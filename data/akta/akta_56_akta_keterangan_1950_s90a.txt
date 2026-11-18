@@ -1,0 +1,20 @@
+AKTA KETERANGAN 1950 [AKTA 56] - SEKSYEN 90A, 90B & 90C
+KEBOLEHTERIMAAN DOKUMEN YANG DIKELUARKAN OLEH KOMPUTER
+
+Seksyen 90A(1) Akta Keterangan 1950
+Dalam mana-mana prosiding jenayah atau sivil, sesuatu dokumen yang dikeluarkan oleh komputer, atau suatu pernyataan yang terkandung dalam dokumen itu, hendaklah diterima sebagai keterangan mengenai apa-apa fakta yang dinyatakan di dalamnya jika dokumen itu dikeluarkan oleh komputer dalam perjalanan penggunaannya yang biasa, sama ada orang yang membuat pernyataan itu merupakan seseorang yang menjadi saksi atau tidak.
+
+Seksyen 90A(2) - Keperluan Sijil / Perakuan Seksyen 90A
+Bagi maksud membuktikan bahawa sesuatu dokumen telah dikeluarkan oleh komputer dalam perjalanan penggunaannya yang biasa, suatu perakuan yang ditandatangani oleh seseorang yang bertanggungjawab bagi pengendalian komputer itu atau bagi pengurusan aktiviti yang berkaitan dengannya hendaklah menjadi keterangan mengenai apa-apa perkara yang dinyatakan dalam perakuan itu; dan bagi maksud subseksyen ini cukuplah bagi sesuatu perkara dinyatakan sepanjang pengetahuan dan kepercayaan orang yang membuat perakuan itu.
+
+Seksyen 90A(4) - Anggapan pengendalian baik komputer
+Apabila suatu perakuan diberikan di bawah subseksyen (2), hendaklah dianggapkan melainkan jika dibuktikan sebaliknya bahawa komputer itu berada dalam keadaan pengendalian yang baik dan beroperasi dengan sewajarnya dalam segala hal yang material sepanjang tempoh dokumen itu dikeluarkan.
+
+Seksyen 90A(6) - Tafsiran dokumen dikeluarkan oleh komputer
+Sesuatu dokumen yang dikeluarkan oleh komputer tidak kira sama ada ia dikeluarkan secara langsung oleh komputer atau melalui peralatan perantara (termasuk pemindahan fail dari kamera digital / telefon pintar ke komputer pejabat dan dicetak menggunakan pencetak pejabat) hendaklah mematuhi perakuan di bawah Seksyen 90A(2).
+
+Keperluan Mandatori Sijil Seksyen 90A dalam Kertas Siasatan UIP KKM:
+1. Mesti menyatakan secara jelas identiti pegawai yang mengendalikan atau menguruskan aktiviti komputer tersebut.
+2. Mesti menyenaraikan spesifikasi peranti input (kamera digital / telefon, jenama & model), komputer pemproses (jenama, model, nombor siri / harta modal KKM), dan pencetak yang digunakan.
+3. Mesti menyenaraikan dokumen atau gambar digital yang dicetak beserta tarikh gambar diambil dan tarikh cetakan dibuat.
+4. WAJIB mengandungi klausa berkanun Seksyen 90A(2): bahawa dokumen dikeluarkan oleh komputer dalam perjalanan penggunaannya yang biasa, komputer berada dalam keadaan pengendalian yang baik, dan perakuan dibuat "sepanjang pengetahuan dan kepercayaan saya".

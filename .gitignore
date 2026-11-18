@@ -1,0 +1,25 @@
+# Persekitaran & Kunci Rahsia (JANGAN muat naik ke GitHub)
+.env
+.env.local
+.env.*.local
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Node.js / Next.js
+node_modules/
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+
+# Pangkalan Data Tempatan & Vektor
+data/uip_command.db*
+data/chroma_db/
+
+# Log & Fail Sistem
+*.log
+.DS_Store
+Thumbs.db
