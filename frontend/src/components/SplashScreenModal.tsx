@@ -82,14 +82,20 @@ export default function SplashScreenModal({
                 <Smartphone className="h-3 w-3" /> Versi Mobile Web
               </button>
             </div>
-            <button
-              type="button"
-              onClick={onClose}
-              title="Tutup & Masuk ke Aplikasi"
-              className="rounded-lg p-1 text-slate-500 hover:bg-slate-200 hover:text-slate-900"
-            >
-              <X className="h-4 w-4" />
-            </button>
+            {officer ? (
+              <button
+                type="button"
+                onClick={onClose}
+                title="Tutup & Masuk ke Aplikasi"
+                className="rounded-lg p-1 text-slate-500 hover:bg-slate-200 hover:text-slate-900"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            ) : (
+              <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2.5 py-0.5 text-[10px] font-bold text-amber-900 ring-1 ring-amber-300">
+                Wajib Daftar / Log Masuk
+              </span>
+            )}
           </div>
         </div>
 
@@ -266,16 +272,24 @@ export default function SplashScreenModal({
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <h3 className="text-xs font-bold text-slate-800">
-                  Pilih Tugas Utama untuk Mula Serta-Merta:
+                  {officer
+                    ? "Pilih Tugas Utama untuk Mula Serta-Merta:"
+                    : "Pratonton Modul (Sila Daftar / Log Masuk Dahulu Untuk Akses):"}
                 </h3>
-                <span className="text-[10px] font-semibold text-slate-500">Mod Pantas Aktif</span>
+                <span className="text-[10px] font-semibold text-slate-500">
+                  {officer ? "Mod Pantas Aktif" : "Terkunci"}
+                </span>
               </div>
 
               <div className={isMobilePreview ? "space-y-2" : "grid grid-cols-1 gap-2 sm:grid-cols-2"}>
                 <button
                   type="button"
-                  onClick={() => onEnterApp("advisor")}
-                  className="flex items-start gap-2.5 rounded-xl border border-indigo-200 bg-white p-3 text-left transition hover:border-indigo-400 hover:bg-indigo-50/50"
+                  onClick={() => (officer ? onEnterApp("advisor") : onOpenGoogleAuth())}
+                  className={`flex items-start gap-2.5 rounded-xl border border-indigo-200 bg-white p-3 text-left transition ${
+                    officer
+                      ? "hover:border-indigo-400 hover:bg-indigo-50/50"
+                      : "opacity-75 hover:border-blue-300"
+                  }`}
                 >
                   <div className="rounded-lg bg-indigo-100 p-2 text-indigo-700">
                     <MessageSquareQuote className="h-4 w-4" />
@@ -290,8 +304,12 @@ export default function SplashScreenModal({
 
                 <button
                   type="button"
-                  onClick={() => onEnterApp("compound")}
-                  className="flex items-start gap-2.5 rounded-xl border border-amber-200 bg-white p-3 text-left transition hover:border-amber-400 hover:bg-amber-50/50"
+                  onClick={() => (officer ? onEnterApp("compound") : onOpenGoogleAuth())}
+                  className={`flex items-start gap-2.5 rounded-xl border border-amber-200 bg-white p-3 text-left transition ${
+                    officer
+                      ? "hover:border-amber-400 hover:bg-amber-50/50"
+                      : "opacity-75 hover:border-blue-300"
+                  }`}
                 >
                   <div className="rounded-lg bg-amber-100 p-2 text-amber-800">
                     <FileCheck2 className="h-4 w-4" />
@@ -306,8 +324,12 @@ export default function SplashScreenModal({
 
                 <button
                   type="button"
-                  onClick={() => onEnterApp("draft")}
-                  className="flex items-start gap-2.5 rounded-xl border border-blue-200 bg-white p-3 text-left transition hover:border-blue-400 hover:bg-blue-50/50"
+                  onClick={() => (officer ? onEnterApp("draft") : onOpenGoogleAuth())}
+                  className={`flex items-start gap-2.5 rounded-xl border border-blue-200 bg-white p-3 text-left transition ${
+                    officer
+                      ? "hover:border-blue-400 hover:bg-blue-50/50"
+                      : "opacity-75 hover:border-blue-300"
+                  }`}
                 >
                   <div className="rounded-lg bg-blue-100 p-2 text-blue-700">
                     <FileText className="h-4 w-4" />
@@ -322,8 +344,12 @@ export default function SplashScreenModal({
 
                 <button
                   type="button"
-                  onClick={() => onEnterApp("audit")}
-                  className="flex items-start gap-2.5 rounded-xl border border-emerald-200 bg-white p-3 text-left transition hover:border-emerald-400 hover:bg-emerald-50/50"
+                  onClick={() => (officer ? onEnterApp("audit") : onOpenGoogleAuth())}
+                  className={`flex items-start gap-2.5 rounded-xl border border-emerald-200 bg-white p-3 text-left transition ${
+                    officer
+                      ? "hover:border-emerald-400 hover:bg-emerald-50/50"
+                      : "opacity-75 hover:border-blue-300"
+                  }`}
                 >
                   <div className="rounded-lg bg-emerald-100 p-2 text-emerald-700">
                     <Scale className="h-4 w-4" />
@@ -342,13 +368,23 @@ export default function SplashScreenModal({
               <span className="text-[11px] text-slate-500">
                 Optimum untuk Pelayar Desktop &amp; Telefon Pintar (Mobile Web)
               </span>
-              <button
-                type="button"
-                onClick={() => onEnterApp("audit")}
-                className="inline-flex items-center gap-1.5 rounded-xl bg-[#0f2744] px-4 py-2 text-xs font-bold text-white hover:bg-slate-800"
-              >
-                Terus Masuk ke Sistem <ArrowRight className="h-3.5 w-3.5" />
-              </button>
+              {officer ? (
+                <button
+                  type="button"
+                  onClick={() => onEnterApp("audit")}
+                  className="inline-flex items-center gap-1.5 rounded-xl bg-[#0f2744] px-4 py-2 text-xs font-bold text-white hover:bg-slate-800"
+                >
+                  Terus Masuk ke Sistem <ArrowRight className="h-3.5 w-3.5" />
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={onOpenGoogleAuth}
+                  className="inline-flex items-center gap-1.5 rounded-xl bg-blue-700 px-4 py-2 text-xs font-bold text-white hover:bg-blue-800"
+                >
+                  Daftar / Log Masuk untuk Masuk <ArrowRight className="h-3.5 w-3.5" />
+                </button>
+              )}
             </div>
           </div>
         </div>

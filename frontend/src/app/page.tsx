@@ -143,6 +143,7 @@ export default function UIPCommandPage() {
   const [mobileSplitPane, setMobileSplitPane] = useState<"input" | "result">("input");
   const [authToken, setAuthToken] = useState<string | null>(null);
   const [officer, setOfficer] = useState<OfficerProfile | null>(null);
+  const [authChecked, setAuthChecked] = useState(false);
 
   const applyCaseRecord = useCallback((rec: IPCaseRecord) => {
     setActiveCaseId(rec.id);
@@ -158,41 +159,43 @@ export default function UIPCommandPage() {
 
   useEffect(() => {
     let mounted = true;
-    if (typeof window !== "undefined" && !window.sessionStorage.getItem("iuip_nerus_splash_seen")) {
-      setSplashOpen(true);
-    }
     async function bootstrap() {
       try {
         const savedToken =
           typeof window !== "undefined" ? window.localStorage.getItem("uip_auth_token") : null;
-        const [sysStatus, caseList] = await Promise.all([
-          fetchSystemStatus(),
-          fetchCases(),
-        ]);
+        const sysStatus = await fetchSystemStatus();
         if (!mounted) return;
         setStatus(sysStatus);
-        setCases(caseList);
-        if (caseList.length > 0) {
-          applyCaseRecord(caseList[0]);
-        }
+
         if (savedToken) {
           try {
             const me = await fetchCurrentOfficer(savedToken);
-            if (mounted) {
-              setAuthToken(savedToken);
-              setOfficer(me);
+            const caseList = await fetchCases();
+            if (!mounted) return;
+            setAuthToken(savedToken);
+            setOfficer(me);
+            setCases(caseList);
+            if (caseList.length > 0) {
+              applyCaseRecord(caseList[0]);
             }
           } catch {
-            window.localStorage.removeItem("uip_auth_token");
+            if (typeof window !== "undefined") {
+              window.localStorage.removeItem("uip_auth_token");
+            }
+            if (mounted) setSplashOpen(true);
           }
+        } else if (mounted) {
+          setSplashOpen(true);
         }
       } catch (err) {
         if (!mounted) return;
         setErrorBanner(
           err instanceof Error
-            ? `Pelayan Backend FastAPI (localhost:8000) tidak dapat dicapai: ${err.message}`
+            ? `Pelayan Backend FastAPI tidak dapat dicapai: ${err.message}`
             : "Gagal menyambung ke Backend API."
         );
+      } finally {
+        if (mounted) setAuthChecked(true);
       }
     }
     bootstrap();
@@ -407,11 +410,74 @@ export default function UIPCommandPage() {
   };
 
   const closeSplashAndRemember = () => {
+    if (!officer) return;
     setSplashOpen(false);
     if (typeof window !== "undefined") {
       window.sessionStorage.setItem("iuip_nerus_splash_seen", "1");
     }
   };
+
+  const handleAuthenticatedSuccess = async (user: OfficerProfile, token: string) => {
+    window.localStorage.setItem("uip_auth_token", token);
+    setAuthToken(token);
+    setOfficer(user);
+    setSplashOpen(false);
+    setAuthOpen(false);
+    try {
+      const caseList = await fetchCases();
+      setCases(caseList);
+      if (caseList.length > 0) {
+        applyCaseRecord(caseList[0]);
+      }
+    } catch {
+      // Abaikan jika gagal sementara
+    }
+  };
+
+  if (!authChecked) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-[#08192e] text-white">
+        <div className="text-center space-y-2">
+          <div className="text-lg font-extrabold tracking-tight text-amber-300">i-UIP Nerus</div>
+          <div className="text-xs text-slate-300">Mengesahkan sesi pegawai PKD Kuala Nerus...</div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!officer) {
+    return (
+      <div className="min-h-screen bg-[#08192e]">
+        <SplashScreenModal
+          open={!authOpen}
+          officer={null}
+          onClose={() => {}}
+          onEnterApp={() => {
+            setAuthInitialTab("google");
+            setAuthOpen(true);
+          }}
+          onOpenGoogleAuth={() => {
+            setAuthInitialTab("google");
+            setAuthOpen(true);
+          }}
+          onOpenEmailAuth={(tabChoice) => {
+            setAuthInitialTab(tabChoice);
+            setAuthOpen(true);
+          }}
+        />
+        <AuthAccountModal
+          open={authOpen}
+          onClose={() => setAuthOpen(false)}
+          officer={null}
+          authToken={null}
+          initialTab={authInitialTab}
+          onAuthenticated={handleAuthenticatedSuccess}
+          onProfileUpdated={() => {}}
+          onLoggedOut={() => {}}
+        />
+      </div>
+    );
+  }
 
   const isFullWidthMode = activeTab === "advisor" || activeTab === "guide";
 
@@ -669,15 +735,16 @@ export default function UIPCommandPage() {
         officer={officer}
         authToken={authToken}
         initialTab={authInitialTab}
-        onAuthenticated={(user, token) => {
-          setOfficer(user);
-          setAuthToken(token);
-          window.localStorage.setItem("uip_auth_token", token);
-        }}
+        onAuthenticated={handleAuthenticatedSuccess}
         onProfileUpdated={(updated) => setOfficer(updated)}
         onLoggedOut={() => {
           setOfficer(null);
           setAuthToken(null);
+          setCases([]);
+          setAuditReport(null);
+          setDraft(null);
+          setCaseText("");
+          setSplashOpen(true);
           window.localStorage.removeItem("uip_auth_token");
         }}
       />

@@ -6,7 +6,7 @@ import time
 from dataclasses import asdict
 from typing import Any, Dict, Optional
 
-from fastapi import FastAPI, File, Form, Header, HTTPException, Query, UploadFile
+from fastapi import Depends, FastAPI, File, Form, Header, HTTPException, Query, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response
 from pydantic import BaseModel, Field
@@ -41,6 +41,18 @@ def _resolve_current_officer(authorization: Optional[str]) -> Optional[Dict[str,
     if not token:
         return None
     return db_service.get_user_by_token(token)
+
+
+def _require_authenticated_officer(
+    authorization: Optional[str] = Header(default=None),
+) -> Dict[str, Any]:
+    user = _resolve_current_officer(authorization)
+    if not user:
+        raise HTTPException(
+            status_code=401,
+            detail="Akses disekat: Sila daftar atau log masuk akaun pegawai terlebih dahulu.",
+        )
+    return user
 
 
 def _est_tokens(text: Optional[str]) -> int:
@@ -248,7 +260,10 @@ def get_runtime_settings() -> Dict[str, Any]:
 
 
 @app.post("/api/settings")
-def update_runtime_settings(req: RuntimeSettingsRequest) -> Dict[str, Any]:
+def update_runtime_settings(
+    req: RuntimeSettingsRequest,
+    _officer: Dict[str, Any] = Depends(_require_authenticated_officer),
+) -> Dict[str, Any]:
     db_service.save_runtime_settings(req.model_dump())
     router_service.refresh_clients()
     return {
@@ -259,25 +274,29 @@ def update_runtime_settings(req: RuntimeSettingsRequest) -> Dict[str, Any]:
 
 
 @app.get("/api/samples")
-def get_samples() -> Dict[str, Any]:
+def get_samples(
+    _officer: Dict[str, Any] = Depends(_require_authenticated_officer),
+) -> Dict[str, Any]:
     return {"samples": SAMPLE_CASES}
 
 
 @app.get("/api/cases")
-def list_cases() -> Dict[str, Any]:
+def list_cases(
+    _officer: Dict[str, Any] = Depends(_require_authenticated_officer),
+) -> Dict[str, Any]:
     return {"cases": db_service.list_cases()}
 
 
 @app.post("/api/cases")
 def save_case(
     req: UpsertCaseRequest,
-    authorization: Optional[str] = Header(default=None),
+    current_officer: Dict[str, Any] = Depends(_require_authenticated_officer),
 ) -> Dict[str, Any]:
     saved = db_service.upsert_case(req.model_dump(exclude_none=True))
     db_service.log_activity(
         action_type="SIMPAN_KES_IP",
         action_detail=f"Simpan fail {saved.get('no_ip', '')} ({saved.get('akta_utama', '')})",
-        user=_resolve_current_officer(authorization),
+        user=current_officer,
         model_used="local-sqlite-db",
         latency_ms=8,
     )
@@ -285,7 +304,10 @@ def save_case(
 
 
 @app.delete("/api/cases/{case_id}")
-def delete_case(case_id: str) -> Dict[str, Any]:
+def delete_case(
+    case_id: str,
+    _officer: Dict[str, Any] = Depends(_require_authenticated_officer),
+) -> Dict[str, Any]:
     deleted = db_service.delete_case(case_id)
     if not deleted:
         raise HTTPException(status_code=404, detail="Kes IP tidak dijumpai.")
@@ -293,7 +315,10 @@ def delete_case(case_id: str) -> Dict[str, Any]:
 
 
 @app.post("/api/redact")
-def redact_text(req: RedactRequest) -> Dict[str, Any]:
+def redact_text(
+    req: RedactRequest,
+    _officer: Dict[str, Any] = Depends(_require_authenticated_officer),
+) -> Dict[str, Any]:
     result = router_service.redactor.redact(req.text, use_ollama=req.use_ollama)
     return {
         "original_text": result.original_text,
@@ -307,7 +332,10 @@ def redact_text(req: RedactRequest) -> Dict[str, Any]:
 
 
 @app.post("/api/rehydrate")
-def rehydrate_text(req: RehydrateRequest) -> Dict[str, str]:
+def rehydrate_text(
+    req: RehydrateRequest,
+    _officer: Dict[str, Any] = Depends(_require_authenticated_officer),
+) -> Dict[str, str]:
     return {
         "restored_text": router_service.redactor.rehydrate(req.text, req.token_map)
     }
@@ -316,14 +344,14 @@ def rehydrate_text(req: RehydrateRequest) -> Dict[str, str]:
 @app.post("/api/check-compound")
 def check_compound_notice(
     req: CompoundCheckRequest,
-    authorization: Optional[str] = Header(default=None),
+    current_officer: Dict[str, Any] = Depends(_require_authenticated_officer),
 ) -> Dict[str, Any]:
     t0 = time.perf_counter()
     res = compound_checker.check_notice(req.model_dump())
     db_service.log_activity(
         action_type="SEMAK_KOMPAUN",
         action_detail=f"Semak notis kompaun {req.no_notis or '(draf)'} - {req.peruntukan_undang or 'Umum'}",
-        user=_resolve_current_officer(authorization),
+        user=current_officer,
         model_used="local-compound-validator",
         latency_ms=int((time.perf_counter() - t0) * 1000),
     )
@@ -338,7 +366,7 @@ async def audit_ip_endpoint(
     fast_mode: bool = Form(default=False),
     case_id: Optional[str] = Form(default=None),
     file: Optional[UploadFile] = File(default=None),
-    authorization: Optional[str] = Header(default=None),
+    current_officer: Dict[str, Any] = Depends(_require_authenticated_officer),
 ) -> Dict[str, Any]:
     t0 = time.perf_counter()
     raw_text = (text or "").strip()
@@ -402,7 +430,7 @@ async def audit_ip_endpoint(
     db_service.log_activity(
         action_type="AUDIT_IP_20",
         action_detail=f"Semak 20 Kriteria ({akta_utama}) — Skor {report.overall_score:.1f}% ({report.readiness_status})",
-        user=_resolve_current_officer(authorization),
+        user=current_officer,
         model_used=audit_model,
         est_input_tokens=_est_tokens(raw_text) if is_gemini_audit else 0,
         est_output_tokens=550 if is_gemini_audit else 0,
@@ -416,7 +444,7 @@ async def audit_ip_endpoint(
 async def extract_evidence_endpoint(
     file: UploadFile = File(...),
     doc_hint: str = Form(default="bukti_kesalahan"),
-    authorization: Optional[str] = Header(default=None),
+    current_officer: Dict[str, Any] = Depends(_require_authenticated_officer),
 ) -> Dict[str, Any]:
     t0 = time.perf_counter()
     file_bytes = await file.read()
@@ -432,7 +460,7 @@ async def extract_evidence_endpoint(
     db_service.log_activity(
         action_type="EKSTRAK_BUKTI_OCR",
         action_detail=f"Ekstrak gambar/fail bukti: {file.filename or 'bukti'} ({doc_hint})",
-        user=_resolve_current_officer(authorization),
+        user=current_officer,
         model_used=result.model_used,
         est_input_tokens=1300 if is_cloud else 0,
         est_output_tokens=450 if is_cloud else 0,
@@ -452,10 +480,10 @@ async def extract_evidence_endpoint(
 @app.post("/api/generate-draft")
 def generate_draft_endpoint(
     req: GenerateDraftRequest,
-    authorization: Optional[str] = Header(default=None),
+    current_officer: Dict[str, Any] = Depends(_require_authenticated_officer),
 ) -> Dict[str, Any]:
     t0 = time.perf_counter()
-    active_officer = req.officer_profile or _resolve_current_officer(authorization)
+    active_officer = req.officer_profile or current_officer
     result = router_service.generate_legal_drafts(
         case_text=req.case_text,
         akta_utama=req.akta_utama,
@@ -494,14 +522,14 @@ def generate_draft_endpoint(
 @app.post("/api/export-docx")
 def export_docx_endpoint(
     req: ExportDocxRequest,
-    authorization: Optional[str] = Header(default=None),
+    current_officer: Dict[str, Any] = Depends(_require_authenticated_officer),
 ) -> Response:
     t0 = time.perf_counter()
     docx_bytes, filename = generate_docx_by_type(req.doc_type, req.payload)
     db_service.log_activity(
         action_type="EXPORT_DOCX",
         action_detail=f"Muat turun fail Word rasmi: {filename} ({req.doc_type})",
-        user=_resolve_current_officer(authorization),
+        user=current_officer,
         model_used="python-docx-local",
         latency_ms=int((time.perf_counter() - t0) * 1000),
     )
@@ -517,14 +545,14 @@ def query_statutory_rag(
     q: str = Query(..., min_length=2),
     akta: Optional[str] = Query(default=None),
     top_k: int = Query(default=4, ge=1, le=10),
-    authorization: Optional[str] = Header(default=None),
+    current_officer: Dict[str, Any] = Depends(_require_authenticated_officer),
 ) -> Dict[str, Any]:
     t0 = time.perf_counter()
     chunks = router_service.rag_store.search_statutes(query=q, akta_filter=akta, top_k=top_k)
     db_service.log_activity(
         action_type="CARIAN_RAG_AKTA",
         action_detail=f"Cari teks akta ({akta or 'Semua'}): {q[:80]}",
-        user=_resolve_current_officer(authorization),
+        user=current_officer,
         model_used=router_service.rag_store.engine_name,
         latency_ms=int((time.perf_counter() - t0) * 1000),
     )
@@ -536,7 +564,10 @@ def query_statutory_rag(
 
 
 @app.post("/api/rag/ingest")
-async def ingest_statutory_act(file: UploadFile = File(...)) -> Dict[str, Any]:
+async def ingest_statutory_act(
+    file: UploadFile = File(...),
+    _officer: Dict[str, Any] = Depends(_require_authenticated_officer),
+) -> Dict[str, Any]:
     raw_bytes = await file.read()
     if not raw_bytes:
         raise HTTPException(status_code=400, detail="Fail akta kosong.")
@@ -645,14 +676,16 @@ def logout_officer_account(
 
 
 @app.get("/api/advisor/scenarios")
-def list_advisor_scenarios() -> Dict[str, Any]:
+def list_advisor_scenarios(
+    _officer: Dict[str, Any] = Depends(_require_authenticated_officer),
+) -> Dict[str, Any]:
     return {"scenarios": advisor_service.list_scenarios()}
 
 
 @app.post("/api/advisor/consult")
 def consult_uip_advisor(
     req: AdvisorConsultRequest,
-    authorization: Optional[str] = Header(default=None),
+    current_officer: Dict[str, Any] = Depends(_require_authenticated_officer),
 ) -> Dict[str, Any]:
     if not req.question.strip() and not req.scenario_id:
         raise HTTPException(
@@ -660,7 +693,7 @@ def consult_uip_advisor(
             detail="Sila taip soalan situasi kes atau pilih salah satu templat situasi.",
         )
     t0 = time.perf_counter()
-    officer = req.officer_profile or _resolve_current_officer(authorization)
+    officer = req.officer_profile or current_officer
     res = advisor_service.consult(
         question=req.question,
         akta_hint=req.akta_hint,
@@ -691,5 +724,7 @@ def consult_uip_advisor(
 
 
 @app.get("/api/dev/overview")
-def get_dev_console_overview() -> Dict[str, Any]:
+def get_dev_console_overview(
+    _officer: Dict[str, Any] = Depends(_require_authenticated_officer),
+) -> Dict[str, Any]:
     return db_service.get_dev_overview()

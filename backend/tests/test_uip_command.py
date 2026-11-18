@@ -17,6 +17,27 @@ from backend.services.sample_cases import SAMPLE_CASES
 from training.prepare_dataset import build_training_records
 
 client = TestClient(app)
+_CACHED_TEST_HEADERS: dict[str, str] | None = None
+
+
+def _get_auth_headers() -> dict[str, str]:
+    global _CACHED_TEST_HEADERS
+    if _CACHED_TEST_HEADERS is not None:
+        return _CACHED_TEST_HEADERS
+    import uuid
+
+    email = f"ppkp.pytest.{uuid.uuid4().hex[:6]}@moh.gov.my"
+    res = client.post(
+        "/api/auth/register",
+        json={
+            "email": email,
+            "password": "PytestKKM#2026",
+            "full_name": "PPKP Ujian Pytest",
+        },
+    )
+    assert res.status_code == 200
+    _CACHED_TEST_HEADERS = {"Authorization": f"Bearer {res.json()['token']}"}
+    return _CACHED_TEST_HEADERS
 
 
 def test_privacy_redaction_whitelists_io_and_masks_cleanly() -> None:
@@ -65,10 +86,12 @@ def test_statutory_rag_store_exact_malaysian_sections() -> None:
 
 
 def test_audit_ip_detects_wrong_sections_and_date_conflicts() -> None:
+    headers = _get_auth_headers()
     # Kes 1 (Akta 852 tanpa Sijil 90A): C12 GAGAL, C11 LULUS (tidak perlukan makmal)
     kes1 = SAMPLE_CASES[0]
     resp1 = client.post(
         "/api/audit-ip",
+        headers=headers,
         data={"text": kes1["text"], "akta_utama": kes1["akta_utama"], "use_ollama": "false"},
     )
     assert resp1.status_code == 200
@@ -83,6 +106,7 @@ def test_audit_ip_detects_wrong_sections_and_date_conflicts() -> None:
     kes2 = SAMPLE_CASES[1]
     resp2 = client.post(
         "/api/audit-ip",
+        headers=headers,
         data={"text": kes2["text"], "akta_utama": kes2["akta_utama"], "use_ollama": "false"},
     )
     assert resp2.status_code == 200
@@ -94,6 +118,7 @@ def test_audit_ip_detects_wrong_sections_and_date_conflicts() -> None:
     kes3 = SAMPLE_CASES[2]
     resp3 = client.post(
         "/api/audit-ip",
+        headers=headers,
         data={"text": kes3["text"], "akta_utama": kes3["akta_utama"], "use_ollama": "false"},
     )
     assert resp3.status_code == 200
@@ -111,6 +136,7 @@ def test_audit_ip_detects_wrong_sections_and_date_conflicts() -> None:
     )
     resp_bad = client.post(
         "/api/audit-ip",
+        headers=headers,
         data={"text": bad_statutes_text, "akta_utama": "Akta 852", "use_ollama": "false"},
     )
     assert resp_bad.status_code == 200
@@ -123,6 +149,7 @@ def test_audit_ip_detects_wrong_sections_and_date_conflicts() -> None:
     kes4 = SAMPLE_CASES[3]
     resp4 = client.post(
         "/api/audit-ip",
+        headers=headers,
         data={"text": kes4["text"], "akta_utama": kes4["akta_utama"], "use_ollama": "false"},
     )
     assert resp4.status_code == 200
@@ -137,6 +164,7 @@ def test_audit_ip_detects_wrong_sections_and_date_conflicts() -> None:
     )
     resp_tb_bad = client.post(
         "/api/audit-ip",
+        headers=headers,
         data={"text": bad_tb_514_text, "akta_utama": "Akta 342", "use_ollama": "false"},
     )
     assert resp_tb_bad.status_code == 200
@@ -162,6 +190,7 @@ def test_generate_drafts_uses_real_case_facts_and_official_docx_format() -> None
     )
     resp = client.post(
         "/api/generate-draft",
+        headers=_get_auth_headers(),
         json={
             "case_text": custom_case,
             "akta_utama": "Akta 281",
@@ -196,6 +225,7 @@ def test_tb_akta_342_draft_and_pkd_docx_sections() -> None:
     kes4 = SAMPLE_CASES[3]
     resp = client.post(
         "/api/generate-draft",
+        headers=_get_auth_headers(),
         json={
             "case_text": kes4["text"],
             "akta_utama": kes4["akta_utama"],
@@ -261,7 +291,7 @@ def test_compound_notice_checker_statutory_limits_and_ic_validation() -> None:
         "status_serahan": "enggan_tandatangan",
         "saksi_ppkp": "",
     }
-    resp_bad = client.post("/api/check-compound", json=invalid_payload)
+    resp_bad = client.post("/api/check-compound", headers=_get_auth_headers(), json=invalid_payload)
     assert resp_bad.status_code == 200
     body_bad = resp_bad.json()
     by_code = {c["code"]: c for c in body_bad["checks"]}
@@ -276,15 +306,17 @@ def test_compound_notice_checker_statutory_limits_and_ic_validation() -> None:
         "amaun_kompaun_rm": "RM 500.00",
         "status_serahan": "tandatangan_terima",
     }
-    resp_ok = client.post("/api/check-compound", json=valid_payload)
+    resp_ok = client.post("/api/check-compound", headers=_get_auth_headers(), json=valid_payload)
     assert resp_ok.status_code == 200
     assert resp_ok.json()["counts"]["GAGAL"] == 0
 
 
 def test_sqlite_cases_crud_and_runtime_settings() -> None:
+    headers = _get_auth_headers()
     # Cipta kes baharu dalam SQLite
     resp_create = client.post(
         "/api/cases",
+        headers=headers,
         json={
             "no_ip": "PKD-TEST/2026/777",
             "tajuk_kes": "Kes Ujian SQLite",
@@ -295,13 +327,13 @@ def test_sqlite_cases_crud_and_runtime_settings() -> None:
     assert resp_create.status_code == 200
     created_id = resp_create.json()["case"]["id"]
 
-    resp_list = client.get("/api/cases")
+    resp_list = client.get("/api/cases", headers=headers)
     assert resp_list.status_code == 200
     case_ids = {c["id"] for c in resp_list.json()["cases"]}
     assert created_id in case_ids
     assert "kes-akta-342-tibi" in case_ids
 
-    resp_del = client.delete(f"/api/cases/{created_id}")
+    resp_del = client.delete(f"/api/cases/{created_id}", headers=headers)
     assert resp_del.status_code == 200
 
     # Uji endpoint GET/POST /api/settings (tanpa merosakkan kunci sebenar jika ada)
@@ -394,7 +426,8 @@ def test_officer_account_register_login_profile_and_autofill() -> None:
 def test_uip_advisor_scenarios_and_consult() -> None:
     import time
 
-    resp_list = client.get("/api/advisor/scenarios")
+    headers = _get_auth_headers()
+    resp_list = client.get("/api/advisor/scenarios", headers=headers)
     assert resp_list.status_code == 200
     scenarios = resp_list.json()["scenarios"]
     assert len(scenarios) == 11
@@ -404,6 +437,7 @@ def test_uip_advisor_scenarios_and_consult() -> None:
     # Uji klik templat terus (pantasklik tapak binaan Akta 154)
     resp_tapak = client.post(
         "/api/advisor/consult",
+        headers=headers,
         json={
             "question": "Tapak pembinaan membiak Aedes, boleh kompaun atau buka IP?",
             "akta_hint": "Akta 154",
@@ -423,6 +457,7 @@ def test_uip_advisor_scenarios_and_consult() -> None:
     t0 = time.monotonic()
     resp_obd = client.post(
         "/api/advisor/consult",
+        headers=headers,
         json={
             "question": "ada budak sekolah hisap rokok tepi jalan",
             "akta_hint": "Semua",
@@ -440,6 +475,7 @@ def test_uip_advisor_scenarios_and_consult() -> None:
     t1 = time.monotonic()
     resp_combo = client.post(
         "/api/advisor/consult",
+        headers=headers,
         json={
             "question": "Restoran kotor ada najis tikus di dapur dan 2 pekerja tiada suntikan tifoid",
             "akta_hint": "Semua",
@@ -457,6 +493,7 @@ def test_uip_advisor_scenarios_and_consult() -> None:
     # Uji soalan bebas (pengendali makanan tiada suntikan tifoid)
     resp_free = client.post(
         "/api/advisor/consult",
+        headers=headers,
         json={
             "question": "Tukang masak restoran tiada suntikan tifoid dan tiada sijil LPM, nak caj peraturan mana?",
             "akta_hint": "Akta 281",
@@ -485,7 +522,7 @@ def test_google_auth_requires_real_oauth_token_and_no_demo_accounts(monkeypatch)
 
     # 3. Uji aliran pengesahan token rasmi Google (tokeninfo id_token + userinfo access_token)
     g_email = f"ppkp.nerus.{uuid.uuid4().hex[:6]}@gmail.com"
-    client.post("/api/settings", json={"google_client_id": ""})
+    client.post("/api/settings", headers=_get_auth_headers(), json={"google_client_id": ""})
 
     class _MockResp:
         def __init__(self, status_code: int, payload: dict) -> None:
@@ -551,8 +588,9 @@ def test_dev_overview_tracks_who_uses_what_and_api_costs(monkeypatch) -> None:
     import httpx
 
     # 1. Uji simpan & dapatkan google_client_id melalui /api/settings
+    headers = _get_auth_headers()
     client_id_test = f"123456-{uuid.uuid4().hex[:6]}.apps.googleusercontent.com"
-    resp_save = client.post("/api/settings", json={"google_client_id": client_id_test})
+    resp_save = client.post("/api/settings", headers=headers, json={"google_client_id": client_id_test})
     assert resp_save.status_code == 200
     assert resp_save.json()["settings"]["google_client_id"] == client_id_test
     assert resp_save.json()["settings"]["google_client_id_configured"] is True
@@ -594,7 +632,7 @@ def test_dev_overview_tracks_who_uses_what_and_api_costs(monkeypatch) -> None:
     assert consult_res.status_code == 200
 
     # 3. Semak /api/dev/overview memaparkan siapa guna & apa dibuat + anggaran kos
-    dev_resp = client.get("/api/dev/overview")
+    dev_resp = client.get("/api/dev/overview", headers={"Authorization": f"Bearer {token}"})
     assert dev_resp.status_code == 200
     overview = dev_resp.json()
     assert overview["developer"] == "g.dev/syrzy"
@@ -613,7 +651,17 @@ def test_dev_overview_tracks_who_uses_what_and_api_costs(monkeypatch) -> None:
     assert len(overview["pricing_reference"]) >= 4
 
     # Pulihkan google_client_id kepada kosong
-    client.post("/api/settings", json={"google_client_id": ""})
+    client.post("/api/settings", headers=headers, json={"google_client_id": ""})
+
+
+def test_unauthenticated_requests_are_blocked_401() -> None:
+    assert client.get("/api/cases").status_code == 401
+    assert client.post("/api/cases", json={"case_text": "test"}).status_code == 401
+    assert client.post("/api/audit-ip", data={"text": "test"}).status_code == 401
+    assert client.post("/api/generate-draft", json={"case_text": "test"}).status_code == 401
+    assert client.post("/api/advisor/consult", json={"question": "test"}).status_code == 401
+    assert client.get("/api/dev/overview").status_code == 401
+    assert client.post("/api/settings", json={"ollama_model": "gemma3:12b"}).status_code == 401
 
 
 def test_cloud_run_healthz_and_postgres_adapter() -> None:

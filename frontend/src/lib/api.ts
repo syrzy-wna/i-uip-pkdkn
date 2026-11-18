@@ -69,20 +69,26 @@ export async function saveRuntimeSettings(payload: {
 }): Promise<{ status: string; system_status: SystemStatus; settings: RuntimeSettings }> {
   const res = await fetch(`${API_BASE}/api/settings`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", ...getAuthHeader() },
     body: JSON.stringify(payload),
   });
   return parseJsonOrThrow(res);
 }
 
 export async function fetchSampleCases(): Promise<SampleCase[]> {
-  const res = await fetch(`${API_BASE}/api/samples`, { cache: "no-store" });
+  const res = await fetch(`${API_BASE}/api/samples`, {
+    cache: "no-store",
+    headers: { ...getAuthHeader() },
+  });
   const data = await parseJsonOrThrow<{ samples: SampleCase[] }>(res);
   return data.samples;
 }
 
 export async function fetchCases(): Promise<IPCaseRecord[]> {
-  const res = await fetch(`${API_BASE}/api/cases`, { cache: "no-store" });
+  const res = await fetch(`${API_BASE}/api/cases`, {
+    cache: "no-store",
+    headers: { ...getAuthHeader() },
+  });
   const data = await parseJsonOrThrow<{ cases: IPCaseRecord[] }>(res);
   return data.cases;
 }
@@ -102,6 +108,7 @@ export async function saveCaseRecord(
 export async function deleteCaseRecord(caseId: string): Promise<void> {
   const res = await fetch(`${API_BASE}/api/cases/${encodeURIComponent(caseId)}`, {
     method: "DELETE",
+    headers: { ...getAuthHeader() },
   });
   await parseJsonOrThrow<{ deleted: boolean }>(res);
 }
@@ -112,7 +119,7 @@ export async function runRedaction(
 ): Promise<RedactResponse> {
   const res = await fetch(`${API_BASE}/api/redact`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", ...getAuthHeader() },
     body: JSON.stringify({ text, use_ollama: useOllama }),
   });
   return parseJsonOrThrow<RedactResponse>(res);
@@ -361,6 +368,9 @@ export async function consultUipAdvisor(params: {
 // ---------------- Konsol Pembangun (Dev g.dev/syrzy) ----------------
 
 export async function fetchDevOverview(): Promise<DevOverviewResponse> {
-  const res = await fetch(`${API_BASE}/api/dev/overview`, { cache: "no-store" });
+  const res = await fetch(`${API_BASE}/api/dev/overview`, {
+    cache: "no-store",
+    headers: { ...getAuthHeader() },
+  });
   return parseJsonOrThrow<DevOverviewResponse>(res);
 }
