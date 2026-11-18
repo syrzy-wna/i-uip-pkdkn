@@ -70,7 +70,7 @@ class _PgConnAdapter:
         from psycopg.rows import dict_row
 
         normalized = dsn.replace("postgres://", "postgresql://", 1) if dsn.startswith("postgres://") else dsn
-        self._conn = psycopg.connect(normalized, row_factory=dict_row)
+        self._conn = psycopg.connect(normalized, row_factory=dict_row, connect_timeout=15)
 
     def __enter__(self) -> "_PgConnAdapter":
         return self
@@ -186,16 +186,25 @@ class UIPDatabase:
                 )
                 """
             )
-            for col_sql in (
-                "ALTER TABLE users ADD COLUMN auth_provider TEXT NOT NULL DEFAULT 'email'",
-                "ALTER TABLE users ADD COLUMN last_seen_at TEXT NOT NULL DEFAULT ''",
-            ):
-                try:
-                    conn.execute(col_sql)
-                except Exception:
-                    if self.use_postgres:
-                        conn._conn.rollback()
-                    pass
+            conn.commit()
+            if self.use_postgres:
+                conn.execute(
+                    "ALTER TABLE users ADD COLUMN IF NOT EXISTS auth_provider TEXT NOT NULL DEFAULT 'email'"
+                )
+                conn.execute(
+                    "ALTER TABLE users ADD COLUMN IF NOT EXISTS last_seen_at TEXT NOT NULL DEFAULT ''"
+                )
+                conn.commit()
+            else:
+                for col_sql in (
+                    "ALTER TABLE users ADD COLUMN auth_provider TEXT NOT NULL DEFAULT 'email'",
+                    "ALTER TABLE users ADD COLUMN last_seen_at TEXT NOT NULL DEFAULT ''",
+                ):
+                    try:
+                        conn.execute(col_sql)
+                    except sqlite3.OperationalError:
+                        pass
+                conn.commit()
             conn.execute(
                 """
                 CREATE TABLE IF NOT EXISTS user_sessions (
@@ -581,6 +590,8 @@ class UIPDatabase:
         if not full_name:
             prefix = email.split("@")[0].replace(".", " ").replace("_", " ").strip()
             full_name = prefix.title() if prefix else email
+        if len(full_name) < 3:
+            full_name = f"Pegawai {full_name}".strip()
 
         with self._connect() as conn:
             existing = conn.execute("SELECT * FROM users WHERE email = ?", (email,)).fetchone()

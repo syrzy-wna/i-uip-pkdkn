@@ -6,9 +6,9 @@ import time
 from dataclasses import asdict
 from typing import Any, Dict, Optional
 
-from fastapi import Depends, FastAPI, File, Form, Header, HTTPException, Query, UploadFile
+from fastapi import Depends, FastAPI, File, Form, Header, HTTPException, Query, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import Response
+from fastapi.responses import JSONResponse, Response
 from pydantic import BaseModel, Field
 
 from backend.core.config import settings
@@ -76,6 +76,14 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@app.exception_handler(Exception)
+async def global_json_exception_handler(_request: Request, exc: Exception) -> JSONResponse:
+    return JSONResponse(
+        status_code=500,
+        content={"detail": f"Ralat dalaman pelayan: {str(exc)[:240]}"},
+    )
 
 
 class RedactRequest(BaseModel):
@@ -231,6 +239,7 @@ def root() -> Dict[str, str]:
 
 
 @app.get("/healthz")
+@app.get("/api/health")
 def healthz() -> Dict[str, str]:
     return {
         "status": "ok",
@@ -595,13 +604,16 @@ def get_demo_accounts() -> Dict[str, Any]:
 def register_officer_account(req: RegisterAccountRequest) -> Dict[str, Any]:
     try:
         res = db_service.register_user(req.model_dump())
-        db_service.log_activity(
-            action_type="REGISTER_ACCOUNT",
-            action_detail=f"Daftar akaun baharu (Emel KKM): {res['user'].get('email', '')}",
-            user=res.get("user"),
-            model_used="local-sqlite-auth",
-            latency_ms=15,
-        )
+        try:
+            db_service.log_activity(
+                action_type="REGISTER_ACCOUNT",
+                action_detail=f"Daftar akaun baharu (Emel KKM): {res['user'].get('email', '')}",
+                user=res.get("user"),
+                model_used="local-sqlite-auth",
+                latency_ms=15,
+            )
+        except Exception:
+            pass
         return res
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc))
@@ -615,13 +627,16 @@ def login_officer_account(req: LoginRequest) -> Dict[str, Any]:
             status_code=401,
             detail="Emel atau kata laluan tidak tepat. Sila semak semula.",
         )
-    db_service.log_activity(
-        action_type="LOGIN_EMAIL",
-        action_detail=f"Log masuk emel: {res['user'].get('email', '')}",
-        user=res.get("user"),
-        model_used="local-sqlite-auth",
-        latency_ms=12,
-    )
+    try:
+        db_service.log_activity(
+            action_type="LOGIN_EMAIL",
+            action_detail=f"Log masuk emel: {res['user'].get('email', '')}",
+            user=res.get("user"),
+            model_used="local-sqlite-auth",
+            latency_ms=12,
+        )
+    except Exception:
+        pass
     return res
 
 
@@ -630,13 +645,16 @@ def google_auth_officer(req: GoogleAuthRequest) -> Dict[str, Any]:
     try:
         res = db_service.authenticate_or_register_google_user(req.model_dump())
         status_txt = "Daftar baharu" if res.get("is_new_account") else "Log masuk pantas"
-        db_service.log_activity(
-            action_type="LOGIN_GOOGLE",
-            action_detail=f"{status_txt} Google Connector: {res['user'].get('email', '')}",
-            user=res.get("user"),
-            model_used="google-oauth2-gis",
-            latency_ms=14,
-        )
+        try:
+            db_service.log_activity(
+                action_type="LOGIN_GOOGLE",
+                action_detail=f"{status_txt} Google Connector: {res['user'].get('email', '')}",
+                user=res.get("user"),
+                model_used="google-oauth2-gis",
+                latency_ms=14,
+            )
+        except Exception:
+            pass
         return res
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc))

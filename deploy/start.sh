@@ -21,5 +21,19 @@ FRONTEND_PID=$!
 # Pastikan proses ditutup bersih jika container dihentikan
 trap "kill $BACKEND_PID $FRONTEND_PID 2>/dev/null || true" EXIT INT TERM
 
+# Tunggu Backend FastAPI & Frontend Next.js siap mendengar (elak 502 cold-start)
+python - <<'PY'
+import socket, time
+
+for host, port in (("127.0.0.1", 8000), ("127.0.0.1", 3000)):
+    deadline = time.time() + 25
+    while time.time() < deadline:
+        try:
+            with socket.create_connection((host, port), timeout=1):
+                break
+        except OSError:
+            time.sleep(0.25)
+PY
+
 # 3. Jalankan Nginx di foreground untuk menerima trafik Cloud Run
 exec nginx -c /tmp/nginx.conf -g "daemon off;"

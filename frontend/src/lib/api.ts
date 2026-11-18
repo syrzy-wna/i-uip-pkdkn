@@ -37,17 +37,35 @@ function getAuthHeader(explicitToken?: string | null): Record<string, string> {
 }
 
 async function parseJsonOrThrow<T>(res: Response): Promise<T> {
+  const rawText = await res.text();
+  let parsed: Record<string, unknown> | null = null;
+  if (rawText) {
+    try {
+      parsed = JSON.parse(rawText) as Record<string, unknown>;
+    } catch {
+      parsed = null;
+    }
+  }
+
   if (!res.ok) {
     let msg = `Ralat pelayan (${res.status})`;
-    try {
-      const errData = await res.json();
-      msg = errData.detail || msg;
-    } catch {
-      msg = await res.text();
+    if (parsed && typeof parsed.detail === "string" && parsed.detail.trim()) {
+      msg = parsed.detail;
+    } else if (parsed && typeof parsed.message === "string" && parsed.message.trim()) {
+      msg = parsed.message;
+    } else if (rawText.trim()) {
+      const stripped = rawText.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+      if (stripped) {
+        msg = stripped.slice(0, 220);
+      }
     }
     throw new Error(msg);
   }
-  return res.json() as Promise<T>;
+
+  if (parsed !== null) {
+    return parsed as T;
+  }
+  throw new Error("Respons pelayan bukan format JSON yang sah.");
 }
 
 export async function fetchSystemStatus(): Promise<SystemStatus> {

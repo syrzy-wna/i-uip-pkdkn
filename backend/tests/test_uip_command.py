@@ -665,13 +665,37 @@ def test_unauthenticated_requests_are_blocked_401() -> None:
     assert client.post("/api/settings", json={"ollama_model": "gemma3:12b"}).status_code == 401
 
 
-def test_cloud_run_healthz_and_postgres_adapter() -> None:
+def test_cloud_run_healthz_and_postgres_adapter(monkeypatch) -> None:
+    import uuid
+    import httpx
+    from backend.core.config import DEFAULT_GOOGLE_CLIENT_ID
     from backend.core.database import _PgConnAdapter
 
-    resp = client.get("/healthz")
-    assert resp.status_code == 200
-    assert resp.json() == {"status": "ok", "db": "sqlite"}
+    for path in ("/healthz", "/api/health"):
+        resp = client.get(path)
+        assert resp.status_code == 200
+        assert resp.json() == {"status": "ok", "db": "sqlite"}
+
     assert (
         _PgConnAdapter._translate_sql("SELECT * FROM users WHERE email = ? AND id = ?")
         == "SELECT * FROM users WHERE email = %s AND id = %s"
     )
+
+    # Uji nama Google pendek (cth. "Al") tidak gagal sekatan 3 aksara
+    short_email = f"al.{uuid.uuid4().hex[:6]}@gmail.com"
+
+    class _ShortResp:
+        status_code = 200
+
+        def json(self) -> dict:
+            return {
+                "email": short_email,
+                "email_verified": "true",
+                "name": "Al",
+                "aud": DEFAULT_GOOGLE_CLIENT_ID,
+            }
+
+    monkeypatch.setattr(httpx, "get", lambda url, **kwargs: _ShortResp())
+    resp_short = client.post("/api/auth/google", json={"id_token": "tok-short"})
+    assert resp_short.status_code == 200
+    assert resp_short.json()["user"]["email"] == short_email

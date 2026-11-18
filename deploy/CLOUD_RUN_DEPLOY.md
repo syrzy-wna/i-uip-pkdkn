@@ -39,4 +39,4 @@ gcloud run deploy iuip-nerus \
 1. Salin URL HTTPS yang diberikan oleh Cloud Run (contoh: `https://iuip-nerus-xxxxxxxx-as.a.run.app`).
 2. Buka **Google Cloud Console** → **APIs & Services** → **Credentials** → sunting OAuth 2.0 Client ID anda (`290203327893-b7f42feigfscdd4rfo1eh1a3n5age7ev.apps.googleusercontent.com`).
 3. Masukkan URL Cloud Run anda ke dalam **Authorized JavaScript origins** (di sebelah `http://localhost:3000`).
-4. Uji kesihatan pelayan di `https://<URL-ANDA>/healthz` (sepatutnya memulangkan `{"status":"ok","db":"postgres"}`).
+4. Uji kesihatan pelayan di `https://<URL-ANDA>/api/health` (sepatutnya memulangkan `{"status":"ok","db":"postgres"}`).
