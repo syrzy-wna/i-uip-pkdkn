@@ -650,8 +650,9 @@ def test_dev_overview_tracks_who_uses_what_and_api_costs(monkeypatch) -> None:
     assert overview["summary"]["local_free_calls"] >= 1
     assert len(overview["pricing_reference"]) >= 4
 
-    # Pulihkan google_client_id kepada kosong
-    client.post("/api/settings", headers=headers, json={"google_client_id": ""})
+    # Pulihkan google_client_id kepada Client ID lalai
+    from backend.core.config import DEFAULT_GOOGLE_CLIENT_ID
+    client.post("/api/settings", headers=headers, json={"google_client_id": DEFAULT_GOOGLE_CLIENT_ID})
 
 
 def test_unauthenticated_requests_are_blocked_401() -> None:

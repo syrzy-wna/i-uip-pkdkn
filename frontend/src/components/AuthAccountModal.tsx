@@ -19,9 +19,11 @@ import {
   loginOfficer,
   logoutOfficer,
   registerOfficer,
-  saveRuntimeSettings,
   updateOfficerProfile,
 } from "@/lib/api";
+
+const DEFAULT_GOOGLE_CLIENT_ID =
+  "290203327893-b7f42feigfscdd4rfo1eh1a3n5age7ev.apps.googleusercontent.com";
 import type { OfficerProfile } from "@/lib/types";
 
 declare global {
@@ -71,9 +73,7 @@ export default function AuthAccountModal({
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
   // Tetapan & Token Google OAuth 2.0 Sebenar
-  const [googleClientId, setGoogleClientId] = useState("");
-  const [clientIdDraft, setClientIdDraft] = useState("");
-  const [savingClientId, setSavingClientId] = useState(false);
+  const [googleClientId, setGoogleClientId] = useState(DEFAULT_GOOGLE_CLIENT_ID);
   const [gsiReady, setGsiReady] = useState(false);
   const gsiBtnRef = useRef<HTMLDivElement | null>(null);
 
@@ -116,13 +116,11 @@ export default function AuthAccountModal({
       setTab(initialTab === "profile" ? "google" : initialTab);
       fetchRuntimeSettings()
         .then((s) => {
-          const cid = (s.google_client_id || "").trim();
+          const cid = (s.google_client_id || "").trim() || DEFAULT_GOOGLE_CLIENT_ID;
           setGoogleClientId(cid);
-          setClientIdDraft(cid);
         })
         .catch(() => {
-          setGoogleClientId("");
-          setClientIdDraft("");
+          setGoogleClientId(DEFAULT_GOOGLE_CLIENT_ID);
         });
     }
   }, [open, officer, initialTab]);
@@ -236,27 +234,6 @@ export default function AuthAccountModal({
       },
     });
     tokenClient.requestAccessToken({ prompt: "select_account" });
-  };
-
-  const handleSaveInlineClientId = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const cleaned = clientIdDraft.trim();
-    if (!cleaned || !cleaned.includes(".apps.googleusercontent.com")) {
-      setError("Sila masukkan Google OAuth Web Client ID yang sah (berakhir dengan .apps.googleusercontent.com).");
-      return;
-    }
-    setSavingClientId(true);
-    setError(null);
-    setSuccessMsg(null);
-    try {
-      await saveRuntimeSettings({ google_client_id: cleaned });
-      setGoogleClientId(cleaned);
-      setSuccessMsg("Google OAuth Client ID telah disimpan dan diaktifkan. Butang rasmi Google kini sedia digunakan.");
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Gagal menyimpan Client ID Google.");
-    } finally {
-      setSavingClientId(false);
-    }
   };
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -455,35 +432,16 @@ export default function AuthAccountModal({
                 ) : (
                   <div className="space-y-3">
                     <div className="rounded-lg border border-amber-300 bg-amber-50 p-3 text-[11px] text-amber-950 leading-relaxed">
-                      <strong>Google OAuth 2.0 Web Client ID belum dikonfigurasi pada pelayan ini.</strong>{" "}
-                      Aplikasi ini berada dalam mod produksi sebenar dan tidak menggunakan akaun simulasi. Untuk mengaktifkan butang Google Sign-In sebenar bagi pengguna anda, masukkan <strong>Google OAuth Client ID</strong> dari Google Cloud Console di bawah, atau gunakan tab <strong>Daftar Emel Biasa</strong> buat sementara waktu.
+                      <strong>Google Sign-In belum dikonfigurasi pada pelayan ini.</strong>{" "}
+                      Sila gunakan tab <strong>Daftar Emel Biasa</strong> atau <strong>Log Masuk Emel Biasa</strong> untuk akses segera.
                     </div>
-
-                    <form onSubmit={handleSaveInlineClientId} className="space-y-2 rounded-lg border border-slate-200 bg-white p-3">
-                      <label className="block text-[11px] font-bold text-slate-700">
-                        Aktifkan Google OAuth Connector (Untuk Pembangun / Pentadbir)
-                      </label>
-                      <div className="flex flex-wrap gap-2">
-                        <input
-                          type="text"
-                          value={clientIdDraft}
-                          onChange={(e) => setClientIdDraft(e.target.value)}
-                          placeholder="Tampal Client ID: 1234567890-xxxx.apps.googleusercontent.com"
-                          className="flex-1 min-w-[230px] rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-mono focus:border-blue-500 focus:outline-none"
-                        />
-                        <button
-                          type="submit"
-                          disabled={savingClientId}
-                          className="inline-flex items-center gap-1.5 rounded-lg bg-[#0f2744] px-3.5 py-1.5 text-xs font-bold text-white hover:bg-slate-800 disabled:opacity-60"
-                        >
-                          {savingClientId && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
-                          Aktifkan Google Sign-In
-                        </button>
-                      </div>
-                      <p className="text-[10px] text-slate-500">
-                        Pastikan <code>Authorized JavaScript origins</code> dalam Google Cloud Console menyertakan URL aplikasi ini (cth. <code>http://localhost:3000</code> dan domain deploy rasmi anda).
-                      </p>
-                    </form>
+                    <button
+                      type="button"
+                      onClick={() => setTab("register")}
+                      className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-700 px-3.5 py-2 text-xs font-bold text-white hover:bg-emerald-800"
+                    >
+                      <UserPlus className="h-3.5 w-3.5" /> Daftar Akaun Emel Pegawai
+                    </button>
                   </div>
                 )}
               </div>

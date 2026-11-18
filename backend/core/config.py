@@ -25,12 +25,17 @@ def _resolve_path(raw_path: str, default_rel: str) -> Path:
     return (BASE_DIR / default_rel).resolve()
 
 
+DEFAULT_GOOGLE_CLIENT_ID = (
+    "290203327893-b7f42feigfscdd4rfo1eh1a3n5age7ev.apps.googleusercontent.com"
+)
+
+
 @dataclass
 class Settings:
     """Tetapan persekitaran dan pemetaan model AI UIP-Command yang boleh dikemas kini secara runtime."""
 
     gemini_api_key: str = os.getenv("GEMINI_API_KEY", "").strip()
-    google_client_id: str = os.getenv("GOOGLE_CLIENT_ID", "").strip()
+    google_client_id: str = os.getenv("GOOGLE_CLIENT_ID", DEFAULT_GOOGLE_CLIENT_ID).strip()
     ollama_base_url: str = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434").rstrip("/")
     ollama_model: str = os.getenv("OLLAMA_MODEL", "gemma3:12b").strip()
     ollama_timeout_seconds: float = float(os.getenv("OLLAMA_TIMEOUT_SECONDS", "12.0"))
