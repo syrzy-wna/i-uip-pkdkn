@@ -60,8 +60,8 @@ class Settings:
     decision_model: str = os.getenv("DECISION_MODEL", "gemini-decision-1").strip()
     multimodal_model: str = os.getenv("MULTIMODAL_MODEL", "gemini-4-hydrogen").strip()
     reasoning_model: str = os.getenv("REASONING_MODEL", "gemini-4-argon").strip()
-    reasoning_model_alias: str = os.getenv("REASONING_MODEL_ALIAS", "gemini-2.5-pro").strip()
-    standard_fallback_model: str = os.getenv("STANDARD_GEMINI_MODEL", "gemini-2.5-flash").strip()
+    reasoning_model_alias: str = os.getenv("REASONING_MODEL_ALIAS", "gemini-3.1-pro-preview").strip()
+    standard_fallback_model: str = os.getenv("STANDARD_GEMINI_MODEL", "gemini-3.8-flash").strip()
 
     # Direktori data, ChromaDB & SQLite
     akta_dir: Path = _resolve_path(os.getenv("AKTA_DIR", "./data/akta"), "data/akta")

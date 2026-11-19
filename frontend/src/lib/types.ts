@@ -370,6 +370,9 @@ export interface AdvisorConsultResult {
   templat_ringkas: string;
   draf_teks_kes_cadangan: string;
   engine_used: string;
+  ai_attempted?: boolean;
+  ai_succeeded?: boolean;
+  fallback_reason?: string | null;
   statutory_citations: StatutoryCitation[];
 }
 

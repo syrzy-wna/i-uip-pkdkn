@@ -309,6 +309,7 @@ def update_runtime_settings(
 ) -> Dict[str, Any]:
     db_service.save_runtime_settings(req.model_dump())
     router_service.refresh_clients()
+    advisor_service.clear_cache()
     return {
         "status": "disimpan",
         "system_status": router_service.get_system_status(),
@@ -948,7 +949,7 @@ def consult_uip_advisor(
     )
     model_used = str(res.get("engine_used") or "Mod Pantas — Matriks SOP UIP KKM + Strict RAG")
     is_cloud = bool(
-        "gemini" in model_used.lower()
+        (res.get("ai_succeeded") or "gemini" in model_used.lower())
         and "pantas" not in model_used.lower()
         and "cache" not in model_used.lower()
     )

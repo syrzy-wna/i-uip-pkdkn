@@ -12,9 +12,12 @@ from __future__ import annotations
 import base64
 import hashlib
 import json
+import logging
 import re
 from dataclasses import asdict, dataclass, field
 from typing import Any, Dict, List, Optional
+
+logger = logging.getLogger("uip.model_router")
 
 import httpx
 import pymupdf as fitz
@@ -230,6 +233,7 @@ class UIPModelRouter:
         self._genai_client = None
         self._decision_client = None
         self._decision_cache: Dict[str, tuple[List[Dict[str, Any]], str]] = {}
+        self._last_ai_error: Optional[str] = None
         self.refresh_clients()
 
     def refresh_clients(self) -> None:
@@ -240,14 +244,20 @@ class UIPModelRouter:
         self._decision_cache.clear()
         self._genai_client = None
         self._decision_client = None
+        self._last_ai_error = None
         if GENAI_SDK_AVAILABLE and settings.has_gemini_key:
             try:
-                self._genai_client = genai.Client(api_key=settings.gemini_api_key)
+                self._genai_client = genai.Client(
+                    api_key=settings.gemini_api_key,
+                    http_options={"api_version": "v1beta", "timeout": 25_000},
+                )
                 self._decision_client = genai.Client(
                     api_key=settings.gemini_api_key,
-                    http_options={"api_version": "v1beta"},
+                    http_options={"api_version": "v1beta", "timeout": 25_000},
                 )
-            except Exception:
+            except Exception as exc:
+                self._last_ai_error = f"{type(exc).__name__}: {str(exc)[:180]}"
+                logger.warning("Gagal membina klien Gemini: %s", self._last_ai_error)
                 self._genai_client = None
                 self._decision_client = None
 
@@ -280,6 +290,49 @@ class UIPModelRouter:
             },
         }
 
+    @staticmethod
+    def _parse_json_payload(raw_text: str) -> Dict[str, Any]:
+        """Menghurai JSON daripada respons model termasuk jika dibalut markdown code fence."""
+        cleaned = (raw_text or "").strip()
+        fence_match = re.match(
+            r"^```(?:json)?\s*(.*?)\s*```$",
+            cleaned,
+            flags=re.DOTALL | re.IGNORECASE,
+        )
+        if fence_match:
+            cleaned = fence_match.group(1).strip()
+        try:
+            parsed = json.loads(cleaned)
+            if isinstance(parsed, dict):
+                return parsed
+        except Exception:
+            pass
+        start = cleaned.find("{")
+        end = cleaned.rfind("}")
+        if start != -1 and end > start:
+            parsed = json.loads(cleaned[start : end + 1])
+            if isinstance(parsed, dict):
+                return parsed
+        raise ValueError("Respons AI bukan objek JSON yang sah.")
+
+    @staticmethod
+    def _build_generate_content_config(
+        model_name: str,
+        temperature: float,
+        schema: Dict[str, Any],
+        prefer_flash: bool,
+    ) -> Any:
+        """Membina GenerateContentConfig dengan skema JSON tepat dan ThinkingConfig selamat."""
+        cfg_kwargs: Dict[str, Any] = {
+            "response_mime_type": "application/json",
+            "response_json_schema": schema,
+        }
+        if "2.5" in model_name:
+            cfg_kwargs["temperature"] = temperature
+            if prefer_flash and "flash" in model_name and hasattr(genai_types, "ThinkingConfig"):
+                cfg_kwargs["thinking_config"] = genai_types.ThinkingConfig(thinking_budget=0)
+        return genai_types.GenerateContentConfig(**cfg_kwargs)
+
     def _call_gemini_structured_json(
         self,
         model_candidates: List[str],
@@ -288,43 +341,64 @@ class UIPModelRouter:
         temperature: float = 0.1,
         prefer_flash: bool = False,
     ) -> tuple[Optional[Dict[str, Any]], str]:
-        """Cuba Interactions API model pantas dahulu apabila prefer_flash=True; elak tunggu model pro/404."""
+        """Cuba Interactions API dahulu kemudian fallback ke generate_content berserta log ralat."""
         if not self._genai_client:
+            self._last_ai_error = "Kunci API Gemini belum dikonfigurasi pada pelayan."
             return None, "enjin-statutori-tempatan"
 
-        # 1. Susun calon Interactions API (utamakan gemini-4-hydrogen jika prefer_flash=True)
-        ordered_candidates = list(model_candidates)
+        self._last_ai_error = None
+        attempt_errors: List[str] = []
+
+        # 1. Susun calon Interactions API (elakkan model 2.5 yang tidak menyokong / tidak aktif)
+        ordered_candidates = [m for m in model_candidates if m]
         if prefer_flash:
-            fast_first = [settings.multimodal_model]
-            ordered_candidates = fast_first + [m for m in ordered_candidates if m not in fast_first and m != settings.standard_fallback_model]
+            fast_first = [m for m in (settings.multimodal_model, "gemini-3.8-flash") if m]
+            ordered_candidates = fast_first + [
+                m for m in ordered_candidates if m not in fast_first and "2.5" not in m
+            ]
+        elif "gemini-3.8-flash" not in ordered_candidates:
+            ordered_candidates.append("gemini-3.8-flash")
 
         for model_name in dict.fromkeys(ordered_candidates):
-            if not model_name:
+            if not model_name or "2.5" in model_name:
                 continue
             try:
-                interaction = self._genai_client.interactions.create(
-                    model=model_name,
-                    input=input_payload,
-                    response_format={
+                inter_kwargs: Dict[str, Any] = {
+                    "model": model_name,
+                    "input": input_payload,
+                    "response_format": {
                         "type": "text",
                         "mime_type": "application/json",
                         "schema": schema,
                     },
-                    generation_config={"temperature": temperature},
-                )
-                text = (interaction.output_text or "").strip()
+                }
+                if "3." not in model_name:
+                    inter_kwargs["generation_config"] = {"temperature": temperature}
+                interaction = self._genai_client.interactions.create(**inter_kwargs)
+                text = (getattr(interaction, "output_text", None) or "").strip()
                 if text:
-                    return json.loads(text), f"{model_name} (Interactions API)"
-            except Exception:
+                    return self._parse_json_payload(text), f"{model_name} (Interactions API)"
+                attempt_errors.append(f"{model_name} (Interactions): output kosong")
+            except Exception as exc:
+                msg = f"{model_name} (Interactions): {type(exc).__name__} - {str(exc)[:140]}"
+                attempt_errors.append(msg)
+                logger.warning("Gemini %s", msg)
                 continue
 
-        # 2. Fallback standard generate_content (untuk kunci AI Studio yang tidak guna Interactions API)
+        # 2. Fallback standard generate_content (dengan response_json_schema & fallback model 3.8)
         if genai_types is not None:
-            std_models = (
-                [settings.standard_fallback_model]
+            raw_std = (
+                [settings.standard_fallback_model, "gemini-3.8-flash", "gemini-flash-latest"]
                 if prefer_flash
-                else [settings.standard_fallback_model, settings.reasoning_model_alias]
+                else [
+                    settings.reasoning_model,
+                    settings.reasoning_model_alias,
+                    "gemini-3.1-pro-preview",
+                    settings.standard_fallback_model,
+                    "gemini-3.8-flash",
+                ]
             )
+            std_models = [m for m in dict.fromkeys(raw_std) if m]
             gc_contents: Any = input_payload
             if isinstance(input_payload, list):
                 gc_parts = []
@@ -341,27 +415,30 @@ class UIPModelRouter:
                         )
                 gc_contents = gc_parts
 
-            for model_name in dict.fromkeys(std_models):
-                if not model_name:
-                    continue
+            for model_name in std_models:
                 try:
-                    cfg_kwargs: Dict[str, Any] = {
-                        "temperature": temperature,
-                        "response_mime_type": "application/json",
-                    }
-                    if prefer_flash and "flash" in model_name and hasattr(genai_types, "ThinkingConfig"):
-                        cfg_kwargs["thinking_config"] = genai_types.ThinkingConfig(thinking_budget=0)
+                    cfg = self._build_generate_content_config(
+                        model_name=model_name,
+                        temperature=temperature,
+                        schema=schema,
+                        prefer_flash=prefer_flash,
+                    )
                     resp = self._genai_client.models.generate_content(
                         model=model_name,
                         contents=gc_contents,
-                        config=genai_types.GenerateContentConfig(**cfg_kwargs),
+                        config=cfg,
                     )
-                    text = (resp.text or "").strip()
+                    text = (getattr(resp, "text", None) or "").strip()
                     if text:
-                        return json.loads(text), f"{model_name} (Gemini API)"
-                except Exception:
+                        return self._parse_json_payload(text), f"{model_name} (Gemini API)"
+                    attempt_errors.append(f"{model_name} (Gemini API): output kosong")
+                except Exception as exc:
+                    msg = f"{model_name} (Gemini API): {type(exc).__name__} - {str(exc)[:140]}"
+                    attempt_errors.append(msg)
+                    logger.warning("Gemini %s", msg)
                     continue
 
+        self._last_ai_error = " | ".join(attempt_errors[:3]) if attempt_errors else "Tiada respons model Gemini."
         return None, "enjin-statutori-tempatan"
 
     def _polish_formal_malay_offline(self, text: str) -> tuple[str, str]:
@@ -1229,6 +1306,14 @@ class UIPModelRouter:
             )
 
         if "342" in akta_utama or "342" in low or "tibi" in low or "tuberkulosis" in low:
+            if any(k in low for k in ("smear negatif", "afb negatif", "disaring", "saringan", "enggan mula", "taknak mula")):
+                return (
+                    "Seksyen 15(1) & Seksyen 14 Akta 342 [APPPB 1988] (Perintah Pemerhatian/Pengawasan/Pengasingan; S.22(b) hanya terpakai selepas diagnosis aktif disahkan MO/FMS & notis bertulis diserahkan lalu diingkari)",
+                    "Seksyen 24 Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988 [Akta 342]",
+                    "Individu: Denda tidak melebihi RM10,000.00 atau penjara tidak melebihi 2 tahun atau kedua-duanya (Akta A1742).",
+                    "Tidak digalakkan kompaun / JANGAN terus buka IP S.22(b) selagi pengesahan klinikal MO/FMS (CXR/GeneXpert/Kultur) dan serahan notis bertulis belum lengkap.",
+                    "14 hari (sekiranya notis atau kompaun terpakai selepas pengesahan)",
+                )
             return (
                 "Seksyen 22(b) Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988 [Akta 342]",
                 "Seksyen 24(a) Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988 [Akta 342]",

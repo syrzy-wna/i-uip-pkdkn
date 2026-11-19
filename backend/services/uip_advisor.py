@@ -9,6 +9,8 @@ Membantu PPKP / IO / Pegawai Pendakwa menjawab soalan sebenar di lapangan:
 
 from __future__ import annotations
 
+import logging
+import re
 from typing import Any, Dict, List, Optional
 
 from pydantic import BaseModel, Field
@@ -16,21 +18,25 @@ from pydantic import BaseModel, Field
 from backend.core.config import settings
 from backend.core.model_router import UIPModelRouter
 
+logger = logging.getLogger("uip.advisor")
+
 UIP_SCENARIO_LIBRARY: List[Dict[str, Any]] = [
     {
         "id": "ak852_pamer_vape",
         "akta_utama": "Akta 852",
         "tajuk": "Kedai Serbaneka Pamer Rokok / Vape Secara Terbuka di Kaunter",
         "keywords": [
-            "pamer", "pameran", "terbuka", "kaunter", "vape", "rokok elektronik",
-            "pod", "kedai runcit", "serbaneka", "kabinet", "ak 852", "852", "260/2024",
+            "pamer rokok", "pamer vape", "pameran rokok", "pameran vape", "pamer terbuka", "pamer secara terbuka",
+            "vape di kaunter", "rokok di kaunter", "kabinet rokok", "serbaneka", "kedai runcit",
+            "pamer", "pameran", "pod", "rokok elektronik", "260/2024",
         ],
-        "keputusan_tindakan": "SITA & BUKA IP TERUS (atau Notis S.47 / Kompaun S.48 ikut arahan KKM)",
+        "negative_keywords": ["hisap rokok", "merokok tepi jalan", "iklan papan"],
+        "keputusan_tindakan": "SITA BARANG PAMERAN (S.35/S.36) & BUKA IP TERUS (S.10(1) TIDAK BOLEH KOMPAUN di bawah P.U.(A) 259/2024)",
         "sesuai_buka_ip": True,
         "alasan_keputusan": (
-            "Pameran terbuka vape atau rokok di kaunter jualan merupakan kesalahan larangan pameran "
-            "berimpak komersial tinggi di bawah P.U. (A) 260/2024. Barang pameran wajib disita di bawah "
-            "Seksyen 35 & 36 Akta 852 bagi memelihara eksibit sebelum dibuka IP atau dikompaun mengikut jadual P.U. (A) 259/2024."
+            "Pameran terbuka vape atau rokok di kaunter jualan melanggar Seksyen 10(1) Akta 852 dibaca bersama Peraturan 6 P.U. (A) 260/2024. "
+            "Kesalahan Seksyen 10(1) tidak tersenarai sebagai kesalahan boleh kompaun di bawah Jadual Pertama P.U. (A) 259/2024; "
+            "barang pameran wajib disita di bawah Seksyen 35 & 36 Akta 852 dan dibuka Kertas Siasatan (IP) untuk pendakwaan mahkamah."
         ),
         "cadangan_pertuduhan": [
             {
@@ -71,9 +77,12 @@ UIP_SCENARIO_LIBRARY: List[Dict[str, Any]] = [
         "akta_utama": "Akta 852",
         "tajuk": "Pelajar / Orang Belum Dewasa (OBD < 18 Tahun) Merokok / Hisap Vape di Tepi Jalan atau Tempat Awam",
         "keywords": [
-            "budak sekolah", "pelajar", "tepi jalan", "hisap rokok", "menghisap", "seragam sekolah",
-            "pondok bas", "bawah umur", "remaja", "obd", "seksyen 17", "17(1)", "membeli rokok",
+            "budak sekolah", "pelajar sekolah", "pelajar merokok", "tepi jalan", "hisap rokok", "hisap vape",
+            "menghisap rokok", "seragam sekolah", "pondok bas", "seksyen 17", "17(1)",
+            "obd merokok", "remaja merokok", "bawah umur hisap",
         ],
+        "negative_keywords": ["jual kepada", "menjual rokok", "kedai jual", "tanda larangan"],
+        "incompatible_with": ["ak852_larangan_merokok"],
         "keputusan_tindakan": "OBD MEROKOK: NOTIS KESALAHAN S.47 & KOMPAUN S.48 (BUKA IP JIKA ENGGAN BAYAR / JUALAN KEDAI: S.13(1))",
         "sesuai_buka_ip": False,
         "alasan_keputusan": (
@@ -124,9 +133,11 @@ UIP_SCENARIO_LIBRARY: List[Dict[str, Any]] = [
         "akta_utama": "Akta 852",
         "tajuk": "Pekedai Menjual Rokok / Vape kepada Orang Belum Dewasa (OBD < 18 Tahun)",
         "keywords": [
-            "jual rokok", "jual vape", "menjual", "penjual", "pekedai", "kaunter jual",
-            "resit", "18 tahun", "obd", "seksyen 13", "bawah umur",
+            "jual rokok", "jual vape", "menjual rokok", "menjual vape", "penjual rokok", "pekedai jual",
+            "kaunter jual", "resit belian", "18 tahun", "jual kepada obd", "membeli rokok",
+            "seksyen 13 akta 852", "bawah umur",
         ],
+        "negative_keywords": ["makanan tercemar", "keracunan", "najis tikus", "pamer secara terbuka"],
         "keputusan_tindakan": "PENJUAL: BUKA IP TERUS (Kes Serius) | OBD MEROKOK: KOMPAUN S.48 / KHIDMAT MASYARAKAT",
         "sesuai_buka_ip": True,
         "alasan_keputusan": (
@@ -177,9 +188,12 @@ UIP_SCENARIO_LIBRARY: List[Dict[str, Any]] = [
         "akta_utama": "Akta 852",
         "tajuk": "Merokok / Vape di Tempat Larangan (Restoran) & Pemilik Tiada Papan Tanda Kod QR / Sedia Ashtray",
         "keywords": [
-            "merokok", "tempat makan", "restoran", "kedai makan", "larangan", "qr", "tanda amaran",
-            "ashtray", "bekas abu", "seksyen 16", "seksyen 18", "257/2024", "258/2024",
+            "kawasan larangan merokok", "larangan merokok", "tempat makan", "tanda amaran", "tanda larangan",
+            "kod qr", "ashtray", "bekas abu", "rokok dalam restoran", "merokok di restoran",
+            "seksyen 16", "seksyen 18 akta 852", "257/2024", "258/2024",
         ],
+        "negative_keywords": ["tepi jalan", "budak sekolah", "najis tikus", "suntikan tifoid"],
+        "incompatible_with": ["ak852_obd_merokok_tepi_jalan"],
         "keputusan_tindakan": "KOMPAUN DAHULU (Notis S.47 / Kompaun S.48 — 30 Hari); BUKA IP HANYA JIKA GAGAL BAYAR",
         "sesuai_buka_ip": False,
         "alasan_keputusan": (
@@ -229,14 +243,15 @@ UIP_SCENARIO_LIBRARY: List[Dict[str, Any]] = [
         "akta_utama": "Akta 852",
         "tajuk": "Iklan, Poster, Bunting atau Promosi Produk Vape / Rokok (Fizikal atau Skrin Digital)",
         "keywords": [
-            "iklan", "poster", "bunting", "papan iklan", "promosi", "tajaan", "skrin", "media sosial",
-            "seksyen 7", "seksyen 9",
+            "iklan rokok", "iklan vape", "papan iklan", "poster iklan", "bunting", "promosi vape",
+            "tajaan", "skrin digital", "media sosial", "seksyen 7 akta 852", "seksyen 9 akta 852",
         ],
-        "keputusan_tindakan": "SITA POSTER/IKLAN & BUKA IP TERUS (atau Kompaun ikut jadual P.U.(A) 259/2024)",
+        "keputusan_tindakan": "SITA POSTER/IKLAN (S.35/S.36) & BUKA IP TERUS (S.7(1) TIDAK BOLEH KOMPAUN di bawah P.U.(A) 259/2024)",
         "sesuai_buka_ip": True,
         "alasan_keputusan": (
-            "Kes iklan dan promosi vape melanggar Seksyen 7(1) / Seksyen 9(1) Akta 852. Bahan iklan fizikal perlu disita di bawah S.35/36, "
-            "atau jika iklan dipapar di skrin/internet, perlu tangkapan skrin bercetak dengan Sijil Seksyen 90A(2) untuk membuka IP."
+            "Kes iklan dan promosi vape melanggar Seksyen 7(1) / Seksyen 9(1) Akta 852. "
+            "Seksyen 7(1) tidak disenaraikan sebagai kesalahan boleh kompaun di bawah Jadual Pertama P.U. (A) 259/2024; "
+            "bahan iklan fizikal wajib disita di bawah S.35/36, atau tangkapan skrin digital dicetak dengan Sijil Seksyen 90A(2) untuk membuka IP."
         ),
         "cadangan_pertuduhan": [
             {
@@ -244,7 +259,7 @@ UIP_SCENARIO_LIBRARY: List[Dict[str, Any]] = [
                 "seksyen_kesalahan": "Seksyen 7(1) Akta 852 [atau Seksyen 9(1) jika promosi harga/diskaun]",
                 "seksyen_hukuman": "Seksyen 7(2) [Individu] / Seksyen 7(3) [Pertubuhan Perbadanan] Akta 852",
                 "hukuman_maksimum": "Individu: Denda maks RM20,000 / penjara 1 tahun | Syarikat: Denda RM20,000 – RM100,000",
-                "boleh_kompaun": "Boleh dikompaun mengikut jadual P.U. (A) 259/2024 atau terus Buka IP bagi kesalahan serius/berulang.",
+                "boleh_kompaun": "TIDAK BOLEH KOMPAUN di bawah Jadual Pertama P.U. (A) 259/2024 bagi S.7(1) — wajib buka IP untuk pendakwaan.",
             }
         ],
         "sop_lapangan": [
@@ -270,9 +285,11 @@ UIP_SCENARIO_LIBRARY: List[Dict[str, Any]] = [
         "akta_utama": "Akta 281",
         "tajuk": "Restoran / Premis Makanan Kotor (Markah < 70%, Najis Tikus, Lipas, LILATI)",
         "keywords": [
-            "premis kotor", "kotor", "tikus", "najis tikus", "lipas", "lalat", "lilati", "perangkap minyak",
-            "tutup premis", "seksyen 11", "peraturan 11", "peraturan 34", "70%",
+            "premis kotor", "dapur kotor", "najis tikus", "lipas", "lalat", "lilati", "perangkap minyak",
+            "tutup premis makanan", "seksyen 11 akta 281", "peraturan 11", "peraturan 34", "70%",
+            "kotor", "tikus",
         ],
+        "negative_keywords": ["taska", "tadika", "hfmd", "kolam renang"],
         "keputusan_tindakan": "DUA TINDAKAN SERENTAK: Perintah Tutup S.11 Akta 281 + Notis Kompaun S.32B (Buka IP jika ingkar/tak bayar)",
         "sesuai_buka_ip": True,
         "alasan_keputusan": (
@@ -325,8 +342,8 @@ UIP_SCENARIO_LIBRARY: List[Dict[str, Any]] = [
         "akta_utama": "Akta 281",
         "tajuk": "Pengendali Makanan Tiada Suntikan Anti-Tifoid, Tiada Sijil Latihan (LPM) atau Tidak Pakai Apron",
         "keywords": [
-            "tifoid", "typhoid", "suntikan", "vaksin", "lpm", "latihan pengendali", "apron",
-            "penutup kepala", "kasut", "kuku", "cincin", "peraturan 30", "peraturan 31", "peraturan 32", "peraturan 33",
+            "suntikan tifoid", "tiada tifoid", "tifoid", "typhoid", "suntikan", "sijil lpm", "slpm", "latihan pengendali",
+            "apron", "penutup kepala", "kasut bertutup", "kuku panjang", "cincin", "peraturan 30", "peraturan 31", "peraturan 32", "peraturan 33",
         ],
         "keputusan_tindakan": "KOMPAUN DAHULU (Notis Seksyen 32B Akta 281); BUKA IP JIKA GAGAL BAYAR KOMPAUN",
         "sesuai_buka_ip": False,
@@ -351,9 +368,9 @@ UIP_SCENARIO_LIBRARY: List[Dict[str, Any]] = [
             },
             {
                 "perihal": "Tidak memakai pakaian bersih / apron cerah / penutup kepala / kasut bertutup",
-                "seksyen_kesalahan": "Peraturan 32(1) PPKM 2009 [Kuku/jam/cincin: Peraturan 33(1)]",
-                "seksyen_hukuman": "Peraturan 32(2) PPKM 2009 [Peraturan 33(2)]",
-                "hukuman_maksimum": "Denda tidak melebihi RM10,000 atau penjara tidak melebihi 2 tahun",
+                "seksyen_kesalahan": "Peraturan 32(1) PPKM 2009 [Kebersihan diri / kuku / cincin: Peraturan 33(1)]",
+                "seksyen_hukuman": "Peraturan 32(3) PPKM 2009 [Peraturan 33(2) bagi P.33]",
+                "hukuman_maksimum": "Peraturan 32(3): Denda tidak melebihi RM1,000 sahaja | Peraturan 33(2): Denda maks RM10,000 atau penjara 2 tahun",
                 "boleh_kompaun": "Boleh kompaun melalui Notis Seksyen 32B Akta Makanan 1983.",
             },
         ],
@@ -382,9 +399,11 @@ UIP_SCENARIO_LIBRARY: List[Dict[str, Any]] = [
         "akta_utama": "Akta 281",
         "tajuk": "Makanan Tercemar Benda Asing (Lipas/Paku/Logam), Bahan Beracun atau Punca Keracunan Makanan",
         "keywords": [
-            "keracunan", "benda asing", "paku", "kaca", "bangkai", "beracun", "kimia", "bakteria",
-            "persampelan", "sampel makanan", "juruanalisis", "mkak", "seksyen 13", "seksyen 13b", "seksyen 19",
+            "keracunan makanan", "keracunan", "benda asing", "paku dalam makanan", "serpihan kaca", "bangkai",
+            "bahan beracun", "bahan kimia", "persampelan makanan", "sampel makanan", "juruanalisis",
+            "mkak", "seksyen 13 akta 281", "seksyen 13b", "seksyen 19",
         ],
+        "negative_keywords": ["jual rokok", "obd", "tamat tempoh", "expired"],
         "keputusan_tindakan": "WAJIB BUKA IP TERUS TANPA KOMPAUN (Kes Tidak Boleh Dikompaun — Izin Dakwa TPR S.32A)",
         "sesuai_buka_ip": True,
         "alasan_keputusan": (
@@ -435,9 +454,10 @@ UIP_SCENARIO_LIBRARY: List[Dict[str, Any]] = [
         "akta_utama": "Akta 154",
         "tajuk": "Pembiakan Larva Nyamuk Aedes di Rumah Kediaman / Premis Perniagaan",
         "keywords": [
-            "aedes", "larva", "jentik", "jentik-jentik", "denggi", "takungan", "nyamuk",
-            "seksyen 13", "ak 154", "154", "entomologi", "kediaman", "premis",
+            "aedes", "larva", "jentik-jentik", "jentik", "denggi", "takungan air", "takungan",
+            "nyamuk", "entomologi", "seksyen 13 akta 154", "ak 154", "pembiakan nyamuk",
         ],
+        "negative_keywords": ["tapak bina", "tapak pembinaan", "kontraktor", "cidb", "fogging", "halang semburan"],
         "keputusan_tindakan": "KOMPAUN S.25 DAHULU (Maksimum RM500 — 14 Hari); BUKA IP JIKA GAGAL BAYAR",
         "sesuai_buka_ip": False,
         "alasan_keputusan": (
@@ -481,8 +501,8 @@ UIP_SCENARIO_LIBRARY: List[Dict[str, Any]] = [
         "akta_utama": "Akta 154",
         "tajuk": "Pembiakan Larva Aedes di Tapak Pembinaan & Perintah Penutupan Tapak Binaan",
         "keywords": [
-            "tapak bina", "tapak pembinaan", "construction", "kontraktor", "cidb", "seksyen 8",
-            "perintah tutup tapak", "pemaju", "loa", "projek",
+            "tapak bina", "tapak pembinaan", "construction site", "kontraktor utama", "kontraktor",
+            "cidb", "perintah tutup tapak", "pemaju", "surat setuju terima", "seksyen 8 akta 154",
         ],
         "keputusan_tindakan": "WAJIB BUKA IP TERUS TANPA KOMPAUN + KELUARKAN PERINTAH SEKSYEN 8(1) AKTA 154",
         "sesuai_buka_ip": True,
@@ -534,9 +554,17 @@ UIP_SCENARIO_LIBRARY: List[Dict[str, Any]] = [
         "akta_utama": "Akta 342",
         "tajuk": "Pesakit Tibi (PTB Smear Positif) Cicir Rawatan / Ingkar Perintah Rawatan atau Halang Pegawai",
         "keywords": [
-            "tibi", "tb", "tuberkulosis", "cicir rawatan", "cicir ubat", "defaulter", "smear positif",
-            "tbis", "mdr-tb", "penyakit berjangkit", "seksyen 22", "seksyen 24", "ak 342", "342", "arahan rawatan",
+            "smear positif", "afb positif", "cicir rawatan", "cicir ubat", "mangkir rawatan",
+            "defaulter", "tbis 10d", "mdr-tb", "tbis 10a-1", "sambung rawatan",
+            "ingkar perintah rawatan", "seksyen 22(b)", "seksyen 22 akta 342", "arahan rawatan",
+            "tibi", "tuberkulosis",
         ],
+        "negative_keywords": [
+            "smear negatif", "afb negatif", "ptb smear negatif", "disaring tibi", "saringan tibi",
+            "belum mula rawatan", "taknak mulakan", "taknak mula", "enggan mulakan", "enggan mula",
+            "mula rawatan", "mulakan rawatan", "presumptive",
+        ],
+        "incompatible_with": ["ak342_tibi_smear_negatif_enggan_mula"],
         "keputusan_tindakan": "BUKA IP TERUS TANPA KOMPAUN (Seksyen 22(b) & Seksyen 24(a) Akta 342 [APPPB 88])",
         "sesuai_buka_ip": True,
         "alasan_keputusan": (
@@ -575,7 +603,279 @@ UIP_SCENARIO_LIBRARY: List[Dict[str, Any]] = [
             "Perbuatan ini melanggar Seksyen 22(b) Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988 [Akta 342] dan boleh dihukum di bawah Seksyen 24(a) akta yang sama."
         ),
     },
+    {
+        "id": "ak342_tibi_smear_negatif_enggan_mula",
+        "akta_utama": "Akta 342",
+        "tajuk": "Kes Disaring Tibi / PTB Smear Negatif (AFB Negatif) Enggan Memulakan Rawatan",
+        "keywords": [
+            "smear negatif", "afb negatif", "ptb smear negatif", "disaring tibi", "saringan tibi",
+            "mula rawatan", "mulakan rawatan", "belum mula rawatan", "taknak mulakan", "taknak mula",
+            "enggan mulakan", "enggan mula", "genexpert", "kultur tibi", "presumptive tb", "aor tibi",
+            "seksyen 14 akta 342", "seksyen 15(1)", "tibi", "ptb",
+        ],
+        "negative_keywords": ["smear positif", "afb positif", "cicir rawatan", "cicir ubat", "tbis 10d", "defaulter"],
+        "incompatible_with": ["ak342_tibi_ingkar"],
+        "keputusan_tindakan": "SAHKAN DIAGNOSIS KLINIKAL DAHULU (MO/FMS — CXR/GeneXpert/Kultur TBIS 20C) & SERAH NOTIS ARAHAN SAH — JANGAN TERUS BUKA IP S.22(b)",
+        "sesuai_buka_ip": False,
+        "alasan_keputusan": (
+            "Kes disaring Tibi atau PTB Smear Negatif (AFB Negatif) yang enggan memulakan rawatan TIDAK sama dengan kes PTB Smear Positif cicir rawatan (TBIS 10D). "
+            "Jika kes masih peringkat saringan atau keputusan kahak AFB negatif tanpa pengesahan klinikal MO/FMS (CXR/GeneXpert MTB/kultur TBIS 20C) serta tanpa Notis Arahan bertulis yang diserahkan secara tangan, "
+            "pembukaan IP Seksyen 22(b) berisiko tinggi ditolak TPR/Mahkamah kerana gagal membuktikan pesakit disahkan menghidap penyakit berjangkit aktif dan tiada perintah statutori sah yang diingkari. "
+            "Sahkan diagnosis klinikal & e-Notifikasi S.10 dahulu; guna S.15(1)/S.18(1)(a) untuk ujian lanjut atau S.14/Notis Arahan Rawatan bertulis — hanya buka IP S.22(b) & S.24 jika pesakit masih ingkar selepas serahan tangan notis sah."
+        ),
+        "cadangan_pertuduhan": [
+            {
+                "perihal": "Fasa 1 (Saringan / Belum Disahkan Aktif): Perintah Pemerhatian, Pengawasan & Ujian Lanjutan",
+                "seksyen_kesalahan": "Seksyen 15(1) & Seksyen 18(1)(a)/(f) Akta 342 [APPPB 1988] + kaunseling & Borang Enggan Rawatan (AOR)",
+                "seksyen_hukuman": "Seksyen 22(b) dibaca bersama Seksyen 24 Akta 342 (hanya jika ingkar Perintah bertulis S.15(1) yang diserahkan)",
+                "hukuman_maksimum": "Pindaan Akta A1742 (kuat kuasa 1 Mei 2025): Individu denda maks RM10,000 atau penjara maks 2 tahun atau kedua-duanya.",
+                "boleh_kompaun": "JANGAN buka IP S.22(b) atau tuduh MDR-TB selagi ujian pengesahan (GeneXpert/Kultur/MO) & notis bertulis belum lengkap.",
+            },
+            {
+                "perihal": "Fasa 2 (Selepas Disahkan PTB Aktif oleh MO/FMS & Dinotifikasi S.10): Ingkar Notis Arahan Rawatan / Pengasingan S.14",
+                "seksyen_kesalahan": "Seksyen 22(b) Akta 342 [ingkar Notis Arahan Menjalani Rawatan / Perintah Pengasingan Seksyen 14 bertulis]",
+                "seksyen_hukuman": "Seksyen 24 Akta 342 [APPPB 1988] (pindaan Akta A1742; atau S.24(a)/(b) bagi kesalahan terdahulu)",
+                "hukuman_maksimum": "Denda maks RM10,000 atau penjara tidak melebihi 2 tahun atau kedua-duanya.",
+                "boleh_kompaun": "Buka IP terus HANYA selepas bukti diagnosis aktif MO/FMS & bukti serahan tangan Notis Arahan bertulis lengkap.",
+            },
+        ],
+        "sop_lapangan": [
+            "Semak status klinikal dengan Pegawai Perubatan (MO) / FMS / Pakar Klinik Tibi: adakah kes masih suspek saringan (presumptive TB) atau telah disahkan PTB Smear Negatif aktif berdasarkan CXR, GeneXpert MTB/RIF atau Kultur (C&S) pada Borang Makmal TBIS 20C.",
+            "Pastikan kes telah didaftarkan dalam e-Notifikasi (Seksyen 10 Akta 342 / Peraturan Borang Notis 2005) sekiranya disahkan menghidap Tibi aktif.",
+            "Jika keputusan pengesahan masih belum muktamad (tunggu GeneXpert/kultur): jalankan kaunseling bersemuka (MO + PPKP), rekod Borang Enggan Rawatan / AOR bertandatangan pesakit & saksi, dan pertimbangkan Perintah Pemerhatian/Pengawasan bertulis di bawah Seksyen 15(1) / S.18(1)(a) Akta 342 untuk hadir ujian pengesahan.",
+            "Hanya apabila MO/FMS mengesahkan PTB aktif dan rawatan wajib dimulakan: keluarkan Notis Arahan Menjalani Rawatan Penyakit Berjangkit / Perintah Seksyen 14 secara bertulis dan buat SERAHAN TANGAN RASMI (tandatangan terima pesakit + saksi PPKP, atau catatan 'Enggan Tandatangan' + saksi + Pos Berdaftar AR).",
+            "Sekiranya pesakit masih ingkar tarikh dalam notis bertulis tersebut, barulah buka Fail IP Seksyen 22(b) dengan melampirkan Laporan Pengesahan MO/FMS (wajib sebagai saksi mahkamah), keputusan GeneXpert/Kultur/CXR, notis asal, S.112 KTJ dan Diari Siasatan.",
+        ],
+        "eksibit_wajib": [
+            "Laporan Pengesahan Klinikal Bertulis MO / FMS / Pakar Perubatan (mengesahkan PTB Smear Negatif aktif melalui CXR / GeneXpert MTB / Kultur)",
+            "Keputusan Makmal TBIS 20C (AFB Smear Negatif serta keputusan GeneXpert MTB/RIF atau Kultur & Sensitiviti)",
+            "Cetakan e-Notifikasi Seksyen 10 Akta 342 + Sijil Seksyen 90A(2) Akta Keterangan 1950",
+            "Borang Kaunseling & Borang Enggan Rawatan / Surat AOR (bagi fasa penolakan awal klinik)",
+            "Notis Arahan Menjalani Rawatan / Perintah S.14 atau S.15(1) bertandatangan terima pesakit & saksi PPKP (WAJIB wujud sebelum IP S.22(b) dibuka)",
+        ],
+        "perangkap_kesilapan": [
+            "JANGAN paksa pakai templat 'PTB Smear Positif Cicir Rawatan' atau nyatakan pesakit telah 'mula & cicir ubat / TBIS 10D' sedangkan rawatan belum pernah dimulakan dan AFB negatif — TPR akan menolak dakwaan kerana percanggahan fakta material (S.152–154 KTJ)!",
+            "Arahan lisan doktor/jururawat di klinik BUKAN perintah statutori bertulis di bawah Seksyen 22(b) — notis/perintah bertulis Akta 342 wajib diserahkan dahulu sebelum kesalahan ingkar terbentuk.",
+            "Jangan tulis 'Akta 514' (OSHA 1994); semua tindakan kawalan Tibi ialah di bawah Akta 342 [APPPB 1988].",
+        ],
+        "templat_ringkas": (
+            "Kesalahan / Siasatan: Pengendalian kes disaring Tibi / PTB Smear Negatif (AFB Negatif) yang enggan memulakan rawatan di klinik kesihatan. "
+            "Tindakan statutori dijalankan mengikut Seksyen 15(1) / Seksyen 14 Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988 [Akta 342] selepas pengesahan diagnosis oleh Pegawai Perubatan melalui CXR/GeneXpert/Kultur TBIS 20C serta e-Notifikasi Seksyen 10, "
+            "sebelum pertimbangan pendakwaan Seksyen 22(b) & Seksyen 24 Akta 342 sekiranya notis perintah bertulis serahan tangan diingkari."
+        ),
+    },
+    {
+        "id": "ak342_wabak_tutup_premis_hfmd",
+        "akta_utama": "Akta 342",
+        "tajuk": "Wabak Penyakit Berjangkit di Taska / Tadika / Sekolah / Kolam Rekreasi (HFMD / Leptospirosis) & Saringan Kontak",
+        "keywords": [
+            "hfmd", "taska", "tadika", "wabak", "kolam renang", "leptospirosis", "kencing tikus",
+            "measles", "difteria", "kolera", "kontak rapat", "tutup taska", "seksyen 18(1)(d)",
+            "seksyen 18 akta 342", "enggan saringan", "e-notifikasi", "klinik swasta gagal notifikasi",
+        ],
+        "negative_keywords": ["dapur restoran", "lemak grease trap", "lilati"],
+        "keputusan_tindakan": "PERINTAH TUTUP / DISINFEKSI S.18(1)(d)&(f) AKTA 342 (atau S.15(1) Pengawasan Kontak; S.10(2) jika klinik gagal notifikasi)",
+        "sesuai_buka_ip": True,
+        "alasan_keputusan": (
+            "Premis bukan makanan seperti taska, tadika, sekolah, pusat rekreasi atau kem yang menjadi kluster wabak HFMD, Leptospirosis atau Measles "
+            "ditutup untuk kerja disinfeksi dan kawalan perebakan menggunakan Seksyen 18(1)(d) & (f) Akta 342 (BUKAN Seksyen 11 Akta 281 yang khusus untuk premis makanan!). "
+            "Kontak rapat berisiko yang enggan menjalani pemeriksaan/pengawasan boleh diarahkan melalui Perintah Seksyen 15(1)."
+        ),
+        "cadangan_pertuduhan": [
+            {
+                "perihal": "Ingkar perintah penutupan premis wabak / halang kerja disinfeksi atau langkah kawalan wabak",
+                "seksyen_kesalahan": "Seksyen 22(b) / Seksyen 22(a) Akta 342 (ingkar Perintah Seksyen 18(1)(d) / halang pegawai)",
+                "seksyen_hukuman": "Seksyen 24 Akta 342 [APPPB 1988]",
+                "hukuman_maksimum": "Individu: Denda maks RM10,000 / penjara maks 2 tahun | Syarikat: Denda maks RM100,000 (Akta A1742).",
+                "boleh_kompaun": "Perintah Tutup S.18(1)(d) dikuatkuasa serta-merta; jika diingkari, terus buka IP S.22(b) tanpa kompromi keselamatan kanak-kanak/awam.",
+            }
+        ],
+        "sop_lapangan": [
+            "Sahkan kes kluster wabak melalui semakan e-Notifikasi (Seksyen 10 Akta 342) dan siasatan epidemiologi lapangan.",
+            "Serahkan Notis Perintah Penutupan Premis Sementara di bawah Seksyen 18(1)(d) Akta 342 kepada pengusaha taska/sekolah/pusat rekreasi berserta arahan pembersihan & disinfeksi di bawah Seksyen 18(1)(f).",
+            "Jika terdapat kontak rapat yang enggan disaring atau diasingkan sementara, keluarkan Perintah Pemerhatian/Pengawasan bertulis di bawah Seksyen 15(1) Akta 342.",
+            "Bagi pengamal perubatan/klinik swasta yang gagal membuat notifikasi penyakit berjangkit, dokumentasikan bukti rekod pesakit dan buka kertas siasatan Seksyen 10(2) Akta 342.",
+        ],
+        "eksibit_wajib": [
+            "Notis Perintah Penutupan Premis Seksyen 18(1)(d) / Seksyen 15(1) Akta 342 bertandatangan terima",
+            "Rekod e-Notifikasi kes indeks & laporan siasatan wabak epidemiologi PKD",
+            "Gambar foto lokasi kluster/tampalan notis penutupan + Sijil S.90A(2)",
+        ],
+        "perangkap_kesilapan": [
+            "JANGAN guna Seksyen 11 Akta Makanan 1983 untuk menutup taska/tadika/kolam renang — gunakan Seksyen 18(1)(d) Akta 342!",
+            "Pastikan tarikh kuat kuasa & syarat pembukaan semula (pemeriksaan disinfeksi lulus) dinyatakan jelas dalam perintah penutupan.",
+        ],
+        "templat_ringkas": (
+            "Kesalahan / Tindakan: Penutupan premis bukan makanan dan arahan disinfeksi bagi membendung penularan wabak penyakit berjangkit "
+            "di bawah Seksyen 18(1)(d) & Seksyen 18(1)(f) Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988 [Akta 342]. "
+            "Sebarang keingkaran terhadap perintah tersebut merupakan kesalahan di bawah Seksyen 22(b) dan boleh dihukum di bawah Seksyen 24 akta yang sama."
+        ),
+    },
+    {
+        "id": "ak281_makanan_luput_label",
+        "akta_utama": "Akta 281",
+        "tajuk": "Makanan Tamat Tempoh (Expired), Pelabelan Tiada Bahasa Melayu atau Mesin Jual Air / Premis Tak Berdaftar",
+        "keywords": [
+            "tamat tempoh", "luput tarikh", "tarikh luput", "expired", "peraturan 14(9)",
+            "label bahasa melayu", "tiada label", "peraturan 10", "mesin jual air", "mja",
+            "360c", "tidak berdaftar fosim", "fosim", "peraturan 3", "ppm 1985",
+        ],
+        "negative_keywords": ["benda asing", "keracunan", "paku"],
+        "keputusan_tindakan": "SITA STOK / LAK MESIN (S.4(1)(f) AKTA 281) & NOTIS S.32B / BUKA IP (ikut jenis kesalahan & nilai kes)",
+        "sesuai_buka_ip": True,
+        "alasan_keputusan": (
+            "Menjual makanan tamat tarikh luput (Peraturan 14(9) PPM 1985), pelabelan tidak mematuhi Peraturan 10/11 PPM 1985, "
+            "mengendali Mesin Jual Air tanpa lesen sah KKM (Peraturan 360C(4) PPM 1985), atau menjalankan premis makanan tanpa pendaftaran FoSIM (Peraturan 3(1) PPKM 2009) "
+            "wajib didokumentasikan dengan sitaan produk/mesin dan tindakan Notis S.32B atau buka IP sekiranya berskala besar/berulang/ingkar."
+        ),
+        "cadangan_pertuduhan": [
+            {
+                "perihal": "Menjual / mempamer untuk jualan makanan yang telah tamat tarikh luput (expired)",
+                "seksyen_kesalahan": "Peraturan 14(9)(b) Peraturan-Peraturan Makanan 1985 [Ubah tarikh luput: P.14(7)]",
+                "seksyen_hukuman": "Seksyen 32A / Peraturan 397 PPM 1985 dibaca bersama Akta Makanan 1983 [Akta 281]",
+                "hukuman_maksimum": "Denda tidak melebihi RM10,000 atau penjara tidak melebihi 2 tahun atau kedua-duanya.",
+                "boleh_kompaun": "Sita semua stok tamat tempoh di bawah S.4(1)(f) Akta 281; boleh tawar kompaun S.32B atau buka IP bagi kesalahan besar/berulang.",
+            },
+            {
+                "perihal": "Mengendali Mesin Jual Air (MJA) tanpa lesen KKM / Premis tak daftar FoSIM",
+                "seksyen_kesalahan": "Peraturan 360C(4) PPM 1985 [MJA] / Peraturan 3(1) PPKM 2009 [Tiada Pendaftaran Premis]",
+                "seksyen_hukuman": "Peraturan 397 PPM 1985 / Peraturan 3(2) PPKM 2009",
+                "hukuman_maksimum": "Denda tidak melebihi RM10,000 atau penjara tidak melebihi 2 tahun.",
+                "boleh_kompaun": "Lak/tahan operasi MJA tanpa lesen; premis tak daftar FoSIM lazimnya boleh dikompaun S.32B berserta arahan daftar.",
+            },
+        ],
+        "sop_lapangan": [
+            "Ambil gambar produk di rak jualan menunjukkan dengan jelas tarikh luput (EXP/Best Before) atau keadaan label sebelum dialihkan.",
+            "Sita kesemua unit makanan tamat tempoh atau tanpa label sah di bawah Seksyen 4(1)(f) Akta Makanan 1983, senaraikan kuantiti/jenama dan dapatkan tandatangan terima pemilik.",
+            "Bagi Mesin Jual Air (MJA) tanpa lesen P.360C atau lesen tamat tempoh 2 tahun, rekod nombor siri mesin, pemilik syarikat pada pelekat mesin & SSM sebelum tindakan pengelakan/kompaun.",
+        ],
+        "eksibit_wajib": [
+            "Sampel/stok produk makanan tamat tempoh atau berlabel salah yang disita & dilak (P1..Pn)",
+            "Borang Senarai Barang Disita & resit pembelian (jika ujian beli) / gambar tarikh luput + Sijil S.90A(2)",
+            "Carian SSM syarikat pengendali/peruncit berserta Sijil S.90A",
+        ],
+        "perangkap_kesilapan": [
+            "Jangan campurkan tarikh luput (P.14(9) PPM 1985) dengan makanan rosak/tercemar fizikal (S.13B Akta 281) tanpa membezakan fakta kesalahan pada Borang 114.",
+            "Bagi produk tamat tempoh, pastikan tarikh tamat pada bungkusan jelas terbaca dalam gambar bukti sebelum kes tamat tempoh dipertikai pembelaan.",
+        ],
+        "templat_ringkas": (
+            "Kesalahan: Menjual atau mendedahkan untuk jualan makanan yang telah tamat tempoh tarikh akhir penggunaan yang melanggar "
+            "Peraturan 14(9)(b) Peraturan-Peraturan Makanan 1985 di bawah Akta Makanan 1983 [Akta 281]. "
+            "Semua produk terlibat telah disita di bawah Seksyen 4(1)(f) Akta Makanan 1983 bagi tujuan pembuktian."
+        ),
+    },
+    {
+        "id": "ak154_halang_fogging_ingkar_s8",
+        "akta_utama": "Akta 154",
+        "tajuk": "Menghalang Pegawai Semburan Kabus (Fogging) atau Ingkar Perintah Pembersihan Seksyen 8(1) Akta 154",
+        "keywords": [
+            "halang fogging", "halang semburan", "fogging", "semburan kabus", "seksyen 21 akta 154",
+            "ingkar perintah seksyen 8", "seksyen 8(8)", "lot semak", "tanah terbiar", "enggan bagi masuk",
+        ],
+        "negative_keywords": ["tapak pembinaan", "cidb", "kontraktor utama"],
+        "keputusan_tindakan": "BUKA IP TERUS TANPA KOMPAUN (Seksyen 21 / Seksyen 8(8) Akta 154) & BANTUAN POLIS S.24 JIKA PERLU",
+        "sesuai_buka_ip": True,
+        "alasan_keputusan": (
+            "Menghalang, menggertak atau enggan memberi akses kepada pegawai KKM menjalankan semburan kabus (fogging) dan kawalan denggi "
+            "ialah kesalahan jenayah serius di bawah Seksyen 21 Akta 154. Begitu juga kegagalan mematuhi Notis/Perintah Pembersihan Seksyen 8(1) selepas tamat tempoh notis ialah kesalahan Seksyen 8(8) Akta 154. "
+            "Kedua-duanya wajib dibuka IP untuk pendakwaan dan boleh memohon bantuan PDRM di bawah Seksyen 24 Akta 154 jika dihalang keras."
+        ),
+        "cadangan_pertuduhan": [
+            {
+                "perihal": "Menghalang / mengganggu pegawai diberi kuasa menjalankan tugas pemeriksaan atau semburan kabus (fogging)",
+                "seksyen_kesalahan": "Seksyen 21 Akta Pemusnahan Serangga Pembawa Penyakit 1975 [Akta 154]",
+                "seksyen_hukuman": "Seksyen 21 dibaca bersama Seksyen 23 Akta 154",
+                "hukuman_maksimum": "Denda tidak melebihi RM10,000 atau penjara tidak melebihi 2 tahun atau kedua-duanya.",
+                "boleh_kompaun": "BUKA IP TERUS — kesalahan menghalang pegawai tidak wajar diselesaikan dengan kompaun biasa.",
+            },
+            {
+                "perihal": "Ingkar Perintah Pembersihan / Pemusnahan Tempat Pembiakan Seksyen 8(1)",
+                "seksyen_kesalahan": "Seksyen 8(8) Akta Pemusnahan Serangga Pembawa Penyakit 1975 [Akta 154]",
+                "seksyen_hukuman": "Seksyen 23(a) Akta 154",
+                "hukuman_maksimum": "Kesalahan pertama: Denda <= RM10,000 atau penjara <= 2 tahun atau kedua-duanya.",
+                "boleh_kompaun": "Buka IP Terus (boleh disusuli kerja pembersihan oleh pihak berkuasa & tuntutan kos di bawah S.8(6)-(7)).",
+            },
+        ],
+        "sop_lapangan": [
+            "Tunjukkan Kad Kuasa Rasmi KKM serta terangkan tujuan semburan kabus/pemeriksaan secara berhemah dan rekodkan butiran penolakan dalam Diari Siasatan serta rakaman S.112 saksi PPKP/pasukan kawalan vektor.",
+            "Jika diugut atau dihalang keras di lokasi wabak denggi, buat laporan polis dan mohon bantuan polis di bawah Seksyen 24 Akta 154.",
+            "Bagi kes S.8(8), pastikan Notis Perintah Seksyen 8(1) asal mempunyai bukti serahan rasmi (tangan/tampal + gambar tarikh serah & tarikh tamat notis sebelum pemeriksaan ulangan).",
+        ],
+        "eksibit_wajib": [
+            "Laporan Polis (jika ancaman/halangan keras) & Diari Siasatan pasukan fogging / vektor",
+            "Notis Perintah Seksyen 8(1) bertandatangan terima / bukti tampalan premis (bagi kes S.8(8))",
+            "Gambar foto sebelum dan selepas tamat tempoh notis + Sijil S.90A(2)",
+            "Percakapan S.112 KTJ PPKP & pembantu kesihatan awam (saksi kejadian)",
+        ],
+        "perangkap_kesilapan": [
+            "Jangan lupa buktikan serahan sah Notis Seksyen 8(1) terlebih dahulu sebelum menuduh di bawah Seksyen 8(8)!",
+            "Asingkan pertuduhan S.21 (halangan) dan S.13(1) (pembiakan) dalam Borang 114 berasingan.",
+        ],
+        "templat_ringkas": (
+            "Kesalahan: Menghalang pegawai diberi kuasa daripada menjalankan pemeriksaan / semburan kabus kawalan vektor Aedes "
+            "yang melanggar Seksyen 21 Akta Pemusnahan Serangga Pembawa Penyakit 1975 [Akta 154]."
+        ),
+    },
+    {
+        "id": "ak_silang_agensi_kacau_ganggu_racun",
+        "akta_utama": "Rujukan Silang Agensi (Akta 171 / Akta 366 / Akta 586 / Akta 260)",
+        "tajuk": "Kes Kacau Ganggu PBT (Akta 171), Vape Dadah/Racun (Akta 366), Klinik Swasta (Akta 586) & Pengasapan (Akta 260)",
+        "keywords": [
+            "kacau ganggu", "bau busuk", "najis lembu", "ternakan", "parit tersumbat", "akta 171",
+            "racun berjadual", "magic mushroom", "vape dadah", "akta 366", "akta 368", "farmasi",
+            "ckaps", "klinik tak berdaftar", "akta 586", "hidrogen sianida", "pengasapan", "fumigation", "akta 260",
+            "pencemaran sungai", "jas", "akta 127",
+        ],
+        "keputusan_tindakan": "SIASAT AWAL & RUJUK SILANG AGENSI BERKUASA (PBT / Farmasi JKN / PDRM / CKAPS / JAS)",
+        "sesuai_buka_ip": False,
+        "alasan_keputusan": (
+            "Kes seperti bau busuk/kumbahan bukan makanan (Seksyen 80–82 Akta Kerajaan Tempatan 1976 [Akta 171]), cecair vape disyaki mengandungi dadah/racun berjadual (Akta Racun 1952 [Akta 366] / Akta Jualan Dadah [Akta 368]), "
+            "klinik swasta tidak berdaftar (Akta 586 CKAPS) atau pencemaran industri (Akta 127 JAS) berada di bawah akta khusus atau tindakan bersepadu. "
+            "Rujuk silang agensi berkenaan supaya tindakan tidak dibatalkan atas alasan luar bidang kuasa (ultra vires)."
+        ),
+        "cadangan_pertuduhan": [
+            {
+                "perihal": "Kacau ganggu kesihatan awam (bau busuk ternakan, longkang, sisa domestik bukan makanan)",
+                "seksyen_kesalahan": "Seksyen 80, 81 & 82 Akta Kerajaan Tempatan 1976 [Akta 171] (Bidang kuasa PBT)",
+                "seksyen_hukuman": "Peruntukan Notis Kacau Ganggu PBT di bawah Akta 171",
+                "hukuman_maksimum": "Perintah menghentikan kacau ganggu PBT / denda & kos kerja pembetulan oleh PBT.",
+                "boleh_kompaun": "PPKP siasat punca vektor/air; rujuk kes kacau ganggu bukan pembiakan Aedes kepada PBT.",
+            },
+            {
+                "perihal": "Cecair vape disyaki mengandungi dadah sintetik / racun berjadual (atau pengasapan gas beracun Akta 260)",
+                "seksyen_kesalahan": "Akta Racun 1952 [Akta 366] / Akta Dadah Berbahaya 1952 / Akta 260 [Pengasapan Hidrogen Sianida]",
+                "seksyen_hukuman": "Disiasat Penguatkuasaan Farmasi JKN / JSJN PDRM (atau Unit Kesihatan Pekerjaan KKM bagi Akta 260)",
+                "hukuman_maksimum": "Tertakluk penalti jenayah berat di bawah Akta Racun / Dadah / Akta 260.",
+                "boleh_kompaun": "Serah/operasi bersepadu bersama Cawangan Penguatkuasaan Farmasi JKN / PDRM & ujian makmal Jabatan Kimia.",
+            },
+        ],
+        "sop_lapangan": [
+            "Jalankan siasatan awal di lokasi untuk mengesahkan fakta (adakah terdapat pembiakan Aedes di bawah Akta 154 atau pencemaran air KMAM/BAKAS).",
+            "Jika kes sahih melibatkan kacau ganggu PBT (Akta 171), tulis minit rujukan rasmi berserta gambar bertarikh kepada Jabatan Kesihatan/Penguatkuasaan PBT.",
+            "Jika menemui perisa vape disyaki racun/dadah atau ubat tanpa nombor MAL/NOT, JANGAN sita bersendirian tanpa koordinasi — hubungi segera Penguatkuasaan Farmasi JKN / PDRM (atau CKAPS JKN bagi klinik swasta Akta 586).",
+        ],
+        "eksibit_wajib": [
+            "Laporan Siasatan Awal PPKP berserta koordinat lokasi & gambar bertarikh (+ Sijil S.90A(2))",
+            "Surat / Memo Rujukan Rasmi Antara Agensi (PBT / Farmasi JKN / CKAPS / JAS / PDRM)",
+        ],
+        "perangkap_kesilapan": [
+            "JANGAN paksa guna Akta 154 atau Akta 281 untuk aduan bau tahi lembu atau longkang tersumbat tanpa penemuan larva Aedes atau pengendalian makanan — kes berisiko dicabar ultra vires.",
+        ],
+        "templat_ringkas": (
+            "Laporan Rujukan Silang Agensi: Siasatan awal mendapati isu terletak di bawah bidang kuasa / penguatkuasaan bersepadu "
+            "(Akta 171 PBT / Akta 366 Farmasi / Akta 586 CKAPS / Akta 260 / Akta 127 JAS). "
+            "Dokumen dan gambar lapangan dilampirkan untuk tindakan susulan pihak berkuasa berkaitan."
+        ),
+    },
 ]
+
+
+class _AdvisorChargeItemSchema(BaseModel):
+    perihal: str = Field(...)
+    seksyen_kesalahan: str = Field(...)
+    seksyen_hukuman: str = Field(...)
+    hukuman_maksimum: str = Field(...)
+    boleh_kompaun: str = Field(...)
 
 
 class _AdvisorLLMSchema(BaseModel):
@@ -583,7 +883,7 @@ class _AdvisorLLMSchema(BaseModel):
     keputusan_tindakan: str = Field(...)
     sesuai_buka_ip: bool = Field(...)
     alasan_keputusan: str = Field(...)
-    cadangan_pertuduhan: List[Dict[str, str]] = Field(default_factory=list)
+    cadangan_pertuduhan: List[_AdvisorChargeItemSchema] = Field(default_factory=list)
     sop_lapangan: List[str] = Field(default_factory=list)
     eksibit_wajib: List[str] = Field(default_factory=list)
     perangkap_kesilapan: List[str] = Field(default_factory=list)
@@ -593,9 +893,15 @@ class _AdvisorLLMSchema(BaseModel):
 class UIPAdvisorService:
     """Enjin Penasihat Undang-Undang & Prosedur Lapangan UIP KKM."""
 
+    MIN_SCENARIO_SCORE = 1.8
+
     def __init__(self, router: UIPModelRouter) -> None:
         self.router = router
         self._consult_cache: Dict[str, Dict[str, Any]] = {}
+
+    def clear_cache(self) -> None:
+        """Mengosongkan cache konsultasi apabila tetapan atau kunci API diubah."""
+        self._consult_cache.clear()
 
     def list_scenarios(self) -> List[Dict[str, Any]]:
         return [
@@ -611,34 +917,140 @@ class UIPAdvisorService:
         ]
 
     @staticmethod
+    def _kw_in_text(kw: str, text_low: str) -> bool:
+        """Padanan kata kunci bersempadan perkataan agar subkata seperti 'tb' tidak padan dalam 'ptb'."""
+        if not kw:
+            return False
+        return bool(re.search(rf"(?<!\w){re.escape(kw)}(?!\w)", text_low))
+
+    @classmethod
+    def _score_scenario(
+        cls,
+        scenario: Dict[str, Any],
+        q_low: str,
+        akta_hint: str = "Semua",
+    ) -> tuple[float, float, int, List[str]]:
+        """Mengira skor senario menggunakan padanan frasa terpanjang & penalti kata kunci negatif."""
+        matched_kws: List[str] = []
+        kw_score = 0.0
+        for kw in sorted(scenario.get("keywords", []), key=len, reverse=True):
+            kw_low = kw.lower()
+            if any(kw_low in prev for prev in matched_kws):
+                continue
+            if cls._kw_in_text(kw_low, q_low):
+                matched_kws.append(kw_low)
+                if " " in kw_low:
+                    kw_score += 3.2
+                elif len(kw_low) > 5:
+                    kw_score += 2.2
+                else:
+                    kw_score += 1.2
+
+        neg_hits = sum(
+            1 for nkw in scenario.get("negative_keywords", []) if cls._kw_in_text(nkw.lower(), q_low)
+        )
+        net_kw_score = kw_score - (neg_hits * 6.0)
+        act_bonus = (
+            0.8
+            if (akta_hint and akta_hint != "Semua" and akta_hint in str(scenario.get("akta_utama", "")))
+            else 0.0
+        )
+        return net_kw_score + act_bonus, net_kw_score, neg_hits, matched_kws
+
+    @staticmethod
+    def _build_rag_fallback_scenario(
+        question: str,
+        akta_hint: str,
+        rag_hits: List[Any],
+    ) -> Dict[str, Any]:
+        """Templat rujukan berasaskan RAG statutori apabila soalan di luar 16 templat teras."""
+        top_hit = rag_hits[0] if rag_hits else None
+        akta_label = (
+            akta_hint
+            if akta_hint and akta_hint != "Semua"
+            else (top_hit.akta_code if top_hit else "Akta Kesihatan Awam KKM")
+        )
+        citations_summary = ", ".join(
+            dict.fromkeys(f"{c.section} ({c.akta_code})" for c in rag_hits[:3])
+        ) or "Pangkalan data statutori tempatan"
+        return {
+            "id": "rag_custom_query",
+            "akta_utama": akta_label,
+            "tajuk": f"Rujukan Statutori UIP Mengikut Situasi Soalan ({akta_label})",
+            "keputusan_tindakan": (
+                f"RUJUK PERUNTUKAN STATUTORI TERPILIH ({citations_summary}) — SAHKAN FAKTA & SERAHAN NOTIS SEBELUM BUKA IP"
+            ),
+            "sesuai_buka_ip": False,
+            "alasan_keputusan": (
+                f"Soalan anda tiada padanan tepat dalam templat ringkas sedia ada, maka enjin memadankan peruntukan terdekat daripada stor undang-undang ({citations_summary}). "
+                "Klik butang Analisa AI untuk huraian kes khusus mengikut elemen pembuktian dan SOP PPKP."
+            ),
+            "cadangan_pertuduhan": [
+                {
+                    "perihal": f"Peruntukan berkaitan daripada {c.akta_title}",
+                    "seksyen_kesalahan": f"{c.section} ({c.akta_code})",
+                    "seksyen_hukuman": "Semak peruntukan penalti dalam petikan Akta di tab 'Petikan Akta'.",
+                    "hukuman_maksimum": c.max_fine_hint or "Tertakluk had hukuman di bawah Akta berkaitan.",
+                    "boleh_kompaun": c.is_compoundable_hint or "Semak jadual kompaun akta / rujuk Pegawai Pendakwa & UIP JKN.",
+                }
+                for c in rag_hits[:2]
+            ],
+            "sop_lapangan": [
+                "Tunjukkan Kad Kuasa Rasmi KKM sebelum memulakan pemeriksaan atau siasatan di lokasi.",
+                "Sahkan status entiti (MyKad OKT / carian rasmi SSM jika syarikat) dan bidang kuasa akta terpakai.",
+                "Rekod gambar bertarikh + Sijil S.90A(2), catat Diari Siasatan, dan rujuk petikan Akta berkaitan atau klik Analisa AI untuk langkah kes khusus.",
+            ],
+            "eksibit_wajib": [
+                "Diari Siasatan (DS) & Percakapan S.112 KTJ pegawai pengesan / saksi",
+                "Gambar foto lokasi/kejadian berwarna bertarikh + Sijil Seksyen 90A(2) Akta Keterangan 1950",
+                "Salinan Notis / Perintah bertulis bertandatangan terima (jika tindakan melibatkan pematuhan perintah)",
+            ],
+            "perangkap_kesilapan": [
+                "Pastikan akta dan seksyen yang digunakan berpadanan dengan status fakta lapangan serta kuasa di bawah akta tersebut.",
+            ],
+            "templat_ringkas": (
+                f"Rujukan siasatan awal di bawah {akta_label} berkaitan situasi: {question.strip()[:220]}."
+            ),
+        }
+
+    @classmethod
     def _match_composite_scenarios(
-        question: str, akta_hint: str = "Semua", scenario_id: Optional[str] = None
-    ) -> tuple[Dict[str, Any], float]:
+        cls,
+        question: str,
+        akta_hint: str = "Semua",
+        scenario_id: Optional[str] = None,
+    ) -> tuple[Dict[str, Any], float, bool]:
         if scenario_id:
             for s in UIP_SCENARIO_LIBRARY:
                 if s["id"] == scenario_id:
-                    return s, 10.0
+                    return s, 10.0, True
 
         q_low = question.lower()
-        scored: List[tuple[float, float, Dict[str, Any]]] = []
+        scored: List[tuple[float, float, int, List[str], Dict[str, Any]]] = []
         for s in UIP_SCENARIO_LIBRARY:
-            kw_score = 0.0
-            for kw in s["keywords"]:
-                if kw in q_low:
-                    kw_score += 2.2 if len(kw) > 5 else 1.2
-            if any(w in q_low for w in s["tajuk"].lower().split() if len(w) >= 5):
-                kw_score += 0.6
-            act_bonus = 1.0 if (akta_hint and akta_hint != "Semua" and akta_hint == s["akta_utama"]) else 0.0
-            scored.append((kw_score + act_bonus, kw_score, s))
+            total, kw_score, neg_hits, matched_kws = cls._score_scenario(s, q_low, akta_hint=akta_hint)
+            scored.append((total, kw_score, neg_hits, matched_kws, s))
 
         scored.sort(key=lambda x: x[0], reverse=True)
-        primary_total, primary_kw, primary = scored[0]
+        primary_total, primary_kw, primary_neg, primary_kws, primary = scored[0]
+        if primary_kw < cls.MIN_SCENARIO_SCORE:
+            return primary, max(0.0, primary_kw), False
 
-        # Gabung secara automatik jika pengguna bertanya tentang 2 kesalahan serentak (cth: kotor + tiada tifoid)
+        # Gabung secara automatik hanya jika kesalahan kedua sah, serasi & berbeza kata kunci
         merged = dict(primary)
         if len(scored) > 1:
-            sec_total, sec_kw, secondary = scored[1]
-            if sec_kw >= 2.8 and primary_kw >= 2.4 and secondary["id"] != primary["id"]:
+            sec_total, sec_kw, sec_neg, sec_kws, secondary = scored[1]
+            incompatible = set(primary.get("incompatible_with", [])) | set(secondary.get("incompatible_with", []))
+            distinct_sec_kws = [k for k in sec_kws if k not in set(primary_kws)]
+            if (
+                secondary["id"] != primary["id"]
+                and secondary["id"] not in incompatible
+                and primary["id"] not in incompatible
+                and sec_neg == 0
+                and sec_kw >= 3.2
+                and primary_kw >= 2.4
+                and len(distinct_sec_kws) >= 1
+            ):
                 def _dedup(items: List[str]) -> List[str]:
                     seen = set()
                     out = []
@@ -667,7 +1079,7 @@ class UIPAdvisorService:
                     "templat_ringkas": f"{primary['templat_ringkas']} Selain itu, {secondary['templat_ringkas']}",
                 }
 
-        return merged, primary_kw
+        return merged, primary_kw, True
 
     @staticmethod
     def _build_prefilled_case_template(
@@ -703,6 +1115,29 @@ class UIPAdvisorService:
             f"{scenario['templat_ringkas']}\n"
         )
 
+    @staticmethod
+    def _normalize_charge_items(
+        raw_items: Any,
+        fallback_items: List[Dict[str, str]],
+    ) -> List[Dict[str, str]]:
+        if not isinstance(raw_items, list) or not raw_items:
+            return fallback_items
+        normalized: List[Dict[str, str]] = []
+        for idx, item in enumerate(raw_items):
+            if not isinstance(item, dict):
+                continue
+            base = fallback_items[idx] if idx < len(fallback_items) else (fallback_items[0] if fallback_items else {})
+            normalized.append(
+                {
+                    "perihal": str(item.get("perihal") or item.get("kesalahan") or base.get("perihal") or "Kesalahan Statutori"),
+                    "seksyen_kesalahan": str(item.get("seksyen_kesalahan") or item.get("seksyen") or base.get("seksyen_kesalahan") or "-"),
+                    "seksyen_hukuman": str(item.get("seksyen_hukuman") or item.get("hukuman") or base.get("seksyen_hukuman") or "-"),
+                    "hukuman_maksimum": str(item.get("hukuman_maksimum") or base.get("hukuman_maksimum") or "-"),
+                    "boleh_kompaun": str(item.get("boleh_kompaun") or item.get("kompaun") or base.get("boleh_kompaun") or "-"),
+                }
+            )
+        return normalized or fallback_items
+
     def consult(
         self,
         question: str,
@@ -711,14 +1146,22 @@ class UIPAdvisorService:
         use_ai: bool = False,
         officer_profile: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
-        matched, kw_score = self._match_composite_scenarios(
+        matched, kw_score, confident_match = self._match_composite_scenarios(
             question, akta_hint=akta_hint, scenario_id=scenario_id
         )
-        rag_hits = self.router.rag_store.search_statutes(
-            query=f"{question} {matched['akta_utama']} {matched['tajuk']}",
-            akta_filter=None if akta_hint in ("", "Semua") else akta_hint,
-            top_k=4,
+        rag_query = (
+            f"{question} {matched['akta_utama']} {matched['tajuk']}"
+            if confident_match
+            else question
         )
+        rag_hits = self.router.rag_store.search_statutes(
+            query=rag_query,
+            akta_filter=None if akta_hint in ("", "Semua") else akta_hint,
+            top_k=5,
+        )
+        if not confident_match:
+            matched = self._build_rag_fallback_scenario(question, akta_hint, rag_hits)
+
         citations_dict = [
             {
                 "akta_code": c.akta_code,
@@ -730,7 +1173,7 @@ class UIPAdvisorService:
             for c in rag_hits
         ]
 
-        # Mulakan dengan matriks SOP pakar tempatan (< 15ms)
+        # Mulakan dengan matriks SOP pakar tempatan / rujukan RAG (< 15ms)
         result: Dict[str, Any] = {
             "scenario_id": matched["id"],
             "akta_disyorkan": matched["akta_utama"],
@@ -743,64 +1186,121 @@ class UIPAdvisorService:
             "eksibit_wajib": matched["eksibit_wajib"],
             "perangkap_kesilapan": matched["perangkap_kesilapan"],
             "templat_ringkas": matched["templat_ringkas"],
-            "engine_used": "Mod Pantas — Matriks SOP UIP KKM + Strict RAG",
+            "engine_used": "Mod Pantas — Matriks SOP UIP KKM + Strict RAG"
+            if confident_match
+            else "Mod Pantas — Strict Statutory RAG UIP",
+            "ai_attempted": False,
+            "ai_succeeded": False,
+            "fallback_reason": None,
         }
 
-        # Panggil AI Gemini Flash HANYA jika user aktifkan Mod AI atau soalan di luar pustaka (<1.2)
-        should_call_ai = (
-            self.router._genai_client is not None
-            and not scenario_id
-            and len(question.strip()) >= 12
-            and (use_ai or kw_score < 1.2)
-        )
-        if should_call_ai:
-            cache_key = f"{question.strip().lower()}|{akta_hint}"
+        effective_question = question.strip()
+        if not effective_question or effective_question.lower().startswith("rujuk templat situasi ini"):
+            effective_question = matched["tajuk"]
+
+        # Benarkan AI berjalan apabila use_ai=True (walaupun scenario_id dipilih), ATAU apabila tiada padanan yakin
+        ai_requested = bool(use_ai)
+        auto_ai_needed = (not confident_match) and len(effective_question) >= 12
+        should_call_ai = ai_requested or auto_ai_needed
+
+        if should_call_ai and self.router._genai_client is None:
+            result["ai_attempted"] = ai_requested
+            if ai_requested:
+                result["fallback_reason"] = (
+                    "Kunci API Gemini belum dikonfigurasi pada pelayan (tetapkan GEMINI_API_KEY dalam Tetapan Sistem)."
+                )
+        elif should_call_ai:
+            result["ai_attempted"] = True
+            cache_key = "|".join(
+                [
+                    effective_question.lower(),
+                    akta_hint,
+                    scenario_id or "",
+                    "deep" if ai_requested else "auto",
+                    settings.reasoning_model,
+                    settings.multimodal_model,
+                    settings.standard_fallback_model,
+                ]
+            )
             cached_ai = self._consult_cache.get(cache_key)
             if cached_ai:
                 result.update(cached_ai)
-                result["engine_used"] = f"{cached_ai.get('engine_used', 'Gemini Flash')} [Cache]"
+                result["ai_attempted"] = True
+                result["ai_succeeded"] = True
+                result["fallback_reason"] = None
+                result["engine_used"] = f"{cached_ai.get('engine_used', 'Gemini AI')} [Cache]"
             else:
                 rag_text = "\n\n".join(f"[{c.akta_title} | {c.section}]\n{c.text}" for c in rag_hits)
+                charges_summary = "\n".join(
+                    f"- {c.get('perihal', '')}: {c.get('seksyen_kesalahan', '')} | Hukuman: {c.get('seksyen_hukuman', '')}"
+                    for c in matched.get("cadangan_pertuduhan", [])
+                )
+                ref_block = (
+                    f"MATRIKS SOP RUJUKAN TERDEKAT ({matched['tajuk']}):\n"
+                    f"Keputusan asas: {matched['keputusan_tindakan']}\n"
+                    f"Pertuduhan rujukan:\n{charges_summary}\n\n"
+                    if confident_match
+                    else "TIADA TEMPLAT SEDIA ADA YANG PADAN — analisis terus daripada fakta soalan dan RUJUKAN AKTA SEBENAR di bawah.\n\n"
+                )
                 prompt = (
                     "Anda ialah Ketua UIP / Pegawai Pendakwa Kanan Kementerian Kesihatan Malaysia (KKM).\n"
-                    "Jawab soalan PPKP ini menggunakan Bahasa Melayu kerja harian PPKP yang jelas, padat, dan tepat (jangan guna ayat sastera).\n"
+                    "Jawab soalan PPKP ini menggunakan Bahasa Melayu kerja harian PPKP yang jelas, padat, terperinci, dan tepat (jangan guna ayat sastera).\n"
                     "ARAHAN KETAT:\n"
-                    "1) Petik HANYA Seksyen dan Peraturan yang wujud dalam RUJUKAN AKTA SEBENAR atau MATRIKS SOP UIP di bawah.\n"
-                    "2) Nyatakan jelas: (a) Seksyen Kesalahan & Hukuman boleh dicaj, (b) Boleh kompaun dahulu atau wajib buka IP terus / perintah tutup, "
-                    "(c) Langkah SOP lapangan, (d) Eksibit wajib, dan (e) Perangkap kesilapan biasa.\n\n"
-                    f"SOALAN PPKP:\n{question}\n\n"
-                    f"MATRIKS SOP RUJUKAN PALING HAMPIR ({matched['tajuk']}):\n"
-                    f"Keputusan asas: {matched['keputusan_tindakan']}\n"
-                    f"Pertuduhan rujukan: {matched['cadangan_pertuduhan']}\n\n"
+                    "1) Petik HANYA Seksyen dan Peraturan yang wujud secara sah dalam undang-undang Malaysia / RUJUKAN AKTA SEBENAR di bawah.\n"
+                    "2) JANGAN menyalin membuta tuli templat rujukan jika fakta soalan PPKP berbeza (contoh: PTB Smear Negatif vs Smear Positif, peringkat saringan belum sah vs cicir rawatan, kes bukan makanan seperti taska S.18(1)(d) vs S.11 Akta 281, atau kes rujukan silang Akta 171/366/586/260).\n"
+                    "3) Ubah suai tajuk_nasihat, keputusan_tindakan, sesuai_buka_ip, alasan_keputusan, SOP, eksibit dan perangkap_kesilapan agar 100% menepati situasi sebenar soalan.\n"
+                    "4) Bagi setiap cadangan_pertuduhan, wajib sertakan 5 kunci tepat: perihal, seksyen_kesalahan, seksyen_hukuman, hukuman_maksimum, boleh_kompaun.\n\n"
+                    f"SOALAN PPKP:\n{effective_question}\n\n"
+                    f"{ref_block}"
                     f"RUJUKAN AKTA SEBENAR (RAG):\n{rag_text}"
                 )
-                ai_json, used_model = self.router._call_gemini_structured_json(
-                    model_candidates=[
-                        settings.multimodal_model,
+                model_candidates = (
+                    [
                         settings.reasoning_model,
-                    ],
+                        settings.multimodal_model,
+                        "gemini-3.8-flash",
+                        settings.standard_fallback_model,
+                    ]
+                    if ai_requested
+                    else [settings.multimodal_model, "gemini-3.8-flash", settings.reasoning_model]
+                )
+                ai_json, used_model = self.router._call_gemini_structured_json(
+                    model_candidates=model_candidates,
                     input_payload=prompt,
                     schema=_AdvisorLLMSchema.model_json_schema(),
                     temperature=0.1,
-                    prefer_flash=True,
+                    prefer_flash=not ai_requested,
                 )
                 if ai_json:
+                    normalized_charges = self._normalize_charge_items(
+                        ai_json.get("cadangan_pertuduhan"),
+                        matched.get("cadangan_pertuduhan", []),
+                    )
                     ai_patch = {
-                        "tajuk_nasihat": ai_json.get("tajuk_nasihat") or result["tajuk_nasihat"],
-                        "keputusan_tindakan": ai_json.get("keputusan_tindakan") or result["keputusan_tindakan"],
-                        "sesuai_buka_ip": ai_json.get("sesuai_buka_ip", result["sesuai_buka_ip"]),
-                        "alasan_keputusan": ai_json.get("alasan_keputusan") or result["alasan_keputusan"],
-                        "cadangan_pertuduhan": ai_json.get("cadangan_pertuduhan") or result["cadangan_pertuduhan"],
-                        "sop_lapangan": ai_json.get("sop_lapangan") or result["sop_lapangan"],
-                        "eksibit_wajib": ai_json.get("eksibit_wajib") or result["eksibit_wajib"],
-                        "perangkap_kesilapan": ai_json.get("perangkap_kesilapan") or result["perangkap_kesilapan"],
-                        "templat_ringkas": ai_json.get("templat_ringkas") or result["templat_ringkas"],
+                        "tajuk_nasihat": str(ai_json.get("tajuk_nasihat") or result["tajuk_nasihat"]),
+                        "keputusan_tindakan": str(ai_json.get("keputusan_tindakan") or result["keputusan_tindakan"]),
+                        "sesuai_buka_ip": bool(ai_json.get("sesuai_buka_ip", result["sesuai_buka_ip"])),
+                        "alasan_keputusan": str(ai_json.get("alasan_keputusan") or result["alasan_keputusan"]),
+                        "cadangan_pertuduhan": normalized_charges,
+                        "sop_lapangan": list(ai_json.get("sop_lapangan") or result["sop_lapangan"]),
+                        "eksibit_wajib": list(ai_json.get("eksibit_wajib") or result["eksibit_wajib"]),
+                        "perangkap_kesilapan": list(ai_json.get("perangkap_kesilapan") or result["perangkap_kesilapan"]),
+                        "templat_ringkas": str(ai_json.get("templat_ringkas") or result["templat_ringkas"]),
                         "engine_used": f"{used_model} + Strict Statutory RAG",
+                        "ai_attempted": True,
+                        "ai_succeeded": True,
+                        "fallback_reason": None,
                     }
                     if len(self._consult_cache) >= 64:
                         self._consult_cache.clear()
                     self._consult_cache[cache_key] = ai_patch
                     result.update(ai_patch)
+                else:
+                    err_detail = self.router._last_ai_error or "Model Gemini tidak memulangkan respons."
+                    logger.warning("Tanya Pakar fallback ke enjin tempatan: %s", err_detail)
+                    result["ai_attempted"] = True
+                    result["ai_succeeded"] = False
+                    result["fallback_reason"] = f"Analisa AI tidak berjaya dicapai buat sementara ({err_detail}); paparan menggunakan rujukan statutori tempatan."
 
         result["draf_teks_kes_cadangan"] = self._build_prefilled_case_template(
             {**matched, "templat_ringkas": result["templat_ringkas"]},

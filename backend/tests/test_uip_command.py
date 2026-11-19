@@ -461,7 +461,7 @@ def test_uip_advisor_scenarios_and_consult() -> None:
     resp_list = client.get("/api/advisor/scenarios", headers=headers)
     assert resp_list.status_code == 200
     scenarios = resp_list.json()["scenarios"]
-    assert len(scenarios) == 11
+    assert len(scenarios) == 16
     acts = {s["akta_utama"] for s in scenarios}
     assert {"Akta 852", "Akta 281", "Akta 154", "Akta 342"}.issubset(acts)
 
@@ -500,7 +500,38 @@ def test_uip_advisor_scenarios_and_consult() -> None:
     obd_body = resp_obd.json()
     assert obd_body["scenario_id"] == "ak852_obd_merokok_tepi_jalan"
     assert "17(1)" in json.dumps(obd_body["cadangan_pertuduhan"], ensure_ascii=False)
+    assert "16(2)" not in json.dumps(obd_body["cadangan_pertuduhan"], ensure_ascii=False)
     assert elapsed_obd < 2.0
+
+    # Uji kes Tibi PTB Smear Negatif (AFB Negatif) enggan mula rawatan TIDAK disalah tafsir sebagai Smear Positif
+    resp_tb_neg = client.post(
+        "/api/advisor/consult",
+        headers=headers,
+        json={
+            "question": "kes yang disaring tibi telah diminta untuk mula rawatan ptb smear negatif - afb negatif namun taknak mulakan rawatan",
+            "akta_hint": "Semua",
+            "use_ai": False,
+        },
+    )
+    assert resp_tb_neg.status_code == 200
+    tb_neg_body = resp_tb_neg.json()
+    assert tb_neg_body["scenario_id"] == "ak342_tibi_smear_negatif_enggan_mula"
+    assert tb_neg_body["sesuai_buka_ip"] is False
+    assert "Smear Positif" not in tb_neg_body["tajuk_nasihat"]
+    assert "15(1)" in json.dumps(tb_neg_body["cadangan_pertuduhan"], ensure_ascii=False)
+
+    # Uji soalan di luar templat tetap tidak terperangkap pada kad pertama (ak852_pamer_vape)
+    resp_unmatched = client.post(
+        "/api/advisor/consult",
+        headers=headers,
+        json={
+            "question": "adakah pegawai kesihatan berkuasa memasuki gudang untuk pemeriksaan bahan bercetak import tanpa waran?",
+            "akta_hint": "Semua",
+            "use_ai": False,
+        },
+    )
+    assert resp_unmatched.status_code == 200
+    assert resp_unmatched.json()["scenario_id"] == "rag_custom_query"
 
     # Uji gabungan multi-kesalahan (< 2s): restoran ada najis tikus + pekerja tiada tifoid
     t1 = time.monotonic()
@@ -536,6 +567,103 @@ def test_uip_advisor_scenarios_and_consult() -> None:
     assert free_body["akta_disyorkan"] == "Akta 281"
     combined_charges = json.dumps(free_body["cadangan_pertuduhan"], ensure_ascii=False)
     assert "31" in combined_charges
+
+
+def test_uip_advisor_use_ai_runs_even_with_scenario_id_and_fallback_diag(monkeypatch) -> None:
+    """Memastikan use_ai=True memanggil Gemini walaupun scenario_id dihantar & memparse JSON fallback."""
+    from types import SimpleNamespace
+    from backend.main import advisor_service, router_service
+
+    advisor_service.clear_cache()
+    headers = _get_auth_headers()
+
+    captured_gc: dict = {}
+
+    class _FakeInteractions:
+        def create(self, **kwargs):
+            raise RuntimeError("Simulasi Interactions gagal sementara")
+
+    class _FakeModels:
+        def generate_content(self, *, model, contents, config):
+            captured_gc["model"] = model
+            captured_gc["has_schema"] = bool(getattr(config, "response_json_schema", None))
+            return SimpleNamespace(
+                text=(
+                    "```json\n"
+                    + json.dumps(
+                        {
+                            "tajuk_nasihat": "Analisis AI Khusus: PTB Smear Negatif Enggan Mula Rawatan",
+                            "keputusan_tindakan": "SAHKAN DIAGNOSIS MO/FMS & SERAH NOTIS S.15(1)/S.14 SEBELUM IP",
+                            "sesuai_buka_ip": False,
+                            "alasan_keputusan": "Keputusan makmal AFB negatif belum membolehkan dakwaan S.22(b) tanpa pengesahan klinikal dan serahan notis bertulis.",
+                            "cadangan_pertuduhan": [
+                                {
+                                    "perihal": "Perintah Pengawasan/Ujian Lanjutan",
+                                    "seksyen_kesalahan": "Seksyen 15(1) Akta 342",
+                                    "seksyen_hukuman": "Seksyen 24 Akta 342",
+                                    "hukuman_maksimum": "Denda maks RM10,000 atau penjara 2 tahun",
+                                    "boleh_kompaun": "Tidak sesuai dibuka IP S.22(b) sebelum notis bertulis diingkari",
+                                }
+                            ],
+                            "sop_lapangan": ["Rujuk MO/FMS sahkan GeneXpert/Kultur TBIS 20C."],
+                            "eksibit_wajib": ["Laporan Klinikal MO/FMS & TBIS 20C."],
+                            "perangkap_kesilapan": ["Jangan tuduh sebagai kes PTB Smear Positif cicir rawatan."],
+                            "templat_ringkas": "Siasatan kes PTB Smear Negatif enggan mula rawatan di bawah Akta 342.",
+                        }
+                    )
+                    + "\n```"
+                )
+            )
+
+    fake_client = SimpleNamespace(interactions=_FakeInteractions(), models=_FakeModels())
+    monkeypatch.setattr(router_service, "_genai_client", fake_client)
+
+    resp_ai = client.post(
+        "/api/advisor/consult",
+        headers=headers,
+        json={
+            "question": "kes yang disaring tibi telah diminta untuk mula rawatan ptb smear negatif - afb negatif namun taknak mulakan rawatan",
+            "akta_hint": "Semua",
+            "scenario_id": "ak342_tibi_smear_negatif_enggan_mula",
+            "use_ai": True,
+        },
+    )
+    assert resp_ai.status_code == 200
+    body = resp_ai.json()
+    assert body["ai_attempted"] is True
+    assert body["ai_succeeded"] is True
+    assert body["fallback_reason"] is None
+    assert "Analisis AI Khusus" in body["tajuk_nasihat"]
+    assert captured_gc.get("has_schema") is True
+    assert "Gemini API" in body["engine_used"]
+
+    # Uji jika semua model gagal -> fallback_reason dipulangkan secara telus (tidak disenyapkan)
+    advisor_service.clear_cache()
+
+    class _AlwaysFailModels:
+        def generate_content(self, **kwargs):
+            raise RuntimeError("404 Model tidak tersedia")
+
+    monkeypatch.setattr(
+        router_service,
+        "_genai_client",
+        SimpleNamespace(interactions=_FakeInteractions(), models=_AlwaysFailModels()),
+    )
+    resp_fail = client.post(
+        "/api/advisor/consult",
+        headers=headers,
+        json={
+            "question": "Soalan ujian apabila semua model gagal buat sementara waktu",
+            "akta_hint": "Akta 342",
+            "use_ai": True,
+        },
+    )
+    assert resp_fail.status_code == 200
+    fail_body = resp_fail.json()
+    assert fail_body["ai_attempted"] is True
+    assert fail_body["ai_succeeded"] is False
+    assert fail_body["fallback_reason"]
+    advisor_service.clear_cache()
 
 
 def test_google_auth_requires_real_oauth_token_and_no_demo_accounts(monkeypatch) -> None:

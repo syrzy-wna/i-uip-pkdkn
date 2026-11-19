@@ -24,7 +24,7 @@ export default function SystemSettingsModal({
   const [googleClientId, setGoogleClientId] = useState("");
   const [ollamaUrl, setOllamaUrl] = useState("http://localhost:11434");
   const [ollamaModel, setOllamaModel] = useState("gemma3:12b");
-  const [geminiModel, setGeminiModel] = useState("gemini-2.5-flash");
+  const [geminiModel, setGeminiModel] = useState("gemini-3.8-flash");
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -39,7 +39,7 @@ export default function SystemSettingsModal({
         setGoogleClientId(s.google_client_id || "");
         setOllamaUrl(s.ollama_base_url || "http://localhost:11434");
         setOllamaModel(s.ollama_model || "gemma3:12b");
-        setGeminiModel(s.standard_fallback_model || "gemini-2.5-flash");
+        setGeminiModel(s.standard_fallback_model || "gemini-3.8-flash");
       })
       .catch(() => {});
     const onKeyDown = (e: KeyboardEvent) => {
@@ -164,10 +164,11 @@ export default function SystemSettingsModal({
               onChange={(e) => setGeminiModel(e.target.value)}
               className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs"
             >
-              <option value="gemini-2.5-flash">gemini-2.5-flash (Pantas &amp; Multimodal OCR)</option>
-              <option value="gemini-2.5-pro">gemini-2.5-pro (Penaakulan Undang-Undang Mendalam)</option>
-              <option value="gemini-4-argon">gemini-4-argon (Interactions API)</option>
-              <option value="gemini-4-hydrogen">gemini-4-hydrogen (Interactions API)</option>
+              <option value="gemini-3.8-flash">gemini-3.8-flash (Pantas, Stabil &amp; Multimodal Terkini)</option>
+              <option value="gemini-4-hydrogen">gemini-4-hydrogen (Interactions API — Pantas)</option>
+              <option value="gemini-4-argon">gemini-4-argon (Interactions API — Penaakulan Mendalam)</option>
+              <option value="gemini-3.1-pro-preview">gemini-3.1-pro-preview (Penaakulan Undang-Undang Kompleks)</option>
+              <option value="gemini-flash-latest">gemini-flash-latest (Alias Flash Terkini)</option>
             </select>
           </div>
 

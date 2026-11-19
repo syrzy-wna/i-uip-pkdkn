@@ -283,9 +283,15 @@ export default function UIPAdvisorPanel({
                 <span className="rounded-md bg-[#0f2744] px-2.5 py-0.5 text-[11px] font-bold text-white">
                   {result.akta_disyorkan}
                 </span>
-                <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-700">
-                  <Zap className="h-3.5 w-3.5" /> Rujukan Statutori UIP
-                </span>
+                {result.ai_succeeded ? (
+                  <span className="inline-flex items-center gap-1 rounded-full border border-indigo-200 bg-indigo-50 px-2.5 py-0.5 text-[11px] font-bold text-indigo-800">
+                    <Sparkles className="h-3 w-3" /> {result.engine_used}
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-[11px] font-semibold text-emerald-800">
+                    <Zap className="h-3 w-3" /> {result.engine_used || "Mod Pantas — Rujukan Statutori UIP"}
+                  </span>
+                )}
               </div>
               <h3 className="text-base font-extrabold text-slate-900">{result.tajuk_nasihat}</h3>
             </div>
@@ -322,6 +328,16 @@ export default function UIPAdvisorPanel({
               </button>
             </div>
           </div>
+
+          {result.ai_attempted && result.ai_succeeded === false && result.fallback_reason && (
+            <div className="flex items-start gap-2.5 rounded-xl border border-amber-300 bg-amber-50 px-3.5 py-2.5 text-xs text-amber-950">
+              <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-700" />
+              <div>
+                <span className="font-bold">Analisa AI tidak berjaya dipanggil:</span>{" "}
+                {result.fallback_reason}
+              </div>
+            </div>
+          )}
 
           {/* Ringkasan Eksekutif Bersih: 1 Keputusan + 2 Kad Garis Sisi */}
           <div
@@ -399,8 +415,15 @@ export default function UIPAdvisorPanel({
 
             <button
               type="button"
-              disabled={deepLoading}
-              onClick={() => handleConsult(undefined, result.scenario_id, true)}
+              disabled={loading || deepLoading}
+              onClick={() => {
+                const typed = question.trim();
+                handleConsult(
+                  typed ? undefined : result.tajuk_nasihat,
+                  typed ? undefined : result.scenario_id,
+                  true
+                );
+              }}
               className="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-700 hover:underline disabled:opacity-50"
             >
               {deepLoading ? (
@@ -408,7 +431,11 @@ export default function UIPAdvisorPanel({
               ) : (
                 <Sparkles className="h-3.5 w-3.5" />
               )}
-              {deepLoading ? "Sedang Analisa AI..." : "Perlu jawapan lebih terperinci? Cuba AI (~15s)"}
+              {deepLoading
+                ? "Sedang Analisa AI..."
+                : result.ai_succeeded
+                  ? "Analisa Semula dengan AI"
+                  : "Perlu jawapan lebih terperinci? Cuba AI (~15s)"}
             </button>
           </div>
 
