@@ -31,6 +31,21 @@ DEFAULT_GOOGLE_CLIENT_ID = (
 DEFAULT_DEV_ADMIN_EMAILS = "zero4eleven@gmail.com"
 
 
+def _normalize_database_url(*env_names: str) -> str:
+    """Membersihkan rentetan DATABASE_URL daripada awalan 'psql ' atau tanda petik luar."""
+    for name in env_names:
+        raw = os.getenv(name, "").strip()
+        if not raw:
+            continue
+        if raw.lower().startswith("psql "):
+            raw = raw[5:].strip()
+        if len(raw) >= 2 and raw[0] == raw[-1] and raw[0] in ("'", '"'):
+            raw = raw[1:-1].strip()
+        if raw:
+            return raw
+    return ""
+
+
 @dataclass
 class Settings:
     """Tetapan persekitaran dan pemetaan model AI UIP-Command yang boleh dikemas kini secara runtime."""
@@ -56,7 +71,12 @@ class Settings:
     sqlite_db_path: Path = _resolve_path(
         os.getenv("SQLITE_DB_PATH", "./data/uip_command.db"), "data/uip_command.db"
     )
-    database_url: str = os.getenv("DATABASE_URL", "").strip()
+    database_url: str = _normalize_database_url(
+        "DATABASE_URL",
+        "NEON_DATABASE_URL",
+        "POSTGRES_URL",
+        "POSTGRESQL_URL",
+    )
 
     # Arkib & Private Bucket Eksklusif Pembangun (zero4eleven@gmail.com sahaja)
     dev_archive_s3_endpoint: str = (

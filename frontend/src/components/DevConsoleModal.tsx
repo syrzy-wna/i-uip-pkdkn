@@ -3,6 +3,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Activity,
+  AlertTriangle,
   Archive,
   CheckCircle2,
   Coins,
@@ -166,6 +167,20 @@ export default function DevConsoleModal({
                 >
                   g.dev/syrzy <ExternalLink className="h-2.5 w-2.5" />
                 </a>
+                {data?.vault_summary && (
+                  <span
+                    className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[10px] font-bold ${
+                      data.vault_summary.db_engine === "postgresql"
+                        ? "bg-emerald-500/20 text-emerald-200 ring-1 ring-emerald-400/40"
+                        : "bg-rose-500/25 text-rose-100 ring-1 ring-rose-400/50"
+                    }`}
+                  >
+                    <Database className="h-2.5 w-2.5" />
+                    {data.vault_summary.db_engine === "postgresql"
+                      ? "PostgreSQL Kekal (Neon)"
+                      : "SQLite Sementara (Reset Bila Tidur)"}
+                  </span>
+                )}
               </div>
               <p className="text-[11px] text-slate-300">
                 Semak siapa menggunakan i-UIP Nerus, apa aktiviti yang dijalankan, panggilan Gemini API &amp; anggaran kos operasi masa nyata.
@@ -330,6 +345,19 @@ export default function DevConsoleModal({
                   {data.vault_summary?.is_cloud_bucket ? "Private S3/Neon" : "DB + Local"}
                 </div>
               </button>
+            </div>
+          )}
+          {data?.vault_summary?.db_engine === "sqlite" && (
+            <div className="flex items-start gap-2.5 rounded-xl border border-rose-300 bg-rose-50/90 px-3.5 py-2.5 text-xs text-rose-950">
+              <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-rose-600" />
+              <div className="space-y-1 leading-relaxed">
+                <p>
+                  <span className="font-extrabold">Amaran Storan Sementara (SQLite):</span> Data pengguna, aktiviti &amp; Arkib Dev kini disimpan dalam SQLite tempatan (<code className="rounded bg-rose-100 px-1 py-0.5 text-[11px] font-semibold">/tmp/uip_command.db</code> di Cloud Run) yang akan <span className="font-bold">reset menjadi kosong setiap kali Cloud Run tidur (<em>scale-to-zero</em>) atau revisi baharu di-deploy</span>.
+                </p>
+                <p>
+                  <span className="font-extrabold">Tindakan Kekal:</span> Masukkan <code className="rounded bg-rose-100 px-1 py-0.5 text-[11px] font-semibold">DATABASE_URL</code> (Connection String PostgreSQL Neon bermula <code className="rounded bg-rose-100 px-1 py-0.5 text-[11px] font-semibold">postgresql://...</code>) dalam <span className="font-bold">Google Cloud Run → Edit &amp; Deploy New Revision → Variables &amp; Secrets</span>, kemudian sahkan <code className="rounded bg-rose-100 px-1 py-0.5 text-[11px] font-semibold">/api/health</code> memulangkan <code className="rounded bg-rose-100 px-1 py-0.5 text-[11px] font-semibold">{`{"status":"ok","db":"postgres"}`}</code>.
+                </p>
+              </div>
             </div>
           )}
           {error && (

@@ -105,7 +105,7 @@ class _PgConnAdapter:
         from psycopg.rows import dict_row
 
         normalized = dsn.replace("postgres://", "postgresql://", 1) if dsn.startswith("postgres://") else dsn
-        self._conn = psycopg.connect(normalized, row_factory=dict_row, connect_timeout=15)
+        self._conn = psycopg.connect(normalized, row_factory=dict_row, connect_timeout=20)
 
     def __enter__(self) -> "_PgConnAdapter":
         return self
@@ -117,10 +117,14 @@ class _PgConnAdapter:
 
     @staticmethod
     def _translate_sql(sql: str) -> str:
-        return sql.replace("?", "%s")
+        # Larikan literal '%' kepada '%%' sebelum menukar '?' kepada '%s' (keselamatan psycopg3)
+        return sql.replace("%", "%%").replace("?", "%s")
 
     def execute(self, sql: str, params: tuple[Any, ...] = ()) -> _PgCursorAdapter:
-        cur = self._conn.execute(self._translate_sql(sql), params)
+        if params:
+            cur = self._conn.execute(self._translate_sql(sql), params)
+        else:
+            cur = self._conn.execute(sql)
         return _PgCursorAdapter(cur)
 
     def commit(self) -> None:
@@ -351,7 +355,7 @@ class UIPDatabase:
             )
             # Produksi: pastikan tiada akaun demo palsu atau log seed tinggal dalam pangkalan data
             conn.execute("DELETE FROM users WHERE is_demo = 1")
-            conn.execute("DELETE FROM activity_logs WHERE id LIKE 'act-seed-%'")
+            conn.execute("DELETE FROM activity_logs WHERE id LIKE ?", ("act-seed-%",))
             # Penjajaran gred SSM lama kepada SSPA (U29->U5, U32->U6, U36->U7, dll.)
             for old_g, new_g in LEGACY_TO_SSPA_GRADE.items():
                 conn.execute("UPDATE users SET grade = ? WHERE UPPER(grade) = ?", (new_g, old_g))

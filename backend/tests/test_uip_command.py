@@ -711,7 +711,7 @@ def test_unauthenticated_requests_are_blocked_401() -> None:
 def test_cloud_run_healthz_and_postgres_adapter(monkeypatch) -> None:
     import uuid
     import httpx
-    from backend.core.config import DEFAULT_GOOGLE_CLIENT_ID
+    from backend.core.config import DEFAULT_GOOGLE_CLIENT_ID, _normalize_database_url
     from backend.core.database import _PgConnAdapter
 
     for path in ("/healthz", "/api/health"):
@@ -722,6 +722,56 @@ def test_cloud_run_healthz_and_postgres_adapter(monkeypatch) -> None:
     assert (
         _PgConnAdapter._translate_sql("SELECT * FROM users WHERE email = ? AND id = ?")
         == "SELECT * FROM users WHERE email = %s AND id = %s"
+    )
+    assert (
+        _PgConnAdapter._translate_sql(
+            "DELETE FROM activity_logs WHERE id LIKE 'act-seed-%' AND user_id = ?"
+        )
+        == "DELETE FROM activity_logs WHERE id LIKE 'act-seed-%%' AND user_id = %s"
+    )
+
+    # Uji execute() tanpa params tidak menghantar tuple kosong ke psycopg3
+    recorded_calls: list[tuple[Any, ...]] = []
+
+    class _FakeCur:
+        rowcount = 1
+
+        def fetchone(self):
+            return None
+
+        def fetchall(self):
+            return []
+
+    class _FakeRawConn:
+        def execute(self, *args):
+            recorded_calls.append(args)
+            return _FakeCur()
+
+    pg_adapter = object.__new__(_PgConnAdapter)
+    pg_adapter._conn = _FakeRawConn()
+    pg_adapter.execute("DELETE FROM activity_logs WHERE id LIKE 'act-seed-%'")
+    pg_adapter.execute("SELECT * FROM users WHERE email = ?", ("test@moh.gov.my",))
+    assert recorded_calls[0] == ("DELETE FROM activity_logs WHERE id LIKE 'act-seed-%'",)
+    assert recorded_calls[1] == ("SELECT * FROM users WHERE email = %s", ("test@moh.gov.my",))
+
+    # Uji _normalize_database_url membersihkan 'psql ', tanda petik, & fallback alias
+    for env_key in ("DATABASE_URL", "NEON_DATABASE_URL", "POSTGRES_URL", "POSTGRESQL_URL"):
+        monkeypatch.delenv(env_key, raising=False)
+
+    monkeypatch.setenv("DATABASE_URL", "postgresql://user:pass@ep-demo.aws.neon.tech/neondb?sslmode=require")
+    assert _normalize_database_url("DATABASE_URL") == "postgresql://user:pass@ep-demo.aws.neon.tech/neondb?sslmode=require"
+
+    monkeypatch.setenv("DATABASE_URL", "psql 'postgresql://user:pass@ep-demo.aws.neon.tech/neondb?sslmode=require'")
+    assert _normalize_database_url("DATABASE_URL") == "postgresql://user:pass@ep-demo.aws.neon.tech/neondb?sslmode=require"
+
+    monkeypatch.setenv("DATABASE_URL", '"postgresql://user:pass@ep-demo.aws.neon.tech/neondb"')
+    assert _normalize_database_url("DATABASE_URL") == "postgresql://user:pass@ep-demo.aws.neon.tech/neondb"
+
+    monkeypatch.delenv("DATABASE_URL", raising=False)
+    monkeypatch.setenv("NEON_DATABASE_URL", "postgres://user:pass@ep-alt.aws.neon.tech/neondb")
+    assert (
+        _normalize_database_url("DATABASE_URL", "NEON_DATABASE_URL", "POSTGRES_URL", "POSTGRESQL_URL")
+        == "postgres://user:pass@ep-alt.aws.neon.tech/neondb"
     )
 
     # Uji nama Google pendek (cth. "Al") tidak gagal sekatan 3 aksara
