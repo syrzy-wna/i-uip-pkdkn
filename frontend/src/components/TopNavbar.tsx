@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 import type { OfficerProfile, SystemStatus } from "@/lib/types";
 
-export type ActiveAppMode = "advisor" | "compound" | "draft" | "audit" | "redaction" | "guide";
+export type ActiveAppMode = "home" | "advisor" | "compound" | "audit" | "draft" | "redaction" | "guide";
 
 interface TopNavbarProps {
   status: SystemStatus | null;
@@ -42,42 +42,36 @@ const PRIMARY_MODES: Array<{
   id: ActiveAppMode;
   matches: ActiveAppMode[];
   label: string;
-  sub: string;
   icon: React.ReactNode;
 }> = [
   {
     id: "advisor",
     matches: ["advisor"],
     label: "Tanya Pakar",
-    sub: "Seksyen & SOP",
     icon: <MessageSquareQuote className="h-4 w-4" />,
   },
   {
     id: "compound",
     matches: ["compound"],
     label: "Notis Kompaun",
-    sub: "Semak & Cetak",
     icon: <FileCheck2 className="h-4 w-4" />,
-  },
-  {
-    id: "draft",
-    matches: ["draft"],
-    label: "Bina Fail IP",
-    sub: "Draf & Word",
-    icon: <FileText className="h-4 w-4" />,
   },
   {
     id: "audit",
     matches: ["audit", "redaction"],
     label: "Semak IP",
-    sub: "20 Kriteria Pra-TPR",
     icon: <Scale className="h-4 w-4" />,
+  },
+  {
+    id: "draft",
+    matches: ["draft"],
+    label: "Bina Fail IP",
+    icon: <FileText className="h-4 w-4" />,
   },
   {
     id: "guide",
     matches: ["guide"],
     label: "Panduan",
-    sub: "Carta Alir & Akta",
     icon: <BookOpen className="h-4 w-4" />,
   },
 ];
@@ -102,61 +96,66 @@ export default function TopNavbar({
   const geminiLive = status?.gemini.api_key_configured ?? false;
 
   return (
-    <header className="sticky top-0 z-30 border-b border-slate-200 bg-[#0f2744] text-white shadow-sm">
-      <div className="mx-auto flex h-14 max-w-[1680px] flex-nowrap items-center justify-between gap-2 px-3 sm:h-auto sm:px-4 sm:py-2.5">
-        {/* Identiti Sistem + Logo Rasmi + Moto PKDKN */}
-        <div className="flex min-w-0 items-center gap-2.5">
+    <header className="sticky top-0 z-30 border-b border-slate-800/40 bg-[#0f2744] text-white shadow-sm">
+      <div className="mx-auto flex h-14 max-w-[1600px] flex-nowrap items-center justify-between gap-2 px-3 sm:px-4">
+        {/* Identiti Rasmi: Logo i-UIP Nerus + PKD Kuala Nerus */}
+        <div className="flex min-w-0 items-center gap-2">
           <button
             type="button"
             onClick={onOpenSplash}
-            title="Klik untuk buka Skrin Utama (Pilih Tugas Pantas)"
+            title="Kembali ke Menu Mula (Pilih Tugasan) — PKD Kuala Nerus"
             className="flex min-w-0 items-center gap-2 text-left transition hover:opacity-90"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/images/logo-iuip-nerus.png"
               alt="Logo i-UIP Nerus"
-              className="h-9 w-9 shrink-0 rounded-full bg-white p-0.5 object-contain shadow-sm ring-2 ring-amber-400/70 sm:h-10 sm:w-10"
+              className="h-9 w-9 shrink-0 rounded-full bg-white p-0.5 object-contain shadow-sm ring-2 ring-amber-400/70"
             />
             <div className="min-w-0">
               <div className="flex items-center gap-1.5">
                 <h1 className="truncate text-sm font-extrabold tracking-tight text-white sm:text-base">
                   i-UIP Nerus
                 </h1>
-                <span className="hidden rounded bg-emerald-500/20 px-1.5 py-0.5 text-[10px] font-bold text-emerald-300 ring-1 ring-emerald-400/30 sm:inline-block">
-                  PKD Kuala Nerus
-                </span>
               </div>
-              <p className="truncate text-[10px] text-slate-300 sm:text-[11px]">
-                <span className="sm:hidden">PKD Kuala Nerus</span>
-                <span className="hidden xl:inline text-amber-200/95 italic font-medium">
-                  &ldquo;Satu Hati, Satu Tekad: Memacu Kecemerlangan Kesihatan Kuala Nerus&rdquo;
-                </span>
-                <span className="hidden sm:inline xl:hidden">
-                  Unit Inspektorat &amp; Perundangan • PKD Kuala Nerus
-                </span>
+              <p className="truncate text-[11px] font-medium text-slate-300">
+                PKD Kuala Nerus
               </p>
             </div>
           </button>
 
           <div
-            title="Pejabat Kesihatan Daerah Kuala Nerus (KN2S)"
+            title="Pejabat Kesihatan Daerah Kuala Nerus — Satu Hati, Satu Tekad: Memacu Kecemerlangan Kesihatan Kuala Nerus"
             className="hidden shrink-0 items-center rounded-lg bg-white/95 px-2 py-1 shadow-sm 2xl:flex"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/images/logo-pkdkn.png"
               alt="Logo PKD Kuala Nerus"
-              className="h-6 w-auto object-contain"
+              className="h-5 w-auto object-contain"
             />
           </div>
         </div>
 
-        {/* Bar Navigasi Tunggal Desktop (Telefon guna MobileBottomNav) */}
+        {/* Bar Navigasi Tunggal Desktop (1 baris bersih, tiada teks bertindih) */}
         <nav
           aria-label="Navigasi Utama Desktop"
-          className="hidden items-center gap-1 rounded-xl bg-slate-900/55 p-1 ring-1 ring-white/10 lg:flex"
+          className="hidden items-center gap-1 rounded-xl bg-slate-900/50 p-1 ring-1 ring-white/10 lg:flex"
         >
+          <button
+            type="button"
+            onClick={() => onSelectMode("home")}
+            title="Menu Mula Tugasan"
+            className={`inline-flex h-9 items-center gap-1.5 rounded-lg px-2.5 text-xs font-bold transition ${
+              activeMode === "home"
+                ? "bg-amber-400 text-slate-950 shadow-sm"
+                : "text-slate-300 hover:bg-white/10 hover:text-white"
+            }`}
+          >
+            <Home className="h-3.5 w-3.5" />
+            <span className="hidden xl:inline">Mula</span>
+          </button>
+
           {PRIMARY_MODES.map((m) => {
             const active = m.matches.includes(activeMode);
             return (
@@ -164,34 +163,21 @@ export default function TopNavbar({
                 key={m.id}
                 type="button"
                 onClick={() => onSelectMode(m.id)}
-                className={`flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-left transition ${
+                className={`inline-flex h-9 items-center gap-1.5 whitespace-nowrap rounded-lg px-3 text-xs font-bold transition ${
                   active
                     ? "bg-blue-600 text-white shadow-sm"
-                    : "text-slate-300 hover:bg-white/10 hover:text-white"
+                    : "text-slate-200 hover:bg-white/10 hover:text-white"
                 }`}
               >
                 {m.icon}
-                <div>
-                  <div className="text-xs font-bold leading-tight">{m.label}</div>
-                  <div className="text-[10px] leading-tight opacity-80">{m.sub}</div>
-                </div>
+                <span>{m.label}</span>
               </button>
             );
           })}
         </nav>
 
-        {/* Kawalan Kanan: Bersih & Sasaran Sentuhan >= 40px di Mobile */}
+        {/* Kawalan Kanan: Fokus Tugas + Akaun */}
         <div className="flex shrink-0 items-center gap-1.5 text-xs">
-          <button
-            type="button"
-            onClick={onOpenSplash}
-            title="Skrin Utama (Pilih Tugasan)"
-            className="hidden h-9 items-center gap-1 rounded-lg bg-white/10 px-2.5 text-xs font-semibold text-slate-100 ring-1 ring-white/15 hover:bg-white/20 xl:inline-flex"
-          >
-            <Home className="h-3.5 w-3.5" />
-            <span>Utama</span>
-          </button>
-
           <button
             type="button"
             onClick={onOpenCases}
@@ -201,7 +187,7 @@ export default function TopNavbar({
             <FolderOpen className="h-4 w-4 shrink-0" />
             <span className="hidden sm:inline">Daftar Kes</span>
             <span className="sm:hidden">Kes</span>
-            <span className="rounded-full bg-slate-950/15 px-1.5 py-0.5 text-[10px] font-extrabold">
+            <span className="rounded-full bg-slate-950/15 px-1.5 py-0.5 text-[11px] font-extrabold">
               {caseCount}
             </span>
           </button>
@@ -209,7 +195,7 @@ export default function TopNavbar({
           <button
             type="button"
             onClick={onOpenAccount}
-            title={`Akaun Pegawai (${geminiLive ? "AI Aktif" : "Mod Statutori"})`}
+            title={`Akaun Pegawai (${geminiLive ? "Enjin AI Aktif" : "Mod Statutori"})`}
             className={`inline-flex min-h-[40px] items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-bold shadow-sm transition sm:min-h-[36px] ${
               officer
                 ? "bg-emerald-500 text-slate-950 hover:bg-emerald-400"
@@ -218,12 +204,12 @@ export default function TopNavbar({
           >
             <span
               className={`h-2 w-2 shrink-0 rounded-full ${
-                geminiLive ? "bg-blue-700" : "bg-slate-600"
+                geminiLive ? "bg-blue-700" : "bg-slate-700"
               }`}
             />
             <UserCheck className="h-4 w-4 shrink-0" />
             <span className="hidden max-w-[125px] truncate sm:inline">
-              {officer ? officer.full_name : "Daftar / Log Masuk"}
+              {officer ? officer.full_name : "Log Masuk"}
             </span>
           </button>
 
@@ -236,17 +222,17 @@ export default function TopNavbar({
                 className="hidden min-h-[36px] items-center gap-1 rounded-lg bg-indigo-500/35 px-2.5 py-1.5 text-xs font-bold text-amber-200 ring-1 ring-amber-300/40 hover:bg-indigo-500/50 lg:inline-flex"
               >
                 <Cpu className="h-3.5 w-3.5" />
-                Konsol Dev
+                <span className="hidden xl:inline">Konsol Dev</span>
+                <span className="xl:hidden">Dev</span>
               </button>
 
               <button
                 type="button"
                 onClick={onOpenSettings}
                 title="Tetapan Enjin AI"
-                className="hidden min-h-[36px] items-center gap-1 rounded-lg bg-white/10 px-2.5 py-1.5 text-xs font-semibold text-white ring-1 ring-white/20 hover:bg-white/20 lg:inline-flex"
+                className="hidden min-h-[36px] items-center justify-center rounded-lg bg-white/10 p-2 text-xs font-semibold text-white ring-1 ring-white/20 hover:bg-white/20 lg:inline-flex"
               >
-                <Settings className="h-3.5 w-3.5" />
-                Tetapan
+                <Settings className="h-4 w-4" />
               </button>
             </>
           )}
@@ -276,7 +262,7 @@ export default function TopNavbar({
                   className="h-6 w-auto object-contain"
                 />
               </div>
-              <p className="text-[10px] italic leading-snug text-amber-200">
+              <p className="text-[11px] italic leading-snug text-amber-200">
                 &ldquo;Satu Hati, Satu Tekad: Memacu Kecemerlangan Kesihatan Kuala Nerus&rdquo;
               </p>
             </div>
@@ -285,11 +271,11 @@ export default function TopNavbar({
               <div className="flex items-center gap-2">
                 <Cpu className="h-4 w-4 text-sky-300" />
                 <span>
-                  Enjin AI:{" "}
-                  <strong>{geminiLive ? "Gemini Cloud Aktif" : "Mod Statutori Luar Talian"}</strong>
+                  Enjin:{" "}
+                  <strong>{geminiLive ? "AI Cloud Aktif" : "Mod Statutori Luar Talian"}</strong>
                 </span>
               </div>
-              <span className="inline-flex items-center gap-1 rounded bg-teal-500/20 px-2 py-0.5 text-[10px] font-bold text-teal-200">
+              <span className="inline-flex items-center gap-1 rounded bg-teal-500/20 px-2 py-0.5 text-[11px] font-bold text-teal-200">
                 <Database className="h-3 w-3" /> {status?.rag.chunks_indexed ?? 0} Seksyen Akta
               </span>
             </div>
@@ -298,13 +284,13 @@ export default function TopNavbar({
               <button
                 type="button"
                 onClick={() => {
-                  onOpenSplash();
+                  onSelectMode("home");
                   setMobileMenuOpen(false);
                 }}
                 className="inline-flex min-h-[42px] items-center justify-center gap-1.5 rounded-lg bg-white/10 px-3 font-bold text-white hover:bg-white/20"
               >
                 <Home className="h-4 w-4 text-amber-300" />
-                Skrin Utama
+                Menu Mula
               </button>
 
               <button
@@ -323,7 +309,7 @@ export default function TopNavbar({
                 ) : (
                   <WifiOff className="h-4 w-4 text-amber-300" />
                 )}
-                Privasi: {ollamaOk && useOllama ? "Ollama" : "Regex"}
+                Privasi: {ollamaOk && useOllama ? "Lokal AI" : "Tempatan"}
               </button>
             </div>
 

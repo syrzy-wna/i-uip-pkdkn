@@ -3,15 +3,20 @@
 import React, { useCallback, useEffect, useState } from "react";
 import {
   AlertCircle,
-  ArrowLeft,
   CheckCircle2,
-  CheckSquare,
+  ChevronDown,
+  ChevronUp,
   ExternalLink,
-  FileSearch,
+  FileCheck2,
+  FileText,
+  FolderOpen,
   Loader2,
-  Lock,
-  Play,
-  Sparkles,
+  MessageSquareQuote,
+  PanelLeftClose,
+  PanelLeftOpen,
+  Plus,
+  Save,
+  Scale,
 } from "lucide-react";
 import AppGuidePanel from "@/components/AppGuidePanel";
 import AuditPanel from "@/components/AuditPanel";
@@ -22,12 +27,10 @@ import DevConsoleModal from "@/components/DevConsoleModal";
 import DraftDocxEditor from "@/components/DraftDocxEditor";
 import LeftEvidencePane from "@/components/LeftEvidencePane";
 import MobileBottomNav from "@/components/MobileBottomNav";
-import RedactionPreview from "@/components/RedactionPreview";
 import SplashScreenModal from "@/components/SplashScreenModal";
 import SystemSettingsModal from "@/components/SystemSettingsModal";
 import TopNavbar, { type ActiveAppMode } from "@/components/TopNavbar";
 import UIPAdvisorPanel from "@/components/UIPAdvisorPanel";
-import WorkspaceStepper from "@/components/WorkspaceStepper";
 import {
   extractEvidence,
   fetchCases,
@@ -35,7 +38,6 @@ import {
   fetchSampleCases,
   fetchSystemStatus,
   generateDrafts,
-  queryStatutoryRag,
   runIpAudit,
   runRedaction,
   saveCaseRecord,
@@ -48,12 +50,9 @@ import type {
   NotisKompaunData,
   OfficerProfile,
   RedactResponse,
-  StatutoryCitation,
   SystemStatus,
   WorkflowMode,
 } from "@/lib/types";
-
-type RightTab = ActiveAppMode;
 
 const EMPTY_COMPOUND_NOTICE: NotisKompaunData = {
   no_notis: "",
@@ -225,7 +224,7 @@ export default function UIPCommandPage() {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [fileTriggerNonce, setFileTriggerNonce] = useState(0);
 
-  const [activeTab, setActiveTab] = useState<RightTab>("audit");
+  const [activeTab, setActiveTab] = useState<ActiveAppMode>("home");
   const [auditReport, setAuditReport] = useState<IPAuditReport | null>(null);
   const [redaction, setRedaction] = useState<RedactResponse | null>(null);
   const [draft, setDraft] = useState<DraftGenerationResponse | null>(null);
@@ -233,18 +232,19 @@ export default function UIPCommandPage() {
     useState<NotisKompaunData>(EMPTY_COMPOUND_NOTICE);
   const [extractedEvidence, setExtractedEvidence] =
     useState<EvidenceExtractionResponse | null>(null);
-  const [ragResults, setRagResults] = useState<StatutoryCitation[]>([]);
 
   const [auditLoading, setAuditLoading] = useState(false);
   const [draftLoading, setDraftLoading] = useState(false);
   const [redactLoading, setRedactLoading] = useState(false);
   const [extractLoading, setExtractLoading] = useState(false);
-  const [ragLoading, setRagLoading] = useState(false);
   const [savingCase, setSavingCase] = useState(false);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [editorTargetSection, setEditorTargetSection] = useState<string | null>(null);
   const [errorBanner, setErrorBanner] = useState<string | null>(null);
   const [toastMsg, setToastMsg] = useState<string | null>(null);
+
+  const [desktopShowSource, setDesktopShowSource] = useState(true);
+  const [mobileEditingInput, setMobileEditingInput] = useState(true);
 
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [devConsoleOpen, setDevConsoleOpen] = useState(false);
@@ -253,7 +253,7 @@ export default function UIPCommandPage() {
   const [authOpen, setAuthOpen] = useState(false);
   const [authInitialTab, setAuthInitialTab] = useState<"google" | "login" | "register" | "profile">("google");
   const [splashOpen, setSplashOpen] = useState(false);
-  const [mobileSplitPane, setMobileSplitPane] = useState<"input" | "result">("input");
+
   const [authToken, setAuthToken] = useState<string | null>(null);
   const [officer, setOfficer] = useState<OfficerProfile | null>(null);
   const [authChecked, setAuthChecked] = useState(false);
@@ -262,11 +262,24 @@ export default function UIPCommandPage() {
     setToastMsg(msg);
     window.setTimeout(() => {
       setToastMsg((prev) => (prev === msg ? null : prev));
-    }, 3600);
+    }, 3800);
   }, []);
 
+  const confirmDiscardIfDirty = useCallback(() => {
+    if (!hasUnsavedChanges) return true;
+    return window.confirm(
+      "Anda mempunyai perubahan yang belum disimpan. Teruskan tanpa menyimpan?"
+    );
+  }, [hasUnsavedChanges]);
+
   const applyCaseRecord = useCallback(
-    (rec: IPCaseRecord, currentOfficer?: OfficerProfile | null) => {
+    (rec: IPCaseRecord, currentOfficer?: OfficerProfile | null, force = false) => {
+      if (!force && hasUnsavedChanges && rec.id !== activeCaseId) {
+        const ok = window.confirm(
+          "Anda mempunyai perubahan yang belum disimpan pada kes semasa. Tukar kes tanpa menyimpan?"
+        );
+        if (!ok) return;
+      }
       setActiveCaseId(rec.id);
       setAktaUtama(rec.akta_utama);
       setWorkflow(rec.workflow || "audit_ip");
@@ -277,8 +290,9 @@ export default function UIPCommandPage() {
       setCompoundNotice(buildCompoundFromCase(rec, currentOfficer));
       setHasUnsavedChanges(false);
       setErrorBanner(null);
+      setMobileEditingInput(!(rec.audit_report || rec.draft));
     },
-    []
+    [hasUnsavedChanges, activeCaseId]
   );
 
   useEffect(() => {
@@ -299,17 +313,12 @@ export default function UIPCommandPage() {
             setAuthToken(savedToken);
             setOfficer(me);
             setCases(caseList);
-            if (caseList.length > 0) {
-              applyCaseRecord(caseList[0], me);
-            }
+            setActiveTab("home");
           } catch {
             if (typeof window !== "undefined") {
               window.localStorage.removeItem("uip_auth_token");
             }
-            if (mounted) setSplashOpen(true);
           }
-        } else if (mounted) {
-          setSplashOpen(true);
         }
       } catch (err) {
         if (!mounted) return;
@@ -326,7 +335,7 @@ export default function UIPCommandPage() {
     return () => {
       mounted = false;
     };
-  }, [applyCaseRecord]);
+  }, []);
 
   useEffect(() => {
     return () => {
@@ -351,12 +360,16 @@ export default function UIPCommandPage() {
 
   const handleSelectMode = (mode: ActiveAppMode) => {
     setActiveTab(mode);
+    setErrorBanner(null);
     if (mode === "compound") setWorkflow("notis_kompaun");
-    else if (mode === "draft") setWorkflow("ip_builder");
-    else if (mode === "audit" || mode === "redaction") setWorkflow("audit_ip");
-
-    if (mode === "compound" || mode === "redaction" || mode === "draft" || mode === "audit") {
-      setMobileSplitPane("result");
+    else if (mode === "draft") {
+      setWorkflow("ip_builder");
+      setDesktopShowSource(!draft);
+      setMobileEditingInput(!draft);
+    } else if (mode === "audit" || mode === "redaction") {
+      setWorkflow("audit_ip");
+      setDesktopShowSource(true);
+      setMobileEditingInput(!auditReport && mode !== "redaction");
     }
     if (typeof window !== "undefined") {
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -364,6 +377,7 @@ export default function UIPCommandPage() {
   };
 
   const handleStartBlankCase = () => {
+    if (!confirmDiscardIfDirty()) return;
     setActiveCaseId("");
     setCaseText("");
     setAuditReport(null);
@@ -377,15 +391,19 @@ export default function UIPCommandPage() {
       no_kad_kuasa: officer?.kkm_authority_card_no || "",
     });
     setHasUnsavedChanges(false);
+    setDesktopShowSource(true);
+    setMobileEditingInput(true);
     setErrorBanner(null);
-    showToast("Sedia untuk kes baharu — sila tarik fail atau taip fakta kes.");
+    showToast("Sedia untuk kes baharu — muat naik fail atau taip fakta kes.");
   };
 
   const handleLoadSampleCase = async () => {
+    if (!confirmDiscardIfDirty()) return;
     setErrorBanner(null);
-    if (cases.length > 0) {
-      applyCaseRecord(cases[0], officer);
-      showToast(`Contoh kes dimuatkan: ${cases[0].tajuk_kes}`);
+    const sample = cases.find((c) => c.id.startsWith("kes-")) || cases[0];
+    if (sample) {
+      applyCaseRecord(sample, officer, true);
+      showToast(`Contoh kes dimuatkan: ${sample.tajuk_kes}`);
       return;
     }
     try {
@@ -397,6 +415,7 @@ export default function UIPCommandPage() {
         setCaseText(s.text);
         setAuditReport(null);
         setDraft(null);
+        setHasUnsavedChanges(false);
         showToast(`Contoh kes dimuatkan: ${s.title}`);
       }
     } catch (err) {
@@ -430,7 +449,7 @@ export default function UIPCommandPage() {
         return exists ? prev.map((c) => (c.id === saved.id ? saved : c)) : [saved, ...prev];
       });
       setHasUnsavedChanges(false);
-      showToast("Fail kes & semua perubahan berjaya disimpan!");
+      showToast("Fail kes & perubahan berjaya disimpan ke akaun PKD!");
     } catch (err) {
       setErrorBanner(err instanceof Error ? err.message : "Gagal menyimpan kes PKD.");
     } finally {
@@ -441,7 +460,7 @@ export default function UIPCommandPage() {
   const handleRunAudit = async () => {
     if (!caseText.trim() && !uploadedFile) {
       setErrorBanner("Sila masukkan catatan fakta kes atau muat naik fail PDF/DOCX/gambar dahulu.");
-      setMobileSplitPane("input");
+      setMobileEditingInput(true);
       return;
     }
     setAuditLoading(true);
@@ -455,6 +474,7 @@ export default function UIPCommandPage() {
         file: uploadedFile,
       });
       setAuditReport(report);
+      const nextText = report.extracted_text && uploadedFile ? report.extracted_text : caseText;
       if (report.extracted_text && uploadedFile) {
         setCaseText(report.extracted_text);
       }
@@ -467,20 +487,43 @@ export default function UIPCommandPage() {
         ollama_available: report.redaction_summary.ollama_available,
         warnings: report.redaction_summary.warnings,
       });
-      setCases((prev) =>
-        prev.map((c) =>
-          c.id === activeCaseId
-            ? {
-                ...c,
-                status_kes: report.readiness_status,
-                skor_audit: report.overall_score,
-                audit_report: report,
-              }
-            : c
-        )
-      );
+
+      const isSavedUserCase = Boolean(activeCaseId && !activeCaseId.startsWith("kes-"));
+      if (isSavedUserCase) {
+        saveCaseRecord({
+          id: activeCaseId,
+          akta_utama: aktaUtama,
+          workflow,
+          case_text: nextText,
+          status_kes: report.readiness_status,
+          skor_audit: report.overall_score,
+          audit_report: report,
+          draft: draft ? { ...draft, notis_kompaun: compoundNotice } : null,
+        })
+          .then((saved) => {
+            setCases((prev) => prev.map((c) => (c.id === saved.id ? saved : c)));
+            setHasUnsavedChanges(false);
+          })
+          .catch(() => {
+            setHasUnsavedChanges(true);
+          });
+      } else {
+        setCases((prev) =>
+          prev.map((c) =>
+            c.id === activeCaseId
+              ? {
+                  ...c,
+                  status_kes: report.readiness_status,
+                  skor_audit: report.overall_score,
+                  audit_report: report,
+                }
+              : c
+          )
+        );
+      }
+
       setActiveTab("audit");
-      setMobileSplitPane("result");
+      setMobileEditingInput(false);
       showToast(`Semakan IP siap — Skor ${report.overall_score}%`);
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (err) {
@@ -514,8 +557,8 @@ export default function UIPCommandPage() {
     }
 
     if (!workingText) {
-      setErrorBanner("Sila masukkan catatan fakta kes atau muat naik fail kes di Langkah 1 dahulu.");
-      setMobileSplitPane("input");
+      setErrorBanner("Sila masukkan catatan fakta kes atau muat naik fail kes dahulu.");
+      setMobileEditingInput(true);
       return;
     }
 
@@ -525,7 +568,7 @@ export default function UIPCommandPage() {
       const draftRes = await generateDrafts({
         caseText: workingText,
         aktaUtama,
-        workflow,
+        workflow: "ip_builder",
         useOllama,
         fastMode: true,
         caseId: activeCaseId || undefined,
@@ -533,7 +576,6 @@ export default function UIPCommandPage() {
         officerProfile: officer,
       });
       setDraft(draftRes);
-      setHasUnsavedChanges(true);
       if (draftRes.redaction_preview) {
         setRedaction({
           original_text: workingText,
@@ -555,11 +597,34 @@ export default function UIPCommandPage() {
       if (targetSection) {
         setEditorTargetSection(targetSection);
       }
-      if (workflow !== "notis_kompaun") {
-        setActiveTab("draft");
+
+      const isSavedUserCase = Boolean(activeCaseId && !activeCaseId.startsWith("kes-"));
+      if (isSavedUserCase) {
+        saveCaseRecord({
+          id: activeCaseId,
+          akta_utama: aktaUtama,
+          workflow: "ip_builder",
+          case_text: workingText,
+          status_kes: auditReport?.readiness_status || "DALAM SIASATAN",
+          skor_audit: auditReport?.overall_score || 0,
+          audit_report: auditReport,
+          draft: { ...draftRes, notis_kompaun: { ...compoundNotice, ...draftRes.notis_kompaun } },
+        })
+          .then((saved) => {
+            setCases((prev) => prev.map((c) => (c.id === saved.id ? saved : c)));
+            setHasUnsavedChanges(false);
+          })
+          .catch(() => {
+            setHasUnsavedChanges(true);
+          });
+      } else {
+        setHasUnsavedChanges(true);
       }
-      setMobileSplitPane("result");
-      showToast("Draf dokumen IP berjaya dijana — klik mana-mana kotak putih untuk edit!");
+
+      setActiveTab("draft");
+      setDesktopShowSource(false);
+      setMobileEditingInput(false);
+      showToast("Draf fail IP siap — semak dan edit sebelum muat turun Word (.docx).");
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (err) {
       setErrorBanner(err instanceof Error ? err.message : "Gagal menjana draf dokumen.");
@@ -579,7 +644,7 @@ export default function UIPCommandPage() {
         showToast("Butiran asas kes aktif telah ditarik ke borang kompaun.");
       } else {
         setErrorBanner(
-          "Tiada teks kes atau fail dimuat naik. Anda boleh isi borang ini secara manual atau tekan 'Imbas Foto Notis / SSM'."
+          "Tiada kes aktif dipilih. Anda boleh isi borang ini secara manual atau tekan 'Imbas Foto / SSM'."
         );
       }
       return;
@@ -595,7 +660,6 @@ export default function UIPCommandPage() {
         if (workingText) setCaseText(workingText);
       }
       if (!workingText) {
-        setDraftLoading(false);
         return;
       }
       const draftRes = await generateDrafts({
@@ -611,7 +675,7 @@ export default function UIPCommandPage() {
       if (draftRes.notis_kompaun) {
         setCompoundNotice((prev) => ({ ...prev, ...draftRes.notis_kompaun }));
         setHasUnsavedChanges(true);
-        showToast("Data kes & seksyen berjaya diisi ke Borang Notis Kompaun!");
+        showToast("Data kes berjaya diisi ke Borang Notis Kompaun!");
       }
     } catch (err) {
       setErrorBanner(err instanceof Error ? err.message : "Gagal menarik data ke borang kompaun.");
@@ -620,19 +684,46 @@ export default function UIPCommandPage() {
     }
   };
 
+  const handleExtractFileForCompound = async (file: File) => {
+    handleFileSelected(file);
+    const ext = await extractEvidence(file, "sijil_ssm");
+    setExtractedEvidence(ext);
+    const workingText = (ext.raw_text || "").trim();
+    if (!workingText) {
+      throw new Error("Teks tidak dapat dikesan daripada fail ini. Sila pastikan gambar/PDF jelas.");
+    }
+    setCaseText(workingText);
+    const draftRes = await generateDrafts({
+      caseText: workingText,
+      aktaUtama,
+      workflow: "notis_kompaun",
+      useOllama,
+      fastMode: true,
+      caseId: activeCaseId || undefined,
+      authToken,
+      officerProfile: officer,
+    });
+    if (draftRes.notis_kompaun) {
+      setCompoundNotice((prev) => ({ ...prev, ...draftRes.notis_kompaun }));
+      setHasUnsavedChanges(true);
+      showToast(`Maklumat daripada ${file.name} berjaya diisi ke Notis Kompaun!`);
+    }
+  };
+
   const handleStartBlankDraft = () => {
     const blank = buildBlankDraft(aktaUtama, officer, compoundNotice);
     setDraft(blank);
     setHasUnsavedChanges(true);
     setActiveTab("draft");
-    setMobileSplitPane("result");
-    showToast("Borang IP kosong dibuka — semua ruangan sedia untuk ditaip.");
+    setDesktopShowSource(false);
+    setMobileEditingInput(false);
+    showToast("Borang IP kosong dibuka — semua ruangan sedia diisi.");
   };
 
   const handleRunRedaction = async () => {
     if (!caseText.trim()) {
       setErrorBanner("Tiada catatan teks kes untuk disemak penyamaran data peribadi.");
-      setMobileSplitPane("input");
+      setMobileEditingInput(true);
       return;
     }
     setRedactLoading(true);
@@ -640,8 +731,6 @@ export default function UIPCommandPage() {
     try {
       const res = await runRedaction(caseText, useOllama);
       setRedaction(res);
-      setActiveTab("redaction");
-      setMobileSplitPane("result");
       showToast(`${res.entities.length} data peribadi dikenal pasti & ditutup.`);
     } catch (err) {
       setErrorBanner(err instanceof Error ? err.message : "Gagal menyamarkan data sulit.");
@@ -673,43 +762,37 @@ export default function UIPCommandPage() {
     }
   };
 
-  const handleSearchRag = async (query: string) => {
-    if (!query.trim()) return;
-    setRagLoading(true);
-    setErrorBanner(null);
-    try {
-      const res = await queryStatutoryRag(query, aktaUtama);
-      setRagResults(res.results);
-    } catch (err) {
-      setErrorBanner(err instanceof Error ? err.message : "Gagal mencari teks akta.");
-    } finally {
-      setRagLoading(false);
-    }
-  };
-
-  const closeSplashAndRemember = () => {
-    if (!officer) return;
-    setSplashOpen(false);
-    if (typeof window !== "undefined") {
-      window.sessionStorage.setItem("iuip_nerus_splash_seen", "1");
-    }
-  };
-
   const handleAuthenticatedSuccess = async (user: OfficerProfile, token: string) => {
     window.localStorage.setItem("uip_auth_token", token);
     setAuthToken(token);
     setOfficer(user);
     setSplashOpen(false);
     setAuthOpen(false);
+    setActiveTab("home");
     try {
       const caseList = await fetchCases();
       setCases(caseList);
-      if (caseList.length > 0) {
-        applyCaseRecord(caseList[0], user);
-      }
     } catch {
       // Abaikan jika gagal sementara
     }
+  };
+
+  const handleFullLogout = () => {
+    setOfficer(null);
+    setAuthToken(null);
+    setCases([]);
+    setActiveCaseId("");
+    setAuditReport(null);
+    setDraft(null);
+    setRedaction(null);
+    setExtractedEvidence(null);
+    handleFileSelected(null);
+    setCaseText("");
+    setCompoundNotice(EMPTY_COMPOUND_NOTICE);
+    setHasUnsavedChanges(false);
+    setErrorBanner(null);
+    setActiveTab("home");
+    window.localStorage.removeItem("uip_auth_token");
   };
 
   if (!authChecked) {
@@ -732,7 +815,7 @@ export default function UIPCommandPage() {
           </div>
           <div className="space-y-1">
             <div className="text-xl font-extrabold tracking-tight text-amber-300">i-UIP Nerus</div>
-            <p className="text-[11px] italic text-amber-100/90">
+            <p className="text-xs italic text-amber-100/90">
               &ldquo;Satu Hati, Satu Tekad: Memacu Kecemerlangan Kesihatan Kuala Nerus&rdquo;
             </p>
             <div className="pt-1 text-xs text-slate-300">
@@ -751,10 +834,7 @@ export default function UIPCommandPage() {
           open={!authOpen}
           officer={null}
           onClose={() => {}}
-          onEnterApp={() => {
-            setAuthInitialTab("google");
-            setAuthOpen(true);
-          }}
+          onEnterApp={() => setAuthOpen(true)}
           onOpenGoogleAuth={() => {
             setAuthInitialTab("google");
             setAuthOpen(true);
@@ -763,6 +843,7 @@ export default function UIPCommandPage() {
             setAuthInitialTab(tabChoice);
             setAuthOpen(true);
           }}
+          onAuthenticated={handleAuthenticatedSuccess}
         />
         <AuthAccountModal
           open={authOpen}
@@ -778,7 +859,6 @@ export default function UIPCommandPage() {
     );
   }
 
-  const isFullWidthMode = activeTab === "advisor" || activeTab === "guide";
   const isDevAdmin = Boolean(
     officer &&
       (officer.is_dev_admin || officer.email?.trim().toLowerCase() === "zero4eleven@gmail.com")
@@ -790,16 +870,19 @@ export default function UIPCommandPage() {
     ? activeCaseObj.tajuk_kes.replace(/^Kes \d+:\s*/, "")
     : uploadedFile?.name;
 
+  const isIpWorkspace = activeTab === "audit" || activeTab === "draft" || activeTab === "redaction";
+  const hasIpResult =
+    activeTab === "draft" ? Boolean(draft) : activeTab === "redaction" ? true : Boolean(auditReport);
+
   const mobileBadges: Partial<Record<ActiveAppMode, string>> = {};
   if (auditReport) mobileBadges.audit = `${auditReport.overall_score}%`;
   if (draft) mobileBadges.draft = "✓";
 
+  const recentCases = cases.filter((c) => !c.id.startsWith("kes-")).slice(0, 3);
+  const quickResumeList = recentCases.length > 0 ? recentCases : cases.slice(0, 2);
+
   return (
-    <div
-      className={`flex min-h-[100dvh] flex-col bg-[#f4f7fb] lg:pb-0 ${
-        !isFullWidthMode && mobileSplitPane === "input" ? "pb-36" : "pb-20"
-      }`}
-    >
+    <div className="flex min-h-[100dvh] flex-col bg-[#f4f7fb] pb-20 lg:pb-0">
       <TopNavbar
         status={status}
         activeMode={activeTab}
@@ -818,41 +901,14 @@ export default function UIPCommandPage() {
           setAuthInitialTab(officer ? "profile" : "google");
           setAuthOpen(true);
         }}
-        onOpenSplash={() => setSplashOpen(true)}
+        onOpenSplash={() => handleSelectMode("home")}
         onOpenDevConsole={() => setDevConsoleOpen(true)}
       />
 
-      {/* Jalur Panduan 3 Langkah Kontekstual */}
-      {activeTab !== "guide" && (
-        <WorkspaceStepper
-          activeMode={activeTab}
-          hasInput={hasCaseInput}
-          hasAudit={Boolean(auditReport)}
-          hasDraft={Boolean(draft)}
-          hasCompound={Boolean(compoundNotice.nama_penerima || compoundNotice.peruntukan_undang)}
-          onJumpInput={
-            !isFullWidthMode
-              ? () => {
-                  setMobileSplitPane("input");
-                  window.scrollTo({ top: 0, behavior: "smooth" });
-                }
-              : undefined
-          }
-          onJumpResult={
-            !isFullWidthMode
-              ? () => {
-                  setMobileSplitPane("result");
-                  window.scrollTo({ top: 0, behavior: "smooth" });
-                }
-              : undefined
-          }
-        />
-      )}
-
       {/* Toast Maklum Balas Pantas */}
       {toastMsg && (
-        <div className="mx-auto mt-2.5 w-full max-w-[1680px] px-3 sm:px-4">
-          <div className="flex items-center gap-2 rounded-xl border border-emerald-300 bg-emerald-50 px-3.5 py-2.5 text-xs font-bold text-emerald-900 shadow-sm">
+        <div className="mx-auto mt-3 w-full max-w-[1600px] px-3 sm:px-4">
+          <div className="flex items-center gap-2 rounded-xl border border-emerald-300 bg-emerald-50 px-4 py-2.5 text-xs font-bold text-emerald-900 shadow-sm">
             <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />
             <span>{toastMsg}</span>
           </div>
@@ -860,8 +916,8 @@ export default function UIPCommandPage() {
       )}
 
       {errorBanner && (
-        <div className="mx-auto mt-2.5 w-full max-w-[1680px] px-3 sm:px-4">
-          <div className="flex items-center justify-between gap-2 rounded-xl border border-rose-300 bg-rose-50 px-3.5 py-2.5 text-xs font-semibold text-rose-900 shadow-sm">
+        <div className="mx-auto mt-3 w-full max-w-[1600px] px-3 sm:px-4">
+          <div className="flex items-center justify-between gap-2 rounded-xl border border-rose-300 bg-rose-50 px-4 py-2.5 text-xs font-semibold text-rose-900 shadow-sm">
             <div className="flex items-center gap-2">
               <AlertCircle className="h-4 w-4 shrink-0 text-rose-600" />
               <span>{errorBanner}</span>
@@ -869,7 +925,7 @@ export default function UIPCommandPage() {
             <button
               type="button"
               onClick={() => setErrorBanner(null)}
-              className="rounded px-2 py-0.5 text-[11px] font-bold hover:bg-rose-100"
+              className="rounded px-2 py-0.5 text-xs font-bold hover:bg-rose-100"
             >
               Tutup
             </button>
@@ -877,243 +933,358 @@ export default function UIPCommandPage() {
         </div>
       )}
 
-      {/* Reka Letak Adaptif: Lebar Penuh untuk Tanya Pakar & Panduan, Split-View untuk Kerja Kes IP */}
-      {isFullWidthMode ? (
-        <main className="mx-auto w-full max-w-[1480px] flex-1 space-y-3 p-3 sm:p-4">
-          <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 shadow-sm">
-            <div className="text-xs text-slate-600">
-              {activeTab === "advisor" ? (
-                <span>
-                  Mod Bebas <strong>Tanya Pakar UIP</strong> — tanya sebarang situasi kes di lapangan.
-                </span>
-              ) : (
-                <span>
-                  <strong>Buku Panduan Digital UIP KKM</strong> — rujukan carta alir, seksyen, susunan IP &amp; kesilapan biasa.
-                </span>
-              )}
-            </div>
-            <button
-              type="button"
-              onClick={() => handleSelectMode("audit")}
-              className="inline-flex min-h-[38px] items-center gap-1.5 rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-bold text-slate-800 hover:bg-slate-200"
-            >
-              <ArrowLeft className="h-3.5 w-3.5" />
-              Kembali ke Ruang Kerja Kes ({activeCaseObj?.akta_utama || aktaUtama})
-            </button>
-          </div>
-
-          {activeTab === "advisor" ? (
-            <UIPAdvisorPanel
-              aktaUtama={aktaUtama}
-              authToken={authToken}
-              officer={officer}
-              onApplyToCaseBuilder={(draftText, aktaDisyorkan, bukaIp) => {
-                setCaseText(draftText);
-                setAktaUtama(aktaDisyorkan);
-                setActiveCaseId("");
-                setDraft(null);
-                setAuditReport(null);
-                setHasUnsavedChanges(true);
-                handleSelectMode(bukaIp ? "draft" : "compound");
-                showToast(
-                  bukaIp
-                    ? "Fakta kes dari Pakar UIP dimuatkan — tekan 'Jana Draf Fail IP' di bawah."
-                    : "Fakta kes dimuatkan — tekan 'Tarik Data Dari Kes Aktif' untuk isi borang kompaun."
-                );
-              }}
-            />
-          ) : (
-            <AppGuidePanel onNavigateMode={handleSelectMode} />
-          )}
-        </main>
-      ) : (
-        <main className="mx-auto grid w-full max-w-[1680px] flex-1 grid-cols-1 gap-4 p-3 sm:p-4 lg:grid-cols-12">
-          {/* Penukar Paparan Telefon Pintar (Mobile Sticky Toggle) */}
-          <div className="sticky top-14 z-20 grid grid-cols-2 gap-1.5 rounded-xl bg-white p-1.5 shadow-sm ring-1 ring-slate-200 lg:hidden">
-            <button
-              type="button"
-              onClick={() => setMobileSplitPane("input")}
-              className={`min-h-[42px] rounded-lg px-2 py-2 text-xs font-extrabold transition ${
-                mobileSplitPane === "input"
-                  ? "bg-[#0f2744] text-white"
-                  : "text-slate-700 hover:bg-slate-100"
-              }`}
-            >
-              1. Bahan Kes &amp; Muat Naik {hasCaseInput ? "✓" : ""}
-            </button>
-            <button
-              type="button"
-              onClick={() => setMobileSplitPane("result")}
-              className={`min-h-[42px] rounded-lg px-2 py-2 text-xs font-extrabold transition ${
-                mobileSplitPane === "result"
-                  ? "bg-[#0f2744] text-white"
-                  : "text-slate-700 hover:bg-slate-100"
-              }`}
-            >
-              {activeTab === "compound"
-                ? "2. Borang Notis Kompaun"
-                : activeTab === "draft"
-                  ? `2. Editor IP & Word ${draft ? "✓" : ""}`
-                  : activeTab === "redaction"
-                    ? "2. Privasi Data (PDPA)"
-                    : `2. Keputusan Semak ${auditReport ? `(${auditReport.overall_score}%)` : ""}`}
-            </button>
-          </div>
-
-          <div
-            className={`${mobileSplitPane === "input" ? "block" : "hidden"} lg:col-span-5 lg:block`}
-          >
-            <LeftEvidencePane
-              activeMode={activeTab}
-              cases={cases}
-              activeCaseId={activeCaseId}
-              isSampleCase={isSampleCase}
-              onSelectCase={(rec) => applyCaseRecord(rec, officer)}
-              onOpenNewCase={() => {
-                setRegistryInitialMode("new");
-                setRegistryOpen(true);
-              }}
-              onStartBlankCase={handleStartBlankCase}
-              onSaveCurrentCase={handleSaveCurrentCase}
-              savingCase={savingCase}
-              hasUnsavedChanges={hasUnsavedChanges}
-              aktaUtama={aktaUtama}
-              onChangeAkta={(next) => {
-                setAktaUtama(next);
-                setHasUnsavedChanges(true);
-              }}
-              caseText={caseText}
-              onChangeCaseText={(next) => {
-                setCaseText(next);
-                setHasUnsavedChanges(true);
-              }}
-              uploadedFile={uploadedFile}
-              previewUrl={previewUrl}
-              onFileSelected={handleFileSelected}
-              onRunAudit={handleRunAudit}
-              onRunDraft={() => handleRunDraft()}
-              onExtractEvidence={handleExtractEvidence}
-              onSearchRag={handleSearchRag}
-              ragResults={ragResults}
-              ragLoading={ragLoading}
-              auditLoading={auditLoading}
-              draftLoading={draftLoading}
-              extractLoading={extractLoading}
-              extractedEvidence={extractedEvidence}
-              folderChecklist={auditReport?.ip_folder_checklist}
-              fileTriggerNonce={fileTriggerNonce}
-            />
-          </div>
-
-          <div
-            className={`${
-              mobileSplitPane === "result" ? "flex" : "hidden"
-            } flex-col rounded-xl border border-slate-200 bg-white p-3.5 shadow-sm sm:p-4 lg:col-span-7 lg:flex`}
-          >
-            {/* Header Tunggal Panel Kanan (Tiada lagi bar tab duplikasi!) */}
-            <div className="mb-4 flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-3">
+      {/* PAPARAN 0: MENU MULA TUGASAN (TENANG & LAPANG SELEPAS LOG MASUK) */}
+      {activeTab === "home" && (
+        <main className="mx-auto w-full max-w-5xl flex-1 space-y-6 p-4 sm:p-6">
+          <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+            <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
-                <h2 className="text-sm font-extrabold text-slate-900">
-                  {activeTab === "compound"
-                    ? "Borang & Semakan Notis Kompaun"
-                    : activeTab === "draft"
-                      ? "Editor Fail IP & Dokumen Word (.docx)"
-                      : activeTab === "redaction"
-                        ? "Semakan Privasi Data Peribadi (OSA & PDPA)"
-                        : "Keputusan Semakan Kualiti IP (20 Kriteria Pra-TPR)"}
+                <p className="text-xs font-bold uppercase tracking-wide text-blue-700">
+                  {officer.district_pkd || "PKD Kuala Nerus"} • Gred {officer.grade}
+                </p>
+                <h2 className="mt-1 text-lg font-extrabold text-slate-900 sm:text-xl">
+                  Selamat bertugas, {officer.full_name}
                 </h2>
-                <p className="text-[11px] text-slate-500">
-                  {activeCaseTitle
-                    ? `Kes aktif: ${activeCaseTitle}`
-                    : "Gunakan bahan kes atau isi terus di ruangan kerja ini."}
+                <p className="mt-1 text-xs text-slate-600 sm:text-sm">
+                  Pilih tugasan anda di bawah untuk bermula.
                 </p>
               </div>
 
-              {/* Sub-pil KHUSUS untuk mod Semak IP: Keputusan 20 Kriteria | Privasi Data */}
-              {(activeTab === "audit" || activeTab === "redaction") && (
-                <div className="grid grid-cols-2 gap-1 rounded-lg bg-slate-100 p-1">
-                  <button
-                    type="button"
-                    onClick={() => handleSelectMode("audit")}
-                    className={`inline-flex min-h-[36px] items-center justify-center gap-1.5 rounded-md px-3 py-1 text-xs font-bold transition ${
-                      activeTab === "audit"
-                        ? "bg-[#0f2744] text-white shadow-sm"
-                        : "text-slate-700 hover:bg-white/70"
-                    }`}
-                  >
-                    <CheckSquare className="h-3.5 w-3.5" />
-                    20 Kriteria
-                    {auditReport && (
-                      <span className="rounded-full bg-white/20 px-1.5 py-0.5 text-[10px]">
-                        {auditReport.overall_score}%
-                      </span>
-                    )}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleSelectMode("redaction")}
-                    className={`inline-flex min-h-[36px] items-center justify-center gap-1.5 rounded-md px-3 py-1 text-xs font-bold transition ${
-                      activeTab === "redaction"
-                        ? "bg-[#0f2744] text-white shadow-sm"
-                        : "text-slate-700 hover:bg-white/70"
-                    }`}
-                  >
-                    <Lock className="h-3.5 w-3.5" />
-                    Privasi PDPA
-                    {redaction && (
-                      <span className="rounded-full bg-emerald-500/25 px-1.5 py-0.5 text-[10px]">
-                        {redaction.entities.length}
-                      </span>
-                    )}
-                  </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setRegistryInitialMode("new");
+                  setRegistryOpen(true);
+                }}
+                className="inline-flex min-h-[42px] items-center gap-1.5 rounded-xl bg-[#0f2744] px-4 py-2 text-xs font-extrabold text-white shadow-sm hover:bg-slate-800"
+              >
+                <Plus className="h-4 w-4 text-amber-300" />
+                Daftar Kes IP Baharu
+              </button>
+            </div>
+
+            <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <button
+                type="button"
+                onClick={() => handleSelectMode("advisor")}
+                className="flex items-start gap-3.5 rounded-2xl border border-slate-200 bg-slate-50/40 p-4 text-left transition hover:border-indigo-400 hover:bg-indigo-50/40"
+              >
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-indigo-100 text-indigo-700">
+                  <MessageSquareQuote className="h-5 w-5" />
                 </div>
+                <div>
+                  <div className="text-sm font-extrabold text-slate-900">1. Tanya Pakar UIP</div>
+                  <p className="mt-1 text-xs leading-relaxed text-slate-600">
+                    Tidak pasti seksyen caj, had denda, atau tindakan di lokasi? Tanya di sini dan terus dapat SOP lengkap.
+                  </p>
+                </div>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleSelectMode("compound")}
+                className="flex items-start gap-3.5 rounded-2xl border border-slate-200 bg-slate-50/40 p-4 text-left transition hover:border-amber-400 hover:bg-amber-50/40"
+              >
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-amber-100 text-amber-800">
+                  <FileCheck2 className="h-5 w-5" />
+                </div>
+                <div>
+                  <div className="text-sm font-extrabold text-slate-900">2. Notis Kompaun</div>
+                  <p className="mt-1 text-xs leading-relaxed text-slate-600">
+                    Imbas foto SSM / notis atau isi borang, semak 10 perkara wajib dan muat turun Notis Word (.docx).
+                  </p>
+                </div>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleSelectMode("audit")}
+                className="flex items-start gap-3.5 rounded-2xl border border-slate-200 bg-slate-50/40 p-4 text-left transition hover:border-emerald-400 hover:bg-emerald-50/40"
+              >
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700">
+                  <Scale className="h-5 w-5" />
+                </div>
+                <div>
+                  <div className="text-sm font-extrabold text-slate-900">3. Semak Fail IP (Pra-TPR)</div>
+                  <p className="mt-1 text-xs leading-relaxed text-slate-600">
+                    Muat naik PDF Kertas Siasatan, gambar bukti atau catatan untuk kesan kesilapan seksyen &amp; kuiri TPR.
+                  </p>
+                </div>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleSelectMode("draft")}
+                className="flex items-start gap-3.5 rounded-2xl border border-slate-200 bg-slate-50/40 p-4 text-left transition hover:border-blue-400 hover:bg-blue-50/40"
+              >
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-blue-100 text-blue-700">
+                  <FileText className="h-5 w-5" />
+                </div>
+                <div>
+                  <div className="text-sm font-extrabold text-slate-900">4. Bina Fail IP &amp; Borang Word</div>
+                  <p className="mt-1 text-xs leading-relaxed text-slate-600">
+                    Jana &amp; sunting Borang 114, Saman 111, Diari Siasatan, Rakaman S.112, Sijil 90A &amp; eksport `.docx`.
+                  </p>
+                </div>
+              </button>
+            </div>
+          </section>
+
+          {/* Sambung Kes Tersimpan / Contoh */}
+          {quickResumeList.length > 0 && (
+            <section className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
+              <div className="flex flex-wrap items-center justify-between gap-2 pb-3">
+                <h3 className="text-xs font-extrabold uppercase tracking-wide text-slate-700">
+                  {recentCases.length > 0
+                    ? "Sambung Fail Kes Anda"
+                    : "Atau Cuba Dengan Contoh Kes Sedia Ada"}
+                </h3>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setRegistryInitialMode("list");
+                    setRegistryOpen(true);
+                  }}
+                  className="inline-flex items-center gap-1 text-xs font-bold text-blue-700 hover:underline"
+                >
+                  <FolderOpen className="h-3.5 w-3.5" />
+                  Lihat Semua ({cases.length})
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
+                {quickResumeList.map((c) => (
+                  <button
+                    key={c.id}
+                    type="button"
+                    onClick={() => {
+                      applyCaseRecord(c, officer, true);
+                      handleSelectMode(c.draft ? "draft" : "audit");
+                    }}
+                    className="flex flex-col items-start rounded-xl border border-slate-200 bg-slate-50/50 p-3 text-left transition hover:border-blue-400 hover:bg-blue-50/30"
+                  >
+                    <div className="flex w-full items-center justify-between gap-2">
+                      <span className="rounded bg-[#0f2744] px-2 py-0.5 text-[11px] font-bold text-white">
+                        {c.akta_utama}
+                      </span>
+                      <span className="text-[11px] font-semibold text-slate-500">
+                        {c.skor_audit ? `Skor ${c.skor_audit}%` : c.status_kes}
+                      </span>
+                    </div>
+                    <div className="mt-1.5 line-clamp-1 text-xs font-bold text-slate-900">
+                      {c.tajuk_kes.replace(/^Kes \d+:\s*/, "")}
+                    </div>
+                    <div className="mt-0.5 text-[11px] text-slate-500">
+                      {c.nama_okt || c.nama_premis || "Klik untuk buka kes"}
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </section>
+          )}
+        </main>
+      )}
+
+      {/* PAPARAN 1: TANYA PAKAR (FOKUS PENUH) */}
+      {activeTab === "advisor" && (
+        <main className="mx-auto w-full max-w-[1600px] flex-1 p-3 sm:p-5">
+          <UIPAdvisorPanel
+            aktaUtama={aktaUtama}
+            authToken={authToken}
+            officer={officer}
+            onApplyToCaseBuilder={(draftText, aktaDisyorkan, bukaIp) => {
+              if (!confirmDiscardIfDirty()) return;
+              setCaseText(draftText);
+              setAktaUtama(aktaDisyorkan);
+              setActiveCaseId("");
+              setDraft(null);
+              setAuditReport(null);
+              setHasUnsavedChanges(true);
+              setDesktopShowSource(true);
+              setMobileEditingInput(true);
+              handleSelectMode(bukaIp ? "draft" : "compound");
+              showToast(
+                bukaIp
+                  ? "Fakta kes dari Pakar UIP dimuatkan — tekan 'Jana Draf IP & Borang 114'."
+                  : "Fakta kes dimuatkan — tekan 'Tarik Dari Kes Aktif' untuk isi borang kompaun."
+              );
+            }}
+          />
+        </main>
+      )}
+
+      {/* PAPARAN 2: NOTIS KOMPAUN (FOKUS BORANG TUNGGAL — DESKTOP & MOBILE) */}
+      {activeTab === "compound" && (
+        <main className="mx-auto w-full max-w-[1600px] flex-1 p-3 sm:p-5">
+          <CompoundNoticePanel
+            notice={compoundNotice}
+            onChangeNotice={(next) => {
+              setCompoundNotice(next);
+              setHasUnsavedChanges(true);
+            }}
+            onClearNotice={() => {
+              setCompoundNotice({
+                ...EMPTY_COMPOUND_NOTICE,
+                pegawai_pengeluar: officer?.full_name || "",
+                no_kad_kuasa: officer?.kkm_authority_card_no || "",
+              });
+              setHasUnsavedChanges(true);
+            }}
+            onAutoFillFromCase={handleAutoFillCompound}
+            onExtractFileForCompound={handleExtractFileForCompound}
+            onOpenCases={() => {
+              setRegistryInitialMode("list");
+              setRegistryOpen(true);
+            }}
+            autoFillLoading={draftLoading}
+            activeCaseTitle={activeCaseTitle}
+            hasCaseSource={Boolean(caseText.trim() || uploadedFile || activeCaseId)}
+            savingCase={savingCase}
+            onSaveNotice={handleSaveCurrentCase}
+            onDownloaded={(fname) =>
+              showToast(`Fail ${fname} berjaya dimuat turun ke peranti anda.`)
+            }
+          />
+        </main>
+      )}
+
+      {/* PAPARAN 3: PANDUAN */}
+      {activeTab === "guide" && (
+        <main className="mx-auto w-full max-w-6xl flex-1 p-3 sm:p-5">
+          <AppGuidePanel onNavigateMode={handleSelectMode} />
+        </main>
+      )}
+
+      {/* PAPARAN 4: RUANG KERJA FAIL IP (SEMAK IP & BINA FAIL IP — SINGLE-FLOW MOBILE & COLLAPSIBLE DESKTOP) */}
+      {isIpWorkspace && (
+        <main className="mx-auto w-full max-w-[1600px] flex-1 space-y-3 p-3 sm:p-4">
+          {/* Bar Konteks Tunggal & Kemas */}
+          <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 shadow-sm">
+            <div className="flex min-w-0 items-center gap-2 text-xs">
+              <span className="shrink-0 rounded-md bg-[#0f2744] px-2 py-0.5 text-[11px] font-bold text-white">
+                {aktaUtama}
+              </span>
+              <span className="truncate font-bold text-slate-900">
+                {activeCaseTitle || "Kes Baharu (Belum Disimpan)"}
+              </span>
+              {isSampleCase && (
+                <span className="hidden rounded bg-amber-100 px-2 py-0.5 text-[11px] font-bold text-amber-900 sm:inline">
+                  Contoh Kes
+                </span>
               )}
             </div>
 
-            <div className="flex-1 overflow-y-auto pr-0.5 sm:pr-1">
-              {activeTab === "audit" && (
-                <AuditPanel
-                  report={auditReport}
-                  hasCaseInput={hasCaseInput}
-                  activeCaseTitle={activeCaseTitle}
-                  auditLoading={auditLoading}
-                  draftLoading={draftLoading}
-                  onRunAudit={handleRunAudit}
-                  onSwitchToInput={() => {
-                    setMobileSplitPane("input");
-                    setFileTriggerNonce((n) => n + 1);
-                  }}
-                  onLoadSampleCase={handleLoadSampleCase}
-                  onJumpToEditor={(sectionId) => {
-                    if (!draft) {
-                      handleRunDraft(sectionId);
-                    } else {
-                      if (sectionId) setEditorTargetSection(sectionId);
-                      handleSelectMode("draft");
-                    }
-                  }}
-                />
+            <div className="flex flex-wrap items-center gap-2">
+              <button
+                type="button"
+                disabled={savingCase}
+                onClick={handleSaveCurrentCase}
+                className={`inline-flex min-h-[36px] items-center gap-1.5 rounded-lg border px-3 py-1 text-xs font-bold transition disabled:opacity-60 ${
+                  hasUnsavedChanges
+                    ? "border-amber-400 bg-amber-50 text-amber-950 hover:bg-amber-100"
+                    : "border-slate-300 bg-white text-slate-700 hover:bg-slate-50"
+                }`}
+              >
+                {savingCase ? (
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                ) : (
+                  <Save className="h-3.5 w-3.5 text-emerald-700" />
+                )}
+                {hasUnsavedChanges ? "Simpan*" : "Simpan"}
+              </button>
+
+              {/* Toggle Panel Sumber di Desktop */}
+              <button
+                type="button"
+                onClick={() => setDesktopShowSource((v) => !v)}
+                className="hidden min-h-[36px] items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-1 text-xs font-bold text-slate-700 hover:bg-slate-50 lg:inline-flex"
+              >
+                {desktopShowSource ? (
+                  <>
+                    <PanelLeftClose className="h-4 w-4 text-slate-600" />
+                    Luaskan Paparan
+                  </>
+                ) : (
+                  <>
+                    <PanelLeftOpen className="h-4 w-4 text-blue-700" />
+                    Tunjuk Bahan &amp; Fakta
+                  </>
+                )}
+              </button>
+
+              {/* Toggle Bahan vs Hasil di Mobile (Hanya bila ada hasil/editor) */}
+              {hasIpResult && (
+                <button
+                  type="button"
+                  onClick={() => setMobileEditingInput((v) => !v)}
+                  className="inline-flex min-h-[36px] items-center gap-1 rounded-lg border border-blue-200 bg-blue-50 px-3 py-1 text-xs font-bold text-blue-800 lg:hidden"
+                >
+                  {mobileEditingInput ? (
+                    <>
+                      Lihat Keputusan <ChevronDown className="h-3.5 w-3.5" />
+                    </>
+                  ) : (
+                    <>
+                      Ubah Bahan Kes <ChevronUp className="h-3.5 w-3.5" />
+                    </>
+                  )}
+                </button>
               )}
-              {activeTab === "compound" && (
-                <CompoundNoticePanel
-                  notice={compoundNotice}
-                  onChangeNotice={(next) => {
-                    setCompoundNotice(next);
-                    setHasUnsavedChanges(true);
-                  }}
-                  onClearNotice={() => {
-                    setCompoundNotice(EMPTY_COMPOUND_NOTICE);
-                    setHasUnsavedChanges(true);
-                  }}
-                  onAutoFillFromCase={handleAutoFillCompound}
-                  autoFillLoading={draftLoading}
-                  activeCaseTitle={activeCaseTitle}
-                  savingCase={savingCase}
-                  onSaveNotice={handleSaveCurrentCase}
-                  onSwitchToInput={() => setMobileSplitPane("input")}
-                />
-              )}
-              {activeTab === "draft" && (
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-12">
+            {/* Panel Sumber (Di Mobile: hanya bila sedang isi input atau tiada hasil lagi; Di Desktop: boleh dilipat) */}
+            <div
+              className={`${mobileEditingInput ? "block" : "hidden"} ${
+                desktopShowSource ? "lg:col-span-5 lg:block" : "lg:hidden"
+              }`}
+            >
+              <LeftEvidencePane
+                activeMode={activeTab}
+                cases={cases}
+                activeCaseId={activeCaseId}
+                isSampleCase={isSampleCase}
+                onSelectCase={(rec) => applyCaseRecord(rec, officer)}
+                onOpenNewCase={() => {
+                  setRegistryInitialMode("new");
+                  setRegistryOpen(true);
+                }}
+                onStartBlankCase={handleStartBlankCase}
+                aktaUtama={aktaUtama}
+                onChangeAkta={(next) => {
+                  setAktaUtama(next);
+                  setHasUnsavedChanges(true);
+                }}
+                caseText={caseText}
+                onChangeCaseText={(next) => {
+                  setCaseText(next);
+                  setHasUnsavedChanges(true);
+                }}
+                uploadedFile={uploadedFile}
+                previewUrl={previewUrl}
+                onFileSelected={handleFileSelected}
+                onRunAudit={handleRunAudit}
+                onRunDraft={() => handleRunDraft()}
+                onStartBlankDraft={handleStartBlankDraft}
+                hasExistingResult={hasIpResult}
+                onBackToResult={() => setMobileEditingInput(false)}
+                onExtractEvidence={handleExtractEvidence}
+                auditLoading={auditLoading}
+                draftLoading={draftLoading}
+                extractLoading={extractLoading}
+                extractedEvidence={extractedEvidence}
+                fileTriggerNonce={fileTriggerNonce}
+              />
+            </div>
+
+            {/* Panel Hasil / Editor (Di Mobile: bila hasil sedia; Di Desktop: 7 col atau penuh 12 col) */}
+            <div
+              className={`${mobileEditingInput ? "hidden" : "block"} ${
+                desktopShowSource ? "lg:col-span-7" : "lg:col-span-12"
+              } lg:block`}
+            >
+              {activeTab === "draft" ? (
                 <DraftDocxEditor
                   draft={draft}
                   onChangeDraft={(next) => {
@@ -1129,71 +1300,46 @@ export default function UIPCommandPage() {
                   onGenerateDraft={() => handleRunDraft()}
                   onStartBlankDraft={handleStartBlankDraft}
                   onSaveDraft={handleSaveCurrentCase}
-                  onSwitchToInput={() => setMobileSplitPane("input")}
+                  onSwitchToInput={() => {
+                    setDesktopShowSource(true);
+                    setMobileEditingInput(true);
+                  }}
                   onLoadSampleCase={handleLoadSampleCase}
+                  onDownloaded={(fname) =>
+                    showToast(`Fail ${fname} berjaya dimuat turun ke peranti anda.`)
+                  }
                 />
-              )}
-              {activeTab === "redaction" && (
-                <RedactionPreview
+              ) : (
+                <AuditPanel
+                  report={auditReport}
                   redaction={redaction}
-                  loading={redactLoading}
+                  redactLoading={redactLoading}
                   onRunRedaction={handleRunRedaction}
                   hasCaseInput={hasCaseInput}
-                  onSwitchToInput={() => setMobileSplitPane("input")}
+                  activeCaseTitle={activeCaseTitle}
+                  auditLoading={auditLoading}
+                  draftLoading={draftLoading}
+                  onRunAudit={handleRunAudit}
+                  onSwitchToInput={() => {
+                    setDesktopShowSource(true);
+                    setMobileEditingInput(true);
+                    setFileTriggerNonce((n) => n + 1);
+                  }}
+                  onLoadSampleCase={handleLoadSampleCase}
+                  onJumpToEditor={(sectionId) => {
+                    if (!draft) {
+                      handleRunDraft(sectionId);
+                    } else {
+                      if (sectionId) setEditorTargetSection(sectionId);
+                      handleSelectMode("draft");
+                    }
+                  }}
+                  initialSubView={activeTab === "redaction" ? "privacy" : "criteria"}
                 />
               )}
             </div>
           </div>
         </main>
-      )}
-
-      {/* Bar Tindakan Melekit Mobile apabila berada di Panel Input */}
-      {!isFullWidthMode && mobileSplitPane === "input" && (
-        <div
-          style={{ bottom: "calc(56px + env(safe-area-inset-bottom))" }}
-          className="fixed inset-x-0 z-30 border-t border-slate-200 bg-white/95 px-3 py-2 shadow-lg backdrop-blur-sm lg:hidden"
-        >
-          <div className="flex items-center gap-2">
-            {activeTab === "draft" ? (
-              <button
-                type="button"
-                disabled={draftLoading}
-                onClick={() => handleRunDraft()}
-                className="inline-flex min-h-[44px] flex-1 items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 text-xs font-extrabold text-white shadow-sm disabled:opacity-60"
-              >
-                {draftLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Play className="h-4 w-4" />}
-                Jana Fail IP &amp; Borang 114
-              </button>
-            ) : activeTab === "compound" ? (
-              <button
-                type="button"
-                disabled={draftLoading}
-                onClick={() => {
-                  handleAutoFillCompound();
-                  setMobileSplitPane("result");
-                }}
-                className="inline-flex min-h-[44px] flex-1 items-center justify-center gap-2 rounded-xl bg-amber-600 px-4 text-xs font-extrabold text-white shadow-sm disabled:opacity-60"
-              >
-                {draftLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
-                Tarik Data ke Borang Kompaun
-              </button>
-            ) : (
-              <button
-                type="button"
-                disabled={auditLoading}
-                onClick={handleRunAudit}
-                className="inline-flex min-h-[44px] flex-1 items-center justify-center gap-2 rounded-xl bg-[#0f2744] px-4 text-xs font-extrabold text-white shadow-sm disabled:opacity-60"
-              >
-                {auditLoading ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  <FileSearch className="h-4 w-4 text-amber-300" />
-                )}
-                Semak IP Sekarang (20 Perkara)
-              </button>
-            )}
-          </div>
-        </div>
       )}
 
       {isDevAdmin && (
@@ -1224,16 +1370,7 @@ export default function UIPCommandPage() {
         initialTab={authInitialTab}
         onAuthenticated={handleAuthenticatedSuccess}
         onProfileUpdated={(updated) => setOfficer(updated)}
-        onLoggedOut={() => {
-          setOfficer(null);
-          setAuthToken(null);
-          setCases([]);
-          setAuditReport(null);
-          setDraft(null);
-          setCaseText("");
-          setSplashOpen(true);
-          window.localStorage.removeItem("uip_auth_token");
-        }}
+        onLoggedOut={handleFullLogout}
       />
 
       {isDevAdmin && (
@@ -1248,50 +1385,42 @@ export default function UIPCommandPage() {
       <SplashScreenModal
         open={splashOpen}
         officer={officer}
-        onClose={closeSplashAndRemember}
+        onClose={() => setSplashOpen(false)}
         onEnterApp={(mode) => {
-          closeSplashAndRemember();
+          setSplashOpen(false);
           handleSelectMode(mode);
         }}
         onOpenGoogleAuth={() => {
-          closeSplashAndRemember();
+          setSplashOpen(false);
           setAuthInitialTab("google");
           setAuthOpen(true);
         }}
         onOpenEmailAuth={(tabChoice) => {
-          closeSplashAndRemember();
+          setSplashOpen(false);
           setAuthInitialTab(tabChoice);
           setAuthOpen(true);
         }}
+        onAuthenticated={handleAuthenticatedSuccess}
       />
 
-      <footer className="mt-auto border-t border-slate-200 bg-white/95 px-4 py-3 text-center text-[11px] text-slate-600">
-        <div className="mx-auto flex max-w-[1680px] flex-col items-center justify-between gap-2 md:flex-row">
-          <div className="flex flex-wrap items-center justify-center gap-2.5">
+      <footer className="mt-auto hidden border-t border-slate-200 bg-white/95 px-4 py-3 text-[11px] text-slate-600 lg:block">
+        <div className="mx-auto flex max-w-[1600px] items-center justify-between gap-3">
+          <div className="flex items-center gap-2.5">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/images/logo-pkdkn.png"
               alt="Logo PKD Kuala Nerus"
               className="h-6 w-auto object-contain"
             />
-            <span className="text-left">
+            <span>
               <strong>i-UIP Nerus</strong> • Unit Inspektorat &amp; Perundangan,{" "}
-              <strong>PKD Kuala Nerus, Terengganu</strong>{" "}
-              <span className="hidden italic text-slate-500 sm:inline">
-                — &ldquo;Satu Hati, Satu Tekad: Memacu Kecemerlangan Kesihatan Kuala Nerus&rdquo;
-              </span>
+              <strong>PKD Kuala Nerus, Terengganu</strong> —{" "}
+              <em className="text-slate-500">
+                &ldquo;Satu Hati, Satu Tekad: Memacu Kecemerlangan Kesihatan Kuala Nerus&rdquo;
+              </em>
             </span>
           </div>
-          <div className="flex flex-wrap items-center justify-center gap-3">
-            {isDevAdmin && (
-              <button
-                type="button"
-                onClick={() => setDevConsoleOpen(true)}
-                className="font-bold text-indigo-700 hover:underline"
-              >
-                Konsol Pembangun (Siapa Guna &amp; Arkib)
-              </button>
-            )}
+          <div className="flex items-center gap-4">
             <a
               href="https://g.dev/syrzy"
               target="_blank"

@@ -89,7 +89,12 @@ export default function DevConsoleModal({
   useEffect(() => {
     if (!open) return;
     loadOverview();
-  }, [open, loadOverview]);
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [open, loadOverview, onClose]);
 
   const filteredUsers = useMemo(() => {
     if (!data) return [];
@@ -142,8 +147,12 @@ export default function DevConsoleModal({
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center bg-slate-950/65 p-0 backdrop-blur-sm sm:items-center sm:p-5">
+    <div
+      onClick={onClose}
+      className="fixed inset-0 z-50 flex items-end justify-center bg-slate-950/65 p-0 backdrop-blur-sm sm:items-center sm:p-5"
+    >
       <div
+        onClick={(e) => e.stopPropagation()}
         className={`flex max-h-[94dvh] w-full flex-col overflow-hidden rounded-t-2xl border border-slate-200 bg-white shadow-2xl transition-all sm:rounded-2xl ${
           tab === "vault" ? "max-w-7xl" : "max-w-6xl"
         }`}

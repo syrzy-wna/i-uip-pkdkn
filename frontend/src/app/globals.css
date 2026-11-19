@@ -15,10 +15,10 @@ body {
 
 /* Elak Safari iOS auto-zoom ketika PPKP mengisi borang pada telefon pintar */
 @media (max-width: 639px) {
-  input,
+  input:not([type="checkbox"]):not([type="radio"]),
   textarea,
   select {
-    font-size: 16px;
+    font-size: 16px !important;
   }
 }
 

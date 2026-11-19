@@ -254,7 +254,7 @@ export async function downloadDocx(
     | "pakej_ip"
     | "notis_kompaun",
   payload: Record<string, unknown>
-): Promise<void> {
+): Promise<string> {
   const res = await fetch(`${API_BASE}/api/export-docx`, {
     method: "POST",
     headers: { "Content-Type": "application/json", ...getAuthHeader() },
@@ -269,13 +269,18 @@ export async function downloadDocx(
   const filename = match ? match[1] : `${docType}.docx`;
 
   const url = window.URL.createObjectURL(blob);
-  const anchor = document.createElement("a");
-  anchor.href = url;
-  anchor.download = filename;
-  document.body.appendChild(anchor);
-  anchor.click();
-  anchor.remove();
-  window.URL.revokeObjectURL(url);
+  try {
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = filename;
+    anchor.rel = "noopener noreferrer";
+    document.body.appendChild(anchor);
+    anchor.click();
+    anchor.remove();
+  } finally {
+    window.setTimeout(() => window.URL.revokeObjectURL(url), 1500);
+  }
+  return filename;
 }
 
 // ---------------- Akaun Pegawai KKM Sebenar ----------------

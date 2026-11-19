@@ -62,7 +62,12 @@ export default function CaseRegistryModal({
         setDaerah("Kuala Nerus, Terengganu");
       }
     }
-  }, [open, initialMode, officer]);
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [open, initialMode, officer, onClose]);
 
   const handleAktaChange = (nextAkta: string) => {
     setAkta(nextAkta);
@@ -150,8 +155,14 @@ Kesalahan: ${kesalahan || "Sila nyatakan butiran kesalahan yang ditemui semasa p
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center bg-slate-900/65 p-0 backdrop-blur-sm sm:items-center sm:p-4">
-      <div className="flex max-h-[92dvh] w-full max-w-3xl flex-col overflow-hidden rounded-t-2xl border border-slate-200 bg-white p-4 shadow-2xl sm:rounded-2xl sm:p-5">
+    <div
+      onClick={onClose}
+      className="fixed inset-0 z-50 flex items-end justify-center bg-slate-900/65 p-0 backdrop-blur-sm sm:items-center sm:p-4"
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="flex max-h-[92dvh] w-full max-w-3xl flex-col overflow-hidden rounded-t-2xl border border-slate-200 bg-white p-4 shadow-2xl sm:rounded-2xl sm:p-5"
+      >
         <div className="flex flex-col gap-2.5 border-b border-slate-100 pb-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2">

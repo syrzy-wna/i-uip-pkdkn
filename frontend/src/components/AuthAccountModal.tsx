@@ -159,8 +159,18 @@ export default function AuthAccountModal({
     default_camera_desc: "Kamera Digital Rasmi Penguatkuasaan PKD Kuala Nerus",
   });
 
-  // Borang Sunting Profil
+  // Borang Sunting Profil & Progressive Disclosure Pendaftaran
   const [profileForm, setProfileForm] = useState<Partial<OfficerProfile>>({});
+  const [showOfficeDefaults, setShowOfficeDefaults] = useState(false);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [open, onClose]);
 
   useEffect(() => {
     if (!open) return;
@@ -353,8 +363,14 @@ export default function AuthAccountModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center bg-slate-900/65 p-0 backdrop-blur-sm sm:items-center sm:p-4">
-      <div className="flex max-h-[94dvh] w-full max-w-3xl flex-col overflow-hidden rounded-t-2xl border border-slate-200 bg-white shadow-2xl sm:rounded-2xl">
+    <div
+      onClick={onClose}
+      className="fixed inset-0 z-50 flex items-end justify-center bg-slate-900/65 p-0 backdrop-blur-sm sm:items-center sm:p-4"
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="flex max-h-[94dvh] w-full max-w-3xl flex-col overflow-hidden rounded-t-2xl border border-slate-200 bg-white shadow-2xl sm:rounded-2xl"
+      >
         {/* Header Modal */}
         <div className="flex items-center justify-between gap-2 border-b border-slate-200 bg-[#0f2744] px-4 py-3 text-white sm:px-5 sm:py-3.5">
           <div className="flex items-center gap-2.5 min-w-0">
@@ -468,28 +484,19 @@ export default function AuthAccountModal({
 
                 {googleClientId ? (
                   <div className="space-y-3">
-                    <p className="text-[11px] text-slate-600 leading-relaxed">
-                      Klik butang Google rasmi di bawah. Google akan membuka tetingkap pengesahan akaun sebenar dan menghantar token rasmi (<code>id_token</code> / <code>access_token</code>) untuk disahkan oleh pelayan <strong>i-UIP Nerus</strong> sebelum mendaftarkan sesi pegawai.
+                    <p className="text-xs text-slate-600 leading-relaxed">
+                      Klik butang Google rasmi di bawah untuk log masuk pantas dengan akaun Google anda.
                     </p>
-                    <div className="flex flex-wrap items-center gap-3 pt-1">
+                    <div className="flex flex-col items-start gap-2.5 pt-1">
                       <div ref={gsiBtnRef} className="min-h-[40px]" />
                       <button
                         type="button"
                         disabled={loading || !gsiReady}
                         onClick={handleRealGooglePopup}
-                        className="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-4 py-2 text-xs font-bold text-slate-800 shadow-xs transition hover:border-blue-400 hover:bg-blue-50/50 disabled:opacity-60"
+                        className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-700 hover:underline disabled:opacity-50"
                       >
-                        {loading ? (
-                          <Loader2 className="h-4 w-4 animate-spin text-blue-600" />
-                        ) : (
-                          <svg className="h-4 w-4 shrink-0" viewBox="0 0 24 24" aria-hidden="true">
-                            <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17Z" />
-                            <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.11-6.72-4.96H1.29v3.14C3.26 21.3 7.31 24 12 24Z" />
-                            <path fill="#FBBC05" d="M5.28 14.24c-.24-.72-.38-1.49-.38-2.24s.14-1.52.38-2.24V6.62H1.29C.47 8.24 0 10.06 0 12s.47 3.76 1.29 5.38l3.99-3.14Z" />
-                            <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.26 2.7 1.29 6.62l3.99 3.14c.95-2.85 3.6-4.96 6.72-4.96Z" />
-                          </svg>
-                        )}
-                        <span>Log Masuk / Daftar dengan Google (Popup OAuth)</span>
+                        {loading && <Loader2 className="h-3.5 w-3.5 animate-spin text-blue-600" />}
+                        <span>Atau buka tetingkap Google OAuth secara manual →</span>
                       </button>
                     </div>
                   </div>
@@ -678,66 +685,88 @@ export default function AuthAccountModal({
                 </div>
               </div>
 
-              <div className="rounded-xl border border-slate-200 bg-slate-50/60 p-3.5 space-y-2.5">
-                <h4 className="flex items-center gap-1.5 text-xs font-bold text-slate-900">
-                  <Building2 className="h-4 w-4 text-emerald-700" />
-                  2. Penempatan PKD, Mahkamah &amp; Perkakasan Tetap Sijil Seksyen 90A
-                </h4>
-                <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+              <div className="rounded-xl border border-slate-200 bg-slate-50/60 p-3.5">
+                <button
+                  type="button"
+                  onClick={() => setShowOfficeDefaults((v) => !v)}
+                  className="flex w-full items-center justify-between gap-2 text-left"
+                >
                   <div>
-                    <label className="text-[11px] font-semibold text-slate-700">Jabatan Kesihatan Negeri (JKN)</label>
-                    <input
-                      type="text"
-                      value={regForm.state_jkn}
-                      onChange={(e) => setRegForm({ ...regForm, state_jkn: e.target.value })}
-                      className="mt-0.5 w-full rounded border border-slate-300 bg-white px-2.5 py-1.5 text-xs"
-                    />
+                    <h4 className="flex items-center gap-1.5 text-xs font-bold text-slate-900">
+                      <Building2 className="h-4 w-4 text-emerald-700" />
+                      2. Penempatan PKD &amp; Perkakasan Sijil 90A (Dipra-isi)
+                    </h4>
+                    <p className="mt-0.5 text-[11px] text-slate-500">
+                      PKD Kuala Nerus • Mahkamah Kuala Terengganu (Klik untuk ubah jika perlu)
+                    </p>
                   </div>
-                  <div>
-                    <label className="text-[11px] font-semibold text-slate-700">Pejabat Kesihatan Daerah (PKD)</label>
-                    <input
-                      type="text"
-                      value={regForm.district_pkd}
-                      onChange={(e) => setRegForm({ ...regForm, district_pkd: e.target.value })}
-                      className="mt-0.5 w-full rounded border border-slate-300 bg-white px-2.5 py-1.5 text-xs"
-                    />
+                  <span className="shrink-0 text-xs font-bold text-blue-700">
+                    {showOfficeDefaults ? "Tutup ▴" : "Ubah ▾"}
+                  </span>
+                </button>
+                {showOfficeDefaults && (
+                  <div className="mt-3 grid grid-cols-1 gap-2.5 border-t border-slate-200 pt-3 sm:grid-cols-2">
+                    <div>
+                      <label className="text-xs font-semibold text-slate-700">Jabatan Kesihatan Negeri (JKN)</label>
+                      <input
+                        type="text"
+                        value={regForm.state_jkn}
+                        onChange={(e) => setRegForm({ ...regForm, state_jkn: e.target.value })}
+                        className="mt-0.5 w-full rounded-lg border border-slate-300 bg-white px-2.5 py-2 text-base sm:text-sm"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs font-semibold text-slate-700">Pejabat Kesihatan Daerah (PKD)</label>
+                      <input
+                        type="text"
+                        value={regForm.district_pkd}
+                        onChange={(e) => setRegForm({ ...regForm, district_pkd: e.target.value })}
+                        className="mt-0.5 w-full rounded-lg border border-slate-300 bg-white px-2.5 py-2 text-base sm:text-sm"
+                      />
+                    </div>
+                    <div className="sm:col-span-2">
+                      <label className="text-xs font-semibold text-slate-700">Mahkamah Majistret Bidang Kuasa</label>
+                      <input
+                        type="text"
+                        value={regForm.default_magistrate_court}
+                        onChange={(e) => setRegForm({ ...regForm, default_magistrate_court: e.target.value })}
+                        className="mt-0.5 w-full rounded-lg border border-slate-300 bg-white px-2.5 py-2 text-base sm:text-sm"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs font-semibold text-slate-700">Kamera / Telefon Rasmi S.90A</label>
+                      <input
+                        type="text"
+                        value={regForm.default_camera_desc}
+                        onChange={(e) => setRegForm({ ...regForm, default_camera_desc: e.target.value })}
+                        className="mt-0.5 w-full rounded-lg border border-slate-300 bg-white px-2.5 py-2 text-base sm:text-sm"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs font-semibold text-slate-700">Komputer Pejabat S.90A</label>
+                      <input
+                        type="text"
+                        value={regForm.default_computer_desc}
+                        onChange={(e) => setRegForm({ ...regForm, default_computer_desc: e.target.value })}
+                        className="mt-0.5 w-full rounded-lg border border-slate-300 bg-white px-2.5 py-2 text-base sm:text-sm"
+                      />
+                    </div>
                   </div>
-                  <div className="sm:col-span-2">
-                    <label className="text-[11px] font-semibold text-slate-700">Mahkamah Majistret Bidang Kuasa</label>
-                    <input
-                      type="text"
-                      value={regForm.default_magistrate_court}
-                      onChange={(e) => setRegForm({ ...regForm, default_magistrate_court: e.target.value })}
-                      className="mt-0.5 w-full rounded border border-slate-300 bg-white px-2.5 py-1.5 text-xs"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-[11px] font-semibold text-slate-700">Kamera / Telefon Rasmi S.90A</label>
-                    <input
-                      type="text"
-                      value={regForm.default_camera_desc}
-                      onChange={(e) => setRegForm({ ...regForm, default_camera_desc: e.target.value })}
-                      className="mt-0.5 w-full rounded border border-slate-300 bg-white px-2.5 py-1.5 text-xs"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-[11px] font-semibold text-slate-700">Komputer Pejabat S.90A</label>
-                    <input
-                      type="text"
-                      value={regForm.default_computer_desc}
-                      onChange={(e) => setRegForm({ ...regForm, default_computer_desc: e.target.value })}
-                      className="mt-0.5 w-full rounded border border-slate-300 bg-white px-2.5 py-1.5 text-xs"
-                    />
-                  </div>
-                </div>
+                )}
               </div>
+
+              {error && (
+                <div className="rounded-lg border border-rose-300 bg-rose-50 px-3 py-2 text-xs font-semibold text-rose-800">
+                  {error}
+                </div>
+              )}
 
               <button
                 type="submit"
                 disabled={loading}
-                className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-700 px-4 py-2 text-xs font-bold text-white hover:bg-emerald-800 disabled:opacity-60"
+                className="inline-flex min-h-[44px] w-full items-center justify-center gap-1.5 rounded-xl bg-emerald-700 px-4 py-2.5 text-xs font-bold text-white hover:bg-emerald-800 disabled:opacity-60 sm:w-auto"
               >
-                {loading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <UserPlus className="h-3.5 w-3.5" />}
+                {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <UserPlus className="h-4 w-4" />}
                 Daftar &amp; Aktifkan Akaun Pegawai
               </button>
             </form>
@@ -862,12 +891,23 @@ export default function AuthAccountModal({
                 </div>
               </div>
 
+              {error && (
+                <div className="rounded-lg border border-rose-300 bg-rose-50 px-3 py-2 text-xs font-semibold text-rose-800">
+                  {error}
+                </div>
+              )}
+              {successMsg && (
+                <div className="rounded-lg border border-emerald-300 bg-emerald-50 px-3 py-2 text-xs font-semibold text-emerald-800">
+                  {successMsg}
+                </div>
+              )}
+
               <button
                 type="submit"
                 disabled={loading}
-                className="inline-flex items-center gap-1.5 rounded-lg bg-[#0f2744] px-4 py-2 text-xs font-bold text-white hover:bg-slate-800 disabled:opacity-60"
+                className="inline-flex min-h-[44px] w-full items-center justify-center gap-1.5 rounded-xl bg-[#0f2744] px-4 py-2.5 text-xs font-bold text-white hover:bg-slate-800 disabled:opacity-60 sm:w-auto"
               >
-                {loading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Save className="h-3.5 w-3.5" />}
+                {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
                 Simpan Kemas Kini Profil
               </button>
             </form>

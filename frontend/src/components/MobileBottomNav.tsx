@@ -25,7 +25,7 @@ const MOBILE_ITEMS: Array<{
   {
     id: "advisor",
     matches: ["advisor"],
-    label: "Pakar UIP",
+    label: "Pakar",
     icon: <MessageSquareQuote className="h-5 w-5" />,
   },
   {
@@ -35,16 +35,16 @@ const MOBILE_ITEMS: Array<{
     icon: <FileCheck2 className="h-5 w-5" />,
   },
   {
-    id: "draft",
-    matches: ["draft"],
-    label: "Bina IP",
-    icon: <FileText className="h-5 w-5" />,
-  },
-  {
     id: "audit",
     matches: ["audit", "redaction"],
     label: "Semak IP",
     icon: <Scale className="h-5 w-5" />,
+  },
+  {
+    id: "draft",
+    matches: ["draft"],
+    label: "Bina IP",
+    icon: <FileText className="h-5 w-5" />,
   },
   {
     id: "guide",
@@ -80,7 +80,7 @@ export default function MobileBottomNav({
               }`}
             >
               {badge && (
-                <span className="absolute right-1.5 top-1 rounded-full bg-amber-400 px-1.5 py-0.2 text-[9px] font-extrabold text-slate-950">
+                <span className="absolute right-1.5 top-1 rounded-full bg-amber-400 px-1.5 text-[10px] font-extrabold leading-tight text-slate-950">
                   {badge}
                 </span>
               )}

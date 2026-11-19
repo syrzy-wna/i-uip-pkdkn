@@ -4,16 +4,28 @@ import React, { useState } from "react";
 import {
   AlertTriangle,
   ArrowRight,
+  BookOpen,
   BookOpenCheck,
   Compass,
+  Copy,
   FileText,
   FolderTree,
   Layers,
+  Loader2,
+  Search,
   ShieldAlert,
 } from "lucide-react";
+import { queryStatutoryRag } from "@/lib/api";
 import type { ActiveAppMode } from "@/components/TopNavbar";
+import type { StatutoryCitation } from "@/lib/types";
 
-type GuideSection = "cara_guna" | "carta_alir" | "cheat_sheet" | "fail_5w1h" | "kesilapan_maut";
+type GuideSection =
+  | "cara_guna"
+  | "carta_alir"
+  | "cheat_sheet"
+  | "fail_5w1h"
+  | "kesilapan_maut"
+  | "carian_akta";
 
 interface AppGuidePanelProps {
   onNavigateMode?: (mode: ActiveAppMode) => void;
@@ -112,6 +124,23 @@ const CHEAT_SHEET_ROWS = [
 
 export default function AppGuidePanel({ onNavigateMode }: AppGuidePanelProps) {
   const [section, setSection] = useState<GuideSection>("cara_guna");
+  const [aktaSearch, setAktaSearch] = useState("Semua");
+  const [ragQuery, setRagQuery] = useState("");
+  const [ragResults, setRagResults] = useState<StatutoryCitation[]>([]);
+  const [ragLoading, setRagLoading] = useState(false);
+
+  const handleSearchStatute = async () => {
+    if (!ragQuery.trim()) return;
+    setRagLoading(true);
+    try {
+      const res = await queryStatutoryRag(ragQuery, aktaSearch);
+      setRagResults(res.results);
+    } catch {
+      setRagResults([]);
+    } finally {
+      setRagLoading(false);
+    }
+  };
 
   const tabs: Array<{ id: GuideSection; label: string; icon: React.ReactNode }> = [
     { id: "cara_guna", label: "1. Cara Guna Aplikasi", icon: <Compass className="h-3.5 w-3.5" /> },
@@ -119,6 +148,7 @@ export default function AppGuidePanel({ onNavigateMode }: AppGuidePanelProps) {
     { id: "cheat_sheet", label: "3. Cheat Sheet 4 Akta", icon: <BookOpenCheck className="h-3.5 w-3.5" /> },
     { id: "fail_5w1h", label: "4. Susunan IP & 5W1H B.114", icon: <FolderTree className="h-3.5 w-3.5" /> },
     { id: "kesilapan_maut", label: "5. 10 Kesilapan Maut PPKP", icon: <ShieldAlert className="h-3.5 w-3.5" /> },
+    { id: "carian_akta", label: "6. Cari Teks Akta Rasmi", icon: <BookOpen className="h-3.5 w-3.5" /> },
   ];
 
   return (
@@ -418,6 +448,82 @@ export default function AppGuidePanel({ onNavigateMode }: AppGuidePanelProps) {
             <li>Mendaftar kes ke mahkamah tanpa <strong>Izin Mendakwa (Sanksi) bertulis TPR</strong> atau setelah tamat had masa.</li>
             <li>Tiada bukti serahan Notis Kompaun / Arahan Rawatan / Perintah Tutup (tiada tandatangan terima atau tiada saksi PPKP + Kad AR Pos Berdaftar).</li>
           </ol>
+        </div>
+      )}
+
+      {/* 6. CARI TEKS AKTA RASMI */}
+      {section === "carian_akta" && (
+        <div className="space-y-3 rounded-xl border border-slate-200 bg-white p-4">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <h4 className="text-sm font-extrabold text-slate-900">
+                Carian Ayat &amp; Seksyen Akta Rasmi
+              </h4>
+              <p className="text-xs text-slate-500">
+                Cari peruntukan tepat Akta 852, Akta 281, Akta 154, Akta 342, KTJ atau Akta Keterangan.
+              </p>
+            </div>
+            <select
+              value={aktaSearch}
+              onChange={(e) => setAktaSearch(e.target.value)}
+              className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-base font-semibold text-slate-800 sm:text-xs"
+            >
+              <option value="Semua">Semua Akta KKM</option>
+              <option value="Akta 852">Akta 852</option>
+              <option value="Akta 281">Akta 281</option>
+              <option value="Akta 154">Akta 154</option>
+              <option value="Akta 342">Akta 342</option>
+            </select>
+          </div>
+
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={ragQuery}
+              onChange={(e) => setRagQuery(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") handleSearchStatute();
+              }}
+              placeholder="cth: Seksyen 36 sitaan, Peraturan 31 tifoid, Seksyen 13 Aedes..."
+              className="flex-1 rounded-xl border border-slate-300 bg-white px-3 py-2 text-base text-slate-800 focus:border-blue-500 focus:outline-none sm:text-sm"
+            />
+            <button
+              type="button"
+              disabled={ragLoading}
+              onClick={handleSearchStatute}
+              className="inline-flex min-h-[42px] items-center gap-1.5 rounded-xl bg-[#0f2744] px-4 py-2 text-xs font-bold text-white hover:bg-slate-800 disabled:opacity-60"
+            >
+              {ragLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}
+              Cari
+            </button>
+          </div>
+
+          {ragResults.length > 0 && (
+            <div className="space-y-2.5 pt-1">
+              {ragResults.map((item, idx) => (
+                <div
+                  key={`${item.akta_code}-${idx}`}
+                  className="rounded-xl border border-slate-200 bg-slate-50/50 p-3 text-xs"
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="font-extrabold text-teal-800">
+                      {item.akta_code} • {item.section}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => navigator.clipboard?.writeText(item.text)}
+                      className="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-xs font-bold text-slate-700 hover:bg-slate-100"
+                    >
+                      <Copy className="h-3.5 w-3.5" /> Salin
+                    </button>
+                  </div>
+                  <p className="mt-1.5 whitespace-pre-line leading-relaxed text-slate-700">
+                    {item.text}
+                  </p>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
     </div>
