@@ -80,8 +80,8 @@ export default function SystemSettingsModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-sm">
-      <div className="w-full max-w-lg rounded-2xl border border-slate-200 bg-white p-5 shadow-xl">
+    <div className="fixed inset-0 z-50 flex items-end justify-center bg-slate-900/60 p-0 backdrop-blur-sm sm:items-center sm:p-4">
+      <div className="flex max-h-[92dvh] w-full max-w-lg flex-col overflow-hidden rounded-t-2xl border border-slate-200 bg-white p-4 shadow-xl sm:rounded-2xl sm:p-5">
         <div className="flex items-center justify-between border-b border-slate-100 pb-3">
           <div className="flex items-center gap-2">
             <Settings className="h-5 w-5 text-[#0f2744]" />
@@ -97,13 +97,13 @@ export default function SystemSettingsModal({
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-700"
+            className="inline-flex min-h-[40px] min-w-[40px] items-center justify-center rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700"
           >
             <X className="h-5 w-5" />
           </button>
         </div>
 
-        <form onSubmit={handleSave} className="mt-4 space-y-3 text-xs">
+        <form onSubmit={handleSave} className="mt-4 flex-1 space-y-3 overflow-y-auto pr-1 text-xs">
           <div>
             <label className="font-bold text-slate-700">
               GEMINI_API_KEY {maskedKey ? `(Aktif: ${maskedKey})` : "(Belum ditetapkan)"}

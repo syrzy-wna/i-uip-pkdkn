@@ -13,6 +13,7 @@ import type { ActiveAppMode } from "@/components/TopNavbar";
 interface MobileBottomNavProps {
   activeMode: ActiveAppMode;
   onSelectMode: (mode: ActiveAppMode) => void;
+  badges?: Partial<Record<ActiveAppMode, string>>;
 }
 
 const MOBILE_ITEMS: Array<{
@@ -25,57 +26,64 @@ const MOBILE_ITEMS: Array<{
     id: "advisor",
     matches: ["advisor"],
     label: "Pakar UIP",
-    icon: <MessageSquareQuote className="h-4 w-4" />,
+    icon: <MessageSquareQuote className="h-5 w-5" />,
   },
   {
     id: "compound",
     matches: ["compound"],
     label: "Kompaun",
-    icon: <FileCheck2 className="h-4 w-4" />,
+    icon: <FileCheck2 className="h-5 w-5" />,
   },
   {
     id: "draft",
     matches: ["draft"],
     label: "Bina IP",
-    icon: <FileText className="h-4 w-4" />,
+    icon: <FileText className="h-5 w-5" />,
   },
   {
     id: "audit",
     matches: ["audit", "redaction"],
-    label: "Audit IP",
-    icon: <Scale className="h-4 w-4" />,
+    label: "Semak IP",
+    icon: <Scale className="h-5 w-5" />,
   },
   {
     id: "guide",
     matches: ["guide"],
     label: "Panduan",
-    icon: <BookOpen className="h-4 w-4" />,
+    icon: <BookOpen className="h-5 w-5" />,
   },
 ];
 
 export default function MobileBottomNav({
   activeMode,
   onSelectMode,
+  badges,
 }: MobileBottomNavProps) {
   return (
     <nav
       aria-label="Navigasi Mudah Alih i-UIP Nerus"
-      className="fixed inset-x-0 bottom-0 z-40 border-t border-slate-700/60 bg-[#0f2744] text-white shadow-lg lg:hidden"
+      className="fixed inset-x-0 bottom-0 z-40 border-t border-slate-700/70 bg-[#0f2744] text-white shadow-lg pb-safe lg:hidden"
     >
       <div className="grid grid-cols-5">
         {MOBILE_ITEMS.map((item) => {
           const active = item.matches.includes(activeMode);
+          const badge = badges?.[item.id];
           return (
             <button
               key={item.id}
               type="button"
               onClick={() => onSelectMode(item.id)}
-              className={`flex min-h-[54px] flex-col items-center justify-center gap-0.5 px-1 py-1.5 text-[10px] font-bold transition ${
+              className={`relative flex min-h-[56px] flex-col items-center justify-center gap-0.5 border-t-2 px-1 py-1.5 text-[11px] font-bold transition ${
                 active
-                  ? "bg-blue-600/90 text-amber-300"
-                  : "text-slate-300 hover:bg-white/10 hover:text-white"
+                  ? "border-amber-400 bg-blue-600/85 text-amber-200"
+                  : "border-transparent text-slate-300 hover:bg-white/10 hover:text-white"
               }`}
             >
+              {badge && (
+                <span className="absolute right-1.5 top-1 rounded-full bg-amber-400 px-1.5 py-0.2 text-[9px] font-extrabold text-slate-950">
+                  {badge}
+                </span>
+              )}
               {item.icon}
               <span className="truncate">{item.label}</span>
             </button>

@@ -218,12 +218,16 @@ export default function AuthAccountModal({
             }
           },
         });
+        const btnWidth = Math.max(
+          220,
+          Math.min(320, (gsiBtnRef.current.parentElement?.clientWidth || 300) - 8)
+        );
         window.google.accounts.id.renderButton(gsiBtnRef.current, {
           theme: "outline",
           size: "large",
           text: "continue_with",
           shape: "pill",
-          width: 320,
+          width: btnWidth,
         });
       }
     };
@@ -349,75 +353,78 @@ export default function AuthAccountModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-xs">
-      <div className="flex max-h-[92vh] w-full max-w-3xl flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl">
+    <div className="fixed inset-0 z-50 flex items-end justify-center bg-slate-900/65 p-0 backdrop-blur-sm sm:items-center sm:p-4">
+      <div className="flex max-h-[94dvh] w-full max-w-3xl flex-col overflow-hidden rounded-t-2xl border border-slate-200 bg-white shadow-2xl sm:rounded-2xl">
         {/* Header Modal */}
-        <div className="flex items-center justify-between border-b border-slate-200 bg-[#0f2744] px-5 py-3.5 text-white">
-          <div className="flex items-center gap-2.5">
-            <UserCheck className="h-5 w-5 text-amber-300" />
-            <div>
-              <h2 className="text-sm font-bold">
-                Akaun Rasmi Pegawai UIP KKM (Auto-Isi Borang 114, DS &amp; Sijil 90A)
+        <div className="flex items-center justify-between gap-2 border-b border-slate-200 bg-[#0f2744] px-4 py-3 text-white sm:px-5 sm:py-3.5">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <UserCheck className="h-5 w-5 shrink-0 text-amber-300" />
+            <div className="min-w-0">
+              <h2 className="truncate text-xs font-bold sm:text-sm">
+                Akaun Rasmi Pegawai UIP KKM
               </h2>
-              <p className="text-[11px] text-slate-300">
-                Daftar akaun pegawai sebenar supaya Kad Kuasa, PKD, Mahkamah &amp; butiran komputer S.90A terus masuk ke dokumen.
+              <p className="truncate text-[10px] text-slate-300 sm:text-[11px]">
+                Auto-isi Kad Kuasa, PKD, Mahkamah &amp; perkakasan S.90A ke dokumen rasmi.
               </p>
             </div>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg p-1 text-slate-300 hover:bg-white/10 hover:text-white"
+            className="inline-flex min-h-[40px] min-w-[40px] shrink-0 items-center justify-center rounded-lg p-1.5 text-slate-300 hover:bg-white/10 hover:text-white"
           >
             <X className="h-5 w-5" />
           </button>
         </div>
 
         {/* Tab Switcher */}
-        <div className="flex flex-wrap border-b border-slate-200 bg-slate-50 px-5 pt-2.5 gap-1.5">
+        <div className="border-b border-slate-200 bg-slate-50 px-3 pt-2 pb-2 sm:px-5">
           {!officer ? (
-            <>
+            <div className="grid grid-cols-3 gap-1.5">
               <button
                 type="button"
                 onClick={() => setTab("google")}
-                className={`inline-flex items-center gap-1.5 rounded-t-lg px-3.5 py-2 text-xs font-bold transition ${
+                className={`inline-flex min-h-[38px] items-center justify-center gap-1 rounded-lg px-2 py-1.5 text-[11px] font-bold transition sm:text-xs ${
                   tab === "google"
-                    ? "border border-b-white border-slate-200 bg-white text-[#0f2744]"
-                    : "text-slate-600 hover:text-slate-900"
+                    ? "bg-[#0f2744] text-white shadow-sm"
+                    : "bg-white text-slate-600 ring-1 ring-slate-200 hover:text-slate-900"
                 }`}
               >
-                <span className="font-extrabold text-blue-600">G</span> Akaun Google (Mudah)
+                <span className={`font-extrabold ${tab === "google" ? "text-amber-300" : "text-blue-600"}`}>
+                  G
+                </span>
+                Google
               </button>
               <button
                 type="button"
                 onClick={() => setTab("login")}
-                className={`inline-flex items-center gap-1.5 rounded-t-lg px-3.5 py-2 text-xs font-bold transition ${
+                className={`inline-flex min-h-[38px] items-center justify-center gap-1 rounded-lg px-2 py-1.5 text-[11px] font-bold transition sm:text-xs ${
                   tab === "login"
-                    ? "border border-b-white border-slate-200 bg-white text-[#0f2744]"
-                    : "text-slate-600 hover:text-slate-900"
+                    ? "bg-[#0f2744] text-white shadow-sm"
+                    : "bg-white text-slate-600 ring-1 ring-slate-200 hover:text-slate-900"
                 }`}
               >
-                <KeyRound className="h-3.5 w-3.5" /> Log Masuk Emel Biasa
+                <KeyRound className="h-3.5 w-3.5" /> Masuk Emel
               </button>
               <button
                 type="button"
                 onClick={() => setTab("register")}
-                className={`inline-flex items-center gap-1.5 rounded-t-lg px-3.5 py-2 text-xs font-bold transition ${
+                className={`inline-flex min-h-[38px] items-center justify-center gap-1 rounded-lg px-2 py-1.5 text-[11px] font-bold transition sm:text-xs ${
                   tab === "register"
-                    ? "border border-b-white border-slate-200 bg-white text-[#0f2744]"
-                    : "text-slate-600 hover:text-slate-900"
+                    ? "bg-[#0f2744] text-white shadow-sm"
+                    : "bg-white text-slate-600 ring-1 ring-slate-200 hover:text-slate-900"
                 }`}
               >
-                <UserPlus className="h-3.5 w-3.5" /> Daftar Emel Biasa
+                <UserPlus className="h-3.5 w-3.5" /> Daftar Emel
               </button>
-            </>
+            </div>
           ) : (
             <button
               type="button"
               onClick={() => setTab("profile")}
-              className="inline-flex items-center gap-1.5 rounded-t-lg border border-b-white border-slate-200 bg-white px-4 py-2 text-xs font-bold text-[#0f2744]"
+              className="inline-flex items-center gap-1.5 rounded-lg bg-white px-3.5 py-2 text-xs font-bold text-[#0f2744] ring-1 ring-slate-200"
             >
-              <BadgeCheck className="h-3.5 w-3.5 text-emerald-600" /> Profil Pegawai Aktif
+              <BadgeCheck className="h-4 w-4 text-emerald-600" /> Profil Pegawai Aktif
             </button>
           )}
         </div>

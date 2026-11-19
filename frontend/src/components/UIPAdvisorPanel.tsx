@@ -1,11 +1,13 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   AlertTriangle,
   ArrowRightCircle,
   BookOpen,
   CheckCircle2,
+  ChevronDown,
+  ChevronUp,
   ClipboardCheck,
   ClipboardList,
   Copy,
@@ -53,6 +55,8 @@ export default function UIPAdvisorPanel({
   const [copiedSummary, setCopiedSummary] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<AdvisorConsultResult | null>(null);
+  const [showMobileLibrary, setShowMobileLibrary] = useState<boolean>(true);
+  const resultRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     fetchAdvisorScenarios()
@@ -63,7 +67,7 @@ export default function UIPAdvisorPanel({
   const handleConsult = async (customQuestion?: string, scenarioId?: string) => {
     const q = (customQuestion ?? question).trim();
     if (!q && !scenarioId) {
-      setError("Sila taip soalan situasi kesalahan atau pilih salah satu kad situasi di sebelah.");
+      setError("Sila taip soalan situasi kesalahan atau pilih salah satu kad situasi di bawah.");
       return;
     }
     setLoading(true);
@@ -79,6 +83,12 @@ export default function UIPAdvisorPanel({
         officerProfile: officer,
       });
       setResult(res);
+      if (typeof window !== "undefined" && window.innerWidth < 1024) {
+        setShowMobileLibrary(false);
+        window.setTimeout(() => {
+          resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 120);
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Gagal mendapatkan nasihat pakar UIP.");
     } finally {
@@ -115,18 +125,18 @@ export default function UIPAdvisorPanel({
     <div className="grid grid-cols-1 gap-4 lg:grid-cols-12">
       {/* LAJUR KIRI (5 col): Input Soalan + Pustaka Situasi */}
       <div className="space-y-4 lg:col-span-5">
-        <div className="rounded-xl border border-indigo-200 bg-gradient-to-br from-indigo-50/80 to-blue-50/40 p-4 shadow-xs">
+        <div className="rounded-xl border border-indigo-200 bg-gradient-to-br from-indigo-50/80 to-blue-50/40 p-4 shadow-sm">
           <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
             <div className="flex items-center gap-2">
               <MessageSquareQuote className="h-5 w-5 text-indigo-700" />
-              <h3 className="text-xs font-bold text-slate-900">
+              <h3 className="text-xs font-extrabold text-slate-900 sm:text-sm">
                 Tanya Pakar UIP (Lapangan &amp; Perundangan)
               </h3>
             </div>
             <select
               value={aktaFilter}
               onChange={(e) => setAktaFilter(e.target.value)}
-              className="rounded-lg border border-indigo-200 bg-white px-2.5 py-1 text-xs font-semibold text-slate-800"
+              className="rounded-lg border border-indigo-200 bg-white px-2.5 py-1.5 text-base font-semibold text-slate-800 sm:py-1 sm:text-xs"
             >
               <option value="Semua">Semua Akta KKM</option>
               <option value="Akta 852">Akta 852 (Merokok/Vape)</option>
@@ -150,38 +160,41 @@ export default function UIPAdvisorPanel({
               }
             }}
             placeholder="Contoh: Ada budak sekolah hisap rokok di tepi jalan, nak guna seksyen mana dan apa prosedur?"
-            className="w-full rounded-lg border border-indigo-200 bg-white p-2.5 text-xs leading-relaxed focus:border-indigo-500 focus:outline-none"
+            className="w-full rounded-lg border border-indigo-200 bg-white p-2.5 text-base leading-relaxed text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-100 sm:text-xs"
           />
 
-          {/* Suis Mod Pantas (< 0.1s) vs Mod AI Gemini Flash */}
-          <div className="mt-2.5 flex flex-wrap items-center justify-between gap-2 rounded-lg border border-indigo-100 bg-white/90 px-2.5 py-1.5">
+          {/* Suis Jawapan Segera vs Analisa Mendalam AI */}
+          <div className="mt-2.5 flex flex-wrap items-center justify-between gap-2 rounded-lg border border-indigo-100 bg-white/95 px-2.5 py-2">
             <div className="flex items-center gap-1.5 text-[11px] font-semibold text-slate-700">
               {useAiDeep ? (
-                <Sparkles className="h-3.5 w-3.5 text-indigo-600" />
+                <Sparkles className="h-4 w-4 text-indigo-600" />
               ) : (
-                <Zap className="h-3.5 w-3.5 text-emerald-600" />
+                <Zap className="h-4 w-4 text-emerald-600" />
               )}
               <span>
                 {useAiDeep
-                  ? "Mod AI Mendalam (Gemini Cloud ~10–25s)"
-                  : "Mod Pantas Statutori (< 0.1 Saat — Serta-Merta)"}
+                  ? "Analisa Mendalam AI (~15 saat)"
+                  : "Jawapan Segera SOP (< 1 saat)"}
               </span>
             </div>
             <button
               type="button"
               onClick={() => setUseAiDeep(!useAiDeep)}
-              className={`rounded-full px-2.5 py-0.5 text-[10px] font-bold transition ${useAiDeep
-                ? "bg-indigo-600 text-white"
-                : "bg-emerald-100 text-emerald-800 hover:bg-emerald-200"
-                }`}
+              className={`min-h-[34px] rounded-full px-3 py-1 text-[11px] font-bold transition ${
+                useAiDeep
+                  ? "bg-indigo-600 text-white"
+                  : "bg-emerald-100 text-emerald-800 hover:bg-emerald-200"
+              }`}
             >
-              {useAiDeep ? "Tukar ke Mod Pantas" : "Aktifkan AI Flash"}
+              {useAiDeep ? "Tukar ke Jawapan Segera" : "Guna Analisa AI"}
             </button>
           </div>
 
           <div className="mt-2.5">
-            <span className="text-[10px] font-bold uppercase text-slate-500">Soalan Contoh Pantas:</span>
-            <div className="mt-1 flex flex-wrap gap-1.5">
+            <span className="text-[10px] font-bold uppercase text-slate-500">
+              Atau Klik Terus Contoh Situasi:
+            </span>
+            <div className="mt-1.5 grid grid-cols-1 gap-1.5 sm:flex sm:flex-wrap">
               {EXAMPLE_PROMPTS.map((ex, i) => (
                 <button
                   key={i}
@@ -190,7 +203,7 @@ export default function UIPAdvisorPanel({
                     setQuestion(ex);
                     handleConsult(ex);
                   }}
-                  className="rounded-full border border-indigo-200 bg-white px-2.5 py-1 text-[10px] font-medium text-indigo-800 hover:bg-indigo-100"
+                  className="min-h-[38px] rounded-xl border border-indigo-200 bg-white px-3 py-2 text-left text-xs font-medium leading-snug text-indigo-900 transition hover:border-indigo-400 hover:bg-indigo-50 sm:min-h-0 sm:py-1.5 sm:text-[11px]"
                 >
                   {ex}
                 </button>
@@ -202,12 +215,12 @@ export default function UIPAdvisorPanel({
             type="button"
             disabled={loading}
             onClick={() => handleConsult()}
-            className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-lg bg-[#0f2744] px-4 py-2.5 text-xs font-bold text-white shadow-sm hover:bg-slate-800 disabled:opacity-60"
+            className="mt-3 flex min-h-[44px] w-full items-center justify-center gap-1.5 rounded-lg bg-[#0f2744] px-4 py-2.5 text-xs font-extrabold text-white shadow-sm hover:bg-slate-800 disabled:opacity-60"
           >
             {loading ? (
-              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+              <Loader2 className="h-4 w-4 animate-spin" />
             ) : (
-              <Search className="h-3.5 w-3.5 text-amber-300" />
+              <Search className="h-4 w-4 text-amber-300" />
             )}
             Tanya Pakar &amp; Semak Prosedur
           </button>
@@ -219,15 +232,30 @@ export default function UIPAdvisorPanel({
           )}
         </div>
 
-        {/* Pustaka Pantas Situasi Lazim */}
+        {/* Pustaka Pantas Situasi Lazim (Boleh Lipat di Mobile) */}
         <div className="rounded-xl border border-slate-200 bg-white p-3.5">
-          <div className="mb-2 flex items-center justify-between">
-            <h4 className="text-xs font-bold text-slate-900">
-              Pustaka Pantas ({filteredScenarios.length} Situasi Lapangan)
-            </h4>
-            <span className="text-[10px] text-slate-500">Klik 1-kali (0.05s)</span>
-          </div>
-          <div className="max-h-[420px] space-y-1.5 overflow-y-auto pr-1">
+          <button
+            type="button"
+            onClick={() => setShowMobileLibrary((v) => !v)}
+            className="flex min-h-[36px] w-full items-center justify-between gap-2 text-left lg:cursor-default"
+          >
+            <div>
+              <h4 className="text-xs font-extrabold text-slate-900">
+                Pustaka Pantas ({filteredScenarios.length} Situasi Lapangan)
+              </h4>
+              <span className="text-[10px] text-slate-500">Klik mana-mana kad untuk jawapan segera</span>
+            </div>
+            <span className="inline-flex items-center gap-1 text-[11px] font-bold text-indigo-700 lg:hidden">
+              {showMobileLibrary ? "Tutup" : "Lihat Senarai"}
+              {showMobileLibrary ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+            </span>
+          </button>
+
+          <div
+            className={`${
+              showMobileLibrary ? "mt-2.5 block" : "hidden lg:mt-2.5 lg:block"
+            } space-y-1.5 lg:max-h-[420px] lg:overflow-y-auto lg:pr-1`}
+          >
             {filteredScenarios.map((sc) => {
               const selected = result?.scenario_id === sc.id;
               return (
@@ -238,25 +266,25 @@ export default function UIPAdvisorPanel({
                     setQuestion(sc.tajuk);
                     handleConsult(sc.tajuk, sc.id);
                   }}
-                  className={`flex w-full flex-col items-start rounded-lg border p-2.5 text-left transition ${selected
-                    ? "border-indigo-500 bg-indigo-50/70 ring-1 ring-indigo-500"
-                    : "border-slate-200 bg-slate-50/40 hover:border-indigo-300 hover:bg-indigo-50/30"
-                    }`}
+                  className={`flex w-full flex-col items-start rounded-lg border p-2.5 text-left transition ${
+                    selected
+                      ? "border-indigo-500 bg-indigo-50/70 ring-1 ring-indigo-500"
+                      : "border-slate-200 bg-slate-50/40 hover:border-indigo-300 hover:bg-indigo-50/30"
+                  }`}
                 >
                   <div className="flex w-full items-center justify-between gap-2">
                     <span className="rounded bg-slate-800 px-1.5 py-0.5 text-[10px] font-bold text-white">
                       {sc.akta_utama}
                     </span>
                     <span
-                      className={`text-[10px] font-bold ${sc.sesuai_buka_ip ? "text-amber-700" : "text-emerald-700"
-                        }`}
+                      className={`text-[10px] font-bold ${
+                        sc.sesuai_buka_ip ? "text-amber-700" : "text-emerald-700"
+                      }`}
                     >
                       {sc.sesuai_buka_ip ? "Sesuai Buka IP" : "Kompaun Dahulu"}
                     </span>
                   </div>
-                  <span className="mt-1 text-xs font-bold text-slate-900">
-                    {sc.tajuk}
-                  </span>
+                  <span className="mt-1 text-xs font-bold text-slate-900">{sc.tajuk}</span>
                 </button>
               );
             })}
@@ -265,19 +293,20 @@ export default function UIPAdvisorPanel({
       </div>
 
       {/* LAJUR KANAN (7 col): Kad Ringkasan 5-Saat + SOP & Pertuduhan */}
-      <div className="lg:col-span-7">
+      <div ref={resultRef} className="lg:col-span-7">
         {!result ? (
-          <div className="flex h-full min-h-[380px] flex-col items-center justify-center rounded-xl border border-dashed border-slate-300 bg-white p-8 text-center">
+          <div className="flex h-full min-h-[260px] flex-col items-center justify-center rounded-xl border border-dashed border-slate-300 bg-white p-6 text-center sm:min-h-[380px] sm:p-8">
             <MessageSquareQuote className="mb-3 h-10 w-10 text-indigo-400" />
             <h3 className="text-sm font-bold text-slate-800">
               Jawapan Pantas &amp; Ringkas Untuk Pegawai Lapangan (PPKP)
             </h3>
             <p className="mt-1 max-w-md text-xs text-slate-500">
-              Pilih mana-mana contoh soalan di sebelah kiri atau taip situasi kes yang sedang anda kendalikan. Sistem akan memaparkan <strong>Kad Ringkasan 5-Saat</strong> (Seksyen Caj, Hukuman, Kompaun vs Buka IP, dan Eksibit Wajib).
+              Taip situasi di ruangan soalan atau klik mana-mana contoh situasi. Sistem akan memaparkan{" "}
+              <strong>Kad Ringkasan 5-Saat</strong> (Seksyen Caj, Hukuman, Kompaun vs Buka IP, dan Eksibit Wajib).
             </p>
           </div>
         ) : (
-          <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-4 shadow-xs">
+          <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
             {/* Bar Tajuk & Aksi Pantas */}
             <div className="flex flex-wrap items-start justify-between gap-2 border-b border-slate-200 pb-3">
               <div>
@@ -285,9 +314,9 @@ export default function UIPAdvisorPanel({
                   <span className="rounded bg-[#0f2744] px-2 py-0.5 text-[10px] font-bold text-white">
                     {result.akta_disyorkan}
                   </span>
-                  <span className="inline-flex items-center gap-1 rounded bg-slate-100 px-2 py-0.5 text-[10px] font-medium text-slate-600">
+                  <span className="inline-flex items-center gap-1 rounded bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-800">
                     <Zap className="h-3 w-3 text-emerald-600" />
-                    {result.engine_used}
+                    Rujukan SOP &amp; Akta Rasmi
                   </span>
                 </div>
                 <h4 className="mt-1.5 text-sm font-bold text-slate-900">{result.tajuk_nasihat}</h4>
@@ -297,7 +326,7 @@ export default function UIPAdvisorPanel({
                 <button
                   type="button"
                   onClick={handleCopySummary}
-                  className="inline-flex items-center gap-1 rounded-lg bg-slate-100 px-2.5 py-1.5 text-xs font-bold text-slate-700 hover:bg-slate-200"
+                  className="inline-flex min-h-[38px] items-center gap-1 rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-bold text-slate-700 hover:bg-slate-200"
                 >
                   {copiedSummary ? (
                     <ClipboardCheck className="h-3.5 w-3.5 text-emerald-600" />
@@ -315,10 +344,12 @@ export default function UIPAdvisorPanel({
                       result.sesuai_buka_ip
                     )
                   }
-                  className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-700 px-3 py-1.5 text-xs font-bold text-white shadow-sm hover:bg-emerald-800"
+                  className="inline-flex min-h-[38px] items-center gap-1.5 rounded-lg bg-emerald-700 px-3.5 py-1.5 text-xs font-bold text-white shadow-sm hover:bg-emerald-800"
                 >
-                  <ArrowRightCircle className="h-3.5 w-3.5" />
-                  Jana Draf Kes Ini dalam Editor IP
+                  <ArrowRightCircle className="h-4 w-4" />
+                  {result.sesuai_buka_ip
+                    ? "Buka Draf Kes Ini dalam Editor IP"
+                    : "Isi ke Borang Notis Kompaun"}
                 </button>
               </div>
             </div>
@@ -350,14 +381,16 @@ export default function UIPAdvisorPanel({
               </div>
 
               <div
-                className={`rounded-lg border p-3 ${result.sesuai_buka_ip
-                  ? "border-amber-300 bg-amber-50/80"
-                  : "border-emerald-300 bg-emerald-50/80"
-                  }`}
+                className={`rounded-lg border p-3 ${
+                  result.sesuai_buka_ip
+                    ? "border-amber-300 bg-amber-50/80"
+                    : "border-emerald-300 bg-emerald-50/80"
+                }`}
               >
                 <div
-                  className={`text-[10px] font-bold uppercase tracking-wide ${result.sesuai_buka_ip ? "text-amber-800" : "text-emerald-800"
-                    }`}
+                  className={`text-[10px] font-bold uppercase tracking-wide ${
+                    result.sesuai_buka_ip ? "text-amber-800" : "text-emerald-800"
+                  }`}
                 >
                   3. Keputusan Segera (Kompaun vs IP)
                 </div>
@@ -372,7 +405,7 @@ export default function UIPAdvisorPanel({
                 </div>
                 <ul className="mt-1 list-disc space-y-0.5 pl-4 text-[11px] font-medium text-teal-950">
                   {result.eksibit_wajib.slice(0, 2).map((item, i) => (
-                    <li key={i} className="line-clamp-1">{item}</li>
+                    <li key={i} className="line-clamp-2">{item}</li>
                   ))}
                 </ul>
               </div>
@@ -467,7 +500,7 @@ export default function UIPAdvisorPanel({
               <div className="rounded-lg border border-slate-200 bg-slate-50 p-3">
                 <div className="mb-1.5 flex items-center gap-1.5 text-xs font-bold text-slate-800">
                   <BookOpen className="h-4 w-4 text-teal-700" />
-                  Teks Akta Sebenar Dirujuk (Strict RAG)
+                  Petikan Seksyen Akta Rasmi
                 </div>
                 <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                   {result.statutory_citations.slice(0, 2).map((cit, i) => (

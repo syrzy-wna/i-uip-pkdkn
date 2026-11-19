@@ -141,9 +141,9 @@ export default function DevConsoleModal({
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/65 p-3 sm:p-5 backdrop-blur-xs">
+    <div className="fixed inset-0 z-50 flex items-end justify-center bg-slate-950/65 p-0 backdrop-blur-sm sm:items-center sm:p-5">
       <div
-        className={`flex max-h-[92vh] w-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl transition-all ${
+        className={`flex max-h-[94dvh] w-full flex-col overflow-hidden rounded-t-2xl border border-slate-200 bg-white shadow-2xl transition-all sm:rounded-2xl ${
           tab === "vault" ? "max-w-7xl" : "max-w-6xl"
         }`}
       >
@@ -193,84 +193,9 @@ export default function DevConsoleModal({
           </div>
         </div>
 
-        {/* KPI Ringkas Atas */}
-        {data && (
-          <div className="grid grid-cols-2 gap-2.5 border-b border-slate-200 bg-slate-50 px-5 py-3 sm:grid-cols-3 lg:grid-cols-5">
-            <div className="rounded-xl border border-slate-200 bg-white p-3">
-              <div className="flex items-center justify-between text-[11px] font-semibold text-slate-500">
-                <span>Pegawai Berdaftar</span>
-                <Users className="h-4 w-4 text-blue-600" />
-              </div>
-              <div className="mt-1 text-xl font-extrabold text-slate-900">
-                {data.summary.total_users}
-              </div>
-              <div className="text-[10px] text-emerald-700 font-medium">
-                {data.summary.active_sessions} sesi log masuk aktif
-              </div>
-            </div>
-
-            <div className="rounded-xl border border-slate-200 bg-white p-3">
-              <div className="flex items-center justify-between text-[11px] font-semibold text-slate-500">
-                <span>Aktiviti Direkod</span>
-                <Activity className="h-4 w-4 text-indigo-600" />
-              </div>
-              <div className="mt-1 text-xl font-extrabold text-slate-900">
-                {data.summary.total_actions}
-              </div>
-              <div className="text-[10px] text-slate-600">
-                {data.summary.local_free_calls} tempatan (RM0) • {data.summary.cloud_api_calls} Cloud API
-              </div>
-            </div>
-
-            <div className="rounded-xl border border-slate-200 bg-white p-3">
-              <div className="flex items-center justify-between text-[11px] font-semibold text-slate-500">
-                <span>Kos Operasi Terkumpul</span>
-                <Coins className="h-4 w-4 text-amber-600" />
-              </div>
-              <div className="mt-1 text-xl font-extrabold text-emerald-700">
-                RM {data.summary.total_cost_myr.toFixed(4)}
-              </div>
-              <div className="text-[10px] text-slate-500">
-                USD {data.summary.total_cost_usd.toFixed(5)} • {(data.summary.total_input_tokens + data.summary.total_output_tokens).toLocaleString()} token
-              </div>
-            </div>
-
-            <div className="rounded-xl border border-slate-200 bg-white p-3">
-              <div className="flex items-center justify-between text-[11px] font-semibold text-slate-500">
-                <span>Status Connector</span>
-                <ShieldCheck className="h-4 w-4 text-emerald-600" />
-              </div>
-              <div className="mt-1 text-xs font-extrabold text-slate-900">
-                Google: {data.google_client_id_configured ? "OAuth 2.0 GIS Aktif" : "Belum Dikonfigurasi"}
-              </div>
-              <div className="mt-0.5 text-[10px] text-slate-600">
-                Gemini: {data.gemini_api_key_configured ? "Kunci API Aktif" : "Mod Statutori RM0"} • Purata {data.summary.avg_latency_ms}ms
-              </div>
-            </div>
-
-            <button
-              type="button"
-              onClick={() => setTab("vault")}
-              className="rounded-xl border border-indigo-200 bg-indigo-50/70 p-3 text-left transition hover:border-indigo-400 hover:bg-indigo-50"
-            >
-              <div className="flex items-center justify-between text-[11px] font-semibold text-indigo-900">
-                <span>Arkib &amp; Bucket Dev</span>
-                <Database className="h-4 w-4 text-indigo-700" />
-              </div>
-              <div className="mt-1 text-xl font-extrabold text-indigo-950">
-                {data.vault_summary?.total_records ?? 0} Rekod
-              </div>
-              <div className="text-[10px] font-semibold text-indigo-800">
-                {data.vault_summary?.total_files ?? 0} fail •{" "}
-                {data.vault_summary?.is_cloud_bucket ? "Private S3/Neon" : "DB + Local Vault"}
-              </div>
-            </button>
-          </div>
-        )}
-
-        {/* Tab Bar & Carian */}
-        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 bg-white px-5 pt-2.5 pb-2">
-          <div className="flex flex-wrap gap-1.5">
+        {/* Tab Bar & Carian (1 baris skrol mendatar di mobile) */}
+        <div className="flex flex-col gap-2 border-b border-slate-200 bg-white px-4 pt-2.5 pb-2 sm:px-5 lg:flex-row lg:items-center lg:justify-between">
+          <div className="flex gap-1.5 overflow-x-auto pb-1 no-scrollbar">
             {[
               { id: "users", label: `1. Siapa Guna (${data?.users.length ?? 0})`, icon: Users },
               { id: "activities", label: `2. Apa Dibuat (${data?.activities.length ?? 0})`, icon: Activity },
@@ -289,7 +214,7 @@ export default function DevConsoleModal({
                   key={item.id}
                   type="button"
                   onClick={() => setTab(item.id as typeof tab)}
-                  className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition ${
+                  className={`inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-lg px-3 py-1.5 text-xs font-bold transition ${
                     active
                       ? "bg-[#0f2744] text-white"
                       : "bg-slate-100 text-slate-700 hover:bg-slate-200"
@@ -304,21 +229,21 @@ export default function DevConsoleModal({
 
           {(tab === "users" || tab === "activities") && (
             <div className="flex flex-wrap items-center gap-2">
-              <div className="relative">
+              <div className="relative flex-1 sm:flex-none">
                 <Search className="absolute left-2.5 top-2 h-3.5 w-3.5 text-slate-400" />
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Cari nama pegawai, emel atau kes..."
-                  className="w-56 rounded-lg border border-slate-300 pl-8 pr-3 py-1.5 text-xs focus:border-blue-500 focus:outline-none"
+                  className="w-full rounded-lg border border-slate-300 pl-8 pr-3 py-1.5 text-base focus:border-blue-500 focus:outline-none sm:w-56 sm:text-xs"
                 />
               </div>
               {tab === "activities" && data && (
                 <select
                   value={actionFilter}
                   onChange={(e) => setActionFilter(e.target.value)}
-                  className="rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-700"
+                  className="rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-base font-semibold text-slate-700 sm:text-xs"
                 >
                   <option value="SEMUA">Semua Aktiviti</option>
                   {data.summary.action_breakdown.map((b) => (
@@ -332,8 +257,81 @@ export default function DevConsoleModal({
           )}
         </div>
 
-        {/* Kandungan Tab */}
-        <div className="flex-1 overflow-y-auto p-5 bg-slate-50/40">
+        {/* Kandungan Boleh Tatal (termasuk KPI pada mobile supaya jadual luas) */}
+        <div className="flex-1 overflow-y-auto p-4 bg-slate-50/40 sm:p-5 space-y-4">
+          {data && (
+            <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-5">
+              <div className="rounded-xl border border-slate-200 bg-white p-3">
+                <div className="flex items-center justify-between text-[11px] font-semibold text-slate-500">
+                  <span>Pegawai Berdaftar</span>
+                  <Users className="h-4 w-4 text-blue-600" />
+                </div>
+                <div className="mt-1 text-xl font-extrabold text-slate-900">
+                  {data.summary.total_users}
+                </div>
+                <div className="text-[10px] text-emerald-700 font-medium">
+                  {data.summary.active_sessions} sesi log masuk aktif
+                </div>
+              </div>
+
+              <div className="rounded-xl border border-slate-200 bg-white p-3">
+                <div className="flex items-center justify-between text-[11px] font-semibold text-slate-500">
+                  <span>Aktiviti Direkod</span>
+                  <Activity className="h-4 w-4 text-indigo-600" />
+                </div>
+                <div className="mt-1 text-xl font-extrabold text-slate-900">
+                  {data.summary.total_actions}
+                </div>
+                <div className="text-[10px] text-slate-600">
+                  {data.summary.local_free_calls} tempatan • {data.summary.cloud_api_calls} Cloud API
+                </div>
+              </div>
+
+              <div className="rounded-xl border border-slate-200 bg-white p-3">
+                <div className="flex items-center justify-between text-[11px] font-semibold text-slate-500">
+                  <span>Kos Operasi</span>
+                  <Coins className="h-4 w-4 text-amber-600" />
+                </div>
+                <div className="mt-1 text-xl font-extrabold text-emerald-700">
+                  RM {data.summary.total_cost_myr.toFixed(4)}
+                </div>
+                <div className="text-[10px] text-slate-500">
+                  USD {data.summary.total_cost_usd.toFixed(5)}
+                </div>
+              </div>
+
+              <div className="rounded-xl border border-slate-200 bg-white p-3">
+                <div className="flex items-center justify-between text-[11px] font-semibold text-slate-500">
+                  <span>Status Connector</span>
+                  <ShieldCheck className="h-4 w-4 text-emerald-600" />
+                </div>
+                <div className="mt-1 text-xs font-extrabold text-slate-900">
+                  Google: {data.google_client_id_configured ? "Aktif" : "Belum"}
+                </div>
+                <div className="mt-0.5 text-[10px] text-slate-600">
+                  Gemini: {data.gemini_api_key_configured ? "Aktif" : "Mod RM0"}
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setTab("vault")}
+                className="col-span-2 rounded-xl border border-indigo-200 bg-indigo-50/70 p-3 text-left transition hover:border-indigo-400 hover:bg-indigo-50 sm:col-span-1"
+              >
+                <div className="flex items-center justify-between text-[11px] font-semibold text-indigo-900">
+                  <span>Arkib &amp; Bucket Dev</span>
+                  <Database className="h-4 w-4 text-indigo-700" />
+                </div>
+                <div className="mt-1 text-xl font-extrabold text-indigo-950">
+                  {data.vault_summary?.total_records ?? 0} Rekod
+                </div>
+                <div className="text-[10px] font-semibold text-indigo-800">
+                  {data.vault_summary?.total_files ?? 0} fail •{" "}
+                  {data.vault_summary?.is_cloud_bucket ? "Private S3/Neon" : "DB + Local"}
+                </div>
+              </button>
+            </div>
+          )}
           {error && (
             <div className="mb-3 rounded-lg border border-rose-300 bg-rose-50 px-3 py-2 text-xs font-semibold text-rose-800">
               {error}

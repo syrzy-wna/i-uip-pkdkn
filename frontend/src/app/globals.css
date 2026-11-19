@@ -13,6 +13,27 @@ body {
   font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
 }
 
+/* Elak Safari iOS auto-zoom ketika PPKP mengisi borang pada telefon pintar */
+@media (max-width: 639px) {
+  input,
+  textarea,
+  select {
+    font-size: 16px;
+  }
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
 /* Bar skrol halus untuk paparan Split-View profesional */
 ::-webkit-scrollbar {
   width: 6px;
