@@ -327,6 +327,7 @@ export interface OfficerProfile {
   auth_provider?: string;
   last_seen_at?: string;
   is_demo?: boolean;
+  is_dev_admin?: boolean;
 }
 
 export interface DemoAccountSummary {

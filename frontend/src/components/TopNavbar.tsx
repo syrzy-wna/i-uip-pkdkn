@@ -29,6 +29,7 @@ interface TopNavbarProps {
   onOpenCases: () => void;
   onOpenSettings: () => void;
   officer: OfficerProfile | null;
+  isDevAdmin: boolean;
   onOpenAccount: () => void;
   onOpenSplash: () => void;
   onOpenDevConsole: () => void;
@@ -88,6 +89,7 @@ export default function TopNavbar({
   onOpenCases,
   onOpenSettings,
   officer,
+  isDevAdmin,
   onOpenAccount,
   onOpenSplash,
   onOpenDevConsole,
@@ -218,25 +220,29 @@ export default function TopNavbar({
             </span>
           </button>
 
-          <button
-            type="button"
-            onClick={onOpenDevConsole}
-            title="Konsol Pembangun (g.dev/syrzy): Semak Pengguna, Aktiviti & Kos API"
-            className="inline-flex items-center gap-1 rounded-lg bg-indigo-500/30 px-2.5 py-1.5 text-xs font-bold text-amber-200 ring-1 ring-amber-300/40 hover:bg-indigo-500/50"
-          >
-            <Cpu className="h-3.5 w-3.5" />
-            Konsol Dev
-          </button>
+          {isDevAdmin && (
+            <>
+              <button
+                type="button"
+                onClick={onOpenDevConsole}
+                title="Konsol Pembangun (g.dev/syrzy): Semak Pengguna, Aktiviti & Kos API"
+                className="inline-flex items-center gap-1 rounded-lg bg-indigo-500/30 px-2.5 py-1.5 text-xs font-bold text-amber-200 ring-1 ring-amber-300/40 hover:bg-indigo-500/50"
+              >
+                <Cpu className="h-3.5 w-3.5" />
+                Konsol Dev
+              </button>
 
-          <button
-            type="button"
-            onClick={onOpenSettings}
-            title="Tetapan Kunci API Gemini & Ollama"
-            className="inline-flex items-center gap-1 rounded-lg bg-white/10 px-2.5 py-1.5 text-xs font-semibold text-white ring-1 ring-white/20 hover:bg-white/20"
-          >
-            <Settings className="h-3.5 w-3.5" />
-            Tetapan
-          </button>
+              <button
+                type="button"
+                onClick={onOpenSettings}
+                title="Tetapan Kunci API Gemini & Ollama"
+                className="inline-flex items-center gap-1 rounded-lg bg-white/10 px-2.5 py-1.5 text-xs font-semibold text-white ring-1 ring-white/20 hover:bg-white/20"
+              >
+                <Settings className="h-3.5 w-3.5" />
+                Tetapan
+              </button>
+            </>
+          )}
         </div>
       </div>
     </header>

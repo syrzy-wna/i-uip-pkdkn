@@ -55,6 +55,18 @@ def _require_authenticated_officer(
     return user
 
 
+def _require_dev_admin(
+    current_officer: Dict[str, Any] = Depends(_require_authenticated_officer),
+) -> Dict[str, Any]:
+    email = str(current_officer.get("email") or "").strip().lower()
+    if email not in settings.dev_admin_emails:
+        raise HTTPException(
+            status_code=403,
+            detail="Akses disekat: Konsol Pembangun dan Tetapan Sistem hanya untuk akaun pembangun rasmi (zero4eleven@gmail.com).",
+        )
+    return current_officer
+
+
 def _est_tokens(text: Optional[str]) -> int:
     if not text:
         return 0
@@ -271,7 +283,7 @@ def get_runtime_settings() -> Dict[str, Any]:
 @app.post("/api/settings")
 def update_runtime_settings(
     req: RuntimeSettingsRequest,
-    _officer: Dict[str, Any] = Depends(_require_authenticated_officer),
+    _admin: Dict[str, Any] = Depends(_require_dev_admin),
 ) -> Dict[str, Any]:
     db_service.save_runtime_settings(req.model_dump())
     router_service.refresh_clients()
@@ -743,6 +755,6 @@ def consult_uip_advisor(
 
 @app.get("/api/dev/overview")
 def get_dev_console_overview(
-    _officer: Dict[str, Any] = Depends(_require_authenticated_officer),
+    _admin: Dict[str, Any] = Depends(_require_dev_admin),
 ) -> Dict[str, Any]:
     return db_service.get_dev_overview()

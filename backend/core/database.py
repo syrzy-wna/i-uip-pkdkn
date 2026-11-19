@@ -967,6 +967,7 @@ class UIPDatabase:
         d.pop("password_hash", None)
         d.pop("password_salt", None)
         d["is_demo"] = bool(d.get("is_demo", 0))
+        d["is_dev_admin"] = str(d.get("email") or "").strip().lower() in settings.dev_admin_emails
         return d
 
     @staticmethod

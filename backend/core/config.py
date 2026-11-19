@@ -28,6 +28,7 @@ def _resolve_path(raw_path: str, default_rel: str) -> Path:
 DEFAULT_GOOGLE_CLIENT_ID = (
     "290203327893-b7f42feigfscdd4rfo1eh1a3n5age7ev.apps.googleusercontent.com"
 )
+DEFAULT_DEV_ADMIN_EMAILS = "zero4eleven@gmail.com"
 
 
 @dataclass
@@ -60,6 +61,17 @@ class Settings:
     cors_origins_raw: str = os.getenv(
         "CORS_ORIGINS", "http://localhost:3000,http://127.0.0.1:3000"
     )
+    dev_admin_emails_raw: str = os.getenv(
+        "DEV_ADMIN_EMAILS", DEFAULT_DEV_ADMIN_EMAILS
+    )
+
+    @property
+    def dev_admin_emails(self) -> List[str]:
+        return [
+            item.strip().lower()
+            for item in self.dev_admin_emails_raw.split(",")
+            if item.strip()
+        ]
 
     @property
     def has_gemini_key(self) -> bool:

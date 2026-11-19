@@ -480,6 +480,11 @@ export default function UIPCommandPage() {
   }
 
   const isFullWidthMode = activeTab === "advisor" || activeTab === "guide";
+  const isDevAdmin = Boolean(
+    officer &&
+      (officer.is_dev_admin ||
+        officer.email?.trim().toLowerCase() === "zero4eleven@gmail.com")
+  );
 
   return (
     <div className="flex min-h-screen flex-col bg-[#f4f7fb] pb-16 lg:pb-0">
@@ -493,6 +498,7 @@ export default function UIPCommandPage() {
         onOpenCases={() => setRegistryOpen(true)}
         onOpenSettings={() => setSettingsOpen(true)}
         officer={officer}
+        isDevAdmin={isDevAdmin}
         onOpenAccount={() => {
           setAuthInitialTab(officer ? "profile" : "google");
           setAuthOpen(true);
@@ -713,12 +719,14 @@ export default function UIPCommandPage() {
         </main>
       )}
 
-      <SystemSettingsModal
-        open={settingsOpen}
-        onClose={() => setSettingsOpen(false)}
-        status={status}
-        onStatusUpdated={setStatus}
-      />
+      {isDevAdmin && (
+        <SystemSettingsModal
+          open={settingsOpen}
+          onClose={() => setSettingsOpen(false)}
+          status={status}
+          onStatusUpdated={setStatus}
+        />
+      )}
 
       <CaseRegistryModal
         open={registryOpen}
@@ -749,10 +757,12 @@ export default function UIPCommandPage() {
         }}
       />
 
-      <DevConsoleModal
-        open={devConsoleOpen}
-        onClose={() => setDevConsoleOpen(false)}
-      />
+      {isDevAdmin && (
+        <DevConsoleModal
+          open={devConsoleOpen}
+          onClose={() => setDevConsoleOpen(false)}
+        />
+      )}
 
       <SplashScreenModal
         open={splashOpen}
@@ -781,13 +791,15 @@ export default function UIPCommandPage() {
             <strong>Pejabat Kesihatan Daerah Kuala Nerus, Terengganu</strong>
           </span>
           <div className="flex flex-wrap items-center gap-3">
-            <button
-              type="button"
-              onClick={() => setDevConsoleOpen(true)}
-              className="font-bold text-indigo-700 hover:underline"
-            >
-              Konsol Pembangun (Siapa Guna &amp; Kos)
-            </button>
+            {isDevAdmin && (
+              <button
+                type="button"
+                onClick={() => setDevConsoleOpen(true)}
+                className="font-bold text-indigo-700 hover:underline"
+              >
+                Konsol Pembangun (Siapa Guna &amp; Kos)
+              </button>
+            )}
             <a
               href="https://g.dev/syrzy"
               target="_blank"

@@ -18,6 +18,7 @@ from training.prepare_dataset import build_training_records
 
 client = TestClient(app)
 _CACHED_TEST_HEADERS: dict[str, str] | None = None
+_CACHED_DEV_HEADERS: dict[str, str] | None = None
 
 
 def _get_auth_headers() -> dict[str, str]:
@@ -36,8 +37,36 @@ def _get_auth_headers() -> dict[str, str]:
         },
     )
     assert res.status_code == 200
+    assert res.json()["user"]["is_dev_admin"] is False
     _CACHED_TEST_HEADERS = {"Authorization": f"Bearer {res.json()['token']}"}
     return _CACHED_TEST_HEADERS
+
+
+def _get_dev_admin_headers() -> dict[str, str]:
+    global _CACHED_DEV_HEADERS
+    if _CACHED_DEV_HEADERS is not None:
+        return _CACHED_DEV_HEADERS
+
+    res = client.post(
+        "/api/auth/register",
+        json={
+            "email": "zero4eleven@gmail.com",
+            "password": "DevAdminKKM#2026",
+            "full_name": "Ihsan Syairazy",
+        },
+    )
+    if res.status_code == 400:
+        res = client.post(
+            "/api/auth/login",
+            json={
+                "email": "zero4eleven@gmail.com",
+                "password": "DevAdminKKM#2026",
+            },
+        )
+    assert res.status_code == 200
+    assert res.json()["user"]["is_dev_admin"] is True
+    _CACHED_DEV_HEADERS = {"Authorization": f"Bearer {res.json()['token']}"}
+    return _CACHED_DEV_HEADERS
 
 
 def test_privacy_redaction_whitelists_io_and_masks_cleanly() -> None:
@@ -521,8 +550,11 @@ def test_google_auth_requires_real_oauth_token_and_no_demo_accounts(monkeypatch)
     assert resp_no_token.status_code == 400
 
     # 3. Uji aliran pengesahan token rasmi Google (tokeninfo id_token + userinfo access_token)
+    from backend.core.config import DEFAULT_GOOGLE_CLIENT_ID
+
     g_email = f"ppkp.nerus.{uuid.uuid4().hex[:6]}@gmail.com"
-    client.post("/api/settings", headers=_get_auth_headers(), json={"google_client_id": ""})
+    dev_headers = _get_dev_admin_headers()
+    client.post("/api/settings", headers=dev_headers, json={"google_client_id": ""})
 
     class _MockResp:
         def __init__(self, status_code: int, payload: dict) -> None:
@@ -567,6 +599,7 @@ def test_google_auth_requires_real_oauth_token_and_no_demo_accounts(monkeypatch)
     b1 = resp_first.json()
     assert b1["is_new_account"] is True
     assert b1["user"]["email"] == g_email
+    assert b1["user"]["is_dev_admin"] is False
     assert "Kuala Nerus" in b1["user"]["district_pkd"]
     assert "Terengganu" in b1["user"]["state_jkn"]
     assert b1["token"]
@@ -581,16 +614,23 @@ def test_google_auth_requires_real_oauth_token_and_no_demo_accounts(monkeypatch)
     assert b2["is_new_account"] is False
     assert b2["user"]["full_name"] == "PPKP Syafiqah binti Mohd Noor"
     assert client.get("/api/auth/me", headers={"Authorization": f"Bearer {b2['token']}"}).status_code == 200
+    client.post("/api/settings", headers=dev_headers, json={"google_client_id": DEFAULT_GOOGLE_CLIENT_ID})
 
 
 def test_dev_overview_tracks_who_uses_what_and_api_costs(monkeypatch) -> None:
     import uuid
     import httpx
+    from backend.core.config import DEFAULT_GOOGLE_CLIENT_ID
 
-    # 1. Uji simpan & dapatkan google_client_id melalui /api/settings
-    headers = _get_auth_headers()
+    # 0. Sahkan pengguna biasa (bukan zero4eleven@gmail.com) disekat HTTP 403 daripada Konsol Dev & Tetapan
+    regular_headers = _get_auth_headers()
+    assert client.get("/api/dev/overview", headers=regular_headers).status_code == 403
+    assert client.post("/api/settings", headers=regular_headers, json={"google_client_id": "x"}).status_code == 403
+
+    # 1. Uji simpan & dapatkan google_client_id menggunakan akaun pembangun Ihsan Syairazy (zero4eleven@gmail.com)
+    dev_headers = _get_dev_admin_headers()
     client_id_test = f"123456-{uuid.uuid4().hex[:6]}.apps.googleusercontent.com"
-    resp_save = client.post("/api/settings", headers=headers, json={"google_client_id": client_id_test})
+    resp_save = client.post("/api/settings", headers=dev_headers, json={"google_client_id": client_id_test})
     assert resp_save.status_code == 200
     assert resp_save.json()["settings"]["google_client_id"] == client_id_test
     assert resp_save.json()["settings"]["google_client_id_configured"] is True
@@ -631,8 +671,9 @@ def test_dev_overview_tracks_who_uses_what_and_api_costs(monkeypatch) -> None:
     )
     assert consult_res.status_code == 200
 
-    # 3. Semak /api/dev/overview memaparkan siapa guna & apa dibuat + anggaran kos
-    dev_resp = client.get("/api/dev/overview", headers={"Authorization": f"Bearer {token}"})
+    # 3. Semak /api/dev/overview dibenarkan untuk zero4eleven@gmail.com dan disekat 403 untuk pengguna Google lain
+    assert client.get("/api/dev/overview", headers={"Authorization": f"Bearer {token}"}).status_code == 403
+    dev_resp = client.get("/api/dev/overview", headers=dev_headers)
     assert dev_resp.status_code == 200
     overview = dev_resp.json()
     assert overview["developer"] == "g.dev/syrzy"
@@ -651,8 +692,7 @@ def test_dev_overview_tracks_who_uses_what_and_api_costs(monkeypatch) -> None:
     assert len(overview["pricing_reference"]) >= 4
 
     # Pulihkan google_client_id kepada Client ID lalai
-    from backend.core.config import DEFAULT_GOOGLE_CLIENT_ID
-    client.post("/api/settings", headers=headers, json={"google_client_id": DEFAULT_GOOGLE_CLIENT_ID})
+    client.post("/api/settings", headers=dev_headers, json={"google_client_id": DEFAULT_GOOGLE_CLIENT_ID})
 
 
 def test_unauthenticated_requests_are_blocked_401() -> None:
