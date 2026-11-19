@@ -439,6 +439,8 @@ class IPTechnicalAuditor:
     def _determine_status(score: float, threshold: float, answer: str) -> str:
         if answer == "Yes" and score >= threshold:
             return "LULUS"
+        if answer == "Yes":
+            return "SEMAK"
         if score < 0.55:
             return "GAGAL"
         return "SEMAK"

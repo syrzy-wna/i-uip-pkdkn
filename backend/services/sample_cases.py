@@ -155,7 +155,7 @@ Kesalahan: Tidak mematuhi perintah sah yang dikeluarkan oleh pegawai diberi kuas
 - Rakaman S.112 KTJ: Percakapan Saksi 1 (PPKP Nur Hafizah binti Mohamad Shahidin) dan Saksi Pengiring (PPKP Geraldine Neo Hui Hwang) dirakam lengkap dengan amaran Seksyen 112(2) & (3) KTJ (menurut S.112(4)), dibaca semula dan ditandatangani semua pihak menurut Seksyen 112(5) KTJ.
 - Gambar Bukti, Pelan Lakar & Sijil Seksyen 90A(2): 6 keping gambar bukti berwarna bertarikh beserta pelan lakar lokasi kediaman OKS yang bertandatangan IO dilampirkan. Sijil Seksyen 90A(2) Akta Keterangan 1950 lengkap butiran kamera, komputer pejabat PKD Sepang, pencetak HP dan klausa sepanjang pengetahuan dan kepercayaan ditandatangani bagi gambar digital dan cetakan e-Notifikasi.
 - Diari Siasatan (DS): Disusun lengkap oleh kedua-dua PPKP pengesan dan IO mengikut Seksyen 119 KTJ dari tarikh arahan doktor sehingga pengesanan gagal.
-- Kertas Minit (Am 6) & Kertas Cadangan IO: Disemak oleh KPPKP U36 daerah dan UIP JKN Selangor (PKP U42) serta mendapat Izin Mendakwa TPR Selangor di bawah Seksyen 376(3) KTJ. Kes Seksyen 22(b) Akta 342 ini dibawa terus ke Mahkamah Majistret (tiada tawaran kompaun).
+- Kertas Minit (Am 6) & Kertas Cadangan IO: Disemak oleh KPPKP U7 daerah dan UIP JKN Selangor (PKP U9) serta mendapat Izin Mendakwa TPR Selangor di bawah Seksyen 376(3) KTJ. Kes Seksyen 22(b) Akta 342 ini dibawa terus ke Mahkamah Majistret (tiada tawaran kompaun).
 - Borang Mahkamah: Pengaduan kepada Majistret (Mahkamah 143), Saman (Mahkamah 111), Kertas Pertuduhan (Mahkamah 114), serta 6 Poin Pemberatan Hukuman (risiko penularan awam & Multi-Drug Resistant TB [MDR-TB]).
 """,
     },

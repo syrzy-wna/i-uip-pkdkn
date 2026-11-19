@@ -398,7 +398,7 @@ def test_officer_account_register_login_profile_and_autofill() -> None:
             "ic_number": "910412-10-5511",
             "designation": "Penolong Pegawai Kesihatan Persekitaran (PPKP)",
             "grade": "U32",
-            "kkm_authority_card_no": "KKM-SEL-U32-991",
+            "kkm_authority_card_no": "KKM-SEL-U6-991",
             "district_pkd": "Pejabat Kesihatan Daerah Hulu Langat",
             "default_computer_desc": "Komputer Meja HP EliteDesk PKD Hulu Langat",
             "default_camera_desc": "Kamera Digital Canon EOS PKD Hulu Langat",
@@ -407,6 +407,8 @@ def test_officer_account_register_login_profile_and_autofill() -> None:
     assert resp_reg.status_code == 200
     reg_body = resp_reg.json()
     assert reg_body["user"]["email"] == unique_email
+    # Sahkan gred lama U32 dinormalkan secara automatik ke gred SSPA U6
+    assert reg_body["user"]["grade"] == "U6"
     assert "password_hash" not in reg_body["user"]
     assert reg_body["token"]
 
@@ -420,15 +422,15 @@ def test_officer_account_register_login_profile_and_autofill() -> None:
 
     resp_me = client.get("/api/auth/me", headers=headers)
     assert resp_me.status_code == 200
-    assert resp_me.json()["user"]["kkm_authority_card_no"] == "KKM-SEL-U32-991"
+    assert resp_me.json()["user"]["kkm_authority_card_no"] == "KKM-SEL-U6-991"
 
     resp_upd = client.put(
         "/api/auth/profile",
         headers=headers,
-        json={"grade": "U36"},
+        json={"grade": "U7"},
     )
     assert resp_upd.status_code == 200
-    assert resp_upd.json()["user"]["grade"] == "U36"
+    assert resp_upd.json()["user"]["grade"] == "U7"
 
     # Pastikan janaan draf mengisi profil & perkakasan S.90A pegawai yang log masuk secara automatik
     resp_draft = client.post(
@@ -592,13 +594,14 @@ def test_google_auth_requires_real_oauth_token_and_no_demo_accounts(monkeypatch)
         json={
             "id_token": "real-google-id-token-placeholder",
             "kkm_authority_card_no": "KKM/TRG/PKD-KN/0555",
-            "grade": "U32",
+            "grade": "U6",
         },
     )
     assert resp_first.status_code == 200
     b1 = resp_first.json()
     assert b1["is_new_account"] is True
     assert b1["user"]["email"] == g_email
+    assert b1["user"]["grade"] == "U6"
     assert b1["user"]["is_dev_admin"] is False
     assert "Kuala Nerus" in b1["user"]["district_pkd"]
     assert "Terengganu" in b1["user"]["state_jkn"]

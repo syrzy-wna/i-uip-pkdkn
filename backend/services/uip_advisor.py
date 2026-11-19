@@ -555,7 +555,7 @@ UIP_SCENARIO_LIBRARY: List[Dict[str, Any]] = [
         "sop_lapangan": [
             "Pastikan Notis Arahan Menjalani Rawatan Penyakit Berjangkit telah dikeluarkan dan DISERAHKAN SECARA TANGAN kepada pesakit dengan tandatangan terima pesakit dan saksi PPKP.",
             "Jika pesakit gagal hadir klinik mengikut tarikh ditetapkan, lengkapkan notis cicir TBIS 10D/10Da, jalankan lawatan pengesanan ke rumah & rekod setiap usaha pengesanan dalam Diari Siasatan (DS).",
-            "Susun Kronologi Kes lengkap (tarikh mula diagnosis, tarikh AOR/cicir, tarikh serahan notis arahan, tarikh gagal hadir), Kertas Cadangan IO, serta Minit IP (Am 6) semakan KPPKP U36 & UIP JKN.",
+            "Susun Kronologi Kes lengkap (tarikh mula diagnosis, tarikh AOR/cicir, tarikh serahan notis arahan, tarikh gagal hadir), Kertas Cadangan IO, serta Minit IP (Am 6) semakan KPPKP U7 & UIP JKN.",
             "Rakam percakapan S.112 KTJ PPKP pengesan/pegawai perubatan, siapkan Sijil 90A (bagi e-Notifikasi & foto), dan pohon Izin Dakwa TPR bagi mengeluarkan Saman (Mahkamah 111) & Pertuduhan (Mahkamah 114).",
         ],
         "eksibit_wajib": [

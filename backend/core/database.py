@@ -25,6 +25,41 @@ from backend.core.config import settings
 from backend.services.sample_cases import SAMPLE_CASES
 
 
+LEGACY_TO_SSPA_GRADE: Dict[str, str] = {
+    "U29": "U5",
+    "U32": "U6",
+    "U36": "U7",
+    "U38": "U7",
+    "U40": "U8",
+    "U41": "U9",
+    "U42": "U9",
+    "U41/U42": "U9",
+    "U44": "U10",
+    "U48": "U12",
+    "U52": "U13",
+    "U54": "U14",
+    "UD41": "UD9",
+    "UD43": "UD9",
+    "UD44": "UD10",
+    "UD48": "UD12",
+    "UD52": "UD13",
+    "UD54": "UD14",
+    "C41": "C9",
+    "C44": "C10",
+    "C48": "C12",
+    "C52": "C13",
+    "C54": "C14",
+}
+
+
+def normalize_sspa_grade(raw_grade: Optional[str], default: str = "U5") -> str:
+    """Menukarkan gred SSM lama kepada gred SSPA semasa (U5, U6, U7, dll.)."""
+    val = str(raw_grade or "").strip().upper()
+    if not val:
+        return default
+    return LEGACY_TO_SSPA_GRADE.get(val, val)
+
+
 def _utc_now_iso() -> str:
     return datetime.now(timezone.utc).astimezone().strftime("%Y-%m-%d %H:%M:%S")
 
@@ -166,7 +201,7 @@ class UIPDatabase:
                     full_name TEXT NOT NULL,
                     ic_number TEXT NOT NULL DEFAULT '',
                     designation TEXT NOT NULL DEFAULT 'Penolong Pegawai Kesihatan Persekitaran (PPKP)',
-                    grade TEXT NOT NULL DEFAULT 'U29',
+                    grade TEXT NOT NULL DEFAULT 'U5',
                     kkm_authority_card_no TEXT NOT NULL DEFAULT '',
                     prosecution_authorization_no TEXT NOT NULL DEFAULT '',
                     state_jkn TEXT NOT NULL DEFAULT 'Jabatan Kesihatan Negeri Terengganu',
@@ -243,6 +278,9 @@ class UIPDatabase:
             # Produksi: pastikan tiada akaun demo palsu atau log seed tinggal dalam pangkalan data
             conn.execute("DELETE FROM users WHERE is_demo = 1")
             conn.execute("DELETE FROM activity_logs WHERE id LIKE 'act-seed-%'")
+            # Penjajaran gred SSM lama kepada SSPA (U29->U5, U32->U6, U36->U7, dll.)
+            for old_g, new_g in LEGACY_TO_SSPA_GRADE.items():
+                conn.execute("UPDATE users SET grade = ? WHERE UPPER(grade) = ?", (new_g, old_g))
             conn.commit()
 
     def load_runtime_settings_into_config(self) -> Dict[str, str]:
@@ -483,7 +521,7 @@ class UIPDatabase:
                     full_name,
                     str(payload.get("ic_number") or "").strip(),
                     str(payload.get("designation") or "Penolong Pegawai Kesihatan Persekitaran (PPKP)").strip(),
-                    str(payload.get("grade") or "U29").strip(),
+                    normalize_sspa_grade(payload.get("grade"), "U5"),
                     str(payload.get("kkm_authority_card_no") or "").strip(),
                     str(payload.get("prosecution_authorization_no") or "").strip(),
                     str(payload.get("state_jkn") or "Jabatan Kesihatan Negeri Terengganu").strip(),
@@ -618,7 +656,7 @@ class UIPDatabase:
                 "full_name": full_name,
                 "ic_number": payload.get("ic_number") or "",
                 "designation": payload.get("designation") or "Penolong Pegawai Kesihatan Persekitaran (PPKP)",
-                "grade": payload.get("grade") or "U29",
+                "grade": normalize_sspa_grade(payload.get("grade"), "U5"),
                 "kkm_authority_card_no": payload.get("kkm_authority_card_no") or "",
                 "state_jkn": payload.get("state_jkn") or "Jabatan Kesihatan Negeri Terengganu",
                 "district_pkd": payload.get("district_pkd") or "Pejabat Kesihatan Daerah Kuala Nerus",
@@ -699,8 +737,11 @@ class UIPDatabase:
         params: List[Any] = []
         for field in updatable:
             if field in payload and payload[field] is not None:
+                val = str(payload[field]).strip()
+                if field == "grade":
+                    val = normalize_sspa_grade(val, "U5")
                 updates.append(f"{field} = ?")
-                params.append(str(payload[field]).strip())
+                params.append(val)
         if not updates:
             return self.get_user_by_id(user_id)
 

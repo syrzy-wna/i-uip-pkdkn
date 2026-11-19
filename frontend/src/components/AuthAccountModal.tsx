@@ -24,6 +24,63 @@ import {
 
 const DEFAULT_GOOGLE_CLIENT_ID =
   "290203327893-b7f42feigfscdd4rfo1eh1a3n5age7ev.apps.googleusercontent.com";
+
+const SSPA_GRADE_GROUPS: Array<{
+  label: string;
+  items: Array<{ value: string; text: string }>;
+}> = [
+  {
+    label: "Skim PPKP (Kumpulan Pelaksana — SSPA)",
+    items: [
+      { value: "U5", text: "U5 — PPKP (dahulu U29)" },
+      { value: "U6", text: "U6 — PPKP Penyelia / Kanan (dahulu U32)" },
+      { value: "U7", text: "U7 — PPKP Kanan / KPPKP (dahulu U36/U38)" },
+      { value: "U8", text: "U8 — Ketua PPKP / KPPKP (dahulu U40)" },
+    ],
+  },
+  {
+    label: "Skim PKP (Pengurusan & Profesional — SSPA)",
+    items: [
+      { value: "U9", text: "U9 — PKP (dahulu U41/U42)" },
+      { value: "U10", text: "U10 — PKP Kanan (dahulu U44)" },
+      { value: "U12", text: "U12 — PKP Kanan (dahulu U48)" },
+      { value: "U13", text: "U13 — PKP Kanan (dahulu U52)" },
+      { value: "U14", text: "U14 — PKP Kanan (dahulu U54)" },
+    ],
+  },
+  {
+    label: "Pegawai Perubatan / PKD (SSPA)",
+    items: [
+      { value: "UD9", text: "UD9 — Pegawai Perubatan (dahulu UD41/43)" },
+      { value: "UD10", text: "UD10 — Pegawai Perubatan (dahulu UD44)" },
+      { value: "UD12", text: "UD12 — Pegawai Perubatan (dahulu UD48)" },
+      { value: "UD13", text: "UD13 — Pakar / Pegawai Perubatan (dahulu UD52)" },
+      { value: "UD14", text: "UD14 — Pakar / PKD (dahulu UD54)" },
+    ],
+  },
+  {
+    label: "Pegawai Sains Entomologi / Mikrobiologi (SSPA)",
+    items: [
+      { value: "C9", text: "C9 — Pegawai Sains (dahulu C41)" },
+      { value: "C10", text: "C10 — Pegawai Sains (dahulu C44)" },
+      { value: "C12", text: "C12 — Pegawai Sains (dahulu C48)" },
+      { value: "C13", text: "C13 — Pegawai Sains (dahulu C52)" },
+      { value: "C14", text: "C14 — Pegawai Sains (dahulu C54)" },
+    ],
+  },
+];
+
+function renderSspaGradeOptions() {
+  return SSPA_GRADE_GROUPS.map((grp) => (
+    <optgroup key={grp.label} label={grp.label}>
+      {grp.items.map((opt) => (
+        <option key={opt.value} value={opt.value}>
+          {opt.text}
+        </option>
+      ))}
+    </optgroup>
+  ));
+}
 import type { OfficerProfile } from "@/lib/types";
 
 declare global {
@@ -88,7 +145,7 @@ export default function AuthAccountModal({
     full_name: "",
     ic_number: "",
     designation: "Penolong Pegawai Kesihatan Persekitaran (PPKP)",
-    grade: "U29",
+    grade: "U5",
     kkm_authority_card_no: "",
     prosecution_authorization_no: "",
     state_jkn: "Jabatan Kesihatan Negeri Terengganu",
@@ -568,18 +625,13 @@ export default function AuthAccountModal({
                   </div>
                   <div className="grid grid-cols-2 gap-2">
                     <div>
-                      <label className="text-[11px] font-semibold text-slate-700">Gred</label>
+                      <label className="text-[11px] font-semibold text-slate-700">Gred (SSPA)</label>
                       <select
                         value={regForm.grade}
                         onChange={(e) => setRegForm({ ...regForm, grade: e.target.value })}
                         className="mt-0.5 w-full rounded border border-slate-300 bg-white px-2 py-1.5 text-xs"
                       >
-                        <option>U29</option>
-                        <option>U32</option>
-                        <option>U36</option>
-                        <option>U41/U42</option>
-                        <option>U44</option>
-                        <option>U48</option>
+                        {renderSspaGradeOptions()}
                       </select>
                     </div>
                     <div>
@@ -714,6 +766,29 @@ export default function AuthAccountModal({
                     onChange={(e) => setProfileForm({ ...profileForm, full_name: e.target.value })}
                     className="mt-0.5 w-full rounded border border-slate-300 px-2.5 py-1.5 text-xs"
                   />
+                </div>
+                <div>
+                  <label className="text-[11px] font-semibold text-slate-700">Jawatan</label>
+                  <select
+                    value={profileForm.designation || "Penolong Pegawai Kesihatan Persekitaran (PPKP)"}
+                    onChange={(e) => setProfileForm({ ...profileForm, designation: e.target.value })}
+                    className="mt-0.5 w-full rounded border border-slate-300 bg-white px-2.5 py-1.5 text-xs"
+                  >
+                    <option>Penolong Pegawai Kesihatan Persekitaran (PPKP)</option>
+                    <option>Pegawai Kesihatan Persekitaran (PKP)</option>
+                    <option>Pegawai Perubatan Kesihatan Daerah (PKD)</option>
+                    <option>Pegawai Sains (Entomologi / Mikrobiologi)</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="text-[11px] font-semibold text-slate-700">Gred (SSPA)</label>
+                  <select
+                    value={profileForm.grade || "U5"}
+                    onChange={(e) => setProfileForm({ ...profileForm, grade: e.target.value })}
+                    className="mt-0.5 w-full rounded border border-slate-300 bg-white px-2.5 py-1.5 text-xs"
+                  >
+                    {renderSspaGradeOptions()}
+                  </select>
                 </div>
                 <div>
                   <label className="text-[11px] font-semibold text-slate-700">No. Kad Kuasa KKM</label>

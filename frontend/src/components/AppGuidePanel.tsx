@@ -146,7 +146,7 @@ export default function AppGuidePanel() {
               color: "border-indigo-300 bg-indigo-50/50",
               steps: [
                 "Laksanakan Audit 20 Kriteria Pra-TPR dalam UIP-Command sehingga tiada kuiri GAGAL.",
-                "Hantar ke KPPKP U36 / UIP Negeri untuk semakan dan dapatkan Izin Mendakwa (Sanksi) bertulis TPR di bawah S.376(3) KTJ (atau S.32A Akta Makanan).",
+                "Hantar ke KPPKP U7 / UIP Negeri untuk semakan dan dapatkan Izin Mendakwa (Sanksi) bertulis TPR di bawah S.376(3) KTJ (atau S.32A Akta Makanan).",
                 "Daftar Borang 114, Borang 143 & Saman (Mahkamah 111) di Mahkamah Majistret dan serahkan Saman kepada OKS.",
                 "Sediakan Hujahan Pemberatan Hukuman untuk dibacakan oleh Pegawai Pendakwa jika OKT mengaku salah / disabitkan.",
               ],

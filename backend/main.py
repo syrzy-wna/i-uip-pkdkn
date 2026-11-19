@@ -124,14 +124,14 @@ class RegisterAccountRequest(BaseModel):
     full_name: str
     ic_number: str = ""
     designation: str = "Penolong Pegawai Kesihatan Persekitaran (PPKP)"
-    grade: str = "U29"
+    grade: str = "U5"
     kkm_authority_card_no: str = ""
     prosecution_authorization_no: str = ""
-    state_jkn: str = "Jabatan Kesihatan Negeri Selangor"
-    district_pkd: str = "Pejabat Kesihatan Daerah Petaling"
+    state_jkn: str = "Jabatan Kesihatan Negeri Terengganu"
+    district_pkd: str = "Pejabat Kesihatan Daerah Kuala Nerus"
     office_address: str = ""
     unit_assignment: str = "Unit Inspektorat dan Perundangan (UIP)"
-    default_magistrate_court: str = "MAHKAMAH MAJISTRET DI PETALING JAYA, SELANGOR"
+    default_magistrate_court: str = "MAHKAMAH MAJISTRET DI KUALA TERENGGANU, DALAM NEGERI TERENGGANU DARUL IMAN"
     system_role: str = "PEGAWAI_PENYIASAT"
     default_computer_desc: str = "Komputer Meja Rasmi KKM Dell OptiPlex Pejabat PKD"
     default_printer_desc: str = "Pencetak Laser Warna Pejabat PKD"
@@ -147,7 +147,7 @@ class GoogleAuthRequest(BaseModel):
     id_token: Optional[str] = None
     access_token: Optional[str] = None
     kkm_authority_card_no: str = ""
-    grade: str = "U29"
+    grade: str = "U5"
     designation: str = "Penolong Pegawai Kesihatan Persekitaran (PPKP)"
     state_jkn: str = "Jabatan Kesihatan Negeri Terengganu"
     district_pkd: str = "Pejabat Kesihatan Daerah Kuala Nerus"

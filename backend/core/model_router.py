@@ -1007,7 +1007,7 @@ class UIPModelRouter:
             },
             {
                 "tarikh": "Semakan UIP Daerah & Negeri",
-                "peristiwa": "Kertas siasatan disemak oleh KPPKP U36 / UIP JKN dan dikemukakan kepada Timbalan Pendakwa Raya (TPR) bagi permohonan Izin Dakwa.",
+                "peristiwa": "Kertas siasatan disemak oleh KPPKP U7 / UIP JKN dan dikemukakan kepada Timbalan Pendakwa Raya (TPR) bagi permohonan Izin Dakwa.",
             },
         ]
 
