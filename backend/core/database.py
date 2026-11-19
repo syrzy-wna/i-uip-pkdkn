@@ -275,6 +275,80 @@ class UIPDatabase:
             conn.execute(
                 "CREATE INDEX IF NOT EXISTS idx_activity_created_at ON activity_logs(created_at DESC)"
             )
+            conn.execute(
+                """
+                CREATE TABLE IF NOT EXISTS dev_archive_records (
+                    id TEXT PRIMARY KEY,
+                    category TEXT NOT NULL,
+                    action_type TEXT NOT NULL,
+                    endpoint TEXT NOT NULL DEFAULT '',
+                    user_id TEXT NOT NULL DEFAULT '',
+                    user_email TEXT NOT NULL DEFAULT '',
+                    user_name TEXT NOT NULL DEFAULT '',
+                    user_grade TEXT NOT NULL DEFAULT '',
+                    district_pkd TEXT NOT NULL DEFAULT '',
+                    state_jkn TEXT NOT NULL DEFAULT '',
+                    akta_utama TEXT NOT NULL DEFAULT '',
+                    case_id TEXT NOT NULL DEFAULT '',
+                    title TEXT NOT NULL DEFAULT '',
+                    preview_text TEXT NOT NULL DEFAULT '',
+                    raw_input_text TEXT NOT NULL DEFAULT '',
+                    redacted_input_text TEXT NOT NULL DEFAULT '',
+                    raw_response_text TEXT NOT NULL DEFAULT '',
+                    redacted_response_text TEXT NOT NULL DEFAULT '',
+                    request_json TEXT NOT NULL DEFAULT '{}',
+                    response_json TEXT NOT NULL DEFAULT '{}',
+                    redacted_analysis_json TEXT NOT NULL DEFAULT '{}',
+                    user_snapshot_json TEXT NOT NULL DEFAULT '{}',
+                    pdpa_entities_masked INTEGER NOT NULL DEFAULT 0,
+                    model_used TEXT NOT NULL DEFAULT '',
+                    is_cloud_api INTEGER NOT NULL DEFAULT 0,
+                    est_cost_myr REAL NOT NULL DEFAULT 0.0,
+                    latency_ms INTEGER NOT NULL DEFAULT 0,
+                    status_summary TEXT NOT NULL DEFAULT '',
+                    has_file INTEGER NOT NULL DEFAULT 0,
+                    file_name TEXT NOT NULL DEFAULT '',
+                    file_content_type TEXT NOT NULL DEFAULT '',
+                    file_size_bytes BIGINT NOT NULL DEFAULT 0,
+                    file_sha256 TEXT NOT NULL DEFAULT '',
+                    payload_sha256 TEXT NOT NULL DEFAULT '',
+                    storage_backend TEXT NOT NULL DEFAULT 'sqlite_local_vault',
+                    bucket_name TEXT NOT NULL DEFAULT '',
+                    object_key TEXT NOT NULL DEFAULT '',
+                    metadata_object_key TEXT NOT NULL DEFAULT '',
+                    local_path TEXT NOT NULL DEFAULT '',
+                    attachment_b64 TEXT NOT NULL DEFAULT '',
+                    attachment_truncated INTEGER NOT NULL DEFAULT 0,
+                    sync_status TEXT NOT NULL DEFAULT 'db_fallback',
+                    sync_error TEXT NOT NULL DEFAULT '',
+                    created_at TEXT NOT NULL
+                )
+                """
+            )
+            conn.execute(
+                "CREATE INDEX IF NOT EXISTS idx_dev_archive_created_at ON dev_archive_records(created_at DESC)"
+            )
+            conn.execute(
+                "CREATE INDEX IF NOT EXISTS idx_dev_archive_category ON dev_archive_records(category, created_at DESC)"
+            )
+            conn.execute(
+                "CREATE INDEX IF NOT EXISTS idx_dev_archive_user_email ON dev_archive_records(user_email, created_at DESC)"
+            )
+            conn.execute(
+                "CREATE INDEX IF NOT EXISTS idx_dev_archive_case_id ON dev_archive_records(case_id)"
+            )
+            conn.execute(
+                """
+                CREATE TABLE IF NOT EXISTS dev_vault_access_logs (
+                    id TEXT PRIMARY KEY,
+                    dev_email TEXT NOT NULL,
+                    action TEXT NOT NULL,
+                    record_id TEXT NOT NULL DEFAULT '',
+                    detail TEXT NOT NULL DEFAULT '',
+                    created_at TEXT NOT NULL
+                )
+                """
+            )
             # Produksi: pastikan tiada akaun demo palsu atau log seed tinggal dalam pangkalan data
             conn.execute("DELETE FROM users WHERE is_demo = 1")
             conn.execute("DELETE FROM activity_logs WHERE id LIKE 'act-seed-%'")
@@ -921,12 +995,26 @@ class UIPDatabase:
             ).fetchone()
             active_sessions_row = conn.execute("SELECT COUNT(*) AS cnt FROM user_sessions").fetchone()
             active_sessions = active_sessions_row["cnt"] if active_sessions_row else 0
+            archive_count_rows = conn.execute(
+                """
+                SELECT LOWER(user_email) AS email_l, COUNT(*) AS cnt
+                FROM dev_archive_records
+                GROUP BY LOWER(user_email)
+                """
+            ).fetchall()
+
+        archive_counts_by_email = {
+            str(r["email_l"] or ""): int(r["cnt"] or 0) for r in archive_count_rows
+        }
 
         users_list = []
         for r in user_rows:
             u = self._safe_user_dict(r)
             u["total_actions"] = int(r["total_actions"] or 0)
             u["latest_activity_at"] = r["latest_activity_at"] or u.get("last_seen_at") or u.get("updated_at") or ""
+            u["archived_records_count"] = archive_counts_by_email.get(
+                str(u.get("email") or "").strip().lower(), 0
+            )
             users_list.append(u)
 
         activities_list = [dict(r) for r in activity_rows]
@@ -1000,7 +1088,407 @@ class UIPDatabase:
             ],
             "users": users_list,
             "activities": activities_list,
+            "vault_summary": self.get_dev_vault_health(),
         }
+
+    # ---------------- Arkib & Private Bucket Pembangun (zero4eleven@gmail.com) ----------------
+
+    def insert_dev_archive(self, record: Dict[str, Any]) -> str:
+        """Menyimpan satu rekod arkib pembangun ke jadual dev_archive_records."""
+        rec_id = str(record.get("id") or f"arc-{uuid.uuid4().hex[:12]}")
+        now = str(record.get("created_at") or _utc_now_iso())
+        with self._connect() as conn:
+            conn.execute(
+                """
+                INSERT INTO dev_archive_records (
+                    id, category, action_type, endpoint,
+                    user_id, user_email, user_name, user_grade, district_pkd, state_jkn,
+                    akta_utama, case_id, title, preview_text,
+                    raw_input_text, redacted_input_text, raw_response_text, redacted_response_text,
+                    request_json, response_json, redacted_analysis_json, user_snapshot_json,
+                    pdpa_entities_masked, model_used, is_cloud_api, est_cost_myr, latency_ms,
+                    status_summary, has_file, file_name, file_content_type, file_size_bytes,
+                    file_sha256, payload_sha256, storage_backend, bucket_name,
+                    object_key, metadata_object_key, local_path, attachment_b64,
+                    attachment_truncated, sync_status, sync_error, created_at
+                )
+                VALUES (
+                    ?, ?, ?, ?,
+                    ?, ?, ?, ?, ?, ?,
+                    ?, ?, ?, ?,
+                    ?, ?, ?, ?,
+                    ?, ?, ?, ?,
+                    ?, ?, ?, ?, ?,
+                    ?, ?, ?, ?, ?,
+                    ?, ?, ?, ?,
+                    ?, ?, ?, ?,
+                    ?, ?, ?, ?
+                )
+                """,
+                (
+                    rec_id,
+                    str(record.get("category") or "DRAFT_COMPOUND"),
+                    str(record.get("action_type") or ""),
+                    str(record.get("endpoint") or ""),
+                    str(record.get("user_id") or ""),
+                    str(record.get("user_email") or ""),
+                    str(record.get("user_name") or ""),
+                    str(record.get("user_grade") or ""),
+                    str(record.get("district_pkd") or ""),
+                    str(record.get("state_jkn") or ""),
+                    str(record.get("akta_utama") or ""),
+                    str(record.get("case_id") or ""),
+                    str(record.get("title") or "")[:300],
+                    str(record.get("preview_text") or "")[:500],
+                    str(record.get("raw_input_text") or ""),
+                    str(record.get("redacted_input_text") or ""),
+                    str(record.get("raw_response_text") or ""),
+                    str(record.get("redacted_response_text") or ""),
+                    str(record.get("request_json") or "{}"),
+                    str(record.get("response_json") or "{}"),
+                    str(record.get("redacted_analysis_json") or "{}"),
+                    str(record.get("user_snapshot_json") or "{}"),
+                    int(record.get("pdpa_entities_masked") or 0),
+                    str(record.get("model_used") or "")[:120],
+                    1 if record.get("is_cloud_api") else 0,
+                    float(record.get("est_cost_myr") or 0.0),
+                    int(record.get("latency_ms") or 0),
+                    str(record.get("status_summary") or "")[:240],
+                    1 if record.get("has_file") else 0,
+                    str(record.get("file_name") or "")[:200],
+                    str(record.get("file_content_type") or "")[:120],
+                    int(record.get("file_size_bytes") or 0),
+                    str(record.get("file_sha256") or ""),
+                    str(record.get("payload_sha256") or ""),
+                    str(record.get("storage_backend") or "sqlite_local_vault"),
+                    str(record.get("bucket_name") or ""),
+                    str(record.get("object_key") or ""),
+                    str(record.get("metadata_object_key") or ""),
+                    str(record.get("local_path") or ""),
+                    str(record.get("attachment_b64") or ""),
+                    1 if record.get("attachment_truncated") else 0,
+                    str(record.get("sync_status") or "db_fallback"),
+                    str(record.get("sync_error") or "")[:240],
+                    now,
+                ),
+            )
+            conn.commit()
+        return rec_id
+
+    def get_dev_vault_health(self) -> Dict[str, Any]:
+        """Status kesihatan bucket & kiraan kategori arkib eksklusif Dev."""
+        with self._connect() as conn:
+            totals = conn.execute(
+                """
+                SELECT
+                    COUNT(*) AS total_records,
+                    COALESCE(SUM(CASE WHEN has_file = 1 THEN 1 ELSE 0 END), 0) AS total_files,
+                    COALESCE(SUM(file_size_bytes), 0) AS total_bytes,
+                    MAX(created_at) AS last_archived_at,
+                    COALESCE(SUM(CASE WHEN sync_status != 'synced_s3' THEN 1 ELSE 0 END), 0) AS unsynced_count
+                FROM dev_archive_records
+                """
+            ).fetchone()
+            cat_rows = conn.execute(
+                """
+                SELECT category, COUNT(*) AS cnt
+                FROM dev_archive_records
+                GROUP BY category
+                """
+            ).fetchall()
+
+        cat_map: Dict[str, int] = {
+            "USER_REGISTER": 0,
+            "ADVISOR_QA": 0,
+            "AUDIT_IP": 0,
+            "OCR_EVIDENCE": 0,
+            "DRAFT_COMPOUND": 0,
+        }
+        for r in cat_rows:
+            k = str(r["category"] or "")
+            if k in cat_map:
+                cat_map[k] = int(r["cnt"] or 0)
+
+        totals_dict = dict(totals) if totals else {}
+        total_records = int(totals_dict.get("total_records") or 0)
+        cat_counts = {"ALL": total_records, **cat_map}
+
+        s3_active = settings.has_dev_archive_s3
+        if s3_active:
+            backend_type = "s3_neon"
+            backend_label = "Private S3 / Neon Object Storage Aktif"
+        elif self.use_postgres:
+            backend_type = "postgres_local_vault"
+            backend_label = "PostgreSQL Vault + Local Vault"
+        else:
+            backend_type = "sqlite_local_vault"
+            backend_label = "SQLite Vault + Local Vault"
+
+        local_vault_rel = "dev_vault"
+        try:
+            local_vault_rel = str(settings.dev_archive_local_dir.name or "dev_vault")
+        except Exception:
+            pass
+
+        return {
+            "backend_type": backend_type,
+            "backend_label": backend_label,
+            "db_engine": "postgresql" if self.use_postgres else "sqlite",
+            "is_cloud_bucket": bool(s3_active),
+            "is_private_locked": True,
+            "bucket_name": settings.dev_archive_bucket if s3_active else None,
+            "bucket_prefix": settings.dev_archive_prefix if s3_active else None,
+            "bucket_endpoint_host": settings.dev_archive_s3_host if s3_active else None,
+            "bucket_region": settings.dev_archive_s3_region if s3_active else None,
+            "local_vault_path": f"data/{local_vault_rel}" if settings.dev_archive_local_enabled else None,
+            "is_ephemeral_warning": bool(not s3_active and not self.use_postgres),
+            "total_records": total_records,
+            "total_files": int(totals_dict.get("total_files") or 0),
+            "total_bytes": int(totals_dict.get("total_bytes") or 0),
+            "unsynced_count": int(totals_dict.get("unsynced_count") or 0),
+            "last_archived_at": totals_dict.get("last_archived_at") or None,
+            "allowed_dev_emails": list(settings.dev_admin_emails),
+            "category_counts": cat_counts,
+        }
+
+    @staticmethod
+    def _build_dev_archive_where(
+        category: Optional[str] = None,
+        q: Optional[str] = None,
+        user_email: Optional[str] = None,
+        has_file: bool = False,
+    ) -> tuple[str, List[Any]]:
+        clauses: List[str] = []
+        params: List[Any] = []
+        if category and category != "ALL":
+            clauses.append("category = ?")
+            params.append(category.strip())
+        if user_email and user_email.strip():
+            clauses.append("LOWER(user_email) = LOWER(?)")
+            params.append(user_email.strip())
+        if has_file:
+            clauses.append("has_file = 1")
+        if q and q.strip():
+            pat = f"%{q.strip()}%"
+            clauses.append(
+                "("
+                "LOWER(title) LIKE LOWER(?) OR "
+                "LOWER(preview_text) LIKE LOWER(?) OR "
+                "LOWER(user_name) LIKE LOWER(?) OR "
+                "LOWER(user_email) LIKE LOWER(?) OR "
+                "LOWER(district_pkd) LIKE LOWER(?) OR "
+                "LOWER(file_name) LIKE LOWER(?) OR "
+                "LOWER(akta_utama) LIKE LOWER(?) OR "
+                "LOWER(redacted_input_text) LIKE LOWER(?)"
+                ")"
+            )
+            params.extend([pat] * 8)
+        where_sql = ("WHERE " + " AND ".join(clauses)) if clauses else ""
+        return where_sql, params
+
+    def list_dev_archive(
+        self,
+        *,
+        category: Optional[str] = None,
+        q: Optional[str] = None,
+        user_email: Optional[str] = None,
+        has_file: bool = False,
+        limit: int = 30,
+        offset: int = 0,
+    ) -> Dict[str, Any]:
+        """Menyenaraikan rekod arkib ringan (tanpa blob attachment_b64) untuk Konsol Dev."""
+        where_sql, params = self._build_dev_archive_where(
+            category=category, q=q, user_email=user_email, has_file=has_file
+        )
+        safe_limit = max(1, min(int(limit), 200))
+        safe_offset = max(0, int(offset))
+
+        with self._connect() as conn:
+            count_row = conn.execute(
+                f"SELECT COUNT(*) AS cnt FROM dev_archive_records {where_sql}",
+                tuple(params),
+            ).fetchone()
+            rows = conn.execute(
+                f"""
+                SELECT
+                    id, category, action_type, title, preview_text,
+                    akta_utama, user_id, user_email, user_name, district_pkd,
+                    model_used, is_cloud_api, est_cost_myr, latency_ms,
+                    has_file, file_name, file_content_type, file_size_bytes,
+                    storage_backend, pdpa_entities_masked, created_at
+                FROM dev_archive_records
+                {where_sql}
+                ORDER BY created_at DESC
+                LIMIT ? OFFSET ?
+                """,
+                tuple(params + [safe_limit, safe_offset]),
+            ).fetchall()
+
+        health = self.get_dev_vault_health()
+        items = []
+        for r in rows:
+            d = dict(r)
+            items.append(
+                {
+                    "id": d["id"],
+                    "category": d["category"],
+                    "action_type": d["action_type"],
+                    "title": d["title"],
+                    "preview_text": d["preview_text"],
+                    "akta_utama": d.get("akta_utama") or None,
+                    "user_id": d.get("user_id") or None,
+                    "user_email": d.get("user_email") or "",
+                    "user_name": d.get("user_name") or "",
+                    "district_pkd": d.get("district_pkd") or "",
+                    "model_used": d.get("model_used") or "",
+                    "is_cloud_api": bool(d.get("is_cloud_api")),
+                    "est_cost_myr": round(float(d.get("est_cost_myr") or 0.0), 5),
+                    "latency_ms": int(d.get("latency_ms") or 0),
+                    "has_file": bool(d.get("has_file")),
+                    "file_name": d.get("file_name") or None,
+                    "file_content_type": d.get("file_content_type") or None,
+                    "file_size_bytes": int(d.get("file_size_bytes") or 0) if d.get("has_file") else None,
+                    "storage_backend": d.get("storage_backend") or health["backend_type"],
+                    "pdpa_entities_masked": int(d.get("pdpa_entities_masked") or 0),
+                    "created_at": d.get("created_at") or "",
+                }
+            )
+
+        count_dict = dict(count_row) if count_row else {}
+        return {
+            "developer": "g.dev/syrzy",
+            "storage_health": health,
+            "category_counts": health["category_counts"],
+            "total_matching": int(count_dict.get("cnt") or 0),
+            "limit": safe_limit,
+            "offset": safe_offset,
+            "items": items,
+        }
+
+    def get_dev_archive_record(
+        self, record_id: str, include_b64: bool = False
+    ) -> Optional[Dict[str, Any]]:
+        """Mendapatkan satu rekod arkib lengkap berdasarkan ID."""
+        cols = (
+            "*"
+            if include_b64
+            else (
+                "id, category, action_type, endpoint, user_id, user_email, user_name, "
+                "user_grade, district_pkd, state_jkn, akta_utama, case_id, title, "
+                "preview_text, raw_input_text, redacted_input_text, raw_response_text, "
+                "redacted_response_text, request_json, response_json, redacted_analysis_json, "
+                "user_snapshot_json, pdpa_entities_masked, model_used, is_cloud_api, "
+                "est_cost_myr, latency_ms, status_summary, has_file, file_name, "
+                "file_content_type, file_size_bytes, file_sha256, payload_sha256, "
+                "storage_backend, bucket_name, object_key, metadata_object_key, "
+                "local_path, attachment_truncated, sync_status, sync_error, created_at"
+            )
+        )
+        with self._connect() as conn:
+            row = conn.execute(
+                f"SELECT {cols} FROM dev_archive_records WHERE id = ?",
+                (record_id,),
+            ).fetchone()
+        return dict(row) if row else None
+
+    def list_dev_archive_for_export(
+        self,
+        *,
+        category: Optional[str] = None,
+        q: Optional[str] = None,
+        user_email: Optional[str] = None,
+        limit: int = 500,
+    ) -> List[Dict[str, Any]]:
+        """Mendapatkan senarai rekod arkib (termasuk attachment_b64) bagi eksport bundle."""
+        where_sql, params = self._build_dev_archive_where(
+            category=category, q=q, user_email=user_email, has_file=False
+        )
+        safe_limit = max(1, min(int(limit), 2000))
+        with self._connect() as conn:
+            rows = conn.execute(
+                f"""
+                SELECT * FROM dev_archive_records
+                {where_sql}
+                ORDER BY created_at DESC
+                LIMIT ?
+                """,
+                tuple(params + [safe_limit]),
+            ).fetchall()
+        return [dict(r) for r in rows]
+
+    def list_unsynced_dev_archive(self, limit: int = 50) -> List[Dict[str, Any]]:
+        safe_limit = max(1, min(int(limit), 200))
+        with self._connect() as conn:
+            rows = conn.execute(
+                """
+                SELECT * FROM dev_archive_records
+                WHERE sync_status != 'synced_s3'
+                ORDER BY created_at ASC
+                LIMIT ?
+                """,
+                (safe_limit,),
+            ).fetchall()
+        return [dict(r) for r in rows]
+
+    def mark_dev_archive_synced(
+        self,
+        record_id: str,
+        *,
+        storage_backend: str,
+        bucket_name: str,
+        object_key: str,
+        metadata_object_key: str,
+        clear_b64: bool = True,
+    ) -> None:
+        with self._connect() as conn:
+            if clear_b64:
+                conn.execute(
+                    """
+                    UPDATE dev_archive_records
+                    SET storage_backend = ?, bucket_name = ?, object_key = ?,
+                        metadata_object_key = ?, sync_status = 'synced_s3',
+                        sync_error = '', attachment_b64 = ''
+                    WHERE id = ?
+                    """,
+                    (storage_backend, bucket_name, object_key, metadata_object_key, record_id),
+                )
+            else:
+                conn.execute(
+                    """
+                    UPDATE dev_archive_records
+                    SET storage_backend = ?, bucket_name = ?, object_key = ?,
+                        metadata_object_key = ?, sync_status = 'synced_s3',
+                        sync_error = ''
+                    WHERE id = ?
+                    """,
+                    (storage_backend, bucket_name, object_key, metadata_object_key, record_id),
+                )
+            conn.commit()
+
+    def log_dev_vault_access(
+        self,
+        dev_email: str,
+        action: str,
+        record_id: str = "",
+        detail: str = "",
+    ) -> None:
+        log_id = f"dva-{uuid.uuid4().hex[:10]}"
+        now = _utc_now_iso()
+        with self._connect() as conn:
+            conn.execute(
+                """
+                INSERT INTO dev_vault_access_logs (id, dev_email, action, record_id, detail, created_at)
+                VALUES (?, ?, ?, ?, ?, ?)
+                """,
+                (log_id, dev_email, action[:60], record_id[:60], detail[:240], now),
+            )
+            conn.commit()
+
+    def list_all_users_safe(self) -> List[Dict[str, Any]]:
+        """Memulangkan semua profil pengguna berdaftar (tanpa hash/salt) untuk dokumentasi Dev."""
+        with self._connect() as conn:
+            rows = conn.execute("SELECT * FROM users ORDER BY created_at DESC").fetchall()
+        return [self._safe_user_dict(r) for r in rows]
 
     @staticmethod
     def _safe_user_dict(row: sqlite3.Row) -> Dict[str, Any]:

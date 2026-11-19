@@ -58,6 +58,30 @@ class Settings:
     )
     database_url: str = os.getenv("DATABASE_URL", "").strip()
 
+    # Arkib & Private Bucket Eksklusif Pembangun (zero4eleven@gmail.com sahaja)
+    dev_archive_s3_endpoint: str = (
+        os.getenv("DEV_ARCHIVE_S3_ENDPOINT") or os.getenv("AWS_ENDPOINT_URL_S3") or ""
+    ).strip().rstrip("/")
+    dev_archive_s3_access_key: str = (
+        os.getenv("DEV_ARCHIVE_S3_ACCESS_KEY") or os.getenv("AWS_ACCESS_KEY_ID") or ""
+    ).strip()
+    dev_archive_s3_secret_key: str = (
+        os.getenv("DEV_ARCHIVE_S3_SECRET_KEY") or os.getenv("AWS_SECRET_ACCESS_KEY") or ""
+    ).strip()
+    dev_archive_s3_region: str = (
+        os.getenv("DEV_ARCHIVE_S3_REGION") or os.getenv("AWS_REGION") or "ap-southeast-1"
+    ).strip()
+    dev_archive_bucket: str = os.getenv("DEV_ARCHIVE_BUCKET", "dev-vault").strip()
+    dev_archive_prefix: str = os.getenv("DEV_ARCHIVE_PREFIX", "dev-vault").strip().strip("/")
+    dev_archive_db_max_bytes: int = int(os.getenv("DEV_ARCHIVE_DB_MAX_BYTES", "5242880"))
+    dev_archive_max_upload_bytes: int = int(os.getenv("DEV_ARCHIVE_MAX_UPLOAD_BYTES", "20971520"))
+    dev_archive_local_enabled: bool = (
+        os.getenv("DEV_ARCHIVE_LOCAL_ENABLED", "true").strip().lower() not in ("0", "false", "no")
+    )
+    dev_archive_local_dir: Path = _resolve_path(
+        os.getenv("DEV_ARCHIVE_LOCAL_DIR", "./data/dev_vault"), "data/dev_vault"
+    )
+
     cors_origins_raw: str = os.getenv(
         "CORS_ORIGINS", "http://localhost:3000,http://127.0.0.1:3000"
     )
@@ -72,6 +96,25 @@ class Settings:
             for item in self.dev_admin_emails_raw.split(",")
             if item.strip()
         ]
+
+    @property
+    def has_dev_archive_s3(self) -> bool:
+        return bool(
+            self.dev_archive_s3_endpoint
+            and self.dev_archive_s3_access_key
+            and self.dev_archive_s3_secret_key
+            and self.dev_archive_bucket
+        )
+
+    @property
+    def dev_archive_s3_host(self) -> str:
+        raw = self.dev_archive_s3_endpoint
+        if not raw:
+            return ""
+        without_scheme = raw.split("://", 1)[-1]
+        if "@" in without_scheme:
+            without_scheme = without_scheme.split("@", 1)[-1]
+        return without_scheme.split("/", 1)[0]
 
     @property
     def has_gemini_key(self) -> bool:

@@ -378,6 +378,7 @@ export interface DevUserRecord extends OfficerProfile {
   updated_at: string;
   total_actions: number;
   latest_activity_at: string;
+  archived_records_count?: number;
 }
 
 export interface DevActivityLog {
@@ -433,4 +434,117 @@ export interface DevOverviewResponse {
   pricing_reference: DevPricingReference[];
   users: DevUserRecord[];
   activities: DevActivityLog[];
+  vault_summary?: DevVaultStorageHealth & {
+    category_counts?: DevVaultCategoryCounts;
+  };
+}
+
+// ---------------- Arkib & Bucket Eksklusif Pembangun (Dev Vault) ----------------
+
+export type DevVaultCategory =
+  | "ALL"
+  | "USER_REGISTER"
+  | "ADVISOR_QA"
+  | "AUDIT_IP"
+  | "OCR_EVIDENCE"
+  | "DRAFT_COMPOUND";
+
+export type DevVaultStorageBackend =
+  | "s3_neon"
+  | "postgres_local_vault"
+  | "sqlite_local_vault"
+  | "local_vault";
+
+export type DevVaultExportMode = "full" | "redacted";
+
+export interface DevVaultCategoryCounts {
+  ALL: number;
+  USER_REGISTER: number;
+  ADVISOR_QA: number;
+  AUDIT_IP: number;
+  OCR_EVIDENCE: number;
+  DRAFT_COMPOUND: number;
+}
+
+export interface DevVaultStorageHealth {
+  backend_type: DevVaultStorageBackend;
+  backend_label: string;
+  db_engine: "postgresql" | "sqlite";
+  is_cloud_bucket: boolean;
+  is_private_locked: boolean;
+  bucket_name?: string | null;
+  bucket_prefix?: string | null;
+  bucket_endpoint_host?: string | null;
+  bucket_region?: string | null;
+  local_vault_path?: string | null;
+  is_ephemeral_warning: boolean;
+  total_records: number;
+  total_files: number;
+  total_bytes: number;
+  unsynced_count?: number;
+  last_archived_at?: string | null;
+  allowed_dev_emails: string[];
+}
+
+export interface DevVaultFileAttachment {
+  file_id?: string;
+  original_filename: string;
+  content_type: string;
+  size_bytes: number;
+  sha256: string;
+  storage_backend: DevVaultStorageBackend;
+  object_key: string;
+  is_available: boolean;
+}
+
+export interface DevVaultRecordSummary {
+  id: string;
+  category: Exclude<DevVaultCategory, "ALL">;
+  action_type: string;
+  title: string;
+  preview_text: string;
+  akta_utama?: string | null;
+  user_id?: string | null;
+  user_email: string;
+  user_name: string;
+  district_pkd: string;
+  model_used: string;
+  is_cloud_api: boolean;
+  est_cost_myr: number;
+  latency_ms: number;
+  has_file: boolean;
+  file_name?: string | null;
+  file_content_type?: string | null;
+  file_size_bytes?: number | null;
+  storage_backend: DevVaultStorageBackend;
+  pdpa_entities_masked: number;
+  created_at: string;
+}
+
+export interface DevVaultRecordDetail extends DevVaultRecordSummary {
+  raw_input_text: string;
+  redacted_input_text: string;
+  raw_response_text: string;
+  redacted_response_text: string;
+  analysis_json: Record<string, unknown> | null;
+  redacted_analysis_json: Record<string, unknown> | null;
+  user_snapshot?: Partial<OfficerProfile> | null;
+  file_attachment?: DevVaultFileAttachment | null;
+  storage_metadata: {
+    object_key?: string | null;
+    bucket_name?: string | null;
+    payload_sha256?: string | null;
+    source_endpoint?: string | null;
+    sync_status?: string | null;
+  };
+}
+
+export interface DevVaultListResponse {
+  developer: string;
+  storage_health: DevVaultStorageHealth;
+  category_counts: DevVaultCategoryCounts;
+  total_matching: number;
+  limit: number;
+  offset: number;
+  items: DevVaultRecordSummary[];
 }

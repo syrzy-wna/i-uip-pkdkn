@@ -3,9 +3,11 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Activity,
+  Archive,
   CheckCircle2,
   Coins,
   Cpu,
+  Database,
   ExternalLink,
   KeyRound,
   Loader2,
@@ -15,12 +17,15 @@ import {
   Users,
   X,
 } from "lucide-react";
+import DevVaultTab from "@/components/DevVaultTab";
 import { fetchDevOverview, fetchRuntimeSettings, saveRuntimeSettings } from "@/lib/api";
 import type { DevOverviewResponse } from "@/lib/types";
 
 interface DevConsoleModalProps {
   open: boolean;
   onClose: () => void;
+  authToken?: string | null;
+  developerEmail?: string;
 }
 
 const ACTION_BADGES: Record<string, string> = {
@@ -37,13 +42,20 @@ const ACTION_BADGES: Record<string, string> = {
   CARIAN_RAG_AKTA: "bg-slate-100 text-slate-700 border-slate-200",
 };
 
-export default function DevConsoleModal({ open, onClose }: DevConsoleModalProps) {
-  const [tab, setTab] = useState<"users" | "activities" | "costs" | "google_oauth">("users");
+export default function DevConsoleModal({
+  open,
+  onClose,
+  authToken,
+  developerEmail,
+}: DevConsoleModalProps) {
+  const [tab, setTab] = useState<"users" | "activities" | "costs" | "google_oauth" | "vault">("users");
   const [data, setData] = useState<DevOverviewResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [actionFilter, setActionFilter] = useState("SEMUA");
+  const [vaultUserFilter, setVaultUserFilter] = useState("");
+  const [vaultRefreshSignal, setVaultRefreshSignal] = useState(0);
 
   // Tetapan Google OAuth Web Client ID dari Konsol Dev
   const [googleClientId, setGoogleClientId] = useState("");
@@ -55,17 +67,23 @@ export default function DevConsoleModal({ open, onClose }: DevConsoleModalProps)
     setError(null);
     try {
       const [overview, runtime] = await Promise.all([
-        fetchDevOverview(),
+        fetchDevOverview(authToken),
         fetchRuntimeSettings(),
       ]);
       setData(overview);
       setGoogleClientId(runtime.google_client_id || "");
+      setVaultRefreshSignal((n) => n + 1);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Gagal memuatkan Konsol Pembangun.");
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [authToken]);
+
+  const openVaultForUser = (email: string) => {
+    setVaultUserFilter(email);
+    setTab("vault");
+  };
 
   useEffect(() => {
     if (!open) return;
@@ -124,7 +142,11 @@ export default function DevConsoleModal({ open, onClose }: DevConsoleModalProps)
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/65 p-3 sm:p-5 backdrop-blur-xs">
-      <div className="flex max-h-[92vh] w-full max-w-6xl flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl">
+      <div
+        className={`flex max-h-[92vh] w-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl transition-all ${
+          tab === "vault" ? "max-w-7xl" : "max-w-6xl"
+        }`}
+      >
         {/* Header Konsol Pembangun */}
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 bg-gradient-to-r from-[#0b1e36] via-[#0f2744] to-[#13355c] px-5 py-3.5 text-white">
           <div className="flex items-center gap-3">
@@ -173,7 +195,7 @@ export default function DevConsoleModal({ open, onClose }: DevConsoleModalProps)
 
         {/* KPI Ringkas Atas */}
         {data && (
-          <div className="grid grid-cols-2 gap-2.5 border-b border-slate-200 bg-slate-50 px-5 py-3 sm:grid-cols-4">
+          <div className="grid grid-cols-2 gap-2.5 border-b border-slate-200 bg-slate-50 px-5 py-3 sm:grid-cols-3 lg:grid-cols-5">
             <div className="rounded-xl border border-slate-200 bg-white p-3">
               <div className="flex items-center justify-between text-[11px] font-semibold text-slate-500">
                 <span>Pegawai Berdaftar</span>
@@ -225,6 +247,24 @@ export default function DevConsoleModal({ open, onClose }: DevConsoleModalProps)
                 Gemini: {data.gemini_api_key_configured ? "Kunci API Aktif" : "Mod Statutori RM0"} • Purata {data.summary.avg_latency_ms}ms
               </div>
             </div>
+
+            <button
+              type="button"
+              onClick={() => setTab("vault")}
+              className="rounded-xl border border-indigo-200 bg-indigo-50/70 p-3 text-left transition hover:border-indigo-400 hover:bg-indigo-50"
+            >
+              <div className="flex items-center justify-between text-[11px] font-semibold text-indigo-900">
+                <span>Arkib &amp; Bucket Dev</span>
+                <Database className="h-4 w-4 text-indigo-700" />
+              </div>
+              <div className="mt-1 text-xl font-extrabold text-indigo-950">
+                {data.vault_summary?.total_records ?? 0} Rekod
+              </div>
+              <div className="text-[10px] font-semibold text-indigo-800">
+                {data.vault_summary?.total_files ?? 0} fail •{" "}
+                {data.vault_summary?.is_cloud_bucket ? "Private S3/Neon" : "DB + Local Vault"}
+              </div>
+            </button>
           </div>
         )}
 
@@ -236,6 +276,11 @@ export default function DevConsoleModal({ open, onClose }: DevConsoleModalProps)
               { id: "activities", label: `2. Apa Dibuat (${data?.activities.length ?? 0})`, icon: Activity },
               { id: "costs", label: "3. Kos Operasi & API (RM/USD)", icon: Coins },
               { id: "google_oauth", label: "4. Connector Google OAuth", icon: KeyRound },
+              {
+                id: "vault",
+                label: `5. Arkib & Bucket Dev (${data?.vault_summary?.total_records ?? 0})`,
+                icon: Archive,
+              },
             ].map((item) => {
               const Icon = item.icon;
               const active = tab === item.id;
@@ -347,9 +392,22 @@ export default function DevConsoleModal({ open, onClose }: DevConsoleModalProps)
                         </div>
                       </td>
                       <td className="px-3.5 py-2.5 text-center">
-                        <span className="inline-flex min-w-[2rem] items-center justify-center rounded-full bg-indigo-50 px-2 py-0.5 text-xs font-extrabold text-indigo-800">
-                          {u.total_actions}
-                        </span>
+                        <div className="flex items-center justify-center gap-1.5">
+                          <span className="inline-flex min-w-[2rem] items-center justify-center rounded-full bg-indigo-50 px-2 py-0.5 text-xs font-extrabold text-indigo-800">
+                            {u.total_actions}
+                          </span>
+                          {(u.archived_records_count ?? 0) > 0 && (
+                            <button
+                              type="button"
+                              onClick={() => openVaultForUser(u.email)}
+                              title="Lihat rekod & dokumen pegawai ini dalam Arkib Dev"
+                              className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-800 ring-1 ring-emerald-200 hover:bg-emerald-100"
+                            >
+                              <Archive className="h-2.5 w-2.5" />
+                              {u.archived_records_count}
+                            </button>
+                          )}
+                        </div>
                       </td>
                       <td className="px-3.5 py-2.5 text-[11px] text-slate-600 whitespace-nowrap">
                         {u.latest_activity_at || u.updated_at}
@@ -551,6 +609,17 @@ export default function DevConsoleModal({ open, onClose }: DevConsoleModalProps)
                 </div>
               </form>
             </div>
+          )}
+
+          {/* TAB 5: ARKIB & BUCKET EKSKLUSIF DEV */}
+          {tab === "vault" && (
+            <DevVaultTab
+              authToken={authToken}
+              developerEmail={developerEmail}
+              initialUserFilter={vaultUserFilter}
+              onClearInitialUserFilter={() => setVaultUserFilter("")}
+              refreshSignal={vaultRefreshSignal}
+            />
           )}
         </div>
       </div>

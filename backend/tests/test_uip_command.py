@@ -742,3 +742,255 @@ def test_cloud_run_healthz_and_postgres_adapter(monkeypatch) -> None:
     resp_short = client.post("/api/auth/google", json={"id_token": "tok-short"})
     assert resp_short.status_code == 200
     assert resp_short.json()["user"]["email"] == short_email
+
+
+def test_dev_vault_archives_users_questions_docs_and_enforces_exclusive_access(monkeypatch) -> None:
+    import uuid
+    import zipfile
+    import httpx
+    from backend.core.config import settings
+
+    # 1. Tanpa token -> 401 pada semua endpoint Arkib & Bucket Dev
+    assert client.get("/api/dev/vault/health").status_code == 401
+    assert client.get("/api/dev/vault/records").status_code == 401
+    assert client.post("/api/dev/vault/export", json={"mode": "redacted"}).status_code == 401
+    assert client.post("/api/dev/vault/retry-s3-sync").status_code == 401
+
+    # 2. Pegawai biasa daftar & guna sistem -> disekat 403 daripada /api/dev/vault/* dan /api/rag/ingest
+    unique_email = f"ppkp.vault.{uuid.uuid4().hex[:6]}@moh.gov.my"
+    reg_res = client.post(
+        "/api/auth/register",
+        json={
+            "email": unique_email,
+            "password": "VaultUserKKM#2026",
+            "full_name": "PPKP Nurul Huda binti Ismail",
+            "ic_number": "920518-11-5214",
+            "grade": "U5",
+            "kkm_authority_card_no": "KKM-TRG-9988",
+            "district_pkd": "Pejabat Kesihatan Daerah Kuala Nerus",
+        },
+    )
+    assert reg_res.status_code == 200
+    user_token = reg_res.json()["token"]
+    user_headers = {"Authorization": f"Bearer {user_token}"}
+
+    assert client.get("/api/dev/vault/health", headers=user_headers).status_code == 403
+    assert client.get("/api/dev/vault/records", headers=user_headers).status_code == 403
+    assert client.post("/api/dev/vault/export", headers=user_headers, json={"mode": "redacted"}).status_code == 403
+    assert client.post("/api/dev/vault/retry-s3-sync", headers=user_headers).status_code == 403
+    assert (
+        client.post(
+            "/api/rag/ingest",
+            headers=user_headers,
+            files={"file": ("akta_test.txt", b"teks ujian", "text/plain")},
+        ).status_code
+        == 403
+    )
+
+    # Kemaskini profil
+    upd_res = client.put("/api/auth/profile", headers=user_headers, json={"grade": "U6"})
+    assert upd_res.status_code == 200
+
+    # Tanya Pakar UIP
+    consult_res = client.post(
+        "/api/advisor/consult",
+        headers=user_headers,
+        json={
+            "question": "Kedai makan di Kuala Nerus jual vape kepada remaja bawah 18 tahun",
+            "akta_hint": "Akta 852",
+            "use_ai": False,
+        },
+    )
+    assert consult_res.status_code == 200
+
+    # Muat naik PDF sebenar untuk Audit IP
+    pdf_doc = fitz.open()
+    page = pdf_doc.new_page()
+    page.insert_text(
+        (72, 72),
+        "KERTAS SIASATAN UIP PKD KUALA NERUS\n"
+        "Tarikh Kejadian: 12 November 2026\n"
+        "Nama Premis: Kedai Vape Nerus Jaya Enterprise\n"
+        "Nama Suspek (OKT): Ahmad Kamil bin Othman\n"
+        "No. K/P: 880102-11-5011\n"
+        "Pegawai Penyiasat (IO): PPKP Nurul Huda binti Ismail\n"
+        "Kesalahan: pamer produk merokok secara terbuka di bawah Seksyen 10(1) Akta 852.",
+    )
+    pdf_bytes = pdf_doc.tobytes()
+    pdf_doc.close()
+
+    audit_res = client.post(
+        "/api/audit-ip",
+        headers=user_headers,
+        data={"akta_utama": "Akta 852", "use_ollama": "false", "fast_mode": "true"},
+        files={"file": ("ip_ujian_nerus.pdf", pdf_bytes, "application/pdf")},
+    )
+    assert audit_res.status_code == 200
+
+    # Muat naik imej PNG sebenar untuk Ekstrak Bukti OCR
+    png_1x1 = (
+        b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x01\x00\x00\x00\x01"
+        b"\x08\x02\x00\x00\x00\x90wS\xde\x00\x00\x00\x0cIDATx\x9cc```\x00\x00"
+        b"\x00\x04\x00\x01\xf6\x178U\x00\x00\x00\x00IEND\xaeB`\x82"
+    )
+    ocr_res = client.post(
+        "/api/extract-evidence",
+        headers=user_headers,
+        data={"doc_hint": "gambar_premis"},
+        files={"file": ("bukti_premis_nerus.png", png_1x1, "image/png")},
+    )
+    assert ocr_res.status_code == 200
+
+    # Jana Draf & Semak Kompaun & Eksport DOCX
+    draft_res = client.post(
+        "/api/generate-draft",
+        headers=user_headers,
+        json={
+            "case_text": "Tarikh Kejadian: 12 November 2026\nNama Premis: Kedai Vape Nerus Jaya Enterprise\nNama Pemilik (OKT): Ahmad Kamil bin Othman\nNo. K/P: 880102-11-5011\nKesalahan: pamer vape secara terbuka.",
+            "akta_utama": "Akta 852",
+            "workflow": "ip_builder",
+            "use_ollama": False,
+        },
+    )
+    assert draft_res.status_code == 200
+
+    comp_res = client.post(
+        "/api/check-compound",
+        headers=user_headers,
+        json={
+            "no_notis": "KKM/KOM/852/099",
+            "nama_penerima": "Ahmad Kamil bin Othman",
+            "no_kp": "880102-11-5011",
+            "nama_premis": "Kedai Vape Nerus Jaya Enterprise",
+            "peruntukan_undang": "Seksyen 10(1) Akta 852",
+            "amaun_kompaun_rm": "RM 500.00",
+        },
+    )
+    assert comp_res.status_code == 200
+
+    docx_res = client.post(
+        "/api/export-docx",
+        headers=user_headers,
+        json={"doc_type": "borang_114", "payload": draft_res.json()},
+    )
+    assert docx_res.status_code == 200
+
+    # 3. Akses eksklusif Pembangun (zero4eleven@gmail.com) menggunakan header X-Auth-Token & Bearer
+    dev_headers = _get_dev_admin_headers()
+    dev_token = dev_headers["Authorization"].split(" ", 1)[1]
+    x_auth_headers = {"X-Auth-Token": dev_token}
+
+    health_res = client.get("/api/dev/vault/health", headers=x_auth_headers)
+    assert health_res.status_code == 200
+    health = health_res.json()
+    assert health["is_private_locked"] is True
+    assert "zero4eleven@gmail.com" in health["allowed_dev_emails"]
+    assert health["total_records"] >= 7
+    assert health["total_files"] >= 3
+    assert "aws_secret_access_key" not in json.dumps(health).lower()
+
+    list_res = client.get(
+        "/api/dev/vault/records",
+        headers=dev_headers,
+        params={"user_email": unique_email, "limit": 50},
+    )
+    assert list_res.status_code == 200
+    items = list_res.json()["items"]
+    actions_archived = {i["action_type"] for i in items}
+    assert {
+        "REGISTER_ACCOUNT",
+        "UPDATE_PROFILE",
+        "TANYA_PAKAR_UIP",
+        "AUDIT_IP_20",
+        "EKSTRAK_BUKTI_OCR",
+        "JANA_DRAF_IP",
+        "SEMAK_KOMPAUN",
+        "EXPORT_DOCX",
+    }.issubset(actions_archived)
+
+    # Semak rekod pendaftaran tidak menyimpan kata laluan / token & IC disamarkan
+    reg_item = next(i for i in items if i["action_type"] == "REGISTER_ACCOUNT")
+    reg_detail = client.get(f"/api/dev/vault/records/{reg_item['id']}", headers=dev_headers).json()
+    reg_dump = json.dumps(reg_detail, ensure_ascii=False)
+    assert "VaultUserKKM#2026" not in reg_dump
+    assert "password_hash" not in reg_dump
+    assert user_token not in reg_dump
+
+    # Semak rekod Audit IP PDF: muat turun fail asal mesti 100% sepadan & versi PDPA menutup No. K/P
+    pdf_item = next(i for i in items if i["action_type"] == "AUDIT_IP_20")
+    pdf_detail = client.get(f"/api/dev/vault/records/{pdf_item['id']}", headers=dev_headers).json()
+    assert "880102-11-5011" not in pdf_detail["redacted_input_text"]
+    assert "880102-11-5011" in pdf_detail["raw_input_text"]
+    assert pdf_detail["file_attachment"]["original_filename"] == "ip_ujian_nerus.pdf"
+
+    dl_pdf = client.get(f"/api/dev/vault/records/{pdf_item['id']}/file", headers=x_auth_headers)
+    assert dl_pdf.status_code == 200
+    assert dl_pdf.content == pdf_bytes
+    assert dl_pdf.headers.get("x-content-type-options") == "nosniff"
+    assert "attachment" in (dl_pdf.headers.get("content-disposition") or "").lower()
+
+    # Semak Eksport Bundle ZIP (mod redacted & mod full)
+    exp_redacted = client.post(
+        "/api/dev/vault/export",
+        headers=dev_headers,
+        json={"mode": "redacted", "format": "zip", "user_email": unique_email},
+    )
+    assert exp_redacted.status_code == 200
+    with zipfile.ZipFile(io.BytesIO(exp_redacted.content)) as zf:
+        names = set(zf.namelist())
+        assert {"manifest.json", "users_registered.json", "records.jsonl"}.issubset(names)
+        assert not any(n.startswith("attachments/") for n in names)
+        users_text = zf.read("users_registered.json").decode("utf-8")
+        assert "920518-11-5214" not in users_text
+        assert "password_hash" not in users_text
+
+    exp_full = client.post(
+        "/api/dev/vault/export",
+        headers=dev_headers,
+        json={"mode": "full", "format": "zip", "user_email": unique_email},
+    )
+    assert exp_full.status_code == 200
+    with zipfile.ZipFile(io.BytesIO(exp_full.content)) as zf:
+        names = set(zf.namelist())
+        assert any(n.endswith("ip_ujian_nerus.pdf") for n in names)
+
+    # 4. Uji klien S3 SigV4 (Neon Object Storage) + fallback non-fatal jika S3 gagal
+    s3_calls = []
+
+    class _FakeS3Resp:
+        def __init__(self, code: int = 200) -> None:
+            self.status_code = code
+            self.text = ""
+            self.content = b""
+
+    def _fake_s3_put(url: str, content: bytes = b"", headers: dict | None = None, **kwargs):
+        s3_calls.append({"url": url, "headers": headers or {}, "len": len(content)})
+        return _FakeS3Resp(200)
+
+    monkeypatch.setattr(settings, "dev_archive_s3_endpoint", "https://br-test.storage.ap-southeast-1.aws.neon.tech")
+    monkeypatch.setattr(settings, "dev_archive_s3_access_key", "nak_test_id")
+    monkeypatch.setattr(settings, "dev_archive_s3_secret_key", "nak_test_secret")
+    monkeypatch.setattr(settings, "dev_archive_bucket", "dev-vault")
+    monkeypatch.setattr(httpx, "put", _fake_s3_put)
+
+    q2 = client.post(
+        "/api/advisor/consult",
+        headers=user_headers,
+        json={"question": "Ujian S3 Neon Object Storage sigv4", "akta_hint": "Akta 154", "use_ai": False},
+    )
+    assert q2.status_code == 200
+    assert len(s3_calls) >= 1
+    assert "AWS4-HMAC-SHA256" in s3_calls[0]["headers"].get("Authorization", "")
+    assert "/dev-vault/" in s3_calls[0]["url"]
+
+    # Uji fallback non-fatal apabila S3 memulangkan 500
+    monkeypatch.setattr(httpx, "put", lambda url, **kwargs: _FakeS3Resp(500))
+    q3 = client.post(
+        "/api/advisor/consult",
+        headers=user_headers,
+        json={"question": "Ujian fallback jika S3 terputus", "akta_hint": "Akta 281", "use_ai": False},
+    )
+    assert q3.status_code == 200
+    monkeypatch.setattr(settings, "dev_archive_s3_endpoint", "")
+    monkeypatch.setattr(settings, "dev_archive_s3_access_key", "")
+    monkeypatch.setattr(settings, "dev_archive_s3_secret_key", "")

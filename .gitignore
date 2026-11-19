@@ -18,8 +18,10 @@ frontend/out/
 # Pangkalan Data Tempatan & Vektor
 data/uip_command.db*
 data/chroma_db/
+data/dev_vault/
 
 # Log & Fail Sistem
 *.log
 .DS_Store
 Thumbs.db
+.neon

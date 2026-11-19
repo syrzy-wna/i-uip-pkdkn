@@ -173,19 +173,33 @@ export default function TopNavbar({
             <span>{ollamaOk ? `Ollama (${status?.ollama.configured_model})` : "Privasi Regex"}</span>
           </button>
 
-          <button
-            type="button"
-            onClick={onOpenSettings}
-            title="Status AI Gemini & RAG"
-            className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-medium ring-1 transition hover:opacity-90 ${
-              geminiLive
-                ? "bg-blue-500/20 text-blue-200 ring-blue-400/40"
-                : "bg-slate-700/80 text-slate-200 ring-slate-500/50"
-            }`}
-          >
-            <Cpu className="h-3.5 w-3.5" />
-            <span>{geminiLive ? "AI Aktif" : "Luar Talian"}</span>
-          </button>
+          {isDevAdmin ? (
+            <button
+              type="button"
+              onClick={onOpenSettings}
+              title="Status AI Gemini & RAG (Klik untuk Tetapan)"
+              className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-medium ring-1 transition hover:opacity-90 ${
+                geminiLive
+                  ? "bg-blue-500/20 text-blue-200 ring-blue-400/40"
+                  : "bg-slate-700/80 text-slate-200 ring-slate-500/50"
+              }`}
+            >
+              <Cpu className="h-3.5 w-3.5" />
+              <span>{geminiLive ? "AI Aktif" : "Luar Talian"}</span>
+            </button>
+          ) : (
+            <div
+              title="Status Enjin AI Gemini"
+              className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-medium ring-1 ${
+                geminiLive
+                  ? "bg-blue-500/20 text-blue-200 ring-blue-400/40"
+                  : "bg-slate-700/80 text-slate-200 ring-slate-500/50"
+              }`}
+            >
+              <Cpu className="h-3.5 w-3.5" />
+              <span>{geminiLive ? "AI Aktif" : "Luar Talian"}</span>
+            </div>
+          )}
 
           <div
             title="Pangkalan Akta Verbatim RAG"

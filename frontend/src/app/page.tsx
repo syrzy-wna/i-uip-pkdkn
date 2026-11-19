@@ -761,6 +761,8 @@ export default function UIPCommandPage() {
         <DevConsoleModal
           open={devConsoleOpen}
           onClose={() => setDevConsoleOpen(false)}
+          authToken={authToken}
+          developerEmail={officer?.email}
         />
       )}
 

@@ -4,8 +4,9 @@ set -e
 export PORT="${PORT:-8080}"
 export CHROMA_PERSIST_DIR="${CHROMA_PERSIST_DIR:-/tmp/chroma_db}"
 export SQLITE_DB_PATH="${SQLITE_DB_PATH:-/tmp/uip_command.db}"
+export DEV_ARCHIVE_LOCAL_DIR="${DEV_ARCHIVE_LOCAL_DIR:-/tmp/dev_vault}"
 
-mkdir -p "$CHROMA_PERSIST_DIR" /tmp
+mkdir -p "$CHROMA_PERSIST_DIR" "$DEV_ARCHIVE_LOCAL_DIR" /tmp
 
 # Jana konfigurasi Nginx dengan port dinamik Cloud Run ($PORT)
 envsubst '${PORT}' < /app/deploy/nginx.conf.template > /tmp/nginx.conf
