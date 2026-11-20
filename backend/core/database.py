@@ -1054,7 +1054,7 @@ class UIPDatabase:
             },
             "pricing_reference": [
                 {
-                    "module": "Tanya Pakar UIP (Mod Pantas Statutori) & 16 Situasi & Rujukan Statutori",
+                    "module": "Tanya Pakar UIP (Mod Pantas Statutori) & 17 Situasi & Rujukan Statutori",
                     "engine": "Enjin Tempatan Statutori (CPU PC)",
                     "cost_per_call_myr": "RM 0.00 (Percuma)",
                     "notes": "Tiada panggilan API awan; respons < 0.03s.",

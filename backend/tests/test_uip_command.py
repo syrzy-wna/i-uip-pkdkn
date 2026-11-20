@@ -113,6 +113,12 @@ def test_statutory_rag_store_exact_malaysian_sections() -> None:
     hits_tifoid = store.search_statutes("vaksinasi suntikan anti tifoid pengendali", akta_filter="Akta 281", top_k=3)
     assert any("31" in h.section for h in hits_tifoid)
 
+    # Uji domain routing RAG bagi soalan luar templat Unit CDC / penyakit berjangkit (tanpa penapis akta)
+    hits_cdc = store.search_statutes("kes positif penyakit berjangkit datang pejabat aduan unit cdc boleh kompaun", top_k=3)
+    assert hits_cdc
+    assert hits_cdc[0].akta_code == "Akta 342"
+    assert "(Akta 852)" not in hits_cdc[0].section
+
 
 def test_audit_ip_detects_wrong_sections_and_date_conflicts() -> None:
     headers = _get_auth_headers()
@@ -461,7 +467,7 @@ def test_uip_advisor_scenarios_and_consult() -> None:
     resp_list = client.get("/api/advisor/scenarios", headers=headers)
     assert resp_list.status_code == 200
     scenarios = resp_list.json()["scenarios"]
-    assert len(scenarios) == 16
+    assert len(scenarios) == 17
     acts = {s["akta_utama"] for s in scenarios}
     assert {"Akta 852", "Akta 281", "Akta 154", "Akta 342"}.issubset(acts)
 
@@ -520,6 +526,26 @@ def test_uip_advisor_scenarios_and_consult() -> None:
     assert "Smear Positif" not in tb_neg_body["tajuk_nasihat"]
     assert "15(1)" in json.dumps(tb_neg_body["cadangan_pertuduhan"], ensure_ascii=False)
 
+    # Uji soalan tangkapan skrin pengguna: kes COVID-19 positif datang kerja diadukan majikan ke Unit CDC
+    resp_covid = client.post(
+        "/api/advisor/consult",
+        headers=headers,
+        json={
+            "question": "ada kes covid positif datng kerja. majikan adukan kepada unit cdc. boleh kompaun ke?",
+            "akta_hint": "Semua",
+            "use_ai": False,
+        },
+    )
+    assert resp_covid.status_code == 200
+    covid_body = resp_covid.json()
+    assert covid_body["scenario_id"] == "ak342_covid_positif_tempat_kerja"
+    assert covid_body["akta_disyorkan"] == "Akta 342"
+    assert covid_body["sesuai_buka_ip"] is False
+    covid_dump = json.dumps(covid_body, ensure_ascii=False)
+    assert "15 Julai 2024" in covid_dump
+    assert "139/2025" in covid_dump
+    assert "Akta 852" not in covid_body["tajuk_nasihat"]
+
     # Uji soalan di luar templat tetap tidak terperangkap pada kad pertama (ak852_pamer_vape)
     resp_unmatched = client.post(
         "/api/advisor/consult",
@@ -531,7 +557,9 @@ def test_uip_advisor_scenarios_and_consult() -> None:
         },
     )
     assert resp_unmatched.status_code == 200
-    assert resp_unmatched.json()["scenario_id"] == "rag_custom_query"
+    unmatched_body = resp_unmatched.json()
+    assert unmatched_body["scenario_id"] == "rag_custom_query"
+    assert "(Akta 852) (Akta 852)" not in json.dumps(unmatched_body, ensure_ascii=False)
 
     # Uji gabungan multi-kesalahan (< 2s): restoran ada najis tikus + pekerja tiada tifoid
     t1 = time.monotonic()
@@ -642,7 +670,7 @@ def test_uip_advisor_use_ai_runs_even_with_scenario_id_and_fallback_diag(monkeyp
 
     class _AlwaysFailModels:
         def generate_content(self, **kwargs):
-            raise RuntimeError("404 Model tidak tersedia")
+            raise TimeoutError("APITimeoutError: Request timed out. This is a client-side timeout")
 
     monkeypatch.setattr(
         router_service,
@@ -663,6 +691,9 @@ def test_uip_advisor_use_ai_runs_even_with_scenario_id_and_fallback_diag(monkeyp
     assert fail_body["ai_attempted"] is True
     assert fail_body["ai_succeeded"] is False
     assert fail_body["fallback_reason"]
+    assert "Pelayan AI" in fail_body["fallback_reason"]
+    assert "APITimeoutError" not in fail_body["fallback_reason"]
+    assert "client-side timeout" not in fail_body["fallback_reason"]
     advisor_service.clear_cache()
 
 

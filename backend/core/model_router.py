@@ -249,15 +249,23 @@ class UIPModelRouter:
             try:
                 self._genai_client = genai.Client(
                     api_key=settings.gemini_api_key,
-                    http_options={"api_version": "v1beta", "timeout": 25_000},
+                    http_options={
+                        "api_version": "v1beta",
+                        "timeout": 45_000,
+                        "retry_options": {"attempts": 1},
+                    },
                 )
                 self._decision_client = genai.Client(
                     api_key=settings.gemini_api_key,
-                    http_options={"api_version": "v1beta", "timeout": 25_000},
+                    http_options={
+                        "api_version": "v1beta",
+                        "timeout": 35_000,
+                        "retry_options": {"attempts": 2},
+                    },
                 )
             except Exception as exc:
-                self._last_ai_error = f"{type(exc).__name__}: {str(exc)[:180]}"
-                logger.warning("Gagal membina klien Gemini: %s", self._last_ai_error)
+                self._last_ai_error = "Konfigurasi klien AI tidak dapat dimulakan."
+                logger.warning("Gagal membina klien Gemini (%s): %s", type(exc).__name__, str(exc)[:180])
                 self._genai_client = None
                 self._decision_client = None
 
@@ -316,22 +324,148 @@ class UIPModelRouter:
         raise ValueError("Respons AI bukan objek JSON yang sah.")
 
     @staticmethod
+    def _classify_friendly_ai_error(attempt_errors: List[str]) -> str:
+        """Menukar ralat teknikal SDK kepada mesej Bahasa Melayu yang jelas untuk PPKP."""
+        joined = " ".join(attempt_errors).lower()
+        if any(tok in joined for tok in ("apitimeouterror", "timeoutexception", "timed out", "504", "deadline_exceeded")):
+            return (
+                "Pelayan AI mengambil masa terlalu lama untuk membalas. "
+                "Paparan menggunakan rujukan statutori tempatan — sila klik 'Cuba AI' sebentar lagi."
+            )
+        if any(tok in joined for tok in ("429", "ratelimit", "resource_exhausted", "quota")):
+            return (
+                "Pelayan AI sedang menerima permintaan tinggi buat sementara waktu. "
+                "Paparan menggunakan rujukan statutori tempatan — sila cuba semula dalam 1 minit."
+            )
+        if any(tok in joined for tok in ("401", "403", "api_key", "permissiondenied", "authentication")):
+            return (
+                "Konfigurasi kunci API AI perlu disemak oleh pentadbir sistem. "
+                "Paparan menggunakan rujukan statutori tempatan."
+            )
+        if any(tok in joined for tok in ("apiconnectionerror", "connecterror", "network", "dns")):
+            return (
+                "Sambungan ke pelayan AI terganggu buat sementara waktu. "
+                "Paparan menggunakan rujukan statutori tempatan."
+            )
+        return (
+            "Analisa AI tidak dapat dicapai buat sementara waktu. "
+            "Paparan menggunakan rujukan statutori tempatan — anda boleh cuba semula sebentar lagi."
+        )
+
+    @staticmethod
     def _build_generate_content_config(
         model_name: str,
         temperature: float,
         schema: Dict[str, Any],
         prefer_flash: bool,
+        max_output_tokens: Optional[int] = None,
     ) -> Any:
         """Membina GenerateContentConfig dengan skema JSON tepat dan ThinkingConfig selamat."""
         cfg_kwargs: Dict[str, Any] = {
             "response_mime_type": "application/json",
             "response_json_schema": schema,
         }
-        if "2.5" in model_name:
+        if max_output_tokens is not None:
+            cfg_kwargs["max_output_tokens"] = max_output_tokens
+        low_model = model_name.lower()
+        thinking_cls = getattr(genai_types, "ThinkingConfig", None)
+        if "2.5" in low_model:
             cfg_kwargs["temperature"] = temperature
-            if prefer_flash and "flash" in model_name and hasattr(genai_types, "ThinkingConfig"):
-                cfg_kwargs["thinking_config"] = genai_types.ThinkingConfig(thinking_budget=0)
+            if prefer_flash and "flash" in low_model and thinking_cls is not None:
+                cfg_kwargs["thinking_config"] = thinking_cls(thinking_budget=0)
+        elif thinking_cls is not None and (prefer_flash or "3.8-flash" in low_model):
+            cfg_kwargs["thinking_config"] = thinking_cls(thinking_level="low")
         return genai_types.GenerateContentConfig(**cfg_kwargs)
+
+    @staticmethod
+    def _to_generate_content_parts(input_payload: Any) -> Any:
+        if not isinstance(input_payload, list):
+            return input_payload
+        gc_parts = []
+        for blk in input_payload:
+            if isinstance(blk, dict) and blk.get("type") == "text":
+                gc_parts.append(blk.get("text", ""))
+            elif isinstance(blk, dict) and blk.get("type") in ("image", "document"):
+                raw_bytes = base64.b64decode(blk["data"])
+                gc_parts.append(
+                    genai_types.Part.from_bytes(
+                        data=raw_bytes,
+                        mime_type=blk.get("mime_type", "application/octet-stream"),
+                    )
+                )
+        return gc_parts
+
+    def _try_interactions_json(
+        self,
+        model_name: str,
+        input_payload: Any,
+        schema: Dict[str, Any],
+        temperature: float,
+        low_thinking: bool,
+        attempt_errors: List[str],
+    ) -> Optional[tuple[Dict[str, Any], str]]:
+        if not model_name or "2.5" in model_name:
+            return None
+        try:
+            inter_kwargs: Dict[str, Any] = {
+                "model": model_name,
+                "input": input_payload,
+                "response_format": {
+                    "type": "text",
+                    "mime_type": "application/json",
+                    "schema": schema,
+                },
+                "store": False,
+            }
+            if low_thinking:
+                inter_kwargs["generation_config"] = {"thinking_level": "low"}
+            elif "3." not in model_name:
+                inter_kwargs["generation_config"] = {"temperature": temperature}
+            interaction = self._genai_client.interactions.create(**inter_kwargs)
+            text = (getattr(interaction, "output_text", None) or "").strip()
+            if text:
+                return self._parse_json_payload(text), f"{model_name} (Interactions API)"
+            attempt_errors.append(f"{model_name} (Interactions): output kosong")
+        except Exception as exc:
+            msg = f"{model_name} (Interactions): {type(exc).__name__} - {str(exc)[:140]}"
+            attempt_errors.append(msg)
+            logger.warning("Gemini %s", msg)
+        return None
+
+    def _try_generate_content_json(
+        self,
+        model_name: str,
+        gc_contents: Any,
+        schema: Dict[str, Any],
+        temperature: float,
+        prefer_flash: bool,
+        max_output_tokens: Optional[int],
+        attempt_errors: List[str],
+    ) -> Optional[tuple[Dict[str, Any], str]]:
+        if genai_types is None or not model_name:
+            return None
+        try:
+            cfg = self._build_generate_content_config(
+                model_name=model_name,
+                temperature=temperature,
+                schema=schema,
+                prefer_flash=prefer_flash,
+                max_output_tokens=max_output_tokens,
+            )
+            resp = self._genai_client.models.generate_content(
+                model=model_name,
+                contents=gc_contents,
+                config=cfg,
+            )
+            text = (getattr(resp, "text", None) or "").strip()
+            if text:
+                return self._parse_json_payload(text), f"{model_name} (Gemini API)"
+            attempt_errors.append(f"{model_name} (Gemini API): output kosong")
+        except Exception as exc:
+            msg = f"{model_name} (Gemini API): {type(exc).__name__} - {str(exc)[:140]}"
+            attempt_errors.append(msg)
+            logger.warning("Gemini %s", msg)
+        return None
 
     def _call_gemini_structured_json(
         self,
@@ -340,105 +474,97 @@ class UIPModelRouter:
         schema: Dict[str, Any],
         temperature: float = 0.1,
         prefer_flash: bool = False,
+        prefer_fast_gc: bool = False,
+        max_output_tokens: Optional[int] = None,
     ) -> tuple[Optional[Dict[str, Any]], str]:
-        """Cuba Interactions API dahulu kemudian fallback ke generate_content berserta log ralat."""
+        """Menjana JSON berstruktur dengan laluan pantas (~15s) atau Interactions fallback berhad."""
         if not self._genai_client:
-            self._last_ai_error = "Kunci API Gemini belum dikonfigurasi pada pelayan."
+            self._last_ai_error = (
+                "Kunci API Gemini belum dikonfigurasi pada pelayan (sila semak Tetapan Sistem)."
+            )
             return None, "enjin-statutori-tempatan"
 
         self._last_ai_error = None
         attempt_errors: List[str] = []
+        gc_contents = self._to_generate_content_parts(input_payload) if genai_types is not None else input_payload
 
-        # 1. Susun calon Interactions API (elakkan model 2.5 yang tidak menyokong / tidak aktif)
-        ordered_candidates = [m for m in model_candidates if m]
-        if prefer_flash:
-            fast_first = [m for m in (settings.multimodal_model, "gemini-3.8-flash") if m]
-            ordered_candidates = fast_first + [
-                m for m in ordered_candidates if m not in fast_first and "2.5" not in m
-            ]
-        elif "gemini-3.8-flash" not in ordered_candidates:
-            ordered_candidates.append("gemini-3.8-flash")
-
-        for model_name in dict.fromkeys(ordered_candidates):
-            if not model_name or "2.5" in model_name:
-                continue
-            try:
-                inter_kwargs: Dict[str, Any] = {
-                    "model": model_name,
-                    "input": input_payload,
-                    "response_format": {
-                        "type": "text",
-                        "mime_type": "application/json",
-                        "schema": schema,
-                    },
-                }
-                if "3." not in model_name:
-                    inter_kwargs["generation_config"] = {"temperature": temperature}
-                interaction = self._genai_client.interactions.create(**inter_kwargs)
-                text = (getattr(interaction, "output_text", None) or "").strip()
-                if text:
-                    return self._parse_json_payload(text), f"{model_name} (Interactions API)"
-                attempt_errors.append(f"{model_name} (Interactions): output kosong")
-            except Exception as exc:
-                msg = f"{model_name} (Interactions): {type(exc).__name__} - {str(exc)[:140]}"
-                attempt_errors.append(msg)
-                logger.warning("Gemini %s", msg)
-                continue
-
-        # 2. Fallback standard generate_content (dengan response_json_schema & fallback model 3.8)
-        if genai_types is not None:
-            raw_std = (
-                [settings.standard_fallback_model, "gemini-3.8-flash", "gemini-flash-latest"]
-                if prefer_flash
-                else [
-                    settings.reasoning_model,
-                    settings.reasoning_model_alias,
-                    "gemini-3.1-pro-preview",
-                    settings.standard_fallback_model,
-                    "gemini-3.8-flash",
-                ]
+        # Mod pantas (~15s): dahulukan generate_content(gemini-3.8-flash, thinking_level="low")
+        if prefer_fast_gc or prefer_flash:
+            gc_primary = (
+                settings.standard_fallback_model
+                if settings.standard_fallback_model and "2.5" not in settings.standard_fallback_model
+                else "gemini-3.8-flash"
             )
-            std_models = [m for m in dict.fromkeys(raw_std) if m]
-            gc_contents: Any = input_payload
-            if isinstance(input_payload, list):
-                gc_parts = []
-                for blk in input_payload:
-                    if isinstance(blk, dict) and blk.get("type") == "text":
-                        gc_parts.append(blk.get("text", ""))
-                    elif isinstance(blk, dict) and blk.get("type") in ("image", "document"):
-                        raw_bytes = base64.b64decode(blk["data"])
-                        gc_parts.append(
-                            genai_types.Part.from_bytes(
-                                data=raw_bytes,
-                                mime_type=blk.get("mime_type", "application/octet-stream"),
-                            )
-                        )
-                gc_contents = gc_parts
+            res = self._try_generate_content_json(
+                model_name=gc_primary,
+                gc_contents=gc_contents,
+                schema=schema,
+                temperature=temperature,
+                prefer_flash=True,
+                max_output_tokens=max_output_tokens,
+                attempt_errors=attempt_errors,
+            )
+            if res:
+                return res
 
-            for model_name in std_models:
-                try:
-                    cfg = self._build_generate_content_config(
-                        model_name=model_name,
-                        temperature=temperature,
-                        schema=schema,
-                        prefer_flash=prefer_flash,
-                    )
-                    resp = self._genai_client.models.generate_content(
-                        model=model_name,
-                        contents=gc_contents,
-                        config=cfg,
-                    )
-                    text = (getattr(resp, "text", None) or "").strip()
-                    if text:
-                        return self._parse_json_payload(text), f"{model_name} (Gemini API)"
-                    attempt_errors.append(f"{model_name} (Gemini API): output kosong")
-                except Exception as exc:
-                    msg = f"{model_name} (Gemini API): {type(exc).__name__} - {str(exc)[:140]}"
-                    attempt_errors.append(msg)
-                    logger.warning("Gemini %s", msg)
-                    continue
+            inter_fallback = settings.multimodal_model or "gemini-3.8-flash"
+            res = self._try_interactions_json(
+                model_name=inter_fallback,
+                input_payload=input_payload,
+                schema=schema,
+                temperature=temperature,
+                low_thinking=True,
+                attempt_errors=attempt_errors,
+            )
+            if res:
+                return res
 
-        self._last_ai_error = " | ".join(attempt_errors[:3]) if attempt_errors else "Tiada respons model Gemini."
+            self._last_ai_error = self._classify_friendly_ai_error(attempt_errors)
+            return None, "enjin-statutori-tempatan"
+
+        # Mod mendalam (had maks 3 cubaan keseluruhan agar tidak menunggu terlalu lama)
+        attempts_left = 3
+        ordered_candidates = [m for m in model_candidates if m and "2.5" not in m]
+        if "gemini-3.8-flash" not in ordered_candidates:
+            ordered_candidates.append("gemini-3.8-flash")
+        for model_name in dict.fromkeys(ordered_candidates):
+            if attempts_left <= 0:
+                break
+            attempts_left -= 1
+            res = self._try_interactions_json(
+                model_name=model_name,
+                input_payload=input_payload,
+                schema=schema,
+                temperature=temperature,
+                low_thinking=False,
+                attempt_errors=attempt_errors,
+            )
+            if res:
+                return res
+
+        if attempts_left > 0 and genai_types is not None:
+            raw_std = [
+                settings.standard_fallback_model,
+                "gemini-3.8-flash",
+                settings.reasoning_model_alias,
+            ]
+            for model_name in dict.fromkeys(m for m in raw_std if m):
+                if attempts_left <= 0:
+                    break
+                attempts_left -= 1
+                res = self._try_generate_content_json(
+                    model_name=model_name,
+                    gc_contents=gc_contents,
+                    schema=schema,
+                    temperature=temperature,
+                    prefer_flash=False,
+                    max_output_tokens=max_output_tokens,
+                    attempt_errors=attempt_errors,
+                )
+                if res:
+                    return res
+
+        self._last_ai_error = self._classify_friendly_ai_error(attempt_errors)
         return None, "enjin-statutori-tempatan"
 
     def _polish_formal_malay_offline(self, text: str) -> tuple[str, str]:

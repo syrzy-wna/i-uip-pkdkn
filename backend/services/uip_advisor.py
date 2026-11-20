@@ -673,7 +673,7 @@ UIP_SCENARIO_LIBRARY: List[Dict[str, Any]] = [
             "measles", "difteria", "kolera", "kontak rapat", "tutup taska", "seksyen 18(1)(d)",
             "seksyen 18 akta 342", "enggan saringan", "e-notifikasi", "klinik swasta gagal notifikasi",
         ],
-        "negative_keywords": ["dapur restoran", "lemak grease trap", "lilati"],
+        "negative_keywords": ["dapur restoran", "lemak grease trap", "lilati", "covid", "covid-19", "hso", "influenza"],
         "keputusan_tindakan": "PERINTAH TUTUP / DISINFEKSI S.18(1)(d)&(f) AKTA 342 (atau S.15(1) Pengawasan Kontak; S.10(2) jika klinik gagal notifikasi)",
         "sesuai_buka_ip": True,
         "alasan_keputusan": (
@@ -867,6 +867,94 @@ UIP_SCENARIO_LIBRARY: List[Dict[str, Any]] = [
             "Dokumen dan gambar lapangan dilampirkan untuk tindakan susulan pihak berkuasa berkaitan."
         ),
     },
+    {
+        "id": "ak342_covid_positif_tempat_kerja",
+        "akta_utama": "Akta 342",
+        "tajuk": "Pekerja Positif COVID-19 / Jangkitan Respiratori Hadir Bekerja & Aduan Majikan kepada Unit CDC",
+        "keywords": [
+            "covid positif", "positif covid", "kes covid", "covid-19", "covid",
+            "datang kerja", "datng kerja", "hadir bekerja", "masuk kerja",
+            "pekerja positif", "majikan adukan", "aduan majikan", "unit cdc",
+            "hso", "mysejahtera", "influenza", "kluster tempat kerja",
+            "seksyen 12", "12(1)", "seksyen 25 akta 342",
+        ],
+        "negative_keywords": [
+            "tibi", "tuberkulosis", "ptb", "smear positif", "smear negatif", "afb negatif", "tbis",
+            "hfmd", "taska", "tadika", "leptospirosis", "kencing tikus", "kolam renang",
+            "keracunan makanan", "aedes", "vape", "rokok",
+        ],
+        "incompatible_with": [
+            "ak342_tibi_ingkar",
+            "ak342_tibi_smear_negatif_enggan_mula",
+            "ak342_wabak_tutup_premis_hfmd",
+        ],
+        "keputusan_tindakan": (
+            "TIDAK BOLEH KOMPAUN SERTA-MERTA (Tiada HSO Mandatori sejak 15 Julai 2024) — "
+            "SIASAT RISIKO KLUSTER UNIT CDC & NASIHAT PENCEGAHAN; KOMPAUN S.25 / IP S.22(b) HANYA JIKA INGKAR PERINTAH BERTULIS S.15(1)/S.14"
+        ),
+        "sesuai_buka_ip": False,
+        "alasan_keputusan": (
+            "Bermula 15 Julai 2024 (dasar KKM 'Hidup Bersama COVID-19'), Perintah Pengawasan dan Pemerhatian di Rumah (HSO) mandatori MySejahtera telah dimansuhkan "
+            "dan COVID-19 diurus seperti jangkitan saluran pernafasan akut (ARI) biasa melalui penilaian klinikal doktor/MC serta pemakaian pelitup muka. "
+            "Tanpa Perintah Pengawasan Seksyen 15(1) atau Pengasingan Seksyen 14 Akta 342 yang dikeluarkan dan diserahkan secara bertulis, TIADA kesalahan Seksyen 22(b) untuk dikompaun. "
+            "Selain itu, Seksyen 12(1) Akta 342 BUKAN kesalahan boleh kompaun di bawah Jadual Pertama P.U. (A) 139/2025 (berkuat kuasa 1 Mei 2025) serta amat sukar dibuktikan tanpa HSO bertulis. "
+            "Urusan cuti sakit/MC (Seksyen 60F Akta Kerja 1955), arahan pulang/WFH dan tatatertib pekerja ialah tanggungjawab majikan di bawah polisi HR & OSHA 1994 [Akta 514] (S.15 & S.24), manakala Unit CDC PKD menumpukan siasatan risiko kluster tempat kerja."
+        ),
+        "cadangan_pertuduhan": [
+            {
+                "perihal": "Kes COVID-19 Biasa Tanpa Perintah Bertulis S.15(1)/S.14 (Dasar Semasa KKM Pasca 15 Julai 2024)",
+                "seksyen_kesalahan": "TIADA KESALAHAN BOLEH KOMPAUN di bawah Akta 342 (Pengurusan HR majikan: S.60F Akta Kerja 1955 / S.15 & S.24 OSHA 1994 [Akta 514])",
+                "seksyen_hukuman": "Tindakan Kesihatan Awam Unit CDC PKD (nasihat pencegahan, pengesahan e-Notifikasi & penilaian risiko kluster tempat kerja)",
+                "hukuman_maksimum": "Tiada kompaun Akta 342. Pertimbangan Perintah S.15(1) / Penutupan Disinfeksi S.18(1)(d) hanya jika wujud wabak/kluster serius.",
+                "boleh_kompaun": "TIDAK BOLEH KOMPAUN — Jangan keluarkan notis kompaun tanpa perintah statutori bertulis yang sah diingkari.",
+            },
+            {
+                "perihal": "HANYA JIKA Pekerja Ingkar Perintah Bertulis Seksyen 15(1) / Seksyen 14 Akta 342 Yang Sah Diserahkan (Kes Kluster/Wabak Khas)",
+                "seksyen_kesalahan": "Seksyen 22(b) Akta 342 [APPPB 1988] (ingkar perintah sah pegawai diberi kuasa)",
+                "seksyen_hukuman": "Seksyen 24 Akta 342 (Pindaan Akta A1742 berkuat kuasa 1 Mei 2025)",
+                "hukuman_maksimum": "Individu: Denda maks RM10,000 atau penjara maks 2 tahun atau kedua-duanya | Syarikat: Denda maks RM100,000",
+                "boleh_kompaun": (
+                    "Boleh dikompaun di bawah Seksyen 25 Akta 342 (Pindaan Akta A1742) & P.U. (A) 139/2025 "
+                    "HANYA DENGAN KEIZINAN BERTULIS PENDAKWA RAYA: maks RM5,000 (individu) / RM50,000 (pertubuhan perbadanan), atau buka IP jika ingkar tegar."
+                ),
+            },
+            {
+                "perihal": "Rujukan Statutori Terhad: Sengaja Mendedahkan Orang Lain kepada Risiko Jangkitan (Kes Keterlaluan Sahaja — Bukan Rutin)",
+                "seksyen_kesalahan": "Seksyen 12(1) dibaca bersama Seksyen 12(3) Akta 342 [APPPB 1988]",
+                "seksyen_hukuman": "Seksyen 24 Akta 342 (Pindaan Akta A1742)",
+                "hukuman_maksimum": "Individu: Denda maks RM10,000 atau penjara maks 2 tahun atau kedua-duanya",
+                "boleh_kompaun": (
+                    "TIDAK BOLEH DIKOMPAUN (Seksyen 12(1)/(3) tiada dalam Jadual Pertama P.U. (A) 139/2025) — "
+                    "hanya melalui IP & beban bukti amat tinggi (wajib bukti makmal rasmi, pengetahuan awal & pendedahan aktif cuai/niat jahat)."
+                ),
+            },
+        ],
+        "sop_lapangan": [
+            "Sahkan status kes melalui semakan e-Notifikasi (Seksyen 10 Akta 342) dan tanyakan jenis ujian: ujian RTK-Ag kendiri di rumah BUKAN pengesahan rasmi kes di bawah garis panduan KKM sejak 15 Julai 2024.",
+            "Semak rekod PKD sama ada sebarang Perintah Pengawasan/Pemerhatian bertulis Seksyen 15(1) atau Pengasingan Seksyen 14 Akta 342 pernah dikeluarkan dan diserahkan secara tangan kepada pekerja tersebut.",
+            "Jalankan penilaian risiko epidemiologi Unit CDC di tempat kerja: kenal pasti sama ada kes sporadik tunggal atau wujud kluster/wabak aktif (beberapa kes positif/bergejala serentak atau melibatkan golongan rentan seperti wad/pusat jagaan/taska).",
+            "Jika kes sporadik tanpa HSO/perintah bertulis: JANGAN tawarkan kompaun; beri nasihat kawalan jangkitan (pekerja dapatkan pemeriksaan doktor/MC jika tidak sihat, pakai pelitup muka, sanitasi permukaan & pengudaraan premis) dan jelaskan kepada majikan bahawa pengurusan cuti/WFH/arahan pulang adalah di bawah bidang kuasa HR majikan (Akta Kerja 1955 S.60F & OSHA 1994 Akta 514 S.15/S.24).",
+            "HANYA jika siasatan Unit CDC mengesahkan kluster serius/risiko awam tinggi dan tiada kerjasama: pertimbangkan pengeluaran Perintah bertulis Seksyen 15(1) / Seksyen 14 (serahan tangan + tandatangan terima/saksi PPKP) dan/atau arahan disinfeksi/penutupan sementara premis Seksyen 18(1)(d)&(f). Tindakan S.22(b)/S.25 (dengan keizinan bertulis TPR) hanya diambil jika perintah bertulis sah itu diingkari.",
+        ],
+        "eksibit_wajib": [
+            "Rekod Aduan Rasmi Majikan & Laporan Siasatan Epidemiologi Awal Unit CDC PKD (menilai status sporadik vs kluster tempat kerja)",
+            "Semakan Cetakan e-Notifikasi Seksyen 10 Akta 342 / keputusan ujian makmal profesional (jika disahkan fasiliti kesihatan) + Sijil S.90A(2)",
+            "Surat / Rekod Nasihat Pencegahan & Pengurusan Kes kepada Majikan dan Pekerja (bukti tindakan kesihatan awam PKD tanpa salah guna kuasa)",
+            "HANYA JIKA ESKALASI S.22(b): Salinan asal Perintah S.15(1) / S.14 bertandatangan terima & saksi PPKP, bukti kehadiran mengingkari perintah (rekod kedatangan/CCTV + S.90A), percakapan S.112 KTJ saksi, dan Keizinan Bertulis Pendakwa Raya (jika tawar kompaun S.25)",
+        ],
+        "perangkap_kesilapan": [
+            "PERANGKAP KOMPAUN ULTRA VIRES #1: JANGAN tawarkan kompaun Seksyen 22(b) tanpa Perintah bertulis Seksyen 15(1)/Seksyen 14 yang diserahkan secara sah — HSO mandatori MySejahtera telah dimansuhkan sejak 15 Julai 2024!",
+            "PERANGKAP KOMPAUN ULTRA VIRES #2: JANGAN keluarkan notis kompaun di bawah Seksyen 12(1) Akta 342 — Seksyen 12(1)/(3) BUKAN kesalahan boleh kompaun dalam Jadual Pertama P.U. (A) 139/2025!",
+            "PERANGKAP PINDAAN AKTA A1742 (1 MEI 2025): Di bawah Seksyen 25 baharu, had kompaun bukan lagi RM1,000 (kini maks RM5,000 individu / RM50,000 pertubuhan perbadanan) DAN pengkompaunan tertakluk kepada keizinan bertulis Pendakwa Raya serta hanya untuk seksyen dalam Jadual Pertama P.U. (A) 139/2025 (S.10(2), S.11(5), S.21A(3), S.22(b)/(c)/(d)).",
+            "JANGAN jadikan Unit CDC/PPKP sebagai alat tatatertib HR majikan — arahan pulang kerja, cuti sakit (MC S.60F Akta Kerja 1955), WFH dan tatatertib pekerja ialah tanggungjawab majikan di bawah polisi syarikat & OSHA 1994 (Akta 514 S.15 & S.24).",
+        ],
+        "templat_ringkas": (
+            "Laporan Siasatan Aduan Unit CDC (Akta 342): Aduan majikan berkaitan pekerja disyaki/positif COVID-19 hadir bekerja. "
+            "Selaras dasar KKM 'Hidup Bersama COVID-19' (berkuat kuasa 15 Julai 2024), HSO mandatori telah dimansuhkan dan tiada perintah bertulis Seksyen 15(1)/Seksyen 14 Akta 342 dikeluarkan terhadap pekerja berkenaan; "
+            "justeru tiada tindakan kompaun Seksyen 22(b) atau Seksyen 12(1) Akta 342 dikenakan. "
+            "Unit CDC PKD telah menjalankan penilaian risiko kluster tempat kerja, memberi nasihat kawalan jangkitan/penilaian MC doktor, dan memaklumkan majikan mengenai pengurusan kehadiran/cuti di bawah bidang kuasa HR (Akta Kerja 1955 & OSHA 1994 [Akta 514])."
+        ),
+    },
 ]
 
 
@@ -879,6 +967,7 @@ class _AdvisorChargeItemSchema(BaseModel):
 
 
 class _AdvisorLLMSchema(BaseModel):
+    akta_disyorkan: Optional[str] = None
     tajuk_nasihat: str = Field(...)
     keputusan_tindakan: str = Field(...)
     sesuai_buka_ip: bool = Field(...)
@@ -958,12 +1047,40 @@ class UIPAdvisorService:
         return net_kw_score + act_bonus, net_kw_score, neg_hits, matched_kws
 
     @staticmethod
+    def _canonicalize_akta_code(raw_act: str, fallback: str) -> str:
+        low = (raw_act or "").strip().lower()
+        if not low:
+            return fallback
+        if "342" in low or "penyakit berjangkit" in low or "apppb" in low:
+            return "Akta 342"
+        if "852" in low or "produk merokok" in low:
+            return "Akta 852"
+        if "281" in low or "akta makanan" in low or "ppkm" in low or "ppm 1985" in low:
+            return "Akta 281"
+        if "154" in low or "serangga pembawa penyakit" in low:
+            return "Akta 154"
+        m = re.search(r"akta\s+(\d+)", low)
+        if m:
+            return f"Akta {m.group(1)}"
+        return raw_act.strip()
+
+    @staticmethod
+    def _format_section_label(section: str, akta_code: str) -> str:
+        """Mengelakkan pengulangan seperti 'Seksyen 48 Akta 852 (Akta 852)'."""
+        clean_sec = (section or "").strip()
+        clean_act = (akta_code or "").strip()
+        if not clean_act or clean_act.lower() in clean_sec.lower():
+            return clean_sec or clean_act
+        return f"{clean_sec} ({clean_act})"
+
+    @classmethod
     def _build_rag_fallback_scenario(
+        cls,
         question: str,
         akta_hint: str,
         rag_hits: List[Any],
     ) -> Dict[str, Any]:
-        """Templat rujukan berasaskan RAG statutori apabila soalan di luar 16 templat teras."""
+        """Templat rujukan berasaskan RAG statutori apabila soalan di luar 17 templat teras."""
         top_hit = rag_hits[0] if rag_hits else None
         akta_label = (
             akta_hint
@@ -971,7 +1088,7 @@ class UIPAdvisorService:
             else (top_hit.akta_code if top_hit else "Akta Kesihatan Awam KKM")
         )
         citations_summary = ", ".join(
-            dict.fromkeys(f"{c.section} ({c.akta_code})" for c in rag_hits[:3])
+            dict.fromkeys(cls._format_section_label(c.section, c.akta_code) for c in rag_hits[:3])
         ) or "Pangkalan data statutori tempatan"
         return {
             "id": "rag_custom_query",
@@ -988,7 +1105,7 @@ class UIPAdvisorService:
             "cadangan_pertuduhan": [
                 {
                     "perihal": f"Peruntukan berkaitan daripada {c.akta_title}",
-                    "seksyen_kesalahan": f"{c.section} ({c.akta_code})",
+                    "seksyen_kesalahan": cls._format_section_label(c.section, c.akta_code),
                     "seksyen_hukuman": "Semak peruntukan penalti dalam petikan Akta di tab 'Petikan Akta'.",
                     "hukuman_maksimum": c.max_fine_hint or "Tertakluk had hukuman di bawah Akta berkaitan.",
                     "boleh_kompaun": c.is_compoundable_hint or "Semak jadual kompaun akta / rujuk Pegawai Pendakwa & UIP JKN.",
@@ -1247,8 +1364,8 @@ class UIPAdvisorService:
                     "Jawab soalan PPKP ini menggunakan Bahasa Melayu kerja harian PPKP yang jelas, padat, terperinci, dan tepat (jangan guna ayat sastera).\n"
                     "ARAHAN KETAT:\n"
                     "1) Petik HANYA Seksyen dan Peraturan yang wujud secara sah dalam undang-undang Malaysia / RUJUKAN AKTA SEBENAR di bawah.\n"
-                    "2) JANGAN menyalin membuta tuli templat rujukan jika fakta soalan PPKP berbeza (contoh: PTB Smear Negatif vs Smear Positif, peringkat saringan belum sah vs cicir rawatan, kes bukan makanan seperti taska S.18(1)(d) vs S.11 Akta 281, atau kes rujukan silang Akta 171/366/586/260).\n"
-                    "3) Ubah suai tajuk_nasihat, keputusan_tindakan, sesuai_buka_ip, alasan_keputusan, SOP, eksibit dan perangkap_kesilapan agar 100% menepati situasi sebenar soalan.\n"
+                    "2) JANGAN menyalin membuta tuli templat rujukan jika fakta soalan PPKP berbeza (contoh: kes COVID-19 pasca 15 Julai 2024 tanpa HSO mandatori vs perintah bertulis S.15(1)/S.14, PTB Smear Negatif vs Smear Positif, kes bukan makanan seperti taska S.18(1)(d) vs S.11 Akta 281, atau kes rujukan silang Akta 171/366/586/260).\n"
+                    "3) Ubah suai akta_disyorkan, tajuk_nasihat, keputusan_tindakan, sesuai_buka_ip, alasan_keputusan, SOP, eksibit dan perangkap_kesilapan agar 100% menepati situasi sebenar soalan.\n"
                     "4) Bagi setiap cadangan_pertuduhan, wajib sertakan 5 kunci tepat: perihal, seksyen_kesalahan, seksyen_hukuman, hukuman_maksimum, boleh_kompaun.\n\n"
                     f"SOALAN PPKP:\n{effective_question}\n\n"
                     f"{ref_block}"
@@ -1256,13 +1373,13 @@ class UIPAdvisorService:
                 )
                 model_candidates = (
                     [
-                        settings.reasoning_model,
-                        settings.multimodal_model,
                         "gemini-3.8-flash",
+                        settings.multimodal_model,
+                        settings.reasoning_model,
                         settings.standard_fallback_model,
                     ]
                     if ai_requested
-                    else [settings.multimodal_model, "gemini-3.8-flash", settings.reasoning_model]
+                    else ["gemini-3.8-flash", settings.multimodal_model, settings.standard_fallback_model]
                 )
                 ai_json, used_model = self.router._call_gemini_structured_json(
                     model_candidates=model_candidates,
@@ -1270,13 +1387,20 @@ class UIPAdvisorService:
                     schema=_AdvisorLLMSchema.model_json_schema(),
                     temperature=0.1,
                     prefer_flash=not ai_requested,
+                    prefer_fast_gc=True,
+                    max_output_tokens=2600,
                 )
                 if ai_json:
                     normalized_charges = self._normalize_charge_items(
                         ai_json.get("cadangan_pertuduhan"),
                         matched.get("cadangan_pertuduhan", []),
                     )
+                    ai_act = self._canonicalize_akta_code(
+                        str(ai_json.get("akta_disyorkan") or ""),
+                        result["akta_disyorkan"],
+                    )
                     ai_patch = {
+                        "akta_disyorkan": ai_act,
                         "tajuk_nasihat": str(ai_json.get("tajuk_nasihat") or result["tajuk_nasihat"]),
                         "keputusan_tindakan": str(ai_json.get("keputusan_tindakan") or result["keputusan_tindakan"]),
                         "sesuai_buka_ip": bool(ai_json.get("sesuai_buka_ip", result["sesuai_buka_ip"])),
@@ -1296,11 +1420,13 @@ class UIPAdvisorService:
                     self._consult_cache[cache_key] = ai_patch
                     result.update(ai_patch)
                 else:
-                    err_detail = self.router._last_ai_error or "Model Gemini tidak memulangkan respons."
+                    err_detail = self.router._last_ai_error or (
+                        "Analisa AI tidak dapat dicapai buat sementara waktu. Paparan menggunakan rujukan statutori tempatan."
+                    )
                     logger.warning("Tanya Pakar fallback ke enjin tempatan: %s", err_detail)
                     result["ai_attempted"] = True
                     result["ai_succeeded"] = False
-                    result["fallback_reason"] = f"Analisa AI tidak berjaya dicapai buat sementara ({err_detail}); paparan menggunakan rujukan statutori tempatan."
+                    result["fallback_reason"] = err_detail
 
         result["draf_teks_kes_cadangan"] = self._build_prefilled_case_template(
             {**matched, "templat_ringkas": result["templat_ringkas"]},

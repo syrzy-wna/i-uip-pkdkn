@@ -80,13 +80,44 @@ MALAY_STOPWORDS = {
     "yang", "dan", "atau", "di", "ke", "dari", "daripada", "pada", "dalam",
     "untuk", "dengan", "oleh", "adalah", "ialah", "apa", "mana", "mana-mana",
     "suatu", "jika", "tidak", "tiada", "boleh", "hendaklah", "telah", "ini", "itu",
+    "kepada", "ada", "akan", "sudah", "sedang", "masih", "sahaja", "saja", "kah",
+    "lah", "pun", "nak", "bolehkah", "adakah", "apakah", "bagaimana", "kenapa",
+    "kalau", "bila", "apabila", "tersebut", "secara", "terhadap", "mengenai",
+    "tentang", "juga", "lagi", "hanya", "belum", "pernah", "kerana", "sebab",
+    "tetapi", "tapi", "namun", "supaya", "agar",
 }
+
+MALAY_QUERY_NORMALIZATIONS = {
+    "datng": "datang",
+    "taknak": "enggan",
+    "xnak": "enggan",
+    "xde": "tiada",
+    "yg": "yang",
+    "dgn": "dengan",
+    "utk": "untuk",
+    "org": "orang",
+    "bdk": "budak",
+    "sbb": "sebab",
+    "covid19": "covid",
+    "covid-19": "covid",
+}
+
+STEM_PROTECTED = {"majikan", "makan", "bukan", "ikan", "rakan", "pekerja", "saringan"}
+
+
+def _normalize_query_text(text: str) -> str:
+    norm = (text or "").lower()
+    for src, dst in MALAY_QUERY_NORMALIZATIONS.items():
+        norm = re.sub(rf"(?<!\w){re.escape(src)}(?!\w)", dst, norm)
+    return norm
 
 
 def _stem_malay_legal(word: str) -> str:
     low = word.lower()
     if low in MALAY_LEGAL_ROOTS:
         return MALAY_LEGAL_ROOTS[low]
+    if low in STEM_PROTECTED:
+        return low
     # Potong imbuhan akhiran biasa
     for suf in ("kan", "an", "nya", "i"):
         if len(low) > 6 and low.endswith(suf):
@@ -101,7 +132,8 @@ def _stem_malay_legal(word: str) -> str:
 
 
 def _tokenize(text: str) -> List[str]:
-    raw_tokens = [t.lower() for t in TOKEN_RE.findall(text)]
+    norm_text = _normalize_query_text(text)
+    raw_tokens = [t.lower() for t in TOKEN_RE.findall(norm_text)]
     tokens: List[str] = []
     for t in raw_tokens:
         if t in MALAY_STOPWORDS:
@@ -157,14 +189,24 @@ class StatuteChunk:
 
 def _infer_akta_metadata(filename: str, content: str) -> tuple[str, str]:
     low = (filename + " " + content[:400]).lower()
-    if "852" in low or "merokok" in low:
-        return "Akta 852", "Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024 [Akta 852]"
-    if "281" in low or "makanan" in low or "kebersihan makanan" in low:
-        return "Akta 281", "Akta Makanan 1983 [Akta 281] & Peraturan Kebersihan Makanan 2009"
-    if "154" in low or "serangga" in low or "aedes" in low:
-        return "Akta 154", "Akta Pemusnahan Serangga Pembawa Penyakit 1975 [Akta 154]"
-    if "342" in low or "berjangkit" in low:
+    if "akta 342" in low or "342" in low or "berjangkit" in low or "apppb" in low:
         return "Akta 342", "Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988 [Akta 342]"
+    if "akta 154" in low or "154" in low or "serangga" in low or "aedes" in low:
+        return "Akta 154", "Akta Pemusnahan Serangga Pembawa Penyakit 1975 [Akta 154]"
+    if "akta 852" in low or "852" in low or "merokok" in low:
+        return "Akta 852", "Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024 [Akta 852]"
+    if "akta 171" in low or "171" in low or "kerajaan tempatan" in low:
+        return "Akta 171", "Akta Kerajaan Tempatan 1976 [Akta 171]"
+    if "akta 366" in low or "366" in low or "racun" in low or "akta 368" in low:
+        return "Akta 366", "Akta Racun 1952 [Akta 366] & Akta Jualan Dadah 1952"
+    if "akta 586" in low or "586" in low or "jagaan kesihatan swasta" in low:
+        return "Akta 586", "Akta Kemudahan dan Perkhidmatan Jagaan Kesihatan Swasta 1998 [Akta 586]"
+    if "akta 260" in low or "260" in low or "hidrogen sianida" in low:
+        return "Akta 260", "Akta Hidrogen Sianida (Pengasapan) 1953 [Akta 260]"
+    if "akta 127" in low or "127" in low or "kualiti alam sekeliling" in low:
+        return "Akta 127", "Akta Kualiti Alam Sekeliling 1974 [Akta 127] & Akta 655"
+    if "akta 281" in low or "281" in low or "makanan" in low or "kebersihan makanan" in low or "ppm 1985" in low:
+        return "Akta 281", "Akta Makanan 1983 [Akta 281] & Peraturan Kebersihan Makanan 2009"
     if "593" in low or "tatacara jenayah" in low or "ktj" in low:
         return "Akta 593", "Kanun Tatacara Jenayah [Akta 593]"
     if "90a" in low or "keterangan" in low or "akta 56" in low:
@@ -182,26 +224,35 @@ def _extract_legal_hints(block: str) -> tuple[str, str]:
 def _split_into_section_chunks(
     text: str, filename: str, akta_code: str, akta_title: str
 ) -> List[StatuteChunk]:
-    blocks = re.split(r"\n(?=(?:Seksyen|Peraturan|-\s*Seksyen|-\s*Peraturan|Keperluan)\s+)", text.strip())
+    blocks = re.split(
+        r"\n(?=(?:Seksyen|Peraturan|-\s*Seksyen|-\s*Peraturan|Keperluan|Akta)\s+)",
+        text.strip(),
+    )
     chunks: List[StatuteChunk] = []
+    is_multi_act_file = "lain_rujukan" in filename.lower()
     for idx, block in enumerate(blocks):
         clean_block = block.strip()
         if len(clean_block) < 40:
             continue
         first_line = clean_block.splitlines()[0].lstrip("- ").strip()
         sec_match = re.match(
-            r"^((?:Seksyen|Peraturan)\s+[0-9A-Za-z\(\),&\s]+?)(?:\s*[-–:]|$)",
+            r"^((?:Seksyen|Peraturan|Akta)\s+[0-9A-Za-z\(\),&\s]+?)(?:\s*(?:[-–—:]|\[)|$)",
             first_line,
             flags=re.I,
         )
         section_label = sec_match.group(1).strip() if sec_match else first_line[:70]
+        chunk_akta_code, chunk_akta_title = (
+            _infer_akta_metadata(filename, clean_block)
+            if is_multi_act_file
+            else (akta_code, akta_title)
+        )
         fine_hint, comp_hint = _extract_legal_hints(clean_block)
         chunk_id = f"{Path(filename).stem}__chunk_{idx:03d}"
         chunks.append(
             StatuteChunk(
                 chunk_id=chunk_id,
-                akta_code=akta_code,
-                akta_title=akta_title,
+                akta_code=chunk_akta_code,
+                akta_title=chunk_akta_title,
                 section=section_label,
                 text=clean_block,
                 source_file=filename,
@@ -358,6 +409,45 @@ class StatutoryRAGStore:
                 }
         return list(seen.values())
 
+    @staticmethod
+    def _infer_domain_signals(query: str) -> tuple[Optional[str], List[str]]:
+        """Mengenal pasti isyarat domain kuat & istilah perluasan ringan apabila penapis='Semua'."""
+        q_norm = _normalize_query_text(query)
+        domain_rules: Dict[str, tuple[tuple[str, ...], List[str]]] = {
+            "Akta 342": (
+                (
+                    "covid", "koronavirus", "cdc", "hso", "kuarantin", "pengasingan", "isolasi",
+                    "wabak", "berjangkit", "tibi", "ptb", "afb", "tbis", "hfmd", "leptospirosis",
+                    "measles", "campak", "kolera", "difteria", "influenza", "mpox", "rabies",
+                    "kontak rapat", "e-notifikasi", "enotifikasi", "apppb", "a1742",
+                ),
+                ["penyakit", "berjangkit", "342", "pengawasan", "perintah"],
+            ),
+            "Akta 852": (
+                ("rokok", "vape", "pod", "shisha", "obd", "ashtray", "merokok", "257", "259", "260"),
+                ["merokok", "852"],
+            ),
+            "Akta 281": (
+                ("makanan", "restoran", "dapur", "tifoid", "lpm", "slpm", "fosim", "keracunan", "najis tikus", "lipas", "luput", "mja", "ppkm", "ppm"),
+                ["makanan", "281"],
+            ),
+            "Akta 154": (
+                ("aedes", "denggi", "jentik", "larva", "nyamuk", "fogging", "entomologi", "tapak bina"),
+                ["aedes", "154"],
+            ),
+        }
+        scores: Dict[str, int] = {}
+        expansions: Dict[str, List[str]] = {}
+        for act, (terms, exp) in domain_rules.items():
+            hits = sum(1 for term in terms if re.search(rf"(?<!\w){re.escape(term)}(?!\w)", q_norm))
+            if hits > 0:
+                scores[act] = hits
+                expansions[act] = exp
+        if not scores:
+            return None, []
+        top_act = max(scores, key=lambda k: scores[k])
+        return top_act, expansions[top_act]
+
     def search_statutes(
         self,
         query: str,
@@ -370,6 +460,8 @@ class StatutoryRAGStore:
         norm_filter = (akta_filter or "").strip().lower()
         if norm_filter in ("", "semua", "all"):
             norm_filter = ""
+
+        domain_act, domain_expansions = (None, []) if norm_filter else self._infer_domain_signals(query)
 
         chroma_scores: Dict[str, float] = {}
         if self._collection is not None:
@@ -384,7 +476,7 @@ class StatutoryRAGStore:
                     if len(matched_codes) == 1:
                         where_clause = {"akta_code": next(iter(matched_codes))}
                 res = self._collection.query(
-                    query_texts=[query],
+                    query_texts=[_normalize_query_text(query)],
                     n_results=min(max(top_k * 3, 8), len(self._chunks)),
                     where=where_clause,
                 )
@@ -396,6 +488,8 @@ class StatutoryRAGStore:
                 chroma_scores = {}
 
         query_tokens = _tokenize(query)
+        unique_q_tokens = set(query_tokens)
+        expansion_tokens = set(domain_expansions) - unique_q_tokens
         n_docs = len(self._chunks)
         k1 = 1.5
         b = 0.75
@@ -410,7 +504,7 @@ class StatutoryRAGStore:
             c_cnt = self._chunk_counters.get(chunk.chunk_id, Counter())
             doc_len = self._chunk_lengths.get(chunk.chunk_id, 1)
             bm25 = 0.0
-            for qt in set(query_tokens):
+            for qt in unique_q_tokens:
                 tf = c_cnt.get(qt, 0)
                 if tf == 0:
                     continue
@@ -419,24 +513,34 @@ class StatutoryRAGStore:
                 denom = tf + k1 * (1.0 - b + b * (doc_len / max(1.0, self._avg_doc_len)))
                 bm25 += idf * ((tf * (k1 + 1.0)) / denom)
 
+            for eq in expansion_tokens:
+                tf = c_cnt.get(eq, 0)
+                if tf == 0:
+                    continue
+                df = self._doc_freqs.get(eq, 0)
+                idf = math.log(1.0 + (n_docs - df + 0.5) / (df + 0.5))
+                denom = tf + k1 * (1.0 - b + b * (doc_len / max(1.0, self._avg_doc_len)))
+                bm25 += 0.45 * idf * ((tf * (k1 + 1.0)) / denom)
+
             # Bonus padanan nombor seksyen atau Peraturan tepat
             sec_low = chunk.section.lower()
-            for qt in set(query_tokens):
+            for qt in unique_q_tokens:
                 if qt in sec_low and (qt.isdigit() or "90a" in qt or "32b" in qt or "112" in qt):
                     bm25 += 3.0
             raw_bm25[chunk.chunk_id] = bm25
 
-        max_bm25 = max(raw_bm25.values()) if raw_bm25 else 1.0
-        if max_bm25 <= 0:
-            max_bm25 = 1.0
+        max_bm25 = max(raw_bm25.values()) if raw_bm25 else 0.0
+        bm25_denom = max(max_bm25, 4.5)
 
         scored: List[StatuteChunk] = []
         for chunk in self._chunks:
             if chunk.chunk_id not in raw_bm25:
                 continue
-            bm25_norm = raw_bm25[chunk.chunk_id] / max_bm25
-            vec_score = chroma_scores.get(chunk.chunk_id, 0.0)
-            combined = (0.72 * bm25_norm) + (0.28 * vec_score)
+            chunk_bm25 = raw_bm25[chunk.chunk_id]
+            bm25_norm = chunk_bm25 / bm25_denom
+            vec_score = chroma_scores.get(chunk.chunk_id, 0.0) if (chunk_bm25 > 0 or max_bm25 == 0) else 0.0
+            act_boost = 0.20 if (domain_act and chunk.akta_code == domain_act) else 0.0
+            combined = (0.88 * bm25_norm) + (0.12 * vec_score) + act_boost
             normalized_score = round(min(0.99, max(0.01, combined)), 4)
 
             scored.append(

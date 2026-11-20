@@ -42,7 +42,6 @@ const QUICK_CHIPS = [
 ];
 
 export default function UIPAdvisorPanel({
-  aktaUtama,
   authToken,
   officer,
   onApplyToCaseBuilder,
@@ -83,7 +82,7 @@ export default function UIPAdvisorPanel({
     try {
       const res = await consultUipAdvisor({
         question: q || "Rujuk templat situasi ini",
-        aktaHint: aktaFilter !== "Semua" ? aktaFilter : aktaUtama || "Semua",
+        aktaHint: aktaFilter,
         scenarioId,
         useAi: forceAi,
         authToken,
@@ -330,12 +329,30 @@ export default function UIPAdvisorPanel({
           </div>
 
           {result.ai_attempted && result.ai_succeeded === false && result.fallback_reason && (
-            <div className="flex items-start gap-2.5 rounded-xl border border-amber-300 bg-amber-50 px-3.5 py-2.5 text-xs text-amber-950">
-              <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-700" />
-              <div>
-                <span className="font-bold">Analisa AI tidak berjaya dipanggil:</span>{" "}
-                {result.fallback_reason}
+            <div className="flex flex-wrap items-center justify-between gap-2.5 rounded-xl border border-amber-300 bg-amber-50 px-3.5 py-2.5 text-xs text-amber-950">
+              <div className="flex min-w-0 flex-1 items-start gap-2.5">
+                <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-700" />
+                <div>
+                  <span className="font-bold">Mod Rujukan Tempatan Aktif:</span>{" "}
+                  {result.fallback_reason}
+                </div>
               </div>
+              <button
+                type="button"
+                disabled={loading || deepLoading}
+                onClick={() => {
+                  const typed = question.trim();
+                  handleConsult(
+                    typed ? undefined : result.tajuk_nasihat,
+                    typed ? undefined : result.scenario_id,
+                    true
+                  );
+                }}
+                className="inline-flex shrink-0 items-center gap-1 rounded-lg border border-amber-400 bg-white px-2.5 py-1.5 text-[11px] font-bold text-amber-900 shadow-xs hover:bg-amber-100 disabled:opacity-50"
+              >
+                <Sparkles className="h-3 w-3" />
+                {deepLoading ? "Mencuba AI..." : "Cuba Semula AI"}
+              </button>
             </div>
           )}
 
@@ -531,7 +548,9 @@ export default function UIPAdvisorPanel({
                     className="rounded-xl border border-slate-200 bg-slate-50/40 p-3 text-xs text-slate-700"
                   >
                     <div className="font-extrabold text-teal-800">
-                      {cit.akta_code} — {cit.section}
+                      {cit.section.toLowerCase().includes(cit.akta_code.toLowerCase())
+                        ? cit.section
+                        : `${cit.akta_code} — ${cit.section}`}
                     </div>
                     <p className="mt-1 whitespace-pre-line leading-relaxed">{cit.text}</p>
                   </div>
