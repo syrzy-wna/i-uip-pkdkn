@@ -9,6 +9,7 @@ import {
   FileText,
   FolderOpen,
   Home,
+  Layers,
   Menu,
   MessageSquareQuote,
   Scale,
@@ -35,6 +36,7 @@ interface TopNavbarProps {
   isDevAdmin: boolean;
   onOpenAccount: () => void;
   onOpenSplash: () => void;
+  onOpenOnboarding?: () => void;
   onOpenDevConsole: () => void;
 }
 
@@ -89,6 +91,7 @@ export default function TopNavbar({
   isDevAdmin,
   onOpenAccount,
   onOpenSplash,
+  onOpenOnboarding,
   onOpenDevConsole,
 }: TopNavbarProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -178,6 +181,19 @@ export default function TopNavbar({
 
         {/* Kawalan Kanan: Fokus Tugas + Akaun */}
         <div className="flex shrink-0 items-center gap-1.5 text-xs">
+          {onOpenOnboarding && (
+            <button
+              type="button"
+              onClick={onOpenOnboarding}
+              title="Panduan Kad Fungsi i-UIP Nerus (8 Kad)"
+              aria-label="Panduan Kad Fungsi i-UIP Nerus"
+              className="hidden min-h-[36px] items-center gap-1.5 rounded-lg bg-white/10 px-2.5 py-1.5 text-xs font-bold text-amber-100 ring-1 ring-white/15 transition hover:bg-white/20 lg:inline-flex"
+            >
+              <Layers className="h-4 w-4 text-amber-300" />
+              <span className="hidden xl:inline">Fungsi</span>
+            </button>
+          )}
+
           <button
             type="button"
             onClick={onOpenCases}
@@ -312,6 +328,20 @@ export default function TopNavbar({
                 Privasi: {ollamaOk && useOllama ? "Lokal AI" : "Tempatan"}
               </button>
             </div>
+
+            {onOpenOnboarding && (
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  onOpenOnboarding();
+                }}
+                className="inline-flex min-h-[42px] w-full items-center justify-center gap-2 rounded-lg bg-[#9e1b32] px-3 font-extrabold text-white ring-1 ring-[#e9c98a]/40 hover:bg-[#6d0f21]"
+              >
+                <Layers className="h-4 w-4 text-[#e9c98a]" />
+                Lihat 8 Kad Fungsi Aplikasi
+              </button>
+            )}
 
             {isDevAdmin && (
               <div className="grid grid-cols-2 gap-2 pt-1">

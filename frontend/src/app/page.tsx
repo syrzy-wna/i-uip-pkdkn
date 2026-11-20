@@ -10,6 +10,7 @@ import {
   FileCheck2,
   FileText,
   FolderOpen,
+  Layers,
   Loader2,
   MessageSquareQuote,
   PanelLeftClose,
@@ -27,6 +28,7 @@ import DevConsoleModal from "@/components/DevConsoleModal";
 import DraftDocxEditor from "@/components/DraftDocxEditor";
 import LeftEvidencePane from "@/components/LeftEvidencePane";
 import MobileBottomNav from "@/components/MobileBottomNav";
+import OnboardingCardsModal from "@/components/OnboardingCardsModal";
 import SplashScreenModal from "@/components/SplashScreenModal";
 import SystemSettingsModal from "@/components/SystemSettingsModal";
 import TopNavbar, { type ActiveAppMode } from "@/components/TopNavbar";
@@ -211,6 +213,16 @@ function buildBlankDraft(
   };
 }
 
+function getOnboardingHideKey(user: OfficerProfile): string {
+  const ident = (user.email || user.id || "default").trim().toLowerCase();
+  return `uip_onboarding_cards_hide_v1:${ident}`;
+}
+
+function getOnboardingSessionKey(user: OfficerProfile): string {
+  const ident = (user.email || user.id || "default").trim().toLowerCase();
+  return `uip_onboarding_cards_session_v1:${ident}`;
+}
+
 export default function UIPCommandPage() {
   const [status, setStatus] = useState<SystemStatus | null>(null);
   const [cases, setCases] = useState<IPCaseRecord[]>([]);
@@ -252,7 +264,8 @@ export default function UIPCommandPage() {
   const [registryInitialMode, setRegistryInitialMode] = useState<"list" | "new">("list");
   const [authOpen, setAuthOpen] = useState(false);
   const [authInitialTab, setAuthInitialTab] = useState<"google" | "login" | "register" | "profile">("google");
-  const [splashOpen, setSplashOpen] = useState(false);
+  const [onboardingOpen, setOnboardingOpen] = useState(false);
+  const [onboardingDontShow, setOnboardingDontShow] = useState(false);
 
   const [authToken, setAuthToken] = useState<string | null>(null);
   const [officer, setOfficer] = useState<OfficerProfile | null>(null);
@@ -264,6 +277,49 @@ export default function UIPCommandPage() {
       setToastMsg((prev) => (prev === msg ? null : prev));
     }, 3800);
   }, []);
+
+  const maybeOpenOnboarding = useCallback((user: OfficerProfile, isFreshLogin: boolean) => {
+    if (typeof window === "undefined") return;
+    const hideKey = getOnboardingHideKey(user);
+    const sessionKey = getOnboardingSessionKey(user);
+    const hidden = window.localStorage.getItem(hideKey) === "1";
+    setOnboardingDontShow(hidden);
+    if (hidden) return;
+    if (isFreshLogin) {
+      window.sessionStorage.removeItem(sessionKey);
+      setOnboardingOpen(true);
+      return;
+    }
+    if (window.sessionStorage.getItem(sessionKey) !== "1") {
+      setOnboardingOpen(true);
+    }
+  }, []);
+
+  const handleToggleOnboardingDontShow = (val: boolean) => {
+    setOnboardingDontShow(val);
+    if (officer && typeof window !== "undefined") {
+      const hideKey = getOnboardingHideKey(officer);
+      if (val) window.localStorage.setItem(hideKey, "1");
+      else window.localStorage.removeItem(hideKey);
+    }
+  };
+
+  const handleCloseOnboarding = () => {
+    if (officer && typeof window !== "undefined") {
+      window.sessionStorage.setItem(getOnboardingSessionKey(officer), "1");
+      const hideKey = getOnboardingHideKey(officer);
+      if (onboardingDontShow) window.localStorage.setItem(hideKey, "1");
+      else window.localStorage.removeItem(hideKey);
+    }
+    setOnboardingOpen(false);
+  };
+
+  const handleOpenOnboardingManual = () => {
+    if (officer && typeof window !== "undefined") {
+      setOnboardingDontShow(window.localStorage.getItem(getOnboardingHideKey(officer)) === "1");
+    }
+    setOnboardingOpen(true);
+  };
 
   const confirmDiscardIfDirty = useCallback(() => {
     if (!hasUnsavedChanges) return true;
@@ -314,6 +370,7 @@ export default function UIPCommandPage() {
             setOfficer(me);
             setCases(caseList);
             setActiveTab("home");
+            maybeOpenOnboarding(me, false);
           } catch {
             if (typeof window !== "undefined") {
               window.localStorage.removeItem("uip_auth_token");
@@ -335,7 +392,7 @@ export default function UIPCommandPage() {
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [maybeOpenOnboarding]);
 
   useEffect(() => {
     return () => {
@@ -766,9 +823,9 @@ export default function UIPCommandPage() {
     window.localStorage.setItem("uip_auth_token", token);
     setAuthToken(token);
     setOfficer(user);
-    setSplashOpen(false);
     setAuthOpen(false);
     setActiveTab("home");
+    maybeOpenOnboarding(user, true);
     try {
       const caseList = await fetchCases();
       setCases(caseList);
@@ -778,6 +835,7 @@ export default function UIPCommandPage() {
   };
 
   const handleFullLogout = () => {
+    setOnboardingOpen(false);
     setOfficer(null);
     setAuthToken(null);
     setCases([]);
@@ -902,6 +960,7 @@ export default function UIPCommandPage() {
           setAuthOpen(true);
         }}
         onOpenSplash={() => handleSelectMode("home")}
+        onOpenOnboarding={handleOpenOnboardingManual}
         onOpenDevConsole={() => setDevConsoleOpen(true)}
       />
 
@@ -950,17 +1009,28 @@ export default function UIPCommandPage() {
                 </p>
               </div>
 
-              <button
-                type="button"
-                onClick={() => {
-                  setRegistryInitialMode("new");
-                  setRegistryOpen(true);
-                }}
-                className="inline-flex min-h-[42px] items-center gap-1.5 rounded-xl bg-[#0f2744] px-4 py-2 text-xs font-extrabold text-white shadow-sm hover:bg-slate-800"
-              >
-                <Plus className="h-4 w-4 text-amber-300" />
-                Daftar Kes IP Baharu
-              </button>
+              <div className="flex flex-wrap items-center gap-2">
+                <button
+                  type="button"
+                  onClick={handleOpenOnboardingManual}
+                  className="inline-flex min-h-[42px] items-center gap-1.5 rounded-xl border border-[#9e1b32]/25 bg-[#f7f4ef] px-3.5 py-2 text-xs font-extrabold text-[#6d0f21] shadow-sm transition hover:bg-[#efe7dc]"
+                >
+                  <Layers className="h-4 w-4 text-[#9e1b32]" />
+                  Kenali Fungsi (8 Kad)
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setRegistryInitialMode("new");
+                    setRegistryOpen(true);
+                  }}
+                  className="inline-flex min-h-[42px] items-center gap-1.5 rounded-xl bg-[#0f2744] px-4 py-2 text-xs font-extrabold text-white shadow-sm hover:bg-slate-800"
+                >
+                  <Plus className="h-4 w-4 text-amber-300" />
+                  Daftar Kes IP Baharu
+                </button>
+              </div>
             </div>
 
             <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -1382,25 +1452,26 @@ export default function UIPCommandPage() {
         />
       )}
 
-      <SplashScreenModal
-        open={splashOpen}
+      <OnboardingCardsModal
+        open={onboardingOpen}
         officer={officer}
-        onClose={() => setSplashOpen(false)}
-        onEnterApp={(mode) => {
-          setSplashOpen(false);
+        dontShowAgain={onboardingDontShow}
+        onToggleDontShowAgain={handleToggleOnboardingDontShow}
+        onClose={handleCloseOnboarding}
+        onNavigateMode={(mode) => {
+          handleCloseOnboarding();
           handleSelectMode(mode);
         }}
-        onOpenGoogleAuth={() => {
-          setSplashOpen(false);
-          setAuthInitialTab("google");
+        onOpenCases={() => {
+          handleCloseOnboarding();
+          setRegistryInitialMode("list");
+          setRegistryOpen(true);
+        }}
+        onOpenProfile={() => {
+          handleCloseOnboarding();
+          setAuthInitialTab("profile");
           setAuthOpen(true);
         }}
-        onOpenEmailAuth={(tabChoice) => {
-          setSplashOpen(false);
-          setAuthInitialTab(tabChoice);
-          setAuthOpen(true);
-        }}
-        onAuthenticated={handleAuthenticatedSuccess}
       />
 
       <footer className="mt-auto hidden border-t border-slate-200 bg-white/95 px-4 py-3 text-[11px] text-slate-600 lg:block">
