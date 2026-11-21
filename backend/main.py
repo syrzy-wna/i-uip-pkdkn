@@ -928,6 +928,20 @@ def list_advisor_scenarios(
     return {"scenarios": advisor_service.list_scenarios()}
 
 
+@app.get("/api/advisor/answered")
+def list_advisor_answered_questions(
+    akta: Optional[str] = Query(default=None),
+    q: Optional[str] = Query(default=None),
+    limit: int = Query(default=120, ge=1, le=200),
+    _officer: Dict[str, Any] = Depends(_require_authenticated_officer),
+) -> Dict[str, Any]:
+    return db_service.list_advisor_answered_questions(
+        akta=akta,
+        q=q,
+        limit=limit,
+    )
+
+
 @app.post("/api/advisor/consult")
 def consult_uip_advisor(
     req: AdvisorConsultRequest,

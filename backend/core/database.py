@@ -12,6 +12,7 @@ from __future__ import annotations
 import base64
 import hashlib
 import json
+import re
 import secrets
 import sqlite3
 import uuid
@@ -50,6 +51,85 @@ LEGACY_TO_SSPA_GRADE: Dict[str, str] = {
     "C52": "C13",
     "C54": "C14",
 }
+
+ADVISOR_ACT_META: tuple[tuple[str, str], ...] = (
+    ("Akta 852", "Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024"),
+    ("Akta 281", "Akta Makanan 1983 & Peraturan-Peraturan Kebersihan Makanan 2009"),
+    ("Akta 154", "Akta Pemusnahan Serangga Pembawa Penyakit 1975"),
+    ("Akta 342", "Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988"),
+    ("Akta 593", "Kanun Tatacara Jenayah (KTJ)"),
+    ("Akta 56", "Akta Keterangan 1950 (Seksyen 90A)"),
+    ("Akta Lain / Rujukan Silang", "Rujukan Silang Agensi & Akta Berkaitan"),
+)
+
+
+def _match_canonical_act_from_text(text: str) -> Optional[str]:
+    low = (text or "").strip().lower()
+    if not low:
+        return None
+    if re.search(r"(?<!\d)(?:akta\s*)?852(?!\d)", low) or "produk merokok" in low or "ppkht" in low:
+        return "Akta 852"
+    if (
+        re.search(r"(?<!\d)(?:akta\s*)?281(?!\d)", low)
+        or "akta makanan" in low
+        or "ppkm" in low
+        or "ppm 1985" in low
+    ):
+        return "Akta 281"
+    if (
+        re.search(r"(?<!\d)(?:akta\s*)?154(?!\d)", low)
+        or "serangga pembawa penyakit" in low
+        or "apspp" in low
+    ):
+        return "Akta 154"
+    if (
+        re.search(r"(?<!\d)(?:akta\s*)?342(?!\d)", low)
+        or "penyakit berjangkit" in low
+        or "apppb" in low
+    ):
+        return "Akta 342"
+    if (
+        re.search(r"(?<!\d)(?:akta\s*)?593(?!\d)", low)
+        or "kanun tatacara jenayah" in low
+        or re.search(r"\bktj\b", low)
+    ):
+        return "Akta 593"
+    if re.search(r"\bakta\s*56\b", low) or "akta keterangan" in low or "keterangan 1950" in low:
+        return "Akta 56"
+    return None
+
+
+def classify_advisor_akta_group(
+    raw_akta: Optional[str],
+    analysis: Optional[Dict[str, Any]] = None,
+) -> str:
+    """Mengelaskan rekod Tanya Pakar kepada kategori Akta KKM yang konsisten."""
+    ana = analysis if isinstance(analysis, dict) else {}
+    primary_charge = ""
+    charges = ana.get("cadangan_pertuduhan")
+    if isinstance(charges, list) and charges and isinstance(charges[0], dict):
+        primary_charge = str(charges[0].get("seksyen_kesalahan") or "")
+
+    first_cit_act = ""
+    citations = ana.get("statutory_citations")
+    if isinstance(citations, list) and citations and isinstance(citations[0], dict):
+        first_cit_act = str(citations[0].get("akta_code") or "")
+
+    for candidate in (
+        str(ana.get("akta_disyorkan") or ""),
+        str(raw_akta or ""),
+        primary_charge,
+        first_cit_act,
+    ):
+        matched = _match_canonical_act_from_text(candidate)
+        if matched:
+            return matched
+    return "Akta Lain / Rujukan Silang"
+
+
+def _normalize_advisor_question_key(text: str) -> str:
+    cleaned = re.sub(r"[^\w]+", " ", (text or "").lower(), flags=re.UNICODE)
+    return re.sub(r"\s+", " ", cleaned).strip()
 
 
 def normalize_sspa_grade(raw_grade: Optional[str], default: str = "U5") -> str:
@@ -1493,6 +1573,244 @@ class UIPDatabase:
         with self._connect() as conn:
             rows = conn.execute("SELECT * FROM users ORDER BY created_at DESC").fetchall()
         return [self._safe_user_dict(r) for r in rows]
+
+    @staticmethod
+    def _sanitize_advisor_answer(
+        analysis: Dict[str, Any],
+        *,
+        akta_group: str,
+        fallback_title: str,
+        fallback_status: str,
+        fallback_resp: str,
+        fallback_model: str,
+    ) -> Dict[str, Any]:
+        """Menormalkan struktur jawapan Pakar UIP daripada rekod terkelas PDPA."""
+        charges_raw = analysis.get("cadangan_pertuduhan")
+        charges = [c for c in charges_raw if isinstance(c, dict)] if isinstance(charges_raw, list) else []
+        citations_raw = analysis.get("statutory_citations")
+        citations = [c for c in citations_raw if isinstance(c, dict)] if isinstance(citations_raw, list) else []
+
+        def _str_list(key: str) -> List[str]:
+            val = analysis.get(key)
+            if isinstance(val, list):
+                return [str(x) for x in val if str(x).strip()]
+            return []
+
+        return {
+            "scenario_id": str(analysis.get("scenario_id") or "answered_archive"),
+            "akta_disyorkan": str(analysis.get("akta_disyorkan") or akta_group),
+            "tajuk_nasihat": str(analysis.get("tajuk_nasihat") or fallback_title),
+            "keputusan_tindakan": str(
+                analysis.get("keputusan_tindakan")
+                or fallback_status
+                or "Rujuk langkah SOP & petikan akta."
+            ),
+            "sesuai_buka_ip": bool(analysis.get("sesuai_buka_ip", False)),
+            "alasan_keputusan": str(analysis.get("alasan_keputusan") or fallback_resp or ""),
+            "cadangan_pertuduhan": charges,
+            "sop_lapangan": _str_list("sop_lapangan"),
+            "eksibit_wajib": _str_list("eksibit_wajib"),
+            "perangkap_kesilapan": _str_list("perangkap_kesilapan"),
+            "templat_ringkas": str(analysis.get("templat_ringkas") or ""),
+            "draf_teks_kes_cadangan": str(analysis.get("draf_teks_kes_cadangan") or ""),
+            "engine_used": str(
+                analysis.get("engine_used")
+                or fallback_model
+                or "Mod Pantas — Rujukan Statutori UIP"
+            ),
+            "ai_attempted": bool(analysis.get("ai_attempted", False)),
+            "ai_succeeded": bool(analysis.get("ai_succeeded", False)),
+            "fallback_reason": analysis.get("fallback_reason"),
+            "statutory_citations": citations,
+        }
+
+    def list_advisor_answered_questions(
+        self,
+        *,
+        akta: Optional[str] = None,
+        q: Optional[str] = None,
+        limit: int = 120,
+    ) -> Dict[str, Any]:
+        """Mengumpul semua soalan Tanya Pakar yang telah dijawab (versi PDPA) dan mengelaskannya mengikut Akta."""
+        with self._connect() as conn:
+            rows = conn.execute(
+                """
+                SELECT
+                    id, akta_utama, title, redacted_input_text, redacted_response_text,
+                    redacted_analysis_json, model_used, is_cloud_api, status_summary, created_at
+                FROM dev_archive_records
+                WHERE category = ? AND action_type = ?
+                ORDER BY created_at DESC
+                LIMIT ?
+                """,
+                ("ADVISOR_QA", "TANYA_PAKAR_UIP", 600),
+            ).fetchall()
+
+        deduped: Dict[tuple[str, str], Dict[str, Any]] = {}
+        for r in rows:
+            row = dict(r)
+            raw_json_str = str(row.get("redacted_analysis_json") or "").strip()
+            analysis: Dict[str, Any] = {}
+            if raw_json_str and raw_json_str != "{}":
+                try:
+                    parsed = json.loads(raw_json_str)
+                    if isinstance(parsed, dict):
+                        analysis = parsed
+                except Exception:
+                    analysis = {}
+
+            redacted_resp = str(row.get("redacted_response_text") or "").strip()
+            if not analysis and not redacted_resp:
+                continue
+
+            redacted_q = re.sub(r"\s+", " ", str(row.get("redacted_input_text") or "")).strip()
+            is_template_placeholder = (
+                not redacted_q
+                or redacted_q == "Rujuk templat situasi ini"
+                or redacted_q.startswith("[Templat Situasi:")
+            )
+            fallback_tajuk = str(analysis.get("tajuk_nasihat") or "").strip()
+            if is_template_placeholder:
+                question_text = fallback_tajuk or re.sub(
+                    r"\s+", " ", str(row.get("title") or "")
+                ).strip()
+            else:
+                question_text = redacted_q
+
+            if not question_text:
+                continue
+
+            norm_key = _normalize_advisor_question_key(question_text)
+            if not norm_key:
+                continue
+
+            akta_group = classify_advisor_akta_group(row.get("akta_utama"), analysis)
+            is_ai = bool(analysis.get("ai_succeeded") or row.get("is_cloud_api"))
+
+            safe_fallback_title = fallback_tajuk or (
+                question_text if len(question_text) <= 120 else f"{question_text[:117]}..."
+            )
+            answer_obj = self._sanitize_advisor_answer(
+                analysis,
+                akta_group=akta_group,
+                fallback_title=safe_fallback_title,
+                fallback_status=str(row.get("status_summary") or ""),
+                fallback_resp=redacted_resp,
+                fallback_model=str(row.get("model_used") or ""),
+            )
+
+            charges = answer_obj.get("cadangan_pertuduhan") or []
+            primary_sec = (
+                str(charges[0].get("seksyen_kesalahan") or "").strip()
+                if charges and isinstance(charges[0], dict)
+                else ""
+            )
+            alasan_clean = re.sub(r"\s+", " ", str(answer_obj.get("alasan_keputusan") or "")).strip()
+            alasan_short = (
+                alasan_clean if len(alasan_clean) <= 190 else f"{alasan_clean[:187]}..."
+            )
+
+            entry = {
+                "id": str(row.get("id") or ""),
+                "question": question_text,
+                "akta_group": akta_group,
+                "akta_disyorkan": str(answer_obj.get("akta_disyorkan") or akta_group),
+                "tajuk_nasihat": str(answer_obj.get("tajuk_nasihat") or safe_fallback_title),
+                "keputusan_tindakan": str(answer_obj.get("keputusan_tindakan") or ""),
+                "alasan_ringkas": alasan_short,
+                "seksyen_utama": primary_sec,
+                "sesuai_buka_ip": bool(answer_obj.get("sesuai_buka_ip", False)),
+                "is_ai_answered": is_ai,
+                "engine_used": str(answer_obj.get("engine_used") or ""),
+                "ask_count": 1,
+                "last_asked_at": str(row.get("created_at") or ""),
+                "answer": answer_obj,
+            }
+
+            dedup_key = (akta_group, norm_key)
+            existing = deduped.get(dedup_key)
+            if not existing:
+                deduped[dedup_key] = entry
+            else:
+                existing["ask_count"] += 1
+                if entry["last_asked_at"] > existing["last_asked_at"]:
+                    existing["last_asked_at"] = entry["last_asked_at"]
+                if not existing["is_ai_answered"] and entry["is_ai_answered"]:
+                    ask_total = existing["ask_count"]
+                    latest_ts = existing["last_asked_at"]
+                    deduped[dedup_key] = {
+                        **entry,
+                        "ask_count": ask_total,
+                        "last_asked_at": latest_ts,
+                    }
+
+        all_items = sorted(
+            deduped.values(),
+            key=lambda x: x.get("last_asked_at") or "",
+            reverse=True,
+        )
+
+        act_counts: Dict[str, int] = {code: 0 for code, _ in ADVISOR_ACT_META}
+        total_asks_all = 0
+        for it in all_items:
+            grp = str(it.get("akta_group") or "Akta Lain / Rujukan Silang")
+            act_counts[grp] = act_counts.get(grp, 0) + 1
+            total_asks_all += int(it.get("ask_count") or 1)
+
+        akta_filter = (akta or "").strip()
+        q_filter = (q or "").strip().lower()
+
+        filtered: List[Dict[str, Any]] = []
+        for it in all_items:
+            if akta_filter and akta_filter.lower() != "semua":
+                if (
+                    it["akta_group"].lower() != akta_filter.lower()
+                    and akta_filter.lower() not in it["akta_disyorkan"].lower()
+                ):
+                    continue
+            if q_filter:
+                haystack = " ".join(
+                    [
+                        it.get("question", ""),
+                        it.get("tajuk_nasihat", ""),
+                        it.get("keputusan_tindakan", ""),
+                        it.get("seksyen_utama", ""),
+                        it.get("akta_group", ""),
+                        it.get("akta_disyorkan", ""),
+                    ]
+                ).lower()
+                if q_filter not in haystack:
+                    continue
+            filtered.append(it)
+
+        safe_limit = max(1, min(int(limit), 200))
+        limited_items = filtered[:safe_limit]
+
+        grouped_map: Dict[str, List[Dict[str, Any]]] = {}
+        for it in limited_items:
+            grouped_map.setdefault(it["akta_group"], []).append(it)
+
+        groups = []
+        for code, title in ADVISOR_ACT_META:
+            grp_items = grouped_map.get(code)
+            if grp_items:
+                groups.append(
+                    {
+                        "akta_code": code,
+                        "akta_title": title,
+                        "count": len(grp_items),
+                        "items": grp_items,
+                    }
+                )
+
+        return {
+            "total_questions": len(all_items),
+            "total_asks": total_asks_all,
+            "total_matching": len(limited_items),
+            "act_counts": act_counts,
+            "groups": groups,
+            "items": limited_items,
+        }
 
     @staticmethod
     def _safe_user_dict(row: sqlite3.Row) -> Dict[str, Any]:

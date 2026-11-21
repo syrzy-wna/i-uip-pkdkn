@@ -376,6 +376,39 @@ export interface AdvisorConsultResult {
   statutory_citations: StatutoryCitation[];
 }
 
+export interface AdvisorAnsweredItem {
+  id: string;
+  question: string;
+  akta_group: string;
+  akta_disyorkan: string;
+  tajuk_nasihat: string;
+  keputusan_tindakan: string;
+  alasan_ringkas: string;
+  seksyen_utama: string;
+  sesuai_buka_ip: boolean;
+  is_ai_answered: boolean;
+  engine_used: string;
+  ask_count: number;
+  last_asked_at: string;
+  answer: AdvisorConsultResult | null;
+}
+
+export interface AdvisorAnsweredGroup {
+  akta_code: string;
+  akta_title: string;
+  count: number;
+  items: AdvisorAnsweredItem[];
+}
+
+export interface AdvisorAnsweredListResponse {
+  total_questions: number;
+  total_asks: number;
+  total_matching: number;
+  act_counts: Record<string, number>;
+  groups: AdvisorAnsweredGroup[];
+  items: AdvisorAnsweredItem[];
+}
+
 export interface DevUserRecord extends OfficerProfile {
   created_at: string;
   updated_at: string;

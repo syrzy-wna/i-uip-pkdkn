@@ -1,4 +1,5 @@
 import type {
+  AdvisorAnsweredListResponse,
   AdvisorConsultResult,
   AdvisorScenarioItem,
   CompoundCheckResult,
@@ -372,6 +373,25 @@ export async function fetchAdvisorScenarios(): Promise<AdvisorScenarioItem[]> {
   });
   const data = await parseJsonOrThrow<{ scenarios: AdvisorScenarioItem[] }>(res);
   return data.scenarios;
+}
+
+export async function fetchAdvisorAnsweredQuestions(
+  params: {
+    akta?: string;
+    q?: string;
+    limit?: number;
+    authToken?: string | null;
+  } = {}
+): Promise<AdvisorAnsweredListResponse> {
+  const search = new URLSearchParams();
+  if (params.akta && params.akta !== "Semua") search.set("akta", params.akta);
+  if (params.q?.trim()) search.set("q", params.q.trim());
+  search.set("limit", String(params.limit ?? 120));
+  const res = await fetch(`${API_BASE}/api/advisor/answered?${search.toString()}`, {
+    cache: "no-store",
+    headers: { ...getAuthHeader(params.authToken) },
+  });
+  return parseJsonOrThrow<AdvisorAnsweredListResponse>(res);
 }
 
 export async function consultUipAdvisor(params: {

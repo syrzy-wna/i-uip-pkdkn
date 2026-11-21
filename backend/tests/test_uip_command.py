@@ -1203,3 +1203,119 @@ def test_dev_vault_archives_users_questions_docs_and_enforces_exclusive_access(m
     monkeypatch.setattr(settings, "dev_archive_s3_endpoint", "")
     monkeypatch.setattr(settings, "dev_archive_s3_access_key", "")
     monkeypatch.setattr(settings, "dev_archive_s3_secret_key", "")
+
+
+def test_advisor_answered_questions_grouped_by_act_and_redacted() -> None:
+    import uuid
+
+    # 1. Tanpa token -> 401
+    assert client.get("/api/advisor/answered").status_code == 401
+
+    def _register_officer(tag: str) -> tuple[str, dict[str, str]]:
+        email = f"ppkp.{tag}.{uuid.uuid4().hex[:6]}@moh.gov.my"
+        reg = client.post(
+            "/api/auth/register",
+            json={
+                "email": email,
+                "password": "AdvisorQAPass#2026",
+                "full_name": f"PPKP {tag.upper()} Ujian",
+            },
+        )
+        assert reg.status_code == 200
+        return email, {"Authorization": f"Bearer {reg.json()['token']}"}
+
+    email_a, headers_a = _register_officer("a")
+    email_b, headers_b = _register_officer("b")
+    _email_c, headers_c = _register_officer("c")
+
+    # Pengguna A tanya Akta 852 (mengandungi PII OKT & No. K/P sintetik) + Akta 154
+    q_852 = "OKT: Ali bin Baba No. K/P 900101-11-5123 pamer vape secara terbuka di kaunter kedai"
+    r_852 = client.post(
+        "/api/advisor/consult",
+        headers=headers_a,
+        json={"question": q_852, "akta_hint": "Semua", "use_ai": False},
+    )
+    assert r_852.status_code == 200
+
+    q_154 = "Tapak pembinaan membiak nyamuk Aedes aegypti boleh terus kompaun ke?"
+    r_154_a = client.post(
+        "/api/advisor/consult",
+        headers=headers_a,
+        json={"question": q_154, "akta_hint": "Semua", "use_ai": False},
+    )
+    assert r_154_a.status_code == 200
+
+    # Pengguna B tanya Akta 281 + Akta 342 + ulang soalan Akta 154 (uji penyahduplikasian ask_count)
+    r_281 = client.post(
+        "/api/advisor/consult",
+        headers=headers_b,
+        json={
+            "question": "Pengendali makanan restoran kotor tiada suntikan tifoid, nak guna peraturan mana?",
+            "akta_hint": "Semua",
+            "use_ai": False,
+        },
+    )
+    assert r_281.status_code == 200
+
+    q_342 = "ada kes covid positif datng kerja. majikan adukan kepada unit cdc. boleh kompaun ke?"
+    r_342 = client.post(
+        "/api/advisor/consult",
+        headers=headers_b,
+        json={"question": q_342, "akta_hint": "Semua", "use_ai": False},
+    )
+    assert r_342.status_code == 200
+
+    r_154_b = client.post(
+        "/api/advisor/consult",
+        headers=headers_b,
+        json={"question": q_154, "akta_hint": "Semua", "use_ai": False},
+    )
+    assert r_154_b.status_code == 200
+
+    # Pengguna C baca himpunan soalan telah dijawab daripada semua pengguna & dikelaskan mengikut Akta
+    resp_all = client.get("/api/advisor/answered", headers=headers_c)
+    assert resp_all.status_code == 200
+    body = resp_all.json()
+    assert body["total_questions"] >= 4
+    assert body["total_asks"] >= 5
+
+    groups_by_code = {g["akta_code"]: g for g in body["groups"]}
+    for code in ("Akta 852", "Akta 281", "Akta 154", "Akta 342"):
+        assert code in groups_by_code
+        assert groups_by_code[code]["count"] >= 1
+        assert body["act_counts"][code] >= 1
+
+    # Pastikan soalan berulang Akta 154 digabung dan ask_count >= 2
+    ak154_item = next(
+        it for it in groups_by_code["Akta 154"]["items"] if "aedes aegypti" in it["question"].lower()
+    )
+    assert ak154_item["ask_count"] >= 2
+
+    # Pastikan privasi PDPA ketat: No. K/P & emel pengguna tidak bocor dalam jawapan awam
+    dumped = json.dumps(body, ensure_ascii=False)
+    assert "900101-11-5123" not in dumped
+    assert "Ali bin Baba" not in dumped
+    assert email_a not in dumped
+    assert email_b not in dumped
+    assert "token_map" not in dumped
+
+    # Pastikan objek jawapan penuh tersedia untuk dipaparkan terus pada klik kad
+    covid_item = next(
+        it for it in groups_by_code["Akta 342"]["items"] if "covid" in it["question"].lower()
+    )
+    assert covid_item["answer"] is not None
+    assert covid_item["answer"]["tajuk_nasihat"]
+    assert covid_item["answer"]["keputusan_tindakan"]
+    assert len(covid_item["answer"]["sop_lapangan"]) >= 1
+    assert len(covid_item["answer"]["cadangan_pertuduhan"]) >= 1
+
+    # Uji tapisan API mengikut Akta dan kata kunci carian
+    resp_342_only = client.get(
+        "/api/advisor/answered",
+        headers=headers_c,
+        params={"akta": "Akta 342", "q": "covid"},
+    )
+    assert resp_342_only.status_code == 200
+    b342 = resp_342_only.json()
+    assert [g["akta_code"] for g in b342["groups"]] == ["Akta 342"]
+    assert any("covid" in it["question"].lower() for it in b342["items"])
