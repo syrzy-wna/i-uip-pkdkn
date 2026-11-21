@@ -373,6 +373,11 @@ export interface AdvisorConsultResult {
   ai_attempted?: boolean;
   ai_succeeded?: boolean;
   fallback_reason?: string | null;
+  from_qa_collection?: boolean;
+  matched_collection_id?: string | null;
+  matched_collection_question?: string | null;
+  matched_collection_similarity?: number | null;
+  matched_collection_ask_count?: number | null;
   statutory_citations: StatutoryCitation[];
 }
 

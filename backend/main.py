@@ -29,7 +29,7 @@ db_service = get_uip_db()
 router_service = UIPModelRouter()
 auditor_service = IPTechnicalAuditor(router=router_service)
 compound_checker = CompoundNoticeChecker()
-advisor_service = UIPAdvisorService(router=router_service)
+advisor_service = UIPAdvisorService(router=router_service, db=db_service)
 dev_vault_service = DevArchiveVaultService(db=db_service, redactor=router_service.redactor)
 
 
@@ -963,9 +963,11 @@ def consult_uip_advisor(
     )
     model_used = str(res.get("engine_used") or "Mod Pantas — Matriks SOP UIP KKM + Strict RAG")
     is_cloud = bool(
-        (res.get("ai_succeeded") or "gemini" in model_used.lower())
+        not res.get("from_qa_collection")
+        and (res.get("ai_succeeded") or "gemini" in model_used.lower())
         and "pantas" not in model_used.lower()
         and "cache" not in model_used.lower()
+        and "koleksi" not in model_used.lower()
     )
     q_preview = (req.question or req.scenario_id or "Situasi UIP").strip()[:100]
     latency_ms = int((time.perf_counter() - t0) * 1000)
@@ -987,7 +989,13 @@ def consult_uip_advisor(
         akta_utama=str(res.get("akta_disyorkan") or req.akta_hint or ""),
         raw_input_text=req.question or f"[Templat Situasi: {req.scenario_id}]",
         raw_response_text=f"{res.get('keputusan_tindakan', '')}\n\n{res.get('alasan_keputusan', '')}".strip(),
-        request_payload={"question": req.question, "akta_hint": req.akta_hint, "scenario_id": req.scenario_id, "use_ai": req.use_ai},
+        request_payload={
+            "question": req.question,
+            "akta_hint": req.akta_hint,
+            "scenario_id": req.scenario_id,
+            "use_ai": req.use_ai,
+            "reused_from_qa_id": res.get("matched_collection_id"),
+        },
         analysis_payload=res,
         model_used=model_used,
         is_cloud_api=is_cloud,

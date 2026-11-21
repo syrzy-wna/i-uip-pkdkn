@@ -1319,3 +1319,195 @@ def test_advisor_answered_questions_grouped_by_act_and_redacted() -> None:
     b342 = resp_342_only.json()
     assert [g["akta_code"] for g in b342["groups"]] == ["Akta 342"]
     assert any("covid" in it["question"].lower() for it in b342["items"])
+
+
+def test_advisor_reuses_similar_question_from_qa_collection_and_respects_guards(monkeypatch) -> None:
+    import uuid
+    from types import SimpleNamespace
+    from backend.main import advisor_service, router_service
+
+    advisor_service.clear_cache()
+
+    def _reg_with_card(tag: str, full_name: str, card_no: str) -> dict[str, str]:
+        email = f"ppkp.{tag}.{uuid.uuid4().hex[:6]}@moh.gov.my"
+        reg = client.post(
+            "/api/auth/register",
+            json={
+                "email": email,
+                "password": "QACollection#2026",
+                "full_name": full_name,
+                "kkm_authority_card_no": card_no,
+            },
+        )
+        assert reg.status_code == 200
+        return {"Authorization": f"Bearer {reg.json()['token']}"}
+
+    headers_x = _reg_with_card("x", "PPKP Encik Ahmad X", "KKM-TRG-X111")
+    headers_y = _reg_with_card("y", "PPKP Puan Siti Y", "KKM-TRG-Y222")
+
+    unique_tag = uuid.uuid4().hex[:6]
+    ai_marker_title = f"Nasihat AI: Pemprosesan Kicap Berkarat & Label Luput ({unique_tag})"
+
+    class _FakeInteractions:
+        def create(self, **kwargs):
+            raise RuntimeError("Guna models.generate_content terus")
+
+    class _FakeModelsSeed:
+        def generate_content(self, *, model, contents, config):
+            return SimpleNamespace(
+                text=json.dumps(
+                    {
+                        "tajuk_nasihat": ai_marker_title,
+                        "keputusan_tindakan": "SITA PRODUK LUPUT S.4(1)(f) & PERINTAH TUTUP S.11 AKTA MAKANAN 1983",
+                        "sesuai_buka_ip": True,
+                        "alasan_keputusan": "Mesin pemprosesan kicap berkarat dan label tamat tempoh tanpa kelulusan MeSTI mendedahkan risiko keselamatan makanan.",
+                        "cadangan_pertuduhan": [
+                            {
+                                "perihal": "Mengilang makanan dalam keadaan tidak suci & berkarat",
+                                "seksyen_kesalahan": "Peraturan 11(1) PPKM 2009 / Seksyen 11 Akta 281",
+                                "seksyen_hukuman": "Peraturan 11(2) PPKM 2009",
+                                "hukuman_maksimum": "Denda maks RM10,000 atau penjara maks 2 tahun",
+                                "boleh_kompaun": "Tutup premis S.11 serta sitaan/Buka IP",
+                            }
+                        ],
+                        "sop_lapangan": ["Tutup kilang S.11 Akta 281 serta-merta & sita botol berlabel luput."],
+                        "eksibit_wajib": ["Sampel botol kicap luput tarikh + Sijil S.90A(2)."],
+                        "perangkap_kesilapan": ["Pastikan label asal tidak diubah selepas sitaan."],
+                        "templat_ringkas": "Pemeriksaan kilang kicap mendapati mesin karat dan label luput tarikh tanpa MeSTI.",
+                    }
+                )
+            )
+
+    monkeypatch.setattr(
+        router_service,
+        "_genai_client",
+        SimpleNamespace(interactions=_FakeInteractions(), models=_FakeModelsSeed()),
+    )
+
+    q_orig = f"kilang kicap guna mesin berkarat dan label tamat tempoh tanpa sijil MeSTI {unique_tag}, boleh sita dan tutup premis?"
+    seed_resp = client.post(
+        "/api/advisor/consult",
+        headers=headers_x,
+        json={"question": q_orig, "akta_hint": "Semua", "use_ai": True},
+    )
+    assert seed_resp.status_code == 200
+    assert seed_resp.json()["tajuk_nasihat"] == ai_marker_title
+
+    # Pastikan tersimpan dalam Koleksi Q&A di bawah Akta 281 sebagai jawapan AI
+    qa_list_1 = client.get("/api/advisor/answered", headers=headers_y, params={"akta": "Akta 281", "q": unique_tag})
+    assert qa_list_1.status_code == 200
+    items_1 = qa_list_1.json()["items"]
+    assert len(items_1) == 1
+    assert items_1[0]["is_ai_answered"] is True
+    seed_qa_id = items_1[0]["id"]
+
+    # Pasang spy: tidak boleh memanggil Gemini apabila soalan lebih kurang sama ditanya tanpa use_ai=True
+    class _ForbiddenModels:
+        def generate_content(self, **kwargs):
+            raise AssertionError("Tidak sepatutnya panggil Gemini apabila padan Koleksi Q&A!")
+
+    monkeypatch.setattr(
+        router_service,
+        "_genai_client",
+        SimpleNamespace(interactions=_FakeInteractions(), models=_ForbiddenModels()),
+    )
+
+    # Pengguna Y tanya soalan berbeza ayat tetapi maksud lebih kurang sama (use_ai=False)
+    q_similar = f"kilang buat kicap ada mesin karat serta label luput tarikh tiada sijil MeSTI {unique_tag}, boleh tutup dan sita?"
+    reuse_resp = client.post(
+        "/api/advisor/consult",
+        headers=headers_y,
+        json={"question": q_similar, "akta_hint": "Semua", "use_ai": False},
+    )
+    assert reuse_resp.status_code == 200
+    reuse_body = reuse_resp.json()
+    assert reuse_body["from_qa_collection"] is True
+    assert reuse_body["matched_collection_id"] == seed_qa_id
+    assert reuse_body["matched_collection_similarity"] >= 62
+    assert reuse_body["tajuk_nasihat"] == ai_marker_title
+    assert reuse_body["ai_succeeded"] is True
+    assert reuse_body["ai_attempted"] is False
+    assert "Koleksi Q&A Pakar" in reuse_body["engine_used"]
+    # Pastikan templat kes dipersonalisasi dengan profil Pengguna Y, BUKAN Pengguna X
+    assert "PPKP Puan Siti Y" in reuse_body["draf_teks_kes_cadangan"]
+    assert "KKM-TRG-Y222" in reuse_body["draf_teks_kes_cadangan"]
+    assert "PPKP Encik Ahmad X" not in reuse_body["draf_teks_kes_cadangan"]
+
+    # Koleksi Q&A tidak mewujudkan kad pendua, sebaliknya ask_count meningkat >= 2
+    qa_list_2 = client.get("/api/advisor/answered", headers=headers_y, params={"akta": "Akta 281", "q": unique_tag})
+    assert qa_list_2.status_code == 200
+    items_2 = qa_list_2.json()["items"]
+    assert len(items_2) == 1
+    assert items_2[0]["ask_count"] >= 2
+
+    # Uji pengawal polariti klinikal: PTB Smear Positif tidak boleh dipadankan ke soalan PTB Smear Negatif
+    r_pos = client.post(
+        "/api/advisor/consult",
+        headers=headers_x,
+        json={
+            "question": f"pesakit tibi PTB smear positif AFB positif enggan sambung rawatan {unique_tag}",
+            "akta_hint": "Akta 342",
+            "use_ai": False,
+        },
+    )
+    assert r_pos.status_code == 200
+    r_neg = client.post(
+        "/api/advisor/consult",
+        headers=headers_y,
+        json={
+            "question": f"pesakit saringan tibi PTB smear negatif afb negatif enggan mula rawatan {unique_tag}",
+            "akta_hint": "Akta 342",
+            "use_ai": False,
+        },
+    )
+    assert r_neg.status_code == 200
+    neg_body = r_neg.json()
+    assert neg_body["sesuai_buka_ip"] is False
+    assert "Smear Positif" not in neg_body["tajuk_nasihat"]
+
+    # Uji butang 'Analisa Baharu dengan AI' (use_ai=True) sentiasa memanggil Gemini segar
+    fresh_title = f"Analisis AI Segar Baharu ({unique_tag})"
+
+    class _FreshModels:
+        def generate_content(self, *, model, contents, config):
+            return SimpleNamespace(
+                text=json.dumps(
+                    {
+                        "tajuk_nasihat": fresh_title,
+                        "keputusan_tindakan": "BUKA IP SEGERA & SITAAAN AKTA 281",
+                        "sesuai_buka_ip": True,
+                        "alasan_keputusan": "Analisa AI baharu khusus bagi keadaan mesin berkarat.",
+                        "cadangan_pertuduhan": [
+                            {
+                                "perihal": "Premis pengilangan tidak bersih",
+                                "seksyen_kesalahan": "Peraturan 11(1) PPKM 2009",
+                                "seksyen_hukuman": "Peraturan 11(2) PPKM 2009",
+                                "hukuman_maksimum": "Denda maks RM10,000 atau penjara 2 tahun",
+                                "boleh_kompaun": "Buka IP & tutup S.11",
+                            }
+                        ],
+                        "sop_lapangan": ["Sita mesin dan produk luput tarikh."],
+                        "eksibit_wajib": ["Gambar mesin karat + Sijil S.90A."],
+                        "perangkap_kesilapan": ["Rekod nombor batch produk dengan tepat."],
+                        "templat_ringkas": "Analisa segar kilang kicap.",
+                    }
+                )
+            )
+
+    monkeypatch.setattr(
+        router_service,
+        "_genai_client",
+        SimpleNamespace(interactions=_FakeInteractions(), models=_FreshModels()),
+    )
+    fresh_resp = client.post(
+        "/api/advisor/consult",
+        headers=headers_y,
+        json={"question": q_similar, "akta_hint": "Semua", "use_ai": True},
+    )
+    assert fresh_resp.status_code == 200
+    fresh_body = fresh_resp.json()
+    assert fresh_body["from_qa_collection"] is False
+    assert fresh_body["ai_attempted"] is True
+    assert fresh_body["ai_succeeded"] is True
+    assert fresh_body["tajuk_nasihat"] == fresh_title
+    advisor_service.clear_cache()

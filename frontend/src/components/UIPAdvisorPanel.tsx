@@ -195,7 +195,7 @@ export default function UIPAdvisorPanel({
       setResult(res);
       setResultTab("sop");
       setShowLibrary(false);
-      setSelectedAnsweredId(null);
+      setSelectedAnsweredId(res.matched_collection_id || null);
       void loadAnsweredQuestions();
       window.setTimeout(() => {
         resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -373,7 +373,7 @@ export default function UIPAdvisorPanel({
                 className="inline-flex min-h-[40px] items-center justify-center gap-1.5 rounded-xl border border-emerald-200 bg-emerald-50/70 px-3.5 py-2 text-xs font-bold text-emerald-900 hover:bg-emerald-100/70"
               >
                 <History className="h-4 w-4 text-emerald-700" />
-                <span>Soalan Dijawab ({answeredData?.total_questions ?? 0})</span>
+                <span>Koleksi Q&amp;A ({answeredData?.total_questions ?? 0})</span>
               </button>
             </div>
 
@@ -456,7 +456,12 @@ export default function UIPAdvisorPanel({
                 <span className="rounded-md bg-[#0f2744] px-2.5 py-0.5 text-[11px] font-bold text-white">
                   {result.akta_disyorkan}
                 </span>
-                {result.ai_succeeded ? (
+                {result.from_qa_collection ? (
+                  <span className="inline-flex items-center gap-1 rounded-full border border-teal-300 bg-teal-50 px-2.5 py-0.5 text-[11px] font-bold text-teal-900">
+                    <History className="h-3 w-3" /> Dipetik dari Koleksi Q&amp;A · Padanan{" "}
+                    {result.matched_collection_similarity ?? 100}%
+                  </span>
+                ) : result.ai_succeeded ? (
                   <span className="inline-flex items-center gap-1 rounded-full border border-indigo-200 bg-indigo-50 px-2.5 py-0.5 text-[11px] font-bold text-indigo-800">
                     <Sparkles className="h-3 w-3" /> {result.engine_used}
                   </span>
@@ -501,6 +506,41 @@ export default function UIPAdvisorPanel({
               </button>
             </div>
           </div>
+
+          {result.from_qa_collection && result.matched_collection_question && (
+            <div className="flex flex-wrap items-center justify-between gap-2.5 rounded-xl border border-teal-200 bg-teal-50/70 px-3.5 py-2.5 text-xs text-teal-950">
+              <div className="flex min-w-0 flex-1 items-start gap-2.5">
+                <History className="mt-0.5 h-4 w-4 shrink-0 text-teal-700" />
+                <div className="space-y-0.5">
+                  <div>
+                    <span className="font-extrabold">Dipetik Segera daripada Koleksi Q&amp;A Pakar:</span>{" "}
+                    <span>&ldquo;{result.matched_collection_question}&rdquo;</span>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-2 text-[11px] font-semibold text-teal-800">
+                    <span>Padanan {result.matched_collection_similarity ?? 100}%</span>
+                    <span>•</span>
+                    <span>{result.ai_succeeded ? "Jawapan AI Terdahulu" : "Rujukan Statutori UIP"}</span>
+                    {typeof result.matched_collection_ask_count === "number" &&
+                      result.matched_collection_ask_count > 1 && (
+                        <>
+                          <span>•</span>
+                          <span>Dirujuk {result.matched_collection_ask_count}× oleh pengguna</span>
+                        </>
+                      )}
+                  </div>
+                </div>
+              </div>
+              <button
+                type="button"
+                disabled={loading || deepLoading}
+                onClick={() => handleConsult(undefined, undefined, true)}
+                className="inline-flex shrink-0 items-center gap-1 rounded-lg border border-teal-300 bg-white px-2.5 py-1.5 text-[11px] font-bold text-teal-900 shadow-xs hover:bg-teal-100 disabled:opacity-50"
+              >
+                <Sparkles className="h-3 w-3 text-indigo-700" />
+                {deepLoading ? "Menganalisa AI..." : "Analisa Baharu dengan AI"}
+              </button>
+            </div>
+          )}
 
           {result.ai_attempted && result.ai_succeeded === false && result.fallback_reason && (
             <div className="flex flex-wrap items-center justify-between gap-2.5 rounded-xl border border-amber-300 bg-amber-50 px-3.5 py-2.5 text-xs text-amber-950">
@@ -747,11 +787,11 @@ export default function UIPAdvisorPanel({
             </div>
             <div>
               <h3 className="text-sm font-extrabold text-slate-900 sm:text-base">
-                Senarai Soalan Telah Dijawab Pakar (Mengikut Akta)
+                Koleksi Soalan &amp; Jawapan Pakar (Mengikut Akta)
               </h3>
               <p className="mt-0.5 flex flex-wrap items-center gap-1.5 text-xs text-slate-500">
                 <span>
-                  Himpunan soalan pengguna yang telah dijawab Pakar UIP &amp; dikelaskan mengikut Akta.
+                  Himpunan soalan &amp; jawapan semua pengguna dikelaskan mengikut Akta — Pakar akan memetik jawapan daripada koleksi ini secara automatik jika soalan lebih kurang sama ditanya semula.
                 </span>
                 <span className="inline-flex items-center gap-1 rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-semibold text-slate-700">
                   <ShieldCheck className="h-3 w-3 text-emerald-700" /> Data Peribadi Disamarkan (PDPA)

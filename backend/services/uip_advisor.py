@@ -984,8 +984,9 @@ class UIPAdvisorService:
 
     MIN_SCENARIO_SCORE = 1.8
 
-    def __init__(self, router: UIPModelRouter) -> None:
+    def __init__(self, router: UIPModelRouter, db: Optional[Any] = None) -> None:
         self.router = router
+        self.db = db
         self._consult_cache: Dict[str, Dict[str, Any]] = {}
 
     def clear_cache(self) -> None:
@@ -1263,6 +1264,68 @@ class UIPAdvisorService:
         use_ai: bool = False,
         officer_profile: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
+        # 0. Semak Koleksi Soalan & Jawapan Pakar dahulu apabila pengguna tidak memaksa Analisa AI segar
+        if (
+            not use_ai
+            and not scenario_id
+            and self.db is not None
+            and len((question or "").strip()) >= 8
+        ):
+            try:
+                matched_qa = self.db.find_similar_answered_question(
+                    question=question,
+                    akta_hint=akta_hint,
+                )
+            except Exception as exc:
+                logger.warning("Carian Koleksi Q&A Pakar gagal (non-fatal): %s", exc)
+                matched_qa = None
+
+            if matched_qa and isinstance(matched_qa.get("answer"), dict):
+                ans = dict(matched_qa["answer"])
+                if not ans.get("statutory_citations"):
+                    hits = self.router.rag_store.search_statutes(
+                        query=question,
+                        akta_filter=None if akta_hint in ("", "Semua") else akta_hint,
+                        top_k=4,
+                    )
+                    ans["statutory_citations"] = [
+                        {
+                            "akta_code": c.akta_code,
+                            "akta_title": c.akta_title,
+                            "section": c.section,
+                            "text": c.text,
+                            "score": c.score,
+                        }
+                        for c in hits
+                    ]
+                resolved_act = str(
+                    ans.get("akta_disyorkan") or matched_qa.get("akta_group") or "Akta 852"
+                )
+                ans["akta_disyorkan"] = resolved_act
+                ans["draf_teks_kes_cadangan"] = self._build_prefilled_case_template(
+                    {
+                        "akta_utama": resolved_act,
+                        "templat_ringkas": str(
+                            ans.get("templat_ringkas") or ans.get("keputusan_tindakan") or ""
+                        ),
+                    },
+                    officer_profile=officer_profile,
+                )
+                sim_pct = int(matched_qa.get("similarity_percent") or 100)
+                src_label = (
+                    "AI Terdahulu" if matched_qa.get("is_ai_answered") else "Statutori UIP"
+                )
+                ans["engine_used"] = f"Koleksi Q&A Pakar ({src_label} · Padanan {sim_pct}%)"
+                ans["ai_attempted"] = False
+                ans["ai_succeeded"] = bool(matched_qa.get("is_ai_answered"))
+                ans["fallback_reason"] = None
+                ans["from_qa_collection"] = True
+                ans["matched_collection_id"] = matched_qa.get("id")
+                ans["matched_collection_question"] = matched_qa.get("question")
+                ans["matched_collection_similarity"] = sim_pct
+                ans["matched_collection_ask_count"] = int(matched_qa.get("ask_count") or 1)
+                return ans
+
         matched, kw_score, confident_match = self._match_composite_scenarios(
             question, akta_hint=akta_hint, scenario_id=scenario_id
         )
@@ -1309,6 +1372,11 @@ class UIPAdvisorService:
             "ai_attempted": False,
             "ai_succeeded": False,
             "fallback_reason": None,
+            "from_qa_collection": False,
+            "matched_collection_id": None,
+            "matched_collection_question": None,
+            "matched_collection_similarity": None,
+            "matched_collection_ask_count": None,
         }
 
         effective_question = question.strip()

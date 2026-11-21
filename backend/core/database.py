@@ -10,6 +10,7 @@ Menyimpan:
 from __future__ import annotations
 
 import base64
+import difflib
 import hashlib
 import json
 import re
@@ -130,6 +131,187 @@ def classify_advisor_akta_group(
 def _normalize_advisor_question_key(text: str) -> str:
     cleaned = re.sub(r"[^\w]+", " ", (text or "").lower(), flags=re.UNICODE)
     return re.sub(r"\s+", " ", cleaned).strip()
+
+
+_EXTRA_QA_NORMALIZATIONS: Dict[str, str] = {
+    "tak": "tidak",
+    "tk": "tidak",
+    "x": "tidak",
+    "buleh": "boleh",
+    "bleh": "boleh",
+    "kompun": "kompaun",
+    "keje": "kerja",
+    "tmpt": "tempat",
+    "klu": "kalau",
+    "klo": "kalau",
+    "mcmana": "bagaimana",
+    "camana": "bagaimana",
+    "restoren": "restoran",
+    "berkarat": "karat",
+    "luput tarikh": "luput",
+    "tamat tempoh": "luput",
+}
+
+_GENERIC_QA_TOKENS = {
+    "kes",
+    "boleh",
+    "kompaun",
+    "seksyen",
+    "peraturan",
+    "akta",
+    "tindakan",
+    "soalan",
+    "caj",
+    "dakwa",
+    "siasat",
+    "buka",
+    "notis",
+    "hukuman",
+    "denda",
+    "buat",
+    "guna",
+    "rujuk",
+    "pakar",
+    "uip",
+    "ppkp",
+    "kkm",
+    "pkd",
+    "sila",
+    "mohon",
+    "tanya",
+    "tahu",
+    "kena",
+    "perlu",
+    "wajib",
+    "minta",
+    "mana",
+    "berapa",
+    "status",
+    "prosedur",
+    "langkah",
+    "sop",
+    "terus",
+    "terima",
+}
+
+_DISTINCT_QA_SUBJECTS: tuple[tuple[str, ...], ...] = (
+    ("covid",),
+    ("tibi", "ptb", "tb"),
+    ("aedes", "denggi"),
+    ("tifoid",),
+    ("hfmd",),
+    ("vape", "rokok", "tembakau"),
+)
+
+
+def _qa_extract_tokens(text: str) -> tuple[str, set[str], set[str]]:
+    """Menormalkan soalan perbualan PPKP dan memisahkan kata umum vs kata isi spesifik."""
+    from backend.rag.statutory_store import MALAY_STOPWORDS, _normalize_query_text, _stem_malay_legal
+
+    stripped = re.sub(r"\[[A-Z0-9_]+\]", " ", text or "")
+    norm = _normalize_query_text(stripped)
+    for src, dst in _EXTRA_QA_NORMALIZATIONS.items():
+        norm = re.sub(rf"(?<!\w){re.escape(src)}(?!\w)", dst, norm)
+    clean_norm = _normalize_advisor_question_key(norm)
+
+    raw_words = re.findall(r"[a-zA-Z0-9]+", clean_norm)
+    all_tokens: set[str] = set()
+    for w in raw_words:
+        if len(w) < 2 or w in MALAY_STOPWORDS:
+            continue
+        stemmed = _stem_malay_legal(w)
+        tok = stemmed if len(stemmed) >= 2 else w
+        all_tokens.add(tok)
+
+    specific_tokens = all_tokens - _GENERIC_QA_TOKENS
+    return clean_norm, all_tokens, specific_tokens
+
+
+def _has_legal_fact_conflict(q_norm: str, cand_norm: str, cand_item: Dict[str, Any]) -> bool:
+    """Mengelak padanan palsu antara kes yang berlawanan fakta kritikal (cth. positif vs negatif)."""
+    # 1. Positif vs Negatif (cth. PTB Smear Positif vs Smear Negatif)
+    q_has_neg = bool(re.search(r"\bnegatif\b", q_norm))
+    q_has_pos = bool(re.search(r"\bpositif\b", q_norm))
+    c_has_neg = bool(re.search(r"\bnegatif\b", cand_norm))
+    c_has_pos = bool(re.search(r"\bpositif\b", cand_norm))
+    if (q_has_neg and not q_has_pos and c_has_pos and not c_has_neg) or (
+        c_has_neg and not c_has_pos and q_has_pos and not q_has_neg
+    ):
+        return True
+
+    # 2. Taska/HFMD vs Premis Makanan
+    taska_terms = ("taska", "tadika", "tabika", "hfmd")
+    food_terms = ("restoran", "kedai makan", "dapur", "gerai", "tikus", "tifoid")
+    q_taska = any(re.search(rf"\b{t}\b", q_norm) for t in taska_terms)
+    c_taska = any(re.search(rf"\b{t}\b", cand_norm) for t in taska_terms)
+    q_food = any(re.search(rf"\b{t}\b", q_norm) for t in food_terms)
+    c_food = any(re.search(rf"\b{t}\b", cand_norm) for t in food_terms)
+    if (q_taska and c_food and not c_taska) or (c_taska and q_food and not q_taska):
+        return True
+
+    # 3. Tapak Bina vs Kediaman (Akta 154)
+    bina_terms = ("tapak bina", "pembinaan", "kontraktor")
+    rumah_terms = ("rumah", "kediaman", "taman perumahan")
+    q_bina = any(t in q_norm for t in bina_terms)
+    c_bina = any(t in cand_norm for t in bina_terms)
+    q_rumah = any(t in q_norm for t in rumah_terms)
+    c_rumah = any(t in cand_norm for t in rumah_terms)
+    if (q_bina and c_rumah and not c_bina) or (c_bina and q_rumah and not q_bina):
+        return True
+
+    # 4. Menjual kepada OBD vs OBD Merokok (Akta 852)
+    jual_terms = ("jual", "menjual", "penjual", "pekedai")
+    hisap_terms = ("hisap", "menghisap", "merokok")
+    q_jual = any(re.search(rf"\b{t}\b", q_norm) for t in jual_terms)
+    c_jual = any(re.search(rf"\b{t}\b", cand_norm) for t in jual_terms)
+    q_hisap = any(re.search(rf"\b{t}\b", q_norm) for t in hisap_terms)
+    c_hisap = any(re.search(rf"\b{t}\b", cand_norm) for t in hisap_terms)
+    if (q_jual and not q_hisap and c_hisap and not c_jual) or (
+        c_jual and not c_hisap and q_hisap and not q_jual
+    ):
+        return True
+
+    # 5. Ketidaksepadanan penyakit/subjek berbeza (cth. COVID vs Tibi vs Aedes vs Tifoid)
+    q_subjs = {
+        idx
+        for idx, group in enumerate(_DISTINCT_QA_SUBJECTS)
+        if any(re.search(rf"\b{t}\b", q_norm) for t in group)
+    }
+    c_subjs = {
+        idx
+        for idx, group in enumerate(_DISTINCT_QA_SUBJECTS)
+        if any(re.search(rf"\b{t}\b", cand_norm) for t in group)
+    }
+    if q_subjs and c_subjs and not (q_subjs & c_subjs):
+        return True
+
+    # 6. Jika pengguna menyebut nombor Akta secara eksplisit, elak petik daripada Akta berlainan
+    q_explicit_act = _match_canonical_act_from_text(q_norm)
+    cand_act = str(cand_item.get("akta_group") or "")
+    if q_explicit_act and cand_act and q_explicit_act != cand_act:
+        return True
+
+    return False
+
+
+def _is_reusable_qa_answer(entry: Dict[str, Any]) -> bool:
+    """Memastikan hanya jawapan berkualiti (AI atau templat teras berstruktur) boleh dipetik semula."""
+    if entry.get("is_ai_answered"):
+        return True
+    ans = entry.get("answer")
+    if not isinstance(ans, dict):
+        return False
+    charges = ans.get("cadangan_pertuduhan") or []
+    sop = ans.get("sop_lapangan") or []
+    sc_id = str(ans.get("scenario_id") or "")
+    alasan = str(ans.get("alasan_keputusan") or "").lower()
+    if sc_id != "rag_custom_query" and len(charges) >= 1:
+        return True
+    return (
+        len(charges) >= 1
+        and len(sop) >= 2
+        and "tiada padanan tepat dalam templat ringkas" not in alasan
+    )
 
 
 def normalize_sspa_grade(raw_grade: Optional[str], default: str = "U5") -> str:
@@ -1647,6 +1829,9 @@ class UIPDatabase:
             ).fetchall()
 
         deduped: Dict[tuple[str, str], Dict[str, Any]] = {}
+        id_to_dedup_key: Dict[str, tuple[str, str]] = {}
+        deferred_reused: List[tuple[str, str, tuple[str, str], Dict[str, Any]]] = []
+
         for r in rows:
             row = dict(r)
             raw_json_str = str(row.get("redacted_analysis_json") or "").strip()
@@ -1728,6 +1913,11 @@ class UIPDatabase:
             }
 
             dedup_key = (akta_group, norm_key)
+            matched_coll_id = str(analysis.get("matched_collection_id") or "").strip()
+            if analysis.get("from_qa_collection") and matched_coll_id:
+                deferred_reused.append((matched_coll_id, entry["last_asked_at"], dedup_key, entry))
+                continue
+
             existing = deduped.get(dedup_key)
             if not existing:
                 deduped[dedup_key] = entry
@@ -1743,6 +1933,23 @@ class UIPDatabase:
                         "ask_count": ask_total,
                         "last_asked_at": latest_ts,
                     }
+            id_to_dedup_key[entry["id"]] = dedup_key
+
+        for target_id, reused_ts, dkey, fallback_entry in deferred_reused:
+            resolved_key = id_to_dedup_key.get(target_id)
+            if resolved_key and resolved_key in deduped:
+                target_entry = deduped[resolved_key]
+                target_entry["ask_count"] += 1
+                if reused_ts > target_entry["last_asked_at"]:
+                    target_entry["last_asked_at"] = reused_ts
+            elif dkey in deduped:
+                target_entry = deduped[dkey]
+                target_entry["ask_count"] += 1
+                if reused_ts > target_entry["last_asked_at"]:
+                    target_entry["last_asked_at"] = reused_ts
+            else:
+                deduped[dkey] = fallback_entry
+                id_to_dedup_key[fallback_entry["id"]] = dkey
 
         all_items = sorted(
             deduped.values(),
@@ -1810,6 +2017,90 @@ class UIPDatabase:
             "act_counts": act_counts,
             "groups": groups,
             "items": limited_items,
+        }
+
+    def find_similar_answered_question(
+        self,
+        question: str,
+        *,
+        akta_hint: str = "Semua",
+        min_score: float = 0.62,
+    ) -> Optional[Dict[str, Any]]:
+        """Mencari padanan soalan tepat atau lebih kurang sama daripada Koleksi Soalan & Jawapan Pakar."""
+        raw_q = (question or "").strip()
+        if len(raw_q) < 8 or raw_q.lower().startswith("rujuk templat situasi ini"):
+            return None
+
+        q_norm, q_all, q_spec = _qa_extract_tokens(raw_q)
+        if len(q_all) < 3 or len(q_spec) < 2:
+            return None
+
+        data = self.list_advisor_answered_questions(
+            akta=akta_hint if akta_hint and akta_hint != "Semua" else None,
+            limit=200,
+        )
+        candidates = data.get("items") or []
+        if not candidates:
+            return None
+
+        best_item: Optional[Dict[str, Any]] = None
+        best_sim = 0.0
+        best_rank = (-1.0, "")
+
+        for item in candidates:
+            if not _is_reusable_qa_answer(item):
+                continue
+
+            cand_q = str(item.get("question") or "").strip()
+            if not cand_q:
+                continue
+
+            cand_norm, cand_all, cand_spec = _qa_extract_tokens(cand_q)
+            if not cand_all:
+                continue
+
+            if _has_legal_fact_conflict(q_norm, cand_norm, item):
+                continue
+
+            if q_norm == cand_norm:
+                sim = 1.0
+            else:
+                shared_spec = q_spec & cand_spec
+                if len(shared_spec) < 2:
+                    continue
+
+                def _tok_weights(tokens: set[str]) -> float:
+                    total = 0.0
+                    for tok in tokens:
+                        total += 0.6 if tok in _GENERIC_QA_TOKENS else 2.5
+                    return total
+
+                q_w = _tok_weights(q_all)
+                c_w = _tok_weights(cand_all)
+                shared_w = _tok_weights(q_all & cand_all)
+                if q_w + c_w <= 0:
+                    continue
+                weighted_dice = (2.0 * shared_w) / (q_w + c_w)
+                char_sim = difflib.SequenceMatcher(None, q_norm, cand_norm).ratio()
+                sim = 0.72 * weighted_dice + 0.28 * char_sim
+
+            if sim < min_score:
+                continue
+
+            rank_score = sim + (0.05 if item.get("is_ai_answered") else 0.0)
+            rank_key = (rank_score, str(item.get("last_asked_at") or ""))
+            if rank_key > best_rank:
+                best_rank = rank_key
+                best_sim = min(1.0, sim)
+                best_item = item
+
+        if not best_item:
+            return None
+
+        return {
+            **best_item,
+            "similarity": round(best_sim, 4),
+            "similarity_percent": min(100, int(round(best_sim * 100))),
         }
 
     @staticmethod
