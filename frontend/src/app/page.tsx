@@ -6,6 +6,7 @@ import {
   CheckCircle2,
   ChevronDown,
   ChevronUp,
+  Database,
   ExternalLink,
   FileCheck2,
   FileText,
@@ -27,6 +28,7 @@ import CompoundNoticePanel from "@/components/CompoundNoticePanel";
 import DevConsoleModal from "@/components/DevConsoleModal";
 import DraftDocxEditor from "@/components/DraftDocxEditor";
 import LeftEvidencePane from "@/components/LeftEvidencePane";
+import LegalDirectoryPanel from "@/components/LegalDirectoryPanel";
 import MobileBottomNav from "@/components/MobileBottomNav";
 import OnboardingCardsModal from "@/components/OnboardingCardsModal";
 import SplashScreenModal from "@/components/SplashScreenModal";
@@ -1097,6 +1099,24 @@ export default function UIPCommandPage() {
                   </p>
                 </div>
               </button>
+
+              <button
+                type="button"
+                onClick={() => handleSelectMode("directory")}
+                className="flex items-start gap-3.5 rounded-2xl border border-slate-200 bg-slate-50/40 p-4 text-left transition hover:border-teal-400 hover:bg-teal-50/40 sm:col-span-2"
+              >
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-teal-100 text-teal-800">
+                  <Database className="h-5 w-5" />
+                </div>
+                <div>
+                  <div className="text-sm font-extrabold text-slate-900">
+                    5. Direktori Kesalahan &amp; Pustaka Akta Verbatim (Warta AGC)
+                  </div>
+                  <p className="mt-1 text-xs leading-relaxed text-slate-600">
+                    Semak teks verbatim Warta Kerajaan Persekutuan (Akta 852, Akta 281, PPKM 2009, PPM 1985, Akta 154, Akta 342), tapis semua kesalahan mengikut kategori pelaku (termasuk OBD &lt; 18 tahun), unsur mandatori, pengecualian &amp; muat naik PDF Warta.
+                  </p>
+                </div>
+              </button>
             </div>
           </section>
 
@@ -1177,6 +1197,34 @@ export default function UIPCommandPage() {
                 bukaIp
                   ? "Fakta kes dari Pakar UIP dimuatkan — tekan 'Jana Draf IP & Borang 114'."
                   : "Fakta kes dimuatkan — tekan 'Tarik Dari Kes Aktif' untuk isi borang kompaun."
+              );
+            }}
+          />
+        </main>
+      )}
+
+      {/* PAPARAN 1B: DIREKTORI KESALAHAN & PUSTAKA AKTA VERBATIM */}
+      {activeTab === "directory" && (
+        <main className="mx-auto w-full max-w-[1600px] flex-1 p-3 sm:p-5">
+          <LegalDirectoryPanel
+            authToken={authToken}
+            officer={officer}
+            isDevAdmin={isDevAdmin}
+            onApplyOffenceToCase={(draftText, aktaCode, bukaIp) => {
+              if (!confirmDiscardIfDirty()) return;
+              setCaseText(draftText);
+              setAktaUtama(aktaCode);
+              setActiveCaseId("");
+              setDraft(null);
+              setAuditReport(null);
+              setHasUnsavedChanges(true);
+              setDesktopShowSource(true);
+              setMobileEditingInput(true);
+              handleSelectMode(bukaIp ? "draft" : "compound");
+              showToast(
+                bukaIp
+                  ? "Templat Pertuduhan dari Direktori Akta dimuatkan ke Bina Fail IP!"
+                  : "Templat Kesalahan dari Direktori Akta dimuatkan ke Borang Notis Kompaun!"
               );
             }}
           />

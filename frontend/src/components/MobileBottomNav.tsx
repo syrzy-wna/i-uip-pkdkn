@@ -3,6 +3,7 @@
 import React from "react";
 import {
   BookOpen,
+  Database,
   FileCheck2,
   FileText,
   MessageSquareQuote,
@@ -27,6 +28,12 @@ const MOBILE_ITEMS: Array<{
     matches: ["advisor"],
     label: "Pakar",
     icon: <MessageSquareQuote className="h-5 w-5" />,
+  },
+  {
+    id: "directory",
+    matches: ["directory"],
+    label: "Direktori",
+    icon: <Database className="h-5 w-5" />,
   },
   {
     id: "compound",
@@ -64,7 +71,7 @@ export default function MobileBottomNav({
       aria-label="Navigasi Mudah Alih i-UIP Nerus"
       className="fixed inset-x-0 bottom-0 z-40 border-t border-slate-700/70 bg-[#0f2744] text-white shadow-lg pb-safe lg:hidden"
     >
-      <div className="grid grid-cols-5">
+      <div className="grid grid-cols-6">
         {MOBILE_ITEMS.map((item) => {
           const active = item.matches.includes(activeMode);
           const badge = badges?.[item.id];

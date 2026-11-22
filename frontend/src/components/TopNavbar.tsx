@@ -21,7 +21,15 @@ import {
 } from "lucide-react";
 import type { OfficerProfile, SystemStatus } from "@/lib/types";
 
-export type ActiveAppMode = "home" | "advisor" | "compound" | "audit" | "draft" | "redaction" | "guide";
+export type ActiveAppMode =
+  | "home"
+  | "advisor"
+  | "directory"
+  | "compound"
+  | "audit"
+  | "draft"
+  | "redaction"
+  | "guide";
 
 interface TopNavbarProps {
   status: SystemStatus | null;
@@ -51,6 +59,12 @@ const PRIMARY_MODES: Array<{
     matches: ["advisor"],
     label: "Tanya Pakar",
     icon: <MessageSquareQuote className="h-4 w-4" />,
+  },
+  {
+    id: "directory",
+    matches: ["directory"],
+    label: "Direktori Akta",
+    icon: <Database className="h-4 w-4" />,
   },
   {
     id: "compound",

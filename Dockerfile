@@ -27,10 +27,11 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     NODE_ENV=production \
     PORT=8080
 
-# Pasang Nginx, envsubst (gettext-base) dan Node.js 20 untuk Next.js standalone
+# Pasang Nginx, envsubst (gettext-base), libstdc++6 (untuk PyMuPDF) dan Node.js 20 untuk Next.js standalone
 RUN apt-get update && apt-get install -y --no-install-recommends \
     nginx \
     gettext-base \
+    libstdc++6 \
     curl \
     ca-certificates \
     gnupg \
@@ -42,13 +43,17 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/*
 
-# Pasang kebergantungan Python
+# Pasang kebergantungan Python (termasuk pymupdf untuk penghurai PDF Warta AGC & python-multipart untuk muat naik Admin)
 COPY backend/requirements.txt /app/backend/requirements.txt
-RUN pip install --upgrade pip && pip install -r /app/backend/requirements.txt
+RUN pip install --upgrade pip \
+    && pip install -r /app/backend/requirements.txt \
+    && python -c "import pymupdf as fitz; doc = fitz.open(); doc.close(); print('PyMuPDF PDF parser OK:', fitz.__version__)"
 
-# Salin kod backend, data akta & skrip deploy
+# Salin kod backend, data akta, pustaka perundangan 2-lapisan, skrip CLI & skrip deploy
 COPY backend/ /app/backend/
 COPY data/akta/ /app/data/akta/
+COPY data/legal_library/ /app/data/legal_library/
+COPY scripts/ /app/scripts/
 COPY deploy/ /app/deploy/
 
 # Salin hasil binaan Next.js standalone

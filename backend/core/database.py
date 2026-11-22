@@ -295,11 +295,17 @@ def _has_legal_fact_conflict(q_norm: str, cand_norm: str, cand_item: Dict[str, A
 
 
 def _is_reusable_qa_answer(entry: Dict[str, Any]) -> bool:
-    """Memastikan hanya jawapan berkualiti (AI atau templat teras berstruktur) boleh dipetik semula."""
+    """Memastikan hanya jawapan berkualiti (AI atau templat teras berstruktur) berversi statute_library_version boleh dipetik semula."""
+    if not str(entry.get("statute_library_version") or "").strip():
+        return False
+    if str(entry.get("cache_status") or "").upper() == "STALE":
+        return False
     if entry.get("is_ai_answered"):
         return True
     ans = entry.get("answer")
     if not isinstance(ans, dict):
+        return False
+    if not str(ans.get("statute_library_version") or "").strip():
         return False
     charges = ans.get("cadangan_pertuduhan") or []
     sop = ans.get("sop_lapangan") or []
@@ -615,12 +621,41 @@ class UIPDatabase:
                 )
                 """
             )
+            conn.execute(
+                """
+                CREATE TABLE IF NOT EXISTS legal_admin_overrides (
+                    override_key TEXT PRIMARY KEY,
+                    entity_type TEXT NOT NULL,
+                    entity_id TEXT NOT NULL,
+                    verified_by_admin INTEGER,
+                    verified_status TEXT,
+                    verified_at TEXT,
+                    updates_json TEXT NOT NULL DEFAULT '{}',
+                    updated_by TEXT NOT NULL DEFAULT '',
+                    updated_at TEXT NOT NULL
+                )
+                """
+            )
             # Produksi: pastikan tiada akaun demo palsu atau log seed tinggal dalam pangkalan data
             conn.execute("DELETE FROM users WHERE is_demo = 1")
             conn.execute("DELETE FROM activity_logs WHERE id LIKE ?", ("act-seed-%",))
             # Penjajaran gred SSM lama kepada SSPA (U29->U5, U32->U6, U36->U7, dll.)
             for old_g, new_g in LEGACY_TO_SSPA_GRADE.items():
                 conn.execute("UPDATE users SET grade = ? WHERE UPPER(grade) = ?", (new_g, old_g))
+            # FASA 3.5: Tandakan secara automatik semua rekod lama Koleksi Q&A pra-v2 yang tiada statute_library_version sebagai STALE
+            conn.execute(
+                """
+                UPDATE dev_archive_records
+                SET action_type = ?
+                WHERE category = ? AND action_type = ?
+                  AND (
+                      redacted_analysis_json IS NULL
+                      OR redacted_analysis_json = ''
+                      OR redacted_analysis_json NOT LIKE ?
+                  )
+                """,
+                ("TANYA_PAKAR_UIP_STALE", "ADVISOR_QA", "TANYA_PAKAR_UIP", "%statute_library_version%"),
+            )
             conn.commit()
 
     def load_runtime_settings_into_config(self) -> Dict[str, str]:
@@ -1803,8 +1838,59 @@ class UIPDatabase:
             "ai_attempted": bool(analysis.get("ai_attempted", False)),
             "ai_succeeded": bool(analysis.get("ai_succeeded", False)),
             "fallback_reason": analysis.get("fallback_reason"),
+            "statute_library_version": str(
+                analysis.get("statute_library_version") or ""
+            ).strip(),
+            "cache_status": str(analysis.get("cache_status") or "ACTIVE"),
+            "legal_validation": analysis.get("legal_validation"),
+            "element_evaluations": analysis.get("element_evaluations") or [],
             "statutory_citations": citations,
         }
+
+    def invalidate_advisor_qa_cache(
+        self,
+        *,
+        akta_code: Optional[str] = None,
+        new_version: Optional[str] = None,
+    ) -> int:
+        """FASA 3.5: Menandakan rekod cache Koleksi Q&A lama sebagai STALE apabila PDF akta dikemas kini."""
+        with self._connect() as conn:
+            if akta_code and akta_code.strip() and akta_code.strip().lower() != "semua":
+                pat = f"%{akta_code.strip()}%"
+                cur = conn.execute(
+                    """
+                    UPDATE dev_archive_records
+                    SET action_type = ?
+                    WHERE category = ? AND action_type = ?
+                      AND (LOWER(akta_utama) LIKE LOWER(?) OR LOWER(redacted_analysis_json) LIKE LOWER(?))
+                    """,
+                    ("TANYA_PAKAR_UIP_STALE", "ADVISOR_QA", "TANYA_PAKAR_UIP", pat, pat),
+                )
+            else:
+                cur = conn.execute(
+                    """
+                    UPDATE dev_archive_records
+                    SET action_type = ?
+                    WHERE category = ? AND action_type = ?
+                    """,
+                    ("TANYA_PAKAR_UIP_STALE", "ADVISOR_QA", "TANYA_PAKAR_UIP"),
+                )
+            affected = int(cur.rowcount or 0) if cur.rowcount is not None and cur.rowcount >= 0 else 0
+            if new_version:
+                conn.execute(
+                    """
+                    INSERT INTO runtime_settings (key, value, updated_at)
+                    VALUES (?, ?, ?)
+                    ON CONFLICT(key) DO UPDATE SET value=excluded.value, updated_at=excluded.updated_at
+                    """,
+                    ("statute_library_version", new_version, _utc_now_iso()),
+                )
+            conn.commit()
+        return affected
+
+    def purge_advisor_qa_cache(self, akta_code: Optional[str] = None) -> int:
+        """Memadam/mengarkibkan semua rekod cache Koleksi Soalan & Jawapan Pakar yang lama."""
+        return self.invalidate_advisor_qa_cache(akta_code=akta_code)
 
     def list_advisor_answered_questions(
         self,
@@ -1814,12 +1900,15 @@ class UIPDatabase:
         limit: int = 120,
     ) -> Dict[str, Any]:
         """Mengumpul semua soalan Tanya Pakar yang telah dijawab (versi PDPA) dan mengelaskannya mengikut Akta."""
+        from backend.rag.legal_engine import get_legal_library
+
+        active_lib_ver = get_legal_library().statute_library_version
         with self._connect() as conn:
             rows = conn.execute(
                 """
                 SELECT
                     id, akta_utama, title, redacted_input_text, redacted_response_text,
-                    redacted_analysis_json, model_used, is_cloud_api, status_summary, created_at
+                    request_json, redacted_analysis_json, model_used, is_cloud_api, status_summary, created_at
                 FROM dev_archive_records
                 WHERE category = ? AND action_type = ?
                 ORDER BY created_at DESC
@@ -1843,6 +1932,25 @@ class UIPDatabase:
                         analysis = parsed
                 except Exception:
                     analysis = {}
+
+            # Abaikan secara automatik sebarang rekod lama pra-v2 yang tiada medan statute_library_version atau bertanda STALE
+            record_lib_ver = str(analysis.get("statute_library_version") or "").strip()
+            if not record_lib_ver:
+                continue
+            if str(analysis.get("cache_status") or "").upper() == "STALE":
+                continue
+
+            req_obj: Dict[str, Any] = {}
+            raw_req_str = str(row.get("request_json") or "").strip()
+            if raw_req_str and raw_req_str != "{}":
+                try:
+                    parsed_req = json.loads(raw_req_str)
+                    if isinstance(parsed_req, dict):
+                        req_obj = parsed_req
+                except Exception:
+                    req_obj = {}
+
+            is_scenario_click = bool(req_obj.get("scenario_id") and not req_obj.get("use_ai"))
 
             redacted_resp = str(row.get("redacted_response_text") or "").strip()
             if not analysis and not redacted_resp:
@@ -1906,7 +2014,10 @@ class UIPDatabase:
                 "seksyen_utama": primary_sec,
                 "sesuai_buka_ip": bool(answer_obj.get("sesuai_buka_ip", False)),
                 "is_ai_answered": is_ai,
+                "is_scenario_click": is_scenario_click,
                 "engine_used": str(answer_obj.get("engine_used") or ""),
+                "statute_library_version": record_lib_ver,
+                "cache_status": str(answer_obj.get("cache_status") or "ACTIVE"),
                 "ask_count": 1,
                 "last_asked_at": str(row.get("created_at") or ""),
                 "answer": answer_obj,
@@ -1942,6 +2053,10 @@ class UIPDatabase:
                 target_entry["ask_count"] += 1
                 if reused_ts > target_entry["last_asked_at"]:
                     target_entry["last_asked_at"] = reused_ts
+                # Jika rekod asal ialah klik templat scenario_id, kemas kini teks soalan kepada soalan bebas pengguna
+                if target_entry.get("is_scenario_click") and not fallback_entry.get("is_scenario_click"):
+                    target_entry["question"] = fallback_entry["question"]
+                    target_entry["is_scenario_click"] = False
             elif dkey in deduped:
                 target_entry = deduped[dkey]
                 target_entry["ask_count"] += 1
@@ -2011,6 +2126,7 @@ class UIPDatabase:
                 )
 
         return {
+            "statute_library_version": active_lib_ver,
             "total_questions": len(all_items),
             "total_asks": total_asks_all,
             "total_matching": len(limited_items),
@@ -2048,6 +2164,8 @@ class UIPDatabase:
         best_rank = (-1.0, "")
 
         for item in candidates:
+            if item.get("is_scenario_click"):
+                continue
             if not _is_reusable_qa_answer(item):
                 continue
 
@@ -2069,10 +2187,27 @@ class UIPDatabase:
                 if len(shared_spec) < 2:
                     continue
 
+                def _is_ref_code(tok: str) -> bool:
+                    if len(tok) < 5:
+                        return False
+                    has_d = any(c.isdigit() for c in tok)
+                    has_a = any(c.isalpha() for c in tok)
+                    return (has_d and has_a) or tok.isdigit() or bool(re.fullmatch(r"[0-9a-f]{6,}", tok))
+
+                q_ref_codes = {t for t in q_spec if _is_ref_code(t)}
+                c_ref_codes = {t for t in cand_spec if _is_ref_code(t)}
+                if q_ref_codes and c_ref_codes and not (q_ref_codes & c_ref_codes):
+                    continue
+
                 def _tok_weights(tokens: set[str]) -> float:
                     total = 0.0
                     for tok in tokens:
-                        total += 0.6 if tok in _GENERIC_QA_TOKENS else 2.5
+                        if tok in _GENERIC_QA_TOKENS:
+                            total += 0.6
+                        elif _is_ref_code(tok):
+                            total += 7.5
+                        else:
+                            total += 2.5
                     return total
 
                 q_w = _tok_weights(q_all)
@@ -2102,6 +2237,176 @@ class UIPDatabase:
             "similarity": round(best_sim, 4),
             "similarity_percent": min(100, int(round(best_sim * 100))),
         }
+
+    # ---------------- Ketahanan Pengesahan Admin Pustaka Akta (Cloud Run PostgreSQL / SQLite) ----------------
+
+    def upsert_legal_statute_override(
+        self,
+        statute_id: str,
+        *,
+        verified_by_admin: bool,
+        verified_at: Optional[str] = None,
+        updated_by: str = "",
+    ) -> None:
+        sid = statute_id.strip().upper()
+        if not sid:
+            return
+        now = _utc_now_iso()
+        eff_verified_at = (verified_at or now) if verified_by_admin else None
+        status_str = "VERIFIED_AGC" if verified_by_admin else "DRAFT_PENDING_REVIEW"
+        key = f"STATUTE:{sid}"
+        with self._connect() as conn:
+            conn.execute(
+                """
+                INSERT INTO legal_admin_overrides (
+                    override_key, entity_type, entity_id,
+                    verified_by_admin, verified_status, verified_at,
+                    updates_json, updated_by, updated_at
+                )
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ON CONFLICT(override_key) DO UPDATE SET
+                    verified_by_admin = excluded.verified_by_admin,
+                    verified_status = excluded.verified_status,
+                    verified_at = excluded.verified_at,
+                    updated_by = excluded.updated_by,
+                    updated_at = excluded.updated_at
+                """,
+                (
+                    key,
+                    "STATUTE",
+                    sid,
+                    1 if verified_by_admin else 0,
+                    status_str,
+                    eff_verified_at,
+                    "{}",
+                    updated_by or "",
+                    now,
+                ),
+            )
+            conn.commit()
+
+    def upsert_legal_offence_override(
+        self,
+        offence_id: str,
+        *,
+        verified_status: Optional[str] = None,
+        verified_at: Optional[str] = None,
+        updates: Optional[Dict[str, Any]] = None,
+        updated_by: str = "",
+    ) -> None:
+        oid = offence_id.strip().upper()
+        if not oid:
+            return
+        now = _utc_now_iso()
+        key = f"OFFENCE:{oid}"
+        with self._connect() as conn:
+            existing = conn.execute(
+                "SELECT verified_status, verified_at, updates_json, updated_by FROM legal_admin_overrides WHERE override_key = ?",
+                (key,),
+            ).fetchone()
+            merged_updates: Dict[str, Any] = {}
+            prev_status: Optional[str] = None
+            prev_verified_at: Optional[str] = None
+            prev_by: str = ""
+            if existing is not None:
+                prev_status = existing["verified_status"]
+                prev_verified_at = existing["verified_at"]
+                prev_by = str(existing["updated_by"] or "")
+                try:
+                    loaded = json.loads(existing["updates_json"] or "{}")
+                    if isinstance(loaded, dict):
+                        merged_updates.update(loaded)
+                except Exception:
+                    pass
+            if isinstance(updates, dict):
+                for k, v in updates.items():
+                    if k == "verified_status":
+                        verified_status = str(v)
+                    else:
+                        merged_updates[k] = v
+
+            final_status = verified_status if verified_status is not None else prev_status
+            if verified_status is not None:
+                final_verified_at = (
+                    (verified_at or now) if verified_status == "VERIFIED_AGC" else None
+                )
+            else:
+                final_verified_at = prev_verified_at
+            final_by = updated_by or prev_by
+
+            conn.execute(
+                """
+                INSERT INTO legal_admin_overrides (
+                    override_key, entity_type, entity_id,
+                    verified_by_admin, verified_status, verified_at,
+                    updates_json, updated_by, updated_at
+                )
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ON CONFLICT(override_key) DO UPDATE SET
+                    verified_by_admin = excluded.verified_by_admin,
+                    verified_status = excluded.verified_status,
+                    verified_at = excluded.verified_at,
+                    updates_json = excluded.updates_json,
+                    updated_by = excluded.updated_by,
+                    updated_at = excluded.updated_at
+                """,
+                (
+                    key,
+                    "OFFENCE",
+                    oid,
+                    1 if final_status == "VERIFIED_AGC" else (0 if final_status is not None else None),
+                    final_status,
+                    final_verified_at,
+                    json.dumps(merged_updates, ensure_ascii=False),
+                    final_by,
+                    now,
+                ),
+            )
+            conn.commit()
+
+    def list_legal_admin_overrides(self) -> Dict[str, Dict[str, Dict[str, Any]]]:
+        statutes: Dict[str, Dict[str, Any]] = {}
+        offences: Dict[str, Dict[str, Any]] = {}
+        with self._connect() as conn:
+            rows = conn.execute(
+                """
+                SELECT entity_type, entity_id, verified_by_admin, verified_status,
+                       verified_at, updates_json, updated_by, updated_at
+                FROM legal_admin_overrides
+                """
+            ).fetchall()
+        for r in rows:
+            etype = str(r["entity_type"] or "").upper()
+            eid = str(r["entity_id"] or "").upper()
+            if not eid:
+                continue
+            try:
+                upd = json.loads(r["updates_json"] or "{}")
+                if not isinstance(upd, dict):
+                    upd = {}
+            except Exception:
+                upd = {}
+            rec = {
+                "verified_by_admin": (
+                    bool(r["verified_by_admin"]) if r["verified_by_admin"] is not None else None
+                ),
+                "verified_status": r["verified_status"],
+                "verified_at": r["verified_at"],
+                "updates": upd,
+                "updated_by": str(r["updated_by"] or ""),
+                "updated_at": str(r["updated_at"] or ""),
+            }
+            if etype == "STATUTE":
+                statutes[eid] = rec
+            elif etype == "OFFENCE":
+                offences[eid] = rec
+        return {"statutes": statutes, "offences": offences}
+
+    def delete_legal_admin_override(self, entity_type: str, entity_id: str) -> None:
+        key = f"{entity_type.strip().upper()}:{entity_id.strip().upper()}"
+        with self._connect() as conn:
+            conn.execute("DELETE FROM legal_admin_overrides WHERE override_key = ?", (key,))
+            conn.commit()
 
     @staticmethod
     def _safe_user_dict(row: sqlite3.Row) -> Dict[str, Any]:

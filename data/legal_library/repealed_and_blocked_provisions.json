@@ -1,0 +1,83 @@
+[
+  {
+    "provision_id": "REPEALED_PPKHT_2004_ALL",
+    "repealed_statute_or_section": "Peraturan-Peraturan Kawalan Hasil Tembakau 2004 (PPKHT 2004) [P.U. (A) 324/2004] — Keseluruhan Peraturan (termasuk Peraturan 8, 9, 10, 11, 12, 13, 13(1), 14)",
+    "match_patterns": [
+      "\\bppkht\\s*2004\\b",
+      "\\bp\\.?u\\.?\\s*\\(a\\)\\s*324/2004\\b",
+      "\\bkawalan\\s+hasil\\s+tembakau\\s+2004\\b",
+      "\\bperaturan\\s+(?:8|8a|9|10|11|12|13|14)(?:\\(\\d+\\))?\\s+ppkht\\b"
+    ],
+    "status": "DIMANSUHKAN",
+    "replacement_statute_id": "AKTA_852",
+    "replacement_section": "Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024 [Akta 852] & Peraturan/Perintah Subsidiari P.U. (A) 257–264/2024",
+    "warning_message_bm": "DISEKAT (UNDANG-UNDANG DIMANSUHKAN): Peraturan-Peraturan Kawalan Hasil Tembakau 2004 (PPKHT 2004) telah DIMANSUHKAN sepenuhnya mulai 1 Oktober 2024. Gunakan Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024 [Akta 852].",
+    "key_differences_note": "PERBEZAAN KRITIKAL AKTA 852 vs PPKHT 2004: (1) Kawasan larangan merokok kini di bawah Seksyen 16(2) Akta 852 & P.U. (A) 257/2024 (bukan Peraturan 11 PPKHT 2004). (2) Kewajipan pemilik premis pamer tanda amaran/tiada ashtray kini Seksyen 18(1)(a)/(b) Akta 852 & P.U. (A) 258/2024 (bukan Peraturan 12 PPKHT 2004). (3) Kesalahan Orang Belum Dewasa (OBD < 18 tahun) di bawah Seksyen 17(1) Akta 852 HANYA merangkumi perbuatan 'merokok, mengunyah atau menggunakan' (serta 'membeli' di bawah Seksyen 13(3)); kesalahan 'MEMILIKI' semata-mata oleh OBD dalam Peraturan 13(1) PPKHT 2004 TIDAK lagi wujud dalam Seksyen 17(1) Akta 852!"
+  },
+  {
+    "provision_id": "EXPIRED_ORDINAN_DARURAT_342_2021",
+    "repealed_statute_or_section": "Ordinan Darurat (Pencegahan dan Pengawalan Penyakit Berjangkit) (Pindaan) 2021 [P.U. (A) 82/2021] — Kompaun RM10,000 / RM50,000",
+    "match_patterns": [
+      "\\bordinan\\s+darurat\\b.*?(?:2021|342|penyakit\\s+berjangkit|kompaun)",
+      "\\bp\\.?u\\.?\\s*\\(a\\)\\s*82/2021\\b",
+      "\\bkompaun\\s+rm\\s*10,?000\\b.*?\\bakta\\s*342\\b"
+    ],
+    "status": "TAMAT_TEMPOH",
+    "replacement_statute_id": "AKTA_342",
+    "replacement_section": "Seksyen 24 & Seksyen 25 Akta 342 (Pindaan Akta A1742 berkuat kuasa 1 Mei 2025) & P.U. (A) 139/2025",
+    "warning_message_bm": "DISEKAT (ORDINAN TAMAT TEMPOH / TIDAK SAH): Ordinan Darurat (Pencegahan dan Pengawalan Penyakit Berjangkit) (Pindaan) 2021 (kompaun RM10,000 individu / RM50,000 syarikat) telah DIBATALKAN & TAMAT TEMPOH. Rujuk Seksyen 25 Akta 342 (Pindaan Akta A1742 berkuat kuasa 1 Mei 2025) & P.U. (A) 139/2025.",
+    "key_differences_note": "Di bawah Seksyen 25 Akta 342 (Pindaan Akta A1742) & P.U. (A) 139/2025: had kompaun maksimum ialah RM5,000 (individu) / RM50,000 (pertubuhan perbadanan), WAJIB dengan keizinan bertulis Pendakwa Raya, dan HANYA bagi seksyen dalam Jadual Pertama P.U. (A) 139/2025 (S.10(2), S.11(5), S.21A(3), S.22(b)/(c)/(d))."
+  },
+  {
+    "provision_id": "BLOCKED_AKTA_852_S38_AS_SEIZURE",
+    "repealed_statute_or_section": "Salah Petik: Seksyen 38 Akta 852 sebagai kuasa penyitaan / Borang Senarai Benda Disita",
+    "match_patterns": [
+      "\\bsitaan\\s+seksyen\\s+38\\b",
+      "\\bborang\\s+sitaan\\s+seksyen\\s+38\\b",
+      "\\bdisita\\s+di\\s+bawah\\s+seksyen\\s+38\\s+akta\\s+852\\b"
+    ],
+    "status": "SALAH_PETIK_SEKSYEN",
+    "replacement_statute_id": "AKTA_852",
+    "replacement_section": "Seksyen 35 (Kuasa Menyita) & Seksyen 36 (Senarai Benda Disita) Akta 852",
+    "warning_message_bm": "DISEKAT (SALAH PETIK SEKSYEN): Seksyen 38 Akta 852 ialah kos memegang barang disita, BUKAN kuasa penyitaan. Kuasa menyita ialah Seksyen 35 dan Borang Senarai Benda Disita ialah Seksyen 36 Akta 852.",
+    "key_differences_note": "Gunakan Seksyen 35 & Seksyen 36 Akta 852 pada Borang Senarai Benda Disita."
+  },
+  {
+    "provision_id": "BLOCKED_AKTA_852_S44_AS_COMPOUND",
+    "repealed_statute_or_section": "Salah Petik: Seksyen 44 Akta 852 sebagai kuasa mengkompaun",
+    "match_patterns": [
+      "\\bkompaun\\s+seksyen\\s+44\\b",
+      "\\bdikompaun\\s+di\\s+bawah\\s+seksyen\\s+44\\s+akta\\s+852\\b"
+    ],
+    "status": "SALAH_PETIK_SEKSYEN",
+    "replacement_statute_id": "AKTA_852",
+    "replacement_section": "Seksyen 48 Akta 852 & P.U. (A) 259/2024",
+    "warning_message_bm": "DISEKAT (SALAH PETIK SEKSYEN): Seksyen 44 Akta 852 ialah perlindungan pemberi maklumat. Kuasa mengkompaun kesalahan ialah Seksyen 48 Akta 852 dibaca bersama P.U. (A) 259/2024.",
+    "key_differences_note": "Gunakan Seksyen 48 Akta 852 [P.U. (A) 259/2024] untuk tawaran kompaun."
+  },
+  {
+    "provision_id": "BLOCKED_AKTA_514_FOR_TB",
+    "repealed_statute_or_section": "Salah Petik: Seksyen 22(b) Akta 514 untuk kes ingkar rawatan Tibi / Penyakit Berjangkit",
+    "match_patterns": [
+      "\\bseksyen\\s+22\\(b\\)\\s+akta\\s+514\\b"
+    ],
+    "status": "SALAH_PETIK_SEKSYEN",
+    "replacement_statute_id": "AKTA_342",
+    "replacement_section": "Seksyen 22(b) Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988 [Akta 342]",
+    "warning_message_bm": "DISEKAT (SALAH PETIK AKTA): Akta 514 ialah Akta Keselamatan dan Kesihatan Pekerjaan 1994 (OSHA). Kes ingkar perintah rawatan Tibi / penyakit berjangkit ialah di bawah Seksyen 22(b) Akta 342 [APPPB 1988].",
+    "key_differences_note": "Gunakan Seksyen 22(b) & Seksyen 24 Akta 342 bagi kes ingkar perintah sah penyakit berjangkit."
+  },
+  {
+    "provision_id": "REPEALED_KTJ_S113",
+    "repealed_statute_or_section": "Seksyen 113 Kanun Tatacara Jenayah [Akta 593] — Pernyataan Beramaran Lama",
+    "match_patterns": [
+      "\\bpernyataan\\s+beramaran\\s+seksyen\\s+113\\b",
+      "\\brakaman\\s+seksyen\\s+113\\s+ktj\\b"
+    ],
+    "status": "DIMANSUHKAN",
+    "replacement_statute_id": "AKTA_593",
+    "replacement_section": "Seksyen 112 Kanun Tatacara Jenayah [Akta 593] (dengan pematuhan subseksyen (2) hingga (5))",
+    "warning_message_bm": "DISEKAT (PERUNTUKAN DIMANSUHKAN): Pernyataan beramaran Seksyen 113 KTJ telah dimansuhkan. Semua rakaman percakapan saksi dan OYDS diambil di bawah Seksyen 112 KTJ.",
+    "key_differences_note": "Wajib rekodkan pemakluman amaran Seksyen 112(2) & (3) mengikut S.112(4) dan tandatangan S.112(5) KTJ."
+  }
+]

@@ -28,12 +28,16 @@ import {
   consultUipAdvisor,
   fetchAdvisorAnsweredQuestions,
   fetchAdvisorScenarios,
+  fetchLegalSnapshot,
 } from "@/lib/api";
+import { validateLegalOutput } from "@/lib/legalValidator";
 import type {
   AdvisorAnsweredItem,
   AdvisorAnsweredListResponse,
   AdvisorConsultResult,
   AdvisorScenarioItem,
+  LegalLibrarySnapshot,
+  LegalValidationResult,
   OfficerProfile,
 } from "@/lib/types";
 
@@ -44,7 +48,7 @@ interface UIPAdvisorPanelProps {
   onApplyToCaseBuilder: (draftText: string, aktaDisyorkan: string, bukaIp: boolean) => void;
 }
 
-type AdvisorResultTab = "sop" | "charges" | "statutes";
+type AdvisorResultTab = "sop" | "charges" | "statutes" | "elements";
 
 const QUICK_CHIPS = [
   "Budak sekolah hisap vape di tepi jalan",
@@ -143,6 +147,7 @@ export default function UIPAdvisorPanel({
   const [answeredSearch, setAnsweredSearch] = useState("");
   const [selectedAnsweredId, setSelectedAnsweredId] = useState<string | null>(null);
   const [expandedActGroups, setExpandedActGroups] = useState<Record<string, boolean>>({});
+  const [legalSnapshot, setLegalSnapshot] = useState<LegalLibrarySnapshot | null>(null);
   const resultRef = useRef<HTMLDivElement | null>(null);
   const answeredSectionRef = useRef<HTMLElement | null>(null);
 
@@ -151,6 +156,32 @@ export default function UIPAdvisorPanel({
       .then(setScenarios)
       .catch(() => setScenarios([]));
   }, []);
+
+  useEffect(() => {
+    fetchLegalSnapshot(authToken)
+      .then((snap) => {
+        setLegalSnapshot(snap);
+        if (typeof window !== "undefined") {
+          try {
+            window.localStorage.setItem("uip_offline_legal_library_v2", JSON.stringify(snap));
+          } catch {
+            // Abaikan jika kuota penuh
+          }
+        }
+      })
+      .catch(() => {
+        if (typeof window !== "undefined") {
+          const raw = window.localStorage.getItem("uip_offline_legal_library_v2");
+          if (raw) {
+            try {
+              setLegalSnapshot(JSON.parse(raw) as LegalLibrarySnapshot);
+            } catch {
+              // Abaikan
+            }
+          }
+        }
+      });
+  }, [authToken]);
 
   const loadAnsweredQuestions = useCallback(async () => {
     setAnsweredLoading(true);
@@ -287,6 +318,15 @@ export default function UIPAdvisorPanel({
   }, [answeredData]);
 
   const primaryCharge = result?.cadangan_pertuduhan?.[0];
+
+  const activeValidation: LegalValidationResult | null = useMemo(() => {
+    if (!result) return null;
+    if (legalSnapshot) {
+      const clientCheck = validateLegalOutput(result, legalSnapshot, question);
+      if (!clientCheck.passed) return clientCheck;
+    }
+    return result.legal_validation || (legalSnapshot ? validateLegalOutput(result, legalSnapshot, question) : null);
+  }, [result, legalSnapshot, question]);
 
   return (
     <div className="mx-auto max-w-5xl space-y-4">
@@ -470,6 +510,12 @@ export default function UIPAdvisorPanel({
                     <Zap className="h-3 w-3" /> {result.engine_used || "Mod Pantas — Rujukan Statutori UIP"}
                   </span>
                 )}
+                {activeValidation && activeValidation.passed && (
+                  <span className="inline-flex items-center gap-1 rounded-full border border-emerald-300 bg-emerald-50 px-2.5 py-0.5 text-[11px] font-extrabold text-emerald-900">
+                    <ShieldCheck className="h-3.5 w-3.5 text-emerald-700" />
+                    Disahkan Pustaka Akta ({result.statute_library_version || activeValidation.statute_library_version})
+                  </span>
+                )}
               </div>
               <h3 className="text-base font-extrabold text-slate-900">{result.tajuk_nasihat}</h3>
             </div>
@@ -488,24 +534,54 @@ export default function UIPAdvisorPanel({
                 {copiedSummary ? "Disalin!" : "Salin Ringkasan"}
               </button>
 
-              <button
-                type="button"
-                onClick={() =>
-                  onApplyToCaseBuilder(
-                    result.draf_teks_kes_cadangan,
-                    result.akta_disyorkan,
-                    result.sesuai_buka_ip
-                  )
-                }
-                className="inline-flex min-h-[40px] items-center gap-1.5 rounded-xl bg-blue-600 px-4 py-2 text-xs font-extrabold text-white shadow-sm hover:bg-blue-700"
-              >
-                <ArrowRightCircle className="h-4 w-4" />
-                {result.sesuai_buka_ip
-                  ? "Terus Buka Editor Fail IP"
-                  : "Isi ke Borang Notis Kompaun"}
-              </button>
+              {(!activeValidation || activeValidation.passed) && !result.unindexed_statute && (
+                <button
+                  type="button"
+                  onClick={() =>
+                    onApplyToCaseBuilder(
+                      result.draf_teks_kes_cadangan,
+                      result.akta_disyorkan,
+                      result.sesuai_buka_ip
+                    )
+                  }
+                  className="inline-flex min-h-[40px] items-center gap-1.5 rounded-xl bg-blue-600 px-4 py-2 text-xs font-extrabold text-white shadow-sm hover:bg-blue-700"
+                >
+                  <ArrowRightCircle className="h-4 w-4" />
+                  {result.sesuai_buka_ip
+                    ? "Terus Buka Editor Fail IP"
+                    : "Isi ke Borang Notis Kompaun"}
+                </button>
+              )}
             </div>
           </div>
+
+          {/* PENGAWAL PETIKAN DETERMINISTIK SELEPAS JANAAN (POST-GENERATION CITATION GUARDRAIL) */}
+          {activeValidation && !activeValidation.passed && (
+            <div className="rounded-2xl border-2 border-rose-500 bg-rose-50 p-4 text-xs text-rose-950 shadow-sm">
+              <div className="flex items-start gap-2.5">
+                <ShieldAlert className="mt-0.5 h-5 w-5 shrink-0 text-rose-700" />
+                <div className="space-y-1.5">
+                  <div className="text-sm font-extrabold text-rose-900">
+                    {activeValidation.warning_banner ||
+                      "Amaran Sistem: Cadangan petikan undang-undang gagal pengesahan Pustaka Akta."}
+                  </div>
+                  <p className="font-semibold text-rose-800">
+                    Pengawal Petikan Deterministik (<code>validateLegalOutput</code>) telah menyekat cadangan Notis Kompaun / Pertuduhan ini atas sebab berikut:
+                  </p>
+                  <ul className="list-disc space-y-1 pl-5 font-medium text-rose-900">
+                    {[
+                      ...(activeValidation.invalid_citations || []),
+                      ...(activeValidation.repealed_hits || []).map((r) => r.warning_message_bm),
+                      ...(activeValidation.penalty_mismatches || []),
+                      ...(activeValidation.unfulfilled_element_errors || []),
+                    ].map((errItem, idx) => (
+                      <li key={idx}>{errItem}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          )}
 
           {result.from_qa_collection && result.matched_collection_question && (
             <div className="flex flex-wrap items-center justify-between gap-2.5 rounded-xl border border-teal-200 bg-teal-50/70 px-3.5 py-2.5 text-xs text-teal-950">
@@ -573,9 +649,12 @@ export default function UIPAdvisorPanel({
           {/* Ringkasan Eksekutif Bersih: 1 Keputusan + 2 Kad Garis Sisi */}
           <div
             className={`rounded-xl border border-slate-200 border-l-4 p-4 ${
-              result.sesuai_buka_ip
-                ? "border-l-amber-500 bg-amber-50/40"
-                : "border-l-emerald-600 bg-emerald-50/40"
+              result.keputusan_tindakan.toUpperCase().includes("TIADA KESALAHAN") ||
+              result.unindexed_statute
+                ? "border-l-rose-600 bg-rose-50/50"
+                : result.sesuai_buka_ip
+                  ? "border-l-amber-500 bg-amber-50/40"
+                  : "border-l-emerald-600 bg-emerald-50/40"
             }`}
           >
             <div className="text-[11px] font-extrabold uppercase tracking-wide text-slate-600">
@@ -615,18 +694,22 @@ export default function UIPAdvisorPanel({
             </div>
           </div>
 
-          {/* 3 Tab Kemas Untuk Perincian (Elak Dinding Kotak Serentak) */}
+          {/* 4 Tab Kemas Untuk Perincian (SOP, Unsur Mandatori, Pertuduhan, Petikan Akta Verbatim) */}
           <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-2 pt-1">
             <div className="flex gap-1.5 overflow-x-auto no-scrollbar">
               {[
                 { id: "sop" as AdvisorResultTab, label: "SOP, Eksibit & Amaran" },
+                {
+                  id: "elements" as AdvisorResultTab,
+                  label: `Semakan Unsur Mandatori (${result.element_evaluations?.length ?? 0})`,
+                },
                 {
                   id: "charges" as AdvisorResultTab,
                   label: `Pertuduhan Penuh (${result.cadangan_pertuduhan.length})`,
                 },
                 {
                   id: "statutes" as AdvisorResultTab,
-                  label: `Petikan Akta (${result.statutory_citations.length})`,
+                  label: `Petikan Akta Verbatim (${result.statutory_citations.length})`,
                 },
               ].map((t) => (
                 <button
@@ -700,7 +783,7 @@ export default function UIPAdvisorPanel({
                 <div className="rounded-xl border border-rose-200 border-l-4 border-l-rose-600 bg-rose-50/40 p-3">
                   <h4 className="mb-1.5 flex items-center gap-1.5 text-xs font-extrabold text-rose-950">
                     <ShieldAlert className="h-4 w-4 text-rose-700" />
-                    Elak Kesilapan Biasa PPKP
+                    Elak Kesilapan Biasa PPKP &amp; Pengecualian Eksplisit
                   </h4>
                   <ul className="space-y-1.5 text-xs text-rose-900">
                     {result.perangkap_kesilapan.map((trap, i) => (
@@ -712,6 +795,84 @@ export default function UIPAdvisorPanel({
                   </ul>
                 </div>
               </div>
+            </div>
+          )}
+
+          {resultTab === "elements" && (
+            <div className="space-y-3">
+              {(!result.element_evaluations || result.element_evaluations.length === 0) ? (
+                <p className="text-xs text-slate-500">
+                  Tiada jadual unsur mandatori tambahan dilampirkan untuk situasi ini.
+                </p>
+              ) : (
+                <div className="space-y-3">
+                  {result.element_evaluations.map((ev) => (
+                    <div
+                      key={ev.offence_id}
+                      className="overflow-x-auto rounded-xl border border-slate-200"
+                    >
+                      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 bg-slate-50 px-3 py-2 text-xs">
+                        <span className="font-extrabold text-slate-900">
+                          {ev.offence_id} — {ev.offence_section}
+                        </span>
+                        <span
+                          className={`rounded-full px-2.5 py-0.5 text-[10px] font-extrabold ${
+                            ev.action_blocked
+                              ? "bg-rose-100 text-rose-900"
+                              : ev.all_elements_satisfied
+                                ? "bg-emerald-100 text-emerald-900"
+                                : "bg-amber-100 text-amber-900"
+                          }`}
+                        >
+                          {ev.action_blocked
+                            ? "TINDAKAN KOMPAUN/PERTUDUHAN DISEKAT"
+                            : ev.all_elements_satisfied
+                              ? "SEMUA UNSUR MANDATORI TERPENUHI"
+                              : "PERLU BUKTI TAMBAHAN"}
+                        </span>
+                      </div>
+                      <table className="w-full border-collapse text-left text-xs">
+                        <thead>
+                          <tr className="border-b border-slate-200 bg-white text-[11px] font-extrabold uppercase text-slate-600">
+                            <th className="p-2.5">Bil</th>
+                            <th className="p-2.5">Unsur Mandatori Kesalahan (Warta)</th>
+                            <th className="p-2.5">Status Semakan</th>
+                            <th className="p-2.5">Bukti Wajib / Catatan</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-200">
+                          {ev.element_evaluations.map((el) => (
+                            <tr key={el.element_no} className="hover:bg-slate-50/60">
+                              <td className="p-2.5 font-mono font-bold text-slate-900">
+                                #{el.element_no}
+                              </td>
+                              <td className="p-2.5 font-medium text-slate-800">
+                                {el.description}
+                              </td>
+                              <td className="p-2.5">
+                                <span
+                                  className={`inline-flex rounded-full px-2.5 py-0.5 text-[10px] font-extrabold ${
+                                    el.status === "TERPENUHI"
+                                      ? "bg-emerald-100 text-emerald-900"
+                                      : el.status === "TIDAK TERPENUHI"
+                                        ? "bg-rose-100 text-rose-900"
+                                        : "bg-amber-100 text-amber-900"
+                                  }`}
+                                >
+                                  {el.status || "PERLU BUKTI TAMBAHAN"}
+                                </span>
+                              </td>
+                              <td className="p-2.5 text-slate-600">
+                                {el.notes || el.must_prove}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           )}
 
@@ -756,19 +917,45 @@ export default function UIPAdvisorPanel({
                   Tiada petikan akta tambahan dilampirkan untuk pertanyaan ini.
                 </p>
               ) : (
-                result.statutory_citations.map((cit, i) => (
-                  <div
-                    key={i}
-                    className="rounded-xl border border-slate-200 bg-slate-50/40 p-3 text-xs text-slate-700"
-                  >
-                    <div className="font-extrabold text-teal-800">
-                      {cit.section.toLowerCase().includes(cit.akta_code.toLowerCase())
-                        ? cit.section
-                        : `${cit.akta_code} — ${cit.section}`}
+                result.statutory_citations.map((cit, i) => {
+                  const matchedStatute = legalSnapshot?.statutes_registry?.find(
+                    (s) =>
+                      (cit.statute_id && s.statute_id === cit.statute_id) ||
+                      (cit.doc_id && cit.doc_id.startsWith(`${s.statute_id}__`))
+                  );
+                  const isVerifiedAgc = Boolean(matchedStatute?.verified_by_admin);
+                  return (
+                    <div
+                      key={i}
+                      className="rounded-xl border border-teal-200 bg-teal-50/25 p-3.5 text-xs text-slate-800"
+                    >
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <div className="font-extrabold text-teal-900">
+                          {cit.section.toLowerCase().includes(cit.akta_code.toLowerCase())
+                            ? cit.section
+                            : `${cit.akta_code} — ${cit.section}`}
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          {cit.doc_id && (
+                            <span className="rounded bg-white px-2 py-0.5 font-mono text-[10px] font-bold text-slate-600 ring-1 ring-slate-200">
+                              {cit.doc_id}
+                            </span>
+                          )}
+                          {isVerifiedAgc ? (
+                            <span className="rounded bg-teal-100 px-2 py-0.5 text-[10px] font-extrabold text-teal-900">
+                              100% Verbatim Warta AGC
+                            </span>
+                          ) : (
+                            <span className="rounded-full border border-yellow-300 bg-yellow-100 px-2 py-0.5 text-[10px] font-extrabold text-yellow-900">
+                              Perlu Semakan Manual Warta AGC
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                      <p className="mt-1.5 whitespace-pre-line leading-relaxed">{cit.text}</p>
                     </div>
-                    <p className="mt-1 whitespace-pre-line leading-relaxed">{cit.text}</p>
-                  </div>
-                ))
+                  );
+                })
               )}
             </div>
           )}

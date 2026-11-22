@@ -14,11 +14,18 @@ import type {
   EvidenceExtractionResponse,
   IPAuditReport,
   IPCaseRecord,
+  LegalCoverageReport,
+  LegalLibrarySnapshot,
+  LegalValidationResult,
+  MasterOffenceRecord,
   NotisKompaunData,
+  OffenderCategory,
   OfficerProfile,
   RedactResponse,
+  RepealedProvisionRecord,
   RuntimeSettings,
   SampleCase,
+  StatuteSectionVerbatim,
   StatutoryCitation,
   SystemStatus,
 } from "./types";
@@ -622,3 +629,223 @@ export async function retryDevVaultS3Sync(
   });
   return parseJsonOrThrow(res);
 }
+
+// ---------------- Pustaka Akta Penuh & Daftar Semua Kesalahan (Zero-Hallucination Legal Engine) ----------------
+
+export async function fetchLegalRegistry(
+  authToken?: string | null
+): Promise<LegalCoverageReport> {
+  const res = await fetch(`${API_BASE}/api/legal/registry`, {
+    cache: "no-store",
+    headers: { ...getAuthHeader(authToken) },
+  });
+  return parseJsonOrThrow<LegalCoverageReport>(res);
+}
+
+export async function fetchLegalSnapshot(
+  authToken?: string | null
+): Promise<LegalLibrarySnapshot> {
+  const res = await fetch(`${API_BASE}/api/legal/snapshot`, {
+    cache: "no-store",
+    headers: { ...getAuthHeader(authToken) },
+  });
+  return parseJsonOrThrow<LegalLibrarySnapshot>(res);
+}
+
+export async function fetchLegalSections(
+  params: {
+    statuteId?: string;
+    akta?: string;
+    q?: string;
+    authToken?: string | null;
+  } = {}
+): Promise<{
+  total: number;
+  sections: StatuteSectionVerbatim[];
+  statute_library_version: string;
+}> {
+  const search = new URLSearchParams();
+  if (params.statuteId) search.set("statute_id", params.statuteId);
+  if (params.akta && params.akta !== "Semua") search.set("akta", params.akta);
+  if (params.q?.trim()) search.set("q", params.q.trim());
+  const res = await fetch(`${API_BASE}/api/legal/sections?${search.toString()}`, {
+    cache: "no-store",
+    headers: { ...getAuthHeader(params.authToken) },
+  });
+  return parseJsonOrThrow(res);
+}
+
+export async function fetchLegalOffences(
+  params: {
+    statuteId?: string;
+    akta?: string;
+    offenderCategory?: OffenderCategory | "SEMUA";
+    isCompoundable?: boolean | null;
+    q?: string;
+    authToken?: string | null;
+  } = {}
+): Promise<{
+  total: number;
+  offences: MasterOffenceRecord[];
+  statute_library_version: string;
+}> {
+  const search = new URLSearchParams();
+  if (params.statuteId) search.set("statute_id", params.statuteId);
+  if (params.akta && params.akta !== "Semua") search.set("akta", params.akta);
+  if (params.offenderCategory && params.offenderCategory !== "SEMUA") {
+    search.set("target_offender", params.offenderCategory);
+  }
+  if (typeof params.isCompoundable === "boolean") {
+    search.set("is_compoundable", String(params.isCompoundable));
+  }
+  if (params.q?.trim()) search.set("q", params.q.trim());
+  const res = await fetch(`${API_BASE}/api/legal/offences?${search.toString()}`, {
+    cache: "no-store",
+    headers: { ...getAuthHeader(params.authToken) },
+  });
+  return parseJsonOrThrow(res);
+}
+
+export async function fetchRepealedProvisions(
+  authToken?: string | null
+): Promise<{
+  statute_library_version: string;
+  provisions: RepealedProvisionRecord[];
+}> {
+  const res = await fetch(`${API_BASE}/api/legal/repealed`, {
+    cache: "no-store",
+    headers: { ...getAuthHeader(authToken) },
+  });
+  return parseJsonOrThrow(res);
+}
+
+export async function validateLegalOutputApi(
+  aiResponse: unknown,
+  questionContext?: string,
+  authToken?: string | null
+): Promise<LegalValidationResult> {
+  const res = await fetch(`${API_BASE}/api/legal/validate`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...getAuthHeader(authToken),
+    },
+    body: JSON.stringify({
+      ai_response: aiResponse,
+      question_context: questionContext || "",
+    }),
+  });
+  return parseJsonOrThrow<LegalValidationResult>(res);
+}
+
+export async function ingestGazettePdf(params: {
+  file: File;
+  statuteId?: string;
+  officialTitleBm?: string;
+  actNumberOrPu?: string;
+  verifiedByAdmin?: boolean;
+  authToken?: string | null;
+}): Promise<{
+  status: string;
+  filename: string;
+  total_chunks_indexed: number;
+  legal_library_ingest: {
+    status: string;
+    statute_id: string;
+    canonical_akta_code: string;
+    filename: string;
+    source_pdf_hash: string;
+    sections_extracted: number;
+    new_offences_swept: number;
+    total_sections_indexed: number;
+    total_offences_indexed: number;
+    verified_by_admin: boolean;
+    statute_library_version: string;
+  };
+  stale_qa_cache_marked: number;
+}> {
+  const form = new FormData();
+  form.append("file", params.file);
+  if (params.statuteId) form.append("statute_id", params.statuteId);
+  if (params.officialTitleBm) form.append("official_title_bm", params.officialTitleBm);
+  if (params.actNumberOrPu) form.append("act_number_or_pu", params.actNumberOrPu);
+  form.append("verified_by_admin", String(Boolean(params.verifiedByAdmin)));
+
+  const res = await fetch(`${API_BASE}/api/legal/ingest`, {
+    method: "POST",
+    headers: { ...getAuthHeader(params.authToken) },
+    body: form,
+  });
+  return parseJsonOrThrow(res);
+}
+
+export async function verifyGazetteStatuteOrOffence(params: {
+  statuteId?: string;
+  offenceId?: string;
+  verifiedByAdmin?: boolean;
+  authToken?: string | null;
+}): Promise<{
+  updated_statutes: number;
+  updated_offences: number;
+  statute_library_version: string;
+}> {
+  const res = await fetch(`${API_BASE}/api/legal/verify`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...getAuthHeader(params.authToken),
+    },
+    body: JSON.stringify({
+      statute_id: params.statuteId || undefined,
+      offence_id: params.offenceId || undefined,
+      verified: params.verifiedByAdmin ?? true,
+    }),
+  });
+  return parseJsonOrThrow(res);
+}
+
+export async function updateMasterOffence(
+  offenceId: string,
+  payload: Partial<MasterOffenceRecord>,
+  authToken?: string | null
+): Promise<{
+  status: string;
+  offence: MasterOffenceRecord;
+  statute_library_version: string;
+  stale_qa_cache_marked: number;
+}> {
+  const res = await fetch(
+    `${API_BASE}/api/legal/offences/${encodeURIComponent(offenceId)}`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        ...getAuthHeader(authToken),
+      },
+      body: JSON.stringify(payload),
+    }
+  );
+  return parseJsonOrThrow(res);
+}
+
+export async function purgeAdvisorQaCache(
+  aktaCode?: string,
+  authToken?: string | null
+): Promise<{
+  status: string;
+  stale_records_marked: number;
+  statute_library_version: string;
+}> {
+  const res = await fetch(`${API_BASE}/api/legal/purge-qa-cache`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...getAuthHeader(authToken),
+    },
+    body: JSON.stringify({
+      akta_code: aktaCode || undefined,
+    }),
+  });
+  return parseJsonOrThrow(res);
+}
+

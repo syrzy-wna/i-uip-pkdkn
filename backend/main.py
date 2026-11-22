@@ -744,8 +744,14 @@ def query_statutory_rag(
 @app.post("/api/rag/ingest")
 async def ingest_statutory_act(
     file: UploadFile = File(...),
+    statute_id: Optional[str] = Form(default=None),
+    official_title_bm: Optional[str] = Form(default=None),
+    act_number_or_pu: Optional[str] = Form(default=None),
+    verified_by_admin: bool = Form(default=False),
     current_officer: Dict[str, Any] = Depends(_require_dev_admin),
 ) -> Dict[str, Any]:
+    from backend.rag.legal_engine import get_legal_library
+
     t0 = time.perf_counter()
     raw_bytes = await file.read()
     if not raw_bytes:
@@ -754,11 +760,27 @@ async def ingest_statutory_act(
     if not fname.lower().endswith((".txt", ".pdf", ".md")):
         raise HTTPException(status_code=400, detail="Hanya fail .txt, .md atau .pdf disokong.")
     total_chunks = router_service.rag_store.ingest_uploaded_file(fname, raw_bytes)
+    legal_lib = get_legal_library()
+    ingest_meta = legal_lib.ingest_statute_bytes(
+        filename=fname,
+        raw_bytes=raw_bytes,
+        statute_id=statute_id,
+        official_title_bm=official_title_bm,
+        act_number_or_pu=act_number_or_pu,
+        verified_by_admin=verified_by_admin,
+    )
+    stale_marked = db_service.invalidate_advisor_qa_cache(
+        akta_code=ingest_meta["canonical_akta_code"],
+        new_version=ingest_meta["statute_library_version"],
+    )
+    advisor_service.clear_cache()
     out = {
         "status": "berjaya",
         "filename": fname,
         "total_chunks_indexed": total_chunks,
         "acts_loaded": router_service.rag_store.list_available_acts(),
+        "legal_library_ingest": ingest_meta,
+        "stale_qa_cache_marked": stale_marked,
     }
     _archive_safely(
         category="OCR_EVIDENCE",
@@ -775,6 +797,248 @@ async def ingest_statutory_act(
         attachment_mime=file.content_type or "application/octet-stream",
     )
     return out
+
+
+# ---------------- Pustaka Akta Verbatim & Daftar Kesalahan Menyeluruh (Closed-Book Legal Engine) ----------------
+
+
+class VerifyStatuteRequest(BaseModel):
+    statute_id: Optional[str] = None
+    offence_id: Optional[str] = None
+    verified: bool = True
+
+
+class UpdateOffenceRequest(BaseModel):
+    offence_title: Optional[str] = None
+    offence_section: Optional[str] = None
+    read_together_with: Optional[list[str]] = None
+    target_offender: Optional[str] = None
+    mandatory_elements: Optional[list[Dict[str, Any]]] = None
+    explicit_exclusions_and_traps: Optional[list[str]] = None
+    penalty_section: Optional[str] = None
+    penalty_first_offence: Optional[Dict[str, Any]] = None
+    penalty_subsequent_offence: Optional[Dict[str, Any]] = None
+    compound_info: Optional[Dict[str, Any]] = None
+    special_legal_requirements: Optional[list[str]] = None
+    mandatory_exhibits: Optional[list[str]] = None
+    charge_sheet_template_bm: Optional[str] = None
+    verified_status: Optional[str] = None
+
+
+class RegisterUnindexedStatuteRequest(BaseModel):
+    statute_id: str
+    official_title_bm: str
+    act_number_or_pu: str
+    official_title_en: str = ""
+
+
+class ValidateLegalOutputRequest(BaseModel):
+    ai_response: Any
+    question_context: str = ""
+
+
+class PurgeQACacheRequest(BaseModel):
+    akta_code: Optional[str] = None
+
+
+@app.get("/api/legal/registry")
+def get_legal_registry_and_coverage(
+    _officer: Dict[str, Any] = Depends(_require_authenticated_officer),
+) -> Dict[str, Any]:
+    from backend.rag.legal_engine import get_legal_library
+
+    return get_legal_library().get_coverage_audit_report()
+
+
+@app.get("/api/legal/snapshot")
+def get_legal_library_snapshot(
+    _officer: Dict[str, Any] = Depends(_require_authenticated_officer),
+) -> Dict[str, Any]:
+    from backend.rag.legal_engine import get_legal_library
+
+    lib = get_legal_library()
+    return {
+        "statute_library_version": lib.statute_library_version,
+        "statutes_registry": lib.statutes_registry,
+        "statute_sections_verbatim": [
+            {k: v for k, v in s.items() if k != "embedding_vector"}
+            for s in lib.statute_sections_verbatim
+        ],
+        "master_offences_matrix": lib.list_master_offences(),
+        "repealed_and_blocked_provisions": lib.repealed_and_blocked_provisions,
+    }
+
+
+@app.get("/api/legal/sections")
+def list_legal_verbatim_sections(
+    statute_id: Optional[str] = Query(default=None),
+    akta: Optional[str] = Query(default=None),
+    q: Optional[str] = Query(default=None),
+    _officer: Dict[str, Any] = Depends(_require_authenticated_officer),
+) -> Dict[str, Any]:
+    from backend.rag.legal_engine import get_legal_library
+
+    return get_legal_library().list_verbatim_sections(
+        statute_id=statute_id,
+        akta_code=akta,
+        q=q,
+    )
+
+
+@app.get("/api/legal/offences")
+def list_legal_master_offences(
+    statute_id: Optional[str] = Query(default=None),
+    akta: Optional[str] = Query(default=None),
+    target_offender: Optional[str] = Query(default=None),
+    is_compoundable: Optional[bool] = Query(default=None),
+    verified_status: Optional[str] = Query(default=None),
+    q: Optional[str] = Query(default=None),
+    _officer: Dict[str, Any] = Depends(_require_authenticated_officer),
+) -> Dict[str, Any]:
+    from backend.rag.legal_engine import get_legal_library
+
+    lib = get_legal_library()
+    items = lib.list_master_offences(
+        statute_id=statute_id,
+        akta_code=akta,
+        target_offender=target_offender,
+        is_compoundable=is_compoundable,
+        verified_status=verified_status,
+        q=q,
+    )
+    return {
+        "statute_library_version": lib.statute_library_version,
+        "total": len(items),
+        "offences": items,
+    }
+
+
+@app.get("/api/legal/repealed")
+def list_repealed_and_blocked_provisions(
+    _officer: Dict[str, Any] = Depends(_require_authenticated_officer),
+) -> Dict[str, Any]:
+    from backend.rag.legal_engine import get_legal_library
+
+    lib = get_legal_library()
+    return {
+        "statute_library_version": lib.statute_library_version,
+        "provisions": lib.repealed_and_blocked_provisions,
+    }
+
+
+@app.post("/api/legal/validate")
+def validate_legal_output_endpoint(
+    req: ValidateLegalOutputRequest,
+    _officer: Dict[str, Any] = Depends(_require_authenticated_officer),
+) -> Dict[str, Any]:
+    from backend.rag.legal_engine import get_legal_library, validate_legal_output
+
+    lib = get_legal_library()
+    return validate_legal_output(
+        req.ai_response,
+        lib.to_snapshot_dict(),
+        question_context=req.question_context,
+    )
+
+
+@app.post("/api/legal/ingest")
+async def ingest_gazette_pdf_endpoint(
+    file: UploadFile = File(...),
+    statute_id: Optional[str] = Form(default=None),
+    official_title_bm: Optional[str] = Form(default=None),
+    act_number_or_pu: Optional[str] = Form(default=None),
+    verified_by_admin: bool = Form(default=False),
+    current_officer: Dict[str, Any] = Depends(_require_dev_admin),
+) -> Dict[str, Any]:
+    return await ingest_statutory_act(
+        file=file,
+        statute_id=statute_id,
+        official_title_bm=official_title_bm,
+        act_number_or_pu=act_number_or_pu,
+        verified_by_admin=verified_by_admin,
+        current_officer=current_officer,
+    )
+
+
+@app.post("/api/legal/verify")
+def verify_gazette_statute_or_offence(
+    req: VerifyStatuteRequest,
+    _admin: Dict[str, Any] = Depends(_require_dev_admin),
+) -> Dict[str, Any]:
+    from backend.rag.legal_engine import get_legal_library
+
+    return get_legal_library().verify_statute_or_offence(
+        statute_id=req.statute_id,
+        offence_id=req.offence_id,
+        verified=req.verified,
+        updated_by=str(_admin.get("email") or ""),
+    )
+
+
+@app.put("/api/legal/offences/{offence_id}")
+def update_master_offence_endpoint(
+    offence_id: str,
+    req: UpdateOffenceRequest,
+    _admin: Dict[str, Any] = Depends(_require_dev_admin),
+) -> Dict[str, Any]:
+    from backend.rag.legal_engine import get_legal_library
+
+    lib = get_legal_library()
+    updated = lib.update_offence(
+        offence_id,
+        req.model_dump(exclude_none=True),
+        updated_by=str(_admin.get("email") or ""),
+    )
+    if not updated:
+        raise HTTPException(status_code=404, detail=f"Kesalahan '{offence_id}' tidak dijumpai.")
+    stale_marked = db_service.invalidate_advisor_qa_cache(
+        akta_code=None,
+        new_version=lib.statute_library_version,
+    )
+    advisor_service.clear_cache()
+    return {
+        "status": "dikemaskini",
+        "offence": updated,
+        "statute_library_version": lib.statute_library_version,
+        "stale_qa_cache_marked": stale_marked,
+    }
+
+
+@app.post("/api/legal/register-statute")
+def register_unindexed_statute_endpoint(
+    req: RegisterUnindexedStatuteRequest,
+    _admin: Dict[str, Any] = Depends(_require_dev_admin),
+) -> Dict[str, Any]:
+    from backend.rag.legal_engine import get_legal_library
+
+    entry = get_legal_library().register_unindexed_statute(
+        statute_id=req.statute_id,
+        official_title_bm=req.official_title_bm,
+        act_number_or_pu=req.act_number_or_pu,
+        official_title_en=req.official_title_en,
+    )
+    return {"status": "didaftarkan", "statute": entry}
+
+
+@app.post("/api/legal/purge-qa-cache")
+def purge_advisor_qa_cache_endpoint(
+    req: PurgeQACacheRequest,
+    _admin: Dict[str, Any] = Depends(_require_dev_admin),
+) -> Dict[str, Any]:
+    from backend.rag.legal_engine import get_legal_library
+
+    lib = get_legal_library()
+    new_ver = lib.bump_version(tag="purge")
+    purged_count = db_service.invalidate_advisor_qa_cache(
+        akta_code=req.akta_code,
+        new_version=new_ver,
+    )
+    advisor_service.clear_cache()
+    return {
+        "status": "dibersihkan",
+        "stale_records_marked": purged_count,
+        "statute_library_version": new_ver,
+    }
 
 
 # ---------------- Akaun Pegawai KKM Sebenar ----------------

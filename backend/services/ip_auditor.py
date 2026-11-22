@@ -47,21 +47,21 @@ IP_AUDIT_CRITERIA: List[Dict[str, Any]] = [
         "title": "Cetakan Carian SSM / Lesen PBT & Liabiliti Syarikat",
         "category": "Identiti OKT",
         "threshold": 0.88,
-        "description": "Cetakan carian rasmi SSM (e-Info/MyData) dan lesen PBT dilampirkan; jika melibatkan syarikat Sdn. Bhd., rujuk Seksyen 51 Akta 852 / Seksyen 33A Akta 281.",
-        "positive_keywords": ["[no_ssm_1]", "ssm", "e-info", "mydata", "lesen premis", "pengarah", "seksyen 51", "seksyen 33a"],
+        "description": "Cetakan carian rasmi SSM (e-Info/MyData) dan lesen PBT dilampirkan; jika melibatkan syarikat Sdn. Bhd., rujuk Seksyen 49 Akta 852 / Seksyen 33A Akta 281.",
+        "positive_keywords": ["[no_ssm_1]", "ssm", "e-info", "mydata", "lesen premis", "pengarah", "seksyen 49", "seksyen 51", "seksyen 33a"],
         "negative_keywords": ["tiada carian ssm", "belum buat carian ssm"],
-        "statute_ref": "Seksyen 51 Akta 852 / Seksyen 33A Akta Makanan 1983 / Akta Syarikat 2016",
-        "remedy": "Lampirkan cetakan carian rasmi e-Info SSM bersama Sijil S.90A dan sahkan sama ada pertuduhan dikenakan ke atas syarikat atau pengarah (S.51 Akta 852 / S.33A Akta 281).",
+        "statute_ref": "Seksyen 49 Akta 852 / Seksyen 33A Akta Makanan 1983 / Akta Syarikat 2016",
+        "remedy": "Lampirkan cetakan carian rasmi e-Info SSM bersama Sijil S.90A dan sahkan sama ada pertuduhan dikenakan ke atas syarikat atau pengarah (S.49 Akta 852 / S.33A Akta 281).",
     },
     {
         "code": "C04",
         "title": "Salinan Kad Kuasa & Surat Kuasa Pegawai Diberi Kuasa",
         "category": "Kuasa Pegawai",
         "threshold": 0.90,
-        "description": "PPKP pemeriksa dan IO mempunyai No. Kad Kuasa rasmi KKM yang sah di bawah Seksyen 25 Akta 852 / Seksyen 3 Akta 281 / Seksyen 3 Akta 154 / Seksyen 2 & 3 Akta 342 serta salinan Kad Kuasa dilampirkan.",
+        "description": "PPKP pemeriksa dan IO mempunyai No. Kad Kuasa rasmi KKM yang sah di bawah Seksyen 24(2) Akta 852 / Seksyen 3 Akta 281 / Seksyen 3 Akta 154 / Seksyen 2 & 3 Akta 342 serta salinan Kad Kuasa dilampirkan.",
         "positive_keywords": ["kad kuasa", "salinan kad kuasa", "pegawai diberi kuasa", "ppkp", "surat kuasa", "kkm-"],
         "negative_keywords": ["tiada kad kuasa", "luput tarikh kuasa"],
-        "statute_ref": "Seksyen 25 Akta 852 / Seksyen 3 Akta 281 / Seksyen 3 Akta 154 / Seksyen 2 & 3 Akta 342",
+        "statute_ref": "Seksyen 24(2) & 25 Akta 852 / Seksyen 3 Akta 281 / Seksyen 3 Akta 154 / Seksyen 2 & 3 Akta 342",
         "remedy": "Lampirkan salinan Kad Kuasa rasmi KKM yang masih sah dan surat pelantikan / penurunan kuasa.",
     },
     {
@@ -457,7 +457,7 @@ class IPTechnicalAuditor:
 
     @staticmethod
     def _detect_statutory_citation_errors(code: str, low: str) -> Optional[str]:
-        """Mengesan petikan seksyen/peraturan yang salah secara baris demi baris."""
+        """Mengesan petikan seksyen/peraturan yang salah, akta dimansuhkan atau unsur tidak terpenuhi secara baris demi baris."""
         lines = [ln.strip() for ln in low.splitlines() if ln.strip()]
         for ln in lines:
             if code == "C09" and (
@@ -480,6 +480,18 @@ class IPTechnicalAuditor:
             ):
                 if not any(ok in ln for ok in ("pembetulan", "bukan akta 514", "ralat akta 514", "tersilap")):
                     return "KESALAHAN AKTA: Akta 514 ialah Akta Keselamatan dan Kesihatan Pekerjaan (OSHA 1994). Kes ingkar rawatan Tibi / penyakit berjangkit ialah di bawah Seksyen 22(b) Akta 342 [APPPB 1988]!"
+            if code == "C14" and ("ppkht 2004" in ln or "324/2004" in ln) and not any(
+                ok in ln for ok in ("dimansuhkan", "bukan ppkht", "ralat")
+            ):
+                return "UNDANG-UNDANG DIMANSUHKAN: Peraturan-Peraturan Kawalan Hasil Tembakau 2004 (PPKHT 2004) telah dimansuhkan sepenuhnya oleh Akta 852 mulai 1 Oktober 2024!"
+            if code in ("C14", "C16") and "ordinan darurat" in ln and "2021" in ln and not any(
+                ok in ln for ok in ("tamat tempoh", "dibatalkan", "bukan")
+            ):
+                return "UNDANG-UNDANG TAMAT TEMPOH: Ordinan Darurat (Pencegahan dan Pengawalan Penyakit Berjangkit) (Pindaan) 2021 telah tamat tempoh. Gunakan Seksyen 24 & 25 Akta 342 (Pindaan Akta A1742)!"
+            if code == "C15" and ("17(1)" in ln or "seksyen 17" in ln) and "dalam beg" in low and (
+                "tanpa bukti" in low or "tidak menghisap" in low or "pemilikan semata" in low
+            ):
+                return "UNSUR KESALAHAN TIDAK TERPENUHI: Pemilikan vape semata-mata di dalam beg pelajar tanpa bukti menghisap, mengunyah, menggunakan (S.17(1)) atau membeli (S.13(3)) BUKAN kesalahan di bawah Seksyen 17(1) Akta 852!"
         return None
 
     @staticmethod

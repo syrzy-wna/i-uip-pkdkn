@@ -118,11 +118,22 @@ class CompoundNoticeChecker:
             "note": f"Tarikh/Masa: {tarikh_masa}" if ok_tarikh else "Nyatakan tarikh dan waktu tepat kesalahan ditemui (contoh: 14/10/2026, 10.45 pagi).",
         })
 
-        # 6. Ketepatan Seksyen & Peraturan Mengikut Akta
+        # 6. Ketepatan Seksyen & Peraturan Mengikut Akta + Pengesahan Pustaka Akta Verbatim
+        from backend.rag.legal_engine import get_legal_library, validate_legal_output
+
+        legal_lib = get_legal_library()
+        lib_snapshot = legal_lib.to_snapshot_dict()
+
         sec_errors: List[str] = []
-        has_sec_kw = ("seksyen" in low_sec or "peraturan" in low_sec) and ("akta" in low_sec or "ppkm" in low_sec or "p.u." in low_sec)
+        has_sec_kw = ("seksyen" in low_sec or "peraturan" in low_sec) and (
+            "akta" in low_sec or "ppkm" in low_sec or "ppm" in low_sec or "p.u." in low_sec or "ppkht" in low_sec
+        )
         if not has_sec_kw:
             sec_errors.append("Nyatakan Akta serta nombor Seksyen/Peraturan yang lengkap.")
+        if "ppkht" in low_sec or "324/2004" in low_sec:
+            sec_errors.append("PPKHT 2004 telah DIMANSUHKAN sepenuhnya oleh Akta 852 mulai 1 Oktober 2024.")
+        if "ordinan darurat" in low_sec or "82/2021" in low_sec:
+            sec_errors.append("Ordinan Darurat 2021 telah TAMAT TEMPOH. Rujuk Seksyen 25 Akta 342 (Pindaan Akta A1742) & P.U. (A) 139/2025.")
         if "852" in low_sec and "16(1)" in low_sec:
             sec_errors.append("Seksyen 16(1) Akta 852 ialah kuasa Menteri mewartakan kawasan. Kesalahan individu merokok ialah Seksyen 16(2) Akta 852.")
         if "852" in low_sec and "seksyen 44" in low_sec:
@@ -131,6 +142,21 @@ class CompoundNoticeChecker:
             sec_errors.append("Kesalahan tiada suntikan anti-tifoid ialah di bawah Peraturan 31(1) PPKM 2009 (Peraturan 30 ialah Latihan Pengendali Makanan).")
         if "154" in low_sec and "8(2)" in low_sec:
             sec_errors.append("Kesalahan ingkar perintah Seksyen 8 Akta 154 ialah di bawah Seksyen 8(8) Akta 154.")
+
+        # Semak seksyen rekaan atau unsur tidak terpenuhi melalui validate_legal_output
+        val_res = validate_legal_output(
+            {
+                "peruntukan_undang": akta_seksyen,
+                "keputusan_tindakan": f"Kompaun {akta_seksyen} {amaun_rm}",
+                "alasan_keputusan": kesalahan_ringkas,
+            },
+            lib_snapshot,
+            question_context=f"{akta_seksyen} {kesalahan_ringkas}",
+        )
+        if val_res.get("invalid_citations"):
+            sec_errors.extend(val_res["invalid_citations"])
+        if val_res.get("unfulfilled_element_errors"):
+            sec_errors.extend(val_res["unfulfilled_element_errors"])
 
         ok_seksyen = len(sec_errors) == 0
         checks.append({
@@ -163,6 +189,9 @@ class CompoundNoticeChecker:
             if "16(2)" in low_sec and rm_val > 2500.0:
                 k08_status = "GAGAL"
                 k08_note = "Melebihi had maksimum 50% daripada denda RM5,000 (Seksyen 16(3) Akta 852)."
+            elif "17(1)" in low_sec and rm_val > 250.0:
+                k08_status = "GAGAL"
+                k08_note = "Melebihi had maksimum 50% daripada denda RM500 bagi OBD (Seksyen 17(2) Akta 852)."
             elif "30" not in tempoh_bayaran:
                 k08_status = "SEMAK"
                 k08_note = "Di bawah Peraturan Pengkompaunan Akta 852 [P.U. (A) 259/2024], tempoh bayaran rasmi ialah 30 hari dari tarikh tawaran kompaun."
@@ -234,4 +263,5 @@ class CompoundNoticeChecker:
             "counts": {"LULUS": lulus, "SEMAK": semak, "GAGAL": gagal},
             "checks": checks,
             "suggested_offense_text": suggested_offense_text,
+            "legal_validation": val_res,
         }

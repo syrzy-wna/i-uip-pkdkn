@@ -31,7 +31,7 @@ Saksi: Nurul Ain binti Zulkifli (No. K/P: 950821-08-6124, Juruwang Kedai)
 
 2. RINGKASAN KESALAHAN
 Kesalahan: Menyiarkan papan iklan promosi rokok elektronik (vape) di kaunter bayaran yang melanggar Seksyen 7(1) Akta 852 serta mempamerkan 24 kotak pod dan cecair rokok elektronik secara terbuka di kaunter jualan yang melanggar Seksyen 10(1) Akta 852 dibaca bersama Peraturan 6 Peraturan-Peraturan Kawalan Produk Merokok Demi Kesihatan Awam (Kawalan Penjualan) 2024 [P.U. (A) 260/2024].
-PPKP Ahmad Faizal bin Ramli telah menunjukkan Kad Kuasa rasmi KKM-PKD-0842 (Seksyen 25 Akta 852) sebelum pemeriksaan dijalankan. Suspek mengaku sebagai pengarah dan pengurus premis (liabiliti pengarah di bawah Seksyen 51 Akta 852). Penyitaan dibuat di bawah Seksyen 35 Akta 852 dan Borang Senarai Benda Disita di bawah Seksyen 36 Akta 852 telah disediakan, satu salinan diserahkan kepada suspek dengan akuan tandatangan terima.
+PPKP Ahmad Faizal bin Ramli telah menunjukkan Kad Kuasa rasmi KKM-PKD-0842 (Seksyen 24(2) Akta 852) sebelum pemeriksaan dijalankan. Suspek mengaku sebagai pengarah dan pengurus premis (liabiliti pengarah di bawah Seksyen 49 Akta 852). Penyitaan dibuat di bawah Seksyen 35 Akta 852 dan Borang Senarai Benda Disita di bawah Seksyen 36 Akta 852 telah disediakan, satu salinan diserahkan kepada suspek dengan akuan tandatangan terima.
 
 3. SEMAKAN DOKUMEN DALAM FAIL IP
 - Laporan Pengadu (FIR) & Borang Pemeriksaan: Dilampirkan dan konsisten tarikh 14 Oktober 2026 jam 10.45 pagi.

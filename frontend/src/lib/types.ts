@@ -125,12 +125,15 @@ export interface IPFolderSectionStatus {
 
 export interface StatutoryCitation {
   chunk_id?: string;
+  doc_id?: string;
+  statute_id?: string;
   akta_code: string;
   akta_title: string;
   section: string;
   text: string;
   source_file?: string;
   score: number;
+  verbatim?: boolean;
 }
 
 export interface IPAuditReport {
@@ -356,6 +359,183 @@ export interface AdvisorScenarioItem {
   cadangan_pertuduhan: AdvisorChargeItem[];
 }
 
+export interface OffenceElementItem {
+  element_no: number;
+  description: string;
+  must_prove: string;
+  status?: "TERPENUHI" | "TIDAK TERPENUHI" | "PERLU BUKTI TAMBAHAN";
+  notes?: string;
+}
+
+export interface OffenceElementEvaluation {
+  offence_id: string;
+  offence_section?: string;
+  statute_id?: string;
+  all_elements_satisfied: boolean;
+  action_blocked: boolean;
+  trap_triggered?: string | null;
+  element_evaluations: OffenceElementItem[];
+}
+
+export interface RepealedProvisionHit {
+  provision_id: string;
+  matched_text?: string;
+  repealed_statute_or_section?: string;
+  status: "DIMANSUHKAN" | "TAMAT_TEMPOH" | "SALAH_PETIK_SEKSYEN" | string;
+  replacement_statute_id?: string | null;
+  replacement_section?: string | null;
+  warning_message_bm: string;
+  key_differences_note?: string;
+}
+
+export interface LegalValidationResult {
+  passed: boolean;
+  status:
+    | "DISAHKAN_VERBATIM_AGC"
+    | "GAGAL_VALIDASI_PUSTAKA_AKTA"
+    | "AKTA BELUM DIINDEKS — MUAT NAIK PDF WARTA"
+    | string;
+  statute_library_version: string;
+  extracted_citations: string[];
+  verified_citations: string[];
+  invalid_citations: string[];
+  repealed_hits: RepealedProvisionHit[];
+  penalty_mismatches: string[];
+  unfulfilled_element_errors?: string[];
+  element_evaluations?: OffenceElementEvaluation[];
+  unindexed_statutes?: string[];
+  warning_banner?: string | null;
+}
+
+export type StatuteStatus = "BERKUAT_KUASA" | "DIMANSUHKAN" | "BELUM_BERKUAT_KUASA";
+
+export interface StatuteRegistryRecord {
+  statute_id: string;
+  canonical_akta_code?: string;
+  official_title_bm: string;
+  official_title_en: string;
+  act_number_or_pu: string;
+  status: StatuteStatus;
+  repealed_by: string | null;
+  effective_date: string;
+  source_pdf_filename: string;
+  source_pdf_hash: string;
+  total_sections_indexed: number;
+  total_sections_in_pdf?: number;
+  total_offences_indexed: number;
+  verified_by_admin: boolean;
+  last_updated: string;
+}
+
+export interface StatuteSubsectionVerbatim {
+  sub_code: string;
+  verbatim_text: string;
+}
+
+export interface StatuteSectionVerbatim {
+  doc_id: string;
+  statute_id: string;
+  part_number: string;
+  part_title: string;
+  section_code: string;
+  section_heading: string;
+  verbatim_text_bm: string;
+  subsections: StatuteSubsectionVerbatim[];
+  cross_references: string[];
+  is_offence_provision: boolean;
+  is_penalty_provision: boolean;
+  is_procedure_or_power: boolean;
+  embedding_vector?: number[];
+}
+
+export type TargetOffenderCategory =
+  | "INDIVIDU"
+  | "OBD_BAWAH_18"
+  | "PERTUBUHAN_PERBADANAN"
+  | "PENGENDALI_MAKANAN"
+  | "TUAN_PUNYA_PREMIS"
+  | "PENJUAL_PENGILANG";
+
+export type OffenderCategory = TargetOffenderCategory;
+
+export interface OffencePenaltySpec {
+  max_fine_rm: number | null;
+  max_jail_months: number | null;
+  other_orders: string | null;
+  verbatim_penalty: string;
+}
+
+export interface OffenceCompoundInfo {
+  is_compoundable: boolean;
+  compound_authority_section: string | null;
+  compound_regulation_ref: string | null;
+  compound_amount_or_limit: string | null;
+  max_compound_rm?: number | null;
+  payment_days?: number | null;
+  notice_section: string | null;
+}
+
+export interface MasterOffenceRecord {
+  offence_id: string;
+  statute_id: string;
+  canonical_akta_code?: string;
+  offence_section: string;
+  read_together_with: string[];
+  offence_title: string;
+  target_offender: TargetOffenderCategory;
+  mandatory_elements: OffenceElementItem[];
+  explicit_exclusions_and_traps: string[];
+  penalty_section: string;
+  penalty_first_offence: OffencePenaltySpec;
+  penalty_subsequent_offence: OffencePenaltySpec | null;
+  compound_info: OffenceCompoundInfo;
+  special_legal_requirements: string[];
+  mandatory_exhibits: string[];
+  charge_sheet_template_bm: string;
+  source_section_doc_ids: string[];
+  verified_status: "VERIFIED_AGC" | "DRAFT_PENDING_REVIEW";
+  linked_verbatim_sections?: Array<{
+    doc_id: string;
+    statute_id: string;
+    section_code: string;
+    section_heading: string;
+    verbatim_text_bm: string;
+  }>;
+}
+
+export interface RepealedProvisionRecord {
+  provision_id: string;
+  repealed_statute_or_section: string;
+  match_patterns: string[];
+  status: "DIMANSUHKAN" | "TAMAT_TEMPOH" | "SALAH_PETIK_SEKSYEN" | string;
+  replacement_statute_id: string | null;
+  replacement_section: string | null;
+  warning_message_bm: string;
+  key_differences_note: string;
+}
+
+export interface LegalCoverageReport {
+  statute_library_version: string;
+  total_statutes: number;
+  active_statutes_count: number;
+  total_verbatim_sections: number;
+  total_master_offences: number;
+  total_repealed_blocked: number;
+  unverified_statutes: string[];
+  unindexed_statutes: string[];
+  pending_review_offences: string[];
+  has_coverage_warning: boolean;
+  statutes_registry: StatuteRegistryRecord[];
+}
+
+export interface LegalLibrarySnapshot {
+  statute_library_version: string;
+  statutes_registry: StatuteRegistryRecord[];
+  statute_sections_verbatim: StatuteSectionVerbatim[];
+  master_offences_matrix: MasterOffenceRecord[];
+  repealed_and_blocked_provisions: RepealedProvisionRecord[];
+}
+
 export interface AdvisorConsultResult {
   scenario_id: string;
   akta_disyorkan: string;
@@ -378,6 +558,12 @@ export interface AdvisorConsultResult {
   matched_collection_question?: string | null;
   matched_collection_similarity?: number | null;
   matched_collection_ask_count?: number | null;
+  statute_library_version?: string;
+  cache_status?: "ACTIVE" | "STALE" | string;
+  unindexed_statute?: boolean;
+  element_evaluations?: OffenceElementEvaluation[];
+  repealed_warnings?: RepealedProvisionHit[];
+  legal_validation?: LegalValidationResult | null;
   statutory_citations: StatutoryCitation[];
 }
 
@@ -393,6 +579,8 @@ export interface AdvisorAnsweredItem {
   sesuai_buka_ip: boolean;
   is_ai_answered: boolean;
   engine_used: string;
+  statute_library_version?: string;
+  cache_status?: string;
   ask_count: number;
   last_asked_at: string;
   answer: AdvisorConsultResult | null;
@@ -406,6 +594,7 @@ export interface AdvisorAnsweredGroup {
 }
 
 export interface AdvisorAnsweredListResponse {
+  statute_library_version?: string;
   total_questions: number;
   total_asks: number;
   total_matching: number;

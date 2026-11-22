@@ -27,7 +27,7 @@ python - <<'PY'
 import socket, time
 
 for host, port in (("127.0.0.1", 8000), ("127.0.0.1", 3000)):
-    deadline = time.time() + 25
+    deadline = time.time() + 60
     while time.time() < deadline:
         try:
             with socket.create_connection((host, port), timeout=1):

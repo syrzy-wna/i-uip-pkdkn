@@ -1511,3 +1511,645 @@ def test_advisor_reuses_similar_question_from_qa_collection_and_respects_guards(
     assert fresh_body["ai_succeeded"] is True
     assert fresh_body["tajuk_nasihat"] == fresh_title
     advisor_service.clear_cache()
+
+
+def test_fasa5_validate_legal_output_blocks_fabricated_repealed_and_unfulfilled_elements() -> None:
+    """
+    FASA 5 (1): Mengesahkan validateLegalOutput() menangkap & menyekat:
+    (a) Seksyen rekaan yang tidak wujud dalam statute_sections_verbatim (cth: Seksyen 999 Akta 852)
+    (b) Undang-undang terbatal dalam repealed_and_blocked_provisions (cth: Peraturan 13(1) PPKHT 2004, Ordinan Darurat 2021)
+    (c) Cadangan kompaun S.17(1) Akta 852 apabila unsur mandatori tidak dipenuhi (pelajar memiliki vape dalam beg sekolah tanpa bukti merokok/mengunyah/menggunakan/membeli).
+    """
+    headers = _get_auth_headers()
+
+    # (a) Seksyen rekaan: Seksyen 999 Akta 852
+    resp_fabricated = client.post(
+        "/api/legal/validate",
+        headers=headers,
+        json={
+            "ai_response": {
+                "tajuk_nasihat": "Ujian Seksyen Rekaan",
+                "keputusan_tindakan": "KELUARKAN NOTIS KOMPAUN",
+                "cadangan_pertuduhan": [
+                    {
+                        "perihal": "Kesalahan rekaan",
+                        "seksyen_kesalahan": "Seksyen 999 Akta 852",
+                        "seksyen_hukuman": "Seksyen 999(2) Akta 852",
+                        "hukuman_maksimum": "Denda RM50,000",
+                        "boleh_kompaun": "Boleh dikompaun",
+                    }
+                ],
+            },
+            "question_context": "Periksa kedai runcit jual rokok",
+        },
+    )
+    assert resp_fabricated.status_code == 200
+    fab_data = resp_fabricated.json()
+    assert fab_data["passed"] is False
+    assert any("999" in s for s in fab_data["invalid_citations"])
+    assert "Amaran Sistem: Cadangan petikan undang-undang gagal pengesahan Pustaka Akta." in (
+        fab_data["warning_banner"] or ""
+    )
+
+    # (b) Undang-undang yang telah dimansuhkan: Peraturan 13(1) PPKHT 2004 & Ordinan Darurat 2021
+    resp_repealed = client.post(
+        "/api/legal/validate",
+        headers=headers,
+        json={
+            "ai_response": {
+                "tajuk_nasihat": "Kompaun Pelajar Memiliki Rokok",
+                "keputusan_tindakan": "KELUARKAN KOMPAUN PPKHT 2004",
+                "cadangan_pertuduhan": [
+                    {
+                        "perihal": "Orang belum dewasa memiliki hasil tembakau",
+                        "seksyen_kesalahan": "Peraturan 13(1) PPKHT 2004 dan Ordinan Darurat 2021 Akta 342",
+                        "seksyen_hukuman": "Peraturan 13(2) PPKHT 2004",
+                    }
+                ],
+            },
+            "question_context": "Pelajar sekolah ada rokok",
+        },
+    )
+    assert resp_repealed.status_code == 200
+    rep_data = resp_repealed.json()
+    assert rep_data["passed"] is False
+    assert len(rep_data["repealed_hits"]) >= 1
+    assert "PPKHT 2004" in (rep_data["warning_banner"] or "")
+
+    # (c) Unsur mandatori tidak dipenuhi: Pelajar memiliki vape di dalam beg sekolah tanpa bukti merokok/menggunakan/membeli
+    resp_unfulfilled = client.post(
+        "/api/legal/validate",
+        headers=headers,
+        json={
+            "ai_response": {
+                "tajuk_nasihat": "Kompaun Pelajar Simpan Vape Dalam Beg",
+                "keputusan_tindakan": "KELUARKAN NOTIS KOMPAUN SEKSYEN 17(1) AKTA 852",
+                "sesuai_buka_ip": False,
+                "cadangan_pertuduhan": [
+                    {
+                        "perihal": "Orang belum dewasa memiliki vape dalam beg sekolah",
+                        "seksyen_kesalahan": "Seksyen 17(1) Akta 852",
+                        "seksyen_hukuman": "Seksyen 17(2) Akta 852",
+                        "hukuman_maksimum": "Denda RM500",
+                        "boleh_kompaun": "Boleh dikompaun RM50",
+                    }
+                ],
+            },
+            "question_context": "Cikgu disiplin jumpa vape dalam beg sekolah pelajar semasa spotcheck, pelajar tidak menghisap atau membeli",
+        },
+    )
+    assert resp_unfulfilled.status_code == 200
+    unf_data = resp_unfulfilled.json()
+    assert unf_data["passed"] is False
+    assert len(unf_data["unfulfilled_element_errors"]) >= 1
+    assert any("17(1)" in err for err in unf_data["unfulfilled_element_errors"])
+
+    # Uji terus melalui /api/advisor/consult: situasi pelajar simpan vape dalam beg sekolah WAJIB menolak kompaun S.17(1)
+    resp_bag_consult = client.post(
+        "/api/advisor/consult",
+        headers=headers,
+        json={
+            "question": "Guru disiplin rampas pod vape dijumpai dalam beg sekolah pelajar tingkatan 3 semasa spotcheck, tiada saksi nampak pelajar menghisap atau membeli. Boleh keluar kompaun Seksyen 17(1) Akta 852?",
+            "akta_hint": "Akta 852",
+            "use_ai": False,
+        },
+    )
+    assert resp_bag_consult.status_code == 200
+    bag_body = resp_bag_consult.json()
+    assert "BUKAN KESALAHAN" in bag_body["keputusan_tindakan"].upper()
+    assert "UNSUR MANDATORI TIDAK TERPENUHI" in bag_body["keputusan_tindakan"].upper()
+    assert "17(1)" in bag_body["keputusan_tindakan"].upper()
+    assert bag_body["sesuai_buka_ip"] is False
+    evals = bag_body.get("element_evaluations") or []
+    assert len(evals) >= 1
+    assert any(
+        el.get("status") == "TIDAK TERPENUHI"
+        for ev in evals
+        for el in ev.get("element_evaluations", [])
+    )
+    assert bag_body["legal_validation"]["passed"] is True
+
+
+def test_fasa5_unindexed_statute_refuses_to_guess_and_verbatim_citations_match_100_percent() -> None:
+    """
+    FASA 5 (2) & (3):
+    - Apabila suatu akta mempunyai total_sections_indexed == 0, sistem enggan meneka dan memulangkan
+      status 'AKTA BELUM DIINDEKS — MUAT NAIK PDF WARTA'.
+    - Semua teks dalam 'statutory_citations' (tab Petikan Akta) sepadan 100% aksara-demi-aksara
+      dengan 'verbatim_text_bm' dalam 'statute_sections_verbatim'.
+    """
+    headers = _get_auth_headers()
+    admin_headers = _get_dev_admin_headers()
+
+    # 1. Daftarkan satu statut ujian dengan total_sections_indexed == 0
+    reg_resp = client.post(
+        "/api/legal/register-statute",
+        headers=admin_headers,
+        json={
+            "statute_id": "AKTA_999_UJIAN",
+            "official_title_bm": "Akta Kesihatan Persekitaran Ujian 2026 [Akta 999]",
+            "act_number_or_pu": "Akta 999",
+            "official_title_en": "Environmental Health Test Act 2026 [Act 999]",
+        },
+    )
+    assert reg_resp.status_code == 200
+    assert reg_resp.json()["statute"]["total_sections_indexed"] == 0
+
+    # Tanya Pakar mengenai Akta 999 yang belum diindeks
+    consult_unindexed = client.post(
+        "/api/advisor/consult",
+        headers=headers,
+        json={
+            "question": "Apakah seksyen kesalahan dan kompaun di bawah Akta 999?",
+            "akta_hint": "AKTA_999_UJIAN",
+            "use_ai": False,
+        },
+    )
+    assert consult_unindexed.status_code == 200
+    unindexed_body = consult_unindexed.json()
+    assert "AKTA BELUM DIINDEKS — MUAT NAIK PDF WARTA" in unindexed_body["keputusan_tindakan"]
+    assert unindexed_body["cadangan_pertuduhan"] == []
+
+    # Semak juga /api/legal/sections untuk statut yang belum diindeks
+    sec_unindexed = client.get(
+        "/api/legal/sections",
+        headers=headers,
+        params={"statute_id": "AKTA_999_UJIAN"},
+    )
+    assert sec_unindexed.status_code == 200
+    assert (
+        sec_unindexed.json()["status"]
+        == "AKTA BELUM DIINDEKS — MUAT NAIK PDF WARTA"
+    )
+
+    # 2. Ambil snapshot penuh statute_sections_verbatim dan sahkan 100% padanan aksara-demi-aksara
+    snap_resp = client.get("/api/legal/snapshot", headers=headers)
+    assert snap_resp.status_code == 200
+    snap = snap_resp.json()
+    verbatim_by_doc_id = {
+        sec["doc_id"]: sec["verbatim_text_bm"]
+        for sec in snap["statute_sections_verbatim"]
+    }
+    verbatim_texts_set = set(verbatim_by_doc_id.values())
+    assert len(verbatim_by_doc_id) >= 35
+
+    # Uji beberapa pertanyaan Pakar UIP merentasi Akta 852, Akta 281, Akta 154, Akta 342
+    sample_queries = [
+        ("Budak sekolah hisap rokok di tepi jalan", "Akta 852"),
+        ("Premis restoran kotor ada lipas dan pengendali tiada suntikan tifoid", "Akta 281"),
+        ("Tapak binaan ada pembiakan jentik-jentik Aedes", "Akta 154"),
+        ("Pesakit Tibi smear positif ingkar perintah pengawasan Seksyen 15(1)", "Akta 342"),
+    ]
+    for q_text, akta_hint in sample_queries:
+        r = client.post(
+            "/api/advisor/consult",
+            headers=headers,
+            json={"question": q_text, "akta_hint": akta_hint, "use_ai": False},
+        )
+        assert r.status_code == 200
+        body = r.json()
+        citations = body.get("statutory_citations", [])
+        assert len(citations) >= 1
+        for cit in citations:
+            doc_id = cit.get("doc_id") or cit.get("chunk_id")
+            assert doc_id in verbatim_by_doc_id, f"doc_id {doc_id} tiada dalam statute_sections_verbatim"
+            # Sahkan 100% aksara-demi-aksara (character-for-character)
+            assert cit["text"] == verbatim_by_doc_id[doc_id]
+            assert cit["text"] in verbatim_texts_set
+
+
+def test_fasa5_gazette_ingestion_pipeline_and_admin_verification() -> None:
+    """
+    FASA 5 (4): Mengesahkan saluran paip pengekstrakan Warta (/api/legal/ingest),
+    penyaringan kesalahan DRAFT_PENDING_REVIEW, dan pengesahan Admin (/api/legal/verify).
+    """
+    headers = _get_auth_headers()
+    admin_headers = _get_dev_admin_headers()
+    sample_gazette_text = (
+        "BAHAGIAN I - PERMULAAN\n"
+        "Seksyen 1. Tajuk ringkas dan permulaan kuat kuasa.\n"
+        "(1) Akta ini bolehlah dinamakan Akta Ujian Warta 2026.\n\n"
+        "BAHAGIAN II - KAWALAN KESIHATAN\n"
+        "Seksyen 5. Larangan membuang sisa klinikal.\n"
+        "(1) Tiada seorang pun boleh membuang sisa klinikal di tempat awam.\n"
+        "(2) Mana-mana orang yang melanggar subseksyen (1) melakukan suatu kesalahan dan boleh, "
+        "apabila disabitkan, didenda tidak melebihi sepuluh ribu ringgit atau dipenjara selama tempoh "
+        "tidak melebihi dua tahun atau kedua-duanya.\n"
+    )
+
+    resp_ingest = client.post(
+        "/api/legal/ingest",
+        headers=admin_headers,
+        files={
+            "file": (
+                "AKTA_999_UJIAN.txt",
+                sample_gazette_text.encode("utf-8"),
+                "text/plain",
+            )
+        },
+        data={
+            "statute_id": "AKTA_999_UJIAN",
+            "official_title_bm": "Akta Ujian Warta 2026 [Akta 999]",
+            "act_number_or_pu": "Akta 999",
+            "verified_by_admin": "false",
+        },
+    )
+    assert resp_ingest.status_code == 200
+    ing_data = resp_ingest.json()["legal_library_ingest"]
+    assert ing_data["sections_extracted"] == 2
+    assert ing_data["new_offences_swept"] >= 1
+
+    # Semak kesalahan yang disapu berada dalam status DRAFT_PENDING_REVIEW sebelum disahkan Admin
+    off_resp = client.get(
+        "/api/legal/offences",
+        headers=headers,
+        params={"statute_id": "AKTA_999_UJIAN"},
+    )
+    assert off_resp.status_code == 200
+    swept_offences = off_resp.json()["offences"]
+    assert len(swept_offences) >= 1
+    draft_offence = swept_offences[0]
+    assert draft_offence["verified_status"] == "DRAFT_PENDING_REVIEW"
+
+    # Admin klik "Sahkan Warta"
+    ver_resp = client.post(
+        "/api/legal/verify",
+        headers=admin_headers,
+        json={"statute_id": "AKTA_999_UJIAN", "verified": True},
+    )
+    assert ver_resp.status_code == 200
+    assert ver_resp.json()["updated_statutes"] >= 1
+
+    off_resp_after = client.get(
+        "/api/legal/offences",
+        headers=headers,
+        params={"statute_id": "AKTA_999_UJIAN"},
+    )
+    assert off_resp_after.status_code == 200
+    assert off_resp_after.json()["offences"][0]["verified_status"] == "VERIFIED_AGC"
+
+    # Bersihkan fail ujian sementara & override DB supaya data/akta/ dan data/legal_library/ kekal bersih
+    from backend.core.config import settings
+    from backend.core.database import get_uip_db
+    from backend.rag.legal_engine import get_legal_library
+
+    test_akta_file = settings.akta_dir / "AKTA_999_UJIAN.txt"
+    if test_akta_file.exists():
+        test_akta_file.unlink()
+    get_uip_db().delete_legal_admin_override("STATUTE", "AKTA_999_UJIAN")
+    get_legal_library()._bootstrap_library()
+
+
+def test_predeploy_audit_draft_only_defaults_pdf_parser_and_legacy_qa_filtering() -> None:
+    """
+    Audit 3 perkara kritikal pra-deploy:
+    1. TIADA entri hardcoded atau .txt bertanda VERIFIED_AGC / verified_by_admin=True dalam legal_engine.py & data/legal_library/*.json.
+    2. Penghurai PDF (pymupdf) berfungsi untuk muat naik PDF Warta sebenar serta tersenarai dalam backend/requirements.txt & Dockerfile.
+    3. Rekod lama dalam Koleksi Q&A tanpa medan `statute_library_version` diabaikan secara automatik dan tidak dipaparkan kepada pengguna.
+    """
+    from pathlib import Path
+    import uuid
+    from backend.core.database import get_uip_db
+    from backend.rag.legal_engine import (
+        DEFAULT_MASTER_OFFENCES_MATRIX,
+        DEFAULT_STATUTES_REGISTRY_META,
+        get_legal_library,
+    )
+
+    root = Path(__file__).resolve().parents[2]
+    headers = _get_auth_headers()
+    admin_headers = _get_dev_admin_headers()
+
+    # --- 1. Audit semua entri hardcoded & JSON snapshots ---
+    lib = get_legal_library()
+    lib._bootstrap_library()
+
+    assert all(s["verified_by_admin"] is False for s in DEFAULT_STATUTES_REGISTRY_META)
+    assert all(o["verified_status"] == "DRAFT_PENDING_REVIEW" for o in DEFAULT_MASTER_OFFENCES_MATRIX)
+
+    reg_json = json.loads((root / "data/legal_library/statutes_registry.json").read_text(encoding="utf-8"))
+    off_json = json.loads((root / "data/legal_library/master_offences_matrix.json").read_text(encoding="utf-8"))
+    for st in reg_json["statutes_registry"]:
+        if not str(st.get("source_pdf_filename") or "").lower().endswith(".pdf"):
+            assert st["verified_by_admin"] is False, f"{st['statute_id']} bukan PDF tetapi verified_by_admin=True"
+    for off in off_json:
+        assert off["verified_status"] == "DRAFT_PENDING_REVIEW", (
+            f"{off['offence_id']} bertanda {off['verified_status']} walaupun tiada PDF Warta rasmi"
+        )
+
+    # --- 2. Sahkan penghurai PDF sebenar (pymupdf) + backend/requirements.txt + Dockerfile ---
+    reqs = (root / "backend/requirements.txt").read_text(encoding="utf-8").lower()
+    dockerfile = (root / "Dockerfile").read_text(encoding="utf-8")
+    assert "pymupdf" in reqs
+    assert "python-multipart" in reqs
+    assert "COPY backend/requirements.txt" in dockerfile
+    assert "COPY scripts/" in dockerfile
+    assert "COPY data/legal_library/" in dockerfile
+    assert "import pymupdf" in dockerfile
+
+    # Jana fail PDF Warta ujian menggunakan PyMuPDF dan muat naik ke /api/legal/ingest
+    pdf_doc = fitz.open()
+    page = pdf_doc.new_page()
+    page.insert_text(
+        (50, 72),
+        "BAHAGIAN I - PERMULAAN\n"
+        "Seksyen 1. Tajuk ringkas.\n"
+        "(1) Akta ini dinamakan Akta Ujian PDF Warta 2026.\n\n"
+        "BAHAGIAN II - KESALAHAN\n"
+        "Seksyen 8. Larangan pencemaran air.\n"
+        "(1) Mana-mana orang yang mencemarkan air melakukan suatu kesalahan dan boleh didenda RM5000.\n",
+    )
+    pdf_bytes = pdf_doc.tobytes()
+    pdf_doc.close()
+
+    resp_pdf = client.post(
+        "/api/legal/ingest",
+        headers=admin_headers,
+        files={"file": ("AKTA_998_PDF.pdf", pdf_bytes, "application/pdf")},
+        data={
+            "statute_id": "AKTA_998_PDF",
+            "official_title_bm": "Akta Ujian PDF Warta 2026 [Akta 998]",
+            "act_number_or_pu": "Akta 998",
+            "verified_by_admin": "false",
+        },
+    )
+    assert resp_pdf.status_code == 200
+    pdf_ing = resp_pdf.json()["legal_library_ingest"]
+    assert pdf_ing["sections_extracted"] >= 2
+    assert pdf_ing["verified_by_admin"] is False
+
+    # Bersihkan fail PDF ujian sementara
+    test_pdf_file = root / "data/akta/AKTA_998_PDF.pdf"
+    if test_pdf_file.exists():
+        test_pdf_file.unlink()
+    lib._bootstrap_library()
+
+    # --- 3. Sahkan rekod lama Koleksi Q&A tanpa `statute_library_version` diabaikan secara automatik ---
+    db = get_uip_db()
+    legacy_tag = f"legacynover{uuid.uuid4().hex[:6]}"
+    legacy_id = f"arc-legacy-{uuid.uuid4().hex[:8]}"
+    legacy_analysis = {
+        "scenario_id": "legacy_pre_v2",
+        "akta_disyorkan": "Akta 852",
+        "tajuk_nasihat": f"Jawapan Lama Pra-V2 Tanpa Versi ({legacy_tag})",
+        "keputusan_tindakan": "KOMPAUN LAMA PPKHT 2004",
+        "sesuai_buka_ip": False,
+        "alasan_keputusan": "Jawapan lama sebelum rombakan Closed-Book.",
+        "cadangan_pertuduhan": [
+            {
+                "perihal": "Kesalahan lama",
+                "seksyen_kesalahan": "Peraturan 13(1) PPKHT 2004",
+                "seksyen_hukuman": "Peraturan 13(2) PPKHT 2004",
+                "hukuman_maksimum": "RM1,000",
+                "boleh_kompaun": "Kompaun RM50",
+            }
+        ],
+        "sop_lapangan": ["Langkah lama 1", "Langkah lama 2"],
+        "eksibit_wajib": ["Eksibit lama"],
+        "perangkap_kesilapan": [],
+        "templat_ringkas": "Templat lama",
+        "ai_succeeded": True,
+        # SENGAJA TIADA medan `statute_library_version`
+    }
+
+    with db._connect() as conn:
+        conn.execute(
+            """
+            INSERT INTO dev_archive_records (
+                id, category, action_type, endpoint, user_email, user_name,
+                akta_utama, title, preview_text, redacted_input_text,
+                redacted_response_text, request_json, redacted_analysis_json,
+                model_used, is_cloud_api, status_summary, created_at
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            (
+                legacy_id,
+                "ADVISOR_QA",
+                "TANYA_PAKAR_UIP",
+                "/api/advisor/consult",
+                "legacy@moh.gov.my",
+                "Pegawai Lama",
+                "Akta 852",
+                f"Soalan Lama {legacy_tag}",
+                f"Soalan Lama {legacy_tag}",
+                f"pelajar sekolah bawa vape dalam beg {legacy_tag} boleh kompaun?",
+                "Jawapan lama",
+                json.dumps({"question": f"pelajar sekolah bawa vape dalam beg {legacy_tag} boleh kompaun?"}),
+                json.dumps(legacy_analysis, ensure_ascii=False),
+                "gemini-legacy",
+                1,
+                "KOMPAUN LAMA",
+                "2025-01-01 08:00:00",
+            ),
+        )
+        conn.commit()
+
+    # 3a. list_advisor_answered_questions & endpoint /api/advisor/answered WAJIB mengabaikan rekod lama ini
+    resp_answered = client.get(
+        "/api/advisor/answered",
+        headers=headers,
+        params={"q": legacy_tag},
+    )
+    assert resp_answered.status_code == 200
+    assert resp_answered.json()["items"] == []
+
+    # 3b. find_similar_answered_question WAJIB tidak memetik semula rekod lama ini
+    sim_match = db.find_similar_answered_question(
+        f"pelajar sekolah bawa vape dalam beg {legacy_tag} boleh kompaun?"
+    )
+    assert sim_match is None
+
+    # 3c. _init_schema() (simulasi restart/deploy ke produksi) WAJIB menandakan rekod lama itu sebagai TANYA_PAKAR_UIP_STALE
+    db._init_schema()
+    with db._connect() as conn:
+        row = conn.execute(
+            "SELECT action_type FROM dev_archive_records WHERE id = ?",
+            (legacy_id,),
+        ).fetchone()
+    assert row is not None
+    assert row["action_type"] == "TANYA_PAKAR_UIP_STALE"
+
+
+def test_official_agc_gazette_pdfs_installed_and_indexed_verbatim() -> None:
+    """
+    Sahkan kesemua 20 fail PDF Warta Kerajaan Rasmi (16 teras + 4 pelengkap AGC/KKM)
+    wujud dalam data/akta/, sepadan hash SHA-256 dengan SUMBER_WARTA_AGC.json,
+    diindeks 100% verbatim tanpa unindexed_statutes, serta mengandungi teks sahih utama.
+    """
+    import hashlib
+    from pathlib import Path
+    from backend.rag.legal_engine import get_legal_library
+
+    root = Path(__file__).resolve().parents[2]
+    akta_dir = root / "data/akta"
+    manifest = json.loads((akta_dir / "SUMBER_WARTA_AGC.json").read_text(encoding="utf-8"))
+    docs = manifest["documents"]
+    assert len(docs) == 20
+
+    lib = get_legal_library()
+    report = lib.get_coverage_audit_report()
+    assert report["unindexed_statutes"] == []
+    assert report["active_statutes_count"] >= 20
+    assert report["total_verbatim_sections"] >= 1450
+
+    reg_by_id = {st["statute_id"]: st for st in report["statutes_registry"]}
+    for item in docs:
+        pdf_path = akta_dir / item["filename"]
+        assert pdf_path.exists(), f"Fail PDF rasmi hilang: {item['filename']}"
+        actual_sha = hashlib.sha256(pdf_path.read_bytes()).hexdigest()
+        assert actual_sha == item["sha256"], f"Hash SHA-256 tidak sepadan bagi {item['filename']}"
+        st = reg_by_id[item["statute_id"]]
+        assert st["source_pdf_filename"] == item["filename"]
+        assert st["source_pdf_hash"] == item["sha256"]
+        assert st["total_sections_indexed"] > 0
+        assert st["verified_by_admin"] is False
+
+    secs_by_id = {s["doc_id"]: s["verbatim_text_bm"] for s in lib.statute_sections_verbatim}
+    expected_snippets = {
+        "AKTA_852__S17": "orang belum dewasa",
+        "AKTA_852__S24": "perakuan pemberian kuasa",
+        "AKTA_852__S48": "mengkompaun",
+        "AKTA_852__S49": "pertubuhan perbadanan",
+        "AKTA_852_PERATURAN_KOMPAUN_2024__P2": "Jadual Pertama",
+        "AKTA_281__S13B": "diadukkan",
+        "PPKM_2009__P31": "vaksin",
+        "PPKM_2009__P34": "perosak",
+        "PPM_1985__P14": "penandaan tarikh",
+        "AKTA_154__S13": "serangga pembawa penyakit",
+        "AKTA_342__S22": "menghalang",
+        "AKTA_342_PERATURAN_KOMPAUN_2025__P2": "Jadual Pertama",
+        "AKTA_593__S112": "police investigation",
+        "AKTA_56__S73AA": "criminal",
+        "AKTA_56__S90A": "computer",
+        "AKTA_56__S114A": "publication",
+        "AKTA_611__S83": "kanak-kanak",
+    }
+    for doc_id, needle in expected_snippets.items():
+        assert doc_id in secs_by_id, f"Seksyen kritikal hilang: {doc_id}"
+        normalized_text = " ".join(secs_by_id[doc_id].lower().split())
+        assert needle.lower() in normalized_text, (
+            f"Teks sahih '{needle}' tidak ditemui dalam {doc_id}"
+        )
+
+    # Sahkan sapuan penuh master_offences_matrix jauh melebihi 25 rekod teras & semua pautan doc_id sah
+    assert len(lib.master_offences_matrix) >= 80
+    seen_off_ids: set[str] = set()
+    for off in lib.master_offences_matrix:
+        oid = off["offence_id"]
+        assert oid not in seen_off_ids, f"Duplikasi offence_id ditemui: {oid}"
+        seen_off_ids.add(oid)
+        doc_ids = off.get("source_section_doc_ids") or []
+        assert len(doc_ids) >= 1, f"{oid} tiada source_section_doc_ids"
+        for did in doc_ids:
+            assert did in secs_by_id, f"{oid} memautkan doc_id tidak wujud: {did}"
+
+
+def test_amendment_companions_auto_inject_akta342_and_akta281_amendments() -> None:
+    """
+    Sahkan pautan wajib AMENDMENT_COMPANIONS:
+    - Pertanyaan berkaitan kompaun/denda Akta 342 secara automatik menarik konteks AKTA_342_PINDAAN_2025
+      (Akta A1742) dan AKTA_342_PERATURAN_KOMPAUN_2025 (P.U.(A) 139/2025) beserta arahan keras pindaan 2025.
+    - Pertanyaan berkaitan Akta 281 secara automatik menarik konteks AKTA_281_PINDAAN_2024 (Akta A1702).
+    """
+    from backend.rag.legal_engine import get_legal_library
+
+    lib = get_legal_library()
+    headers = _get_auth_headers()
+
+    g342 = lib.search_closed_book_grounding(
+        "Berapa had kompaun dan denda maksimum bagi kesalahan di bawah Akta 342 sekarang?",
+        akta_hint="Akta 342",
+    )
+    assert "AKTA_342_PINDAAN_2025" in g342["amendment_companions_applied"]
+    assert "AKTA_342_PERATURAN_KOMPAUN_2025" in g342["amendment_companions_applied"]
+    v342_sids = {v["statute_id"] for v in g342["verbatim_sections"]}
+    assert "AKTA_342_PINDAAN_2025" in v342_sids
+    assert "AKTA_342_PERATURAN_KOMPAUN_2025" in v342_sids
+    assert "ARAHAN KERAS PINDAAN STATUTORI" in g342["statutory_context_block"]
+    assert "RM5,000" in g342["statutory_context_block"]
+    assert "139/2025" in g342["statutory_context_block"]
+
+    # Semak juga melalui endpoint /api/advisor/consult
+    resp_342 = client.post(
+        "/api/advisor/consult",
+        headers=headers,
+        json={
+            "question": "Berapa had kompaun individu dan syarikat serta penalti am Seksyen 24 Akta 342 terkini?",
+            "akta_hint": "Akta 342",
+            "use_ai": False,
+        },
+    )
+    assert resp_342.status_code == 200
+    body_342 = resp_342.json()
+    assert "AKTA_342_PINDAAN_2025" in (body_342.get("amendment_companions_applied") or [])
+    assert "AKTA_342_PERATURAN_KOMPAUN_2025" in (body_342.get("amendment_companions_applied") or [])
+    cit_sids = {c.get("statute_id") for c in (body_342.get("statutory_citations") or [])}
+    assert "AKTA_342_PINDAAN_2025" in cit_sids
+    assert "AKTA_342_PERATURAN_KOMPAUN_2025" in cit_sids
+
+    # Semak pautan Akta 281 <-> Akta A1702
+    g281 = lib.search_closed_book_grounding(
+        "Apakah pindaan terkini pada Seksyen 2 dan Seksyen 34 Akta Makanan 1983 (Akta 281)?",
+        akta_hint="Akta 281",
+    )
+    assert "AKTA_281_PINDAAN_2024" in g281["amendment_companions_applied"]
+    assert any(v["statute_id"] == "AKTA_281_PINDAAN_2024" for v in g281["verbatim_sections"])
+
+
+def test_admin_verification_and_trap_edits_persist_across_library_restart() -> None:
+    """
+    Sahkan ketahanan Cloud Run:
+    Status VERIFIED_AGC dan suntingan explicit_exclusions_and_traps yang disimpan Admin
+    disimpan ke pangkalan data kekal (SQLite/PostgreSQL) dan kekal utuh walaupun
+    ClosedBookLegalLibrary dimulakan semula atau _bootstrap_library(force_rebuild=True) dijalankan.
+    """
+    from backend.core.database import get_uip_db
+    from backend.rag.legal_engine import ClosedBookLegalLibrary, get_legal_library
+
+    admin_headers = _get_dev_admin_headers()
+    db = get_uip_db()
+    lib = get_legal_library()
+    custom_trap = "UJIAN KETAHANAN CLOUD RUN: Pastikan sampel larva disahkan oleh Pegawai Entomologi KKM."
+
+    try:
+        # 1. Admin sahkan AKTA_154 sebagai VERIFIED_AGC
+        ver_resp = client.post(
+            "/api/legal/verify",
+            headers=admin_headers,
+            json={"statute_id": "AKTA_154", "verified": True},
+        )
+        assert ver_resp.status_code == 200
+        assert ver_resp.json()["updated_statutes"] == 1
+        assert ver_resp.json()["persisted_to_db"] is True
+
+        # 2. Admin sunting explicit_exclusions_and_traps pada AKTA_154_S13_1
+        orig_off = next(o for o in lib.master_offences_matrix if o["offence_id"] == "AKTA_154_S13_1")
+        orig_traps = list(orig_off.get("explicit_exclusions_and_traps") or [])
+        upd_resp = client.put(
+            "/api/legal/offences/AKTA_154_S13_1",
+            headers=admin_headers,
+            json={"explicit_exclusions_and_traps": orig_traps + [custom_trap]},
+        )
+        assert upd_resp.status_code == 200
+
+        # 3. Simulasi restart kontena Cloud Run: bina instans baharu + force_rebuild=True
+        fresh_lib = ClosedBookLegalLibrary()
+        fresh_lib._bootstrap_library(force_rebuild=True)
+
+        ak154_reg = next(r for r in fresh_lib.statutes_registry if r["statute_id"] == "AKTA_154")
+        assert ak154_reg["verified_by_admin"] is True
+        assert ak154_reg.get("verified_at")
+
+        ak154_offs = [o for o in fresh_lib.master_offences_matrix if o["statute_id"] == "AKTA_154"]
+        assert len(ak154_offs) >= 3
+        assert all(o["verified_status"] == "VERIFIED_AGC" for o in ak154_offs)
+
+        ak154_s13 = next(o for o in ak154_offs if o["offence_id"] == "AKTA_154_S13_1")
+        assert custom_trap in (ak154_s13.get("explicit_exclusions_and_traps") or [])
+    finally:
+        # Bersihkan override ujian supaya snapshot lalai kekal bersih (DRAFT_PENDING_REVIEW)
+        db.delete_legal_admin_override("STATUTE", "AKTA_154")
+        db.delete_legal_admin_override("OFFENCE", "AKTA_154_S13_1")
+        lib._bootstrap_library(force_rebuild=True)
+

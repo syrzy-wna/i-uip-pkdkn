@@ -74,6 +74,11 @@ MALAY_LEGAL_ROOTS = {
     "mengendalikan": "kendali",
     "perakuan": "aku",
     "memperakukan": "aku",
+    "computer": "komputer",
+    "computers": "komputer",
+    "komputer": "komputer",
+    "publication": "penerbitan",
+    "penerbitan": "penerbitan",
 }
 
 MALAY_STOPWORDS = {
@@ -188,47 +193,98 @@ class StatuteChunk:
 
 
 def _infer_akta_metadata(filename: str, content: str) -> tuple[str, str]:
-    low = (filename + " " + content[:400]).lower()
-    if "akta 342" in low or "342" in low or "berjangkit" in low or "apppb" in low:
+    stem = Path(filename).stem.lower()
+    low = (stem + " " + content[:600]).lower()
+    if "akta_342" in stem or "akta 342" in low or "342" in stem or "penyakit berjangkit" in low or "apppb" in low:
         return "Akta 342", "Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988 [Akta 342]"
-    if "akta 154" in low or "154" in low or "serangga" in low or "aedes" in low:
+    if "akta_154" in stem or "akta 154" in low or "154" in stem or "serangga pembawa penyakit" in low or "aedes" in low:
         return "Akta 154", "Akta Pemusnahan Serangga Pembawa Penyakit 1975 [Akta 154]"
-    if "akta 852" in low or "852" in low or "merokok" in low:
+    if "akta_852" in stem or "akta 852" in low or "852" in stem or "produk merokok" in low:
         return "Akta 852", "Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024 [Akta 852]"
-    if "akta 171" in low or "171" in low or "kerajaan tempatan" in low:
+    if "akta_611" in stem or "akta 611" in low or "611" in stem or "kanak-kanak 2001" in low:
+        return "Akta 611", "Akta Kanak-Kanak 2001 [Akta 611]"
+    if "akta 171" in low or "171" in stem or "kerajaan tempatan" in low:
         return "Akta 171", "Akta Kerajaan Tempatan 1976 [Akta 171]"
-    if "akta 366" in low or "366" in low or "racun" in low or "akta 368" in low:
+    if "akta 366" in low or "366" in stem or "racun" in low or "akta 368" in low:
         return "Akta 366", "Akta Racun 1952 [Akta 366] & Akta Jualan Dadah 1952"
-    if "akta 586" in low or "586" in low or "jagaan kesihatan swasta" in low:
+    if "akta 586" in low or "586" in stem or "jagaan kesihatan swasta" in low:
         return "Akta 586", "Akta Kemudahan dan Perkhidmatan Jagaan Kesihatan Swasta 1998 [Akta 586]"
-    if "akta 260" in low or "260" in low or "hidrogen sianida" in low:
+    if "akta 260" in low or "260" in stem or "hidrogen sianida" in low:
         return "Akta 260", "Akta Hidrogen Sianida (Pengasapan) 1953 [Akta 260]"
-    if "akta 127" in low or "127" in low or "kualiti alam sekeliling" in low:
+    if "akta 127" in low or "127" in stem or "kualiti alam sekeliling" in low:
         return "Akta 127", "Akta Kualiti Alam Sekeliling 1974 [Akta 127] & Akta 655"
-    if "akta 281" in low or "281" in low or "makanan" in low or "kebersihan makanan" in low or "ppm 1985" in low:
+    if (
+        "akta_281" in stem
+        or "ppkm" in stem
+        or "ppm_" in stem
+        or "akta 281" in low
+        or "akta makanan" in low
+        or "kebersihan makanan" in low
+        or "peraturan-peraturan makanan 1985" in low
+    ):
         return "Akta 281", "Akta Makanan 1983 [Akta 281] & Peraturan Kebersihan Makanan 2009"
-    if "593" in low or "tatacara jenayah" in low or "ktj" in low:
+    if "akta_593" in stem or "593" in stem or "tatacara jenayah" in low or "criminal procedure code" in low or "ktj" in low:
         return "Akta 593", "Kanun Tatacara Jenayah [Akta 593]"
-    if "90a" in low or "keterangan" in low or "akta 56" in low:
+    if "akta_56" in stem or "56" == stem or "90a" in low or "keterangan 1950" in low or "akta 56" in low or "evidence act 1950" in low:
         return "Akta 56", "Akta Keterangan 1950 [Akta 56]"
     return Path(filename).stem, Path(filename).stem.replace("_", " ").title()
 
 
 def _extract_legal_hints(block: str) -> tuple[str, str]:
-    fine_m = re.search(r"(?:didenda|denda)[^.\n;]*(RM\s?[\d,]+|ringgit)", block, flags=re.I)
+    fine_m = re.search(r"(?:didenda|denda|fine)[^.\n;]*(RM\s?[\d,]+|ringgit)", block, flags=re.I)
     fine_hint = fine_m.group(0).strip()[:90] if fine_m else ""
-    comp_hint = "Boleh kompaun" if "kompaun" in block.lower() else ""
+    comp_hint = "Boleh kompaun" if ("kompaun" in block.lower() or "compound" in block.lower()) else ""
     return fine_hint, comp_hint
 
 
 def _split_into_section_chunks(
     text: str, filename: str, akta_code: str, akta_title: str
 ) -> List[StatuteChunk]:
+    if filename.lower().endswith(".pdf"):
+        from backend.rag.legal_engine import (
+            infer_statute_id_from_filename_or_text,
+            parse_statute_verbatim_sections,
+        )
+
+        sid = infer_statute_id_from_filename_or_text(filename, text)
+        parsed_secs, _ = parse_statute_verbatim_sections(
+            raw_text=text,
+            default_statute_id=sid,
+            source_filename=filename,
+        )
+        chunks: List[StatuteChunk] = []
+        for idx, sec in enumerate(parsed_secs):
+            sec_code = str(sec.get("section_code") or "").strip()
+            sec_heading = str(sec.get("section_heading") or "").strip()
+            verbatim = str(sec.get("verbatim_text_bm") or "").strip()
+            if len(verbatim) < 25:
+                continue
+            if sec_code.lower().startswith(("seksyen", "peraturan", "jadual", "first", "second", "third")):
+                sec_lbl = sec_code
+            else:
+                sec_lbl = f"Seksyen {sec_code}"
+            if sec_heading and sec_heading.lower() not in sec_lbl.lower():
+                sec_lbl = f"{sec_lbl} — {sec_heading[:70]}"
+            fine_hint, comp_hint = _extract_legal_hints(verbatim)
+            chunks.append(
+                StatuteChunk(
+                    chunk_id=str(sec.get("doc_id") or f"{Path(filename).stem}__chunk_{idx:03d}"),
+                    akta_code=akta_code,
+                    akta_title=akta_title,
+                    section=sec_lbl[:110],
+                    text=verbatim,
+                    source_file=filename,
+                    max_fine_hint=fine_hint,
+                    is_compoundable_hint=comp_hint,
+                )
+            )
+        return chunks
+
     blocks = re.split(
         r"\n(?=(?:Seksyen|Peraturan|-\s*Seksyen|-\s*Peraturan|Keperluan|Akta)\s+)",
         text.strip(),
     )
-    chunks: List[StatuteChunk] = []
+    chunks = []
     is_multi_act_file = "lain_rujukan" in filename.lower()
     for idx, block in enumerate(blocks):
         clean_block = block.strip()
@@ -267,6 +323,7 @@ class StatutoryRAGStore:
     """Stor RAG Statutori menggunakan ChromaDB + Okapi BM25 Melayu."""
 
     COLLECTION_NAME = "uip_statutory_acts"
+    CACHE_SCHEMA_VERSION = "3.1-agc-pdf"
 
     def __init__(
         self,
@@ -324,34 +381,119 @@ class StatutoryRAGStore:
             return "\n".join(pages)
         return file_path.read_text(encoding="utf-8", errors="ignore")
 
-    def ingest_directory(self) -> int:
-        all_chunks: List[StatuteChunk] = []
+    def _compute_dir_fingerprint(self) -> str:
+        from backend.rag.legal_engine import PARSER_VERSION
+
+        parts: List[str] = [self.CACHE_SCHEMA_VERSION, PARSER_VERSION]
         for path in sorted(self.akta_dir.glob("*")):
-            if path.suffix.lower() not in (".txt", ".pdf", ".md"):
+            if path.suffix.lower() not in (".txt", ".pdf"):
                 continue
+            if path.name.upper().startswith("PANDUAN_"):
+                continue
+            st = path.stat()
+            parts.append(f"{path.name}:{st.st_size}:{hashlib.sha256(path.read_bytes()).hexdigest()[:16]}")
+        return hashlib.sha256("|".join(parts).encode("utf-8")).hexdigest()
+
+    def ingest_directory(self) -> int:
+        dir_fp = self._compute_dir_fingerprint()
+        cache_path = self.persist_dir / "statutory_chunks_cache.json"
+        if cache_path.exists():
+            try:
+                cached = json.loads(cache_path.read_text(encoding="utf-8"))
+                if cached.get("fingerprint") == dir_fp and isinstance(cached.get("chunks"), list) and cached["chunks"]:
+                    self._chunks = [StatuteChunk(**item) for item in cached["chunks"]]
+                    self._build_bm25_index()
+                    return len(self._chunks)
+            except Exception:
+                pass
+
+        all_paths = [
+            p
+            for p in sorted(self.akta_dir.glob("*"))
+            if p.suffix.lower() in (".pdf", ".txt") and not p.name.upper().startswith("PANDUAN_")
+        ]
+        ordered_paths = [p for p in all_paths if p.suffix.lower() == ".pdf"] + [
+            p for p in all_paths if p.suffix.lower() == ".txt"
+        ]
+
+        all_chunks: List[StatuteChunk] = []
+        pdf_covered_acts: set[str] = set()
+        seen_chunk_ids: set[str] = set()
+
+        for path in ordered_paths:
+            is_pdf = path.suffix.lower() == ".pdf"
             content = self.extract_text_from_file(path)
             if not content.strip():
                 continue
             akta_code, akta_title = _infer_akta_metadata(path.name, content)
-            all_chunks.extend(_split_into_section_chunks(content, path.name, akta_code, akta_title))
+            file_chunks = _split_into_section_chunks(content, path.name, akta_code, akta_title)
+            for c in file_chunks:
+                if not is_pdf and c.akta_code in pdf_covered_acts:
+                    continue
+                if c.chunk_id in seen_chunk_ids:
+                    c.chunk_id = f"{c.chunk_id}_{len(seen_chunk_ids)}"
+                seen_chunk_ids.add(c.chunk_id)
+                all_chunks.append(c)
+                if is_pdf:
+                    pdf_covered_acts.add(c.akta_code)
 
         self._chunks = all_chunks
         self._build_bm25_index()
 
-        if self._collection is not None and all_chunks:
-            self._collection.upsert(
-                ids=[c.chunk_id for c in all_chunks],
-                documents=[c.text for c in all_chunks],
-                metadatas=[
+        # Simpan cache cakera untuk startup pantas (<0.1s)
+        try:
+            cache_path.write_text(
+                json.dumps(
                     {
-                        "akta_code": c.akta_code,
-                        "akta_title": c.akta_title,
-                        "section": c.section,
-                        "source_file": c.source_file,
-                    }
-                    for c in all_chunks
-                ],
+                        "fingerprint": dir_fp,
+                        "chunks": [
+                            {
+                                "chunk_id": c.chunk_id,
+                                "akta_code": c.akta_code,
+                                "akta_title": c.akta_title,
+                                "section": c.section,
+                                "text": c.text,
+                                "source_file": c.source_file,
+                                "max_fine_hint": c.max_fine_hint,
+                                "is_compoundable_hint": c.is_compoundable_hint,
+                            }
+                            for c in all_chunks
+                        ],
+                    },
+                    ensure_ascii=False,
+                ),
+                encoding="utf-8",
             )
+        except Exception:
+            pass
+
+        if self._collection is not None and all_chunks:
+            if self._chroma_client is not None:
+                try:
+                    self._chroma_client.delete_collection(name=self.COLLECTION_NAME)
+                    self._collection = self._chroma_client.get_or_create_collection(
+                        name=self.COLLECTION_NAME,
+                        embedding_function=_DeterministicHashEmbedding(),
+                        metadata={"hnsw:space": "cosine"},
+                    )
+                except Exception:
+                    pass
+            batch_size = 200
+            for start in range(0, len(all_chunks), batch_size):
+                batch = all_chunks[start : start + batch_size]
+                self._collection.upsert(
+                    ids=[c.chunk_id for c in batch],
+                    documents=[c.text[:4000] for c in batch],
+                    metadatas=[
+                        {
+                            "akta_code": c.akta_code,
+                            "akta_title": c.akta_title,
+                            "section": c.section,
+                            "source_file": c.source_file,
+                        }
+                        for c in batch
+                    ],
+                )
         else:
             fallback_path = self.persist_dir / "statutory_fallback_index.json"
             fallback_path.write_text(
@@ -382,7 +524,7 @@ class StatutoryRAGStore:
 
         total_len = 0
         for c in self._chunks:
-            toks = _tokenize(f"{c.akta_code} {c.section} {c.text}")
+            toks = _tokenize(f"{c.akta_code} {c.section} {c.text[:3000]}")
             cnt = Counter(toks)
             self._chunk_counters[c.chunk_id] = cnt
             self._chunk_lengths[c.chunk_id] = len(toks)
