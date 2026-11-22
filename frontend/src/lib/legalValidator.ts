@@ -82,7 +82,7 @@ export function validateLegalOutput(
   db: Partial<LegalLibrarySnapshot> | null | undefined,
   questionContext = ""
 ): LegalValidationResult {
-  const libVersion = db?.statute_library_version || "2.5.0-closed-book-agc-pdf";
+  const libVersion = db?.statute_library_version || "2.6.0-closed-book-agc-pdf";
   const statutesReg = db?.statutes_registry || [];
   const sectionsList = db?.statute_sections_verbatim || [];
   const offencesList = db?.master_offences_matrix || [];
@@ -201,6 +201,7 @@ export function validateLegalOutput(
     "AKTA 260", "AKTA 127", "AKTA 655", "AKTA 265", "AKTA 514", "AKTA 574",
     "AKTA KERJA 1955", "OSHA 1994",
   ]);
+  const proceduralCrossRefs = new Set(["90A", "112", "114", "114A", "119", "128", "152", "153", "154", "163", "376", "377", "399"]);
 
   for (const cit of extracted) {
     const actUp = cit.actRef.toUpperCase();
@@ -227,7 +228,7 @@ export function validateLegalOutput(
     const lookupAct = cit.actRef ? canonicalizeAct(cit.actRef) : defaultAct;
     const actSet = validSectionsByAct.get(lookupAct);
     if (actSet) {
-      if (actSet.has(cit.baseNumber) || allValidNums.has(cit.baseNumber)) {
+      if (actSet.has(cit.baseNumber) || (!cit.actRef && proceduralCrossRefs.has(cit.baseNumber))) {
         verifiedCitations.push(cit.rawCitation);
       } else {
         invalidCitations.push(
@@ -304,8 +305,33 @@ export function validateLegalOutput(
     }
   }
 
-  // Semak ketidaksepadanan denda/kompaun & unsur mandatori S.17(1) Akta 852
+  // Semak ketidaksepadanan had denda/kompaun & status boleh kompaun
   const penaltyMismatches: string[] = [];
+  if (lowCombined.includes("akta 154") && lowCombined.includes("kompaun")) {
+    const rmHits = Array.from(lowCombined.matchAll(/kompaun[^.\n]{0,40}rm\s*([\d,]+)/gi));
+    for (const m of rmHits) {
+      const val = parseFloat((m[1] || "0").replace(/,/g, ""));
+      if (val > 500) {
+        penaltyMismatches.push(
+          `Had kompaun maksimum Seksyen 25 Akta 154 ialah RM 500 (cadangan menyebut RM ${val.toLocaleString()}).`
+        );
+      }
+    }
+  }
+  if (lowCombined.includes("akta 852")) {
+    for (const c of chargesArr) {
+      const sec = String(c.seksyen_kesalahan || "").toLowerCase();
+      const comp = String(c.boleh_kompaun || "").toLowerCase();
+      const nonComp852 = /\b(?:3\(1\)|7\(1\)|9\(1\)|10\(1\)|13\(1\))\b/.test(sec);
+      if (nonComp852 && comp.includes("boleh") && !comp.includes("tidak")) {
+        penaltyMismatches.push(
+          `${String(c.seksyen_kesalahan || "Seksyen Akta 852")} TIDAK BOLEH dikompaun di bawah Jadual Pertama P.U. (A) 259/2024.`
+        );
+      }
+    }
+  }
+
+  // Semak unsur wajib S.17(1) Akta 852 (pemilikan vape dalam beg tanpa bukti menghisap/membeli)
   const unfulfilledErrors: string[] = [];
   const evalCtx = `${questionContext} ${combinedText}`.toLowerCase();
   const declaredNoOffence = String(respObj.status_kesalahan || "").toUpperCase() === "TIADA_KESALAHAN";
@@ -328,7 +354,7 @@ export function validateLegalOutput(
     !lowCombined.includes("jangan keluarkan")
   ) {
     unfulfilledErrors.push(
-      "UNSUR MANDATORI TIDAK TERPENUHI (Seksyen 17(1) Akta 852): Pemilikan vape dalam beg oleh pelajar tanpa bukti menghisap/menggunakan/membeli BUKAN kesalahan di bawah Seksyen 17(1) Akta 852."
+      "UNSUR WAJIB TIDAK DIPENUHI (Seksyen 17(1) Akta 852): Pemilikan vape dalam beg oleh pelajar tanpa bukti menghisap/menggunakan/membeli BUKAN kesalahan di bawah Seksyen 17(1) Akta 852."
     );
   }
 
@@ -353,7 +379,7 @@ export function validateLegalOutput(
       ...penaltyMismatches,
       ...unfulfilledErrors,
     ];
-    warningBanner = `Amaran Sistem: Cadangan petikan undang-undang gagal pengesahan Pustaka Akta. ${allReasons.join(" | ")}`;
+    warningBanner = `Amaran Sistem: Cadangan petikan undang-undang gagal semakan Pustaka Akta. ${allReasons.join(" | ")}`;
   }
 
   return {

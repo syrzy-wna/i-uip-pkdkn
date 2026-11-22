@@ -225,7 +225,7 @@ export default function TopNavbar({
           <button
             type="button"
             onClick={onOpenAccount}
-            title={`Akaun Pegawai (${geminiLive ? "Enjin AI Aktif" : "Mod Statutori"})`}
+            title={`Akaun Pegawai (${geminiLive ? "AI Awan Aktif" : "Mod Rujukan Tempatan"})`}
             className={`inline-flex min-h-[40px] items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-bold shadow-sm transition sm:min-h-[36px] ${
               officer
                 ? "bg-emerald-500 text-slate-950 hover:bg-emerald-400"
@@ -252,14 +252,15 @@ export default function TopNavbar({
                 className="hidden min-h-[36px] items-center gap-1 rounded-lg bg-indigo-500/35 px-2.5 py-1.5 text-xs font-bold text-amber-200 ring-1 ring-amber-300/40 hover:bg-indigo-500/50 lg:inline-flex"
               >
                 <Cpu className="h-3.5 w-3.5" />
-                <span className="hidden xl:inline">Konsol Dev</span>
-                <span className="xl:hidden">Dev</span>
+                <span className="hidden xl:inline">Konsol Pembangun</span>
+                <span className="xl:hidden">Pembangun</span>
               </button>
 
               <button
                 type="button"
                 onClick={onOpenSettings}
                 title="Tetapan Enjin AI"
+                aria-label="Tetapan Enjin AI"
                 className="hidden min-h-[36px] items-center justify-center rounded-lg bg-white/10 p-2 text-xs font-semibold text-white ring-1 ring-white/20 hover:bg-white/20 lg:inline-flex"
               >
                 <Settings className="h-4 w-4" />
@@ -302,7 +303,7 @@ export default function TopNavbar({
                 <Cpu className="h-4 w-4 text-sky-300" />
                 <span>
                   Enjin:{" "}
-                  <strong>{geminiLive ? "AI Cloud Aktif" : "Mod Statutori Luar Talian"}</strong>
+                  <strong>{geminiLive ? "AI Awan Aktif" : "Mod Rujukan Tempatan"}</strong>
                 </span>
               </div>
               <span className="inline-flex items-center gap-1 rounded bg-teal-500/20 px-2 py-0.5 text-[11px] font-bold text-teal-200">
@@ -314,10 +315,34 @@ export default function TopNavbar({
               <button
                 type="button"
                 onClick={() => {
+                  onSelectMode("directory");
+                  setMobileMenuOpen(false);
+                }}
+                className="inline-flex min-h-[44px] items-center justify-center gap-1.5 rounded-lg bg-teal-600/35 px-3 font-bold text-teal-100 ring-1 ring-teal-400/40 hover:bg-teal-600/50"
+              >
+                <Database className="h-4 w-4 text-teal-200" />
+                Direktori Akta
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  onSelectMode("guide");
+                  setMobileMenuOpen(false);
+                }}
+                className="inline-flex min-h-[44px] items-center justify-center gap-1.5 rounded-lg bg-white/10 px-3 font-bold text-white hover:bg-white/20"
+              >
+                <BookOpen className="h-4 w-4 text-amber-300" />
+                Panduan Pengguna
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
                   onSelectMode("home");
                   setMobileMenuOpen(false);
                 }}
-                className="inline-flex min-h-[42px] items-center justify-center gap-1.5 rounded-lg bg-white/10 px-3 font-bold text-white hover:bg-white/20"
+                className="inline-flex min-h-[44px] items-center justify-center gap-1.5 rounded-lg bg-white/10 px-3 font-bold text-white hover:bg-white/20"
               >
                 <Home className="h-4 w-4 text-amber-300" />
                 Menu Mula
@@ -328,7 +353,7 @@ export default function TopNavbar({
                 onClick={() => {
                   onToggleOllama(!useOllama);
                 }}
-                className={`inline-flex min-h-[42px] items-center justify-center gap-1.5 rounded-lg px-3 font-bold ${
+                className={`inline-flex min-h-[44px] items-center justify-center gap-1.5 rounded-lg px-3 font-bold ${
                   ollamaOk && useOllama
                     ? "bg-emerald-500/25 text-emerald-200 ring-1 ring-emerald-400/40"
                     : "bg-slate-700 text-slate-100"
@@ -339,7 +364,7 @@ export default function TopNavbar({
                 ) : (
                   <WifiOff className="h-4 w-4 text-amber-300" />
                 )}
-                Privasi: {ollamaOk && useOllama ? "Lokal AI" : "Tempatan"}
+                Privasi: {ollamaOk && useOllama ? "AI Tempatan" : "Tempatan"}
               </button>
             </div>
 
@@ -350,7 +375,7 @@ export default function TopNavbar({
                   setMobileMenuOpen(false);
                   onOpenOnboarding();
                 }}
-                className="inline-flex min-h-[42px] w-full items-center justify-center gap-2 rounded-lg bg-[#9e1b32] px-3 font-extrabold text-white ring-1 ring-[#e9c98a]/40 hover:bg-[#6d0f21]"
+                className="inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-lg bg-[#9e1b32] px-3 font-extrabold text-white ring-1 ring-[#e9c98a]/40 hover:bg-[#6d0f21]"
               >
                 <Layers className="h-4 w-4 text-[#e9c98a]" />
                 Lihat 8 Kad Fungsi Aplikasi
@@ -365,10 +390,10 @@ export default function TopNavbar({
                     setMobileMenuOpen(false);
                     onOpenDevConsole();
                   }}
-                  className="inline-flex min-h-[42px] items-center justify-center gap-1.5 rounded-lg bg-indigo-600 px-3 font-bold text-white"
+                  className="inline-flex min-h-[44px] items-center justify-center gap-1.5 rounded-lg bg-indigo-600 px-3 font-bold text-white"
                 >
                   <Cpu className="h-4 w-4" />
-                  Konsol Dev
+                  Konsol Pembangun
                 </button>
                 <button
                   type="button"
@@ -376,7 +401,7 @@ export default function TopNavbar({
                     setMobileMenuOpen(false);
                     onOpenSettings();
                   }}
-                  className="inline-flex min-h-[42px] items-center justify-center gap-1.5 rounded-lg bg-white/15 px-3 font-bold text-white"
+                  className="inline-flex min-h-[44px] items-center justify-center gap-1.5 rounded-lg bg-white/15 px-3 font-bold text-white"
                 >
                   <Settings className="h-4 w-4" />
                   Tetapan AI

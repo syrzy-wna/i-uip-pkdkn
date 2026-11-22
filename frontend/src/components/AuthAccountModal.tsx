@@ -132,13 +132,14 @@ export default function AuthAccountModal({
   // Tetapan & Token Google OAuth 2.0 Sebenar
   const [googleClientId, setGoogleClientId] = useState(DEFAULT_GOOGLE_CLIENT_ID);
   const [gsiReady, setGsiReady] = useState(false);
+  const [gsiFailed, setGsiFailed] = useState(false);
   const gsiBtnRef = useRef<HTMLDivElement | null>(null);
 
-  // Borang Log Masuk Emel Biasa
+  // Borang Log Masuk E-mel Biasa
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
 
-  // Borang Daftar Akaun Emel Biasa (Lalai PKD Kuala Nerus, Terengganu)
+  // Borang Daftar Akaun E-mel Biasa (Lalai PKD Kuala Nerus, Terengganu)
   const [regForm, setRegForm] = useState({
     email: "",
     password: "",
@@ -195,12 +196,16 @@ export default function AuthAccountModal({
   useEffect(() => {
     if (!open || officer || tab !== "google" || !googleClientId) {
       setGsiReady(false);
+      setGsiFailed(false);
       return;
     }
     let cancelled = false;
+    setGsiFailed(false);
+
     const initGisButton = () => {
       if (cancelled || !window.google?.accounts?.id) return;
       setGsiReady(true);
+      setGsiFailed(false);
       if (gsiBtnRef.current) {
         gsiBtnRef.current.innerHTML = "";
         window.google.accounts.id.initialize({
@@ -221,7 +226,7 @@ export default function AuthAccountModal({
               setError(
                 err instanceof Error
                   ? err.message
-                  : "Pengesahan token Google OAuth gagal."
+                  : "Pengesahan akaun Google gagal. Sila cuba lagi."
               );
             } finally {
               setLoading(false);
@@ -242,6 +247,12 @@ export default function AuthAccountModal({
       }
     };
 
+    const failTimer = window.setTimeout(() => {
+      if (!cancelled && !window.google?.accounts?.id) {
+        setGsiFailed(true);
+      }
+    }, 4500);
+
     if (window.google?.accounts?.id) {
       initGisButton();
     } else {
@@ -253,6 +264,9 @@ export default function AuthAccountModal({
         script.async = true;
         script.defer = true;
         script.onload = initGisButton;
+        script.onerror = () => {
+          if (!cancelled) setGsiFailed(true);
+        };
         document.head.appendChild(script);
       } else {
         existingScript.addEventListener("load", initGisButton);
@@ -260,6 +274,7 @@ export default function AuthAccountModal({
     }
     return () => {
       cancelled = true;
+      window.clearTimeout(failTimer);
     };
   }, [open, officer, tab, googleClientId, onAuthenticated, onClose]);
 
@@ -267,12 +282,12 @@ export default function AuthAccountModal({
 
   const handleRealGooglePopup = () => {
     if (!googleClientId) {
-      setError("GOOGLE_CLIENT_ID belum ditetapkan. Sila masukkan Google OAuth Web Client ID di bawah.");
+      setError("Tetapan log masuk Google belum aktif. Sila guna tab Log Masuk E-mel.");
       return;
     }
     const oauth2 = window.google?.accounts?.oauth2;
     if (!oauth2) {
-      setError("SDK Google Identity Services sedang dimuatkan atau disekat rangkaian. Sila cuba sebentar lagi.");
+      setError("Sistem log masuk Google tidak dapat dimuatkan (mungkin disekat rangkaian pejabat). Sila guna Log Masuk E-mel di tab sebelah.");
       return;
     }
     setError(null);
@@ -297,7 +312,7 @@ export default function AuthAccountModal({
           setError(
             err instanceof Error
               ? err.message
-              : "Pengesahan Google OAuth gagal."
+              : "Pengesahan akaun Google gagal."
           );
         } finally {
           setLoading(false);
@@ -364,6 +379,9 @@ export default function AuthAccountModal({
 
   return (
     <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Akaun Rasmi Pegawai UIP KKM"
       onClick={onClose}
       className="fixed inset-0 z-50 flex items-end justify-center bg-slate-900/65 p-0 backdrop-blur-sm sm:items-center sm:p-4"
     >
@@ -387,7 +405,8 @@ export default function AuthAccountModal({
           <button
             type="button"
             onClick={onClose}
-            className="inline-flex min-h-[40px] min-w-[40px] shrink-0 items-center justify-center rounded-lg p-1.5 text-slate-300 hover:bg-white/10 hover:text-white"
+            aria-label="Tutup tetingkap akaun"
+            className="inline-flex min-h-[44px] min-w-[44px] shrink-0 items-center justify-center rounded-lg p-1.5 text-slate-300 hover:bg-white/10 hover:text-white"
           >
             <X className="h-5 w-5" />
           </button>
@@ -400,7 +419,7 @@ export default function AuthAccountModal({
               <button
                 type="button"
                 onClick={() => setTab("google")}
-                className={`inline-flex min-h-[38px] items-center justify-center gap-1 rounded-lg px-2 py-1.5 text-[11px] font-bold transition sm:text-xs ${
+                className={`inline-flex min-h-[40px] items-center justify-center gap-1 rounded-lg px-2 py-1.5 text-[11px] font-bold transition sm:text-xs ${
                   tab === "google"
                     ? "bg-[#0f2744] text-white shadow-sm"
                     : "bg-white text-slate-600 ring-1 ring-slate-200 hover:text-slate-900"
@@ -420,7 +439,7 @@ export default function AuthAccountModal({
                     : "bg-white text-slate-600 ring-1 ring-slate-200 hover:text-slate-900"
                 }`}
               >
-                <KeyRound className="h-3.5 w-3.5" /> Masuk Emel
+                <KeyRound className="h-3.5 w-3.5" /> Masuk E-mel
               </button>
               <button
                 type="button"
@@ -431,7 +450,7 @@ export default function AuthAccountModal({
                     : "bg-white text-slate-600 ring-1 ring-slate-200 hover:text-slate-900"
                 }`}
               >
-                <UserPlus className="h-3.5 w-3.5" /> Daftar Emel
+                <UserPlus className="h-3.5 w-3.5" /> Daftar E-mel
               </button>
             </div>
           ) : (
@@ -469,16 +488,20 @@ export default function AuthAccountModal({
                       <path fill="#FBBC05" d="M5.28 14.24c-.24-.72-.38-1.49-.38-2.24s.14-1.52.38-2.24V6.62H1.29C.47 8.24 0 10.06 0 12s.47 3.76 1.29 5.38l3.99-3.14Z" />
                       <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.26 2.7 1.29 6.62l3.99 3.14c.95-2.85 3.6-4.96 6.72-4.96Z" />
                     </svg>
-                    <span>Google OAuth 2.0 Connector (Pengesahan Pelayan Google Sebenar)</span>
+                    <span>Log Masuk Google Rasmi</span>
                   </div>
                   <span
                     className={`rounded-full px-2.5 py-0.5 text-[10px] font-bold ${
-                      googleClientId
+                      googleClientId && !gsiFailed
                         ? "bg-emerald-100 text-emerald-800 ring-1 ring-emerald-300"
                         : "bg-amber-100 text-amber-800 ring-1 ring-amber-300"
                     }`}
                   >
-                    {googleClientId ? "OAuth 2.0 Sebenar Aktif" : "Perlu GOOGLE_CLIENT_ID"}
+                    {!googleClientId
+                      ? "Belum Dikonfigurasi"
+                      : gsiFailed
+                        ? "Sekatan Rangkaian / Pelayar"
+                        : "Google Aktif"}
                   </span>
                 </div>
 
@@ -487,6 +510,29 @@ export default function AuthAccountModal({
                     <p className="text-xs text-slate-600 leading-relaxed">
                       Klik butang Google rasmi di bawah untuk log masuk pantas dengan akaun Google anda.
                     </p>
+                    {gsiFailed && (
+                      <div className="rounded-lg border border-amber-300 bg-amber-50 p-3 text-[11px] text-amber-950 leading-relaxed space-y-2">
+                        <p>
+                          <strong>Butang Google tidak dapat dimuatkan</strong> (kemungkinan disekat oleh rangkaian pejabat atau penyekat iklan pelayar). Anda masih boleh log masuk terus menggunakan e-mel rasmi.
+                        </p>
+                        <div className="flex flex-wrap gap-2">
+                          <button
+                            type="button"
+                            onClick={() => setTab("login")}
+                            className="inline-flex items-center gap-1.5 rounded-lg bg-[#0f2744] px-3 py-1.5 text-[11px] font-bold text-white hover:bg-slate-800"
+                          >
+                            <KeyRound className="h-3.5 w-3.5" /> Masuk E-mel
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setTab("register")}
+                            className="inline-flex items-center gap-1.5 rounded-lg border border-amber-400 bg-white px-3 py-1.5 text-[11px] font-bold text-amber-950 hover:bg-amber-100"
+                          >
+                            <UserPlus className="h-3.5 w-3.5" /> Daftar Akaun E-mel
+                          </button>
+                        </div>
+                      </div>
+                    )}
                     <div className="flex flex-col items-start gap-2.5 pt-1">
                       <div ref={gsiBtnRef} className="min-h-[40px]" />
                       <button
@@ -496,22 +542,22 @@ export default function AuthAccountModal({
                         className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-700 hover:underline disabled:opacity-50"
                       >
                         {loading && <Loader2 className="h-3.5 w-3.5 animate-spin text-blue-600" />}
-                        <span>Atau buka tetingkap Google OAuth secara manual →</span>
+                        <span>Atau buka tetingkap Log Masuk Google secara manual →</span>
                       </button>
                     </div>
                   </div>
                 ) : (
                   <div className="space-y-3">
                     <div className="rounded-lg border border-amber-300 bg-amber-50 p-3 text-[11px] text-amber-950 leading-relaxed">
-                      <strong>Google Sign-In belum dikonfigurasi pada pelayan ini.</strong>{" "}
-                      Sila gunakan tab <strong>Daftar Emel Biasa</strong> atau <strong>Log Masuk Emel Biasa</strong> untuk akses segera.
+                      <strong>Log Masuk Google belum dikonfigurasi pada pelayan ini.</strong>{" "}
+                      Sila gunakan tab <strong>Daftar E-mel</strong> atau <strong>Masuk E-mel</strong> untuk akses segera.
                     </div>
                     <button
                       type="button"
                       onClick={() => setTab("register")}
                       className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-700 px-3.5 py-2 text-xs font-bold text-white hover:bg-emerald-800"
                     >
-                      <UserPlus className="h-3.5 w-3.5" /> Daftar Akaun Emel Pegawai
+                      <UserPlus className="h-3.5 w-3.5" /> Daftar Akaun E-mel Pegawai
                     </button>
                   </div>
                 )}

@@ -136,16 +136,15 @@ def _append_kulit_dan_indeks_ip(doc: Document, payload: Dict[str, Any]) -> None:
     ]
     _add_clean_table(doc, ["Perkara Kulit IP", "Butiran Kes"], kulit_rows)
 
-    _add_paragraph_text(doc, "INDEKS KANDUNGAN FAIL KERTAS SIASATAN", bold=True, underline=True, size=11, space_before=12, space_after=6)
+    _add_paragraph_text(doc, "INDEKS KANDUNGAN FAIL KERTAS SIASATAN (7 BAHAGIAN A–G)", bold=True, underline=True, size=11, space_before=12, space_after=6)
     indeks_rows = [
-        ["A", "Kertas Minit Siasatan (Minit 1 hingga Minit 4) & Surat Izin Mendakwa TPR", "Lampiran A"],
-        ["B", "Pengaduan kepada Majistret (Borang 143) & Kertas Pertuduhan (Borang 114)", "Lampiran B"],
-        ["C", "Fakta Kes, Senarai Saksi Pendakwaan (SP) & Senarai Barang Kes (P)", "Lampiran C"],
-        ["D", "Notis S.32B / S.47, Tawaran Kompaun, Pengesahan Belum Bayar & Kad AR", "Lampiran D"],
-        ["E", "Borang Sitaan (S.36) / Perintah S.11, Pelan Lakar, Gambar & Sijil Seksyen 90A(2)", "Lampiran E"],
-        ["F", "Rakaman Percakapan Seksyen 112 KTJ (Saksi & OKT)", "Lampiran F"],
-        ["G", "Cetakan Carian SSM, Salinan Kad Kuasa & Laporan Makmal/Entomologi", "Lampiran G"],
-        ["H", "Diari Siasatan (Seksyen 119 KTJ)", "Lampiran H"],
+        ["A", "Kertas Minit (Am 6), Izin Mendakwa TPR, Kronologi, Kertas Cadangan IO & Fakta Kes", "Bahagian A"],
+        ["B", "Pengaduan kepada Majistret (Borang 143), Saman (Borang 111) & Kertas Pertuduhan (Borang 114)", "Bahagian B"],
+        ["C", "Notis S.32B / S.47 / Arahan Rawatan Akta 342, Tawaran Kompaun, Pengesahan Belum Bayar & Kad AR", "Bahagian C"],
+        ["D", "Borang Sitaan (S.36) / Perintah S.11, Senarai Barang Kes (P), Pelan Lakar, Gambar & Sijil Seksyen 90A(2)", "Bahagian D"],
+        ["E", "Rakaman Percakapan Seksyen 112 KTJ (Saksi & OKT) & Senarai Saksi Pendakwaan (SP)", "Bahagian E"],
+        ["F", "Cetakan Carian SSM, Salinan Kad Kuasa & Laporan Makmal (S.19) / Entomologi / TBIS 20C", "Bahagian F"],
+        ["G", "Diari Siasatan (Seksyen 119 KTJ) & Hujahan Pemberatan Hukuman", "Bahagian G"],
     ]
     _add_clean_table(doc, ["Bahagian", "Perihal Kandungan Fail IP", "Folio"], indeks_rows)
 
@@ -183,8 +182,15 @@ def _append_minit_ip(doc: Document, minit_list: Any, no_kes: str) -> None:
 def _append_izin_mendakwa(doc: Document, izin: Dict[str, Any]) -> None:
     if not izin:
         return
-    _add_paragraph_text(doc, "PERMOHONAN IZIN MENDakwa (SANKSIPENDAKWA RAYA)", bold=True, size=12, align=WD_ALIGN_PARAGRAPH.CENTER, space_after=2)
-    _add_paragraph_text(doc, f"({izin.get('peruntukan_izin', 'Seksyen 376(3) Kanun Tatacara Jenayah')})", bold=True, size=10, align=WD_ALIGN_PARAGRAPH.CENTER, space_after=10)
+    _add_paragraph_text(doc, "PERMOHONAN IZIN MENDAKWA (KEIZINAN PENDAKWA RAYA)", bold=True, size=12, align=WD_ALIGN_PARAGRAPH.CENTER, space_after=2)
+    _add_paragraph_text(
+        doc,
+        f"({izin.get('peruntukan_izin', 'Perkara 145(3) Perlembagaan Persekutuan & Seksyen 376(3) / 377(b) Kanun Tatacara Jenayah')})",
+        bold=True,
+        size=10,
+        align=WD_ALIGN_PARAGRAPH.CENTER,
+        space_after=10,
+    )
 
     _add_paragraph_text(doc, f"Kepada: {izin.get('kepada', 'Timbalan Pendakwa Raya')}", bold=True, space_after=4)
     _add_paragraph_text(doc, f"No. Rujukan Kertas Siasatan: {izin.get('rujukan_ip', '-')}", space_after=6)
@@ -258,7 +264,7 @@ def _append_borang_114(doc: Document, b114: Dict[str, Any]) -> None:
 
     _add_paragraph_text(
         doc,
-        f"adalah dipertuduh atas pengaduan {b114.get('pegawai_pengadu', 'Pegawai Pendakwa KKM')} "
+        f"adalah dituduh atas pengaduan {b114.get('pegawai_pengadu', 'Pegawai Pendakwa KKM')} "
         "bagi pihak Pendakwa Raya seperti berikut:-",
         italic=True,
         size=11,
@@ -335,15 +341,22 @@ def _append_diari_siasatan(doc: Document, entries: List[Dict[str, str]], no_kes:
 
 def _append_rakaman_112(doc: Document, rakaman_112: str, no_kes: str) -> None:
     _add_paragraph_text(doc, "PERCAKAPAN DI BAWAH SEKSYEN 112 KANUN TATACARA JENAYAH [AKTA 593]", bold=True, underline=True, size=11, align=WD_ALIGN_PARAGRAPH.CENTER, space_after=2)
-    _add_paragraph_text(doc, f"No. Kertas Siasatan: {no_kes}", bold=True, size=10, align=WD_ALIGN_PARAGRAPH.CENTER, space_after=10)
+    _add_paragraph_text(doc, f"No. Kertas Siasatan: {no_kes}", bold=True, size=10, align=WD_ALIGN_PARAGRAPH.CENTER, space_after=4)
+    _add_paragraph_text(
+        doc,
+        "Tarikh & Masa Mula Rakaman: ........................................    |    Bahasa Digunakan: Bahasa Melayu / ....................................",
+        size=9,
+        align=WD_ALIGN_PARAGRAPH.CENTER,
+        space_after=8,
+    )
 
     _add_paragraph_text(doc, rakaman_112 or "-", size=10, align=WD_ALIGN_PARAGRAPH.JUSTIFY, space_after=12)
 
     _add_paragraph_text(
         doc,
         "PERAKUAN PENUTUP DI BAWAH SEKSYEN 112(5) KANUN TATACARA JENAYAH:\n"
-        "\"Percakapan di atas telah dibaca semula kepada saya dalam Bahasa Melayu dan saya mengakui "
-        "ianya adalah benar dan betul tanpa sebarang pindaan.\"",
+        "\"Percakapan di atas telah dibaca semula kepada saya dalam bahasa yang saya fahami "
+        "(Bahasa Melayu / melalui jurubahasa) dan saya mengakui percakapan tersebut adalah benar dan betul tanpa sebarang pindaan.\"",
         bold=True,
         size=10,
         space_after=14,
@@ -352,7 +365,8 @@ def _append_rakaman_112(doc: Document, rakaman_112: str, no_kes: str) -> None:
     _add_paragraph_text(
         doc,
         ".................................................          .................................................\n"
-        "Tandatangan Orang Yang Diperiksa                            Tandatangan Pegawai Perakam (IO)\n\n"
+        "Tandatangan Orang Yang Diperiksa                            Tandatangan Pegawai Perakam (IO)\n"
+        "No. K/P / Pasport: .............................            No. Kad Kuasa KKM: .............................\n\n"
         ".................................................          .................................................\n"
         "Tandatangan Jurubahasa (jika ada)                          Tarikh & Masa Tamat Rakaman",
         size=10,
@@ -370,7 +384,7 @@ def _append_sijil_90a(doc: Document, s90a: Dict[str, Any], no_kes: str) -> None:
     _add_paragraph_text(
         doc,
         f"Saya, {nama}, yang memegang jawatan sebagai {jawatan} di {pejabat}, Kementerian Kesihatan Malaysia, "
-        "dengan ini memperakukan seperti berikut:-",
+        "dengan ini memperakui seperti berikut:-",
         align=WD_ALIGN_PARAGRAPH.JUSTIFY,
         space_after=8,
     )
@@ -398,7 +412,7 @@ def _append_sijil_90a(doc: Document, s90a: Dict[str, Any], no_kes: str) -> None:
 
     _add_paragraph_text(
         doc,
-        "Tandatangan Pegawai Memperaku: ........................................\n"
+        "Tandatangan Pegawai Yang Membuat Perakuan: ........................................\n"
         f"Nama Penuh: {nama}\n"
         f"Jawatan: {jawatan}\n"
         f"Pejabat: {pejabat}\n"
@@ -455,6 +469,7 @@ def _append_kertas_cadangan_io(
 
 
 def _append_saman_111(doc: Document, saman: Dict[str, Any], b114: Dict[str, Any]) -> None:
+    current_year = datetime.now().year
     _add_paragraph_text(doc, "(Mahkamah 111 - Pin. 1/85)", bold=True, size=10, align=WD_ALIGN_PARAGRAPH.RIGHT, space_after=1)
     _add_paragraph_text(doc, "NEGERI-NEGERI TANAH MELAYU", bold=True, size=10, align=WD_ALIGN_PARAGRAPH.CENTER, space_after=1)
     _add_paragraph_text(doc, "SAMAN KEPADA ORANG KENA SAMAN (OKS)", bold=True, underline=True, size=12, align=WD_ALIGN_PARAGRAPH.CENTER, space_after=2)
@@ -479,14 +494,14 @@ def _append_saman_111(doc: Document, saman: Dict[str, Any], b114: Dict[str, Any]
     _add_paragraph_text(
         doc,
         f"MAKA OLEH YANG DEMIKIAN, kamu adalah diperintahkan supaya hadir sendiri di hadapan Mahkamah Majistret "
-        f"pada {saman.get('tarikh_hadir', '........ haribulan .................... 2026')} "
+        f"pada {saman.get('tarikh_hadir', f'........ haribulan .................... {current_year}')} "
         f"jam {saman.get('masa_hadir', '9.00 pagi')} untuk menjawab aduan tersebut dan diperlakukan mengikut undang-undang.",
         align=WD_ALIGN_PARAGRAPH.JUSTIFY,
         space_after=16,
     )
     _add_paragraph_text(
         doc,
-        "Bertarikh pada ........ haribulan ...................... 2026\n\n"
+        f"Bertarikh pada ........ haribulan ...................... {current_year}\n\n"
         "............................................................\n"
         "Majistret / Pendaftar Mahkamah",
         size=10,
@@ -543,43 +558,91 @@ def generate_rakaman_112_docx(payload: Dict[str, Any]) -> bytes:
 def generate_compound_notice_docx(payload: Dict[str, Any]) -> bytes:
     doc = _configure_base_doc()
     kom = payload.get("notis_kompaun", payload)
+    peruntukan = str(kom.get("peruntukan_undang", "") or "")
+    low_per = peruntukan.lower()
+    if "852" in low_per:
+        akta_header = "AKTA KAWALAN PRODUK MEROKOK DEMI KESIHATAN AWAM 2024 [AKTA 852]"
+        peruntukan_kompaun_default = "Seksyen 48 Akta 852 [P.U. (A) 259/2024]"
+    elif "154" in low_per:
+        akta_header = "AKTA PEMUSNAHAN SERANGGA PEMBAWA PENYAKIT 1975 [AKTA 154]"
+        peruntukan_kompaun_default = "Seksyen 25 Akta 154"
+    elif "342" in low_per:
+        akta_header = "AKTA PENCEGAHAN DAN PENGAWALAN PENYAKIT BERJANGKIT 1988 [AKTA 342]"
+        peruntukan_kompaun_default = "Seksyen 25 Akta 342 [P.U. (A) 139/2025]"
+    else:
+        akta_header = "AKTA MAKANAN 1983 [AKTA 281] & PERATURAN-PERATURAN KEBERSIHAN MAKANAN 2009"
+        peruntukan_kompaun_default = "Notis Seksyen 32B & Seksyen 33 Akta Makanan 1983"
+
     _add_paragraph_text(doc, "KEMENTERIAN KESIHATAN MALAYSIA", bold=True, size=12, align=WD_ALIGN_PARAGRAPH.CENTER, space_after=1)
     _add_paragraph_text(doc, "UNIT INSPEKTORAT DAN PERUNDANGAN (UIP)", bold=True, size=11, align=WD_ALIGN_PARAGRAPH.CENTER, space_after=1)
+    _add_paragraph_text(doc, akta_header, bold=True, size=10, align=WD_ALIGN_PARAGRAPH.CENTER, space_after=2)
     _add_paragraph_text(doc, "NOTIS KESALAHAN & TAWARAN MENGKOMPAUN", bold=True, underline=True, size=11, align=WD_ALIGN_PARAGRAPH.CENTER, space_after=10)
 
+    status_serahan = str(kom.get("status_serahan") or "tandatangan_terima")
+    saksi_ppkp = str(kom.get("saksi_ppkp") or "-")
+
     rows = [
-        ["No. Notis", kom.get("no_notis", "-")],
-        ["Nama Penerima / OKT", kom.get("nama_penerima", "-")],
-        ["No. Kad Pengenalan", kom.get("no_kp", "-")],
+        ["No. Siri Notis", kom.get("no_notis", "-")],
+        ["Nama Penerima / OKS", kom.get("nama_penerima", "-")],
+        ["No. K/P / Pasport / SSM", kom.get("no_kp", "-")],
         ["Nama Premis / Syarikat", kom.get("nama_premis", "-")],
         ["No. Daftar SSM", kom.get("no_ssm", "-")],
         ["Alamat Tempat Kejadian", kom.get("alamat_kejadian", "-")],
         ["Tarikh & Masa Kejadian", kom.get("tarikh_masa", "-")],
-        ["Peruntukan Kesalahan", kom.get("peruntukan_undang", "-")],
-        ["Peruntukan Kompaun", kom.get("peruntukan_kompaun", "-")],
+        ["Peruntukan Kesalahan", peruntukan or "-"],
+        ["Peruntukan Kompaun", kom.get("peruntukan_kompaun") or peruntukan_kompaun_default],
         ["Butir-Butir Kesalahan", kom.get("kesalahan_ringkas", "-")],
         ["Amaun Tawaran Kompaun", kom.get("amaun_kompaun_rm", "-")],
         ["Tempoh Bayaran", kom.get("tempoh_bayaran", "-")],
         ["PPKP Pengeluar Notis", f"{kom.get('pegawai_pengeluar', '-')} ({kom.get('no_kad_kuasa', '-')})"],
     ]
-    _add_clean_table(doc, ["Medan Notis", "Maklumat Rasmi"], rows)
+    _add_clean_table(doc, ["Butiran Notis", "Maklumat Rasmi"], rows)
     _add_paragraph_text(
         doc,
-        "\nPERINGATAN: Sekiranya tawaran kompaun ini gagal dijelaskan dalam tempoh yang ditetapkan, "
-        "tindakan pendakwaan di Mahkamah Majistret akan dimulakan tanpa notis lanjut.",
+        "\nTEMPAT & TATACARA BAYARAN: Bayaran kompaun hendaklah dijelaskan dalam tempoh yang ditetapkan di Kaunter Unit Hasil "
+        "Pejabat Kesihatan Daerah (PKD) yang berkenaan (tunai / wang pos / kiriman wang / e-Bayaran atas nama Pengarah Kesihatan Negeri / Pegawai Kesihatan Daerah). "
+        "Sekiranya tawaran kompaun ini gagal dijelaskan dalam tempoh yang ditetapkan, tindakan pendakwaan di Mahkamah Majistret akan dimulakan tanpa notis lanjut.",
+        size=9,
+        align=WD_ALIGN_PARAGRAPH.JUSTIFY,
+        space_before=8,
+        space_after=10,
+    )
+
+    _add_paragraph_text(
+        doc,
+        "1. PENGELUARAN NOTIS (PEGAWAI DIBERI KUASA)\n"
+        "Tandatangan PPKP Pengeluar: ........................................     Tarikh & Masa Serahan: ............................\n"
+        f"Nama & No. Kad Kuasa: {kom.get('pegawai_pengeluar', '-')} ({kom.get('no_kad_kuasa', '-')})",
         size=10,
-        space_before=10,
+        space_after=10,
+    )
+    _add_paragraph_text(
+        doc,
+        "2. AKUAN TERIMA PENERIMA / OKS\n"
+        f"Status Serahan: {'[X] Serahan Tangan (Tandatangan Terima)   [ ] Enggan Tandatangan' if status_serahan != 'enggan_tandatangan' else '[ ] Serahan Tangan   [X] Enggan Tandatangan (Rujuk Saksi PPKP & Pos Berdaftar AR)'}\n"
+        "Tandatangan Penerima / OKS: ........................................     Tarikh Terima: ....................................\n"
+        f"Nama Penerima: {kom.get('nama_penerima', '-')}   |   No. K/P / Pasport: {kom.get('no_kp', '-')}",
+        size=10,
+        space_after=10,
+    )
+    _add_paragraph_text(
+        doc,
+        "3. PENGESAHAN SAKSI PPKP (WAJIB JIKA OKS ENGGAN TANDATANGAN)\n"
+        "Tandatangan Saksi PPKP: ............................................     Tarikh: ...........................................\n"
+        f"Nama Saksi Pengiring: {saksi_ppkp}   |   No. Resit Pos Berdaftar AR (jika dipos): ............................",
+        size=10,
+        space_after=6,
     )
     return _doc_to_bytes(doc)
 
 
 def generate_full_ip_package_docx(payload: Dict[str, Any]) -> bytes:
-    """Menjana Pakej IP Lengkap mengikut susunan rasmi fail Kertas Siasatan UIP KKM."""
+    """Menjana Pakej IP Lengkap mengikut susunan rasmi fail Kertas Siasatan UIP KKM (Bahagian A-G)."""
     doc = _configure_base_doc()
     b114 = payload.get("borang_114", {})
     no_kes = b114.get("no_kes", "PKD/UIP/2026/001")
 
-    # 1. Kulit IP & Indeks Kandungan Fail (A-H)
+    # 1. Kulit IP & Indeks Kandungan Fail (7 Bahagian A-G)
     _append_kulit_dan_indeks_ip(doc, payload)
     doc.add_page_break()
 
@@ -607,6 +670,11 @@ def generate_full_ip_package_docx(payload: Dict[str, Any]) -> bytes:
         _append_saman_111(doc, payload["saman_111"], b114)
         doc.add_page_break()
     _append_borang_114(doc, b114)
+    # Sokongan pertuduhan berasingan (S.163 KTJ) jika lebih daripada 1 pertuduhan
+    for extra_b114 in payload.get("borang_114_tambahan") or []:
+        if isinstance(extra_b114, dict):
+            doc.add_page_break()
+            _append_borang_114(doc, {**b114, **extra_b114})
     doc.add_page_break()
 
     # 4. Fakta Kes, Senarai Saksi & Senarai Barang Kes (Eksibit)

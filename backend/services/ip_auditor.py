@@ -88,7 +88,7 @@ IP_AUDIT_CRITERIA: List[Dict[str, Any]] = [
     },
     {
         "code": "C07",
-        "title": "Amaran Statutori Seksyen 112(2) & (3) menurut S.112(4) KTJ",
+        "title": "Amaran Wajib Seksyen 112(2) & (3) menurut S.112(4) KTJ",
         "category": "Prosedur KTJ",
         "threshold": 0.88,
         "description": "IO memaklumkan kewajipan menjawab benar dan hak enggan menjawab soalan membabitkan diri di bawah Seksyen 112(2) & (3) sebelum merakam percakapan.",
@@ -103,7 +103,7 @@ IP_AUDIT_CRITERIA: List[Dict[str, Any]] = [
         "category": "Dokumen IP",
         "threshold": 0.85,
         "description": "Diari Siasatan (DS) bernombor butiran lengkap merekodkan siasatan dari laporan pertama hingga IP ditutup untuk semakan UIP/TPR.",
-        "positive_keywords": ["diari siasatan", "susunan masa", "kronologi", "seksyen 119", "ds"],
+        "positive_keywords": ["diari siasatan", "susunan masa", "kronologi", "seksyen 119", "(ds)"],
         "negative_keywords": ["tiada diari siasatan", "ds tidak lengkap"],
         "statute_ref": "Seksyen 119 Kanun Tatacara Jenayah [Akta 593]",
         "remedy": "Lengkapkan jadual Diari Siasatan (DS) dengan butiran tarikh, masa, tindakan dan tandatangan ringkas IO.",
@@ -135,11 +135,11 @@ IP_AUDIT_CRITERIA: List[Dict[str, Any]] = [
         "title": "Perakuan Juruanalisis (S.19 Akta 281) / Entomologi (Akta 154) / Makmal TBIS 20C (Akta 342)",
         "category": "Bukti Makmal",
         "threshold": 0.88,
-        "description": "Bagi kes persampelan makanan (S.19 Akta 281), pembiakan Aedes (Akta 154), atau kes Tibi (TBIS 20C di bawah Akta 342), laporan rasmi makmal/entomologi/kahak dan borang permintaan ujian wajib dilampirkan.",
+        "description": "Bagi kes persampelan makanan (S.19 Akta 281 — serah salinan kepada OKT sekurang-kurangnya 10 hari genap sebelum bicara di bawah S.19(2)), pembiakan Aedes (Akta 154), atau kes Tibi (TBIS 20C di bawah Akta 342), laporan rasmi makmal/entomologi/kahak wajib dilampirkan.",
         "positive_keywords": ["perakuan juruanalisis", "seksyen 19", "laporan makmal", "entomologi", "mkak", "laporan analisis", "tbis 20c", "smear positif"],
         "negative_keywords": ["tiada laporan makmal", "laporan entomologi belum diterima", "najis tikus ke makmal"],
-        "statute_ref": "Seksyen 19 Akta Makanan 1983 / Seksyen 399 KTJ / Akta 154 / Akta 342 (TBIS 20C)",
-        "remedy": "Lampirkan Perakuan Juruanalisis Makanan (S.19 Akta 281), Sijil Pengecaman Entomologi (Akta 154), atau Borang/Keputusan Makmal TBIS 20C (Akta 342).",
+        "statute_ref": "Seksyen 19(1)-(2) Akta Makanan 1983 / Seksyen 399 KTJ / Akta 154 / Akta 342 (TBIS 20C)",
+        "remedy": "Lampirkan Perakuan Juruanalisis Makanan (S.19 Akta 281 — ingat serahan 10 hari genap S.19(2) sebelum bicara), Sijil Pengecaman Entomologi (Akta 154), atau Keputusan Makmal TBIS 20C (Akta 342).",
     },
     {
         "code": "C12",
@@ -165,7 +165,7 @@ IP_AUDIT_CRITERIA: List[Dict[str, Any]] = [
     },
     {
         "code": "C14",
-        "title": "Ketepatan Seksyen Kesalahan & Hukuman Borang 114 (Tiada Duplicity)",
+        "title": "Ketepatan Seksyen Kesalahan & Hukuman Borang 114 (Tiada Pertindihan Pertuduhan)",
         "category": "Kertas Pertuduhan",
         "threshold": 0.95,
         "description": "Borang 114 memisahkan Seksyen Kesalahan dengan Seksyen Hukuman secara tepat, tidak mencampurkan dua kesalahan berlainan (S.163 KTJ), serta disertakan draf Borang 143 & Izin Mendakwa TPR.",
@@ -176,14 +176,14 @@ IP_AUDIT_CRITERIA: List[Dict[str, Any]] = [
     },
     {
         "code": "C15",
-        "title": "Semua Elemen Kesalahan Masuk dalam Ayat Pertuduhan",
+        "title": "Semua Unsur Kesalahan Masuk dalam Ayat Pertuduhan",
         "category": "Kertas Pertuduhan",
         "threshold": 0.92,
         "description": "Ayat pertuduhan mengandungi semua unsur wajib kesalahan (identiti OKS, tarikh, masa, premis, daerah/negeri, perbuatan spesifik, peraturan subsidiari seperti P.U.(A) 260/2024 atau PPKM 2009).",
         "positive_keywords": ["melanggar", "peraturan", "seksyen", "premis", "p.u."],
         "negative_keywords": ["intipati tidak lengkap", "unsur kesalahan tidak dibuktikan"],
         "statute_ref": "Seksyen 152 & 154 Kanun Tatacara Jenayah [Akta 593]",
-        "remedy": "Pastikan teks pertuduhan Borang 114 menyebut lengkap 5 unsur mandatori termasuk peraturan subsidiari (cth: Peraturan 6 P.U.(A) 260/2024 bagi pameran vape).",
+        "remedy": "Pastikan teks pertuduhan Borang 114 menyebut lengkap 5 unsur wajib termasuk peraturan berkaitan (cth: Peraturan 6 P.U.(A) 260/2024 bagi pameran vape).",
     },
     {
         "code": "C16",
@@ -194,7 +194,7 @@ IP_AUDIT_CRITERIA: List[Dict[str, Any]] = [
         "positive_keywords": ["had masa", "tamat tempoh", "seksyen 48", "seksyen 33", "seksyen 25", "tanpa bayaran", "tbis 10d", "tiada tawaran kompaun", "izin mendakwa"],
         "negative_keywords": ["tamat had masa", "tempoh kompaun belum tamat", "kompaun telah dibayar", "kompaun seksyen 44"],
         "statute_ref": "Seksyen 48 Akta 852 / Seksyen 33 Akta 281 / Seksyen 25 Akta 154 / Seksyen 22(b) & 24(a) Akta 342",
-        "remedy": "Lampirkan pengesahan Unit Hasil bahawa tawaran kompaun tidak dibayar selepas tamat tempoh statutori, atau rujukan TBIS 10D/Izin Dakwa bagi kes pendakwaan terus Akta 342.",
+        "remedy": "Lampirkan pengesahan Unit Hasil bahawa tawaran kompaun tidak dibayar selepas tamat tempoh ditetapkan, atau rujukan TBIS 10D/Izin Dakwa bagi kes pendakwaan terus Akta 342.",
     },
     {
         "code": "C17",
@@ -457,7 +457,7 @@ class IPTechnicalAuditor:
 
     @staticmethod
     def _detect_statutory_citation_errors(code: str, low: str) -> Optional[str]:
-        """Mengesan petikan seksyen/peraturan yang salah, akta dimansuhkan atau unsur tidak terpenuhi secara baris demi baris."""
+        """Mengesan petikan seksyen/peraturan yang salah, akta dimansuhkan atau unsur tidak dipenuhi secara baris demi baris."""
         lines = [ln.strip() for ln in low.splitlines() if ln.strip()]
         for ln in lines:
             if code == "C09" and (
@@ -474,7 +474,11 @@ class IPTechnicalAuditor:
             if code == "C03" and "seksyen 32b" in ln and ("pengarah" in ln or "syarikat" in ln or "liabiliti" in ln):
                 return "KESALAHAN SEKSYEN: Seksyen 32B Akta Makanan 1983 ialah notis hadir mahkamah. Liabiliti pengarah/syarikat ialah Seksyen 33A Akta Makanan 1983!"
             if code == "C14" and ("tifoid" in ln or "typhoid" in ln) and "peraturan 30" in ln and "peraturan 31" not in ln:
-                return "KESALAHAN PERATURAN: Kesalahan tiada suntikan anti-tifoid ialah di bawah Peraturan 31(1) PPKM 2009 (Peraturan 30 ialah Latihan Pengendali Makanan)."
+                return "KESALAHAN PERATURAN: Kesalahan tiada suntikan antitifoid ialah di bawah Peraturan 31(1) / 31(2) PPKM 2009 (Peraturan 30 ialah Latihan Pengendali Makanan)."
+            if code == "C14" and "852" in ln and "16(1)" in ln and not any(ok in ln for ok in ("mewartakan", "bukan 16(1)", "kuasa menteri")):
+                return "KESALAHAN SEKSYEN: Seksyen 16(1) Akta 852 ialah kuasa Menteri mewartakan kawasan larangan merokok. Kesalahan individu merokok ialah Seksyen 16(2) Akta 852!"
+            if code == "C14" and "154" in ln and "8(2)" in ln and ("ingkar" in ln or "kesalahan" in ln or "pertuduhan" in ln):
+                return "KESALAHAN SEKSYEN: Kesalahan ingkar perintah bertulis Seksyen 8 Akta 154 ialah di bawah Seksyen 8(8) Akta 154 (bukan Seksyen 8(2))."
             if code == "C14" and "akta 514" in ln and any(
                 k in low for k in ("tibi", "tuberkulosis", "tbis", "apppb", "akta 342", "penyakit berjangkit", "22(b)")
             ):
@@ -491,11 +495,49 @@ class IPTechnicalAuditor:
             if code == "C15" and ("17(1)" in ln or "seksyen 17" in ln) and "dalam beg" in low and (
                 "tanpa bukti" in low or "tidak menghisap" in low or "pemilikan semata" in low
             ):
-                return "UNSUR KESALAHAN TIDAK TERPENUHI: Pemilikan vape semata-mata di dalam beg pelajar tanpa bukti menghisap, mengunyah, menggunakan (S.17(1)) atau membeli (S.13(3)) BUKAN kesalahan di bawah Seksyen 17(1) Akta 852!"
+                return "UNSUR KESALAHAN TIDAK DIPENUHI: Pemilikan vape semata-mata di dalam beg pelajar tanpa bukti menghisap, mengunyah, menggunakan (S.17(1)) atau membeli (S.13(3)) BUKAN kesalahan di bawah Seksyen 17(1) Akta 852!"
+
+        # Sahkan seksyen yang dipetik terhadap Pustaka Akta Verbatim AGC untuk C14
+        if code == "C14":
+            from backend.rag.legal_engine import get_legal_library, validate_legal_output
+
+            lib_snapshot = get_legal_library().to_snapshot_dict()
+            val_res = validate_legal_output({"pertuduhan": low}, lib_snapshot, question_context=low[:400])
+            if val_res.get("invalid_citations"):
+                return "PETIKAN SEKSYEN TIDAK WUJUD / TIDAK SAH: " + "; ".join(val_res["invalid_citations"][:2])
         return None
 
     @staticmethod
-    def _check_date_conflict(raw_text: str) -> Optional[str]:
+    def _normalize_date_tuple(date_str: str) -> Optional[tuple[int, int, int]]:
+        """Normalkan pelbagai format tarikh BM/numerik kepada (hari, bulan, tahun)."""
+        s = date_str.strip().lower()
+        months = {
+            "jan": 1, "januari": 1, "january": 1,
+            "feb": 2, "februari": 2, "february": 2,
+            "mac": 3, "mar": 3, "march": 3,
+            "apr": 4, "april": 4,
+            "mei": 5, "may": 5,
+            "jun": 6, "june": 6,
+            "jul": 7, "julai": 7, "july": 7,
+            "ogos": 8, "ogo": 8, "aug": 8, "august": 8,
+            "sep": 9, "sept": 9, "september": 9,
+            "okt": 10, "oct": 10, "oktober": 10, "october": 10,
+            "nov": 11, "november": 11,
+            "dis": 12, "dec": 12, "disember": 12, "december": 12,
+        }
+        m_txt = re.match(r"^(\d{1,2})\s+([a-z]+)\s+(\d{4})$", s)
+        if m_txt and m_txt.group(2) in months:
+            return (int(m_txt.group(1)), months[m_txt.group(2)], int(m_txt.group(3)))
+        m_num = re.match(r"^(\d{1,2})[/-](\d{1,2})[/-](\d{2,4})$", s)
+        if m_num:
+            yr = int(m_num.group(3))
+            if yr < 100:
+                yr += 2000
+            return (int(m_num.group(1)), int(m_num.group(2)), yr)
+        return None
+
+    @classmethod
+    def _check_date_conflict(cls, raw_text: str) -> Optional[str]:
         """Mengesan jika Tarikh Kejadian bercanggah dengan tarikh laporan entomologi / makmal / sitaan."""
         main_date_m = re.search(
             r"tarikh\s+kejadian\s*[:\-]\s*(\d{1,2}\s+[A-Za-z]+\s+\d{4}|\d{1,2}[/-]\d{1,2}[/-]\d{2,4})",
@@ -505,6 +547,7 @@ class IPTechnicalAuditor:
         if not main_date_m:
             return None
         main_date = main_date_m.group(1).strip().lower()
+        main_tuple = cls._normalize_date_tuple(main_date)
         # Semak baris Laporan Entomologi / Borang Sampel / Borang Sitaan
         for line in raw_text.splitlines():
             l_low = line.lower()
@@ -512,7 +555,9 @@ class IPTechnicalAuditor:
                 other_m = re.search(r"(\d{1,2}\s+[A-Za-z]+\s+\d{4}|\d{1,2}[/-]\d{1,2}[/-]\d{2,4})", line)
                 if other_m:
                     other_date = other_m.group(1).strip().lower()
-                    if other_date != main_date:
+                    other_tuple = cls._normalize_date_tuple(other_date)
+                    is_same = (main_tuple == other_tuple) if (main_tuple and other_tuple) else (other_date == main_date)
+                    if not is_same:
                         return f"Tarikh pada dokumen sokongan ({other_m.group(1)}) bercanggah dengan Tarikh Kejadian ({main_date_m.group(1)})."
         return None
 
@@ -551,13 +596,22 @@ class IPTechnicalAuditor:
                     "recommendation": spec["remedy"],
                 }
 
-        # C02: Pengesahan MyKad sebenar secara tempatan (kerana nombor KP ditutup kepada [NO_KP_1] sebelum dihantar ke AI awan)
+        # C02: Pengesahan MyKad / Pasport sebenar secara tempatan (kerana nombor KP ditutup kepada [NO_KP_1] sebelum AI awan)
         if code == "C02":
+            from datetime import date as _date
+
             ic_m = re.search(r"\b(\d{2})(\d{2})(\d{2})-(\d{2})-(\d{4})\b", raw_text)
+            passport_m = re.search(r"(?:pasport|passport)\s*[:\-]?\s*([A-Z]{1,2}\d{6,9})\b", raw_text, flags=re.I)
             has_neg_c02 = any(nk in low for nk in spec["negative_keywords"])
             if not has_neg_c02 and ic_m and ("[suspek_1]" in low or "no. k/p" in low or "kad pengenalan" in low):
-                mm, dd = int(ic_m.group(2)), int(ic_m.group(3))
-                if 1 <= mm <= 12 and 1 <= dd <= 31:
+                yy, mm, dd = int(ic_m.group(1)), int(ic_m.group(2)), int(ic_m.group(3))
+                yr = (2000 + yy) if yy <= (_date.today().year % 100) else (1900 + yy)
+                try:
+                    _date(yr, mm, dd)
+                    valid_cal = True
+                except ValueError:
+                    valid_cal = False
+                if valid_cal:
                     return {
                         "score": 0.94,
                         "answer": "Yes",
@@ -570,8 +624,17 @@ class IPTechnicalAuditor:
                     "score": 0.25,
                     "answer": "No",
                     "status": "GAGAL",
-                    "snippet": f"Format tarikh lahir pada No. K/P ({ic_m.group(0)}) tidak sah.",
+                    "snippet": f"Format tarikh lahir pada No. K/P ({ic_m.group(0)}) tidak sah mengikut kalendar.",
                     "recommendation": spec["remedy"],
+                }
+            if not has_neg_c02 and passport_m:
+                return {
+                    "score": 0.92,
+                    "answer": "Yes",
+                    "status": "LULUS",
+                    "snippet": f"No. Pasport warga asing direkodkan ({passport_m.group(1)}).",
+                    "recommendation": "Identiti warga asing (Pasport) disahkan. Lampirkan salinan muka surat biodata pasport & semakan Imigresen.",
+                    "contextual_override": True,
                 }
 
         # C20: Semakan Penyamaran OSA/PDPA
@@ -657,6 +720,8 @@ class IPTechnicalAuditor:
                     continue
                 neg_hits.append(nk)
         pos_hits = [pk for pk in spec["positive_keywords"] if pk in low]
+        if code == "C08" and "(ds)" not in pos_hits and re.search(r"\bds\b", low):
+            pos_hits.append("ds")
 
         if neg_hits:
             snippet = self._find_best_line_snippet(redacted_text, neg_hits)
@@ -682,12 +747,15 @@ class IPTechnicalAuditor:
             snippet = self._find_best_line_snippet(redacted_text, pos_hits)
             boost = min(0.06, 0.02 * (len(pos_hits) - 2))
             score = round(min(0.98, threshold + 0.03 + boost), 2)
+            rec_ok = "Lengkap dan patuh prosedur asas IP."
+            if code == "C11" and ("281" in akta_utama or "seksyen 19" in low):
+                rec_ok = "Lengkap. Peringatan Seksyen 19(2) Akta Makanan 1983: pastikan salinan Perakuan Juruanalisis diserahkan kepada OKT sekurang-kurangnya 10 hari genap sebelum tarikh perbicaraan."
             return {
                 "score": score,
                 "answer": "Yes",
                 "status": "LULUS",
                 "snippet": snippet,
-                "recommendation": "Lengkap dan patuh prosedur asas IP.",
+                "recommendation": rec_ok,
             }
 
         if len(pos_hits) == 1:
@@ -756,7 +824,7 @@ class IPTechnicalAuditor:
             return "LENGKAP"
 
         return [
-            {"bahagian": "A", "tajuk": "Kertas Minit, Izin Mendakwa TPR & Fakta Kes", "status": _agg(["C19", "C20"])},
+            {"bahagian": "A", "tajuk": "Kertas Minit, Izin Mendakwa TPR & Fakta Kes", "status": _agg(["C14", "C19", "C20"])},
             {"bahagian": "B", "tajuk": "Borang 114 (Pertuduhan) & Borang 143 (Pengaduan Majistret)", "status": _agg(["C14", "C15", "C01"])},
             {"bahagian": "C", "tajuk": "Notis S.32B / S.47, Tawaran Kompaun & Bukti Serahan (Kad AR)", "status": _agg(["C16", "C17"])},
             {"bahagian": "D", "tajuk": "Borang Sitaan (S.36) / Perintah S.11, Barang Kes, Pelan Lakar, Gambar & Sijil 90A", "status": _agg(["C09", "C10", "C12", "C13", "C18"])},

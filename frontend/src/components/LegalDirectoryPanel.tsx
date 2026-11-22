@@ -420,7 +420,7 @@ export default function LegalDirectoryPanel({
 
     for (const sec of sectionsForSelectedStatute) {
       const pNum = sec.part_number || "UMUM";
-      const pTitle = sec.part_title || "Peruntukan Statutori";
+      const pTitle = sec.part_title || "Peruntukan Akta";
       const key = `${pNum}::${pTitle}`;
       if (!map.has(key)) {
         map.set(key, []);
@@ -617,6 +617,12 @@ export default function LegalDirectoryPanel({
               <button
                 type="button"
                 onClick={() => {
+                  if (off.verified_status !== "VERIFIED_AGC") {
+                    const proceed = window.confirm(
+                      `Peringatan Semakan Warta:\nRekod ${off.offence_section} masih berstatus Draf (Belum Disahkan Warta AGC oleh Pentadbir).\n\nSila pastikan seksyen dan had kompaun disemak semula dengan teks Warta rasmi sebelum menyerahkan notis.\n\nTeruskan isi ke Borang Notis Kompaun?`
+                    );
+                    if (!proceed) return;
+                  }
                   setMobileOffenceDrawerOpen(false);
                   onApplyOffenceToCase(
                     off.charge_sheet_template_bm,

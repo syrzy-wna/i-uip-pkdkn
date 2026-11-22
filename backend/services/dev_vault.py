@@ -119,7 +119,8 @@ def redact_json_value(redactor: PrivacyRedactor, value: Any) -> Any:
     if isinstance(value, list):
         return [redact_json_value(redactor, item) for item in value]
     if isinstance(value, str):
-        if len(value) >= 12:
+        stripped = value.strip()
+        if len(stripped) >= 5 and not (stripped.startswith("[") and stripped.endswith("]")):
             red_txt, _ = redact_for_vault(redactor, value)
             return red_txt
         return value

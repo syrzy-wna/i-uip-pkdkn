@@ -4,11 +4,13 @@ from __future__ import annotations
 
 import json
 import logging
+import re
 import time
 from dataclasses import asdict
 from typing import Any, Dict, Optional
 
 from fastapi import APIRouter, Depends, FastAPI, File, Form, Header, HTTPException, Query, Request, UploadFile
+from fastapi.concurrency import run_in_threadpool
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, Response
 from pydantic import BaseModel, Field
@@ -24,6 +26,8 @@ from backend.services.sample_cases import SAMPLE_CASES
 from backend.services.uip_advisor import UIPAdvisorService
 
 logger = logging.getLogger("uip.dev_vault")
+MAX_UPLOAD_BYTES = 15 * 1024 * 1024  # Had 15 MB bagi setiap muat naik fail
+IMAGE_UPLOAD_EXTENSIONS = (".jpg", ".jpeg", ".png", ".webp")
 
 db_service = get_uip_db()
 router_service = UIPModelRouter()
@@ -31,6 +35,37 @@ auditor_service = IPTechnicalAuditor(router=router_service)
 compound_checker = CompoundNoticeChecker()
 advisor_service = UIPAdvisorService(router=router_service, db=db_service)
 dev_vault_service = DevArchiveVaultService(db=db_service, redactor=router_service.redactor)
+
+
+async def _read_upload_limited(upload: UploadFile, max_bytes: int = MAX_UPLOAD_BYTES) -> bytes:
+    """Baca fail muat naik secara berperingkat dan sekat fail melebihi had saiz (413)."""
+    chunks: list[bytes] = []
+    total = 0
+    while True:
+        chunk = await upload.read(512 * 1024)
+        if not chunk:
+            break
+        total += len(chunk)
+        if total > max_bytes:
+            raise HTTPException(
+                status_code=413,
+                detail=f"Saiz fail melebihi had maksimum ({max_bytes // (1024 * 1024)} MB). Sila mampatkan fail dan cuba semula.",
+            )
+        chunks.append(chunk)
+    return b"".join(chunks)
+
+
+def _merge_authoritative_officer(
+    current_officer: Dict[str, Any], requested_profile: Optional[Dict[str, Any]]
+) -> Dict[str, Any]:
+    """Kunci medan identiti rasmi kepada pegawai yang log masuk; hanya terima pilihan perkakasan S.90A jika ada."""
+    merged = dict(current_officer)
+    if isinstance(requested_profile, dict):
+        for safe_hw in ("default_computer_desc", "default_printer_desc", "default_camera_desc"):
+            val = requested_profile.get(safe_hw)
+            if isinstance(val, str) and val.strip():
+                merged[safe_hw] = val.strip()
+    return merged
 
 
 def _archive_safely(**kwargs: Any) -> None:
@@ -99,12 +134,12 @@ app = FastAPI(
         "Aplikasi Pengurusan Kertas Siasatan (IP), Notis Kompaun & Semakan Pra-TPR "
         "untuk Unit Inspektorat dan Perundangan (UIP), Kementerian Kesihatan Malaysia."
     ),
-    version="2.1.0",
+    version="2.2.0",
 )
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.cors_origins + ["*"],
+    allow_origins=settings.cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -113,10 +148,11 @@ app.add_middleware(
 
 
 @app.exception_handler(Exception)
-async def global_json_exception_handler(_request: Request, exc: Exception) -> JSONResponse:
+async def global_json_exception_handler(request: Request, exc: Exception) -> JSONResponse:
+    logger.exception("Ralat dalaman tidak dijangka pada %s %s", request.method, request.url.path)
     return JSONResponse(
         status_code=500,
-        content={"detail": f"Ralat dalaman pelayan: {str(exc)[:240]}"},
+        content={"detail": "Ralat dalaman pelayan. Sila cuba sebentar lagi atau hubungi pentadbir sistem."},
     )
 
 
@@ -293,10 +329,15 @@ def get_status() -> Dict[str, Any]:
 
 
 @app.get("/api/settings")
-def get_runtime_settings() -> Dict[str, Any]:
+def get_runtime_settings(
+    authorization: Optional[str] = Header(default=None),
+    x_auth_token: Optional[str] = Header(default=None, alias="X-Auth-Token"),
+) -> Dict[str, Any]:
+    caller = _resolve_current_officer(authorization, x_auth_token)
+    is_admin = bool(caller and str(caller.get("email") or "").strip().lower() in settings.dev_admin_emails)
     return {
         "gemini_api_key_configured": settings.has_gemini_key,
-        "masked_gemini_api_key": settings.masked_gemini_key,
+        "masked_gemini_api_key": settings.masked_gemini_key if is_admin else ("********" if settings.has_gemini_key else ""),
         "google_client_id": settings.google_client_id,
         "google_client_id_configured": bool(settings.google_client_id),
         "ollama_base_url": settings.ollama_base_url,
@@ -319,7 +360,18 @@ def update_runtime_settings(
     return {
         "status": "disimpan",
         "system_status": router_service.get_system_status(),
-        "settings": get_runtime_settings(),
+        "settings": {
+            "gemini_api_key_configured": settings.has_gemini_key,
+            "masked_gemini_api_key": settings.masked_gemini_key,
+            "google_client_id": settings.google_client_id,
+            "google_client_id_configured": bool(settings.google_client_id),
+            "ollama_base_url": settings.ollama_base_url,
+            "ollama_model": settings.ollama_model,
+            "decision_model": settings.decision_model,
+            "multimodal_model": settings.multimodal_model,
+            "reasoning_model": settings.reasoning_model,
+            "standard_fallback_model": settings.standard_fallback_model,
+        },
     }
 
 
@@ -332,9 +384,15 @@ def get_samples(
 
 @app.get("/api/cases")
 def list_cases(
-    _officer: Dict[str, Any] = Depends(_require_authenticated_officer),
+    current_officer: Dict[str, Any] = Depends(_require_authenticated_officer),
 ) -> Dict[str, Any]:
-    return {"cases": db_service.list_cases()}
+    is_admin = bool(current_officer.get("is_dev_admin"))
+    return {
+        "cases": db_service.list_cases(
+            owner_user_id=str(current_officer.get("id") or ""),
+            is_admin=is_admin,
+        )
+    }
 
 
 @app.post("/api/cases")
@@ -343,7 +401,15 @@ def save_case(
     current_officer: Dict[str, Any] = Depends(_require_authenticated_officer),
 ) -> Dict[str, Any]:
     t0 = time.perf_counter()
-    saved = db_service.upsert_case(req.model_dump(exclude_none=True))
+    is_admin = bool(current_officer.get("is_dev_admin"))
+    try:
+        saved = db_service.upsert_case(
+            req.model_dump(exclude_none=True),
+            owner_user_id=str(current_officer.get("id") or ""),
+            is_admin=is_admin,
+        )
+    except PermissionError as exc:
+        raise HTTPException(status_code=403, detail=str(exc))
     latency_ms = int((time.perf_counter() - t0) * 1000)
     db_service.log_activity(
         action_type="SIMPAN_KES_IP",
@@ -373,9 +439,17 @@ def save_case(
 @app.delete("/api/cases/{case_id}")
 def delete_case(
     case_id: str,
-    _officer: Dict[str, Any] = Depends(_require_authenticated_officer),
+    current_officer: Dict[str, Any] = Depends(_require_authenticated_officer),
 ) -> Dict[str, Any]:
-    deleted = db_service.delete_case(case_id)
+    is_admin = bool(current_officer.get("is_dev_admin"))
+    try:
+        deleted = db_service.delete_case(
+            case_id,
+            owner_user_id=str(current_officer.get("id") or ""),
+            is_admin=is_admin,
+        )
+    except PermissionError as exc:
+        raise HTTPException(status_code=403, detail=str(exc))
     if not deleted:
         raise HTTPException(status_code=404, detail="Kes IP tidak dijumpai.")
     return {"deleted": True, "id": case_id}
@@ -459,24 +533,48 @@ async def audit_ip_endpoint(
     upload_mime: Optional[str] = None
 
     if file is not None:
-        file_bytes = await file.read()
+        file_bytes = await _read_upload_limited(file)
         filename = file.filename or "kertas_siasatan.pdf"
         if not file_bytes:
             raise HTTPException(status_code=400, detail="Fail yang dimuat naik kosong.")
         upload_bytes = file_bytes
         upload_filename = filename
         upload_mime = file.content_type or "application/octet-stream"
-        extracted = extract_text_from_upload(file_bytes, filename)
+        low_fn = filename.lower()
+        if low_fn.endswith(IMAGE_UPLOAD_EXTENSIONS) or upload_mime.startswith("image/"):
+            ocr_res = await run_in_threadpool(
+                router_service.extract_multimodal_evidence,
+                file_bytes=file_bytes,
+                filename=filename,
+                mime_type=upload_mime,
+                doc_hint="dokumen_kertas_siasatan",
+            )
+            extracted = (ocr_res.raw_text or ocr_res.structured_summary or "").strip()
+        else:
+            extracted = await run_in_threadpool(extract_text_from_upload, file_bytes, filename)
+            if low_fn.endswith(".pdf") and len(re.sub(r"--- Muka Surat \d+ ---|\s+", "", extracted)) < 40:
+                # PDF imbasan tanpa lapisan teks -> ekstrak melalui OCR multimodal
+                ocr_res = await run_in_threadpool(
+                    router_service.extract_multimodal_evidence,
+                    file_bytes=file_bytes,
+                    filename=filename,
+                    mime_type="application/pdf",
+                    doc_hint="dokumen_kertas_siasatan",
+                )
+                ocr_text = (ocr_res.raw_text or ocr_res.structured_summary or "").strip()
+                if ocr_text:
+                    extracted = ocr_text
         if extracted.strip():
             raw_text = f"{extracted}\n\n{raw_text}".strip() if raw_text else extracted
 
     if not raw_text:
         raise HTTPException(
             status_code=400,
-            detail="Sila masukkan teks Kertas Siasatan atau muat naik fail PDF/DOCX/TXT.",
+            detail="Sila masukkan teks Kertas Siasatan atau muat naik fail PDF/DOCX/TXT/Gambar.",
         )
 
-    report = auditor_service.audit_ip(
+    report = await run_in_threadpool(
+        auditor_service.audit_ip,
         raw_text=raw_text,
         akta_utama=akta_utama,
         filename=filename,
@@ -500,14 +598,22 @@ async def audit_ip_endpoint(
     }
 
     if case_id:
-        db_service.upsert_case({
-            "id": case_id,
-            "akta_utama": akta_utama,
-            "case_text": raw_text,
-            "status_kes": report.readiness_status,
-            "skor_audit": report.overall_score,
-            "audit_report": report_dict,
-        })
+        is_admin = bool(current_officer.get("is_dev_admin"))
+        try:
+            db_service.upsert_case(
+                {
+                    "id": case_id,
+                    "akta_utama": akta_utama,
+                    "case_text": raw_text,
+                    "status_kes": report.readiness_status,
+                    "skor_audit": report.overall_score,
+                    "audit_report": report_dict,
+                },
+                owner_user_id=str(current_officer.get("id") or ""),
+                is_admin=is_admin,
+            )
+        except PermissionError as exc:
+            raise HTTPException(status_code=403, detail=str(exc))
 
     audit_model = str((report.models_used or {}).get("decision_engine") or "local-statute-fallback")
     is_gemini_audit = (
@@ -557,10 +663,11 @@ async def extract_evidence_endpoint(
     current_officer: Dict[str, Any] = Depends(_require_authenticated_officer),
 ) -> Dict[str, Any]:
     t0 = time.perf_counter()
-    file_bytes = await file.read()
+    file_bytes = await _read_upload_limited(file)
     if not file_bytes:
         raise HTTPException(status_code=400, detail="Fail bukti kosong.")
-    result = router_service.extract_multimodal_evidence(
+    result = await run_in_threadpool(
+        router_service.extract_multimodal_evidence,
         file_bytes=file_bytes,
         filename=file.filename or "bukti.jpg",
         mime_type=file.content_type or "application/octet-stream",
@@ -613,7 +720,7 @@ def generate_draft_endpoint(
     current_officer: Dict[str, Any] = Depends(_require_authenticated_officer),
 ) -> Dict[str, Any]:
     t0 = time.perf_counter()
-    active_officer = req.officer_profile or current_officer
+    active_officer = _merge_authoritative_officer(current_officer, req.officer_profile)
     result = router_service.generate_legal_drafts(
         case_text=req.case_text,
         akta_utama=req.akta_utama,
@@ -624,12 +731,20 @@ def generate_draft_endpoint(
     )
     result_dict = asdict(result)
     if req.case_id:
-        db_service.upsert_case({
-            "id": req.case_id,
-            "akta_utama": req.akta_utama,
-            "case_text": req.case_text,
-            "draft": result_dict,
-        })
+        is_admin = bool(current_officer.get("is_dev_admin"))
+        try:
+            db_service.upsert_case(
+                {
+                    "id": req.case_id,
+                    "akta_utama": req.akta_utama,
+                    "case_text": req.case_text,
+                    "draft": result_dict,
+                },
+                owner_user_id=str(current_officer.get("id") or ""),
+                is_admin=is_admin,
+            )
+        except PermissionError as exc:
+            raise HTTPException(status_code=403, detail=str(exc))
     draft_model = str((result.models_used or {}).get("legal_reasoning") or "local-template-engine")
     is_cloud = (
         "gemini" in draft_model.lower()
@@ -759,15 +874,16 @@ async def ingest_statutory_act(
     from backend.rag.legal_engine import get_legal_library
 
     t0 = time.perf_counter()
-    raw_bytes = await file.read()
+    raw_bytes = await _read_upload_limited(file)
     if not raw_bytes:
         raise HTTPException(status_code=400, detail="Fail akta kosong.")
     fname = file.filename or "akta_tambahan.txt"
     if not fname.lower().endswith((".txt", ".pdf", ".md")):
         raise HTTPException(status_code=400, detail="Hanya fail .txt, .md atau .pdf disokong.")
-    total_chunks = router_service.rag_store.ingest_uploaded_file(fname, raw_bytes)
+    total_chunks = await run_in_threadpool(router_service.rag_store.ingest_uploaded_file, fname, raw_bytes)
     legal_lib = get_legal_library()
-    ingest_meta = legal_lib.ingest_statute_bytes(
+    ingest_meta = await run_in_threadpool(
+        legal_lib.ingest_statute_bytes,
         filename=fname,
         raw_bytes=raw_bytes,
         statute_id=statute_id,
@@ -1223,7 +1339,7 @@ def consult_uip_advisor(
             detail="Sila taip soalan situasi kes atau pilih salah satu templat situasi.",
         )
     t0 = time.perf_counter()
-    officer = req.officer_profile or current_officer
+    officer = _merge_authoritative_officer(current_officer, req.officer_profile)
     res = advisor_service.consult(
         question=req.question,
         akta_hint=req.akta_hint,

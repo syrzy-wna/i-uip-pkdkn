@@ -2355,3 +2355,297 @@ def test_two_branch_advisor_vape_checking_bag_vs_smoking_and_corrupt_cache_purge
     assert int(remaining["cnt"]) == 0
 
 
+def test_five_expert_audit_remediations_security_legal_compound_and_docx() -> None:
+    import uuid
+    from docx import Document as DocxDocument
+    from backend.rag.legal_engine import INITIAL_STATUTE_LIBRARY_VERSION, validate_legal_output
+
+    # ------------------------------------------------------------------
+    # 1. KESELAMATAN: IDOR ISOLATION, SETTINGS MASKING & OFFICER LOCKING
+    # ------------------------------------------------------------------
+    tag = uuid.uuid4().hex[:6]
+    reg_a = client.post(
+        "/api/auth/register",
+        json={
+            "email": f"ppkp.idor.a.{tag}@moh.gov.my",
+            "password": "IdorTest#2026A",
+            "full_name": "PPKP Ahmad Faizal bin Ramli",
+            "grade": "U5",
+            "kkm_authority_card_no": "KKM-TRG-A101",
+            "district_pkd": "Pejabat Kesihatan Daerah Kuala Nerus",
+        },
+    )
+    reg_b = client.post(
+        "/api/auth/register",
+        json={
+            "email": f"ppkp.idor.b.{tag}@moh.gov.my",
+            "password": "IdorTest#2026B",
+            "full_name": "PPKP Siti Hajar binti Yusof",
+            "grade": "U6",
+            "kkm_authority_card_no": "KKM-TRG-B202",
+            "district_pkd": "Pejabat Kesihatan Daerah Kuala Nerus",
+        },
+    )
+    assert reg_a.status_code == 200 and reg_b.status_code == 200
+    headers_a = {"Authorization": f"Bearer {reg_a.json()['token']}"}
+    headers_b = {"Authorization": f"Bearer {reg_b.json()['token']}"}
+
+    private_case_id = f"kes-private-{tag}"
+    create_a = client.post(
+        "/api/cases",
+        headers=headers_a,
+        json={
+            "id": private_case_id,
+            "no_ip": f"PKDKN/UIP/852/2026/{tag}",
+            "tajuk": "Kes Sulit Pengguna A",
+            "akta_utama": "Akta 852",
+            "workflow": "ip_builder",
+            "status": "Draf",
+            "case_text": "Fakta kes sulit pengguna A.",
+        },
+    )
+    assert create_a.status_code == 200
+
+    # Pengguna A nampak kes sendiri; Pengguna B TIDAK nampak kes Pengguna A tetapi masih nampak kes contoh
+    list_a_ids = {c["id"] for c in client.get("/api/cases", headers=headers_a).json()["cases"]}
+    list_b_ids = {c["id"] for c in client.get("/api/cases", headers=headers_b).json()["cases"]}
+    assert private_case_id in list_a_ids
+    assert private_case_id not in list_b_ids
+    assert any(cid.startswith("kes-akta-") for cid in list_b_ids)
+
+    # Pengguna B disekat 403 daripada menulis ganti atau memadam kes Pengguna A
+    overwrite_b = client.post(
+        "/api/cases",
+        headers=headers_b,
+        json={
+            "id": private_case_id,
+            "no_ip": f"PKDKN/UIP/852/2026/{tag}",
+            "tajuk": "Cubaan Rampas Kes A",
+            "akta_utama": "Akta 852",
+        },
+    )
+    assert overwrite_b.status_code == 403
+
+    delete_b = client.delete(f"/api/cases/{private_case_id}", headers=headers_b)
+    assert delete_b.status_code == 403
+
+    # Pengguna A boleh memadam kes miliknya sendiri
+    assert client.delete(f"/api/cases/{private_case_id}", headers=headers_a).status_code == 200
+
+    # Pegawai bukan admin tidak menerima masked_gemini_api_key pada /api/settings
+    settings_non_admin = client.get("/api/settings", headers=headers_a)
+    assert settings_non_admin.status_code == 200
+    assert settings_non_admin.json().get("masked_gemini_api_key", "") == ""
+
+    # Identiti pegawai dalam /api/generate-draft WAJIB menggunakan profil sesi sah (bukan payload palsu)
+    spoof_draft = client.post(
+        "/api/generate-draft",
+        headers=headers_a,
+        json={
+            "case_text": "Tarikh Kejadian: 18 November 2026\nNama Premis: Kedai Runcit Nerus\nKesalahan: pamer vape secara terbuka.",
+            "akta_utama": "Akta 852",
+            "workflow": "ip_builder",
+            "use_ollama": False,
+            "officer_profile": {
+                "full_name": "PEGAWAI PALSU",
+                "kkm_authority_card_no": "PALSU-999",
+            },
+        },
+    )
+    assert spoof_draft.status_code == 200
+    draft_dump = json.dumps(spoof_draft.json(), ensure_ascii=False)
+    assert "PEGAWAI PALSU" not in draft_dump
+    assert "PPKP Ahmad Faizal bin Ramli" in draft_dump
+
+    # ------------------------------------------------------------------
+    # 2. KETEPATAN UNDANG-UNDANG (v2.6.0, AKTA A1742, AKTA 852 S.10/S.13(3))
+    # ------------------------------------------------------------------
+    status_res = client.get("/api/status").json()
+    assert status_res["statute_library_version"] == "2.6.0-closed-book-agc-pdf"
+    assert INITIAL_STATUTE_LIBRARY_VERSION == "2.6.0-closed-book-agc-pdf"
+
+    snap = client.get("/api/legal/snapshot", headers=headers_a).json()
+    offence_by_id = {o["offence_id"]: o for o in snap["master_offences_matrix"]}
+    assert "AKTA_852_S13_3" in offence_by_id
+    assert "AKTA_342_S22_B" in offence_by_id
+    s24_text = json.dumps(offence_by_id["AKTA_342_S22_B"], ensure_ascii=False)
+    assert "10,000" in s24_text or "10000" in s24_text
+    assert "100,000" in s24_text or "100000" in s24_text
+    assert "AKTA_852_S10_1" in offence_by_id
+    assert offence_by_id["AKTA_852_S10_1"]["compound_info"]["is_compoundable"] is False
+
+    # Seksyen palsu pada Akta 852 WAJIB ditolak oleh validate_legal_output
+    fake_check = validate_legal_output(
+        {
+            "akta_disyorkan": "Akta 852",
+            "cadangan_pertuduhan": [
+                {
+                    "perihal": "Kesalahan palsu",
+                    "seksyen_kesalahan": "Seksyen 99 Akta 852",
+                    "seksyen_hukuman": "Seksyen 99(2) Akta 852",
+                    "hukuman_maksimum": "RM 50,000",
+                    "boleh_kompaun": "Boleh Kompaun",
+                }
+            ],
+        },
+        snap,
+        question_context="Ujian seksyen palsu Akta 852",
+    )
+    assert fake_check["passed"] is False
+    assert len(fake_check["invalid_citations"]) >= 1
+
+    # Senario kedai pamer vape: TIDAK boleh kompaun + sitaan S.49 + hukuman S.10(2)(a)/(b)
+    pamer_res = client.post(
+        "/api/advisor/consult",
+        headers=headers_a,
+        json={
+            "question": "Kedai pamer vape secara terbuka di kaunter",
+            "akta_hint": "Akta 852",
+            "use_ai": False,
+        },
+    )
+    assert pamer_res.status_code == 200
+    pamer = pamer_res.json()
+    assert pamer["status_kesalahan"] == "ADA_KESALAHAN"
+    assert pamer["punca_kuasa"]["boleh_kompaun_flag"] is False
+    pamer_dump = json.dumps(pamer, ensure_ascii=False)
+    assert "49" in pamer_dump
+    assert "10(2)(a)" in pamer_dump and "10(2)(b)" in pamer_dump
+
+    # ------------------------------------------------------------------
+    # 3. PENYEMAK NOTIS KOMPAUN (TIDAK BOLEH KOMPAUN, TEMPOH, PASPORT, OBD)
+    # ------------------------------------------------------------------
+    base_comp = {
+        "no_notis": "KKM/852/2026/001",
+        "nama_penerima": "Zulkifli bin Hassan",
+        "no_kp": "850410-11-5011",
+        "nama_premis": "Restoran Pantai Nerus",
+        "alamat_kejadian": "Lot 12, Kg. Tok Jembal, 21300 Kuala Nerus, Terengganu",
+        "no_ssm": "202101034892",
+        "tarikh_masa": "18/11/2026 jam 10:30 pagi",
+        "kesalahan_ringkas": "Menghisap rokok di kawasan makan larangan merokok",
+        "pegawai_pengeluar": "PPKP Ahmad Faizal bin Ramli",
+        "no_kad_kuasa": "KKM-TRG-A101",
+    }
+
+    # a) Seksyen 10(1) Akta 852 & Seksyen 13(1) Akta 281 tidak boleh dikompaun -> GAGAL pada K06
+    nc_852 = client.post(
+        "/api/check-compound",
+        headers=headers_a,
+        json={**base_comp, "peruntukan_undang": "Seksyen 10(1) Akta 852", "amaun_kompaun_rm": "RM 500", "tempoh_bayaran": "30 hari"},
+    ).json()
+    assert nc_852["counts"]["GAGAL"] >= 1
+    assert any(c["code"] == "K06" and c["status"] == "GAGAL" for c in nc_852["checks"])
+
+    nc_281 = client.post(
+        "/api/check-compound",
+        headers=headers_a,
+        json={**base_comp, "peruntukan_undang": "Seksyen 13(1) Akta 281", "amaun_kompaun_rm": "RM 500", "tempoh_bayaran": "14 hari"},
+    ).json()
+    assert nc_281["counts"]["GAGAL"] >= 1
+    assert any(c["code"] == "K06" and c["status"] == "GAGAL" for c in nc_281["checks"])
+
+    # b) Tempoh bayaran salah (30 hari pada Akta 154; 14 hari pada Akta 852) -> GAGAL pada K08
+    bad_win_154 = client.post(
+        "/api/check-compound",
+        headers=headers_a,
+        json={**base_comp, "peruntukan_undang": "Seksyen 13(1) Akta 154", "amaun_kompaun_rm": "RM 500", "tempoh_bayaran": "30 hari"},
+    ).json()
+    assert any(c["code"] == "K08" and c["status"] == "GAGAL" for c in bad_win_154["checks"])
+
+    bad_win_852 = client.post(
+        "/api/check-compound",
+        headers=headers_a,
+        json={**base_comp, "peruntukan_undang": "Seksyen 16(2) Akta 852", "amaun_kompaun_rm": "RM 250", "tempoh_bayaran": "14 hari"},
+    ).json()
+    assert any(c["code"] == "K08" and c["status"] == "GAGAL" for c in bad_win_852["checks"])
+
+    # c) Amaun julat ("RM 250 - RM 500") -> GAGAL pada K08
+    range_amt = client.post(
+        "/api/check-compound",
+        headers=headers_a,
+        json={**base_comp, "peruntukan_undang": "Seksyen 16(2) Akta 852", "amaun_kompaun_rm": "RM 250 - RM 500", "tempoh_bayaran": "30 hari"},
+    ).json()
+    assert any(c["code"] == "K08" and c["status"] == "GAGAL" for c in range_amt["checks"])
+
+    # d) Pasport sah diterima (K02 LULUS) & MyKad OBD (<18 tahun) pada S.16(2) Akta 852 ditolak (GAGAL pada K06)
+    passport_ok = client.post(
+        "/api/check-compound",
+        headers=headers_a,
+        json={**base_comp, "nama_penerima": "Rahman Hossain", "no_kp": "A54321987", "peruntukan_undang": "Seksyen 16(2) Akta 852", "amaun_kompaun_rm": "RM 250", "tempoh_bayaran": "30 hari"},
+    ).json()
+    assert any(c["code"] == "K02" and c["status"] == "LULUS" for c in passport_ok["checks"])
+
+    obd_mismatch = client.post(
+        "/api/check-compound",
+        headers=headers_a,
+        json={**base_comp, "nama_penerima": "Pelajar Bawah Umur", "no_kp": "120515-11-5011", "peruntukan_undang": "Seksyen 16(2) Akta 852", "amaun_kompaun_rm": "RM 250", "tempoh_bayaran": "30 hari"},
+    ).json()
+    assert obd_mismatch["counts"]["GAGAL"] >= 1
+    assert any(c["code"] == "K06" and c["status"] == "GAGAL" for c in obd_mismatch["checks"])
+
+    # e) Akta 342 memaparkan Seksyen 25 Akta 342 [P.U. (A) 139/2025]
+    akta342_comp = client.post(
+        "/api/check-compound",
+        headers=headers_a,
+        json={**base_comp, "peruntukan_undang": "Seksyen 22(b) Akta 342", "amaun_kompaun_rm": "RM 1000", "tempoh_bayaran": "14 hari"},
+    ).json()
+    assert "P.U. (A) 139/2025" in akta342_comp["peruntukan_kompaun"]
+
+    # ------------------------------------------------------------------
+    # 4. PENJANA DOKUMEN WORD (.DOCX): INDEKS 7 BAHAGIAN (A-G) & BAHASA RASMI
+    # ------------------------------------------------------------------
+    full_docx_res = client.post(
+        "/api/export-docx",
+        headers=headers_a,
+        json={"doc_type": "pakej_ip_lengkap", "payload": spoof_draft.json()},
+    )
+    assert full_docx_res.status_code == 200
+    doc = DocxDocument(io.BytesIO(full_docx_res.content))
+    full_text_parts = [p.text for p in doc.paragraphs]
+    for tbl in doc.tables:
+        for row in tbl.rows:
+            for cell in row.cells:
+                full_text_parts.append(cell.text)
+    full_docx_text = "\n".join(full_text_parts)
+    for part_letter in ["Bahagian A", "Bahagian B", "Bahagian C", "Bahagian D", "Bahagian E", "Bahagian F", "Bahagian G"]:
+        assert part_letter in full_docx_text, f"Missing {part_letter} in Indeks Fail IP"
+    assert "Bahagian H" not in full_docx_text
+    assert "PERMOHONAN IZIN MENDAKWA (KEIZINAN PENDAKWA RAYA)" in full_docx_text
+    assert "adalah dituduh" in full_docx_text
+    assert "adalah dituntut" not in full_docx_text
+    assert "mengperakui" not in full_docx_text
+
+    comp_docx_res = client.post(
+        "/api/export-docx",
+        headers=headers_a,
+        json={
+            "doc_type": "notis_kompaun",
+            "payload": {
+                "no_notis": "KKM/852/2026/099",
+                "nama_penerima": "Zulkifli bin Hassan",
+                "no_kp": "850410-11-5011",
+                "nama_premis": "Restoran Pantai",
+                "alamat_premis": "Lot 12, Kg. Tok Jembal, Kuala Nerus",
+                "tarikh_kesalahan": "18/11/2026",
+                "masa_kesalahan": "09:15 pagi",
+                "peruntukan_undang": "Seksyen 16(2) Akta 852",
+                "amaun_kompaun_rm": "RM 250.00",
+                "tempoh_bayaran_hari": "30 hari",
+                "ringkasan_kesalahan": "Menghisap rokok di premis makanan larangan merokok.",
+            },
+        },
+    )
+    assert comp_docx_res.status_code == 200
+    cdoc = DocxDocument(io.BytesIO(comp_docx_res.content))
+    c_parts = [p.text for p in cdoc.paragraphs]
+    for tbl in cdoc.tables:
+        for row in tbl.rows:
+            for cell in row.cells:
+                c_parts.append(cell.text)
+    comp_docx_text = "\n".join(c_parts)
+    assert "Unit Hasil" in comp_docx_text or "UNIT HASIL" in comp_docx_text
+    assert "Saksi" in comp_docx_text or "SAKSI" in comp_docx_text
+
+
+

@@ -48,12 +48,14 @@ const DEFAULT_FOLDER_INDEX = [
 
 function mapCriterionToEditorSection(code: string): string {
   const c = (code || "").toUpperCase();
-  if (c === "C06" || c === "C07" || c === "C08" || c === "C14" || c === "C15") return "borang114";
-  if (c === "C12") return "sijil90a";
-  if (c === "C10" || c === "C13") return "rakaman112";
-  if (c === "C09" || c === "C11") return "eksibit";
-  if (c === "C17") return "diari";
-  if (c === "C01" || c === "C02" || c === "C03" || c === "C04" || c === "C05") return "fakta";
+  if (c === "C14" || c === "C15") return "borang114";
+  if (c === "C05" || c === "C06" || c === "C07") return "rakaman112";
+  if (c === "C08") return "diari";
+  if (c === "C09" || c === "C10" || c === "C11" || c === "C18") return "eksibit";
+  if (c === "C12" || c === "C13") return "sijil90a";
+  if (c === "C01" || c === "C02" || c === "C03" || c === "C04" || c === "C16" || c === "C17" || c === "C19" || c === "C20") {
+    return "fakta";
+  }
   return "borang114";
 }
 

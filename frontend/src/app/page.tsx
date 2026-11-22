@@ -95,16 +95,20 @@ function buildCompoundFromCase(
     tarikh_masa: [rec.tarikh_kejadian, rec.masa_kejadian].filter(Boolean).join(", "),
     peruntukan_undang:
       rec.akta_utama === "Akta 852"
-        ? "Seksyen 10(1) Akta 852 dibaca bersama Peraturan 6 P.U. (A) 260/2024"
+        ? "Seksyen 16(2) Akta 852"
         : rec.akta_utama === "Akta 154"
           ? "Seksyen 13(1) dibaca bersama Seksyen 13(2) Akta 154"
-          : "Peraturan 11(1) PPKM 2009 [P.U. (A) 95/2009]",
+          : rec.akta_utama === "Akta 342"
+            ? "Seksyen 22(b) Akta 342"
+            : "Peraturan 11(1) PPKM 2009 [P.U. (A) 95/2009]",
     peruntukan_kompaun:
       rec.akta_utama === "Akta 852"
         ? "Seksyen 48 Akta 852 [P.U. (A) 259/2024]"
         : rec.akta_utama === "Akta 154"
           ? "Seksyen 25 Akta 154 (Maksimum RM500)"
-          : "Notis Seksyen 32B & Seksyen 33 Akta Makanan 1983",
+          : rec.akta_utama === "Akta 342"
+            ? "Seksyen 25 Akta 342 [P.U. (A) 139/2025]"
+            : "Notis Seksyen 32B & Seksyen 33 Akta Makanan 1983",
     amaun_kompaun_rm: "RM 500.00",
     tempoh_bayaran:
       rec.akta_utama === "Akta 852"
@@ -272,6 +276,20 @@ export default function UIPCommandPage() {
   const [authToken, setAuthToken] = useState<string | null>(null);
   const [officer, setOfficer] = useState<OfficerProfile | null>(null);
   const [authChecked, setAuthChecked] = useState(false);
+  const [isOnline, setIsOnline] = useState(true);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    setIsOnline(window.navigator.onLine);
+    const onOnline = () => setIsOnline(true);
+    const onOffline = () => setIsOnline(false);
+    window.addEventListener("online", onOnline);
+    window.addEventListener("offline", onOffline);
+    return () => {
+      window.removeEventListener("online", onOnline);
+      window.removeEventListener("offline", onOffline);
+    };
+  }, []);
 
   const showToast = useCallback((msg: string) => {
     setToastMsg(msg);
@@ -287,12 +305,8 @@ export default function UIPCommandPage() {
     const hidden = window.localStorage.getItem(hideKey) === "1";
     setOnboardingDontShow(hidden);
     if (hidden) return;
-    if (isFreshLogin) {
-      window.sessionStorage.removeItem(sessionKey);
-      setOnboardingOpen(true);
-      return;
-    }
-    if (window.sessionStorage.getItem(sessionKey) !== "1") {
+    // Hanya buka automatik sekali semasa log masuk baharu (elak mengganggu pengguna sedia ada setiap tab baharu)
+    if (isFreshLogin && window.sessionStorage.getItem(sessionKey) !== "1") {
       setOnboardingOpen(true);
     }
   }, []);
@@ -383,8 +397,8 @@ export default function UIPCommandPage() {
         if (!mounted) return;
         setErrorBanner(
           err instanceof Error
-            ? `Pelayan Backend FastAPI tidak dapat dicapai: ${err.message}`
-            : "Gagal menyambung ke Backend API."
+            ? `Pelayan sistem tidak dapat dicapai: ${err.message}`
+            : "Tidak dapat menyambung ke pelayan sistem. Sila semak sambungan internet anda."
         );
       } finally {
         if (mounted) setAuthChecked(true);
@@ -474,6 +488,13 @@ export default function UIPCommandPage() {
         setCaseText(s.text);
         setAuditReport(null);
         setDraft(null);
+        setRedaction(null);
+        setExtractedEvidence(null);
+        setCompoundNotice({
+          ...EMPTY_COMPOUND_NOTICE,
+          pegawai_pengeluar: officer?.full_name || "",
+          no_kad_kuasa: officer?.kkm_authority_card_no || "",
+        });
         setHasUnsavedChanges(false);
         showToast(`Contoh kes dimuatkan: ${s.title}`);
       }
@@ -567,6 +588,7 @@ export default function UIPCommandPage() {
             setHasUnsavedChanges(true);
           });
       } else {
+        setHasUnsavedChanges(true);
         setCases((prev) =>
           prev.map((c) =>
             c.id === activeCaseId
@@ -890,6 +912,31 @@ export default function UIPCommandPage() {
   if (!officer) {
     return (
       <div className="min-h-[100dvh] bg-[#08192e]">
+        {(!isOnline || errorBanner) && (
+          <div className="fixed inset-x-0 top-3 z-[70] mx-auto max-w-xl px-3">
+            {!isOnline && (
+              <div className="mb-2 flex items-center gap-2 rounded-xl border border-amber-300 bg-amber-50 px-4 py-2.5 text-xs font-bold text-amber-950 shadow-lg">
+                <AlertCircle className="h-4 w-4 shrink-0 text-amber-600" />
+                <span>Tiada sambungan internet. Sila sambungkan talian untuk log masuk.</span>
+              </div>
+            )}
+            {errorBanner && (
+              <div className="flex items-center justify-between gap-2 rounded-xl border border-rose-300 bg-rose-50 px-4 py-2.5 text-xs font-semibold text-rose-900 shadow-lg">
+                <div className="flex items-center gap-2">
+                  <AlertCircle className="h-4 w-4 shrink-0 text-rose-600" />
+                  <span>{errorBanner}</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setErrorBanner(null)}
+                  className="rounded px-2 py-0.5 text-xs font-bold hover:bg-rose-100"
+                >
+                  Tutup
+                </button>
+              </div>
+            )}
+          </div>
+        )}
         <SplashScreenModal
           open={!authOpen}
           officer={null}
@@ -942,7 +989,7 @@ export default function UIPCommandPage() {
   const quickResumeList = recentCases.length > 0 ? recentCases : cases.slice(0, 2);
 
   return (
-    <div className="flex min-h-[100dvh] flex-col bg-[#f4f7fb] pb-20 lg:pb-0">
+    <div className="flex min-h-[100dvh] flex-col bg-[#f4f7fb] pb-24 lg:pb-0">
       <TopNavbar
         status={status}
         activeMode={activeTab}
@@ -966,31 +1013,36 @@ export default function UIPCommandPage() {
         onOpenDevConsole={() => setDevConsoleOpen(true)}
       />
 
-      {/* Toast Maklum Balas Pantas */}
-      {toastMsg && (
-        <div className="mx-auto mt-3 w-full max-w-[1600px] px-3 sm:px-4">
-          <div className="flex items-center gap-2 rounded-xl border border-emerald-300 bg-emerald-50 px-4 py-2.5 text-xs font-bold text-emerald-900 shadow-sm">
-            <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />
-            <span>{toastMsg}</span>
-          </div>
+      {!isOnline && (
+        <div className="border-b border-amber-300 bg-amber-50 px-4 py-2 text-center text-xs font-bold text-amber-950">
+          Tiada sambungan internet dikesan. Sesetengah fungsi simpanan dan AI awan memerlukan talian internet.
         </div>
       )}
 
-      {errorBanner && (
-        <div className="mx-auto mt-3 w-full max-w-[1600px] px-3 sm:px-4">
-          <div className="flex items-center justify-between gap-2 rounded-xl border border-rose-300 bg-rose-50 px-4 py-2.5 text-xs font-semibold text-rose-900 shadow-sm">
-            <div className="flex items-center gap-2">
-              <AlertCircle className="h-4 w-4 shrink-0 text-rose-600" />
-              <span>{errorBanner}</span>
+      {/* Toast & Ralat Terapung (Sentiasa Kelihatan Walaupun Skrol Ke Bawah) */}
+      {(toastMsg || errorBanner) && (
+        <div className="pointer-events-none fixed inset-x-0 top-16 z-50 mx-auto max-w-2xl space-y-2 px-3 sm:px-4">
+          {toastMsg && (
+            <div className="pointer-events-auto flex items-center gap-2 rounded-xl border border-emerald-300 bg-emerald-50/95 px-4 py-2.5 text-xs font-bold text-emerald-900 shadow-lg backdrop-blur">
+              <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />
+              <span>{toastMsg}</span>
             </div>
-            <button
-              type="button"
-              onClick={() => setErrorBanner(null)}
-              className="rounded px-2 py-0.5 text-xs font-bold hover:bg-rose-100"
-            >
-              Tutup
-            </button>
-          </div>
+          )}
+          {errorBanner && (
+            <div className="pointer-events-auto flex items-center justify-between gap-2 rounded-xl border border-rose-300 bg-rose-50/95 px-4 py-2.5 text-xs font-semibold text-rose-900 shadow-lg backdrop-blur">
+              <div className="flex items-center gap-2">
+                <AlertCircle className="h-4 w-4 shrink-0 text-rose-600" />
+                <span>{errorBanner}</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setErrorBanner(null)}
+                className="shrink-0 rounded px-2 py-1 text-xs font-bold hover:bg-rose-100"
+              >
+                Tutup
+              </button>
+            </div>
+          )}
         </div>
       )}
 

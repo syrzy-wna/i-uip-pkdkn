@@ -41,10 +41,10 @@ UIP_SCENARIO_LIBRARY: List[Dict[str, Any]] = [
         "cadangan_pertuduhan": [
             {
                 "perihal": "Pameran produk merokok / vape secara terbuka di tempat jualan",
-                "seksyen_kesalahan": "Seksyen 10(1) Akta 852 dibaca bersama Peraturan 6 P.U. (A) 260/2024 (jika syarikat baca bersama S.51)",
-                "seksyen_hukuman": "Seksyen 10(2)(a)/(b) [Individu] atau Seksyen 10(3)(a) [Pertubuhan Perbadanan] Akta 852",
+                "seksyen_kesalahan": "Seksyen 10(1) Akta 852 dibaca bersama Peraturan 6 P.U. (A) 260/2024 (jika syarikat baca bersama S.49)",
+                "seksyen_hukuman": "Seksyen 10(2)(a) [Bukan Pertubuhan Perbadanan] atau Seksyen 10(2)(b) [Pertubuhan Perbadanan] Akta 852",
                 "hukuman_maksimum": "Individu: Denda maks RM20,000 / penjara maks 1 tahun | Syarikat: Denda RM20,000 – RM100,000 / penjara 2 tahun",
-                "boleh_kompaun": "Boleh kompaun mengikut jadual P.U. (A) 259/2024 (Notis S.47, tempoh 30 hari) ATAU terus buka IP jika enggan patuh/berulang.",
+                "boleh_kompaun": "TIDAK BOLEH KOMPAUN (Seksyen 10(1) tiada dalam Jadual Pertama P.U. (A) 259/2024) — Wajib Sita (S.35/S.36) & Buka IP Terus.",
             }
         ],
         "sop_lapangan": [
@@ -52,7 +52,7 @@ UIP_SCENARIO_LIBRARY: List[Dict[str, Any]] = [
             "Ambil gambar sudut jauh dan dekat menunjukkan pod/rokok dipamer secara terbuka sebelum disentuh.",
             "Jalankan pemeriksaan (Seksyen 26/30) dan sita semua unit yang dipamerkan secara salah di bawah Seksyen 35 Akta 852.",
             "Isi Borang Senarai Benda Disita di bawah Seksyen 36 Akta 852 di tempat kejadian, dapatkan tandatangan terima pemilik dan serahkan satu salinan.",
-            "Lak (seal) barang kes dengan nombor siri lak KKM, lukis Pelan Lakar premis dan rekod masuk ke Stor Eksibit PKD.",
+            "Lak barang kes dengan nombor siri lak KKM, lukis Pelan Lakar premis dan rekod masuk ke Stor Barang Kes PKD.",
         ],
         "eksibit_wajib": [
             "Produk vape/rokok yang disita & dilak (P1–Pn)",
@@ -85,12 +85,12 @@ UIP_SCENARIO_LIBRARY: List[Dict[str, Any]] = [
         ],
         "negative_keywords": ["jual kepada", "menjual rokok", "kedai jual", "tanda larangan"],
         "incompatible_with": ["ak852_larangan_merokok"],
-        "keputusan_tindakan": "Keluarkan Notis S.47 & tawarkan kompaun S.48 di bawah Seksyen 17(1) Akta 852 (patuhi perlindungan Akta 611 & maklumkan ibu bapa/penjaga); siasat kedai penjual di bawah S.13(1).",
-        "ringkasan_keputusan": "Keluarkan Notis S.47 & tawarkan kompaun S.48 bagi kesalahan Seksyen 17(1) Akta 852 dengan pemakluman ibu bapa/penjaga (patuhi Akta 611), dan siasat kedai penjual di bawah Seksyen 13(1).",
+        "keputusan_tindakan": "Keluarkan Notis S.47 & tawarkan kompaun S.48(2) di bawah Seksyen 17(1) Akta 852 (patuhi perlindungan Akta 611 & maklumkan ibu bapa/penjaga); siasat kedai penjual di bawah S.13(1).",
+        "ringkasan_keputusan": "Keluarkan Notis S.47 & tawarkan kompaun S.48(2) (dengan keizinan bertulis Pendakwa Raya) bagi kesalahan Seksyen 17(1) Akta 852 serta maklumkan ibu bapa/penjaga (Akta 611), dan siasat kedai penjual di bawah Seksyen 13(1).",
         "sesuai_buka_ip": False,
         "alasan_keputusan": (
             "Pelajar atau individu bawah 18 tahun (OBD) yang ditangkap sedang menghisap vape atau rokok (termasuk di tandas sekolah, kawasan sekolah atau tempat awam) "
-            "melakukan kesalahan di bawah Seksyen 17(1) Akta 852. Kesalahan ini boleh dikompaun di bawah Seksyen 48 [P.U. (A) 259/2024] melalui Notis S.47 "
+            "melakukan kesalahan di bawah Seksyen 17(1) Akta 852. Kesalahan ini boleh dikompaun di bawah Seksyen 48(2) [Borang 1 & Borang 2 P.U. (A) 259/2024] berserta Notis Hadir Mahkamah S.47 "
             "dengan pemakluman wajib kepada ibu bapa/penjaga serta pematuhan perlindungan kanak-kanak di bawah Akta Kanak-Kanak 2001 [Akta 611]. "
             "Buka IP terhadap OBD hanya jika gagal jelas kompaun dalam 30 hari, tetapi wajib siasat kedai/penjual di bawah Seksyen 13(1) Akta 852."
         ),
@@ -100,34 +100,34 @@ UIP_SCENARIO_LIBRARY: List[Dict[str, Any]] = [
                 "seksyen_kesalahan": "Seksyen 17(1) Akta 852",
                 "seksyen_hukuman": "Seksyen 17(2) Akta 852",
                 "hukuman_maksimum": "Denda tidak melebihi RM500 atau Perintah Khidmat Masyarakat (Akta 852)",
-                "boleh_kompaun": "Boleh kompaun RM50 di bawah Seksyen 48 [P.U. (A) 259/2024] melalui Notis S.47 (tempoh 30 hari; maklumkan ibu bapa/penjaga).",
+                "boleh_kompaun": "Boleh kompaun RM50 di bawah Seksyen 48(2) [P.U. (A) 259/2024] dengan keizinan bertulis Pendakwa Raya (tempoh 30 hari; maklumkan ibu bapa/penjaga).",
             },
             {
                 "perihal": "Penjual / Pekedai (Jika dikenal pasti menjual rokok/vape kepada pelajar tersebut)",
                 "seksyen_kesalahan": "Seksyen 13(1) Akta 852",
-                "seksyen_hukuman": "Seksyen 13(2) [Individu] / Seksyen 13(3) [Syarikat] Akta 852",
+                "seksyen_hukuman": "Seksyen 13(2)(a) [Individu] / Seksyen 13(2)(b) [Syarikat] Akta 852",
                 "hukuman_maksimum": "Individu: Denda maks RM20,000 / penjara 1 tahun | Syarikat: RM20,000 – RM100,000",
-                "boleh_kompaun": "Terus Buka IP terhadap penjual jika transaksi jualan kepada OBD dibuktikan.",
+                "boleh_kompaun": "TIDAK BOLEH KOMPAUN — Terus Buka IP terhadap penjual jika transaksi jualan kepada OBD dibuktikan.",
             },
         ],
         "sop_lapangan": [
             "Tunjukkan Kad Kuasa Rasmi KKM (Seksyen 24(2) & Seksyen 25 Akta 852) kepada pihak pentadbiran sekolah / guru saksi dan pelajar secara berhemah.",
             "Sahkan identiti serta umur pelajar (bawah 18 tahun pada tarikh kejadian) melalui MyKad atau Kad Pelajar, dan rekodkan butiran penuh ibu bapa/penjaga.",
             "Rakam bukti kejadian dengan segera: ambil keterangan awal guru/saksi yang menangkap pelajar sedang menghisap vape (rakaman S.112 KTJ jika ke mahkamah), gambar lokasi/peranti vape (+ Sijil S.90A(2)), dan rantaian serahan peranti daripada guru kepada PPKP.",
-            "Keluarkan Notis Kesalahan Seksyen 47 (Seksyen 17(1) Akta 852) dengan tawaran kompaun Seksyen 48 (tempoh 30 hari), maklumkan kepada ibu bapa/penjaga, dan patuhi perlindungan identiti/privasi kanak-kanak di bawah Akta Kanak-Kanak 2001 [Akta 611] (Seksyen 15 & Seksyen 83).",
+            "Keluarkan Notis Hadir Mahkamah Seksyen 47 dan tawaran kompaun Seksyen 48(2) [Borang 1 & 2 P.U.(A) 259/2024] (tempoh 30 hari), maklumkan kepada ibu bapa/penjaga, dan patuhi perlindungan identiti/privasi kanak-kanak di bawah Akta Kanak-Kanak 2001 [Akta 611] (Seksyen 15 & Seksyen 83).",
             "Dapatkan maklumat kedai/pembekal vape daripada pelajar secara berhemah untuk tindakan pemeriksaan dan siasatan susulan terhadap penjual di bawah Seksyen 13(1) Akta 852.",
         ],
         "eksibit_wajib": [
             "Salinan MyKad / Kad Pelajar / Pengesahan JPN (membuktikan umur di bawah 18 tahun pada tarikh kejadian)",
             "Keterangan saksi mata guru/pengawas yang melihat pelajar sedang menghisap vape (S.112 KTJ jika buka IP) + laporan disiplin sekolah",
-            "Salinan pendua Notis Seksyen 47 bertandatangan terima / saksi + rekod pemakluman ibu bapa/penjaga",
+            "Salinan pendua Tawaran Kompaun / Notis Seksyen 47 bertandatangan terima / saksi + rekod pemakluman ibu bapa/penjaga",
             "Peranti vape / pod yang dirampas beserta rekod rantaian serahan daripada guru kepada PPKP (Borang S.36 jika disita)",
             "Gambar foto peranti vape & lokasi kejadian (tandas/kawasan sekolah) + Sijil Seksyen 90A(2) Akta Keterangan 1950",
         ],
         "perangkap_kesilapan": [
             "PEMILIKAN SEMATA-MATA BUKAN KESALAHAN S.17(1): Kesalahan S.17(1) hanya sah jika ada bukti jelas pelajar sedang menghisap, mengunyah atau menggunakan — bukan sekadar jumpa dalam beg!",
             "PERLINDUNGAN KANAK-KANAK (AKTA 611): JANGAN siarkan gambar/nama pelajar di media sosial atau soal siasat secara kasar tanpa kehadiran guru/penjaga — patuhi Seksyen 15 (sekatan penyiaran identiti) & Seksyen 83 Akta Kanak-Kanak 2001 [Akta 611].",
-            "RANTAIAN SERAHAN BARANG KES: Jika guru yang merampas vape terlebih dahulu di tandas sekolah, rekodkan tarikh/masa dan tandatangan serahan daripada guru kepada PPKP supaya rantaian eksibit tidak terputus.",
+            "RANTAIAN SERAHAN BARANG KES: Jika guru yang merampas vape terlebih dahulu di tandas sekolah, rekodkan tarikh/masa dan tandatangan serahan daripada guru kepada PPKP supaya rantaian barang kes tidak terputus.",
             "Pastikan salinan bukti tarikh lahir (MyKad/JPN) dilampirkan untuk membuktikan status bawah 18 tahun (OBD).",
         ],
         "templat_ringkas": (
@@ -146,27 +146,27 @@ UIP_SCENARIO_LIBRARY: List[Dict[str, Any]] = [
             "seksyen 13 akta 852", "bawah umur",
         ],
         "negative_keywords": ["makanan tercemar", "keracunan", "najis tikus", "pamer secara terbuka"],
-        "keputusan_tindakan": "PENJUAL: BUKA IP TERUS (Kes Serius) | OBD MEROKOK: KOMPAUN S.48 / KHIDMAT MASYARAKAT",
+        "keputusan_tindakan": "PENJUAL: BUKA IP TERUS (S.13(1) Tidak Boleh Kompaun) | OBD MEMBELI/MEROKOK: KOMPAUN S.48(2) / KHIDMAT MASYARAKAT",
         "sesuai_buka_ip": True,
         "alasan_keputusan": (
-            "Menjual produk merokok kepada kanak-kanak/remaja di bawah 18 tahun merupakan keutamaan penguatkuasaan KKM "
-            "dengan penalti berat sehingga RM100,000 bagi syarikat. Penjual disyorkan dibuka IP dan disita bukti transaksi, "
-            "manakala OBD yang membeli/merokok boleh dikeluarkan Notis S.47 / kompaun S.17 dengan pemakluman penjaga."
+            "Menjual produk merokok kepada kanak-kanak/remaja di bawah 18 tahun tidak tersenarai untuk kompaun di bawah Jadual Pertama P.U. (A) 259/2024 "
+            "dengan penalti berat sehingga RM100,000 bagi syarikat. Penjual wajib dibuka IP dan disita bukti transaksi, "
+            "manakala OBD yang membeli (S.13(3)) atau merokok (S.17(1)) boleh ditawarkan kompaun S.48(2) dengan pemakluman penjaga."
         ),
         "cadangan_pertuduhan": [
             {
                 "perihal": "Penjual: Menjual produk merokok / rokok elektronik kepada Orang Belum Dewasa (< 18 tahun)",
-                "seksyen_kesalahan": "Seksyen 13(1) Akta 852",
-                "seksyen_hukuman": "Seksyen 13(2) [Individu] / Seksyen 13(3) [Syarikat] Akta 852",
+                "seksyen_kesalahan": "Seksyen 13(1) Akta 852 (dibaca bersama Seksyen 49 jika syarikat)",
+                "seksyen_hukuman": "Seksyen 13(2)(a) [Individu] / Seksyen 13(2)(b) [Syarikat] Akta 852",
                 "hukuman_maksimum": "Individu: Denda maks RM20,000 / penjara maks 1 tahun | Syarikat: Denda RM20,000 – RM100,000",
-                "boleh_kompaun": "Kes penjual kepada OBD disyorkan Buka IP terus untuk pendakwaan.",
+                "boleh_kompaun": "TIDAK BOLEH KOMPAUN — Wajib Buka IP terus untuk pendakwaan.",
             },
             {
                 "perihal": "OBD: Membeli / Merokok / Menggunakan produk merokok di bawah umur 18 tahun",
                 "seksyen_kesalahan": "Seksyen 13(3) [Membeli] atau Seksyen 17(1) [Merokok/Mengunyah/Menggunakan] Akta 852",
                 "seksyen_hukuman": "Seksyen 13(4) / Seksyen 17(2) Akta 852",
                 "hukuman_maksimum": "Denda tidak melebihi RM500 atau Perintah Khidmat Masyarakat",
-                "boleh_kompaun": "Boleh dikompaun di bawah Seksyen 48 P.U. (A) 259/2024 (maklumkan ibu bapa/penjaga).",
+                "boleh_kompaun": "Boleh dikompaun di bawah Seksyen 48(2) P.U. (A) 259/2024 (keizinan bertulis Pendakwa Raya & maklumkan ibu bapa/penjaga).",
             },
         ],
         "sop_lapangan": [
@@ -187,14 +187,14 @@ UIP_SCENARIO_LIBRARY: List[Dict[str, Any]] = [
         ],
         "templat_ringkas": (
             "Kesalahan: Menjual produk merokok kepada seorang Orang Belum Dewasa berumur di bawah 18 tahun "
-            "yang melanggar Seksyen 13(1) Akta 852 dan boleh dihukum di bawah Seksyen 13(2) Akta 852. "
+            "yang melanggar Seksyen 13(1) Akta 852 dan boleh dihukum di bawah Seksyen 13(2)(a)/(b) Akta 852. "
             "Barang kes telah disita di bawah Seksyen 35/36 Akta 852 dan salinan MyKad OBD dilampirkan."
         ),
     },
     {
         "id": "ak852_larangan_merokok",
         "akta_utama": "Akta 852",
-        "tajuk": "Merokok / Vape di Tempat Larangan (Restoran) & Pemilik Tiada Papan Tanda Kod QR / Sedia Ashtray",
+        "tajuk": "Merokok / Vape di Tempat Larangan (Restoran) & Pemilik Tiada Papan Tanda Kod QR / Sedia Bekas Abu Rokok",
         "keywords": [
             "kawasan larangan merokok", "larangan merokok", "tempat makan", "tanda amaran", "tanda larangan",
             "kod qr", "ashtray", "bekas abu", "rokok dalam restoran", "merokok di restoran",
@@ -202,12 +202,12 @@ UIP_SCENARIO_LIBRARY: List[Dict[str, Any]] = [
         ],
         "negative_keywords": ["tepi jalan", "budak sekolah", "najis tikus", "suntikan tifoid"],
         "incompatible_with": ["ak852_obd_merokok_tepi_jalan"],
-        "keputusan_tindakan": "KOMPAUN DAHULU (Notis S.47 / Kompaun S.48 — 30 Hari); BUKA IP HANYA JIKA GAGAL BAYAR",
+        "keputusan_tindakan": "KOMPAUN DAHULU (Tawaran Kompaun S.48(2) & Notis S.47 — 30 Hari); BUKA IP HANYA JIKA GAGAL BAYAR",
         "sesuai_buka_ip": False,
         "alasan_keputusan": (
             "Kesalahan individu merokok di restoran (S.16(2)) serta pemilik premis gagal mempamer tanda larangan QR atau "
-            "menyediakan bekas abu rokok (S.18(1)) adalah kesalahan boleh kompaun lazim. IO/PPKP hendaklah keluar Notis Seksyen 47 "
-            "dahulu dengan tempoh bayaran 30 hari; hanya buka IP jika kompaun tidak dijelaskan selepas tamat 30 hari."
+            "menyediakan bekas abu rokok (S.18(1)) adalah kesalahan boleh kompaun lazim. PPKP hendaklah mengeluarkan Tawaran Kompaun S.48(2) "
+            "(Borang 1 & 2 P.U.(A) 259/2024) berserta Notis Hadir Mahkamah S.47 dengan tempoh bayaran 30 hari; hanya buka IP jika kompaun tidak dijelaskan selepas tamat 30 hari."
         ),
         "cadangan_pertuduhan": [
             {
@@ -215,25 +215,25 @@ UIP_SCENARIO_LIBRARY: List[Dict[str, Any]] = [
                 "seksyen_kesalahan": "Seksyen 16(2) Akta 852 dibaca bersama P.U. (A) 257/2024",
                 "seksyen_hukuman": "Seksyen 16(3) Akta 852",
                 "hukuman_maksimum": "Denda tidak melebihi RM5,000",
-                "boleh_kompaun": "Kompaun RM250.00 di bawah Seksyen 48 [P.U. (A) 259/2024] — tempoh bayaran 30 hari.",
+                "boleh_kompaun": "Boleh dikompaun RM250.00 di bawah Seksyen 48(2) [P.U. (A) 259/2024] — tempoh bayaran 30 hari.",
             },
             {
                 "perihal": "Pemilik premis gagal pamer tanda amaran Kod QR atau sediakan bekas abu rokok",
                 "seksyen_kesalahan": "Seksyen 18(1)(a) [Tiada tanda/P.U.(A) 258/2024] atau Seksyen 18(1)(b) [Bekas abu rokok] Akta 852",
                 "seksyen_hukuman": "Seksyen 18(2) Akta 852",
                 "hukuman_maksimum": "Denda tidak melebihi RM5,000",
-                "boleh_kompaun": "Boleh dikompaun di bawah Seksyen 48 [P.U. (A) 259/2024] — tempoh bayaran 30 hari.",
+                "boleh_kompaun": "Boleh dikompaun di bawah Seksyen 48(2) [P.U. (A) 259/2024] — tempoh bayaran 30 hari.",
             },
         ],
         "sop_lapangan": [
             "Ambil gambar perokok sedang memegang/menghembus asap atau wap vape di dalam premis (termasuk jarak 3 meter dari meja makan luar).",
             "Ambil gambar keadaan dinding premis (jika tiada tanda larangan Kod QR) atau gambar bekas abu rokok di atas meja.",
-            "Tunjukkan Kad Kuasa, periksa MyKad dan serahkan Notis Seksyen 47 (tandatangan terima; jika enggan tandatangan, catat 'Enggan Tandatangan' berserta saksi PPKP).",
+            "Tunjukkan Kad Kuasa, periksa MyKad dan serahkan Tawaran Kompaun / Notis Seksyen 47 (tandatangan terima; jika enggan tandatangan, catat 'Enggan Tandatangan' berserta saksi PPKP).",
             "Jika kompaun tidak dibayar selepas 30 hari (rujuk pengesahan Unit Hasil PKD), barulah buka Fail IP dan sediakan Borang 114.",
         ],
         "eksibit_wajib": [
-            "Salinan pendua Notis Seksyen 47 bertandatangan terima / catatan saksi enggan tandatangan",
-            "Gambar foto bukti (puntung rokok/vape/papan tanda/ashtray) + Sijil Seksyen 90A(2)",
+            "Salinan pendua Tawaran Kompaun / Notis Seksyen 47 bertandatangan terima / catatan saksi enggan tandatangan",
+            "Gambar foto bukti (puntung rokok/vape/papan tanda/bekas abu rokok) + Sijil Seksyen 90A(2)",
             "Sijil / Pengesahan Unit Hasil PKD bahawa kompaun tidak dibayar selepas tamat 30 hari (jika dibawa ke mahkamah)",
         ],
         "perangkap_kesilapan": [
@@ -243,13 +243,13 @@ UIP_SCENARIO_LIBRARY: List[Dict[str, Any]] = [
         "templat_ringkas": (
             "Kesalahan: Menghisap rokok / rokok elektronik di tempat makan yang diisytiharkan sebagai kawasan larangan merokok di bawah P.U. (A) 257/2024 "
             "yang melanggar Seksyen 16(2) Akta 852 dan boleh dihukum di bawah Seksyen 16(3) Akta 852. "
-            "Notis Seksyen 47 dan tawaran kompaun Seksyen 48 [30 hari] telah diserahkan."
+            "Notis Seksyen 47 dan tawaran kompaun Seksyen 48(2) [30 hari] telah diserahkan."
         ),
     },
     {
         "id": "ak852_iklan_vape",
         "akta_utama": "Akta 852",
-        "tajuk": "Iklan, Poster, Bunting atau Promosi Produk Vape / Rokok (Fizikal atau Skrin Digital)",
+        "tajuk": "Iklan, Poster, Gegantung atau Promosi Produk Vape / Rokok (Fizikal atau Skrin Digital)",
         "keywords": [
             "iklan rokok", "iklan vape", "papan iklan", "poster iklan", "bunting", "promosi vape",
             "tajaan", "skrin digital", "media sosial", "seksyen 7 akta 852", "seksyen 9 akta 852",
@@ -259,13 +259,13 @@ UIP_SCENARIO_LIBRARY: List[Dict[str, Any]] = [
         "alasan_keputusan": (
             "Kes iklan dan promosi vape melanggar Seksyen 7(1) / Seksyen 9(1) Akta 852. "
             "Seksyen 7(1) tidak disenaraikan sebagai kesalahan boleh kompaun di bawah Jadual Pertama P.U. (A) 259/2024; "
-            "bahan iklan fizikal wajib disita di bawah S.35/36, atau tangkapan skrin digital dicetak dengan Sijil Seksyen 90A(2) untuk membuka IP."
+            "bahan iklan fizikal wajib disita di bawah S.35/36, atau tangkapan skrin digital dicetak dengan Sijil Seksyen 90A(2) & anggapan Seksyen 114A Akta 56 untuk membuka IP."
         ),
         "cadangan_pertuduhan": [
             {
                 "perihal": "Menyiarkan / mempamerkan iklan produk merokok atau rokok elektronik",
-                "seksyen_kesalahan": "Seksyen 7(1) Akta 852 [atau Seksyen 9(1) jika promosi harga/diskaun]",
-                "seksyen_hukuman": "Seksyen 7(2) [Individu] / Seksyen 7(3) [Pertubuhan Perbadanan] Akta 852",
+                "seksyen_kesalahan": "Seksyen 7(1) Akta 852 [atau Seksyen 9(1) jika promosi harga/diskaun; dibaca bersama S.49 jika syarikat]",
+                "seksyen_hukuman": "Seksyen 7(2)(a) [Individu] / Seksyen 7(2)(b) [Pertubuhan Perbadanan] Akta 852",
                 "hukuman_maksimum": "Individu: Denda maks RM20,000 / penjara 1 tahun | Syarikat: Denda RM20,000 – RM100,000",
                 "boleh_kompaun": "TIDAK BOLEH KOMPAUN di bawah Jadual Pertama P.U. (A) 259/2024 bagi S.7(1) — wajib buka IP untuk pendakwaan.",
             }
@@ -273,7 +273,7 @@ UIP_SCENARIO_LIBRARY: List[Dict[str, Any]] = [
         "sop_lapangan": [
             "Ambil gambar keseluruhan kedai serta gambar jelas poster/gegantung/skrin LED iklan vape sebelum menyentuh bahan.",
             "Sita poster atau papan iklan fizikal di bawah Seksyen 35 dan keluarkan Borang Senarai Sitaan Seksyen 36 Akta 852.",
-            "Jika iklan di skrin LED/media sosial rasmi kedai, ambil gambar skrin serta cetak paparan tersebut bersama Sijil Seksyen 90A(2).",
+            "Jika iklan di skrin LED/media sosial rasmi kedai, ambil gambar skrin serta cetak paparan tersebut bersama Sijil Seksyen 90A(2) & rujukan Seksyen 114A Akta Keterangan 1950.",
         ],
         "eksibit_wajib": [
             "Bahan iklan/poster fizikal yang disita & dilak KKM + Borang S.36",
@@ -281,11 +281,11 @@ UIP_SCENARIO_LIBRARY: List[Dict[str, Any]] = [
             "Carian Rasmi SSM + Sijil S.90A bagi membuktikan entiti yang menyiarkan iklan",
         ],
         "perangkap_kesilapan": [
-            "KESALAHAN DUPLICITY (S.163 KTJ): Jangan campur Seksyen 7(1) [Iklan] dan Seksyen 10(1) [Pameran produk] dalam satu Borang 114 yang sama — wajib asingkan kepada 2 Borang 114 berbeza!",
+            "PERTINDIHAN PERTUDUHAN (S.163 KTJ): Jangan campur Seksyen 7(1) [Iklan] dan Seksyen 10(1) [Pameran produk] dalam satu Borang 114 yang sama — wajib asingkan kepada 2 Borang 114 berbeza!",
         ],
         "templat_ringkas": (
             "Kesalahan: Menyiarkan atau menyebabkan disiarkan iklan promosi rokok elektronik (vape) di premis perniagaan "
-            "yang melanggar Seksyen 7(1) Akta 852 dan boleh dihukum di bawah Seksyen 7(2)/(3) Akta 852."
+            "yang melanggar Seksyen 7(1) Akta 852 dan boleh dihukum di bawah Seksyen 7(2)(a)/(b) Akta 852."
         ),
     },
     {
@@ -539,16 +539,16 @@ UIP_SCENARIO_LIBRARY: List[Dict[str, Any]] = [
             "Jalankan pemeriksaan bersama Pengurus Projek / Safety Health Officer (SHO) kontraktor utama.",
             "Setiap bekas positif dikutip dalam botol spesimen berasingan dengan nombor siri lak KKM tersendiri dan gambar bertarikh.",
             "Serahkan Perintah Seksyen 8(1) Akta 154 (Penutupan tapak / pembersihan wajib).",
-            "Dapatkan carian rasmi SSM syarikat kontraktor utama berserta salinan Pendaftaran CIDB / Surat Setuju Terima (LOA) / Papan Tanda Projek untuk membuktikan entiti pengawal tapak.",
+            "Dapatkan carian rasmi SSM syarikat kontraktor utama berserta salinan Pendaftaran CIDB / Surat Setuju Terima (SST) / Papan Tanda Projek untuk membuktikan entiti pengawal tapak.",
         ],
         "eksibit_wajib": [
             "Botol spesimen larva berlak KKM + Laporan Entomologi bagi setiap bekas positif",
             "Salinan Perintah Seksyen 8(1) bertandatangan terima SHO/Pengurus Tapak",
-            "Cetakan SSM Syarikat Kontraktor Utama + Sijil S.90A, salinan CIDB/LOA & lesen PBT",
+            "Cetakan SSM Syarikat Kontraktor Utama + Sijil S.90A, salinan CIDB/SST & lesen PBT",
             "Pelan Lakar tapak pembinaan menunjukkan zon/aras pembiakan bertandatangan IO",
         ],
         "perangkap_kesilapan": [
-            "JANGAN campurkan pertuduhan Seksyen 8(8) [Ingkar Perintah] dan Seksyen 13(1) [Pembiakan] dalam satu Borang 114 (Duplicity S.163 KTJ).",
+            "JANGAN campurkan pertuduhan Seksyen 8(8) [Ingkar Perintah] dan Seksyen 13(1) [Pembiakan] dalam satu Borang 114 (Pertindihan Pertuduhan S.163 KTJ).",
             "Pastikan tarikh pada Laporan Entomologi, Borang Kutipan Larva dan Pelan Lakar 100% selari.",
         ],
         "templat_ringkas": (
@@ -573,19 +573,19 @@ UIP_SCENARIO_LIBRARY: List[Dict[str, Any]] = [
             "mula rawatan", "mulakan rawatan", "presumptive",
         ],
         "incompatible_with": ["ak342_tibi_smear_negatif_enggan_mula"],
-        "keputusan_tindakan": "BUKA IP TERUS TANPA KOMPAUN (Seksyen 22(b) & Seksyen 24(a) Akta 342 [APPPB 88])",
+        "keputusan_tindakan": "BUKA IP TERUS TANPA KOMPAUN (Seksyen 22(b) & Seksyen 24(a) Akta 342 Pindaan Akta A1742)",
         "sesuai_buka_ip": True,
         "alasan_keputusan": (
             "Pesakit Tibi PTB Smear Positif yang enggan menyambung rawatan berisiko menularkan penyakit maut serta mencipta kuman kebal ubat (MDR-TB). "
-            "Kes di bawah Seksyen 22(b) Akta 342 perlu dibuka IP untuk mendapatkan Saman & Izin Mendakwa TPR bagi perintah mahkamah/penjara pemulihan."
+            "Kes di bawah Seksyen 22(b) Akta 342 perlu dibuka IP untuk mendapatkan Saman & Izin Mendakwa TPR bagi pendakwaan di Mahkamah Majistret."
         ),
         "cadangan_pertuduhan": [
             {
                 "perihal": "Enggan mematuhi perintah sah Pegawai Diberi Kuasa untuk menjalani / menyambung rawatan penyakit berjangkit (Tibi)",
                 "seksyen_kesalahan": "Seksyen 22(b) Akta 342 (APPPB 1988) [atau dibaca bersama S.15(1) bagi kontak enggan pemerhatian]",
-                "seksyen_hukuman": "Seksyen 24(a) Akta 342 [Kesalahan kedua: Seksyen 24(b)]",
-                "hukuman_maksimum": "Penjara tidak melebihi dua (2) tahun atau denda atau kedua-duanya (Kesalahan ulangan: penjara maks 5 tahun)",
-                "boleh_kompaun": "TIDAK DISYORKAN KOMPAUN — Pendakwaan Terus di Mahkamah Majistret + Pemberatan Hukuman.",
+                "seksyen_hukuman": "Seksyen 24(a) [Individu] / Seksyen 24(b) [Pertubuhan Perbadanan] Akta 342 (Pindaan Akta A1742)",
+                "hukuman_maksimum": "Individu: Denda tidak melebihi RM10,000 atau penjara tidak melebihi dua (2) tahun atau kedua-duanya | Syarikat: Denda maks RM100,000",
+                "boleh_kompaun": "TIDAK DISYORKAN KOMPAUN — Pendakwaan Terus di Mahkamah Majistret + Hujahan Pemberatan Hukuman.",
             }
         ],
         "sop_lapangan": [
@@ -599,7 +599,7 @@ UIP_SCENARIO_LIBRARY: List[Dict[str, Any]] = [
             "Salinan Keputusan Makmal Tibi TBIS 20C (mengesahkan kahak PTB Smear Positif)",
             "Notis Arahan Menjalani Rawatan Penyakit Berjangkit bertandatangan terima pesakit & saksi",
             "Borang TBIS 10A-1, Kad Rawatan TBIS 10-I, TBIS 10A-3, TBIS 10D & TBIS 10Da, dan Surat AOR (jika ada)",
-            "Jadual Kronologi Kes, Diari Siasatan lengkap, dan 6 Poin Hujahan Pemberatan Hukuman (risiko penularan awam & MDR-TB)",
+            "Jadual Kronologi Kes, Diari Siasatan lengkap, dan 6 Perkara Hujahan Pemberatan Hukuman (risiko penularan awam & MDR-TB)",
         ],
         "perangkap_kesilapan": [
             "KESALAHAN AKTA BIASA: JANGAN sekali-kali tulis 'Seksyen 22(b) Akta 514' (Akta 514 ialah OSHA 1994!). Akta Tibi ialah Akta 342 [APPPB 1988]!",
@@ -608,7 +608,7 @@ UIP_SCENARIO_LIBRARY: List[Dict[str, Any]] = [
         "templat_ringkas": (
             "Kesalahan: Tidak mematuhi perintah sah yang dikeluarkan oleh pegawai diberi kuasa iaitu enggan menjalani dan menyambung semula rawatan penyakit Tuberkulosis (PTB Smear Positif) "
             "sejenis penyakit berjangkit sebagaimana diarahkan di bawah Notis Arahan Menjalani Rawatan Penyakit Berjangkit. "
-            "Perbuatan ini melanggar Seksyen 22(b) Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988 [Akta 342] dan boleh dihukum di bawah Seksyen 24(a) akta yang sama."
+            "Perbuatan ini melanggar Seksyen 22(b) Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988 [Akta 342] dan boleh dihukum di bawah Seksyen 24(a) akta yang sama (Pindaan Akta A1742)."
         ),
     },
     {
@@ -623,53 +623,53 @@ UIP_SCENARIO_LIBRARY: List[Dict[str, Any]] = [
         ],
         "negative_keywords": ["smear positif", "afb positif", "cicir rawatan", "cicir ubat", "tbis 10d", "defaulter"],
         "incompatible_with": ["ak342_tibi_ingkar"],
-        "keputusan_tindakan": "SAHKAN DIAGNOSIS KLINIKAL DAHULU (MO/FMS — CXR/GeneXpert/Kultur TBIS 20C) & SERAH NOTIS ARAHAN SAH — JANGAN TERUS BUKA IP S.22(b)",
+        "keputusan_tindakan": "SAHKAN DIAGNOSIS KLINIKAL DAHULU (MO/FMS — X-Ray Dada/GeneXpert/Kultur TBIS 20C) & SERAH NOTIS ARAHAN SAH — JANGAN TERUS BUKA IP S.22(b)",
         "sesuai_buka_ip": False,
         "alasan_keputusan": (
             "Kes disaring Tibi atau PTB Smear Negatif (AFB Negatif) yang enggan memulakan rawatan TIDAK sama dengan kes PTB Smear Positif cicir rawatan (TBIS 10D). "
-            "Jika kes masih peringkat saringan atau keputusan kahak AFB negatif tanpa pengesahan klinikal MO/FMS (CXR/GeneXpert MTB/kultur TBIS 20C) serta tanpa Notis Arahan bertulis yang diserahkan secara tangan, "
-            "pembukaan IP Seksyen 22(b) berisiko tinggi ditolak TPR/Mahkamah kerana gagal membuktikan pesakit disahkan menghidap penyakit berjangkit aktif dan tiada perintah statutori sah yang diingkari. "
+            "Jika kes masih peringkat saringan atau keputusan kahak AFB negatif tanpa pengesahan klinikal MO/FMS (X-Ray Dada/GeneXpert MTB/kultur TBIS 20C) serta tanpa Notis Arahan bertulis yang diserahkan secara tangan, "
+            "pembukaan IP Seksyen 22(b) berisiko tinggi ditolak TPR/Mahkamah kerana gagal membuktikan pesakit disahkan menghidap penyakit berjangkit aktif dan tiada perintah bertulis sah yang diingkari. "
             "Sahkan diagnosis klinikal & e-Notifikasi S.10 dahulu; guna S.15(1)/S.18(1)(a) untuk ujian lanjut atau S.14/Notis Arahan Rawatan bertulis — hanya buka IP S.22(b) & S.24 jika pesakit masih ingkar selepas serahan tangan notis sah."
         ),
         "cadangan_pertuduhan": [
             {
                 "perihal": "Fasa 1 (Saringan / Belum Disahkan Aktif): Perintah Pemerhatian, Pengawasan & Ujian Lanjutan",
                 "seksyen_kesalahan": "Seksyen 15(1) & Seksyen 18(1)(a)/(f) Akta 342 [APPPB 1988] + kaunseling & Borang Enggan Rawatan (AOR)",
-                "seksyen_hukuman": "Seksyen 22(b) dibaca bersama Seksyen 24 Akta 342 (hanya jika ingkar Perintah bertulis S.15(1) yang diserahkan)",
+                "seksyen_hukuman": "Seksyen 22(b) dibaca bersama Seksyen 24(a) Akta 342 (hanya jika ingkar Perintah bertulis S.15(1) yang diserahkan)",
                 "hukuman_maksimum": "Pindaan Akta A1742 (kuat kuasa 1 Mei 2025): Individu denda maks RM10,000 atau penjara maks 2 tahun atau kedua-duanya.",
                 "boleh_kompaun": "JANGAN buka IP S.22(b) atau tuduh MDR-TB selagi ujian pengesahan (GeneXpert/Kultur/MO) & notis bertulis belum lengkap.",
             },
             {
                 "perihal": "Fasa 2 (Selepas Disahkan PTB Aktif oleh MO/FMS & Dinotifikasi S.10): Ingkar Notis Arahan Rawatan / Pengasingan S.14",
                 "seksyen_kesalahan": "Seksyen 22(b) Akta 342 [ingkar Notis Arahan Menjalani Rawatan / Perintah Pengasingan Seksyen 14 bertulis]",
-                "seksyen_hukuman": "Seksyen 24 Akta 342 [APPPB 1988] (pindaan Akta A1742; atau S.24(a)/(b) bagi kesalahan terdahulu)",
+                "seksyen_hukuman": "Seksyen 24(a) Akta 342 [APPPB 1988] (Pindaan Akta A1742)",
                 "hukuman_maksimum": "Denda maks RM10,000 atau penjara tidak melebihi 2 tahun atau kedua-duanya.",
                 "boleh_kompaun": "Buka IP terus HANYA selepas bukti diagnosis aktif MO/FMS & bukti serahan tangan Notis Arahan bertulis lengkap.",
             },
         ],
         "sop_lapangan": [
-            "Semak status klinikal dengan Pegawai Perubatan (MO) / FMS / Pakar Klinik Tibi: adakah kes masih suspek saringan (presumptive TB) atau telah disahkan PTB Smear Negatif aktif berdasarkan CXR, GeneXpert MTB/RIF atau Kultur (C&S) pada Borang Makmal TBIS 20C.",
+            "Semak status klinikal dengan Pegawai Perubatan (MO) / FMS / Pakar Klinik Tibi: adakah kes masih disyaki Tibi (saringan awal) atau telah disahkan PTB Smear Negatif aktif berdasarkan X-Ray Dada (CXR), GeneXpert MTB/RIF atau ujian Kultur pada Borang Makmal TBIS 20C.",
             "Pastikan kes telah didaftarkan dalam e-Notifikasi (Seksyen 10 Akta 342 / Peraturan Borang Notis 2005) sekiranya disahkan menghidap Tibi aktif.",
             "Jika keputusan pengesahan masih belum muktamad (tunggu GeneXpert/kultur): jalankan kaunseling bersemuka (MO + PPKP), rekod Borang Enggan Rawatan / AOR bertandatangan pesakit & saksi, dan pertimbangkan Perintah Pemerhatian/Pengawasan bertulis di bawah Seksyen 15(1) / S.18(1)(a) Akta 342 untuk hadir ujian pengesahan.",
             "Hanya apabila MO/FMS mengesahkan PTB aktif dan rawatan wajib dimulakan: keluarkan Notis Arahan Menjalani Rawatan Penyakit Berjangkit / Perintah Seksyen 14 secara bertulis dan buat SERAHAN TANGAN RASMI (tandatangan terima pesakit + saksi PPKP, atau catatan 'Enggan Tandatangan' + saksi + Pos Berdaftar AR).",
-            "Sekiranya pesakit masih ingkar tarikh dalam notis bertulis tersebut, barulah buka Fail IP Seksyen 22(b) dengan melampirkan Laporan Pengesahan MO/FMS (wajib sebagai saksi mahkamah), keputusan GeneXpert/Kultur/CXR, notis asal, S.112 KTJ dan Diari Siasatan.",
+            "Sekiranya pesakit masih ingkar tarikh dalam notis bertulis tersebut, barulah buka Fail IP Seksyen 22(b) dengan melampirkan Laporan Pengesahan MO/FMS (wajib sebagai saksi mahkamah), keputusan GeneXpert/Kultur/X-Ray, notis asal, S.112 KTJ dan Diari Siasatan.",
         ],
         "eksibit_wajib": [
-            "Laporan Pengesahan Klinikal Bertulis MO / FMS / Pakar Perubatan (mengesahkan PTB Smear Negatif aktif melalui CXR / GeneXpert MTB / Kultur)",
-            "Keputusan Makmal TBIS 20C (AFB Smear Negatif serta keputusan GeneXpert MTB/RIF atau Kultur & Sensitiviti)",
+            "Laporan Pengesahan Klinikal Bertulis MO / FMS / Pakar Perubatan (mengesahkan PTB Smear Negatif aktif melalui X-Ray Dada / GeneXpert MTB / Kultur)",
+            "Keputusan Makmal TBIS 20C (AFB Smear Negatif serta keputusan GeneXpert MTB/RIF atau Ujian Kultur)",
             "Cetakan e-Notifikasi Seksyen 10 Akta 342 + Sijil Seksyen 90A(2) Akta Keterangan 1950",
             "Borang Kaunseling & Borang Enggan Rawatan / Surat AOR (bagi fasa penolakan awal klinik)",
             "Notis Arahan Menjalani Rawatan / Perintah S.14 atau S.15(1) bertandatangan terima pesakit & saksi PPKP (WAJIB wujud sebelum IP S.22(b) dibuka)",
         ],
         "perangkap_kesilapan": [
             "JANGAN paksa pakai templat 'PTB Smear Positif Cicir Rawatan' atau nyatakan pesakit telah 'mula & cicir ubat / TBIS 10D' sedangkan rawatan belum pernah dimulakan dan AFB negatif — TPR akan menolak dakwaan kerana percanggahan fakta material (S.152–154 KTJ)!",
-            "Arahan lisan doktor/jururawat di klinik BUKAN perintah statutori bertulis di bawah Seksyen 22(b) — notis/perintah bertulis Akta 342 wajib diserahkan dahulu sebelum kesalahan ingkar terbentuk.",
+            "Arahan lisan doktor/jururawat di klinik BUKAN perintah bertulis di bawah Seksyen 22(b) — notis/perintah bertulis Akta 342 wajib diserahkan dahulu sebelum kesalahan ingkar terbentuk.",
             "Jangan tulis 'Akta 514' (OSHA 1994); semua tindakan kawalan Tibi ialah di bawah Akta 342 [APPPB 1988].",
         ],
         "templat_ringkas": (
             "Kesalahan / Siasatan: Pengendalian kes disaring Tibi / PTB Smear Negatif (AFB Negatif) yang enggan memulakan rawatan di klinik kesihatan. "
-            "Tindakan statutori dijalankan mengikut Seksyen 15(1) / Seksyen 14 Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988 [Akta 342] selepas pengesahan diagnosis oleh Pegawai Perubatan melalui CXR/GeneXpert/Kultur TBIS 20C serta e-Notifikasi Seksyen 10, "
-            "sebelum pertimbangan pendakwaan Seksyen 22(b) & Seksyen 24 Akta 342 sekiranya notis perintah bertulis serahan tangan diingkari."
+            "Tindakan undang-undang dijalankan mengikut Seksyen 15(1) / Seksyen 14 Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988 [Akta 342] selepas pengesahan diagnosis oleh Pegawai Perubatan melalui X-Ray/GeneXpert/Kultur TBIS 20C serta e-Notifikasi Seksyen 10, "
+            "sebelum pertimbangan pendakwaan Seksyen 22(b) & Seksyen 24(a) Akta 342 sekiranya notis perintah bertulis serahan tangan diingkari."
         ),
     },
     {
@@ -693,7 +693,7 @@ UIP_SCENARIO_LIBRARY: List[Dict[str, Any]] = [
             {
                 "perihal": "Ingkar perintah penutupan premis wabak / halang kerja disinfeksi atau langkah kawalan wabak",
                 "seksyen_kesalahan": "Seksyen 22(b) / Seksyen 22(a) Akta 342 (ingkar Perintah Seksyen 18(1)(d) / halang pegawai)",
-                "seksyen_hukuman": "Seksyen 24 Akta 342 [APPPB 1988]",
+                "seksyen_hukuman": "Seksyen 24(a) [Individu] / Seksyen 24(b) [Syarikat] Akta 342 (Pindaan Akta A1742)",
                 "hukuman_maksimum": "Individu: Denda maks RM10,000 / penjara maks 2 tahun | Syarikat: Denda maks RM100,000 (Akta A1742).",
                 "boleh_kompaun": "Perintah Tutup S.18(1)(d) dikuatkuasa serta-merta; jika diingkari, terus buka IP S.22(b) tanpa kompromi keselamatan kanak-kanak/awam.",
             }
@@ -738,16 +738,16 @@ UIP_SCENARIO_LIBRARY: List[Dict[str, Any]] = [
         ),
         "cadangan_pertuduhan": [
             {
-                "perihal": "Menjual / mempamer untuk jualan makanan yang telah tamat tarikh luput (expired)",
+                "perihal": "Menjual / mempamer untuk jualan makanan yang telah tamat tarikh luput",
                 "seksyen_kesalahan": "Peraturan 14(9)(b) Peraturan-Peraturan Makanan 1985 [Ubah tarikh luput: P.14(7)]",
-                "seksyen_hukuman": "Seksyen 32A / Peraturan 397 PPM 1985 dibaca bersama Akta Makanan 1983 [Akta 281]",
+                "seksyen_hukuman": "Peraturan 397(2) Peraturan-Peraturan Makanan 1985 dibaca bersama Akta Makanan 1983 [Akta 281]",
                 "hukuman_maksimum": "Denda tidak melebihi RM10,000 atau penjara tidak melebihi 2 tahun atau kedua-duanya.",
                 "boleh_kompaun": "Sita semua stok tamat tempoh di bawah S.4(1)(f) Akta 281; boleh tawar kompaun S.32B atau buka IP bagi kesalahan besar/berulang.",
             },
             {
                 "perihal": "Mengendali Mesin Jual Air (MJA) tanpa lesen KKM / Premis tak daftar FoSIM",
                 "seksyen_kesalahan": "Peraturan 360C(4) PPM 1985 [MJA] / Peraturan 3(1) PPKM 2009 [Tiada Pendaftaran Premis]",
-                "seksyen_hukuman": "Peraturan 397 PPM 1985 / Peraturan 3(2) PPKM 2009",
+                "seksyen_hukuman": "Peraturan 397(2) PPM 1985 / Peraturan 3(2) PPKM 2009",
                 "hukuman_maksimum": "Denda tidak melebihi RM10,000 atau penjara tidak melebihi 2 tahun.",
                 "boleh_kompaun": "Lak/tahan operasi MJA tanpa lesen; premis tak daftar FoSIM lazimnya boleh dikompaun S.32B berserta arahan daftar.",
             },
@@ -839,7 +839,7 @@ UIP_SCENARIO_LIBRARY: List[Dict[str, Any]] = [
         "alasan_keputusan": (
             "Kes seperti bau busuk/kumbahan bukan makanan (Seksyen 80–82 Akta Kerajaan Tempatan 1976 [Akta 171]), cecair vape disyaki mengandungi dadah/racun berjadual (Akta Racun 1952 [Akta 366] / Akta Jualan Dadah [Akta 368]), "
             "klinik swasta tidak berdaftar (Akta 586 CKAPS) atau pencemaran industri (Akta 127 JAS) berada di bawah akta khusus atau tindakan bersepadu. "
-            "Rujuk silang agensi berkenaan supaya tindakan tidak dibatalkan atas alasan luar bidang kuasa (ultra vires)."
+            "Rujuk silang agensi berkenaan supaya tindakan tidak dibatalkan atas alasan melebihi bidang kuasa."
         ),
         "cadangan_pertuduhan": [
             {
@@ -867,7 +867,7 @@ UIP_SCENARIO_LIBRARY: List[Dict[str, Any]] = [
             "Surat / Memo Rujukan Rasmi Antara Agensi (PBT / Farmasi JKN / CKAPS / JAS / PDRM)",
         ],
         "perangkap_kesilapan": [
-            "JANGAN paksa guna Akta 154 atau Akta 281 untuk aduan bau tahi lembu atau longkang tersumbat tanpa penemuan larva Aedes atau pengendalian makanan — kes berisiko dicabar ultra vires.",
+            "JANGAN paksa guna Akta 154 atau Akta 281 untuk aduan bau tahi lembu atau longkang tersumbat tanpa penemuan larva Aedes atau pengendalian makanan — kes berisiko dibatalkan kerana di luar bidang kuasa akta.",
         ],
         "templat_ringkas": (
             "Laporan Rujukan Silang Agensi: Siasatan awal mendapati isu terletak di bawah bidang kuasa / penguatkuasaan bersepadu "
@@ -903,23 +903,23 @@ UIP_SCENARIO_LIBRARY: List[Dict[str, Any]] = [
         "sesuai_buka_ip": False,
         "alasan_keputusan": (
             "Bermula 15 Julai 2024 (dasar KKM 'Hidup Bersama COVID-19'), Perintah Pengawasan dan Pemerhatian di Rumah (HSO) mandatori MySejahtera telah dimansuhkan "
-            "dan COVID-19 diurus seperti jangkitan saluran pernafasan akut (ARI) biasa melalui penilaian klinikal doktor/MC serta pemakaian pelitup muka. "
+            "dan COVID-19 diurus seperti jangkitan saluran pernafasan akut (ARI) biasa melalui penilaian klinikal doktor/cuti sakit serta pemakaian pelitup muka. "
             "Tanpa Perintah Pengawasan Seksyen 15(1) atau Pengasingan Seksyen 14 Akta 342 yang dikeluarkan dan diserahkan secara bertulis, TIADA kesalahan Seksyen 22(b) untuk dikompaun. "
-            "Selain itu, Seksyen 12(1) Akta 342 BUKAN kesalahan boleh kompaun di bawah Jadual Pertama P.U. (A) 139/2025 (berkuat kuasa 1 Mei 2025) serta amat sukar dibuktikan tanpa HSO bertulis. "
-            "Urusan cuti sakit/MC (Seksyen 60F Akta Kerja 1955), arahan pulang/WFH dan tatatertib pekerja ialah tanggungjawab majikan di bawah polisi HR & OSHA 1994 [Akta 514] (S.15 & S.24), manakala Unit CDC PKD menumpukan siasatan risiko kluster tempat kerja."
+            "Selain itu, Seksyen 12(1) Akta 342 BUKAN kesalahan boleh kompaun di bawah Jadual Pertama P.U. (A) 139/2025 (berkuat kuasa 1 Mei 2025) serta amat sukar dibuktikan tanpa perintah bertulis. "
+            "Urusan cuti sakit (Seksyen 60F Akta Kerja 1955), arahan pulang/bekerja dari rumah dan tatatertib pekerja ialah tanggungjawab majikan di bawah dasar sumber manusia & OSHA 1994 [Akta 514] (S.15 & S.24), manakala Unit CDC PKD menumpukan siasatan risiko kluster tempat kerja."
         ),
         "cadangan_pertuduhan": [
             {
                 "perihal": "Kes COVID-19 Biasa Tanpa Perintah Bertulis S.15(1)/S.14 (Dasar Semasa KKM Pasca 15 Julai 2024)",
-                "seksyen_kesalahan": "TIADA KESALAHAN BOLEH KOMPAUN di bawah Akta 342 (Pengurusan HR majikan: S.60F Akta Kerja 1955 / S.15 & S.24 OSHA 1994 [Akta 514])",
+                "seksyen_kesalahan": "TIADA KESALAHAN BOLEH KOMPAUN di bawah Akta 342 (Pengurusan majikan: S.60F Akta Kerja 1955 / S.15 & S.24 OSHA 1994 [Akta 514])",
                 "seksyen_hukuman": "Tindakan Kesihatan Awam Unit CDC PKD (nasihat pencegahan, pengesahan e-Notifikasi & penilaian risiko kluster tempat kerja)",
                 "hukuman_maksimum": "Tiada kompaun Akta 342. Pertimbangan Perintah S.15(1) / Penutupan Disinfeksi S.18(1)(d) hanya jika wujud wabak/kluster serius.",
-                "boleh_kompaun": "TIDAK BOLEH KOMPAUN — Jangan keluarkan notis kompaun tanpa perintah statutori bertulis yang sah diingkari.",
+                "boleh_kompaun": "TIDAK BOLEH KOMPAUN — Jangan keluarkan notis kompaun tanpa perintah bertulis yang sah diingkari.",
             },
             {
                 "perihal": "HANYA JIKA Pekerja Ingkar Perintah Bertulis Seksyen 15(1) / Seksyen 14 Akta 342 Yang Sah Diserahkan (Kes Kluster/Wabak Khas)",
                 "seksyen_kesalahan": "Seksyen 22(b) Akta 342 [APPPB 1988] (ingkar perintah sah pegawai diberi kuasa)",
-                "seksyen_hukuman": "Seksyen 24 Akta 342 (Pindaan Akta A1742 berkuat kuasa 1 Mei 2025)",
+                "seksyen_hukuman": "Seksyen 24(a) [Individu] / Seksyen 24(b) [Syarikat] Akta 342 (Pindaan Akta A1742 berkuat kuasa 1 Mei 2025)",
                 "hukuman_maksimum": "Individu: Denda maks RM10,000 atau penjara maks 2 tahun atau kedua-duanya | Syarikat: Denda maks RM100,000",
                 "boleh_kompaun": (
                     "Boleh dikompaun di bawah Seksyen 25 Akta 342 (Pindaan Akta A1742) & P.U. (A) 139/2025 "
@@ -927,9 +927,9 @@ UIP_SCENARIO_LIBRARY: List[Dict[str, Any]] = [
                 ),
             },
             {
-                "perihal": "Rujukan Statutori Terhad: Sengaja Mendedahkan Orang Lain kepada Risiko Jangkitan (Kes Keterlaluan Sahaja — Bukan Rutin)",
+                "perihal": "Rujukan Terhad: Sengaja Mendedahkan Orang Lain kepada Risiko Jangkitan (Kes Keterlaluan Sahaja — Bukan Rutin)",
                 "seksyen_kesalahan": "Seksyen 12(1) dibaca bersama Seksyen 12(3) Akta 342 [APPPB 1988]",
-                "seksyen_hukuman": "Seksyen 24 Akta 342 (Pindaan Akta A1742)",
+                "seksyen_hukuman": "Seksyen 24(a) Akta 342 (Pindaan Akta A1742)",
                 "hukuman_maksimum": "Individu: Denda maks RM10,000 atau penjara maks 2 tahun atau kedua-duanya",
                 "boleh_kompaun": (
                     "TIDAK BOLEH DIKOMPAUN (Seksyen 12(1)/(3) tiada dalam Jadual Pertama P.U. (A) 139/2025) — "
@@ -940,21 +940,21 @@ UIP_SCENARIO_LIBRARY: List[Dict[str, Any]] = [
         "sop_lapangan": [
             "Sahkan status kes melalui semakan e-Notifikasi (Seksyen 10 Akta 342) dan tanyakan jenis ujian: ujian RTK-Ag kendiri di rumah BUKAN pengesahan rasmi kes di bawah garis panduan KKM sejak 15 Julai 2024.",
             "Semak rekod PKD sama ada sebarang Perintah Pengawasan/Pemerhatian bertulis Seksyen 15(1) atau Pengasingan Seksyen 14 Akta 342 pernah dikeluarkan dan diserahkan secara tangan kepada pekerja tersebut.",
-            "Jalankan penilaian risiko epidemiologi Unit CDC di tempat kerja: kenal pasti sama ada kes sporadik tunggal atau wujud kluster/wabak aktif (beberapa kes positif/bergejala serentak atau melibatkan golongan rentan seperti wad/pusat jagaan/taska).",
-            "Jika kes sporadik tanpa HSO/perintah bertulis: JANGAN tawarkan kompaun; beri nasihat kawalan jangkitan (pekerja dapatkan pemeriksaan doktor/MC jika tidak sihat, pakai pelitup muka, sanitasi permukaan & pengudaraan premis) dan jelaskan kepada majikan bahawa pengurusan cuti/WFH/arahan pulang adalah di bawah bidang kuasa HR majikan (Akta Kerja 1955 S.60F & OSHA 1994 Akta 514 S.15/S.24).",
+            "Jalankan penilaian risiko epidemiologi Unit CDC di tempat kerja: kenal pasti sama ada kes terpencil tunggal atau wujud kluster/wabak aktif (beberapa kes positif/bergejala serentak atau melibatkan golongan rentan seperti wad/pusat jagaan/taska).",
+            "Jika kes terpencil tanpa perintah bertulis: JANGAN tawarkan kompaun; beri nasihat kawalan jangkitan (pekerja dapatkan pemeriksaan doktor/cuti sakit jika tidak sihat, pakai pelitup muka, sanitasi permukaan & pengudaraan premis) dan jelaskan kepada majikan bahawa pengurusan cuti/bekerja dari rumah adalah di bawah tanggungjawab majikan (Akta Kerja 1955 S.60F & OSHA 1994 Akta 514 S.15/S.24).",
             "HANYA jika siasatan Unit CDC mengesahkan kluster serius/risiko awam tinggi dan tiada kerjasama: pertimbangkan pengeluaran Perintah bertulis Seksyen 15(1) / Seksyen 14 (serahan tangan + tandatangan terima/saksi PPKP) dan/atau arahan disinfeksi/penutupan sementara premis Seksyen 18(1)(d)&(f). Tindakan S.22(b)/S.25 (dengan keizinan bertulis TPR) hanya diambil jika perintah bertulis sah itu diingkari.",
         ],
         "eksibit_wajib": [
-            "Rekod Aduan Rasmi Majikan & Laporan Siasatan Epidemiologi Awal Unit CDC PKD (menilai status sporadik vs kluster tempat kerja)",
+            "Rekod Aduan Rasmi Majikan & Laporan Siasatan Epidemiologi Awal Unit CDC PKD (menilai status kes terpencil vs kluster tempat kerja)",
             "Semakan Cetakan e-Notifikasi Seksyen 10 Akta 342 / keputusan ujian makmal profesional (jika disahkan fasiliti kesihatan) + Sijil S.90A(2)",
             "Surat / Rekod Nasihat Pencegahan & Pengurusan Kes kepada Majikan dan Pekerja (bukti tindakan kesihatan awam PKD tanpa salah guna kuasa)",
-            "HANYA JIKA ESKALASI S.22(b): Salinan asal Perintah S.15(1) / S.14 bertandatangan terima & saksi PPKP, bukti kehadiran mengingkari perintah (rekod kedatangan/CCTV + S.90A), percakapan S.112 KTJ saksi, dan Keizinan Bertulis Pendakwa Raya (jika tawar kompaun S.25)",
+            "HANYA JIKA TINDAKAN LANJUT S.22(b): Salinan asal Perintah S.15(1) / S.14 bertandatangan terima & saksi PPKP, bukti kehadiran mengingkari perintah (rekod kedatangan/CCTV + S.90A), percakapan S.112 KTJ saksi, dan Keizinan Bertulis Pendakwa Raya (jika tawar kompaun S.25)",
         ],
         "perangkap_kesilapan": [
-            "PERANGKAP KOMPAUN ULTRA VIRES #1: JANGAN tawarkan kompaun Seksyen 22(b) tanpa Perintah bertulis Seksyen 15(1)/Seksyen 14 yang diserahkan secara sah — HSO mandatori MySejahtera telah dimansuhkan sejak 15 Julai 2024!",
-            "PERANGKAP KOMPAUN ULTRA VIRES #2: JANGAN keluarkan notis kompaun di bawah Seksyen 12(1) Akta 342 — Seksyen 12(1)/(3) BUKAN kesalahan boleh kompaun dalam Jadual Pertama P.U. (A) 139/2025!",
+            "PERANGKAP KOMPAUN TIDAK SAH #1: JANGAN tawarkan kompaun Seksyen 22(b) tanpa Perintah bertulis Seksyen 15(1)/Seksyen 14 yang diserahkan secara sah — HSO mandatori MySejahtera telah dimansuhkan sejak 15 Julai 2024!",
+            "PERANGKAP KOMPAUN TIDAK SAH #2: JANGAN keluarkan notis kompaun di bawah Seksyen 12(1) Akta 342 — Seksyen 12(1)/(3) BUKAN kesalahan boleh kompaun dalam Jadual Pertama P.U. (A) 139/2025!",
             "PERANGKAP PINDAAN AKTA A1742 (1 MEI 2025): Di bawah Seksyen 25 baharu, had kompaun bukan lagi RM1,000 (kini maks RM5,000 individu / RM50,000 pertubuhan perbadanan) DAN pengkompaunan tertakluk kepada keizinan bertulis Pendakwa Raya serta hanya untuk seksyen dalam Jadual Pertama P.U. (A) 139/2025 (S.10(2), S.11(5), S.21A(3), S.22(b)/(c)/(d)).",
-            "JANGAN jadikan Unit CDC/PPKP sebagai alat tatatertib HR majikan — arahan pulang kerja, cuti sakit (MC S.60F Akta Kerja 1955), WFH dan tatatertib pekerja ialah tanggungjawab majikan di bawah polisi syarikat & OSHA 1994 (Akta 514 S.15 & S.24).",
+            "JANGAN jadikan Unit CDC/PPKP sebagai alat tatatertib sumber manusia majikan — arahan pulang kerja, cuti sakit (S.60F Akta Kerja 1955), bekerja dari rumah dan tatatertib pekerja ialah tanggungjawab majikan di bawah dasar syarikat & OSHA 1994 (Akta 514 S.15 & S.24).",
         ],
         "templat_ringkas": (
             "Laporan Siasatan Aduan Unit CDC (Akta 342): Aduan majikan berkaitan pekerja disyaki/positif COVID-19 hadir bekerja. "
@@ -1171,22 +1171,24 @@ class UIPAdvisorService:
             comp_low = comp_txt.lower()
             is_comp_flag = bool(
                 comp_txt
-                and "boleh kompaun" in comp_low
-                or "boleh dikompaun" in comp_low
-                or "kompaun rm" in comp_low
+                and (
+                    "boleh kompaun" in comp_low
+                    or "boleh dikompaun" in comp_low
+                    or "kompaun rm" in comp_low
+                )
             ) and not any(
                 neg in comp_low
                 for neg in ("tidak boleh kompaun", "tidak boleh dikompaun", "tiada kompaun", "tidak disyorkan kompaun")
             )
             has_obd_minor = any(
                 k in f"{q_low} {akta_code.lower()} {str(primary.get('seksyen_kesalahan') or '').lower()} {str(result.get('tajuk_nasihat') or '').lower()}"
-                for k in ("pelajar", "budak", "murid", "obd", "bawah 18", "bawah umur", "sekolah", "17(1)", "13(3)", "kanak-kanak")
+                for k in ("pelajar", "budak", "murid", "obd", "bawah 18", "bawah umur", "sekolah", "17(1)", "13(3)", "kanak-kanak", "taska", "tadika")
             )
             peringatan_611 = (
-                "Peringatan Akta Kanak-Kanak 2001 [Akta 611]: Pelaku melibatkan pelajar / bawah 18 tahun (OBD). "
-                "Wajib maklumkan ibu bapa atau penjaga, lindungi identiti/privasi pelajar (Seksyen 15 Akta 611), "
+                "Peringatan Akta Kanak-Kanak 2001 [Akta 611]: Kes ini melibatkan kanak-kanak / pelajar bawah 18 tahun (OBD). "
+                "Wajib maklumkan ibu bapa atau penjaga, lindungi identiti/privasi kanak-kanak (Seksyen 15 Akta 611), "
                 "dan patuhi tatacara Mahkamah Bagi Kanak-Kanak (Seksyen 83 Akta 611) sekiranya kes dirujuk ke mahkamah."
-                if has_obd_minor and "852" in akta_code
+                if has_obd_minor
                 else None
             )
             result["punca_kuasa"] = {
@@ -1867,7 +1869,7 @@ class UIPAdvisorService:
             result["ai_attempted"] = ai_requested
             if ai_requested:
                 result["fallback_reason"] = (
-                    "Kunci API Gemini belum dikonfigurasi pada pelayan (tetapkan GEMINI_API_KEY dalam Tetapan Sistem)."
+                    "Fungsi Analisis AI belum diaktifkan oleh pentadbir sistem. Paparan menggunakan rujukan akta tempatan."
                 )
         elif should_call_ai:
             result["ai_attempted"] = True
@@ -1890,7 +1892,7 @@ class UIPAdvisorService:
                 result["ai_succeeded"] = True
                 result["fallback_reason"] = None
                 result["is_fallback_response"] = False
-                result["engine_used"] = f"{cached_ai.get('engine_used', 'Analisa AI')} [Cache]"
+                result["engine_used"] = f"{cached_ai.get('engine_used', 'Analisis AI')} [Cache]"
             else:
                 statutory_context_block = grounding["statutory_context_block"]
                 amendment_directives_list = grounding.get("amendment_directives") or []
@@ -2016,7 +2018,7 @@ class UIPAdvisorService:
                     if ai_val["passed"]:
                         ai_patch = {
                             **candidate_patch,
-                            "engine_used": f"Analisa AI ({used_model})",
+                            "engine_used": f"Analisis AI ({used_model})",
                             "ai_attempted": True,
                             "ai_succeeded": True,
                             "fallback_reason": None,
@@ -2034,7 +2036,7 @@ class UIPAdvisorService:
                         result["legal_validation"] = ai_val
                 else:
                     err_detail = self.router._last_ai_error or (
-                        "Analisa AI tidak dapat dicapai buat sementara waktu. Paparan menggunakan rujukan tempatan."
+                        "Analisis AI tidak dapat dicapai buat sementara waktu. Paparan menggunakan rujukan tempatan."
                     )
                     logger.warning("Tanya Pakar fallback ke enjin tempatan: %s", err_detail)
                     result["ai_attempted"] = True

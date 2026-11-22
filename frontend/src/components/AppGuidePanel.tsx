@@ -36,24 +36,24 @@ const CHEAT_SHEET_ROWS = [
     akta: "Akta 852",
     kesalahan: "Iklan & Promosi Rokok/Vape",
     seksyen: "Seksyen 7(1) / 9(1)",
-    hukuman: "S.7(2) Ind. / S.7(3) Syk.",
-    tindakan: "Sita S.35/36 & Buka IP / Jadual P.U.(A) 259",
+    hukuman: "S.7(2)(a) Ind. / S.7(2)(b) Syk.",
+    tindakan: "TIDAK BOLEH KOMPAUN — Sita S.35/36 & Buka IP Terus",
     isIp: true,
   },
   {
     akta: "Akta 852",
     kesalahan: "Pamer Terbuka Vape/Rokok",
     seksyen: "S.10(1) + P.6 P.U.(A) 260/2024",
-    hukuman: "S.10(2) Ind. / S.10(3) Syk.",
-    tindakan: "Sita S.35/36 & Buka IP / Notis S.47",
+    hukuman: "S.10(2)(a) Ind. / S.10(2)(b) Syk.",
+    tindakan: "TIDAK BOLEH KOMPAUN — Sita S.35/36 & Buka IP Terus",
     isIp: true,
   },
   {
     akta: "Akta 852",
     kesalahan: "Jual kepada OBD (<18 thn)",
     seksyen: "Seksyen 13(1)",
-    hukuman: "S.13(2) Ind. / S.13(3) Syk.",
-    tindakan: "Buka IP Terus (Sita & S.112 OBD)",
+    hukuman: "S.13(2)(a) Ind. / S.13(2)(b) Syk.",
+    tindakan: "TIDAK BOLEH KOMPAUN — Buka IP Terus (Sita & S.112 OBD)",
     isIp: true,
   },
   {
@@ -61,15 +61,15 @@ const CHEAT_SHEET_ROWS = [
     kesalahan: "Merokok di Restoran / Larangan",
     seksyen: "S.16(2) + P.U.(A) 257/2024",
     hukuman: "Seksyen 16(3) (Maks RM5,000)",
-    tindakan: "Kompaun S.48 (RM250 / 30 hari)",
+    tindakan: "Kompaun S.48(2) (Maks RM2,500 / 30 hari, izin bertulis PR)",
     isIp: false,
   },
   {
     akta: "Akta 852",
-    kesalahan: "Premis Tiada Tanda QR / Ashtray",
+    kesalahan: "Premis Tiada Tanda Larangan / Bekas Abu Rokok",
     seksyen: "S.18(1)(a)/(b) + P.U.(A) 258/2024",
     hukuman: "Seksyen 18(2) (Maks RM5,000)",
-    tindakan: "Kompaun S.48 (Notis S.47 / 30 hari)",
+    tindakan: "Kompaun S.48(2) (Notis S.47 / 30 hari)",
     isIp: false,
   },
   {
@@ -82,8 +82,8 @@ const CHEAT_SHEET_ROWS = [
   },
   {
     akta: "Akta 281",
-    kesalahan: "Pengendali Tiada Tifoid / LPM",
-    seksyen: "P.31(1) [Tifoid] / P.30(1) [LPM]",
+    kesalahan: "Pengendali Tiada Antitifoid / LPM",
+    seksyen: "P.31(1)/(2) [Antitifoid] / P.30(1) [LPM]",
     hukuman: "P.31(3) / P.30(3) PPKM 2009",
     tindakan: "Kompaun S.33 (Notis S.32B / 14 hari)",
     isIp: false,
@@ -93,7 +93,7 @@ const CHEAT_SHEET_ROWS = [
     kesalahan: "Makanan Beracun / Benda Asing",
     seksyen: "Seksyen 13(1) / 13B(1)&(2)",
     hukuman: "Seksyen 13(1) / 13B(4)",
-    tindakan: "Wajib Buka IP Terus (Sanksi S.32A)",
+    tindakan: "Wajib Buka IP Terus (Izin Mendakwa TPR S.32A)",
     isIp: true,
   },
   {
@@ -116,8 +116,8 @@ const CHEAT_SHEET_ROWS = [
     akta: "Akta 342",
     kesalahan: "Tibi Cicir Rawatan / Ingkar Perintah",
     seksyen: "Seksyen 22(b) [APPPB 1988]",
-    hukuman: "Seksyen 24(a)/(b)",
-    tindakan: "Buka IP Terus (Saman 111 & M.114)",
+    hukuman: "S.24(a) Ind. / S.24(b) Syk. (Akta A1742)",
+    tindakan: "Buka IP Terus (Saman 111 & Borang 114)",
     isIp: true,
   },
 ];
@@ -145,9 +145,9 @@ export default function AppGuidePanel({ onNavigateMode }: AppGuidePanelProps) {
   const tabs: Array<{ id: GuideSection; label: string; icon: React.ReactNode }> = [
     { id: "cara_guna", label: "1. Cara Guna Aplikasi", icon: <Compass className="h-3.5 w-3.5" /> },
     { id: "carta_alir", label: "2. Carta Alir Kerja UIP", icon: <Layers className="h-3.5 w-3.5" /> },
-    { id: "cheat_sheet", label: "3. Cheat Sheet 4 Akta", icon: <BookOpenCheck className="h-3.5 w-3.5" /> },
+    { id: "cheat_sheet", label: "3. Panduan Ringkas 4 Akta", icon: <BookOpenCheck className="h-3.5 w-3.5" /> },
     { id: "fail_5w1h", label: "4. Susunan IP & 5W1H B.114", icon: <FolderTree className="h-3.5 w-3.5" /> },
-    { id: "kesilapan_maut", label: "5. 10 Kesilapan Maut PPKP", icon: <ShieldAlert className="h-3.5 w-3.5" /> },
+    { id: "kesilapan_maut", label: "5. 10 Kesilapan Utama PPKP", icon: <ShieldAlert className="h-3.5 w-3.5" /> },
     { id: "carian_akta", label: "6. Cari Teks Akta Rasmi", icon: <BookOpen className="h-3.5 w-3.5" /> },
   ];
 
@@ -200,7 +200,7 @@ export default function AppGuidePanel({ onNavigateMode }: AppGuidePanelProps) {
             <h4 className="text-xs font-bold text-slate-900">2. Rujuk Seksyen &amp; Prosedur Kes</h4>
             <p className="text-xs leading-relaxed text-slate-600">
               Tidak pasti kes tertentu perlu kompaun dulu, perintah tutup premis atau buka IP terus? Taip situasi di modul <strong>Tanya Pakar</strong>, kemudian tekan{" "}
-              <em>Buka Draf Kes Ini dalam Editor IP</em> atau <em>Isi ke Borang Notis Kompaun</em>.
+              <em>Buka &amp; Jana Draf Fail IP</em> atau <em>Isi ke Borang Notis Kompaun</em>.
             </p>
             {onNavigateMode && (
               <button
@@ -219,8 +219,7 @@ export default function AppGuidePanel({ onNavigateMode }: AppGuidePanelProps) {
             </span>
             <h4 className="text-xs font-bold text-slate-900">3. Semak 10 Perkara Notis Kompaun</h4>
             <p className="text-xs leading-relaxed text-slate-600">
-              Ambil foto SSM/notis atau muat naik gambar di Langkah 2 dan tekan{" "}
-              <strong>Baca &amp; Masukkan Teks Dari Fail Ini ke Catatan</strong>. Di modul <strong>Notis Kompaun</strong>, sistem semak had denda statutori (cth: Akta 154 maks RM500), MyKad 12 digit, dan saksi serahan sebelum muat turun `.docx`.
+              Ambil foto SSM/notis atau muat naik gambar melalui butang <strong>Imbas Foto / SSM</strong> di modul <strong>Notis Kompaun</strong>. Sistem akan menyemak had kompaun mengikut undang-undang (cth: Akta 154 maks RM500), MyKad 12 digit atau Pasport, dan saksi serahan sebelum muat turun <code>.docx</code>.
             </p>
             {onNavigateMode && (
               <button
@@ -437,7 +436,7 @@ export default function AppGuidePanel({ onNavigateMode }: AppGuidePanelProps) {
             10 Kesilapan Maut PPKP Yang Menyebabkan IP Ditolak TPR atau Kalah di Mahkamah
           </h4>
           <ol className="list-decimal space-y-1.5 pl-5 text-xs text-slate-800">
-            <li>Mencampurkan 2 kesalahan berlainan dalam satu Borang 114 (<strong>Duplicity — S.163 KTJ</strong>).</li>
+            <li>Mencampurkan 2 kesalahan berlainan dalam satu Borang 114 (<strong>Pertindihan Pertuduhan — S.163 KTJ</strong>).</li>
             <li>Tersalah petik seksyen: menulis <strong>S.38</strong> untuk sitaan Akta 852, <strong>S.44</strong> untuk kompaun Akta 852, <strong>P.30</strong> untuk suntikan tifoid, atau <strong>Akta 514</strong> untuk kes Tibi (sepatutnya Akta 342).</li>
             <li>Tiada <strong>Sijil Seksyen 90A(2)</strong> pada gambar digital &amp; cetakan SSM (atau tiada klausa <em>&quot;sepanjang pengetahuan dan kepercayaan saya&quot;</em>).</li>
             <li>Tarikh atau masa antara Borang Pemeriksaan, Label Botol/Barang Kes, Laporan Makmal &amp; Borang 114 bercanggah.</li>

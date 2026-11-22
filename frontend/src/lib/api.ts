@@ -53,6 +53,29 @@ function getAuthHeader(explicitToken?: string | null): Record<string, string> {
   };
 }
 
+async function fetchWithTimeout(
+  url: string,
+  init: RequestInit = {},
+  timeoutMs = 20000
+): Promise<Response> {
+  const controller = new AbortController();
+  const timer = globalThis.setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    return await fetch(url, { ...init, signal: controller.signal });
+  } catch (err) {
+    if (err instanceof DOMException && err.name === "AbortError") {
+      throw new Error(
+        "Sambungan ke pelayan melebihi had masa. Sila semak talian internet anda dan cuba semula."
+      );
+    }
+    throw new Error(
+      "Tidak dapat berhubung dengan pelayan sistem. Sila semak sambungan internet anda dan cuba semula."
+    );
+  } finally {
+    globalThis.clearTimeout(timer);
+  }
+}
+
 async function parseJsonOrThrow<T>(res: Response): Promise<T> {
   const rawText = await res.text();
   let parsed: Record<string, unknown> | null = null;
@@ -86,12 +109,16 @@ async function parseJsonOrThrow<T>(res: Response): Promise<T> {
 }
 
 export async function fetchSystemStatus(): Promise<SystemStatus> {
-  const res = await fetch(`${API_BASE}/api/status`, { cache: "no-store" });
+  const res = await fetchWithTimeout(`${API_BASE}/api/status`, { cache: "no-store" }, 15000);
   return parseJsonOrThrow<SystemStatus>(res);
 }
 
 export async function fetchRuntimeSettings(): Promise<RuntimeSettings> {
-  const res = await fetch(`${API_BASE}/api/settings`, { cache: "no-store" });
+  const res = await fetchWithTimeout(
+    `${API_BASE}/api/settings`,
+    { cache: "no-store", headers: { ...getAuthHeader() } },
+    15000
+  );
   return parseJsonOrThrow<RuntimeSettings>(res);
 }
 
@@ -102,7 +129,7 @@ export async function saveRuntimeSettings(payload: {
   ollama_model?: string;
   standard_fallback_model?: string;
 }): Promise<{ status: string; system_status: SystemStatus; settings: RuntimeSettings }> {
-  const res = await fetch(`${API_BASE}/api/settings`, {
+  const res = await fetchWithTimeout(`${API_BASE}/api/settings`, {
     method: "POST",
     headers: { "Content-Type": "application/json", ...getAuthHeader() },
     body: JSON.stringify(payload),
@@ -111,7 +138,7 @@ export async function saveRuntimeSettings(payload: {
 }
 
 export async function fetchSampleCases(): Promise<SampleCase[]> {
-  const res = await fetch(`${API_BASE}/api/samples`, {
+  const res = await fetchWithTimeout(`${API_BASE}/api/samples`, {
     cache: "no-store",
     headers: { ...getAuthHeader() },
   });
@@ -120,7 +147,7 @@ export async function fetchSampleCases(): Promise<SampleCase[]> {
 }
 
 export async function fetchCases(): Promise<IPCaseRecord[]> {
-  const res = await fetch(`${API_BASE}/api/cases`, {
+  const res = await fetchWithTimeout(`${API_BASE}/api/cases`, {
     cache: "no-store",
     headers: { ...getAuthHeader() },
   });
@@ -131,7 +158,7 @@ export async function fetchCases(): Promise<IPCaseRecord[]> {
 export async function saveCaseRecord(
   payload: Partial<IPCaseRecord>
 ): Promise<IPCaseRecord> {
-  const res = await fetch(`${API_BASE}/api/cases`, {
+  const res = await fetchWithTimeout(`${API_BASE}/api/cases`, {
     method: "POST",
     headers: { "Content-Type": "application/json", ...getAuthHeader() },
     body: JSON.stringify(payload),
@@ -141,7 +168,7 @@ export async function saveCaseRecord(
 }
 
 export async function deleteCaseRecord(caseId: string): Promise<void> {
-  const res = await fetch(`${API_BASE}/api/cases/${encodeURIComponent(caseId)}`, {
+  const res = await fetchWithTimeout(`${API_BASE}/api/cases/${encodeURIComponent(caseId)}`, {
     method: "DELETE",
     headers: { ...getAuthHeader() },
   });
@@ -152,11 +179,15 @@ export async function runRedaction(
   text: string,
   useOllama: boolean
 ): Promise<RedactResponse> {
-  const res = await fetch(`${API_BASE}/api/redact`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json", ...getAuthHeader() },
-    body: JSON.stringify({ text, use_ollama: useOllama }),
-  });
+  const res = await fetchWithTimeout(
+    `${API_BASE}/api/redact`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...getAuthHeader() },
+      body: JSON.stringify({ text, use_ollama: useOllama }),
+    },
+    30000
+  );
   return parseJsonOrThrow<RedactResponse>(res);
 }
 
@@ -175,11 +206,15 @@ export async function runIpAudit(params: {
   form.append("fast_mode", String(Boolean(params.fastMode)));
   if (params.caseId) form.append("case_id", params.caseId);
   if (params.file) form.append("file", params.file);
-  const res = await fetch(`${API_BASE}/api/audit-ip`, {
-    method: "POST",
-    headers: { ...getAuthHeader() },
-    body: form,
-  });
+  const res = await fetchWithTimeout(
+    `${API_BASE}/api/audit-ip`,
+    {
+      method: "POST",
+      headers: { ...getAuthHeader() },
+      body: form,
+    },
+    65000
+  );
   return parseJsonOrThrow<IPAuditReport>(res);
 }
 
@@ -190,11 +225,15 @@ export async function extractEvidence(
   const form = new FormData();
   form.append("file", file);
   form.append("doc_hint", docHint);
-  const res = await fetch(`${API_BASE}/api/extract-evidence`, {
-    method: "POST",
-    headers: { ...getAuthHeader() },
-    body: form,
-  });
+  const res = await fetchWithTimeout(
+    `${API_BASE}/api/extract-evidence`,
+    {
+      method: "POST",
+      headers: { ...getAuthHeader() },
+      body: form,
+    },
+    65000
+  );
   return parseJsonOrThrow<EvidenceExtractionResponse>(res);
 }
 
@@ -212,26 +251,30 @@ export async function generateDrafts(params: {
     "Content-Type": "application/json",
     ...getAuthHeader(params.authToken),
   };
-  const res = await fetch(`${API_BASE}/api/generate-draft`, {
-    method: "POST",
-    headers,
-    body: JSON.stringify({
-      case_text: params.caseText,
-      akta_utama: params.aktaUtama,
-      workflow: params.workflow,
-      use_ollama: params.useOllama,
-      fast_mode: params.fastMode ?? true,
-      case_id: params.caseId,
-      officer_profile: params.officerProfile || undefined,
-    }),
-  });
+  const res = await fetchWithTimeout(
+    `${API_BASE}/api/generate-draft`,
+    {
+      method: "POST",
+      headers,
+      body: JSON.stringify({
+        case_text: params.caseText,
+        akta_utama: params.aktaUtama,
+        workflow: params.workflow,
+        use_ollama: params.useOllama,
+        fast_mode: params.fastMode ?? true,
+        case_id: params.caseId,
+        officer_profile: params.officerProfile || undefined,
+      }),
+    },
+    65000
+  );
   return parseJsonOrThrow<DraftGenerationResponse>(res);
 }
 
 export async function checkCompoundNotice(
   payload: NotisKompaunData
 ): Promise<CompoundCheckResult> {
-  const res = await fetch(`${API_BASE}/api/check-compound`, {
+  const res = await fetchWithTimeout(`${API_BASE}/api/check-compound`, {
     method: "POST",
     headers: { "Content-Type": "application/json", ...getAuthHeader() },
     body: JSON.stringify(payload),
@@ -247,7 +290,7 @@ export async function queryStatutoryRag(
   if (akta && akta !== "Semua") {
     search.set("akta", akta);
   }
-  const res = await fetch(`${API_BASE}/api/rag/query?${search.toString()}`, {
+  const res = await fetchWithTimeout(`${API_BASE}/api/rag/query?${search.toString()}`, {
     headers: { ...getAuthHeader() },
   });
   return parseJsonOrThrow<{ engine: string; results: StatutoryCitation[] }>(res);
@@ -263,13 +306,17 @@ export async function downloadDocx(
     | "notis_kompaun",
   payload: Record<string, unknown>
 ): Promise<string> {
-  const res = await fetch(`${API_BASE}/api/export-docx`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json", ...getAuthHeader() },
-    body: JSON.stringify({ doc_type: docType, payload }),
-  });
+  const res = await fetchWithTimeout(
+    `${API_BASE}/api/export-docx`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...getAuthHeader() },
+      body: JSON.stringify({ doc_type: docType, payload }),
+    },
+    45000
+  );
   if (!res.ok) {
-    throw new Error(`Gagal muat turun fail Word .docx (${res.status})`);
+    await throwBlobResponseError(res, "Gagal memuat turun fail Word .docx");
   }
   const blob = await res.blob();
   const disposition = res.headers.get("Content-Disposition") || "";
@@ -294,7 +341,7 @@ export async function downloadDocx(
 // ---------------- Akaun Pegawai KKM Sebenar ----------------
 
 export async function fetchDemoAccounts(): Promise<DemoAccountSummary[]> {
-  const res = await fetch(`${API_BASE}/api/auth/demo-accounts`, { cache: "no-store" });
+  const res = await fetchWithTimeout(`${API_BASE}/api/auth/demo-accounts`, { cache: "no-store" }, 15000);
   const data = await parseJsonOrThrow<{ accounts: DemoAccountSummary[] }>(res);
   return data.accounts;
 }
@@ -303,7 +350,7 @@ export async function loginOfficer(
   email: string,
   password: string
 ): Promise<{ user: OfficerProfile; token: string }> {
-  const res = await fetch(`${API_BASE}/api/auth/login`, {
+  const res = await fetchWithTimeout(`${API_BASE}/api/auth/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password }),
@@ -314,7 +361,7 @@ export async function loginOfficer(
 export async function registerOfficer(
   payload: Record<string, string>
 ): Promise<{ user: OfficerProfile; token: string }> {
-  const res = await fetch(`${API_BASE}/api/auth/register`, {
+  const res = await fetchWithTimeout(`${API_BASE}/api/auth/register`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
@@ -331,7 +378,7 @@ export async function googleSignInOfficer(payload: {
   district_pkd?: string;
   state_jkn?: string;
 }): Promise<{ user: OfficerProfile; token: string; is_new_account?: boolean }> {
-  const res = await fetch(`${API_BASE}/api/auth/google`, {
+  const res = await fetchWithTimeout(`${API_BASE}/api/auth/google`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
@@ -340,7 +387,7 @@ export async function googleSignInOfficer(payload: {
 }
 
 export async function fetchCurrentOfficer(token: string): Promise<OfficerProfile> {
-  const res = await fetch(`${API_BASE}/api/auth/me`, {
+  const res = await fetchWithTimeout(`${API_BASE}/api/auth/me`, {
     cache: "no-store",
     headers: { Authorization: `Bearer ${token}` },
   });
@@ -352,7 +399,7 @@ export async function updateOfficerProfile(
   token: string,
   payload: Partial<OfficerProfile>
 ): Promise<OfficerProfile> {
-  const res = await fetch(`${API_BASE}/api/auth/profile`, {
+  const res = await fetchWithTimeout(`${API_BASE}/api/auth/profile`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -365,7 +412,7 @@ export async function updateOfficerProfile(
 }
 
 export async function logoutOfficer(token: string): Promise<void> {
-  await fetch(`${API_BASE}/api/auth/logout`, {
+  await fetchWithTimeout(`${API_BASE}/api/auth/logout`, {
     method: "POST",
     headers: { Authorization: `Bearer ${token}` },
   });
@@ -374,7 +421,7 @@ export async function logoutOfficer(token: string): Promise<void> {
 // ---------------- Tanya Pakar UIP ----------------
 
 export async function fetchAdvisorScenarios(): Promise<AdvisorScenarioItem[]> {
-  const res = await fetch(`${API_BASE}/api/advisor/scenarios`, {
+  const res = await fetchWithTimeout(`${API_BASE}/api/advisor/scenarios`, {
     cache: "no-store",
     headers: { ...getAuthHeader() },
   });
@@ -394,7 +441,7 @@ export async function fetchAdvisorAnsweredQuestions(
   if (params.akta && params.akta !== "Semua") search.set("akta", params.akta);
   if (params.q?.trim()) search.set("q", params.q.trim());
   search.set("limit", String(params.limit ?? 120));
-  const res = await fetch(`${API_BASE}/api/advisor/answered?${search.toString()}`, {
+  const res = await fetchWithTimeout(`${API_BASE}/api/advisor/answered?${search.toString()}`, {
     cache: "no-store",
     headers: { ...getAuthHeader(params.authToken) },
   });
@@ -413,17 +460,21 @@ export async function consultUipAdvisor(params: {
     "Content-Type": "application/json",
     ...getAuthHeader(params.authToken),
   };
-  const res = await fetch(`${API_BASE}/api/advisor/consult`, {
-    method: "POST",
-    headers,
-    body: JSON.stringify({
-      question: params.question,
-      akta_hint: params.aktaHint,
-      scenario_id: params.scenarioId || undefined,
-      use_ai: Boolean(params.useAi),
-      officer_profile: params.officerProfile || undefined,
-    }),
-  });
+  const res = await fetchWithTimeout(
+    `${API_BASE}/api/advisor/consult`,
+    {
+      method: "POST",
+      headers,
+      body: JSON.stringify({
+        question: params.question,
+        akta_hint: params.aktaHint,
+        scenario_id: params.scenarioId || undefined,
+        use_ai: Boolean(params.useAi),
+        officer_profile: params.officerProfile || undefined,
+      }),
+    },
+    65000
+  );
   return parseJsonOrThrow<AdvisorConsultResult>(res);
 }
 
@@ -473,7 +524,7 @@ function triggerBrowserBlobDownload(blob: Blob, filename: string): void {
 }
 
 export async function fetchDevOverview(authToken?: string | null): Promise<DevOverviewResponse> {
-  const res = await fetch(`${API_BASE}/api/dev/overview`, {
+  const res = await fetchWithTimeout(`${API_BASE}/api/dev/overview`, {
     cache: "no-store",
     headers: { ...getAuthHeader(authToken) },
   });
@@ -483,7 +534,7 @@ export async function fetchDevOverview(authToken?: string | null): Promise<DevOv
 export async function fetchDevVaultHealth(
   authToken?: string | null
 ): Promise<DevVaultStorageHealth> {
-  const res = await fetch(`${API_BASE}/api/dev/vault/health`, {
+  const res = await fetchWithTimeout(`${API_BASE}/api/dev/vault/health`, {
     cache: "no-store",
     headers: { ...getAuthHeader(authToken) },
   });
@@ -509,7 +560,7 @@ export async function fetchDevVaultRecords(
   search.set("limit", String(params.limit ?? 30));
   search.set("offset", String(params.offset ?? 0));
 
-  const res = await fetch(`${API_BASE}/api/dev/vault/records?${search.toString()}`, {
+  const res = await fetchWithTimeout(`${API_BASE}/api/dev/vault/records?${search.toString()}`, {
     cache: "no-store",
     headers: { ...getAuthHeader(params.authToken) },
   });
@@ -520,7 +571,7 @@ export async function fetchDevVaultRecordDetail(
   recordId: string,
   authToken?: string | null
 ): Promise<DevVaultRecordDetail> {
-  const res = await fetch(
+  const res = await fetchWithTimeout(
     `${API_BASE}/api/dev/vault/records/${encodeURIComponent(recordId)}`,
     {
       cache: "no-store",
@@ -536,13 +587,14 @@ export async function downloadDevVaultFile(
   kind: "attachment" | "json" = "attachment",
   authToken?: string | null
 ): Promise<void> {
-  const res = await fetch(
+  const res = await fetchWithTimeout(
     `${API_BASE}/api/dev/vault/records/${encodeURIComponent(recordId)}/file?kind=${kind}`,
     {
       method: "GET",
       cache: "no-store",
       headers: { ...getAuthHeader(authToken) },
-    }
+    },
+    45000
   );
   if (!res.ok) {
     await throwBlobResponseError(res, "Gagal memuat turun fail dari Arkib Dev");
@@ -559,13 +611,14 @@ export async function fetchDevVaultFilePreviewUrl(
   recordId: string,
   authToken?: string | null
 ): Promise<{ objectUrl: string; contentType: string }> {
-  const res = await fetch(
+  const res = await fetchWithTimeout(
     `${API_BASE}/api/dev/vault/records/${encodeURIComponent(recordId)}/file?kind=attachment`,
     {
       method: "GET",
       cache: "no-store",
       headers: { ...getAuthHeader(authToken) },
-    }
+    },
+    45000
   );
   if (!res.ok) {
     await throwBlobResponseError(res, "Gagal memuatkan pratonton imej");
@@ -587,22 +640,26 @@ export async function exportDevVaultBundle(params: {
   authToken?: string | null;
 }): Promise<void> {
   const fmt = params.format || "zip";
-  const res = await fetch(`${API_BASE}/api/dev/vault/export`, {
-    method: "POST",
-    cache: "no-store",
-    headers: {
-      "Content-Type": "application/json",
-      ...getAuthHeader(params.authToken),
+  const res = await fetchWithTimeout(
+    `${API_BASE}/api/dev/vault/export`,
+    {
+      method: "POST",
+      cache: "no-store",
+      headers: {
+        "Content-Type": "application/json",
+        ...getAuthHeader(params.authToken),
+      },
+      body: JSON.stringify({
+        mode: params.mode,
+        format: fmt,
+        category: params.category && params.category !== "ALL" ? params.category : undefined,
+        q: params.q?.trim() || undefined,
+        user_email: params.userEmail?.trim() || undefined,
+        include_files: params.includeFiles ?? true,
+      }),
     },
-    body: JSON.stringify({
-      mode: params.mode,
-      format: fmt,
-      category: params.category && params.category !== "ALL" ? params.category : undefined,
-      q: params.q?.trim() || undefined,
-      user_email: params.userEmail?.trim() || undefined,
-      include_files: params.includeFiles ?? true,
-    }),
-  });
+    65000
+  );
   if (!res.ok) {
     await throwBlobResponseError(res, "Gagal mengeksport pakej dokumentasi Arkib Dev");
   }
@@ -622,20 +679,20 @@ export async function exportDevVaultBundle(params: {
 export async function retryDevVaultS3Sync(
   authToken?: string | null
 ): Promise<{ synced: number; failed: number; message: string }> {
-  const res = await fetch(`${API_BASE}/api/dev/vault/retry-s3-sync`, {
+  const res = await fetchWithTimeout(`${API_BASE}/api/dev/vault/retry-s3-sync`, {
     method: "POST",
     cache: "no-store",
     headers: { ...getAuthHeader(authToken) },
-  });
+  }, 45000);
   return parseJsonOrThrow(res);
 }
 
-// ---------------- Pustaka Akta Penuh & Daftar Semua Kesalahan (Zero-Hallucination Legal Engine) ----------------
+// ---------------- Pustaka Akta Penuh & Daftar Semua Kesalahan ----------------
 
 export async function fetchLegalRegistry(
   authToken?: string | null
 ): Promise<LegalCoverageReport> {
-  const res = await fetch(`${API_BASE}/api/legal/registry`, {
+  const res = await fetchWithTimeout(`${API_BASE}/api/legal/registry`, {
     cache: "no-store",
     headers: { ...getAuthHeader(authToken) },
   });
@@ -645,10 +702,10 @@ export async function fetchLegalRegistry(
 export async function fetchLegalSnapshot(
   authToken?: string | null
 ): Promise<LegalLibrarySnapshot> {
-  const res = await fetch(`${API_BASE}/api/legal/snapshot`, {
+  const res = await fetchWithTimeout(`${API_BASE}/api/legal/snapshot`, {
     cache: "no-store",
     headers: { ...getAuthHeader(authToken) },
-  });
+  }, 30000);
   return parseJsonOrThrow<LegalLibrarySnapshot>(res);
 }
 
@@ -668,7 +725,7 @@ export async function fetchLegalSections(
   if (params.statuteId) search.set("statute_id", params.statuteId);
   if (params.akta && params.akta !== "Semua") search.set("akta", params.akta);
   if (params.q?.trim()) search.set("q", params.q.trim());
-  const res = await fetch(`${API_BASE}/api/legal/sections?${search.toString()}`, {
+  const res = await fetchWithTimeout(`${API_BASE}/api/legal/sections?${search.toString()}`, {
     cache: "no-store",
     headers: { ...getAuthHeader(params.authToken) },
   });
@@ -699,7 +756,7 @@ export async function fetchLegalOffences(
     search.set("is_compoundable", String(params.isCompoundable));
   }
   if (params.q?.trim()) search.set("q", params.q.trim());
-  const res = await fetch(`${API_BASE}/api/legal/offences?${search.toString()}`, {
+  const res = await fetchWithTimeout(`${API_BASE}/api/legal/offences?${search.toString()}`, {
     cache: "no-store",
     headers: { ...getAuthHeader(params.authToken) },
   });
@@ -712,7 +769,7 @@ export async function fetchRepealedProvisions(
   statute_library_version: string;
   provisions: RepealedProvisionRecord[];
 }> {
-  const res = await fetch(`${API_BASE}/api/legal/repealed`, {
+  const res = await fetchWithTimeout(`${API_BASE}/api/legal/repealed`, {
     cache: "no-store",
     headers: { ...getAuthHeader(authToken) },
   });
@@ -724,7 +781,7 @@ export async function validateLegalOutputApi(
   questionContext?: string,
   authToken?: string | null
 ): Promise<LegalValidationResult> {
-  const res = await fetch(`${API_BASE}/api/legal/validate`, {
+  const res = await fetchWithTimeout(`${API_BASE}/api/legal/validate`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -771,11 +828,15 @@ export async function ingestGazettePdf(params: {
   if (params.actNumberOrPu) form.append("act_number_or_pu", params.actNumberOrPu);
   form.append("verified_by_admin", String(Boolean(params.verifiedByAdmin)));
 
-  const res = await fetch(`${API_BASE}/api/legal/ingest`, {
-    method: "POST",
-    headers: { ...getAuthHeader(params.authToken) },
-    body: form,
-  });
+  const res = await fetchWithTimeout(
+    `${API_BASE}/api/legal/ingest`,
+    {
+      method: "POST",
+      headers: { ...getAuthHeader(params.authToken) },
+      body: form,
+    },
+    65000
+  );
   return parseJsonOrThrow(res);
 }
 
@@ -789,7 +850,7 @@ export async function verifyGazetteStatuteOrOffence(params: {
   updated_offences: number;
   statute_library_version: string;
 }> {
-  const res = await fetch(`${API_BASE}/api/legal/verify`, {
+  const res = await fetchWithTimeout(`${API_BASE}/api/legal/verify`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -814,7 +875,7 @@ export async function updateMasterOffence(
   statute_library_version: string;
   stale_qa_cache_marked: number;
 }> {
-  const res = await fetch(
+  const res = await fetchWithTimeout(
     `${API_BASE}/api/legal/offences/${encodeURIComponent(offenceId)}`,
     {
       method: "PUT",
@@ -836,7 +897,7 @@ export async function purgeAdvisorQaCache(
   stale_records_marked: number;
   statute_library_version: string;
 }> {
-  const res = await fetch(`${API_BASE}/api/legal/purge-qa-cache`, {
+  const res = await fetchWithTimeout(`${API_BASE}/api/legal/purge-qa-cache`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

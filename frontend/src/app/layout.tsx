@@ -23,7 +23,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ms">
-      <body className="min-h-[100dvh] overflow-x-hidden bg-[#f4f7fb] text-slate-900 antialiased">
+      <body className="min-h-[100dvh] overflow-x-clip bg-[#f4f7fb] text-slate-900 antialiased">
         {children}
       </body>
     </html>

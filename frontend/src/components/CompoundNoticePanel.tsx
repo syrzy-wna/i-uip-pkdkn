@@ -107,17 +107,23 @@ export default function CompoundNoticePanel({
   };
 
   const handleDownload = async () => {
+    if (checkResult && checkResult.counts.GAGAL > 0) {
+      const proceed = window.confirm(
+        `Amaran: Notis ini masih mempunyai ${checkResult.counts.GAGAL} perkara GAGAL yang boleh menyebabkan notis dibatalkan. Adakah anda pasti mahu meneruskan muat turun draf Word (.docx)?`
+      );
+      if (!proceed) return;
+    }
     setExporting(true);
     setErrorMsg(null);
     setDownloadOkMsg(null);
     try {
       const fname = await downloadDocx("notis_kompaun", { notis_kompaun: notice });
       setDownloadOkMsg(
-        `Fail ${fname} telah dimuat turun — semak folder Muat Turun / Files peranti anda.`
+        `Fail ${fname} telah dimuat turun — semak folder Muat Turun pada peranti anda.`
       );
       if (onDownloaded) onDownloaded(fname);
     } catch (err) {
-      setErrorMsg(err instanceof Error ? err.message : "Gagal muat turun notis .docx.");
+      setErrorMsg(err instanceof Error ? err.message : "Gagal memuat turun notis .docx.");
     } finally {
       setExporting(false);
     }
@@ -263,9 +269,9 @@ export default function CompoundNoticePanel({
               <div>
                 <div className="flex items-center justify-between gap-1">
                   <label className="text-xs font-semibold text-slate-700">
-                    No. Kad Pengenalan (12 Digit) <span className="text-rose-600">*</span>
+                    No. K/P (12 Digit) / Pasport / SSM <span className="text-rose-600">*</span>
                   </label>
-                  {icDigits.length > 0 && (
+                  {icDigits.length > 0 && !/[a-zA-Z]/.test(notice.no_kp || "") && (
                     <span
                       className={`text-[11px] font-bold ${
                         icDigits.length === 12 ? "text-emerald-700" : "text-rose-600"
@@ -277,10 +283,10 @@ export default function CompoundNoticePanel({
                 </div>
                 <input
                   type="text"
-                  inputMode="numeric"
+                  inputMode="text"
                   value={notice.no_kp}
                   onChange={(e) => updateField("no_kp", e.target.value)}
-                  placeholder="cth: 890415-10-5321"
+                  placeholder="cth: 890415-10-5321 atau Pasport A12345678"
                   className={INPUT_CLASS}
                 />
               </div>
@@ -300,7 +306,7 @@ export default function CompoundNoticePanel({
 
               <div>
                 <label className="text-xs font-semibold text-slate-700">
-                  No. Rujukan Notis <span className="font-normal text-slate-400">(Pilihan)</span>
+                  No. Siri Notis <span className="font-normal text-slate-500">(Disyorkan)</span>
                 </label>
                 <input
                   type="text"
@@ -313,7 +319,7 @@ export default function CompoundNoticePanel({
 
               <div>
                 <label className="text-xs font-semibold text-slate-700">
-                  Nama Premis / Syarikat <span className="font-normal text-slate-400">(Pilihan)</span>
+                  Nama Premis / Syarikat <span className="font-normal text-slate-500">(Pilihan)</span>
                 </label>
                 <input
                   type="text"
@@ -325,7 +331,7 @@ export default function CompoundNoticePanel({
 
               <div>
                 <label className="text-xs font-semibold text-slate-700">
-                  No. Daftar SSM <span className="font-normal text-slate-400">(Pilihan)</span>
+                  No. Daftar SSM <span className="font-normal text-slate-500">(Pilihan)</span>
                 </label>
                 <input
                   type="text"
@@ -364,7 +370,7 @@ export default function CompoundNoticePanel({
                   type="text"
                   value={notice.peruntukan_undang}
                   onChange={(e) => updateField("peruntukan_undang", e.target.value)}
-                  placeholder="cth: Seksyen 10(1) Akta 852"
+                  placeholder="cth: Seksyen 16(2) Akta 852 / Peraturan 11(1) PPKM 2009"
                   className={INPUT_CLASS}
                 />
               </div>
@@ -372,7 +378,7 @@ export default function CompoundNoticePanel({
               <div>
                 <label className="text-xs font-semibold text-slate-700">
                   Peruntukan Kuasa Mengkompaun{" "}
-                  <span className="font-normal text-slate-400">(Pilihan)</span>
+                  <span className="font-normal text-slate-500">(Pilihan)</span>
                 </label>
                 <input
                   type="text"
@@ -498,8 +504,8 @@ export default function CompoundNoticePanel({
                   onChange={(e) => updateField("status_serahan", e.target.value)}
                   className={INPUT_CLASS}
                 >
-                  <option value="tandatangan_terima">OKT Tandatangan Terima di Premis</option>
-                  <option value="enggan_tandatangan">OKT Enggan Tandatangan (Perlu Saksi PPKP &amp; Pos AR)</option>
+                  <option value="tandatangan_terima">OKS Tandatangan Terima di Premis</option>
+                  <option value="enggan_tandatangan">OKS Enggan Tandatangan (Perlu Saksi PPKP &amp; Pos AR)</option>
                 </select>
               </div>
 
@@ -593,7 +599,7 @@ export default function CompoundNoticePanel({
         >
           <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-3">
             <div>
-              <div className="text-xs font-semibold text-slate-500">Keputusan Semakan Notis</div>
+              <div className="text-xs font-semibold text-slate-600">Keputusan Semakan Notis</div>
               <div className="text-base font-extrabold text-slate-900">
                 {checkResult.score_percent}% — {checkResult.readiness_status}
               </div>
@@ -613,13 +619,24 @@ export default function CompoundNoticePanel({
 
           <div className="rounded-xl border border-blue-200 bg-blue-50/50 p-3 text-xs">
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <div className="font-bold text-blue-950">Cadangan Ayat Kesalahan Statutori:</div>
+              <div className="font-bold text-blue-950">Cadangan Ayat Butiran Kesalahan Rasmi:</div>
               <button
                 type="button"
-                onClick={() => updateField("kesalahan_ringkas", checkResult.suggested_offense_text)}
-                className="rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-bold text-white hover:bg-blue-700"
+                disabled={notice.kesalahan_ringkas.trim() === checkResult.suggested_offense_text.trim()}
+                onClick={() => {
+                  const current = (notice.kesalahan_ringkas || "").trim();
+                  const suggested = (checkResult.suggested_offense_text || "").trim();
+                  if (current.startsWith("Pada ") && current.includes("telah didapati")) {
+                    setErrorMsg("Butiran kesalahan sudah menggunakan format ayat rasmi penuh.");
+                    return;
+                  }
+                  updateField("kesalahan_ringkas", suggested);
+                }}
+                className="rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-bold text-white hover:bg-blue-700 disabled:opacity-50"
               >
-                Guna Ayat Ini
+                {notice.kesalahan_ringkas.trim() === checkResult.suggested_offense_text.trim()
+                  ? "Ayat Sudah Digunakan"
+                  : "Guna Ayat Ini"}
               </button>
             </div>
             <p className="mt-1.5 leading-relaxed text-slate-700">

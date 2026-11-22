@@ -36,7 +36,8 @@ export default function CaseRegistryModal({
   const [aktaFilter, setAktaFilter] = useState("SEMUA");
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
 
-  const [noIp, setNoIp] = useState("PKD-KN/UIP/852/2026/");
+  const currentYear = new Date().getFullYear();
+  const [noIp, setNoIp] = useState(`PKD-KN/UIP/852/${currentYear}/`);
   const [akta, setAkta] = useState("Akta 852");
   const [daerah, setDaerah] = useState("Kuala Nerus, Terengganu");
   const [tarikh, setTarikh] = useState("");
@@ -134,6 +135,16 @@ Kesalahan: ${kesalahan || "Sila nyatakan butiran kesalahan yang ditemui semasa p
       });
       onCasesUpdated([created, ...cases]);
       onSelectCase(created);
+      // Kosongkan borang supaya pendaftaran kes seterusnya bersih
+      setNoIp(`PKD-KN/UIP/${akta.replace(/\D/g, "") || "852"}/${currentYear}/`);
+      setTarikh("");
+      setMasa("");
+      setNamaPremis("");
+      setNoSsm("");
+      setAlamat("");
+      setNamaOkt("");
+      setNoKpOkt("");
+      setKesalahan("");
       setMode("list");
       onClose();
     } catch (err) {
@@ -156,6 +167,9 @@ Kesalahan: ${kesalahan || "Sila nyatakan butiran kesalahan yang ditemui semasa p
 
   return (
     <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Daftar Fail Kertas Siasatan PKD"
       onClick={onClose}
       className="fixed inset-0 z-50 flex items-end justify-center bg-slate-900/65 p-0 backdrop-blur-sm sm:items-center sm:p-4"
     >
@@ -171,7 +185,7 @@ Kesalahan: ${kesalahan || "Sila nyatakan butiran kesalahan yang ditemui semasa p
                 <h2 className="text-sm font-extrabold text-slate-900">
                   Daftar Fail Kertas Siasatan (IP) PKD Kuala Nerus
                 </h2>
-                <p className="text-[11px] text-slate-500">
+                <p className="text-[11px] text-slate-600">
                   Semua kes, keputusan semakan Pra-TPR &amp; draf dokumen disimpan dalam akaun anda.
                 </p>
               </div>
@@ -179,7 +193,8 @@ Kesalahan: ${kesalahan || "Sila nyatakan butiran kesalahan yang ditemui semasa p
             <button
               type="button"
               onClick={onClose}
-              className="inline-flex min-h-[40px] min-w-[40px] items-center justify-center rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700 sm:hidden"
+              aria-label="Tutup daftar kes"
+              className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg p-1.5 text-slate-500 hover:bg-slate-100 hover:text-slate-800 sm:hidden"
             >
               <X className="h-5 w-5" />
             </button>
@@ -189,7 +204,7 @@ Kesalahan: ${kesalahan || "Sila nyatakan butiran kesalahan yang ditemui semasa p
             <button
               type="button"
               onClick={() => setMode(mode === "list" ? "new" : "list")}
-              className="inline-flex min-h-[40px] flex-1 items-center justify-center gap-1.5 rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-bold text-white hover:bg-blue-700 sm:flex-none"
+              className="inline-flex min-h-[44px] flex-1 items-center justify-center gap-1.5 rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-bold text-white hover:bg-blue-700 sm:flex-none"
             >
               <Plus className="h-3.5 w-3.5" />
               {mode === "list" ? "Daftar Kes IP Baharu" : "Lihat Senarai Kes"}
@@ -197,7 +212,8 @@ Kesalahan: ${kesalahan || "Sila nyatakan butiran kesalahan yang ditemui semasa p
             <button
               type="button"
               onClick={onClose}
-              className="hidden min-h-[40px] min-w-[40px] items-center justify-center rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700 sm:inline-flex"
+              aria-label="Tutup daftar kes"
+              className="hidden min-h-[44px] min-w-[44px] items-center justify-center rounded-lg p-1.5 text-slate-500 hover:bg-slate-100 hover:text-slate-800 sm:inline-flex"
             >
               <X className="h-5 w-5" />
             </button>

@@ -46,6 +46,12 @@ PASSPORT_RE = re.compile(
 PHONE_RE = re.compile(
     r"(?<!\d)(?:\+?60|0)(?:1[0-9]|3|4|5|6|7|8[2-9]|9)[-\s]?\d{3,4}[-\s]?\d{4}(?!\d)"
 )
+EMAIL_RE = re.compile(
+    r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b"
+)
+RESIDENTIAL_ADDR_RE = re.compile(
+    r"(?im)^[ \t]*alamat\s+(?:kediaman|pesakit|rumah|terkini\s+pesakit)\s*[:\-]\s*([^\n\r]+)"
+)
 SSM_RE = re.compile(
     r"\b(?:\d{12}[ \t]*\(\d{6,7}-[A-Za-z]\)|(?:SA|IP|PG|NS|MA|JM|KT|TR|AS|CA|LA|RA|00)\d{6,7}-[A-Za-z]|\d{6,7}-[A-Za-z])\b"
 )
@@ -265,7 +271,7 @@ class PrivacyRedactor:
         def _register(raw_val: str, category: str, source: str) -> None:
             cleaned = (
                 raw_val.strip()
-                if category in ("NO_KP", "NO_SSM", "NO_TEL", "PASPORT")
+                if category in ("NO_KP", "NO_SSM", "NO_TEL", "PASPORT", "EMEL", "ALAMAT")
                 else self._clean_candidate(raw_val)
             )
             if not cleaned:
@@ -312,6 +318,16 @@ class PrivacyRedactor:
         for m in PHONE_RE.finditer(text):
             _register(m.group(0), "NO_TEL", "regex")
 
+        for m in EMAIL_RE.finditer(text):
+            email_val = m.group(0)
+            if not email_val.lower().endswith("@moh.gov.my"):
+                _register(email_val, "EMEL", "regex")
+
+        for m in RESIDENTIAL_ADDR_RE.finditer(text):
+            addr_val = m.group(1).strip()
+            if len(addr_val) >= 8:
+                _register(addr_val, "ALAMAT", "regex")
+
         for m in PREMISE_LABEL_RE.finditer(text):
             raw_prem = m.group(1).strip()
             # Jika ada maklumat syarikat dalam kurungan seperti "Tapak Bina X (Apex Bina Sdn. Bhd.)", daftar kedua-duanya
@@ -355,6 +371,8 @@ class PrivacyRedactor:
             "PASPORT": 0,
             "NO_SSM": 0,
             "NO_TEL": 0,
+            "EMEL": 0,
+            "ALAMAT": 0,
         }
         token_map: Dict[str, str] = {}
         entities: List[RedactedEntity] = []

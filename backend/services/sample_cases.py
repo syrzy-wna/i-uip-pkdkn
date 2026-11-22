@@ -42,8 +42,8 @@ PPKP Ahmad Faizal bin Ramli telah menunjukkan Kad Kuasa rasmi KKM-PKD-0842 (Seks
 - Carian SSM: Cetakan e-Info SSM bertarikh 15 Oktober 2026 dilampirkan menunjukkan suspek ialah pengarah Kedai Serbaneka Harmoni Jaya Sdn. Bhd.
 - Pelan Lakar Premis: Pelan lakar kedudukan kaunter dan rak pameran yang ditandatangani oleh IO dilampirkan.
 - Gambar Bukti Digital: 8 keping gambar warna diambil guna kamera Nikon Coolpix pejabat pada 14 Oktober 2026 jam 10.50 pagi dan dicetak melalui komputer pejabat. (CATATAN: Sijil Seksyen 90A Akta Keterangan 1950 masih belum ditandatangani dan belum dilampirkan dalam IP ini).
-- Notis Seksyen 47 & Kompaun Seksyen 48 [P.U. (A) 259/2024]: Kes masih dalam had masa pendakwaan; tempoh bayaran kompaun 30 hari telah tamat tanpa bayaran (bukti serahan Kad AR Pos Berdaftar dilampirkan).
-- Borang 114 & Pengaduan Borang 143: Draf pertuduhan berasingan disediakan di bawah Seksyen 7(1) (dihukum di bawah Seksyen 7(2)/7(3)) dan Seksyen 10(1) dibaca bersama Peraturan 6 P.U. (A) 260/2024 (dihukum di bawah Seksyen 10(2)/10(3)), dan menunggu Izin Mendakwa TPR.
+- Pendakwaan Terus & Had Masa: Kes masih dalam had masa pendakwaan; kesalahan Seksyen 7(1) dan Seksyen 10(1) Akta 852 tidak boleh dikompaun di bawah P.U. (A) 259/2024 (tiada tawaran kompaun — terus dibuka IP dengan bukti serahan Borang Senarai Benda Disita S.36 bertandatangan terima dan memohon Izin Mendakwa TPR).
+- Borang 114 & Pengaduan Borang 143: Draf pertuduhan berasingan disediakan di bawah Seksyen 7(1) (dihukum di bawah Seksyen 7(2)(b) bagi syarikat) dan Seksyen 10(1) dibaca bersama Peraturan 6 P.U. (A) 260/2024 (dihukum di bawah Seksyen 10(2)(b)), dan menunggu Izin Mendakwa TPR.
 """,
     },
     {
@@ -56,7 +56,7 @@ PPKP Ahmad Faizal bin Ramli telah menunjukkan Kad Kuasa rasmi KKM-PKD-0842 (Seks
         "text": """KERTAS SIASATAN UNIT INSPEKTORAT DAN PERUNDANGAN (UIP)
 NO. IP: PKD-KLG/UIP/281/2026/042
 DAERAH: Klang, Selangor
-AKTA: Akta Makanan 1983 [Akta 281] & Peraturan-Peraturan Kebersihan Makanan 2009 [P.U. (A) 95/2009] - Peraturan 11(1) & Peraturan 31(1)
+AKTA: Akta Makanan 1983 [Akta 281] & Peraturan-Peraturan Kebersihan Makanan 2009 [P.U. (A) 95/2009] - Peraturan 11(1) & Peraturan 31(2)
 
 1. BUTIRAN PEMERIKSAAN
 Tarikh Kejadian: 03 November 2026
@@ -71,19 +71,19 @@ Pegawai Penyiasat (IO): PPKP Siti Nurhaliza binti Hassan (No. Kad Kuasa: KKM-SEL
 Saksi: Muhammad Danish bin Azman (No. K/P: 980210-10-5117, PPKP Pengiring)
 
 2. RINGKASAN KESALAHAN
-Kesalahan: Menjalankan premis makanan dalam keadaan tidak bersih dengan penemuan najis tikus di meja penyediaan makanan, lipas hidup di bawah rak pinggan, perangkap minyak tersumbat (melanggar Peraturan 11(1) dan Peraturan 34 PPKM 2009), serta membenarkan pengendali makanan bekerja tanpa suntikan vaksinasi anti-tifoid yang sah (melanggar Peraturan 31(1) PPKM 2009) dan tanpa Sijil Latihan Pengendali Makanan (Peraturan 30(1) PPKM 2009). Perintah Penutupan Premis Tidak Suci di bawah Seksyen 11 Akta Makanan 1983 telah disampaikan dan ditandatangani terima pada 03 November 2026.
+Kesalahan: Menjalankan premis makanan dalam keadaan tidak bersih dengan penemuan najis tikus di meja penyediaan makanan, lipas hidup di bawah rak pinggan, perangkap minyak tersumbat (melanggar Peraturan 11(1) dan Peraturan 34 PPKM 2009), serta sebagai tuan punya premis gagal memastikan pengendali makanan mendapat suntikan vaksinasi antitifoid yang sah (melanggar Peraturan 31(2) PPKM 2009) dan tanpa Sijil Latihan Pengendali Makanan (Peraturan 30(1) PPKM 2009). Perintah Penutupan Premis Tidak Suci di bawah Seksyen 11 Akta Makanan 1983 telah disampaikan dan ditandatangani terima pada 03 November 2026.
 
 3. SEMAKAN DOKUMEN DALAM FAIL IP
 - Laporan Pengadu (FIR) & Borang Pemeriksaan Premis Makanan (KMM): Lengkap dengan tarikh dan masa yang sama iaitu 03 November 2026 jam 09.15 pagi.
 - Carian SSM & Lesen PBT: Cetakan e-Info SSM SA0549123-M (Seksyen 33A untuk liabiliti syarikat jika berkenaan) dan salinan lesen premis PBT dilampirkan.
 - Rakaman S.112 KTJ: Percakapan Saksi 1 (Muhammad Danish bin Azman) dan OKT (Sivakumar a/l Subramaniam) diambil dengan amaran Seksyen 112(2) & (3) KTJ (menurut Seksyen 112(4) KTJ), dibaca semula dan ditandatangani oleh semua pihak serta jurubahasa Bahasa Tamil mengikut Seksyen 112(5) KTJ.
 - Diari Siasatan (DS): Lengkap mengikut susunan masa (Seksyen 119 KTJ) dari hari operasi sehingga IP ditutup.
-- Barang Kes & Perakuan Juruanalisis Makanan (Seksyen 19): Sampel makanan siap masak yang tercemar diambil mengikut tatacara persampelan Akta 281, dilabel tanda eksibit (Eksibit P1–P3), dilak dengan lak rasmi KKM siri #KLG-331, direkod keluar-masuk stor eksibit PKD Klang, dan dihantar ke Makmal Kesihatan Awam Kebangsaan (MKAK). Perakuan Juruanalisis Makanan di bawah Seksyen 19 Akta Makanan 1983 mengesahkan pencemaran bakteria patogen; manakala penemuan najis tikus dan lipas dibuktikan melalui Borang Pemeriksaan KMM serta 12 keping gambar berwarna yang jelas, bertarikh 03 November 2026, berkapsyen lokasi tepat dan dirakam oleh jurugambar PPKP Muhammad Danish bin Azman.
+- Barang Kes & Perakuan Juruanalisis Makanan (Seksyen 19): Sampel makanan siap masak yang tercemar diambil mengikut tatacara persampelan Akta 281, dilabel tanda eksibit (Eksibit P1–P3), dilak dengan lak rasmi KKM siri #KLG-331, direkod keluar-masuk stor eksibit PKD Klang, dan dihantar ke Makmal Kesihatan Awam Kebangsaan (MKAK). Perakuan Juruanalisis Makanan di bawah Seksyen 19 Akta Makanan 1983 mengesahkan pencemaran bakteria patogen (salinan perakuan diserahkan kepada OKT sekurang-kurangnya 10 hari genap sebelum perbicaraan menurut Seksyen 19(2)); manakala penemuan najis tikus dan lipas dibuktikan melalui Borang Pemeriksaan KMM serta 12 keping gambar berwarna yang jelas, bertarikh 03 November 2026, berkapsyen lokasi tepat dan dirakam oleh jurugambar PPKP Muhammad Danish bin Azman.
 - Kad Kuasa Pegawai: Salinan Kad Kuasa rasmi KKM (Seksyen 3 Akta Makanan 1983) dan surat pelantikan PPKP pemeriksa serta Pegawai Penyiasat (IO) dilampirkan.
 - Sijil Seksyen 90A(2) Akta Keterangan 1950: Sijil Seksyen 90A lengkap dengan butiran kamera, komputer Dell OptiPlex pejabat PKD Klang, pencetak HP, serta klausa sepanjang pengetahuan dan kepercayaan ditandatangani oleh PPKP Siti Nurhaliza binti Hassan bagi 12 keping gambar digital dan cetakan e-Info SSM.
 - Pelan Lakar Premis: Pelan lakar kawasan dapur, stor kering dan kedudukan eksibit yang lengkap bertandatangan IO serta bertarikh 03 November 2026 dilampirkan.
-- Borang 114, Pengaduan Borang 143 & Fakta Kes: Fakta Kes disusun objektif mengikut kronologi sebelum, semasa dan selepas pemeriksaan selari dengan Laporan Pengadu (FIR) dan Borang 114. Draf pertuduhan berasingan di bawah Peraturan 11(1) dibaca bersama Peraturan 11(2) PPKM 2009 serta Peraturan 31(1) dibaca bersama Peraturan 31(3) PPKM 2009 disemak tanpa pertindihan pertuduhan, berserta draf permohonan Izin Mendakwa TPR di bawah Seksyen 32A Akta Makanan 1983.
-- Notis Seksyen 32B & Kompaun Seksyen 33: Notis Seksyen 32B beserta tawaran kompaun RM 500.00 di bawah Seksyen 33 Akta Makanan 1983 telah diserahkan secara tangan dengan akuan terima; pengesahan Unit Hasil menunjukkan tempoh bayaran sudah tamat tanpa bayaran dan masih dalam had masa pendakwaan.
+- Borang 114, Pengaduan Borang 143 & Fakta Kes: Fakta Kes disusun objektif mengikut kronologi sebelum, semasa dan selepas pemeriksaan selari dengan Laporan Pengadu (FIR) dan Borang 114. Draf pertuduhan berasingan di bawah Peraturan 11(1) dibaca bersama Peraturan 11(2) PPKM 2009 serta Peraturan 31(2) dibaca bersama Peraturan 31(3) PPKM 2009 disemak tanpa pertindihan pertuduhan, berserta draf permohonan Izin Mendakwa TPR di bawah Seksyen 32A Akta Makanan 1983.
+- Notis Seksyen 32B & Kompaun Seksyen 33: Notis Seksyen 32B beserta tawaran kompaun RM 500.00 di bawah Seksyen 33 Akta Makanan 1983 telah diserahkan secara tangan dengan akuan terima; pengesahan Unit Hasil menunjukkan tempoh bayaran 14 hari sudah tamat tanpa bayaran dan masih dalam had masa pendakwaan.
 """,
     },
     {
@@ -123,11 +123,11 @@ Kesalahan: Membiarkan air jernih bertakung dalam 3 bekas plastik terbuka di ting
         "akta_utama": "Akta 342",
         "workflow": "ip_builder",
         "badge": "Templat Sebenar Tibi",
-        "summary": "Struktur lengkap IP Kes Tibi (Seksyen 22(b) & 24(a) Akta 342) berpandukan aliran PKD, JKNS, Izin Dakwa TPR, Borang TBIS, Mahkamah 111/114/143 & Pemberatan Hukuman.",
+        "summary": "Struktur lengkap IP Kes Tibi (Seksyen 22(b) & 24(a) Akta 342 Pindaan Akta A1742) berpandukan aliran PKD, JKNS, Izin Dakwa TPR, Borang TBIS, Mahkamah 111/114/143 & Pemberatan Hukuman.",
         "text": """KERTAS SIASATAN UNIT INSPEKTORAT DAN PERUNDANGAN (UIP)
 NO. IP: PKD-SPG/UIP/342/2026/010
 DAERAH: Sepang, Selangor
-AKTA: Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988 [Akta 342] - Seksyen 22(b) dibaca bersama Seksyen 24(a)
+AKTA: Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988 [Akta 342] - Seksyen 22(b) dibaca bersama Seksyen 24(a) (Pindaan Akta A1742)
 
 1. BUTIRAN PEMERIKSAAN & PESAKIT (OKS)
 Tarikh Kejadian: 13 Januari 2026
@@ -142,7 +142,7 @@ Pegawai Pengadu: PPKP Nur Hafizah binti Mohamad Shahidin (No. K/P: 860222-26-522
 Saksi: PPKP Geraldine Neo Hui Hwang (No. K/P: 900829-13-6334, PPKP Pengiring)
 
 2. RINGKASAN KESALAHAN & KRONOLOGI KES TIBI
-Kesalahan: Tidak mematuhi perintah sah yang dikeluarkan oleh pegawai diberi kuasa iaitu enggan menjalani dan menyambung semula rawatan penyakit Tuberkulosis (PTB Smear Positif) sejenis penyakit berjangkit di Klinik Kesihatan Sungai Pelek sebagaimana diarahkan di bawah Notis Arahan Menjalani Rawatan Penyakit Berjangkit bertarikh 28 Disember 2025 (tempoh 7 hari dan tarikh rawatan ditetapkan 10 Januari 2026). Perbuatan ini melanggar Seksyen 22(b) Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988 [Akta 342] dan boleh dihukum di bawah Seksyen 24(a) akta yang sama.
+Kesalahan: Tidak mematuhi perintah sah yang dikeluarkan oleh pegawai diberi kuasa iaitu enggan menjalani dan menyambung semula rawatan penyakit Tuberkulosis (PTB Smear Positif) sejenis penyakit berjangkit di Klinik Kesihatan Sungai Pelek sebagaimana diarahkan di bawah Notis Arahan Menjalani Rawatan Penyakit Berjangkit bertarikh 28 Disember 2025 (tempoh 7 hari dan tarikh rawatan ditetapkan 10 Januari 2026). Perbuatan ini melanggar Seksyen 22(b) Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988 [Akta 342] dan boleh dihukum di bawah Seksyen 24(a) akta yang sama (sebagaimana dipinda oleh Akta A1742).
 
 3. DOKUMEN WAJIB & EKSHIBIT KES TIBI (P1 - P5 & TBIS)
 - Kad Kuasa Pegawai & Identiti OKS (Individu): Salinan Kad Kuasa rasmi KKM (Seksyen 2 & 3 Akta 342) serta surat pelantikan pegawai pemeriksa/IO dilampirkan. Oleh kerana OKS ialah pesakit individu (bukan syarikat), semakan identiti MyKad/JPN dilampirkan.
@@ -150,8 +150,8 @@ Kesalahan: Tidak mematuhi perintah sah yang dikeluarkan oleh pegawai diberi kuas
 - P2: Borang Notifikasi Penyakit Berjangkit (Peraturan Borang Notis 2005 / e-Notifikasi).
 - P3: Borang Permohonan & Keputusan Makmal TBIS 20C yang mengesahkan kahak PTB Smear Positif (1+ / 2+).
 - P4: Notis Arahan Menjalani Rawatan Penyakit Berjangkit bertarikh 28 Disember 2025 yang diserahkan secara tangan dengan akuan tandatangan terima OKS serta saksi PPKP Nur Hafizah binti Mohamad Shahidin.
-- P5: Notis Pesakit Tibi Cicir Rawatan (TBIS 10D) dan Maklumbalas Pengesanan (TBIS 10Da) bertarikh 13 Januari 2026.
-- Dokumen Sokongan TBIS: Borang Permulaan Rawatan TBIS 10A-1, Kad Rawatan TBIS 10-I, Maklumat Penyiasatan Kes Tibi TBIS 10A-3, dan Surat Pelepasan Di Atas Risiko Sendiri (AOR).
+- P5: Notis Pesakit Tibi Cicir Rawatan (TBIS 10D) dan Maklum Balas Pengesanan (TBIS 10Da) bertarikh 13 Januari 2026.
+- Dokumen Sokongan TBIS: Borang Permulaan Rawatan TBIS 10A-1, Kad Rawatan TBIS 10-I, Maklumat Penyiasatan Kes Tibi TBIS 10A-3, dan Surat Pelepasan Atas Risiko Sendiri (AOR).
 - Rakaman S.112 KTJ: Percakapan Saksi 1 (PPKP Nur Hafizah binti Mohamad Shahidin) dan Saksi Pengiring (PPKP Geraldine Neo Hui Hwang) dirakam lengkap dengan amaran Seksyen 112(2) & (3) KTJ (menurut S.112(4)), dibaca semula dan ditandatangani semua pihak menurut Seksyen 112(5) KTJ.
 - Gambar Bukti, Pelan Lakar & Sijil Seksyen 90A(2): 6 keping gambar bukti berwarna bertarikh beserta pelan lakar lokasi kediaman OKS yang bertandatangan IO dilampirkan. Sijil Seksyen 90A(2) Akta Keterangan 1950 lengkap butiran kamera, komputer pejabat PKD Sepang, pencetak HP dan klausa sepanjang pengetahuan dan kepercayaan ditandatangani bagi gambar digital dan cetakan e-Notifikasi.
 - Diari Siasatan (DS): Disusun lengkap oleh kedua-dua PPKP pengesan dan IO mengikut Seksyen 119 KTJ dari tarikh arahan doktor sehingga pengesanan gagal.

@@ -24,18 +24,18 @@
       "Produk yang masih berada dalam tempoh peralihan pendaftaran statutori yang sah mengikut jadual kuat kuasa P.U. (A) 262/2024 tidak boleh dituduh tanpa semakan tarikh kuat kuasa fasa pendaftaran.",
       "Jangan kelirukan kesalahan pengedaran tanpa daftar (S.3) dengan kesalahan pameran terbuka di kedai runcit (S.10(1) + Peraturan 6 P.U. (A) 260/2024)."
     ],
-    "penalty_section": "Seksyen 3(2) [Individu] / Seksyen 3(3) [Pertubuhan Perbadanan] Akta 852",
+    "penalty_section": "Seksyen 3(2)(a) [Bukan Pertubuhan Perbadanan] / Seksyen 3(2)(b) [Pertubuhan Perbadanan] Akta 852",
     "penalty_first_offence": {
       "max_fine_rm": 20000,
       "max_jail_months": 12,
       "other_orders": "Bagi Pertubuhan Perbadanan: Denda RM20,000 hingga RM100,000 atau penjara maks 2 tahun",
-      "verbatim_penalty": "Individu: Denda tidak melebihi RM20,000 atau penjara tidak melebihi 1 tahun atau kedua-duanya | Pertubuhan Perbadanan: Denda tidak kurang RM20,000 dan tidak melebihi RM100,000 atau penjara tidak melebihi 2 tahun."
+      "verbatim_penalty": "Bukan Pertubuhan Perbadanan: Denda tidak melebihi RM20,000 atau penjara tidak melebihi 1 tahun atau kedua-duanya | Pertubuhan Perbadanan: Denda tidak kurang RM20,000 dan tidak melebihi RM100,000 atau penjara tidak melebihi 2 tahun."
     },
     "penalty_subsequent_offence": {
       "max_fine_rm": 30000,
       "max_jail_months": 24,
       "other_orders": "Pertubuhan Perbadanan: Denda RM50,000 hingga RM300,000 atau penjara maks 3 tahun",
-      "verbatim_penalty": "Individu: Denda tidak melebihi RM30,000 atau penjara tidak melebihi 2 tahun | Pertubuhan Perbadanan: Denda RM50,000 hingga RM300,000 atau penjara tidak melebihi 3 tahun."
+      "verbatim_penalty": "Bukan Pertubuhan Perbadanan: Denda tidak melebihi RM30,000 atau penjara tidak melebihi 2 tahun | Pertubuhan Perbadanan: Denda RM50,000 hingga RM300,000 atau penjara tidak melebihi 3 tahun."
     },
     "compound_info": {
       "is_compoundable": false,
@@ -44,7 +44,7 @@
       "compound_amount_or_limit": "TIDAK BOLEH KOMPAUN — Wajib Sita (S.35/S.36) & Buka IP Terus",
       "max_compound_rm": null,
       "payment_days": null,
-      "notice_section": "Seksyen 47 Akta 852"
+      "notice_section": "Seksyen 47 Akta 852 [P.U. (A) 264/2024] (Notis Hadir Mahkamah)"
     },
     "special_legal_requirements": [
       "Borang Senarai Benda Disita Seksyen 36 Akta 852",
@@ -56,7 +56,7 @@
       "Pengesahan bertulis KKM mengenai status ketiadaan pendaftaran produk di bawah P.U. (A) 262/2024",
       "Gambar foto berwarna bertarikh + Sijil Seksyen 90A(2) & Carian Rasmi SSM"
     ],
-    "charge_sheet_template_bm": "Bahawa kamu, pada [TARIKH], jam lebih kurang [MASA], bertempat di [TEMPAT_KEJADIAN], di dalam Daerah [DAERAH], di dalam Negeri [NEGERI], telah didapati mengedarkan produk pengganti tembakau / bahan merokok yang tidak didaftarkan di bawah Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024 [Akta 852] dan P.U. (A) 262/2024; dan oleh yang demikian kamu telah melakukan suatu kesalahan di bawah Seksyen 3(1) Akta 852 yang boleh dihukum di bawah Seksyen 3(2)/(3) Akta yang sama.",
+    "charge_sheet_template_bm": "Bahawa kamu, pada [TARIKH], jam lebih kurang [MASA], bertempat di [TEMPAT_KEJADIAN], di dalam Daerah [DAERAH], di dalam Negeri [NEGERI], telah didapati mengedarkan produk pengganti tembakau / bahan merokok yang tidak didaftarkan di bawah Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024 [Akta 852] dan P.U. (A) 262/2024; dan oleh yang demikian kamu telah melakukan suatu kesalahan di bawah Seksyen 3(1) Akta 852 yang boleh dihukum di bawah Seksyen 3(2)(a)/(b) Akta yang sama.",
     "source_section_doc_ids": [
       "AKTA_852__S3",
       "AKTA_852_PERATURAN_PENDAFTARAN_2024__P3",
@@ -68,14 +68,17 @@
     "offence_id": "AKTA_852_S7_1",
     "statute_id": "AKTA_852",
     "offence_section": "Seksyen 7(1)",
-    "read_together_with": [],
+    "read_together_with": [
+      "Seksyen 49 Akta 852 (jika pertubuhan perbadanan)",
+      "Seksyen 114A Akta Keterangan 1950 (jika iklan digital/media sosial)"
+    ],
     "offence_title": "Menyiarkan, menyebabkan disiarkan atau memudahkan penyiaran iklan produk tembakau / bahan merokok / produk pengganti tembakau (vape)",
     "target_offender": "PENJUAL_PENGILANG",
     "mandatory_elements": [
       {
         "element_no": 1,
         "description": "OKT menyiarkan, menyebabkan disiarkan atau memudahkan penyiaran suatu iklan (poster, bunting, papan tanda, skrin LED atau hantaran media sosial).",
-        "must_prove": "Bahan iklan fizikal yang disita (Borang S.36) atau cetakan tangkapan skrin digital bersama Sijil S.90A(2) & bukti kawalan premis/akaun (SSM)."
+        "must_prove": "Bahan iklan fizikal yang disita (Borang S.36) atau cetakan tangkapan skrin digital bersama Sijil S.90A(2) & anggapan penerbitan S.114A Akta 56 serta bukti kawalan premis/akaun (SSM)."
       },
       {
         "element_no": 2,
@@ -85,20 +88,20 @@
     ],
     "explicit_exclusions_and_traps": [
       "Senarai harga bertulis yang mematuhi spesifikasi tertutup di bawah P.U. (A) 260/2024 (hanya ditunjukkan atas permintaan pelanggan dewasa) BUKAN iklan haram S.7(1).",
-      "JANGAN campurkan kesalahan iklan S.7(1) dengan kesalahan pameran produk S.10(1) dalam satu Borang 114 yang sama (kesalahan Duplicity di bawah Seksyen 163 KTJ)."
+      "JANGAN campurkan kesalahan iklan S.7(1) dengan kesalahan pameran produk S.10(1) dalam satu Borang 114 yang sama (Pertindihan Pertuduhan di bawah Seksyen 163 KTJ)."
     ],
-    "penalty_section": "Seksyen 7(2)(a)/(b) [Individu] / Seksyen 7(3)(a)/(b) [Pertubuhan Perbadanan] Akta 852",
+    "penalty_section": "Seksyen 7(2)(a) [Bukan Pertubuhan Perbadanan] / Seksyen 7(2)(b) [Pertubuhan Perbadanan] Akta 852",
     "penalty_first_offence": {
       "max_fine_rm": 20000,
       "max_jail_months": 12,
       "other_orders": "Pertubuhan Perbadanan: Denda RM20,000 hingga RM100,000 atau penjara maks 2 tahun",
-      "verbatim_penalty": "Individu: Denda tidak melebihi RM20,000 atau penjara tidak melebihi 1 tahun atau kedua-duanya | Pertubuhan Perbadanan: Denda tidak kurang RM20,000 dan tidak melebihi RM100,000 atau penjara tidak melebihi 2 tahun."
+      "verbatim_penalty": "Bukan Pertubuhan Perbadanan: Denda tidak melebihi RM20,000 atau penjara tidak melebihi 1 tahun atau kedua-duanya | Pertubuhan Perbadanan: Denda tidak kurang RM20,000 dan tidak melebihi RM100,000 atau penjara tidak melebihi 2 tahun."
     },
     "penalty_subsequent_offence": {
       "max_fine_rm": 30000,
       "max_jail_months": 24,
       "other_orders": "Pertubuhan Perbadanan: Denda RM50,000 hingga RM300,000 atau penjara maks 3 tahun",
-      "verbatim_penalty": "Individu: Denda tidak melebihi RM30,000 atau penjara tidak melebihi 2 tahun | Pertubuhan Perbadanan: Denda RM50,000 hingga RM300,000 atau penjara tidak melebihi 3 tahun."
+      "verbatim_penalty": "Bukan Pertubuhan Perbadanan: Denda tidak melebihi RM30,000 atau penjara tidak melebihi 2 tahun | Pertubuhan Perbadanan: Denda RM50,000 hingga RM300,000 atau penjara tidak melebihi 3 tahun."
     },
     "compound_info": {
       "is_compoundable": false,
@@ -107,11 +110,11 @@
       "compound_amount_or_limit": "TIDAK BOLEH KOMPAUN di bawah Jadual Pertama P.U. (A) 259/2024 — Wajib Sita (S.35/S.36) & Buka IP Terus",
       "max_compound_rm": null,
       "payment_days": null,
-      "notice_section": "Seksyen 47 Akta 852"
+      "notice_section": "Seksyen 47 Akta 852 [P.U. (A) 264/2024] (Notis Hadir Mahkamah)"
     },
     "special_legal_requirements": [
       "Borang Senarai Benda Disita Seksyen 36 Akta 852 (bukan Seksyen 38)",
-      "Sijil Seksyen 90A(2) Akta Keterangan 1950",
+      "Sijil Seksyen 90A(2) & Seksyen 114A Akta Keterangan 1950 (jika iklan digital/media sosial)",
       "Seksyen 49 Akta 852 jika pertubuhan perbadanan"
     ],
     "mandatory_exhibits": [
@@ -119,11 +122,12 @@
       "Gambar foto bukti & cetakan paparan iklan digital + Sijil Seksyen 90A(2)",
       "Cetakan Carian Rasmi SSM + Sijil S.90A & Pelan Lakar premis"
     ],
-    "charge_sheet_template_bm": "Bahawa kamu, pada [TARIKH], jam lebih kurang [MASA], bertempat di [TEMPAT_KEJADIAN], di dalam Daerah [DAERAH], di dalam Negeri [NEGERI], telah didapati menyiarkan iklan yang menggalakkan atau mempromosikan penggunaan produk pengganti tembakau (rokok elektronik / vape); dan oleh yang demikian kamu telah melakukan suatu kesalahan di bawah Seksyen 7(1) Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024 [Akta 852] yang boleh dihukum di bawah Seksyen 7(2)/(3) Akta yang sama.",
+    "charge_sheet_template_bm": "Bahawa kamu, pada [TARIKH], jam lebih kurang [MASA], bertempat di [TEMPAT_KEJADIAN], di dalam Daerah [DAERAH], di dalam Negeri [NEGERI], telah didapati menyiarkan iklan yang menggalakkan atau mempromosikan penggunaan produk pengganti tembakau (rokok elektronik / vape); dan oleh yang demikian kamu telah melakukan suatu kesalahan di bawah Seksyen 7(1) Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024 [Akta 852] yang boleh dihukum di bawah Seksyen 7(2)(a)/(b) Akta yang sama.",
     "source_section_doc_ids": [
       "AKTA_852__S7",
       "AKTA_852__S26",
-      "AKTA_852__S49"
+      "AKTA_852__S49",
+      "AKTA_56__S114A"
     ],
     "verified_status": "DRAFT_PENDING_REVIEW"
   },
@@ -131,7 +135,9 @@
     "offence_id": "AKTA_852_S9_1",
     "statute_id": "AKTA_852",
     "offence_section": "Seksyen 9(1)",
-    "read_together_with": [],
+    "read_together_with": [
+      "Seksyen 49 Akta 852 (jika pertubuhan perbadanan)"
+    ],
     "offence_title": "Mempromosikan atau menaja acara, aktiviti atau pemberian diskaun/hadiah berkaitan produk merokok",
     "target_offender": "PENJUAL_PENGILANG",
     "mandatory_elements": [
@@ -149,18 +155,18 @@
     "explicit_exclusions_and_traps": [
       "Tajaan atau aktiviti tanggungjawab sosial korporat (CSR) yang TIDAK menggunakan jenama/cap dagangan/imej produk merokok dan tidak mempromosikan produk merokok perlu disemak fakta elemen cap dagangannya."
     ],
-    "penalty_section": "Seksyen 9(2) [Individu] / Seksyen 9(3) [Pertubuhan Perbadanan] Akta 852",
+    "penalty_section": "Seksyen 9(3)(a) [Bukan Pertubuhan Perbadanan] / Seksyen 9(3)(b) [Pertubuhan Perbadanan] Akta 852",
     "penalty_first_offence": {
       "max_fine_rm": 20000,
       "max_jail_months": 12,
       "other_orders": "Pertubuhan Perbadanan: Denda RM20,000 hingga RM100,000 atau penjara maks 2 tahun",
-      "verbatim_penalty": "Individu: Denda tidak melebihi RM20,000 atau penjara tidak melebihi 1 tahun | Pertubuhan Perbadanan: Denda RM20,000 hingga RM100,000 atau penjara tidak melebihi 2 tahun."
+      "verbatim_penalty": "Bukan Pertubuhan Perbadanan: Denda tidak melebihi RM20,000 atau penjara tidak melebihi 1 tahun | Pertubuhan Perbadanan: Denda RM20,000 hingga RM100,000 atau penjara tidak melebihi 2 tahun."
     },
     "penalty_subsequent_offence": {
       "max_fine_rm": 30000,
       "max_jail_months": 24,
       "other_orders": "Pertubuhan Perbadanan: Denda RM50,000 hingga RM300,000 atau penjara maks 3 tahun",
-      "verbatim_penalty": "Individu: Denda tidak melebihi RM30,000 atau penjara tidak melebihi 2 tahun | Pertubuhan Perbadanan: Denda RM50,000 hingga RM300,000."
+      "verbatim_penalty": "Bukan Pertubuhan Perbadanan: Denda tidak melebihi RM30,000 atau penjara tidak melebihi 2 tahun | Pertubuhan Perbadanan: Denda RM50,000 hingga RM300,000."
     },
     "compound_info": {
       "is_compoundable": false,
@@ -169,7 +175,7 @@
       "compound_amount_or_limit": "TIDAK BOLEH KOMPAUN — Wajib Sita (S.35/S.36) & Buka IP Terus",
       "max_compound_rm": null,
       "payment_days": null,
-      "notice_section": "Seksyen 47 Akta 852"
+      "notice_section": "Seksyen 47 Akta 852 [P.U. (A) 264/2024] (Notis Hadir Mahkamah)"
     },
     "special_legal_requirements": [
       "Borang Senarai Benda Disita Seksyen 36 Akta 852",
@@ -179,9 +185,10 @@
       "Bahan promosi / sampel / gegantung tajaan yang disita + Borang Seksyen 36 Akta 852",
       "Gambar foto bukti berwarna + Sijil Seksyen 90A(2) & Carian SSM"
     ],
-    "charge_sheet_template_bm": "Bahawa kamu, pada [TARIKH], jam lebih kurang [MASA], bertempat di [TEMPAT_KEJADIAN], di dalam Daerah [DAERAH], di dalam Negeri [NEGERI], telah didapati mempromosikan atau menaja [BUTIRAN_PROMOSI] dengan menggunakan cap dagangan berkaitan produk merokok; dan oleh yang demikian kamu telah melakukan suatu kesalahan di bawah Seksyen 9(1) Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024 [Akta 852] yang boleh dihukum di bawah Seksyen 9(2)/(3) Akta yang sama.",
+    "charge_sheet_template_bm": "Bahawa kamu, pada [TARIKH], jam lebih kurang [MASA], bertempat di [TEMPAT_KEJADIAN], di dalam Daerah [DAERAH], di dalam Negeri [NEGERI], telah didapati mempromosikan atau menaja [BUTIRAN_PROMOSI] dengan menggunakan cap dagangan berkaitan produk merokok; dan oleh yang demikian kamu telah melakukan suatu kesalahan di bawah Seksyen 9(1) Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024 [Akta 852] yang boleh dihukum di bawah Seksyen 9(3)(a)/(b) Akta yang sama.",
     "source_section_doc_ids": [
-      "AKTA_852__S9"
+      "AKTA_852__S9",
+      "AKTA_852__S49"
     ],
     "verified_status": "DRAFT_PENDING_REVIEW"
   },
@@ -216,27 +223,27 @@
       "Produk merokok yang disimpan di dalam kabinet tertutup legap (opaque) yang mematuhi Peraturan 6 P.U. (A) 260/2024 dan hanya dibuka seketika semasa mengambil stok untuk pelanggan dewasa BUKAN kesalahan pameran terbuka S.10(1).",
       "JANGAN petik 'Borang Sitaan Seksyen 38' — Seksyen 38 ialah kos memegang barang disita; borang sitaan sah ialah Seksyen 36 Akta 852."
     ],
-    "penalty_section": "Seksyen 10(2)(a)/(b) [Individu] / Seksyen 10(3)(a)/(b) [Pertubuhan Perbadanan] Akta 852",
+    "penalty_section": "Seksyen 10(2)(a) [Bukan Pertubuhan Perbadanan] / Seksyen 10(2)(b) [Pertubuhan Perbadanan] Akta 852",
     "penalty_first_offence": {
       "max_fine_rm": 20000,
       "max_jail_months": 12,
       "other_orders": "Pertubuhan Perbadanan: Denda RM20,000 hingga RM100,000 atau penjara maks 2 tahun",
-      "verbatim_penalty": "Individu: Denda tidak melebihi RM20,000 atau penjara tidak melebihi 1 tahun atau kedua-duanya | Pertubuhan Perbadanan: Denda tidak kurang RM20,000 dan tidak melebihi RM100,000 atau penjara tidak melebihi 2 tahun."
+      "verbatim_penalty": "Bukan Pertubuhan Perbadanan: Denda tidak melebihi RM20,000 atau penjara tidak melebihi 1 tahun atau kedua-duanya | Pertubuhan Perbadanan: Denda tidak kurang RM20,000 dan tidak melebihi RM100,000 atau penjara tidak melebihi 2 tahun."
     },
     "penalty_subsequent_offence": {
       "max_fine_rm": 30000,
       "max_jail_months": 24,
       "other_orders": "Pertubuhan Perbadanan: Denda RM50,000 hingga RM300,000 atau penjara maks 3 tahun",
-      "verbatim_penalty": "Individu: Denda tidak melebihi RM30,000 atau penjara tidak melebihi 2 tahun | Pertubuhan Perbadanan: Denda RM50,000 hingga RM300,000 atau penjara tidak melebihi 3 tahun."
+      "verbatim_penalty": "Bukan Pertubuhan Perbadanan: Denda tidak melebihi RM30,000 atau penjara tidak melebihi 2 tahun | Pertubuhan Perbadanan: Denda RM50,000 hingga RM300,000 atau penjara tidak melebihi 3 tahun."
     },
     "compound_info": {
       "is_compoundable": false,
-      "compound_authority_section": "Seksyen 48 Akta 852",
+      "compound_authority_section": null,
       "compound_regulation_ref": "P.U. (A) 259/2024",
-      "compound_amount_or_limit": "Seksyen 10(1) TIDAK tersenarai dalam Jadual Pertama P.U. (A) 259/2024 — Wajib Sita (S.35/S.36) & Buka IP Terus",
+      "compound_amount_or_limit": "TIDAK BOLEH KOMPAUN (Seksyen 10(1) tiada dalam Jadual Pertama P.U. (A) 259/2024) — Wajib Sita (S.35/S.36) & Buka IP Terus",
       "max_compound_rm": null,
-      "payment_days": 30,
-      "notice_section": "Seksyen 47 Akta 852"
+      "payment_days": null,
+      "notice_section": "Seksyen 47 Akta 852 [P.U. (A) 264/2024] (Notis Hadir Mahkamah)"
     },
     "special_legal_requirements": [
       "Penyitaan di bawah Seksyen 35 & Borang Senarai Benda Disita Seksyen 36 Akta 852",
@@ -250,7 +257,7 @@
       "Cetakan Carian Rasmi SSM (e-Info/MyData) + Sijil S.90A & Lesen PBT",
       "Pelan Lakar kedudukan rak/kaunter pameran bertandatangan IO"
     ],
-    "charge_sheet_template_bm": "Bahawa kamu, pada [TARIKH], jam lebih kurang [MASA], bertempat di [TEMPAT_KEJADIAN], di dalam Daerah [DAERAH], di dalam Negeri [NEGERI], telah didapati mempamerkan bagi maksud penjualan produk pengganti tembakau / bahan merokok secara terbuka di kaunter jualan yang melanggar Peraturan 6 Peraturan-Peraturan Kawalan Produk Merokok Demi Kesihatan Awam (Kawalan Penjualan) 2024 [P.U. (A) 260/2024]; dan oleh yang demikian kamu telah melakukan suatu kesalahan di bawah Seksyen 10(1) Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024 [Akta 852] yang boleh dihukum di bawah Seksyen 10(2)/(3) Akta yang sama.",
+    "charge_sheet_template_bm": "Bahawa kamu, pada [TARIKH], jam lebih kurang [MASA], bertempat di [TEMPAT_KEJADIAN], di dalam Daerah [DAERAH], di dalam Negeri [NEGERI], telah didapati mempamerkan bagi maksud penjualan produk pengganti tembakau / bahan merokok secara terbuka di kaunter jualan yang melanggar Peraturan 6 Peraturan-Peraturan Kawalan Produk Merokok Demi Kesihatan Awam (Kawalan Penjualan) 2024 [P.U. (A) 260/2024]; dan oleh yang demikian kamu telah melakukan suatu kesalahan di bawah Seksyen 10(1) Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024 [Akta 852] yang boleh dihukum di bawah Seksyen 10(2)(a)/(b) Akta yang sama.",
     "source_section_doc_ids": [
       "AKTA_852__S10",
       "AKTA_852_PERATURAN_JUALAN_2024__P6",
@@ -284,27 +291,27 @@
       "Jika pembeli telah berumur 18 tahun ke atas pada tarikh kejadian mengikut tarikh lahir MyKad, kesalahan S.13(1) TIDAK wujud.",
       "Gagal melampirkan bukti rasmi tarikh lahir OBD (MyKad/JPN) akan menyebabkan pertuduhan S.13(1) gugur di mahkamah."
     ],
-    "penalty_section": "Seksyen 13(2) [Individu] / Seksyen 13(3) [Pertubuhan Perbadanan] Akta 852",
+    "penalty_section": "Seksyen 13(2)(a) [Bukan Pertubuhan Perbadanan] / Seksyen 13(2)(b) [Pertubuhan Perbadanan] Akta 852",
     "penalty_first_offence": {
       "max_fine_rm": 20000,
       "max_jail_months": 12,
       "other_orders": "Pertubuhan Perbadanan: Denda RM20,000 hingga RM100,000 atau penjara maks 2 tahun",
-      "verbatim_penalty": "Individu: Denda tidak melebihi RM20,000 atau penjara tidak melebihi 1 tahun | Pertubuhan Perbadanan: Denda RM20,000 hingga RM100,000 atau penjara tidak melebihi 2 tahun."
+      "verbatim_penalty": "Bukan Pertubuhan Perbadanan: Denda tidak melebihi RM20,000 atau penjara tidak melebihi 1 tahun | Pertubuhan Perbadanan: Denda RM20,000 hingga RM100,000 atau penjara tidak melebihi 2 tahun."
     },
     "penalty_subsequent_offence": {
       "max_fine_rm": 30000,
       "max_jail_months": 24,
       "other_orders": "Pertubuhan Perbadanan: Denda RM50,000 hingga RM300,000 atau penjara maks 3 tahun",
-      "verbatim_penalty": "Individu: Denda tidak melebihi RM30,000 atau penjara tidak melebihi 2 tahun | Pertubuhan Perbadanan: Denda RM50,000 hingga RM300,000."
+      "verbatim_penalty": "Bukan Pertubuhan Perbadanan: Denda tidak melebihi RM30,000 atau penjara tidak melebihi 2 tahun | Pertubuhan Perbadanan: Denda RM50,000 hingga RM300,000."
     },
     "compound_info": {
       "is_compoundable": false,
       "compound_authority_section": null,
       "compound_regulation_ref": "P.U. (A) 259/2024",
-      "compound_amount_or_limit": "Kes penjualan kepada OBD disyorkan Buka IP Terus untuk pendakwaan mahkamah",
+      "compound_amount_or_limit": "TIDAK BOLEH KOMPAUN (S.13(1) tiada dalam Jadual Pertama P.U.(A) 259/2024) — Wajib Buka IP Terus untuk pendakwaan mahkamah",
       "max_compound_rm": null,
       "payment_days": null,
-      "notice_section": "Seksyen 47 Akta 852"
+      "notice_section": "Seksyen 47 Akta 852 [P.U. (A) 264/2024] (Notis Hadir Mahkamah)"
     },
     "special_legal_requirements": [
       "Bukti rasmi umur OBD < 18 tahun (MyKad / Sijil Lahir / JPN)",
@@ -317,10 +324,71 @@
       "Rakaman percakapan S.112 OBD dan PPKP saksi kejadian",
       "Gambar premis / kaunter jualan + Sijil Seksyen 90A(2)"
     ],
-    "charge_sheet_template_bm": "Bahawa kamu, pada [TARIKH], jam lebih kurang [MASA], bertempat di [TEMPAT_KEJADIAN], di dalam Daerah [DAERAH], di dalam Negeri [NEGERI], telah didapati menjual produk merokok kepada seorang Orang Belum Dewasa berumur di bawah 18 tahun; dan oleh yang demikian kamu telah melakukan suatu kesalahan di bawah Seksyen 13(1) Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024 [Akta 852] yang boleh dihukum di bawah Seksyen 13(2)/(3) Akta yang sama.",
+    "charge_sheet_template_bm": "Bahawa kamu, pada [TARIKH], jam lebih kurang [MASA], bertempat di [TEMPAT_KEJADIAN], di dalam Daerah [DAERAH], di dalam Negeri [NEGERI], telah didapati menjual produk merokok kepada seorang Orang Belum Dewasa berumur di bawah 18 tahun; dan oleh yang demikian kamu telah melakukan suatu kesalahan di bawah Seksyen 13(1) Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024 [Akta 852] yang boleh dihukum di bawah Seksyen 13(2)(a)/(b) Akta yang sama.",
     "source_section_doc_ids": [
       "AKTA_852__S13",
       "AKTA_852__S49",
+      "AKTA_611__S83"
+    ],
+    "verified_status": "DRAFT_PENDING_REVIEW"
+  },
+  {
+    "offence_id": "AKTA_852_S13_3",
+    "statute_id": "AKTA_852",
+    "offence_section": "Seksyen 13(3)",
+    "read_together_with": [
+      "Akta Kanak-Kanak 2001 [Akta 611]",
+      "Seksyen 48 Akta 852"
+    ],
+    "offence_title": "Orang Belum Dewasa (OBD < 18 tahun): Membeli produk tembakau, bahan merokok atau produk pengganti tembakau (vape)",
+    "target_offender": "OBD_BAWAH_18",
+    "mandatory_elements": [
+      {
+        "element_no": 1,
+        "description": "Pembeli ialah seorang Orang Belum Dewasa (berumur di bawah 18 tahun pada tarikh kejadian).",
+        "must_prove": "Salinan MyKad / Kad Pelajar / Sijil Lahir / Pengesahan JPN yang membuktikan umur < 18 tahun."
+      },
+      {
+        "element_no": 2,
+        "description": "OBD benar-benar MEMBELI apa-apa produk tembakau, bahan merokok atau produk pengganti tembakau (vape) — bukan sekadar memiliki di dalam beg.",
+        "must_prove": "Saksi transaksi pembelian, resit bayaran/QR, rakaman CCTV kedai atau pengakuan bertulis + produk yang dibeli."
+      }
+    ],
+    "explicit_exclusions_and_traps": [
+      "Jika pelajar/OBD hanya memiliki vape di dalam beg sekolah TANPA sebarang bukti transaksi pembelian olehnya atau perbuatan menghisap/menggunakan, kesalahan S.13(3) dan S.17(1) TIDAK terbentuk.",
+      "Siasat dan tuduh penjual di bawah Seksyen 13(1) (hukuman S.13(2)) jika kedai dikenal pasti menjual kepada OBD."
+    ],
+    "penalty_section": "Seksyen 13(4) Akta 852",
+    "penalty_first_offence": {
+      "max_fine_rm": 500,
+      "max_jail_months": null,
+      "other_orders": "Perintah Khidmat Masyarakat (Akta 611 / Akta 593)",
+      "verbatim_penalty": "Didenda tidak melebihi lima ratus ringgit (RM500.00) atau diperintahkan melaksanakan khidmat masyarakat."
+    },
+    "penalty_subsequent_offence": null,
+    "compound_info": {
+      "is_compoundable": true,
+      "compound_authority_section": "Seksyen 48(2) Akta 852",
+      "compound_regulation_ref": "Jadual Pertama & Kedua P.U. (A) 259/2024",
+      "compound_amount_or_limit": "Boleh dikompaun sehingga 50% daripada denda maks RM500 (= maks RM250.00, tawaran lazim RM50.00) dengan keizinan bertulis Pendakwa Raya (Borang 1 & Borang 2 P.U.(A) 259/2024) — tempoh 30 hari",
+      "max_compound_rm": 250,
+      "payment_days": 30,
+      "notice_section": "Tawaran Kompaun Borang 2 P.U.(A) 259/2024 & Notis Hadir Mahkamah S.47 [P.U.(A) 264/2024]"
+    },
+    "special_legal_requirements": [
+      "Akta Kanak-Kanak 2001 [Akta 611] — Makluman ibu bapa/penjaga, sekatan siaran media S.15 & tatacara S.83",
+      "Keizinan bertulis Pendakwa Raya (Borang 1 P.U.(A) 259/2024) bagi Tawaran Kompaun S.48(2)"
+    ],
+    "mandatory_exhibits": [
+      "Salinan MyKad / Pengesahan JPN OBD (< 18 tahun)",
+      "Resit bayaran / CCTV transaksi pembelian & produk vape/rokok yang dibeli",
+      "Rakaman percakapan S.112 saksi transaksi & OBD (dihadiri ibu bapa/penjaga)"
+    ],
+    "charge_sheet_template_bm": "Bahawa kamu (seorang Orang Belum Dewasa berumur di bawah 18 tahun), pada [TARIKH], jam lebih kurang [MASA], bertempat di [TEMPAT_KEJADIAN], di dalam Daerah [DAERAH], di dalam Negeri [NEGERI], telah didapati membeli suatu produk pengganti tembakau (rokok elektronik / vape); dan oleh yang demikian kamu telah melakukan suatu kesalahan di bawah Seksyen 13(3) Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024 [Akta 852] yang boleh dihukum di bawah Seksyen 13(4) Akta yang sama.",
+    "source_section_doc_ids": [
+      "AKTA_852__S13",
+      "AKTA_852__S48",
+      "AKTA_852_PERATURAN_KOMPAUN_2024__P2",
       "AKTA_611__S83"
     ],
     "verified_status": "DRAFT_PENDING_REVIEW"
@@ -360,19 +428,19 @@
     "penalty_subsequent_offence": null,
     "compound_info": {
       "is_compoundable": true,
-      "compound_authority_section": "Seksyen 48 Akta 852",
-      "compound_regulation_ref": "P.U. (A) 259/2024",
-      "compound_amount_or_limit": "Kompaun RM250.00 (had statutori maks 50% daripada RM5,000 = RM2,500) — tempoh bayaran 30 hari",
+      "compound_authority_section": "Seksyen 48(2) Akta 852",
+      "compound_regulation_ref": "Jadual Pertama & Kedua P.U. (A) 259/2024",
+      "compound_amount_or_limit": "Boleh dikompaun RM250.00 (had maks 50% daripada RM5,000 = RM2,500) dengan keizinan bertulis Pendakwa Raya (Borang 1 & Borang 2 P.U.(A) 259/2024) — tempoh bayaran 30 hari",
       "max_compound_rm": 2500,
       "payment_days": 30,
-      "notice_section": "Seksyen 47 Akta 852 [P.U. (A) 264/2024]"
+      "notice_section": "Tawaran Kompaun Borang 2 P.U.(A) 259/2024 & Notis Hadir Mahkamah S.47 [P.U.(A) 264/2024]"
     },
     "special_legal_requirements": [
-      "Notis Seksyen 47 Akta 852 [P.U. (A) 264/2024]",
+      "Keizinan bertulis Pendakwa Raya (Borang 1) & Tawaran Kompaun (Borang 2) di bawah P.U. (A) 259/2024; Notis S.47 [P.U. (A) 264/2024] ialah Notis Hadir Mahkamah",
       "Tunggu tempoh kompaun 30 hari tamat & Sijil Unit Hasil PKD sebelum daftar mahkamah"
     ],
     "mandatory_exhibits": [
-      "Salinan pendua Notis Seksyen 47 bertandatangan terima / catatan saksi enggan tandatangan",
+      "Salinan pendua Tawaran Kompaun / Notis Seksyen 47 bertandatangan terima / catatan saksi enggan tandatangan",
       "Gambar foto bukti perokok di kawasan larangan + Sijil Seksyen 90A(2)",
       "Sijil Pengesahan Unit Hasil PKD bahawa kompaun tidak dibayar selepas tamat 30 hari"
     ],
@@ -422,20 +490,21 @@
     "penalty_subsequent_offence": null,
     "compound_info": {
       "is_compoundable": true,
-      "compound_authority_section": "Seksyen 48 Akta 852",
-      "compound_regulation_ref": "P.U. (A) 259/2024",
-      "compound_amount_or_limit": "Kompaun RM50.00 (maksimum statutori tidak melebihi 50% daripada RM500 = RM250) — tempoh 30 hari dengan pemakluman ibu bapa/penjaga",
+      "compound_authority_section": "Seksyen 48(2) Akta 852",
+      "compound_regulation_ref": "Jadual Pertama & Kedua P.U. (A) 259/2024",
+      "compound_amount_or_limit": "Kompaun RM50.00 (had maks 50% daripada RM500 = RM250) dengan keizinan bertulis Pendakwa Raya (Borang 1 & Borang 2 P.U.(A) 259/2024) — tempoh 30 hari dengan pemakluman ibu bapa/penjaga",
       "max_compound_rm": 250,
       "payment_days": 30,
-      "notice_section": "Seksyen 47 Akta 852"
+      "notice_section": "Tawaran Kompaun Borang 2 P.U.(A) 259/2024 & Notis Hadir Mahkamah S.47 [P.U.(A) 264/2024]"
     },
     "special_legal_requirements": [
-      "Akta Kanak-Kanak 2001 [Akta 611] — Pemakluman & kehadiran ibu bapa/penjaga; prosiding di Mahkamah Bagi Kanak-Kanak",
+      "Akta Kanak-Kanak 2001 [Akta 611] — Pemakluman & kehadiran ibu bapa/penjaga; sekatan media S.15; prosiding Mahkamah Bagi Kanak-Kanak",
+      "Keizinan bertulis Pendakwa Raya (Borang 1 P.U.(A) 259/2024) bagi Tawaran Kompaun S.48(2); Notis S.47 ialah Notis Hadir Mahkamah",
       "Bukti rasmi tarikh lahir OBD (< 18 tahun)"
     ],
     "mandatory_exhibits": [
       "Salinan MyKad / Pengesahan JPN OBD (membuktikan umur di bawah 18 tahun)",
-      "Salinan pendua Notis Seksyen 47 bertandatangan terima / saksi + rekod makluman ibu bapa/penjaga",
+      "Salinan pendua Tawaran Kompaun / Notis Seksyen 47 bertandatangan terima / saksi + rekod makluman ibu bapa/penjaga",
       "Puntung rokok / peranti vape yang sedang dihisap/digunakan + Borang S.36 (jika disita)",
       "Gambar foto kejadian OBD sedang menghisap/menggunakan + Sijil Seksyen 90A(2)"
     ],
@@ -482,19 +551,19 @@
     "penalty_subsequent_offence": null,
     "compound_info": {
       "is_compoundable": true,
-      "compound_authority_section": "Seksyen 48 Akta 852",
-      "compound_regulation_ref": "P.U. (A) 259/2024",
-      "compound_amount_or_limit": "Boleh dikompaun RM250.00 – RM2,500.00 (maks 50% daripada RM5,000) — tempoh bayaran 30 hari",
+      "compound_authority_section": "Seksyen 48(2) Akta 852",
+      "compound_regulation_ref": "Jadual Pertama & Kedua P.U. (A) 259/2024",
+      "compound_amount_or_limit": "Boleh dikompaun RM250.00 – RM2,500.00 (maks 50% daripada RM5,000) dengan keizinan bertulis Pendakwa Raya (Borang 1 & Borang 2 P.U.(A) 259/2024) — tempoh bayaran 30 hari",
       "max_compound_rm": 2500,
       "payment_days": 30,
-      "notice_section": "Seksyen 47 Akta 852"
+      "notice_section": "Tawaran Kompaun Borang 2 P.U.(A) 259/2024 & Notis Hadir Mahkamah S.47 [P.U.(A) 264/2024]"
     },
     "special_legal_requirements": [
-      "Notis Seksyen 47 Akta 852",
+      "Keizinan bertulis Pendakwa Raya (Borang 1 & Borang 2 P.U.(A) 259/2024); Notis Hadir Mahkamah S.47",
       "Sijil Seksyen 90A(2)"
     ],
     "mandatory_exhibits": [
-      "Salinan pendua Notis Seksyen 47 bertandatangan terima / saksi",
+      "Salinan pendua Tawaran Kompaun / Notis Seksyen 47 bertandatangan terima / saksi",
       "Gambar foto dinding tanpa tanda amaran Kod QR atau bekas abu rokok + Sijil S.90A(2)",
       "Carian SSM / Lesen PBT premis & Sijil Unit Hasil PKD (jika gagal bayar kompaun 30 hari)"
     ],
@@ -1108,8 +1177,8 @@
     "mandatory_elements": [
       {
         "element_no": 1,
-        "description": "OKT ialah pemunya atau penghuni premis / pengawal tapak pembinaan tempat pembiakan ditemui.",
-        "must_prove": "Bil utiliti / Carian SSM / Lesen PBT / Pendaftaran CIDB atau Surat Setuju Terima (LOA) kontraktor utama."
+        "description": "OKT ialah pemunya, penduduk atau orang yang melakukan/membiarkan keadaan pembiakan di premis/tapak pembinaan (tanggungan bersama S.22(1) Akta 154).",
+        "must_prove": "Bil utiliti / Carian SSM / Lesen PBT / Pendaftaran CIDB atau Surat Setuju Terima (SST) kontraktor utama."
       },
       {
         "element_no": 2,
@@ -1124,8 +1193,9 @@
     ],
     "explicit_exclusions_and_traps": [
       "Takungan air kosong yang TIADA penemuan larva/pupa hidup atau keputusan Makmal Entomologi mengesahkan spesies BUKAN serangga pembawa penyakit tidak boleh dikompaun/dituduh di bawah Seksyen 13(1) (hanya boleh dikeluarkan Perintah Pencegahan Seksyen 8(1)).",
-      "HAD MUTLAK KOMPAUN S.25 AKTA 154: Amaun kompaun Seksyen 25 Akta 154 TIDAK BOLEH melebihi RM500.00! Sebarang notis kompaun > RM500 di bawah Akta 154 adalah TIDAK SAH (Ultra Vires).",
-      "Bagi tapak pembinaan, dasar penguatkuasaan KKM menetapkan TIADA tawaran kompaun RM500 — wajib keluarkan Perintah Seksyen 8(1) dan Buka IP Terus ke mahkamah."
+      "Kesalahan pembiakan di kawasan luar kawalan pemunya/penduduk (S.22(1): dibuktikan dilakukan tanpa pengetahuan, persetujuan & pembiaran serta segala usaha wajar telah diambil) perlu disiasat terhadap pihak yang bertanggungjawab.",
+      "HAD MUTLAK KOMPAUN S.25 AKTA 154: Amaun kompaun Seksyen 25 Akta 154 TIDAK BOLEH melebihi RM500.00. Sebarang notis kompaun > RM500 di bawah Akta 154 adalah TIDAK SAH.",
+      "Bagi tapak pembinaan atau kesalahan berulang S.23(b): TIADA tawaran kompaun RM500 — wajib keluarkan Perintah Seksyen 8(1) dan Buka IP Terus ke mahkamah."
     ],
     "penalty_section": "Seksyen 23(a) [Kesalahan Pertama] / Seksyen 23(b) [Kesalahan Kedua/Berikutnya] Akta 154",
     "penalty_first_offence": {
@@ -1144,7 +1214,7 @@
       "is_compoundable": true,
       "compound_authority_section": "Seksyen 25 Akta 154",
       "compound_regulation_ref": "Peraturan-Peraturan Pemusnahan Serangga Pembawa Penyakit (Mengkompaun Kesalahan) 1975",
-      "compound_amount_or_limit": "Maksimum RM500.00 (had statutori mutlak S.25 Akta 154 — tempoh 14 hari) bagi premis biasa; TIADA kompaun bagi tapak pembinaan (Buka IP Terus)",
+      "compound_amount_or_limit": "Maksimum RM500.00 (had mutlak S.25 Akta 154 — tempoh 14 hari) bagi premis biasa kesalahan pertama; TIADA kompaun bagi tapak pembinaan atau kes berulang S.23(b) (Buka IP Terus)",
       "max_compound_rm": 500,
       "payment_days": 14,
       "notice_section": "Seksyen 25 Akta 154"
@@ -1499,19 +1569,14 @@
       "PENGECUALIAN COVID-19 PASCA 15 JULAI 2024: Sejak pemansuhan HSO mandatori MySejahtera pada 15 Julai 2024, pekerja positif COVID-19 yang hadir bekerja TANPA Perintah Pengawasan bertulis Seksyen 15(1) atau Pengasingan Seksyen 14 yang diserahkan secara sah TIDAK melakukan kesalahan Seksyen 22(b) dan TIDAK BOLEH dikompaun serta-merta!",
       "JANGAN sesekali tulis 'Seksyen 22(b) Akta 514' (Akta 514 ialah OSHA 1994!). Akta Penyakit Berjangkit ialah Akta 342."
     ],
-    "penalty_section": "Seksyen 24(a) / Seksyen 24 Akta 342 [APPPB 1988]",
+    "penalty_section": "Seksyen 24(a) [Individu] / Seksyen 24(b) [Pertubuhan Perbadanan] Akta 342 (Pindaan Akta A1742)",
     "penalty_first_offence": {
       "max_fine_rm": 10000,
       "max_jail_months": 24,
-      "other_orders": "Pertubuhan Perbadanan: Denda maks RM100,000 (Akta A1742)",
-      "verbatim_penalty": "Penjara selama tempoh tidak melebihi dua (2) tahun atau denda (tidak melebihi RM10,000.00 di bawah Akta A1742) atau kedua-duanya."
+      "other_orders": "Pertubuhan Perbadanan [Seksyen 24(b)]: Denda tidak melebihi RM100,000.00 (Akta A1742)",
+      "verbatim_penalty": "Individu [S.24(a)]: Denda tidak melebihi RM10,000.00 atau penjara tidak melebihi dua (2) tahun atau kedua-duanya | Pertubuhan Perbadanan [S.24(b)]: Denda tidak melebihi RM100,000.00."
     },
-    "penalty_subsequent_offence": {
-      "max_fine_rm": null,
-      "max_jail_months": 60,
-      "other_orders": "Kesalahan kedua/berikutnya di bawah S.24(b) asal: penjara tidak melebihi 5 tahun atau denda atau kedua-duanya",
-      "verbatim_penalty": "Penjara tidak melebihi lima (5) tahun atau denda atau kedua-duanya."
-    },
+    "penalty_subsequent_offence": null,
     "compound_info": {
       "is_compoundable": true,
       "compound_authority_section": "Seksyen 25 Akta 342 (Pindaan Akta A1742)",
@@ -1557,11 +1622,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Seksyen 8 (Larangan pengiklanan produk tembakau, dsb., tiruan).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Seksyen 8 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Seksyen 8 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Seksyen 8",
     "penalty_first_offence": {
@@ -1575,9 +1640,9 @@
       "is_compoundable": false,
       "compound_authority_section": null,
       "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Semak jadual kompaun / Buka IP",
+      "compound_amount_or_limit": "TIDAK BOLEH KOMPAUN — Sita (jika berkenaan) & Buka IP Terus",
       "max_compound_rm": null,
-      "payment_days": 30,
+      "payment_days": null,
       "notice_section": null
     },
     "special_legal_requirements": [
@@ -1606,11 +1671,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Seksyen 11 (Larangan penjualan produk tembakau, dsb., tiruan).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Seksyen 11 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Seksyen 11 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Seksyen 11",
     "penalty_first_offence": {
@@ -1624,9 +1689,9 @@
       "is_compoundable": false,
       "compound_authority_section": null,
       "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Semak jadual kompaun / Buka IP",
+      "compound_amount_or_limit": "TIDAK BOLEH KOMPAUN — Sita (jika berkenaan) & Buka IP Terus",
       "max_compound_rm": null,
-      "payment_days": 30,
+      "payment_days": null,
       "notice_section": null
     },
     "special_legal_requirements": [
@@ -1655,11 +1720,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Seksyen 12 (Larangan produk tembakau, dsb., sebagai pemberian atau hadiah).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Seksyen 12 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Seksyen 12 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Seksyen 12",
     "penalty_first_offence": {
@@ -1673,9 +1738,9 @@
       "is_compoundable": false,
       "compound_authority_section": null,
       "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Semak jadual kompaun / Buka IP",
+      "compound_amount_or_limit": "TIDAK BOLEH KOMPAUN — Sita (jika berkenaan) & Buka IP Terus",
       "max_compound_rm": null,
-      "payment_days": 30,
+      "payment_days": null,
       "notice_section": null
     },
     "special_legal_requirements": [
@@ -1704,11 +1769,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Seksyen 14 (Harga runcit atau harga jualan minimum).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Seksyen 14 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Seksyen 14 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Seksyen 14",
     "penalty_first_offence": {
@@ -1722,9 +1787,9 @@
       "is_compoundable": false,
       "compound_authority_section": null,
       "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Semak jadual kompaun / Buka IP",
+      "compound_amount_or_limit": "TIDAK BOLEH KOMPAUN — Sita (jika berkenaan) & Buka IP Terus",
       "max_compound_rm": null,
-      "payment_days": 30,
+      "payment_days": null,
       "notice_section": null
     },
     "special_legal_requirements": [
@@ -1753,11 +1818,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Seksyen 15 (Pembungkusan dan pelabelan).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Seksyen 15 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Seksyen 15 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Seksyen 15",
     "penalty_first_offence": {
@@ -1771,9 +1836,9 @@
       "is_compoundable": false,
       "compound_authority_section": null,
       "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Semak jadual kompaun / Buka IP",
+      "compound_amount_or_limit": "TIDAK BOLEH KOMPAUN — Sita (jika berkenaan) & Buka IP Terus",
       "max_compound_rm": null,
-      "payment_days": 30,
+      "payment_days": null,
       "notice_section": null
     },
     "special_legal_requirements": [
@@ -1802,11 +1867,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Seksyen 20 (Tanggungjawab pengilang, pengimport atau pengedar).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Seksyen 20 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Seksyen 20 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Seksyen 20",
     "penalty_first_offence": {
@@ -1820,9 +1885,9 @@
       "is_compoundable": false,
       "compound_authority_section": null,
       "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Semak jadual kompaun / Buka IP",
+      "compound_amount_or_limit": "TIDAK BOLEH KOMPAUN — Sita (jika berkenaan) & Buka IP Terus",
       "max_compound_rm": null,
-      "payment_days": 30,
+      "payment_days": null,
       "notice_section": null
     },
     "special_legal_requirements": [
@@ -1852,11 +1917,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Seksyen 21 (PENTADBIRAN Situasi akut atau kritikal).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Seksyen 21 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Seksyen 21 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Seksyen 21",
     "penalty_first_offence": {
@@ -1870,9 +1935,9 @@
       "is_compoundable": false,
       "compound_authority_section": null,
       "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Semak jadual kompaun / Buka IP",
+      "compound_amount_or_limit": "TIDAK BOLEH KOMPAUN — Sita (jika berkenaan) & Buka IP Terus",
       "max_compound_rm": null,
-      "payment_days": 30,
+      "payment_days": null,
       "notice_section": null
     },
     "special_legal_requirements": [
@@ -1889,347 +1954,6 @@
     "verified_status": "DRAFT_PENDING_REVIEW"
   },
   {
-    "offence_id": "AKTA_852_27",
-    "statute_id": "AKTA_852",
-    "offence_section": "Seksyen 27",
-    "read_together_with": [
-      "subseksyen (1)"
-    ],
-    "offence_title": "Kuasa untuk mengambil sampel",
-    "target_offender": "INDIVIDU",
-    "mandatory_elements": [
-      {
-        "element_no": 1,
-        "description": "Pematuhan intipati perbuatan di bawah Seksyen 27 (Kuasa untuk mengambil sampel).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
-      }
-    ],
-    "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Seksyen 27 dipenuhi sebelum mengeluarkan notis atau membuka IP."
-    ],
-    "penalty_section": "Seksyen 27",
-    "penalty_first_offence": {
-      "max_fine_rm": 10000,
-      "max_jail_months": 12,
-      "other_orders": null,
-      "verbatim_penalty": "Kuasa untuk mengambil sampel\n27.\t (1)\t Setelah pembayaran kepada mana-mana orang yang menjual\nproduk tembakau, bahan merokok atau produk pengganti tembakau\natau kepada ejen atau pekerjanya, pada nilai pasaran semasa bagi\nproduk tembakau, bahan merokok atau produk pengganti tembak"
-    },
-    "penalty_subsequent_offence": null,
-    "compound_info": {
-      "is_compoundable": false,
-      "compound_authority_section": null,
-      "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Semak jadual kompaun / Buka IP",
-      "max_compound_rm": null,
-      "payment_days": 30,
-      "notice_section": null
-    },
-    "special_legal_requirements": [
-      "Sijil Seksyen 90A(2) Akta Keterangan 1950"
-    ],
-    "mandatory_exhibits": [
-      "Gambar foto lokasi/kejadian berwarna bertarikh + Sijil Seksyen 90A(2)",
-      "Diari Siasatan (S.119 KTJ) & Rakaman Percakapan S.112 KTJ"
-    ],
-    "charge_sheet_template_bm": "Bahawa kamu, pada [TARIKH], jam lebih kurang [MASA], bertempat di [TEMPAT_KEJADIAN], di dalam Daerah [DAERAH], di dalam Negeri [NEGERI], telah didapati melakukan kesalahan di bawah Seksyen 27 [AKTA_852]; dan oleh yang demikian kamu boleh dihukum di bawah peruntukan penalti akta yang sama.",
-    "source_section_doc_ids": [
-      "AKTA_852__S27"
-    ],
-    "verified_status": "DRAFT_PENDING_REVIEW"
-  },
-  {
-    "offence_id": "AKTA_852_31",
-    "statute_id": "AKTA_852",
-    "offence_section": "Seksyen 31",
-    "read_together_with": [
-      "seksyen 17",
-      "subseksyen (2)"
-    ],
-    "offence_title": "Kuasa untuk memberhentikan, menggeledah dan menyita pengangkut",
-    "target_offender": "INDIVIDU",
-    "mandatory_elements": [
-      {
-        "element_no": 1,
-        "description": "Pematuhan intipati perbuatan di bawah Seksyen 31 (Kuasa untuk memberhentikan, menggeledah dan menyita pengangkut).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
-      }
-    ],
-    "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Seksyen 31 dipenuhi sebelum mengeluarkan notis atau membuka IP."
-    ],
-    "penalty_section": "Seksyen 31",
-    "penalty_first_offence": {
-      "max_fine_rm": 10000,
-      "max_jail_months": 12,
-      "other_orders": null,
-      "verbatim_penalty": "Kuasa untuk memberhentikan, menggeledah dan menyita\npengangkut\n31.\t (1)\t Sekiranya seseorang pegawai diberi kuasa mempunyai\nsebab yang munasabah untuk mengesyaki bahawa mana-mana\npengangkut sedang membawa apa-apa produk tembakau, bahan\nmerokok, produk pengganti tembakau, jentera,"
-    },
-    "penalty_subsequent_offence": null,
-    "compound_info": {
-      "is_compoundable": false,
-      "compound_authority_section": null,
-      "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Semak jadual kompaun / Buka IP",
-      "max_compound_rm": null,
-      "payment_days": 30,
-      "notice_section": null
-    },
-    "special_legal_requirements": [
-      "Sijil Seksyen 90A(2) Akta Keterangan 1950"
-    ],
-    "mandatory_exhibits": [
-      "Gambar foto lokasi/kejadian berwarna bertarikh + Sijil Seksyen 90A(2)",
-      "Diari Siasatan (S.119 KTJ) & Rakaman Percakapan S.112 KTJ"
-    ],
-    "charge_sheet_template_bm": "Bahawa kamu, pada [TARIKH], jam lebih kurang [MASA], bertempat di [TEMPAT_KEJADIAN], di dalam Daerah [DAERAH], di dalam Negeri [NEGERI], telah didapati melakukan kesalahan di bawah Seksyen 31 [AKTA_852]; dan oleh yang demikian kamu boleh dihukum di bawah peruntukan penalti akta yang sama.",
-    "source_section_doc_ids": [
-      "AKTA_852__S31"
-    ],
-    "verified_status": "DRAFT_PENDING_REVIEW"
-  },
-  {
-    "offence_id": "AKTA_852_32",
-    "statute_id": "AKTA_852",
-    "offence_section": "Seksyen 32",
-    "read_together_with": [
-      "subseksyen (1)",
-      "subseksyen (6)"
-    ],
-    "offence_title": "Penggeledahan dan penyitaan dengan waran",
-    "target_offender": "INDIVIDU",
-    "mandatory_elements": [
-      {
-        "element_no": 1,
-        "description": "Pematuhan intipati perbuatan di bawah Seksyen 32 (Penggeledahan dan penyitaan dengan waran).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
-      }
-    ],
-    "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Seksyen 32 dipenuhi sebelum mengeluarkan notis atau membuka IP."
-    ],
-    "penalty_section": "Seksyen 32",
-    "penalty_first_offence": {
-      "max_fine_rm": 10000,
-      "max_jail_months": 12,
-      "other_orders": null,
-      "verbatim_penalty": "Penggeledahan dan penyitaan dengan waran\n32.\t (1)\t Jika seseorang Majistret mendapati, berdasarkan maklumat\nbertulis dengan bersumpah daripada pegawai diberi kuasa dan\nselepas apa-apa siasatan sebagaimana yang difikirkannya perlu,\nbahawa terdapat sebab yang munasabah untuk memper"
-    },
-    "penalty_subsequent_offence": null,
-    "compound_info": {
-      "is_compoundable": false,
-      "compound_authority_section": null,
-      "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Semak jadual kompaun / Buka IP",
-      "max_compound_rm": null,
-      "payment_days": 30,
-      "notice_section": null
-    },
-    "special_legal_requirements": [
-      "Sijil Seksyen 90A(2) Akta Keterangan 1950"
-    ],
-    "mandatory_exhibits": [
-      "Gambar foto lokasi/kejadian berwarna bertarikh + Sijil Seksyen 90A(2)",
-      "Diari Siasatan (S.119 KTJ) & Rakaman Percakapan S.112 KTJ"
-    ],
-    "charge_sheet_template_bm": "Bahawa kamu, pada [TARIKH], jam lebih kurang [MASA], bertempat di [TEMPAT_KEJADIAN], di dalam Daerah [DAERAH], di dalam Negeri [NEGERI], telah didapati melakukan kesalahan di bawah Seksyen 32 [AKTA_852]; dan oleh yang demikian kamu boleh dihukum di bawah peruntukan penalti akta yang sama.",
-    "source_section_doc_ids": [
-      "AKTA_852__S32"
-    ],
-    "verified_status": "DRAFT_PENDING_REVIEW"
-  },
-  {
-    "offence_id": "AKTA_852_45",
-    "statute_id": "AKTA_852",
-    "offence_section": "Seksyen 45",
-    "read_together_with": [],
-    "offence_title": "Keterangan ejen provokasi boleh diterima",
-    "target_offender": "INDIVIDU",
-    "mandatory_elements": [
-      {
-        "element_no": 1,
-        "description": "Pematuhan intipati perbuatan di bawah Seksyen 45 (Keterangan ejen provokasi boleh diterima).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
-      }
-    ],
-    "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Seksyen 45 dipenuhi sebelum mengeluarkan notis atau membuka IP."
-    ],
-    "penalty_section": "Seksyen 45",
-    "penalty_first_offence": {
-      "max_fine_rm": null,
-      "max_jail_months": null,
-      "other_orders": null,
-      "verbatim_penalty": "Keterangan ejen provokasi boleh diterima\n45.\t (1)\t Walau apa pun mana-mana rukun undang-undang atau\nperuntukan Akta ini atau mana-mana undang-undang bertulis lain\nyang berlawanan, tiada ejen provokasi boleh dianggap tidak boleh\ndipercayai hanya oleh sebab dia telah cuba bersubaha"
-    },
-    "penalty_subsequent_offence": null,
-    "compound_info": {
-      "is_compoundable": false,
-      "compound_authority_section": null,
-      "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Semak jadual kompaun / Buka IP",
-      "max_compound_rm": null,
-      "payment_days": 30,
-      "notice_section": null
-    },
-    "special_legal_requirements": [
-      "Sijil Seksyen 90A(2) Akta Keterangan 1950"
-    ],
-    "mandatory_exhibits": [
-      "Gambar foto lokasi/kejadian berwarna bertarikh + Sijil Seksyen 90A(2)",
-      "Diari Siasatan (S.119 KTJ) & Rakaman Percakapan S.112 KTJ"
-    ],
-    "charge_sheet_template_bm": "Bahawa kamu, pada [TARIKH], jam lebih kurang [MASA], bertempat di [TEMPAT_KEJADIAN], di dalam Daerah [DAERAH], di dalam Negeri [NEGERI], telah didapati melakukan kesalahan di bawah Seksyen 45 [AKTA_852]; dan oleh yang demikian kamu boleh dihukum di bawah peruntukan penalti akta yang sama.",
-    "source_section_doc_ids": [
-      "AKTA_852__S45"
-    ],
-    "verified_status": "DRAFT_PENDING_REVIEW"
-  },
-  {
-    "offence_id": "AKTA_852_47",
-    "statute_id": "AKTA_852",
-    "offence_section": "Seksyen 47",
-    "read_together_with": [
-      "subseksyen (1)"
-    ],
-    "offence_title": "Kuasa untuk memerintahkan kehadiran ke mahkamah",
-    "target_offender": "INDIVIDU",
-    "mandatory_elements": [
-      {
-        "element_no": 1,
-        "description": "Pematuhan intipati perbuatan di bawah Seksyen 47 (Kuasa untuk memerintahkan kehadiran ke mahkamah).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
-      }
-    ],
-    "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Seksyen 47 dipenuhi sebelum mengeluarkan notis atau membuka IP."
-    ],
-    "penalty_section": "Seksyen 47",
-    "penalty_first_offence": {
-      "max_fine_rm": null,
-      "max_jail_months": null,
-      "other_orders": null,
-      "verbatim_penalty": "Kuasa untuk memerintahkan kehadiran ke mahkamah\n47.\t (1)\t Jika Ketua Pengarah atau mana-mana pegawai diberi kuasa\nmempunyai alasan yang munasabah untuk mempercayai bahawa\nmana-mana orang telah melakukan suatu kesalahan di bawah\nAkta ini, dia boleh, sebagai ganti membuat permohona"
-    },
-    "penalty_subsequent_offence": null,
-    "compound_info": {
-      "is_compoundable": false,
-      "compound_authority_section": null,
-      "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Semak jadual kompaun / Buka IP",
-      "max_compound_rm": null,
-      "payment_days": 30,
-      "notice_section": null
-    },
-    "special_legal_requirements": [
-      "Sijil Seksyen 90A(2) Akta Keterangan 1950"
-    ],
-    "mandatory_exhibits": [
-      "Gambar foto lokasi/kejadian berwarna bertarikh + Sijil Seksyen 90A(2)",
-      "Diari Siasatan (S.119 KTJ) & Rakaman Percakapan S.112 KTJ"
-    ],
-    "charge_sheet_template_bm": "Bahawa kamu, pada [TARIKH], jam lebih kurang [MASA], bertempat di [TEMPAT_KEJADIAN], di dalam Daerah [DAERAH], di dalam Negeri [NEGERI], telah didapati melakukan kesalahan di bawah Seksyen 47 [AKTA_852]; dan oleh yang demikian kamu boleh dihukum di bawah peruntukan penalti akta yang sama.",
-    "source_section_doc_ids": [
-      "AKTA_852__S47"
-    ],
-    "verified_status": "DRAFT_PENDING_REVIEW"
-  },
-  {
-    "offence_id": "AKTA_852_48",
-    "statute_id": "AKTA_852",
-    "offence_section": "Seksyen 48",
-    "read_together_with": [
-      "subseksyen (2)"
-    ],
-    "offence_title": "AM Pengkompaunan kesalahan",
-    "target_offender": "INDIVIDU",
-    "mandatory_elements": [
-      {
-        "element_no": 1,
-        "description": "Pematuhan intipati perbuatan di bawah Seksyen 48 (AM Pengkompaunan kesalahan).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
-      }
-    ],
-    "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Seksyen 48 dipenuhi sebelum mengeluarkan notis atau membuka IP."
-    ],
-    "penalty_section": "Seksyen 48",
-    "penalty_first_offence": {
-      "max_fine_rm": null,
-      "max_jail_months": null,
-      "other_orders": null,
-      "verbatim_penalty": "AM\nPengkompaunan kesalahan\n48.\t (1)\t Menteri boleh, dengan kelulusan Pendakwa Raya, membuat\nperaturan-peraturan yang menetapkan—\n\n(a)\t apa-apa kesalahan di bawah Akta ini atau mana-mana\nperaturan-peraturan yang dibuat di bawah Akta ini sebagai\nsuatu kesalahan yang boleh dikompaun"
-    },
-    "penalty_subsequent_offence": null,
-    "compound_info": {
-      "is_compoundable": true,
-      "compound_authority_section": null,
-      "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun",
-      "max_compound_rm": null,
-      "payment_days": 30,
-      "notice_section": null
-    },
-    "special_legal_requirements": [
-      "Sijil Seksyen 90A(2) Akta Keterangan 1950"
-    ],
-    "mandatory_exhibits": [
-      "Gambar foto lokasi/kejadian berwarna bertarikh + Sijil Seksyen 90A(2)",
-      "Diari Siasatan (S.119 KTJ) & Rakaman Percakapan S.112 KTJ"
-    ],
-    "charge_sheet_template_bm": "Bahawa kamu, pada [TARIKH], jam lebih kurang [MASA], bertempat di [TEMPAT_KEJADIAN], di dalam Daerah [DAERAH], di dalam Negeri [NEGERI], telah didapati melakukan kesalahan di bawah Seksyen 48 [AKTA_852]; dan oleh yang demikian kamu boleh dihukum di bawah peruntukan penalti akta yang sama.",
-    "source_section_doc_ids": [
-      "AKTA_852__S48"
-    ],
-    "verified_status": "DRAFT_PENDING_REVIEW"
-  },
-  {
-    "offence_id": "AKTA_852_49",
-    "statute_id": "AKTA_852",
-    "offence_section": "Seksyen 49",
-    "read_together_with": [],
-    "offence_title": "Kesalahan oleh pertubuhan perbadanan",
-    "target_offender": "PERTUBUHAN_PERBADANAN",
-    "mandatory_elements": [
-      {
-        "element_no": 1,
-        "description": "Pematuhan intipati perbuatan di bawah Seksyen 49 (Kesalahan oleh pertubuhan perbadanan).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
-      }
-    ],
-    "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Seksyen 49 dipenuhi sebelum mengeluarkan notis atau membuka IP."
-    ],
-    "penalty_section": "Seksyen 49",
-    "penalty_first_offence": {
-      "max_fine_rm": null,
-      "max_jail_months": null,
-      "other_orders": null,
-      "verbatim_penalty": "Kesalahan oleh pertubuhan perbadanan\n49.\t (1)\t Jika mana-mana pertubuhan perbadanan melakukan suatu\nkesalahan di bawah Akta ini, orang yang semasa melakukan kesalahan\nitu ialah seorang pengarah, pegawai pematuhan, pekongsi, pengurus,\nsetiausaha atau pegawai lain yang seumpamanya "
-    },
-    "penalty_subsequent_offence": null,
-    "compound_info": {
-      "is_compoundable": false,
-      "compound_authority_section": null,
-      "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Semak jadual kompaun / Buka IP",
-      "max_compound_rm": null,
-      "payment_days": 30,
-      "notice_section": null
-    },
-    "special_legal_requirements": [
-      "Sijil Seksyen 90A(2) Akta Keterangan 1950"
-    ],
-    "mandatory_exhibits": [
-      "Gambar foto lokasi/kejadian berwarna bertarikh + Sijil Seksyen 90A(2)",
-      "Diari Siasatan (S.119 KTJ) & Rakaman Percakapan S.112 KTJ"
-    ],
-    "charge_sheet_template_bm": "Bahawa kamu, pada [TARIKH], jam lebih kurang [MASA], bertempat di [TEMPAT_KEJADIAN], di dalam Daerah [DAERAH], di dalam Negeri [NEGERI], telah didapati melakukan kesalahan di bawah Seksyen 49 [AKTA_852]; dan oleh yang demikian kamu boleh dihukum di bawah peruntukan penalti akta yang sama.",
-    "source_section_doc_ids": [
-      "AKTA_852__S49"
-    ],
-    "verified_status": "DRAFT_PENDING_REVIEW"
-  },
-  {
     "offence_id": "AKTA_852_PERATURAN_JUALAN_2024_PERATURAN_4",
     "statute_id": "AKTA_852_PERATURAN_JUALAN_2024",
     "offence_section": "Peraturan 4",
@@ -2240,11 +1964,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Peraturan 4 (Peraturan 4).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Peraturan 4 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Peraturan 4 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Peraturan 4",
     "penalty_first_offence": {
@@ -2255,12 +1979,12 @@
     },
     "penalty_subsequent_offence": null,
     "compound_info": {
-      "is_compoundable": true,
+      "is_compoundable": false,
       "compound_authority_section": null,
       "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun",
+      "compound_amount_or_limit": "TIDAK BOLEH KOMPAUN — Sita (jika berkenaan) & Buka IP Terus",
       "max_compound_rm": null,
-      "payment_days": 30,
+      "payment_days": null,
       "notice_section": null
     },
     "special_legal_requirements": [
@@ -2287,11 +2011,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Peraturan 5 (Syarat penjualan produk merokok).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Peraturan 5 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Peraturan 5 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Peraturan 5",
     "penalty_first_offence": {
@@ -2302,12 +2026,12 @@
     },
     "penalty_subsequent_offence": null,
     "compound_info": {
-      "is_compoundable": true,
+      "is_compoundable": false,
       "compound_authority_section": null,
       "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun",
+      "compound_amount_or_limit": "TIDAK BOLEH KOMPAUN — Sita (jika berkenaan) & Buka IP Terus",
       "max_compound_rm": null,
-      "payment_days": 30,
+      "payment_days": null,
       "notice_section": null
     },
     "special_legal_requirements": [
@@ -2334,11 +2058,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Peraturan 6 (Peraturan 6).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Peraturan 6 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Peraturan 6 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Peraturan 6",
     "penalty_first_offence": {
@@ -2349,12 +2073,12 @@
     },
     "penalty_subsequent_offence": null,
     "compound_info": {
-      "is_compoundable": true,
+      "is_compoundable": false,
       "compound_authority_section": null,
       "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun",
+      "compound_amount_or_limit": "TIDAK BOLEH KOMPAUN — Sita (jika berkenaan) & Buka IP Terus",
       "max_compound_rm": null,
-      "payment_days": 30,
+      "payment_days": null,
       "notice_section": null
     },
     "special_legal_requirements": [
@@ -2383,11 +2107,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Peraturan 7 (Pameran tanda amaran di kaunter jualan).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Peraturan 7 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Peraturan 7 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Peraturan 7",
     "penalty_first_offence": {
@@ -2398,12 +2122,12 @@
     },
     "penalty_subsequent_offence": null,
     "compound_info": {
-      "is_compoundable": true,
+      "is_compoundable": false,
       "compound_authority_section": null,
       "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun",
+      "compound_amount_or_limit": "TIDAK BOLEH KOMPAUN — Sita (jika berkenaan) & Buka IP Terus",
       "max_compound_rm": null,
-      "payment_days": 30,
+      "payment_days": null,
       "notice_section": null
     },
     "special_legal_requirements": [
@@ -2430,11 +2154,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Peraturan 8 (Peraturan 8).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Peraturan 8 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Peraturan 8 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Peraturan 8",
     "penalty_first_offence": {
@@ -2445,12 +2169,12 @@
     },
     "penalty_subsequent_offence": null,
     "compound_info": {
-      "is_compoundable": true,
+      "is_compoundable": false,
       "compound_authority_section": null,
       "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun",
+      "compound_amount_or_limit": "TIDAK BOLEH KOMPAUN — Sita (jika berkenaan) & Buka IP Terus",
       "max_compound_rm": null,
-      "payment_days": 30,
+      "payment_days": null,
       "notice_section": null
     },
     "special_legal_requirements": [
@@ -2477,11 +2201,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Peraturan 9 (Peraturan 9).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Peraturan 9 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Peraturan 9 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Peraturan 9",
     "penalty_first_offence": {
@@ -2492,12 +2216,12 @@
     },
     "penalty_subsequent_offence": null,
     "compound_info": {
-      "is_compoundable": true,
+      "is_compoundable": false,
       "compound_authority_section": null,
       "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun",
+      "compound_amount_or_limit": "TIDAK BOLEH KOMPAUN — Sita (jika berkenaan) & Buka IP Terus",
       "max_compound_rm": null,
-      "payment_days": 30,
+      "payment_days": null,
       "notice_section": null
     },
     "special_legal_requirements": [
@@ -2527,11 +2251,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Peraturan 2 (Tanggungjawab mempamerkan tanda amaran larangan merokok).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Peraturan 2 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Peraturan 2 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Peraturan 2",
     "penalty_first_offence": {
@@ -2542,12 +2266,12 @@
     },
     "penalty_subsequent_offence": null,
     "compound_info": {
-      "is_compoundable": true,
+      "is_compoundable": false,
       "compound_authority_section": null,
       "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun",
+      "compound_amount_or_limit": "TIDAK BOLEH KOMPAUN — Sita (jika berkenaan) & Buka IP Terus",
       "max_compound_rm": null,
-      "payment_days": 30,
+      "payment_days": null,
       "notice_section": null
     },
     "special_legal_requirements": [
@@ -2574,11 +2298,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Peraturan 3 (Tanda pengenalan).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Peraturan 3 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Peraturan 3 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Peraturan 3",
     "penalty_first_offence": {
@@ -2592,9 +2316,9 @@
       "is_compoundable": false,
       "compound_authority_section": null,
       "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Semak jadual kompaun / Buka IP",
+      "compound_amount_or_limit": "TIDAK BOLEH KOMPAUN — Sita (jika berkenaan) & Buka IP Terus",
       "max_compound_rm": null,
-      "payment_days": 30,
+      "payment_days": null,
       "notice_section": null
     },
     "special_legal_requirements": [
@@ -2623,11 +2347,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Peraturan 4 (Rokok).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Peraturan 4 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Peraturan 4 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Peraturan 4",
     "penalty_first_offence": {
@@ -2641,9 +2365,9 @@
       "is_compoundable": false,
       "compound_authority_section": null,
       "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Semak jadual kompaun / Buka IP",
+      "compound_amount_or_limit": "TIDAK BOLEH KOMPAUN — Sita (jika berkenaan) & Buka IP Terus",
       "max_compound_rm": null,
-      "payment_days": 30,
+      "payment_days": null,
       "notice_section": null
     },
     "special_legal_requirements": [
@@ -2672,11 +2396,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Peraturan 5 (Tembakau lerai dan tembakau tanpa asap).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Peraturan 5 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Peraturan 5 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Peraturan 5",
     "penalty_first_offence": {
@@ -2690,9 +2414,9 @@
       "is_compoundable": false,
       "compound_authority_section": null,
       "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Semak jadual kompaun / Buka IP",
+      "compound_amount_or_limit": "TIDAK BOLEH KOMPAUN — Sita (jika berkenaan) & Buka IP Terus",
       "max_compound_rm": null,
-      "payment_days": 30,
+      "payment_days": null,
       "notice_section": null
     },
     "special_legal_requirements": [
@@ -2721,11 +2445,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Peraturan 6 (Cerut).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Peraturan 6 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Peraturan 6 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Peraturan 6",
     "penalty_first_offence": {
@@ -2739,9 +2463,9 @@
       "is_compoundable": false,
       "compound_authority_section": null,
       "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Semak jadual kompaun / Buka IP",
+      "compound_amount_or_limit": "TIDAK BOLEH KOMPAUN — Sita (jika berkenaan) & Buka IP Terus",
       "max_compound_rm": null,
-      "payment_days": 30,
+      "payment_days": null,
       "notice_section": null
     },
     "special_legal_requirements": [
@@ -2770,11 +2494,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Peraturan 7 (Produk yang dipanaskan).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Peraturan 7 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Peraturan 7 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Peraturan 7",
     "penalty_first_offence": {
@@ -2788,9 +2512,9 @@
       "is_compoundable": false,
       "compound_authority_section": null,
       "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Semak jadual kompaun / Buka IP",
+      "compound_amount_or_limit": "TIDAK BOLEH KOMPAUN — Sita (jika berkenaan) & Buka IP Terus",
       "max_compound_rm": null,
-      "payment_days": 30,
+      "payment_days": null,
       "notice_section": null
     },
     "special_legal_requirements": [
@@ -2819,11 +2543,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Peraturan 8 (Bahan merokok).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Peraturan 8 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Peraturan 8 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Peraturan 8",
     "penalty_first_offence": {
@@ -2837,9 +2561,9 @@
       "is_compoundable": false,
       "compound_authority_section": null,
       "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Semak jadual kompaun / Buka IP",
+      "compound_amount_or_limit": "TIDAK BOLEH KOMPAUN — Sita (jika berkenaan) & Buka IP Terus",
       "max_compound_rm": null,
-      "payment_days": 30,
+      "payment_days": null,
       "notice_section": null
     },
     "special_legal_requirements": [
@@ -2866,11 +2590,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Peraturan 10 (Peleraian imej amaran kesihatan).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Peraturan 10 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Peraturan 10 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Peraturan 10",
     "penalty_first_offence": {
@@ -2884,9 +2608,9 @@
       "is_compoundable": false,
       "compound_authority_section": null,
       "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Semak jadual kompaun / Buka IP",
+      "compound_amount_or_limit": "TIDAK BOLEH KOMPAUN — Sita (jika berkenaan) & Buka IP Terus",
       "max_compound_rm": null,
-      "payment_days": 30,
+      "payment_days": null,
       "notice_section": null
     },
     "special_legal_requirements": [
@@ -2913,11 +2637,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Peraturan 12 (Amaran dan maklumat kesihatan tidak boleh dihalang).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Peraturan 12 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Peraturan 12 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Peraturan 12",
     "penalty_first_offence": {
@@ -2931,9 +2655,9 @@
       "is_compoundable": false,
       "compound_authority_section": null,
       "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Semak jadual kompaun / Buka IP",
+      "compound_amount_or_limit": "TIDAK BOLEH KOMPAUN — Sita (jika berkenaan) & Buka IP Terus",
       "max_compound_rm": null,
-      "payment_days": 30,
+      "payment_days": null,
       "notice_section": null
     },
     "special_legal_requirements": [
@@ -2960,11 +2684,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Peraturan 13 (Perkara yang dilarang pada pembungkusan dan pelabelan).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Peraturan 13 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Peraturan 13 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Peraturan 13",
     "penalty_first_offence": {
@@ -2978,9 +2702,9 @@
       "is_compoundable": false,
       "compound_authority_section": null,
       "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Semak jadual kompaun / Buka IP",
+      "compound_amount_or_limit": "TIDAK BOLEH KOMPAUN — Sita (jika berkenaan) & Buka IP Terus",
       "max_compound_rm": null,
-      "payment_days": 30,
+      "payment_days": null,
       "notice_section": null
     },
     "special_legal_requirements": [
@@ -3007,11 +2731,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Peraturan 7 (Pendaftaran tidak boleh dipindahkan).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Peraturan 7 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Peraturan 7 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Peraturan 7",
     "penalty_first_offence": {
@@ -3025,9 +2749,9 @@
       "is_compoundable": false,
       "compound_authority_section": null,
       "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Semak jadual kompaun / Buka IP",
+      "compound_amount_or_limit": "TIDAK BOLEH KOMPAUN — Sita (jika berkenaan) & Buka IP Terus",
       "max_compound_rm": null,
-      "payment_days": 30,
+      "payment_days": null,
       "notice_section": null
     },
     "special_legal_requirements": [
@@ -3044,299 +2768,6 @@
     "verified_status": "DRAFT_PENDING_REVIEW"
   },
   {
-    "offence_id": "AKTA_852_PERATURAN_KOMPAUN_2024_PERATURAN_3",
-    "statute_id": "AKTA_852_PERATURAN_KOMPAUN_2024",
-    "offence_section": "Peraturan 3",
-    "read_together_with": [
-      "peraturan 2(2)",
-      "Jadual Kedua"
-    ],
-    "offence_title": "Tatacara mengkompaun",
-    "target_offender": "INDIVIDU",
-    "mandatory_elements": [
-      {
-        "element_no": 1,
-        "description": "Pematuhan intipati perbuatan di bawah Peraturan 3 (Tatacara mengkompaun).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
-      }
-    ],
-    "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Peraturan 3 dipenuhi sebelum mengeluarkan notis atau membuka IP."
-    ],
-    "penalty_section": "Peraturan 3",
-    "penalty_first_offence": {
-      "max_fine_rm": null,
-      "max_jail_months": null,
-      "other_orders": null,
-      "verbatim_penalty": "Tatacara mengkompaun\n3.\n(1)\nApabila\nmenerima\napa-apa\nmaklumat\natau\naduan\nbahawa\nsuatu kesalahan yang boleh dikompaun telah dilakukan, Ketua Pengarah atau\nmana-mana pegawai diberi kuasa oleh Ketua Pengarah boleh, dengan keizinan bertulis\nPendakwa Raya yang disebut dalam subperatur"
-    },
-    "penalty_subsequent_offence": null,
-    "compound_info": {
-      "is_compoundable": true,
-      "compound_authority_section": null,
-      "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun",
-      "max_compound_rm": null,
-      "payment_days": 30,
-      "notice_section": null
-    },
-    "special_legal_requirements": [
-      "Sijil Seksyen 90A(2) Akta Keterangan 1950"
-    ],
-    "mandatory_exhibits": [
-      "Gambar foto lokasi/kejadian berwarna bertarikh + Sijil Seksyen 90A(2)",
-      "Diari Siasatan (S.119 KTJ) & Rakaman Percakapan S.112 KTJ"
-    ],
-    "charge_sheet_template_bm": "Bahawa kamu, pada [TARIKH], jam lebih kurang [MASA], bertempat di [TEMPAT_KEJADIAN], di dalam Daerah [DAERAH], di dalam Negeri [NEGERI], telah didapati melakukan kesalahan di bawah Peraturan 3 [AKTA_852_PERATURAN_KOMPAUN_2024]; dan oleh yang demikian kamu boleh dihukum di bawah peruntukan penalti akta yang sama.",
-    "source_section_doc_ids": [
-      "AKTA_852_PERATURAN_KOMPAUN_2024__P3"
-    ],
-    "verified_status": "DRAFT_PENDING_REVIEW"
-  },
-  {
-    "offence_id": "AKTA_281_4",
-    "statute_id": "AKTA_281",
-    "offence_section": "Seksyen 4",
-    "read_together_with": [
-      "subseksyen (1)",
-      "Akta 593",
-      "Akta A1117"
-    ],
-    "offence_title": "Kuasa pegawai diberi kuasa",
-    "target_offender": "INDIVIDU",
-    "mandatory_elements": [
-      {
-        "element_no": 1,
-        "description": "Pematuhan intipati perbuatan di bawah Seksyen 4 (Kuasa pegawai diberi kuasa).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
-      }
-    ],
-    "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Seksyen 4 dipenuhi sebelum mengeluarkan notis atau membuka IP."
-    ],
-    "penalty_section": "Seksyen 4",
-    "penalty_first_offence": {
-      "max_fine_rm": null,
-      "max_jail_months": 12,
-      "other_orders": null,
-      "verbatim_penalty": "Kuasa pegawai diberi kuasa\n4.  (1)  Seseorang pegawai diberi kuasa boleh pada bila-bila masa bagi\nmelaksananakan dengan wajar dan lebih baik kewajipannya—\n\n(a) memasuki mana-mana premis yang dipercayainya menjadi premis\nmakanan dan memeriksa apa-apa makanan yang didapati di\ndalam"
-    },
-    "penalty_subsequent_offence": null,
-    "compound_info": {
-      "is_compoundable": false,
-      "compound_authority_section": null,
-      "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Semak jadual kompaun / Buka IP",
-      "max_compound_rm": null,
-      "payment_days": 14,
-      "notice_section": null
-    },
-    "special_legal_requirements": [
-      "Sijil Seksyen 90A(2) Akta Keterangan 1950"
-    ],
-    "mandatory_exhibits": [
-      "Gambar foto lokasi/kejadian berwarna bertarikh + Sijil Seksyen 90A(2)",
-      "Diari Siasatan (S.119 KTJ) & Rakaman Percakapan S.112 KTJ"
-    ],
-    "charge_sheet_template_bm": "Bahawa kamu, pada [TARIKH], jam lebih kurang [MASA], bertempat di [TEMPAT_KEJADIAN], di dalam Daerah [DAERAH], di dalam Negeri [NEGERI], telah didapati melakukan kesalahan di bawah Seksyen 4 [AKTA_281]; dan oleh yang demikian kamu boleh dihukum di bawah peruntukan penalti akta yang sama.",
-    "source_section_doc_ids": [
-      "AKTA_281__S4"
-    ],
-    "verified_status": "DRAFT_PENDING_REVIEW"
-  },
-  {
-    "offence_id": "AKTA_281_5",
-    "statute_id": "AKTA_281",
-    "offence_section": "Seksyen 5",
-    "read_together_with": [],
-    "offence_title": "Kuasa mengambil sampel",
-    "target_offender": "INDIVIDU",
-    "mandatory_elements": [
-      {
-        "element_no": 1,
-        "description": "Pematuhan intipati perbuatan di bawah Seksyen 5 (Kuasa mengambil sampel).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
-      }
-    ],
-    "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Seksyen 5 dipenuhi sebelum mengeluarkan notis atau membuka IP."
-    ],
-    "penalty_section": "Seksyen 5",
-    "penalty_first_offence": {
-      "max_fine_rm": null,
-      "max_jail_months": 12,
-      "other_orders": null,
-      "verbatim_penalty": "Kuasa mengambil sampel\n5.  (1)  Apabila dibayar atau diberi kepada mana-mana orang yang menjual\nmakanan atau kepada ejen atau pekhidmatnya akan nilai pasaran semasa bagi\nmakanan itu, mana-mana pegawai berkuasa boleh di mana-mana tempat\nmeminta dan memilih serta mengambil atau men"
-    },
-    "penalty_subsequent_offence": null,
-    "compound_info": {
-      "is_compoundable": false,
-      "compound_authority_section": null,
-      "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Semak jadual kompaun / Buka IP",
-      "max_compound_rm": null,
-      "payment_days": 14,
-      "notice_section": null
-    },
-    "special_legal_requirements": [
-      "Sijil Seksyen 90A(2) Akta Keterangan 1950"
-    ],
-    "mandatory_exhibits": [
-      "Gambar foto lokasi/kejadian berwarna bertarikh + Sijil Seksyen 90A(2)",
-      "Diari Siasatan (S.119 KTJ) & Rakaman Percakapan S.112 KTJ"
-    ],
-    "charge_sheet_template_bm": "Bahawa kamu, pada [TARIKH], jam lebih kurang [MASA], bertempat di [TEMPAT_KEJADIAN], di dalam Daerah [DAERAH], di dalam Negeri [NEGERI], telah didapati melakukan kesalahan di bawah Seksyen 5 [AKTA_281]; dan oleh yang demikian kamu boleh dihukum di bawah peruntukan penalti akta yang sama.",
-    "source_section_doc_ids": [
-      "AKTA_281__S5"
-    ],
-    "verified_status": "DRAFT_PENDING_REVIEW"
-  },
-  {
-    "offence_id": "AKTA_281_7",
-    "statute_id": "AKTA_281",
-    "offence_section": "Seksyen 7",
-    "read_together_with": [],
-    "offence_title": "Perakuan juruanalisis",
-    "target_offender": "INDIVIDU",
-    "mandatory_elements": [
-      {
-        "element_no": 1,
-        "description": "Pematuhan intipati perbuatan di bawah Seksyen 7 (Perakuan juruanalisis).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
-      }
-    ],
-    "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Seksyen 7 dipenuhi sebelum mengeluarkan notis atau membuka IP."
-    ],
-    "penalty_section": "Seksyen 7",
-    "penalty_first_offence": {
-      "max_fine_rm": null,
-      "max_jail_months": 12,
-      "other_orders": null,
-      "verbatim_penalty": "Perakuan juruanalisis\n7.  (1)  Perakuan juruanalisis hendaklah mengikut borang yang ditetapkan\nmelalui peraturan-peraturan.\n\n(2)  Jika\napa-apa\nkaedah\nanalisis\ntelah\nditetapkan\nmelalui\nperaturan-peraturan bagi menganalisis apa-apa makanan maka juruanalisis\nhendaklah mengikuti kaed"
-    },
-    "penalty_subsequent_offence": null,
-    "compound_info": {
-      "is_compoundable": false,
-      "compound_authority_section": null,
-      "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Semak jadual kompaun / Buka IP",
-      "max_compound_rm": null,
-      "payment_days": 14,
-      "notice_section": null
-    },
-    "special_legal_requirements": [
-      "Sijil Seksyen 90A(2) Akta Keterangan 1950"
-    ],
-    "mandatory_exhibits": [
-      "Gambar foto lokasi/kejadian berwarna bertarikh + Sijil Seksyen 90A(2)",
-      "Diari Siasatan (S.119 KTJ) & Rakaman Percakapan S.112 KTJ"
-    ],
-    "charge_sheet_template_bm": "Bahawa kamu, pada [TARIKH], jam lebih kurang [MASA], bertempat di [TEMPAT_KEJADIAN], di dalam Daerah [DAERAH], di dalam Negeri [NEGERI], telah didapati melakukan kesalahan di bawah Seksyen 7 [AKTA_281]; dan oleh yang demikian kamu boleh dihukum di bawah peruntukan penalti akta yang sama.",
-    "source_section_doc_ids": [
-      "AKTA_281__S7"
-    ],
-    "verified_status": "DRAFT_PENDING_REVIEW"
-  },
-  {
-    "offence_id": "AKTA_281_8",
-    "statute_id": "AKTA_281",
-    "offence_section": "Seksyen 8",
-    "read_together_with": [
-      "subseksyen (1)"
-    ],
-    "offence_title": "Kuasa meminta maklumat",
-    "target_offender": "INDIVIDU",
-    "mandatory_elements": [
-      {
-        "element_no": 1,
-        "description": "Pematuhan intipati perbuatan di bawah Seksyen 8 (Kuasa meminta maklumat).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
-      }
-    ],
-    "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Seksyen 8 dipenuhi sebelum mengeluarkan notis atau membuka IP."
-    ],
-    "penalty_section": "Seksyen 8",
-    "penalty_first_offence": {
-      "max_fine_rm": null,
-      "max_jail_months": 36,
-      "other_orders": null,
-      "verbatim_penalty": "Kuasa meminta maklumat\n8.  (1)\nJika mana-mana pegawai diberi kuasa berpendapat bahawa ada\nalasan yang munasabah bagi mengesyaki bahawa mana-mana orang ada\nmemiliki apa-apa makanan atau lain-lain bahan atau apa-apa perkakas bagi\nmaksud  atau ada kaitan dengan penyediaan, pengaweta"
-    },
-    "penalty_subsequent_offence": null,
-    "compound_info": {
-      "is_compoundable": false,
-      "compound_authority_section": null,
-      "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Semak jadual kompaun / Buka IP",
-      "max_compound_rm": null,
-      "payment_days": 14,
-      "notice_section": null
-    },
-    "special_legal_requirements": [
-      "Sijil Seksyen 90A(2) Akta Keterangan 1950"
-    ],
-    "mandatory_exhibits": [
-      "Gambar foto lokasi/kejadian berwarna bertarikh + Sijil Seksyen 90A(2)",
-      "Diari Siasatan (S.119 KTJ) & Rakaman Percakapan S.112 KTJ"
-    ],
-    "charge_sheet_template_bm": "Bahawa kamu, pada [TARIKH], jam lebih kurang [MASA], bertempat di [TEMPAT_KEJADIAN], di dalam Daerah [DAERAH], di dalam Negeri [NEGERI], telah didapati melakukan kesalahan di bawah Seksyen 8 [AKTA_281]; dan oleh yang demikian kamu boleh dihukum di bawah peruntukan penalti akta yang sama.",
-    "source_section_doc_ids": [
-      "AKTA_281__S8"
-    ],
-    "verified_status": "DRAFT_PENDING_REVIEW"
-  },
-  {
-    "offence_id": "AKTA_281_9",
-    "statute_id": "AKTA_281",
-    "offence_section": "Seksyen 9",
-    "read_together_with": [
-      "subseksyen (1)"
-    ],
-    "offence_title": "Kuasa Ketua Pengarah mendapatkan butir-butir mengenai ramuan makanan tertentu",
-    "target_offender": "INDIVIDU",
-    "mandatory_elements": [
-      {
-        "element_no": 1,
-        "description": "Pematuhan intipati perbuatan di bawah Seksyen 9 (Kuasa Ketua Pengarah mendapatkan butir-butir mengenai ramuan makanan tertentu).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
-      }
-    ],
-    "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Seksyen 9 dipenuhi sebelum mengeluarkan notis atau membuka IP."
-    ],
-    "penalty_section": "Seksyen 9",
-    "penalty_first_offence": {
-      "max_fine_rm": null,
-      "max_jail_months": 60,
-      "other_orders": null,
-      "verbatim_penalty": "Kuasa Ketua Pengarah mendapatkan butir-butir mengenai ramuan\nmakanan tertentu\n9.  (1)  Ketua Pengarah boleh setelah mendapat kelulusan secara bertulis\ndaripada Menteri mengarahkan mana-mana orang yang pada tarikh arahan\nitu atau pada bila-bila masa berikutnya menjalankan suatu pe"
-    },
-    "penalty_subsequent_offence": null,
-    "compound_info": {
-      "is_compoundable": false,
-      "compound_authority_section": null,
-      "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Semak jadual kompaun / Buka IP",
-      "max_compound_rm": null,
-      "payment_days": 14,
-      "notice_section": null
-    },
-    "special_legal_requirements": [
-      "Sijil Seksyen 90A(2) Akta Keterangan 1950"
-    ],
-    "mandatory_exhibits": [
-      "Gambar foto lokasi/kejadian berwarna bertarikh + Sijil Seksyen 90A(2)",
-      "Diari Siasatan (S.119 KTJ) & Rakaman Percakapan S.112 KTJ"
-    ],
-    "charge_sheet_template_bm": "Bahawa kamu, pada [TARIKH], jam lebih kurang [MASA], bertempat di [TEMPAT_KEJADIAN], di dalam Daerah [DAERAH], di dalam Negeri [NEGERI], telah didapati melakukan kesalahan di bawah Seksyen 9 [AKTA_281]; dan oleh yang demikian kamu boleh dihukum di bawah peruntukan penalti akta yang sama.",
-    "source_section_doc_ids": [
-      "AKTA_281__S9"
-    ],
-    "verified_status": "DRAFT_PENDING_REVIEW"
-  },
-  {
     "offence_id": "AKTA_281_10",
     "statute_id": "AKTA_281",
     "offence_section": "Seksyen 10",
@@ -3349,11 +2780,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Seksyen 10 (Pengarah boleh memerintahkan supaya premis makanan atau perkakas berada dalam keadaan bersih dan suci).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Seksyen 10 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Seksyen 10 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Seksyen 10",
     "penalty_first_offence": {
@@ -3367,9 +2798,9 @@
       "is_compoundable": false,
       "compound_authority_section": null,
       "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Semak jadual kompaun / Buka IP",
+      "compound_amount_or_limit": "TIDAK BOLEH KOMPAUN — Sita (jika berkenaan) & Buka IP Terus",
       "max_compound_rm": null,
-      "payment_days": 14,
+      "payment_days": null,
       "notice_section": null
     },
     "special_legal_requirements": [
@@ -3396,11 +2827,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Seksyen 13A (Makanan yang tidak sesuai untuk dimakan oleh manusia).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Seksyen 13A dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Seksyen 13A dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Seksyen 13A",
     "penalty_first_offence": {
@@ -3414,9 +2845,9 @@
       "is_compoundable": false,
       "compound_authority_section": null,
       "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Semak jadual kompaun / Buka IP",
+      "compound_amount_or_limit": "TIDAK BOLEH KOMPAUN — Sita (jika berkenaan) & Buka IP Terus",
       "max_compound_rm": null,
-      "payment_days": 14,
+      "payment_days": null,
       "notice_section": null
     },
     "special_legal_requirements": [
@@ -3447,11 +2878,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Seksyen 13C (Mengalihkan makanan dari premis makanan).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Seksyen 13C dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Seksyen 13C dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Seksyen 13C",
     "penalty_first_offence": {
@@ -3465,9 +2896,9 @@
       "is_compoundable": false,
       "compound_authority_section": null,
       "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Semak jadual kompaun / Buka IP",
+      "compound_amount_or_limit": "TIDAK BOLEH KOMPAUN — Sita (jika berkenaan) & Buka IP Terus",
       "max_compound_rm": null,
-      "payment_days": 14,
+      "payment_days": null,
       "notice_section": null
     },
     "special_legal_requirements": [
@@ -3494,11 +2925,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Seksyen 14 (Larangan terhadap penjualan makanan yang bukan daripada jenis, bahan atau kualiti yang diminta).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Seksyen 14 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Seksyen 14 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Seksyen 14",
     "penalty_first_offence": {
@@ -3512,9 +2943,9 @@
       "is_compoundable": false,
       "compound_authority_section": null,
       "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Semak jadual kompaun / Buka IP",
+      "compound_amount_or_limit": "TIDAK BOLEH KOMPAUN — Sita (jika berkenaan) & Buka IP Terus",
       "max_compound_rm": null,
-      "payment_days": 14,
+      "payment_days": null,
       "notice_section": null
     },
     "special_legal_requirements": [
@@ -3541,11 +2972,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Seksyen 15 (Pelabelan, dll., yang tidak menepati standard makanan).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Seksyen 15 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Seksyen 15 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Seksyen 15",
     "penalty_first_offence": {
@@ -3559,9 +2990,9 @@
       "is_compoundable": false,
       "compound_authority_section": null,
       "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Semak jadual kompaun / Buka IP",
+      "compound_amount_or_limit": "TIDAK BOLEH KOMPAUN — Sita (jika berkenaan) & Buka IP Terus",
       "max_compound_rm": null,
-      "payment_days": 14,
+      "payment_days": null,
       "notice_section": null
     },
     "special_legal_requirements": [
@@ -3588,11 +3019,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Seksyen 16 (Mana-mana orang yang menyedia, membungkus, melabel atau menjual).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Seksyen 16 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Seksyen 16 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Seksyen 16",
     "penalty_first_offence": {
@@ -3606,9 +3037,9 @@
       "is_compoundable": false,
       "compound_authority_section": null,
       "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Semak jadual kompaun / Buka IP",
+      "compound_amount_or_limit": "TIDAK BOLEH KOMPAUN — Sita (jika berkenaan) & Buka IP Terus",
       "max_compound_rm": null,
-      "payment_days": 14,
+      "payment_days": null,
       "notice_section": null
     },
     "special_legal_requirements": [
@@ -3637,11 +3068,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Seksyen 17 (Iklan).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Seksyen 17 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Seksyen 17 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Seksyen 17",
     "penalty_first_offence": {
@@ -3655,9 +3086,9 @@
       "is_compoundable": false,
       "compound_authority_section": null,
       "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Semak jadual kompaun / Buka IP",
+      "compound_amount_or_limit": "TIDAK BOLEH KOMPAUN — Sita (jika berkenaan) & Buka IP Terus",
       "max_compound_rm": null,
-      "payment_days": 14,
+      "payment_days": null,
       "notice_section": null
     },
     "special_legal_requirements": [
@@ -3684,11 +3115,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Seksyen 27 (Proses pengilangan dan rahsia perdagangan).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Seksyen 27 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Seksyen 27 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Seksyen 27",
     "penalty_first_offence": {
@@ -3702,9 +3133,9 @@
       "is_compoundable": false,
       "compound_authority_section": null,
       "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Semak jadual kompaun / Buka IP",
+      "compound_amount_or_limit": "TIDAK BOLEH KOMPAUN — Sita (jika berkenaan) & Buka IP Terus",
       "max_compound_rm": null,
-      "payment_days": 14,
+      "payment_days": null,
       "notice_section": null
     },
     "special_legal_requirements": [
@@ -3731,11 +3162,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Seksyen 28 (Jika makanan yang berkaitan dengannya terdapat pelanggaran).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Seksyen 28 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Seksyen 28 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Seksyen 28",
     "penalty_first_offence": {
@@ -3749,9 +3180,9 @@
       "is_compoundable": false,
       "compound_authority_section": null,
       "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Semak jadual kompaun / Buka IP",
+      "compound_amount_or_limit": "TIDAK BOLEH KOMPAUN — Sita (jika berkenaan) & Buka IP Terus",
       "max_compound_rm": null,
-      "payment_days": 14,
+      "payment_days": null,
       "notice_section": null
     },
     "special_legal_requirements": [
@@ -3780,11 +3211,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Seksyen 30 (Waranti).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Seksyen 30 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Seksyen 30 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Seksyen 30",
     "penalty_first_offence": {
@@ -3798,9 +3229,9 @@
       "is_compoundable": false,
       "compound_authority_section": null,
       "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Semak jadual kompaun / Buka IP",
+      "compound_amount_or_limit": "TIDAK BOLEH KOMPAUN — Sita (jika berkenaan) & Buka IP Terus",
       "max_compound_rm": null,
-      "payment_days": 14,
+      "payment_days": null,
       "notice_section": null
     },
     "special_legal_requirements": [
@@ -3829,11 +3260,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Seksyen 32 (Penalti kerana waranti palsu).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Seksyen 32 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Seksyen 32 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Seksyen 32",
     "penalty_first_offence": {
@@ -3847,9 +3278,9 @@
       "is_compoundable": false,
       "compound_authority_section": null,
       "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Semak jadual kompaun / Buka IP",
+      "compound_amount_or_limit": "TIDAK BOLEH KOMPAUN — Sita (jika berkenaan) & Buka IP Terus",
       "max_compound_rm": null,
-      "payment_days": 14,
+      "payment_days": null,
       "notice_section": null
     },
     "special_legal_requirements": [
@@ -3866,103 +3297,6 @@
     "verified_status": "DRAFT_PENDING_REVIEW"
   },
   {
-    "offence_id": "AKTA_281_32B",
-    "statute_id": "AKTA_281",
-    "offence_section": "Seksyen 32B",
-    "read_together_with": [
-      "subseksyen (1)",
-      "seksyen 33"
-    ],
-    "offence_title": "Kuasa untuk memerintahkan kehadiran di mahkamah",
-    "target_offender": "INDIVIDU",
-    "mandatory_elements": [
-      {
-        "element_no": 1,
-        "description": "Pematuhan intipati perbuatan di bawah Seksyen 32B (Kuasa untuk memerintahkan kehadiran di mahkamah).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
-      }
-    ],
-    "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Seksyen 32B dipenuhi sebelum mengeluarkan notis atau membuka IP."
-    ],
-    "penalty_section": "Seksyen 32B",
-    "penalty_first_offence": {
-      "max_fine_rm": null,
-      "max_jail_months": null,
-      "other_orders": null,
-      "verbatim_penalty": "Kuasa untuk memerintahkan kehadiran di mahkamah\n32B.  (1)  Jika Pengarah atau mana-mana pegawai diberi kuasa mempunyai\nalasan yang munasabah untuk mempercayai bahawa mana-mana orang telah\nmelakukan suatu kesalahan di bawah Akta ini, dia boleh, sebagai ganti\nmembuat permohonan kep"
-    },
-    "penalty_subsequent_offence": null,
-    "compound_info": {
-      "is_compoundable": true,
-      "compound_authority_section": null,
-      "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun",
-      "max_compound_rm": null,
-      "payment_days": 14,
-      "notice_section": null
-    },
-    "special_legal_requirements": [
-      "Sijil Seksyen 90A(2) Akta Keterangan 1950"
-    ],
-    "mandatory_exhibits": [
-      "Gambar foto lokasi/kejadian berwarna bertarikh + Sijil Seksyen 90A(2)",
-      "Diari Siasatan (S.119 KTJ) & Rakaman Percakapan S.112 KTJ"
-    ],
-    "charge_sheet_template_bm": "Bahawa kamu, pada [TARIKH], jam lebih kurang [MASA], bertempat di [TEMPAT_KEJADIAN], di dalam Daerah [DAERAH], di dalam Negeri [NEGERI], telah didapati melakukan kesalahan di bawah Seksyen 32B [AKTA_281]; dan oleh yang demikian kamu boleh dihukum di bawah peruntukan penalti akta yang sama.",
-    "source_section_doc_ids": [
-      "AKTA_281__S32B"
-    ],
-    "verified_status": "DRAFT_PENDING_REVIEW"
-  },
-  {
-    "offence_id": "AKTA_281_33A",
-    "statute_id": "AKTA_281",
-    "offence_section": "Seksyen 33A",
-    "read_together_with": [],
-    "offence_title": "Kesalahan oleh pertubuhan perbadanan",
-    "target_offender": "PERTUBUHAN_PERBADANAN",
-    "mandatory_elements": [
-      {
-        "element_no": 1,
-        "description": "Pematuhan intipati perbuatan di bawah Seksyen 33A (Kesalahan oleh pertubuhan perbadanan).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
-      }
-    ],
-    "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Seksyen 33A dipenuhi sebelum mengeluarkan notis atau membuka IP."
-    ],
-    "penalty_section": "Seksyen 33A",
-    "penalty_first_offence": {
-      "max_fine_rm": null,
-      "max_jail_months": null,
-      "other_orders": null,
-      "verbatim_penalty": "Kesalahan oleh pertubuhan perbadanan\n33A. Jika sesuatu pertubuhan perbadanan melakukan suatu kesalahan di\nbawah Akta ini atau mana-mana peraturan yang dibuat di bawah Akta ini,\nmaka mana-mana orang yang, pada masa kesalahan itu dilakukan,\nmerupakan pengarah, pengurus, setiausaha "
-    },
-    "penalty_subsequent_offence": null,
-    "compound_info": {
-      "is_compoundable": false,
-      "compound_authority_section": null,
-      "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Semak jadual kompaun / Buka IP",
-      "max_compound_rm": null,
-      "payment_days": 14,
-      "notice_section": null
-    },
-    "special_legal_requirements": [
-      "Sijil Seksyen 90A(2) Akta Keterangan 1950"
-    ],
-    "mandatory_exhibits": [
-      "Gambar foto lokasi/kejadian berwarna bertarikh + Sijil Seksyen 90A(2)",
-      "Diari Siasatan (S.119 KTJ) & Rakaman Percakapan S.112 KTJ"
-    ],
-    "charge_sheet_template_bm": "Bahawa kamu, pada [TARIKH], jam lebih kurang [MASA], bertempat di [TEMPAT_KEJADIAN], di dalam Daerah [DAERAH], di dalam Negeri [NEGERI], telah didapati melakukan kesalahan di bawah Seksyen 33A [AKTA_281]; dan oleh yang demikian kamu boleh dihukum di bawah peruntukan penalti akta yang sama.",
-    "source_section_doc_ids": [
-      "AKTA_281__S33A"
-    ],
-    "verified_status": "DRAFT_PENDING_REVIEW"
-  },
-  {
     "offence_id": "PPKM_2009_PERATURAN_7",
     "statute_id": "PPKM_2009",
     "offence_section": "Peraturan 7",
@@ -3975,11 +3309,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Peraturan 7 (Permohonan untuk pembaharuan perakuan).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Peraturan 7 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Peraturan 7 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Peraturan 7",
     "penalty_first_offence": {
@@ -3991,9 +3325,9 @@
     "penalty_subsequent_offence": null,
     "compound_info": {
       "is_compoundable": true,
-      "compound_authority_section": null,
-      "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun",
+      "compound_authority_section": "Peraturan 58 PPKM 2009 / Seksyen 33 Akta 281",
+      "compound_regulation_ref": "Jadual Keempat PPKM 2009",
+      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun (dengan keizinan bertulis Pendakwa Raya)",
       "max_compound_rm": 5000,
       "payment_days": 14,
       "notice_section": null
@@ -4022,11 +3356,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Peraturan 8 ((1)  Tuan punya, pemunya atau penghuni premis makanan).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Peraturan 8 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Peraturan 8 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Peraturan 8",
     "penalty_first_offence": {
@@ -4038,9 +3372,9 @@
     "penalty_subsequent_offence": null,
     "compound_info": {
       "is_compoundable": true,
-      "compound_authority_section": null,
-      "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun",
+      "compound_authority_section": "Peraturan 58 PPKM 2009 / Seksyen 33 Akta 281",
+      "compound_regulation_ref": "Jadual Keempat PPKM 2009",
+      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun (dengan keizinan bertulis Pendakwa Raya)",
       "max_compound_rm": 5000,
       "payment_days": 14,
       "notice_section": null
@@ -4071,11 +3405,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Peraturan 9 (Program jaminan keselamatan makanan).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Peraturan 9 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Peraturan 9 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Peraturan 9",
     "penalty_first_offence": {
@@ -4087,9 +3421,9 @@
     "penalty_subsequent_offence": null,
     "compound_info": {
       "is_compoundable": true,
-      "compound_authority_section": null,
-      "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun",
+      "compound_authority_section": "Peraturan 58 PPKM 2009 / Seksyen 33 Akta 281",
+      "compound_regulation_ref": "Jadual Keempat PPKM 2009",
+      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun (dengan keizinan bertulis Pendakwa Raya)",
       "max_compound_rm": 5000,
       "payment_days": 14,
       "notice_section": null
@@ -4118,11 +3452,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Peraturan 10 (Sistem kebolehkesanan makanan).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Peraturan 10 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Peraturan 10 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Peraturan 10",
     "penalty_first_offence": {
@@ -4134,9 +3468,9 @@
     "penalty_subsequent_offence": null,
     "compound_info": {
       "is_compoundable": true,
-      "compound_authority_section": null,
-      "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun",
+      "compound_authority_section": "Peraturan 58 PPKM 2009 / Seksyen 33 Akta 281",
+      "compound_regulation_ref": "Jadual Keempat PPKM 2009",
+      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun (dengan keizinan bertulis Pendakwa Raya)",
       "max_compound_rm": 5000,
       "payment_days": 14,
       "notice_section": null
@@ -4165,11 +3499,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Peraturan 17 (Pelupusan sampah).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Peraturan 17 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Peraturan 17 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Peraturan 17",
     "penalty_first_offence": {
@@ -4180,12 +3514,12 @@
     },
     "penalty_subsequent_offence": null,
     "compound_info": {
-      "is_compoundable": true,
+      "is_compoundable": false,
       "compound_authority_section": null,
       "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun",
+      "compound_amount_or_limit": "TIDAK BOLEH KOMPAUN — Sita (jika berkenaan) & Buka IP Terus",
       "max_compound_rm": null,
-      "payment_days": 14,
+      "payment_days": null,
       "notice_section": null
     },
     "special_legal_requirements": [
@@ -4212,11 +3546,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Peraturan 25 (Penyimpanan makanan).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Peraturan 25 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Peraturan 25 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Peraturan 25",
     "penalty_first_offence": {
@@ -4227,12 +3561,12 @@
     },
     "penalty_subsequent_offence": null,
     "compound_info": {
-      "is_compoundable": true,
+      "is_compoundable": false,
       "compound_authority_section": null,
       "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun",
+      "compound_amount_or_limit": "TIDAK BOLEH KOMPAUN — Sita (jika berkenaan) & Buka IP Terus",
       "max_compound_rm": null,
-      "payment_days": 14,
+      "payment_days": null,
       "notice_section": null
     },
     "special_legal_requirements": [
@@ -4259,11 +3593,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Peraturan 34 (Kewajipan untuk mengekalkan premis makanan bersih).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Peraturan 34 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Peraturan 34 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Peraturan 34",
     "penalty_first_offence": {
@@ -4275,9 +3609,9 @@
     "penalty_subsequent_offence": null,
     "compound_info": {
       "is_compoundable": true,
-      "compound_authority_section": null,
-      "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun",
+      "compound_authority_section": "Peraturan 58 PPKM 2009 / Seksyen 33 Akta 281",
+      "compound_regulation_ref": "Jadual Keempat PPKM 2009",
+      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun (dengan keizinan bertulis Pendakwa Raya)",
       "max_compound_rm": 5000,
       "payment_days": 14,
       "notice_section": null
@@ -4306,11 +3640,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Peraturan 35 ((1)).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Peraturan 35 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Peraturan 35 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Peraturan 35",
     "penalty_first_offence": {
@@ -4322,9 +3656,9 @@
     "penalty_subsequent_offence": null,
     "compound_info": {
       "is_compoundable": true,
-      "compound_authority_section": null,
-      "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun",
+      "compound_authority_section": "Peraturan 58 PPKM 2009 / Seksyen 33 Akta 281",
+      "compound_regulation_ref": "Jadual Keempat PPKM 2009",
+      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun (dengan keizinan bertulis Pendakwa Raya)",
       "max_compound_rm": 5000,
       "payment_days": 14,
       "notice_section": null
@@ -4353,11 +3687,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Peraturan 36 (Penyediaan, pembungkusan dan penghidangan makanan).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Peraturan 36 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Peraturan 36 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Peraturan 36",
     "penalty_first_offence": {
@@ -4369,9 +3703,9 @@
     "penalty_subsequent_offence": null,
     "compound_info": {
       "is_compoundable": true,
-      "compound_authority_section": null,
-      "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun",
+      "compound_authority_section": "Peraturan 58 PPKM 2009 / Seksyen 33 Akta 281",
+      "compound_regulation_ref": "Jadual Keempat PPKM 2009",
+      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun (dengan keizinan bertulis Pendakwa Raya)",
       "max_compound_rm": 5000,
       "payment_days": 14,
       "notice_section": null
@@ -4400,11 +3734,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Peraturan 37 (Penyimpanan, pendedahan atau pameran makanan untuk dijual).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Peraturan 37 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Peraturan 37 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Peraturan 37",
     "penalty_first_offence": {
@@ -4416,9 +3750,9 @@
     "penalty_subsequent_offence": null,
     "compound_info": {
       "is_compoundable": true,
-      "compound_authority_section": null,
-      "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun",
+      "compound_authority_section": "Peraturan 58 PPKM 2009 / Seksyen 33 Akta 281",
+      "compound_regulation_ref": "Jadual Keempat PPKM 2009",
+      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun (dengan keizinan bertulis Pendakwa Raya)",
       "max_compound_rm": 5000,
       "payment_days": 14,
       "notice_section": null
@@ -4447,11 +3781,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Peraturan 38 (Penyimpanan makanan).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Peraturan 38 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Peraturan 38 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Peraturan 38",
     "penalty_first_offence": {
@@ -4463,9 +3797,9 @@
     "penalty_subsequent_offence": null,
     "compound_info": {
       "is_compoundable": true,
-      "compound_authority_section": null,
-      "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun",
+      "compound_authority_section": "Peraturan 58 PPKM 2009 / Seksyen 33 Akta 281",
+      "compound_regulation_ref": "Jadual Keempat PPKM 2009",
+      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun (dengan keizinan bertulis Pendakwa Raya)",
       "max_compound_rm": 5000,
       "payment_days": 14,
       "notice_section": null
@@ -4496,11 +3830,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Peraturan 39 (Penyediaan daging).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Peraturan 39 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Peraturan 39 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Peraturan 39",
     "penalty_first_offence": {
@@ -4512,9 +3846,9 @@
     "penalty_subsequent_offence": null,
     "compound_info": {
       "is_compoundable": true,
-      "compound_authority_section": null,
-      "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun",
+      "compound_authority_section": "Peraturan 58 PPKM 2009 / Seksyen 33 Akta 281",
+      "compound_regulation_ref": "Jadual Keempat PPKM 2009",
+      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun (dengan keizinan bertulis Pendakwa Raya)",
       "max_compound_rm": 5000,
       "payment_days": 14,
       "notice_section": null
@@ -4543,11 +3877,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Peraturan 40 (Pengangkutan daging).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Peraturan 40 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Peraturan 40 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Peraturan 40",
     "penalty_first_offence": {
@@ -4559,9 +3893,9 @@
     "penalty_subsequent_offence": null,
     "compound_info": {
       "is_compoundable": true,
-      "compound_authority_section": null,
-      "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun",
+      "compound_authority_section": "Peraturan 58 PPKM 2009 / Seksyen 33 Akta 281",
+      "compound_regulation_ref": "Jadual Keempat PPKM 2009",
+      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun (dengan keizinan bertulis Pendakwa Raya)",
       "max_compound_rm": 5000,
       "payment_days": 14,
       "notice_section": null
@@ -4590,11 +3924,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Peraturan 41 (Penjualan daging).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Peraturan 41 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Peraturan 41 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Peraturan 41",
     "penalty_first_offence": {
@@ -4606,9 +3940,9 @@
     "penalty_subsequent_offence": null,
     "compound_info": {
       "is_compoundable": true,
-      "compound_authority_section": null,
-      "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun",
+      "compound_authority_section": "Peraturan 58 PPKM 2009 / Seksyen 33 Akta 281",
+      "compound_regulation_ref": "Jadual Keempat PPKM 2009",
+      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun (dengan keizinan bertulis Pendakwa Raya)",
       "max_compound_rm": 5000,
       "payment_days": 14,
       "notice_section": null
@@ -4639,11 +3973,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Peraturan 42 (Memunggah dan menurunkan ikan).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Peraturan 42 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Peraturan 42 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Peraturan 42",
     "penalty_first_offence": {
@@ -4655,9 +3989,9 @@
     "penalty_subsequent_offence": null,
     "compound_info": {
       "is_compoundable": true,
-      "compound_authority_section": null,
-      "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun",
+      "compound_authority_section": "Peraturan 58 PPKM 2009 / Seksyen 33 Akta 281",
+      "compound_regulation_ref": "Jadual Keempat PPKM 2009",
+      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun (dengan keizinan bertulis Pendakwa Raya)",
       "max_compound_rm": 5000,
       "payment_days": 14,
       "notice_section": null
@@ -4686,11 +4020,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Peraturan 43 (Pengendalian ikan segar).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Peraturan 43 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Peraturan 43 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Peraturan 43",
     "penalty_first_offence": {
@@ -4702,9 +4036,9 @@
     "penalty_subsequent_offence": null,
     "compound_info": {
       "is_compoundable": true,
-      "compound_authority_section": null,
-      "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun",
+      "compound_authority_section": "Peraturan 58 PPKM 2009 / Seksyen 33 Akta 281",
+      "compound_regulation_ref": "Jadual Keempat PPKM 2009",
+      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun (dengan keizinan bertulis Pendakwa Raya)",
       "max_compound_rm": 5000,
       "payment_days": 14,
       "notice_section": null
@@ -4735,11 +4069,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Peraturan 44 (Pengendalian krustasea atau moluska).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Peraturan 44 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Peraturan 44 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Peraturan 44",
     "penalty_first_offence": {
@@ -4751,9 +4085,9 @@
     "penalty_subsequent_offence": null,
     "compound_info": {
       "is_compoundable": true,
-      "compound_authority_section": null,
-      "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun",
+      "compound_authority_section": "Peraturan 58 PPKM 2009 / Seksyen 33 Akta 281",
+      "compound_regulation_ref": "Jadual Keempat PPKM 2009",
+      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun (dengan keizinan bertulis Pendakwa Raya)",
       "max_compound_rm": 5000,
       "payment_days": 14,
       "notice_section": null
@@ -4782,11 +4116,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Peraturan 45 (Penyimpanan ikan).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Peraturan 45 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Peraturan 45 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Peraturan 45",
     "penalty_first_offence": {
@@ -4798,9 +4132,9 @@
     "penalty_subsequent_offence": null,
     "compound_info": {
       "is_compoundable": true,
-      "compound_authority_section": null,
-      "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun",
+      "compound_authority_section": "Peraturan 58 PPKM 2009 / Seksyen 33 Akta 281",
+      "compound_regulation_ref": "Jadual Keempat PPKM 2009",
+      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun (dengan keizinan bertulis Pendakwa Raya)",
       "max_compound_rm": 5000,
       "payment_days": 14,
       "notice_section": null
@@ -4829,11 +4163,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Peraturan 46 (Pengangkutan ikan).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Peraturan 46 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Peraturan 46 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Peraturan 46",
     "penalty_first_offence": {
@@ -4845,9 +4179,9 @@
     "penalty_subsequent_offence": null,
     "compound_info": {
       "is_compoundable": true,
-      "compound_authority_section": null,
-      "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun",
+      "compound_authority_section": "Peraturan 58 PPKM 2009 / Seksyen 33 Akta 281",
+      "compound_regulation_ref": "Jadual Keempat PPKM 2009",
+      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun (dengan keizinan bertulis Pendakwa Raya)",
       "max_compound_rm": 5000,
       "payment_days": 14,
       "notice_section": null
@@ -4876,11 +4210,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Peraturan 47 (Penjualan ikan dingin dan sejuk beku).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Peraturan 47 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Peraturan 47 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Peraturan 47",
     "penalty_first_offence": {
@@ -4892,9 +4226,9 @@
     "penalty_subsequent_offence": null,
     "compound_info": {
       "is_compoundable": true,
-      "compound_authority_section": null,
-      "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun",
+      "compound_authority_section": "Peraturan 58 PPKM 2009 / Seksyen 33 Akta 281",
+      "compound_regulation_ref": "Jadual Keempat PPKM 2009",
+      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun (dengan keizinan bertulis Pendakwa Raya)",
       "max_compound_rm": 5000,
       "payment_days": 14,
       "notice_section": null
@@ -4923,11 +4257,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Peraturan 48 (Penyediaan, pembungkusan atau penjualan aiskrim atau konfeksi sejuk beku).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Peraturan 48 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Peraturan 48 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Peraturan 48",
     "penalty_first_offence": {
@@ -4939,9 +4273,9 @@
     "penalty_subsequent_offence": null,
     "compound_info": {
       "is_compoundable": true,
-      "compound_authority_section": null,
-      "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun",
+      "compound_authority_section": "Peraturan 58 PPKM 2009 / Seksyen 33 Akta 281",
+      "compound_regulation_ref": "Jadual Keempat PPKM 2009",
+      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun (dengan keizinan bertulis Pendakwa Raya)",
       "max_compound_rm": 5000,
       "payment_days": 14,
       "notice_section": null
@@ -4970,11 +4304,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Peraturan 49 (Kelakuan orang yang menjual aiskrim atau konfeksi sejuk beku).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Peraturan 49 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Peraturan 49 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Peraturan 49",
     "penalty_first_offence": {
@@ -4986,9 +4320,9 @@
     "penalty_subsequent_offence": null,
     "compound_info": {
       "is_compoundable": true,
-      "compound_authority_section": null,
-      "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun",
+      "compound_authority_section": "Peraturan 58 PPKM 2009 / Seksyen 33 Akta 281",
+      "compound_regulation_ref": "Jadual Keempat PPKM 2009",
+      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun (dengan keizinan bertulis Pendakwa Raya)",
       "max_compound_rm": 5000,
       "payment_days": 14,
       "notice_section": null
@@ -5017,11 +4351,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Peraturan 50 (Kehendak suhu).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Peraturan 50 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Peraturan 50 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Peraturan 50",
     "penalty_first_offence": {
@@ -5033,9 +4367,9 @@
     "penalty_subsequent_offence": null,
     "compound_info": {
       "is_compoundable": true,
-      "compound_authority_section": null,
-      "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun",
+      "compound_authority_section": "Peraturan 58 PPKM 2009 / Seksyen 33 Akta 281",
+      "compound_regulation_ref": "Jadual Keempat PPKM 2009",
+      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun (dengan keizinan bertulis Pendakwa Raya)",
       "max_compound_rm": 5000,
       "payment_days": 14,
       "notice_section": null
@@ -5064,11 +4398,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Peraturan 51 (Penjualan susu).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Peraturan 51 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Peraturan 51 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Peraturan 51",
     "penalty_first_offence": {
@@ -5080,9 +4414,9 @@
     "penalty_subsequent_offence": null,
     "compound_info": {
       "is_compoundable": true,
-      "compound_authority_section": null,
-      "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun",
+      "compound_authority_section": "Peraturan 58 PPKM 2009 / Seksyen 33 Akta 281",
+      "compound_regulation_ref": "Jadual Keempat PPKM 2009",
+      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun (dengan keizinan bertulis Pendakwa Raya)",
       "max_compound_rm": 5000,
       "payment_days": 14,
       "notice_section": null
@@ -5111,11 +4445,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Peraturan 52 (Pengangkutan, penyimpanan dan hantar serah ais).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Peraturan 52 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Peraturan 52 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Peraturan 52",
     "penalty_first_offence": {
@@ -5127,9 +4461,9 @@
     "penalty_subsequent_offence": null,
     "compound_info": {
       "is_compoundable": true,
-      "compound_authority_section": null,
-      "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun",
+      "compound_authority_section": "Peraturan 58 PPKM 2009 / Seksyen 33 Akta 281",
+      "compound_regulation_ref": "Jadual Keempat PPKM 2009",
+      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun (dengan keizinan bertulis Pendakwa Raya)",
       "max_compound_rm": 5000,
       "payment_days": 14,
       "notice_section": null
@@ -5158,11 +4492,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Peraturan 53 (Pemasangan mesin jual makanan atau mesin jual air).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Peraturan 53 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Peraturan 53 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Peraturan 53",
     "penalty_first_offence": {
@@ -5174,9 +4508,9 @@
     "penalty_subsequent_offence": null,
     "compound_info": {
       "is_compoundable": true,
-      "compound_authority_section": null,
-      "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun",
+      "compound_authority_section": "Peraturan 58 PPKM 2009 / Seksyen 33 Akta 281",
+      "compound_regulation_ref": "Jadual Keempat PPKM 2009",
+      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun (dengan keizinan bertulis Pendakwa Raya)",
       "max_compound_rm": null,
       "payment_days": 14,
       "notice_section": null
@@ -5205,11 +4539,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Peraturan 54 (Mesin jual makanan).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Peraturan 54 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Peraturan 54 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Peraturan 54",
     "penalty_first_offence": {
@@ -5221,9 +4555,9 @@
     "penalty_subsequent_offence": null,
     "compound_info": {
       "is_compoundable": true,
-      "compound_authority_section": null,
-      "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun",
+      "compound_authority_section": "Peraturan 58 PPKM 2009 / Seksyen 33 Akta 281",
+      "compound_regulation_ref": "Jadual Keempat PPKM 2009",
+      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun (dengan keizinan bertulis Pendakwa Raya)",
       "max_compound_rm": 5000,
       "payment_days": 14,
       "notice_section": null
@@ -5252,11 +4586,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Peraturan 55 (Mesin jual air).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Peraturan 55 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Peraturan 55 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Peraturan 55",
     "penalty_first_offence": {
@@ -5268,9 +4602,9 @@
     "penalty_subsequent_offence": null,
     "compound_info": {
       "is_compoundable": true,
-      "compound_authority_section": null,
-      "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun",
+      "compound_authority_section": "Peraturan 58 PPKM 2009 / Seksyen 33 Akta 281",
+      "compound_regulation_ref": "Jadual Keempat PPKM 2009",
+      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun (dengan keizinan bertulis Pendakwa Raya)",
       "max_compound_rm": 5000,
       "payment_days": 14,
       "notice_section": null
@@ -5299,11 +4633,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Peraturan 56 (Pengangkutan makanan).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Peraturan 56 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Peraturan 56 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Peraturan 56",
     "penalty_first_offence": {
@@ -5315,9 +4649,9 @@
     "penalty_subsequent_offence": null,
     "compound_info": {
       "is_compoundable": true,
-      "compound_authority_section": null,
-      "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun",
+      "compound_authority_section": "Peraturan 58 PPKM 2009 / Seksyen 33 Akta 281",
+      "compound_regulation_ref": "Jadual Keempat PPKM 2009",
+      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun (dengan keizinan bertulis Pendakwa Raya)",
       "max_compound_rm": 5000,
       "payment_days": 14,
       "notice_section": null
@@ -5348,11 +4682,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Seksyen 7 (Kehendak untuk membekalkan maklumat).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Seksyen 7 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Seksyen 7 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Seksyen 7",
     "penalty_first_offence": {
@@ -5366,9 +4700,9 @@
       "is_compoundable": false,
       "compound_authority_section": null,
       "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Semak jadual kompaun / Buka IP",
+      "compound_amount_or_limit": "TIDAK BOLEH KOMPAUN — Sita (jika berkenaan) & Buka IP Terus",
       "max_compound_rm": null,
-      "payment_days": 14,
+      "payment_days": null,
       "notice_section": null
     },
     "special_legal_requirements": [
@@ -5395,11 +4729,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Seksyen 10 (Pemeriksaan perubatan terhadap orang yang disyaki dijangkiti penyakit yang dibawa oleh serangga).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Seksyen 10 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Seksyen 10 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Seksyen 10",
     "penalty_first_offence": {
@@ -5413,9 +4747,9 @@
       "is_compoundable": false,
       "compound_authority_section": null,
       "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Semak jadual kompaun / Buka IP",
+      "compound_amount_or_limit": "TIDAK BOLEH KOMPAUN — Sita (jika berkenaan) & Buka IP Terus",
       "max_compound_rm": null,
-      "payment_days": 14,
+      "payment_days": null,
       "notice_section": null
     },
     "special_legal_requirements": [
@@ -5432,57 +4766,6 @@
     "verified_status": "DRAFT_PENDING_REVIEW"
   },
   {
-    "offence_id": "AKTA_154_10A",
-    "statute_id": "AKTA_154",
-    "offence_section": "Seksyen 10A",
-    "read_together_with": [
-      "subseksyen\n(2)",
-      "seksyen 111",
-      "Akta 593"
-    ],
-    "offence_title": "Kuasa untuk menghendaki maklumat dan memeriksa orang",
-    "target_offender": "INDIVIDU",
-    "mandatory_elements": [
-      {
-        "element_no": 1,
-        "description": "Pematuhan intipati perbuatan di bawah Seksyen 10A (Kuasa untuk menghendaki maklumat dan memeriksa orang).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
-      }
-    ],
-    "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Seksyen 10A dipenuhi sebelum mengeluarkan notis atau membuka IP."
-    ],
-    "penalty_section": "Seksyen 10A",
-    "penalty_first_offence": {
-      "max_fine_rm": null,
-      "max_jail_months": null,
-      "other_orders": null,
-      "verbatim_penalty": "Kuasa untuk menghendaki maklumat dan memeriksa orang\n10A. (1) Ketua Pengarah, seseorang Pegawai Kesihatan atau\nseseorang inspektor yang membuat suatu penyiasatan dan\npemeriksaan di bawah Bahagian ini mempunyai kuasa untuk\nmenghendaki maklumat, sama ada secara lisan atau bertulis,"
-    },
-    "penalty_subsequent_offence": null,
-    "compound_info": {
-      "is_compoundable": false,
-      "compound_authority_section": null,
-      "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Semak jadual kompaun / Buka IP",
-      "max_compound_rm": null,
-      "payment_days": 14,
-      "notice_section": null
-    },
-    "special_legal_requirements": [
-      "Sijil Seksyen 90A(2) Akta Keterangan 1950"
-    ],
-    "mandatory_exhibits": [
-      "Gambar foto lokasi/kejadian berwarna bertarikh + Sijil Seksyen 90A(2)",
-      "Diari Siasatan (S.119 KTJ) & Rakaman Percakapan S.112 KTJ"
-    ],
-    "charge_sheet_template_bm": "Bahawa kamu, pada [TARIKH], jam lebih kurang [MASA], bertempat di [TEMPAT_KEJADIAN], di dalam Daerah [DAERAH], di dalam Negeri [NEGERI], telah didapati melakukan kesalahan di bawah Seksyen 10A [AKTA_154]; dan oleh yang demikian kamu boleh dihukum di bawah peruntukan penalti akta yang sama.",
-    "source_section_doc_ids": [
-      "AKTA_154__S10A"
-    ],
-    "verified_status": "DRAFT_PENDING_REVIEW"
-  },
-  {
     "offence_id": "AKTA_154_14",
     "statute_id": "AKTA_154",
     "offence_section": "Seksyen 14",
@@ -5495,11 +4778,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Seksyen 14 (Larangan terhadap pembiakan, dsb., serangga pembawa penyakit tanpa kebenaran).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Seksyen 14 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Seksyen 14 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Seksyen 14",
     "penalty_first_offence": {
@@ -5513,9 +4796,9 @@
       "is_compoundable": false,
       "compound_authority_section": null,
       "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Semak jadual kompaun / Buka IP",
+      "compound_amount_or_limit": "TIDAK BOLEH KOMPAUN — Sita (jika berkenaan) & Buka IP Terus",
       "max_compound_rm": null,
-      "payment_days": 14,
+      "payment_days": null,
       "notice_section": null
     },
     "special_legal_requirements": [
@@ -5532,106 +4815,6 @@
     "verified_status": "DRAFT_PENDING_REVIEW"
   },
   {
-    "offence_id": "AKTA_154_25",
-    "statute_id": "AKTA_154",
-    "offence_section": "Seksyen 25",
-    "read_together_with": [
-      "subseksyen (1)",
-      "subseksyen\n(1)"
-    ],
-    "offence_title": "Kuasa untuk mengkompaun",
-    "target_offender": "INDIVIDU",
-    "mandatory_elements": [
-      {
-        "element_no": 1,
-        "description": "Pematuhan intipati perbuatan di bawah Seksyen 25 (Kuasa untuk mengkompaun).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
-      }
-    ],
-    "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Seksyen 25 dipenuhi sebelum mengeluarkan notis atau membuka IP."
-    ],
-    "penalty_section": "Seksyen 25",
-    "penalty_first_offence": {
-      "max_fine_rm": 500,
-      "max_jail_months": null,
-      "other_orders": null,
-      "verbatim_penalty": "Kuasa untuk mengkompaun\n25. (1) Ketua Pengarah, seseorang Pegawai Kesihatan, seseorang\ninspektor atau seseorang pegawai awam yang diberi kuasa secara\nbertulis bagi maksud itu oleh Ketua Pengarah boleh mengkompaunkan\napa-apa kesalahan yang dilakukan oleh mana-mana orang di bawah\nA"
-    },
-    "penalty_subsequent_offence": null,
-    "compound_info": {
-      "is_compoundable": true,
-      "compound_authority_section": null,
-      "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun",
-      "max_compound_rm": 250,
-      "payment_days": 14,
-      "notice_section": null
-    },
-    "special_legal_requirements": [
-      "Sijil Seksyen 90A(2) Akta Keterangan 1950"
-    ],
-    "mandatory_exhibits": [
-      "Gambar foto lokasi/kejadian berwarna bertarikh + Sijil Seksyen 90A(2)",
-      "Diari Siasatan (S.119 KTJ) & Rakaman Percakapan S.112 KTJ"
-    ],
-    "charge_sheet_template_bm": "Bahawa kamu, pada [TARIKH], jam lebih kurang [MASA], bertempat di [TEMPAT_KEJADIAN], di dalam Daerah [DAERAH], di dalam Negeri [NEGERI], telah didapati melakukan kesalahan di bawah Seksyen 25 [AKTA_154]; dan oleh yang demikian kamu boleh dihukum di bawah peruntukan penalti akta yang sama.",
-    "source_section_doc_ids": [
-      "AKTA_154__S25"
-    ],
-    "verified_status": "DRAFT_PENDING_REVIEW"
-  },
-  {
-    "offence_id": "AKTA_342_3",
-    "statute_id": "AKTA_342",
-    "offence_section": "Seksyen 3",
-    "read_together_with": [
-      "Akta 574",
-      "subseksyen (3)"
-    ],
-    "offence_title": "Pelantikan pegawai diberi kuasa",
-    "target_offender": "INDIVIDU",
-    "mandatory_elements": [
-      {
-        "element_no": 1,
-        "description": "Pematuhan intipati perbuatan di bawah Seksyen 3 (Pelantikan pegawai diberi kuasa).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
-      }
-    ],
-    "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Seksyen 3 dipenuhi sebelum mengeluarkan notis atau membuka IP."
-    ],
-    "penalty_section": "Seksyen 3",
-    "penalty_first_offence": {
-      "max_fine_rm": null,
-      "max_jail_months": 36,
-      "other_orders": null,
-      "verbatim_penalty": "Pelantikan pegawai diberi kuasa\n3. (1)\nMenteri boleh melantik mana-mana orang yang sesuai\nmenjadi pegawai diberi kuasa bagi maksud Akta ini.\n\n(2)\nSeseorang  pegawai diberi kuasa apabila bertindak dalam\nbidang kuasa dan kewajipannya di bawah Akta ini, hendaklah\ndisifatkan sebagai "
-    },
-    "penalty_subsequent_offence": null,
-    "compound_info": {
-      "is_compoundable": false,
-      "compound_authority_section": null,
-      "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Semak jadual kompaun / Buka IP",
-      "max_compound_rm": null,
-      "payment_days": 14,
-      "notice_section": null
-    },
-    "special_legal_requirements": [
-      "Sijil Seksyen 90A(2) Akta Keterangan 1950"
-    ],
-    "mandatory_exhibits": [
-      "Gambar foto lokasi/kejadian berwarna bertarikh + Sijil Seksyen 90A(2)",
-      "Diari Siasatan (S.119 KTJ) & Rakaman Percakapan S.112 KTJ"
-    ],
-    "charge_sheet_template_bm": "Bahawa kamu, pada [TARIKH], jam lebih kurang [MASA], bertempat di [TEMPAT_KEJADIAN], di dalam Daerah [DAERAH], di dalam Negeri [NEGERI], telah didapati melakukan kesalahan di bawah Seksyen 3 [AKTA_342]; dan oleh yang demikian kamu boleh dihukum di bawah peruntukan penalti akta yang sama.",
-    "source_section_doc_ids": [
-      "AKTA_342__S3"
-    ],
-    "verified_status": "DRAFT_PENDING_REVIEW"
-  },
-  {
     "offence_id": "AKTA_342_9",
     "statute_id": "AKTA_342",
     "offence_section": "Seksyen 9",
@@ -5644,11 +4827,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Seksyen 9 (Membawa masuk atau membawa keluar mayat dan organisma atau bahan patogenik).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Seksyen 9 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Seksyen 9 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Seksyen 9",
     "penalty_first_offence": {
@@ -5662,9 +4845,9 @@
       "is_compoundable": false,
       "compound_authority_section": null,
       "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Semak jadual kompaun / Buka IP",
+      "compound_amount_or_limit": "TIDAK BOLEH KOMPAUN — Sita (jika berkenaan) & Buka IP Terus",
       "max_compound_rm": null,
-      "payment_days": 14,
+      "payment_days": null,
       "notice_section": null
     },
     "special_legal_requirements": [
@@ -5693,11 +4876,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Seksyen 17 (Pengurusan orang mati).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Seksyen 17 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Seksyen 17 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Seksyen 17",
     "penalty_first_offence": {
@@ -5711,9 +4894,9 @@
       "is_compoundable": false,
       "compound_authority_section": null,
       "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Semak jadual kompaun / Buka IP",
+      "compound_amount_or_limit": "TIDAK BOLEH KOMPAUN — Sita (jika berkenaan) & Buka IP Terus",
       "max_compound_rm": null,
-      "payment_days": 14,
+      "payment_days": null,
       "notice_section": null
     },
     "special_legal_requirements": [
@@ -5742,11 +4925,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Seksyen 20 (Menjual atau menyewakan bangunan yang tercemar).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Seksyen 20 dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Seksyen 20 dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Seksyen 20",
     "penalty_first_offence": {
@@ -5760,9 +4943,9 @@
       "is_compoundable": false,
       "compound_authority_section": null,
       "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Semak jadual kompaun / Buka IP",
+      "compound_amount_or_limit": "TIDAK BOLEH KOMPAUN — Sita (jika berkenaan) & Buka IP Terus",
       "max_compound_rm": null,
-      "payment_days": 14,
+      "payment_days": null,
       "notice_section": null
     },
     "special_legal_requirements": [
@@ -5789,11 +4972,11 @@
       {
         "element_no": 1,
         "description": "Pematuhan intipati perbuatan di bawah Seksyen 21A (“Arahan Ketua Pengarah).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
+        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Seksyen 21A dipenuhi sebelum mengeluarkan notis atau membuka IP."
+      "Sahkan semua unsur dalam Seksyen 21A dipenuhi sebelum mengeluarkan notis atau membuka IP."
     ],
     "penalty_section": "Seksyen 21A",
     "penalty_first_offence": {
@@ -5804,10 +4987,10 @@
     },
     "penalty_subsequent_offence": null,
     "compound_info": {
-      "is_compoundable": false,
-      "compound_authority_section": null,
-      "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Semak jadual kompaun / Buka IP",
+      "is_compoundable": true,
+      "compound_authority_section": "Seksyen 25 Akta 342 (Pindaan Akta A1742)",
+      "compound_regulation_ref": "Jadual Pertama P.U. (A) 139/2025",
+      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun (dengan keizinan bertulis Pendakwa Raya)",
       "max_compound_rm": null,
       "payment_days": 14,
       "notice_section": null
@@ -5822,147 +5005,6 @@
     "charge_sheet_template_bm": "Bahawa kamu, pada [TARIKH], jam lebih kurang [MASA], bertempat di [TEMPAT_KEJADIAN], di dalam Daerah [DAERAH], di dalam Negeri [NEGERI], telah didapati melakukan kesalahan di bawah Seksyen 21A [AKTA_342_PINDAAN_2025]; dan oleh yang demikian kamu boleh dihukum di bawah peruntukan penalti akta yang sama.",
     "source_section_doc_ids": [
       "AKTA_342_PINDAAN_2025__S21A"
-    ],
-    "verified_status": "DRAFT_PENDING_REVIEW"
-  },
-  {
-    "offence_id": "AKTA_342_PINDAAN_2025_22A",
-    "statute_id": "AKTA_342_PINDAAN_2025",
-    "offence_section": "Seksyen 22A",
-    "read_together_with": [],
-    "offence_title": "“Kesalahan oleh pertubuhan perbadanan",
-    "target_offender": "PERTUBUHAN_PERBADANAN",
-    "mandatory_elements": [
-      {
-        "element_no": 1,
-        "description": "Pematuhan intipati perbuatan di bawah Seksyen 22A (“Kesalahan oleh pertubuhan perbadanan).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
-      }
-    ],
-    "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Seksyen 22A dipenuhi sebelum mengeluarkan notis atau membuka IP."
-    ],
-    "penalty_section": "Seksyen 22A",
-    "penalty_first_offence": {
-      "max_fine_rm": null,
-      "max_jail_months": null,
-      "other_orders": null,
-      "verbatim_penalty": "“Kesalahan oleh pertubuhan perbadanan\n22a.  (1)  Jika sesuatu pertubuhan perbadanan melakukan\nsuatu kesalahan di bawah Akta ini, mana-mana orang yang\npada masa pelakuan kesalahan itu ialah seorang pengarah,\nketua pegawai eksekutif, ketua pegawai operasi, pengurus,\nsetiausaha atau"
-    },
-    "penalty_subsequent_offence": null,
-    "compound_info": {
-      "is_compoundable": false,
-      "compound_authority_section": null,
-      "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Semak jadual kompaun / Buka IP",
-      "max_compound_rm": null,
-      "payment_days": 14,
-      "notice_section": null
-    },
-    "special_legal_requirements": [
-      "Sijil Seksyen 90A(2) Akta Keterangan 1950"
-    ],
-    "mandatory_exhibits": [
-      "Gambar foto lokasi/kejadian berwarna bertarikh + Sijil Seksyen 90A(2)",
-      "Diari Siasatan (S.119 KTJ) & Rakaman Percakapan S.112 KTJ"
-    ],
-    "charge_sheet_template_bm": "Bahawa kamu, pada [TARIKH], jam lebih kurang [MASA], bertempat di [TEMPAT_KEJADIAN], di dalam Daerah [DAERAH], di dalam Negeri [NEGERI], telah didapati melakukan kesalahan di bawah Seksyen 22A [AKTA_342_PINDAAN_2025]; dan oleh yang demikian kamu boleh dihukum di bawah peruntukan penalti akta yang sama.",
-    "source_section_doc_ids": [
-      "AKTA_342_PINDAAN_2025__S22A"
-    ],
-    "verified_status": "DRAFT_PENDING_REVIEW"
-  },
-  {
-    "offence_id": "AKTA_342_PINDAAN_2025_24",
-    "statute_id": "AKTA_342_PINDAAN_2025",
-    "offence_section": "Seksyen 24",
-    "read_together_with": [],
-    "offence_title": "“Penalti am",
-    "target_offender": "PERTUBUHAN_PERBADANAN",
-    "mandatory_elements": [
-      {
-        "element_no": 1,
-        "description": "Pematuhan intipati perbuatan di bawah Seksyen 24 (“Penalti am).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
-      }
-    ],
-    "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Seksyen 24 dipenuhi sebelum mengeluarkan notis atau membuka IP."
-    ],
-    "penalty_section": "Seksyen 24",
-    "penalty_first_offence": {
-      "max_fine_rm": 100000,
-      "max_jail_months": null,
-      "other_orders": null,
-      "verbatim_penalty": "“Penalti am\n24.  Mana-mana orang yang melakukan suatu kesalahan\ndi bawah Akta ini yang tiada penalti diperuntukkan dengan\nnyata boleh, apabila disabitkan—\n\n(a)\t dalam hal seseorang itu merupakan seorang individu,\ndidenda tidak melebihi sepuluh ribu ringgit atau\ndipenjarakan selam"
-    },
-    "penalty_subsequent_offence": null,
-    "compound_info": {
-      "is_compoundable": false,
-      "compound_authority_section": null,
-      "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Semak jadual kompaun / Buka IP",
-      "max_compound_rm": null,
-      "payment_days": 14,
-      "notice_section": null
-    },
-    "special_legal_requirements": [
-      "Sijil Seksyen 90A(2) Akta Keterangan 1950"
-    ],
-    "mandatory_exhibits": [
-      "Gambar foto lokasi/kejadian berwarna bertarikh + Sijil Seksyen 90A(2)",
-      "Diari Siasatan (S.119 KTJ) & Rakaman Percakapan S.112 KTJ"
-    ],
-    "charge_sheet_template_bm": "Bahawa kamu, pada [TARIKH], jam lebih kurang [MASA], bertempat di [TEMPAT_KEJADIAN], di dalam Daerah [DAERAH], di dalam Negeri [NEGERI], telah didapati melakukan kesalahan di bawah Seksyen 24 [AKTA_342_PINDAAN_2025]; dan oleh yang demikian kamu boleh dihukum di bawah peruntukan penalti akta yang sama.",
-    "source_section_doc_ids": [
-      "AKTA_342_PINDAAN_2025__S24"
-    ],
-    "verified_status": "DRAFT_PENDING_REVIEW"
-  },
-  {
-    "offence_id": "AKTA_342_PINDAAN_2025_25",
-    "statute_id": "AKTA_342_PINDAAN_2025",
-    "offence_section": "Seksyen 25",
-    "read_together_with": [],
-    "offence_title": "“Pengkompaunan kesalahan",
-    "target_offender": "PERTUBUHAN_PERBADANAN",
-    "mandatory_elements": [
-      {
-        "element_no": 1,
-        "description": "Pematuhan intipati perbuatan di bawah Seksyen 25 (“Pengkompaunan kesalahan).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan."
-      }
-    ],
-    "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur verbatim dalam Seksyen 25 dipenuhi sebelum mengeluarkan notis atau membuka IP."
-    ],
-    "penalty_section": "Seksyen 25",
-    "penalty_first_offence": {
-      "max_fine_rm": 50000,
-      "max_jail_months": null,
-      "other_orders": null,
-      "verbatim_penalty": "“Pengkompaunan kesalahan\n25.  Ketua Pengarah atau mana-mana pegawai diberi kuasa\nyang diberi kuasa oleh Ketua Pengarah secara bertulis boleh,\ndengan keizinan secara bertulis Pendakwa Raya, pada bila-bila\n\n(Pindaan)\nmasa sebelum sesuatu pertuduhan dimulakan, mengkompaun\nmana-mana "
-    },
-    "penalty_subsequent_offence": null,
-    "compound_info": {
-      "is_compoundable": true,
-      "compound_authority_section": null,
-      "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun",
-      "max_compound_rm": 25000,
-      "payment_days": 14,
-      "notice_section": null
-    },
-    "special_legal_requirements": [
-      "Sijil Seksyen 90A(2) Akta Keterangan 1950"
-    ],
-    "mandatory_exhibits": [
-      "Gambar foto lokasi/kejadian berwarna bertarikh + Sijil Seksyen 90A(2)",
-      "Diari Siasatan (S.119 KTJ) & Rakaman Percakapan S.112 KTJ"
-    ],
-    "charge_sheet_template_bm": "Bahawa kamu, pada [TARIKH], jam lebih kurang [MASA], bertempat di [TEMPAT_KEJADIAN], di dalam Daerah [DAERAH], di dalam Negeri [NEGERI], telah didapati melakukan kesalahan di bawah Seksyen 25 [AKTA_342_PINDAAN_2025]; dan oleh yang demikian kamu boleh dihukum di bawah peruntukan penalti akta yang sama.",
-    "source_section_doc_ids": [
-      "AKTA_342_PINDAAN_2025__S25"
     ],
     "verified_status": "DRAFT_PENDING_REVIEW"
   }

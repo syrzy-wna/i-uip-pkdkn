@@ -497,7 +497,7 @@ export default function DraftDocxEditor({
               </div>
               <div className="sm:col-span-2">
                 <label className="text-xs font-semibold text-slate-700">
-                  Hukuman Statutori Maksimum
+                  Hukuman Maksimum Mengikut Akta
                 </label>
                 <input
                   type="text"
@@ -629,7 +629,7 @@ export default function DraftDocxEditor({
             <div className="space-y-2 pt-1">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <span className="text-xs font-bold text-slate-700">
-                  Poin Pemberatan Hukuman (Jika OKT Mengaku Salah / Sabit)
+                  Perkara Pemberatan Hukuman (Jika OKT Mengaku Salah / Sabit)
                 </span>
                 <button
                   type="button"
@@ -644,7 +644,7 @@ export default function DraftDocxEditor({
                   }
                   className="inline-flex min-h-[36px] items-center gap-1 rounded-lg bg-blue-50 px-3 py-1.5 text-xs font-bold text-blue-800 hover:bg-blue-100"
                 >
-                  <Plus className="h-3.5 w-3.5" /> Tambah Poin
+                  <Plus className="h-3.5 w-3.5" /> Tambah Perkara
                 </button>
               </div>
               <div className="space-y-2">

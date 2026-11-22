@@ -1,7 +1,7 @@
 {
-  "statute_library_version": "2.5.0-closed-book-agc-pdf",
-  "parser_version": "3.3-agc-gazette-pdf",
-  "akta_dir_fingerprint": "709a6c9596eeb25ad5e2ef2b0cd63350ab85f67192a868ffeb7dd99f19c0329d",
+  "statute_library_version": "2.6.0-closed-book-agc-pdf",
+  "parser_version": "3.4-agc-gazette-pdf",
+  "akta_dir_fingerprint": "5a00aa1c2ef28ba0486a1b1b6999eb5b696fb1d7d72ec29ab4c42d9987fe2a91",
   "statutes_registry": [
     {
       "statute_id": "AKTA_852",
@@ -17,8 +17,8 @@
       "source_pdf_hash": "759915cf49bcbd560a7eff66d6a5fd58df2c36558a398eea1aaa9fc918947c9c",
       "total_sections_indexed": 54,
       "total_sections_in_pdf": 54,
-      "total_offences_indexed": 22,
-      "last_updated": "2026-11-22 12:07:11"
+      "total_offences_indexed": 16,
+      "last_updated": "2026-11-22 15:42:32"
     },
     {
       "statute_id": "AKTA_852_PERINTAH_LARANGAN_2024",
@@ -35,7 +35,7 @@
       "total_sections_indexed": 6,
       "total_sections_in_pdf": 6,
       "total_offences_indexed": 0,
-      "last_updated": "2026-11-22 12:07:11"
+      "last_updated": "2026-11-22 15:42:32"
     },
     {
       "statute_id": "AKTA_852_PERATURAN_TANDA_2024",
@@ -52,7 +52,7 @@
       "total_sections_indexed": 4,
       "total_sections_in_pdf": 4,
       "total_offences_indexed": 1,
-      "last_updated": "2026-11-22 12:07:11"
+      "last_updated": "2026-11-22 15:42:32"
     },
     {
       "statute_id": "AKTA_852_PERATURAN_KOMPAUN_2024",
@@ -68,8 +68,8 @@
       "source_pdf_hash": "745b8d6fce7612e8bc7a525e9eda77ad25be1e23dda8507c04da21ff0f67abdc",
       "total_sections_indexed": 8,
       "total_sections_in_pdf": 8,
-      "total_offences_indexed": 1,
-      "last_updated": "2026-11-22 12:07:11"
+      "total_offences_indexed": 0,
+      "last_updated": "2026-11-22 15:42:32"
     },
     {
       "statute_id": "AKTA_852_PERATURAN_JUALAN_2024",
@@ -86,7 +86,7 @@
       "total_sections_indexed": 10,
       "total_sections_in_pdf": 10,
       "total_offences_indexed": 6,
-      "last_updated": "2026-11-22 12:07:11"
+      "last_updated": "2026-11-22 15:42:32"
     },
     {
       "statute_id": "AKTA_852_PERATURAN_PEMBUNGKUSAN_2024",
@@ -103,7 +103,7 @@
       "total_sections_indexed": 18,
       "total_sections_in_pdf": 18,
       "total_offences_indexed": 9,
-      "last_updated": "2026-11-22 12:07:11"
+      "last_updated": "2026-11-22 15:42:32"
     },
     {
       "statute_id": "AKTA_852_PERATURAN_PENDAFTARAN_2024",
@@ -120,7 +120,7 @@
       "total_sections_indexed": 8,
       "total_sections_in_pdf": 8,
       "total_offences_indexed": 1,
-      "last_updated": "2026-11-22 12:07:11"
+      "last_updated": "2026-11-22 15:42:32"
     },
     {
       "statute_id": "AKTA_852_PERINTAH_MAKMAL_2024",
@@ -137,7 +137,7 @@
       "total_sections_indexed": 2,
       "total_sections_in_pdf": 2,
       "total_offences_indexed": 0,
-      "last_updated": "2026-11-22 12:07:11"
+      "last_updated": "2026-11-22 15:42:32"
     },
     {
       "statute_id": "AKTA_852_PERATURAN_NOTIS_S47_2024",
@@ -154,7 +154,7 @@
       "total_sections_indexed": 3,
       "total_sections_in_pdf": 3,
       "total_offences_indexed": 0,
-      "last_updated": "2026-11-22 12:07:11"
+      "last_updated": "2026-11-22 15:42:32"
     },
     {
       "statute_id": "AKTA_281",
@@ -170,8 +170,8 @@
       "source_pdf_hash": "79d4aad975356eae57ef504f045fc9b94846bf963e3699f0f05af908973a99a6",
       "total_sections_indexed": 47,
       "total_sections_in_pdf": 47,
-      "total_offences_indexed": 21,
-      "last_updated": "2026-11-22 12:07:11"
+      "total_offences_indexed": 14,
+      "last_updated": "2026-11-22 15:42:32"
     },
     {
       "statute_id": "AKTA_281_PINDAAN_2024",
@@ -188,7 +188,7 @@
       "total_sections_indexed": 4,
       "total_sections_in_pdf": 4,
       "total_offences_indexed": 0,
-      "last_updated": "2026-11-22 12:07:11"
+      "last_updated": "2026-11-22 15:42:32"
     },
     {
       "statute_id": "PPKM_2009",
@@ -205,7 +205,7 @@
       "total_sections_indexed": 66,
       "total_sections_in_pdf": 66,
       "total_offences_indexed": 35,
-      "last_updated": "2026-11-22 12:07:11"
+      "last_updated": "2026-11-22 15:42:32"
     },
     {
       "statute_id": "PPM_1985",
@@ -222,7 +222,7 @@
       "total_sections_indexed": 438,
       "total_sections_in_pdf": 438,
       "total_offences_indexed": 1,
-      "last_updated": "2026-11-22 12:07:11"
+      "last_updated": "2026-11-22 15:42:32"
     },
     {
       "statute_id": "AKTA_154",
@@ -238,8 +238,8 @@
       "source_pdf_hash": "d62e4a4f5f18bcadcac5d1a77739d0277e9ed7109f98b85fcab26d54c011ad25",
       "total_sections_indexed": 30,
       "total_sections_in_pdf": 30,
-      "total_offences_indexed": 8,
-      "last_updated": "2026-11-22 12:07:11"
+      "total_offences_indexed": 6,
+      "last_updated": "2026-11-22 15:42:32"
     },
     {
       "statute_id": "AKTA_342",
@@ -255,8 +255,8 @@
       "source_pdf_hash": "fa6d88f26c2f1a668685e056cdbac54618954eefbae8adf0fcbba3e93bf674da",
       "total_sections_indexed": 35,
       "total_sections_in_pdf": 35,
-      "total_offences_indexed": 8,
-      "last_updated": "2026-11-22 12:07:11"
+      "total_offences_indexed": 7,
+      "last_updated": "2026-11-22 15:42:32"
     },
     {
       "statute_id": "AKTA_342_PINDAAN_2025",
@@ -272,8 +272,8 @@
       "source_pdf_hash": "6936c60e63ee592e6e039c4d99f3dd57d5b1c44e29d6a9c4539131f756c4d772",
       "total_sections_indexed": 24,
       "total_sections_in_pdf": 24,
-      "total_offences_indexed": 4,
-      "last_updated": "2026-11-22 12:07:11"
+      "total_offences_indexed": 1,
+      "last_updated": "2026-11-22 15:42:32"
     },
     {
       "statute_id": "AKTA_342_PERATURAN_KOMPAUN_2025",
@@ -290,7 +290,7 @@
       "total_sections_indexed": 2,
       "total_sections_in_pdf": 2,
       "total_offences_indexed": 0,
-      "last_updated": "2026-11-22 12:07:11"
+      "last_updated": "2026-11-22 15:42:32"
     },
     {
       "statute_id": "AKTA_593",
@@ -307,7 +307,7 @@
       "total_sections_indexed": 400,
       "total_sections_in_pdf": 400,
       "total_offences_indexed": 0,
-      "last_updated": "2026-11-22 12:07:11"
+      "last_updated": "2026-11-22 15:42:32"
     },
     {
       "statute_id": "AKTA_56",
@@ -324,7 +324,7 @@
       "total_sections_indexed": 179,
       "total_sections_in_pdf": 179,
       "total_offences_indexed": 0,
-      "last_updated": "2026-11-22 12:07:11"
+      "last_updated": "2026-11-22 15:42:32"
     },
     {
       "statute_id": "AKTA_611",
@@ -341,7 +341,7 @@
       "total_sections_indexed": 154,
       "total_sections_in_pdf": 154,
       "total_offences_indexed": 0,
-      "last_updated": "2026-11-22 12:07:11"
+      "last_updated": "2026-11-22 15:42:32"
     },
     {
       "statute_id": "PPKHT_2004",
@@ -358,7 +358,7 @@
       "total_sections_indexed": 0,
       "total_sections_in_pdf": 0,
       "total_offences_indexed": 0,
-      "last_updated": "2026-11-22 12:07:11"
+      "last_updated": "2026-11-22 15:42:32"
     },
     {
       "statute_id": "ORDINAN_DARURAT_342_2021",
@@ -375,7 +375,7 @@
       "total_sections_indexed": 0,
       "total_sections_in_pdf": 0,
       "total_offences_indexed": 0,
-      "last_updated": "2026-11-22 12:07:11"
+      "last_updated": "2026-11-22 15:42:32"
     }
   ]
 }

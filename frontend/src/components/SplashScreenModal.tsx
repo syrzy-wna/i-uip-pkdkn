@@ -43,6 +43,7 @@ export default function SplashScreenModal({
 }: SplashScreenModalProps) {
   const [googleClientId, setGoogleClientId] = useState(DEFAULT_GOOGLE_CLIENT_ID);
   const [gsiReady, setGsiReady] = useState(false);
+  const [gsiFailed, setGsiFailed] = useState(false);
   const [loading, setLoading] = useState(false);
   const [authError, setAuthError] = useState<string | null>(null);
   const gsiBtnRef = useRef<HTMLDivElement | null>(null);
@@ -72,13 +73,16 @@ export default function SplashScreenModal({
   useEffect(() => {
     if (!open || officer || !googleClientId) {
       setGsiReady(false);
+      setGsiFailed(false);
       return;
     }
     let cancelled = false;
+    setGsiFailed(false);
 
     const initGisButton = () => {
       if (cancelled || !window.google?.accounts?.id) return;
       setGsiReady(true);
+      setGsiFailed(false);
       if (gsiBtnRef.current) {
         gsiBtnRef.current.innerHTML = "";
         window.google.accounts.id.initialize({
@@ -121,6 +125,12 @@ export default function SplashScreenModal({
       }
     };
 
+    const failTimer = window.setTimeout(() => {
+      if (!cancelled && !window.google?.accounts?.id) {
+        setGsiFailed(true);
+      }
+    }, 4500);
+
     if (window.google?.accounts?.id) {
       initGisButton();
     } else {
@@ -132,6 +142,9 @@ export default function SplashScreenModal({
         script.async = true;
         script.defer = true;
         script.onload = initGisButton;
+        script.onerror = () => {
+          if (!cancelled) setGsiFailed(true);
+        };
         document.head.appendChild(script);
       } else {
         existingScript.addEventListener("load", initGisButton);
@@ -140,6 +153,7 @@ export default function SplashScreenModal({
 
     return () => {
       cancelled = true;
+      window.clearTimeout(failTimer);
     };
   }, [open, officer, googleClientId, onAuthenticated, onClose]);
 
@@ -184,6 +198,9 @@ export default function SplashScreenModal({
 
   return (
     <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Log Masuk i-UIP Nerus"
       onClick={() => {
         if (officer) onClose();
       }}
@@ -194,35 +211,45 @@ export default function SplashScreenModal({
         className="my-auto relative w-full max-w-4xl overflow-hidden rounded-3xl border border-slate-700/60 bg-white shadow-2xl"
       >
         <div className="grid grid-cols-1 md:grid-cols-12">
-          {/* BAHAGIAN KIRI: IDENTITI RASMI & MOTO PKDKN */}
-          <div className="flex flex-col justify-between bg-gradient-to-br from-[#08192e] via-[#0f2744] to-[#133b69] p-5 text-white md:col-span-5 md:p-7">
-            <div className="space-y-4">
+          {/* BAHAGIAN KIRI: IDENTITI RASMI & MOTO PKDKN (Padat pada telefon supaya butang log masuk terus kelihatan) */}
+          <div className="flex flex-col justify-between bg-gradient-to-br from-[#08192e] via-[#0f2744] to-[#133b69] p-4 text-white sm:p-5 md:col-span-5 md:p-7">
+            <div className="space-y-3 sm:space-y-4">
               {/* Logo i-UIP Nerus */}
-              <div className="flex items-center gap-3">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src="/images/logo-iuip-nerus.png"
-                  alt="Logo Rasmi i-UIP Nerus"
-                  className="h-14 w-14 shrink-0 rounded-full bg-white p-1 object-contain shadow-md ring-2 ring-amber-400/80"
-                />
-                <div>
-                  <h2 className="text-xl font-extrabold tracking-tight text-white sm:text-2xl">
-                    i-UIP Nerus
-                  </h2>
-                  <p className="text-xs font-medium text-amber-200">
-                    Unit Inspektorat &amp; Perundangan (UIP)
-                  </p>
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src="/images/logo-iuip-nerus.png"
+                    alt="Logo Rasmi i-UIP Nerus"
+                    className="h-12 w-12 shrink-0 rounded-full bg-white p-1 object-contain shadow-md ring-2 ring-amber-400/80 sm:h-14 sm:w-14"
+                  />
+                  <div>
+                    <h2 className="text-lg font-extrabold tracking-tight text-white sm:text-2xl">
+                      i-UIP Nerus
+                    </h2>
+                    <p className="text-xs font-medium text-amber-200">
+                      Unit Inspektorat &amp; Perundangan (UIP)
+                    </p>
+                  </div>
+                </div>
+                <div className="rounded-xl bg-white/95 px-2 py-1 shadow-sm md:hidden">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src="/images/logo-pkdkn.png"
+                    alt="Logo PKD Kuala Nerus"
+                    className="h-7 w-auto object-contain"
+                  />
                 </div>
               </div>
 
-              {/* Logo PKD Kuala Nerus & Moto Rasmi */}
-              <div className="rounded-2xl bg-white/95 p-3 text-slate-900 shadow-sm space-y-2">
+              {/* Logo PKD Kuala Nerus & Moto Rasmi (Penuh di skrin sederhana/desktop) */}
+              <div className="hidden rounded-2xl bg-white/95 p-3 text-slate-900 shadow-sm space-y-2 md:block">
                 <div className="flex items-center justify-center">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src="/images/logo-pkdkn.png"
                     alt="Logo Pejabat Kesihatan Daerah Kuala Nerus (KN2S)"
-                    className="h-10 w-auto object-contain sm:h-11"
+                    className="h-11 w-auto object-contain"
                   />
                 </div>
                 <div className="border-t border-slate-200 pt-1.5 text-center">
@@ -232,7 +259,7 @@ export default function SplashScreenModal({
                 </div>
               </div>
 
-              <div className="hidden space-y-1.5 text-xs text-slate-200 sm:block">
+              <div className="hidden space-y-1.5 text-xs text-slate-200 md:block">
                 <p className="font-semibold text-white">Pembantu Kerja Harian PPKP &amp; IO:</p>
                 <ul className="space-y-1 text-slate-300">
                   <li className="flex items-center gap-2">
@@ -245,7 +272,7 @@ export default function SplashScreenModal({
                   </li>
                   <li className="flex items-center gap-2">
                     <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-emerald-400" />
-                    Audit Pra-TPR &amp; bina Kertas Siasatan lengkap
+                    Semakan Pra-TPR &amp; bina Kertas Siasatan lengkap
                   </li>
                 </ul>
               </div>
@@ -267,7 +294,7 @@ export default function SplashScreenModal({
           </div>
 
           {/* BAHAGIAN KANAN: 1-TAP SIGN-IN (JIKA BELUM MASUK) ATAU PINTASAN TUGAS (JIKA SUDAH MASUK) */}
-          <div className="flex flex-col justify-center bg-slate-50 p-5 sm:p-7 md:col-span-7">
+          <div className="flex flex-col justify-center bg-slate-50 p-4 sm:p-7 md:col-span-7">
             {officer ? (
               <div className="space-y-4">
                 <div className="flex items-start justify-between gap-2">
@@ -285,7 +312,8 @@ export default function SplashScreenModal({
                   <button
                     type="button"
                     onClick={onClose}
-                    className="inline-flex min-h-[38px] min-w-[38px] items-center justify-center rounded-lg text-slate-500 hover:bg-slate-200 hover:text-slate-900"
+                    aria-label="Tutup"
+                    className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg text-slate-500 hover:bg-slate-200 hover:text-slate-900"
                     title="Tutup"
                   >
                     <X className="h-5 w-5" />
@@ -303,7 +331,7 @@ export default function SplashScreenModal({
                     </div>
                     <div>
                       <div className="text-xs font-extrabold text-slate-900">Tanya Pakar UIP</div>
-                      <div className="text-[11px] text-slate-600">Seksyen caj, had denda &amp; SOP</div>
+                      <div className="text-[11px] text-slate-600">Seksyen kesalahan, had denda &amp; SOP</div>
                     </div>
                   </button>
 
@@ -354,19 +382,19 @@ export default function SplashScreenModal({
                   <button
                     type="button"
                     onClick={onClose}
-                    className="inline-flex min-h-[42px] items-center gap-1.5 rounded-xl bg-[#0f2744] px-4 py-2 text-xs font-bold text-white hover:bg-slate-800"
+                    className="inline-flex min-h-[44px] items-center gap-1.5 rounded-xl bg-[#0f2744] px-4 py-2 text-xs font-bold text-white hover:bg-slate-800"
                   >
                     Teruskan <ArrowRight className="h-3.5 w-3.5" />
                   </button>
                 </div>
               </div>
             ) : (
-              <div className="space-y-4">
+              <div className="space-y-3.5">
                 <div>
                   <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2.5 py-0.5 text-[11px] font-bold text-amber-900">
                     Log Masuk Diperlukan
                   </span>
-                  <h3 className="mt-2 text-lg font-extrabold text-slate-900">
+                  <h3 className="mt-1.5 text-lg font-extrabold text-slate-900">
                     Log Masuk Akaun Pegawai UIP
                   </h3>
                   <p className="mt-1 text-xs leading-relaxed text-slate-600">
@@ -393,8 +421,8 @@ export default function SplashScreenModal({
                     </div>
                   ) : (
                     <div className="flex flex-col items-start gap-2">
-                      <div ref={gsiBtnRef} className="min-h-[42px]" />
-                      {!gsiReady && (
+                      <div ref={gsiBtnRef} className={gsiReady ? "min-h-[42px]" : ""} />
+                      {!gsiReady && !gsiFailed && (
                         <button
                           type="button"
                           onClick={onOpenGoogleAuth}
@@ -403,22 +431,28 @@ export default function SplashScreenModal({
                           Teruskan dengan Akaun Google
                         </button>
                       )}
+                      {gsiFailed && (
+                        <div className="w-full rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900">
+                          Sistem log masuk Google tidak dapat dimuatkan (mungkin disekat rangkaian pejabat). Sila guna{" "}
+                          <strong>Log Masuk E-mel</strong> di bawah.
+                        </div>
+                      )}
                       {gsiReady && (
                         <button
                           type="button"
                           onClick={handlePopupGoogle}
                           className="text-[11px] font-semibold text-blue-700 hover:underline"
                         >
-                          Butang di atas disekat? Buka tetingkap Google OAuth →
+                          Butang di atas disekat? Buka tetingkap Google →
                         </button>
                       )}
                     </div>
                   )}
                 </div>
 
-                <div className="flex items-center gap-3 text-[11px] font-semibold text-slate-400">
+                <div className="flex items-center gap-3 text-[11px] font-semibold text-slate-500">
                   <div className="h-px flex-1 bg-slate-200" />
-                  <span>atau guna emel KKM / kerja</span>
+                  <span>atau guna e-mel KKM / kerja</span>
                   <div className="h-px flex-1 bg-slate-200" />
                 </div>
 
@@ -429,7 +463,7 @@ export default function SplashScreenModal({
                     className="inline-flex min-h-[44px] items-center justify-center gap-1.5 rounded-xl bg-[#0f2744] px-4 py-2 text-xs font-bold text-white hover:bg-slate-800"
                   >
                     <Mail className="h-4 w-4" />
-                    Log Masuk Emel
+                    Log Masuk E-mel
                   </button>
                   <button
                     type="button"
@@ -441,7 +475,7 @@ export default function SplashScreenModal({
                   </button>
                 </div>
 
-                <div className="pt-1 text-center text-[11px] text-slate-500 md:hidden">
+                <div className="pt-1 text-center text-[11px] text-slate-600 md:hidden">
                   <a
                     href="https://g.dev/syrzy"
                     target="_blank"

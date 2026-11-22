@@ -5,6 +5,7 @@ export PORT="${PORT:-8080}"
 export CHROMA_PERSIST_DIR="${CHROMA_PERSIST_DIR:-/tmp/chroma_db}"
 export SQLITE_DB_PATH="${SQLITE_DB_PATH:-/tmp/uip_command.db}"
 export DEV_ARCHIVE_LOCAL_DIR="${DEV_ARCHIVE_LOCAL_DIR:-/tmp/dev_vault}"
+export DEV_ARCHIVE_LOCAL_ENABLED="${DEV_ARCHIVE_LOCAL_ENABLED:-false}"
 
 mkdir -p "$CHROMA_PERSIST_DIR" "$DEV_ARCHIVE_LOCAL_DIR" /tmp
 

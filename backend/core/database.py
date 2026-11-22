@@ -354,6 +354,16 @@ def _utc_now_iso() -> str:
     return datetime.now(timezone.utc).astimezone().strftime("%Y-%m-%d %H:%M:%S")
 
 
+def _utc_plus_days_iso(days: int = 30) -> str:
+    from datetime import timedelta
+
+    return (datetime.now(timezone.utc) + timedelta(days=days)).astimezone().strftime("%Y-%m-%d %H:%M:%S")
+
+
+def _hash_session_token(token: str) -> str:
+    return "sha256:" + hashlib.sha256(token.encode("utf-8")).hexdigest()
+
+
 def _hash_password(password: str, salt: Optional[str] = None) -> tuple[str, str]:
     use_salt = salt or secrets.token_hex(16)
     digest = hashlib.pbkdf2_hmac(
@@ -368,6 +378,27 @@ def _hash_password(password: str, salt: Optional[str] = None) -> tuple[str, str]
 def _verify_password(password: str, salt: str, expected_hash: str) -> bool:
     digest, _ = _hash_password(password, salt=salt)
     return secrets.compare_digest(digest, expected_hash)
+
+
+class _SqliteConnContext:
+    """Pembalut sambungan SQLite yang menjamin conn.close() dipanggil selepas setiap konteks `with`."""
+
+    def __init__(self, db_path: str) -> None:
+        self._conn = sqlite3.connect(db_path, timeout=15.0)
+        self._conn.row_factory = sqlite3.Row
+        self._conn.execute("PRAGMA busy_timeout=15000;")
+        self._conn.execute("PRAGMA journal_mode=WAL;")
+        self._conn.execute("PRAGMA foreign_keys=ON;")
+
+    def __enter__(self) -> sqlite3.Connection:
+        return self._conn
+
+    def __exit__(self, exc_type: Any, exc_val: Any, exc_tb: Any) -> None:
+        try:
+            if exc_type is not None:
+                self._conn.rollback()
+        finally:
+            self._conn.close()
 
 
 class _PgCursorAdapter:
@@ -439,11 +470,7 @@ class UIPDatabase:
     def _connect(self) -> Any:
         if self.use_postgres:
             return _PgConnAdapter(settings.database_url)
-        conn = sqlite3.connect(str(self.db_path))
-        conn.row_factory = sqlite3.Row
-        conn.execute("PRAGMA journal_mode=WAL;")
-        conn.execute("PRAGMA foreign_keys=ON;")
-        return conn
+        return _SqliteConnContext(str(self.db_path))
 
     def _init_schema(self) -> None:
         with self._connect() as conn:
@@ -460,6 +487,7 @@ class UIPDatabase:
                 """
                 CREATE TABLE IF NOT EXISTS ip_cases (
                     id TEXT PRIMARY KEY,
+                    owner_user_id TEXT NOT NULL DEFAULT '',
                     no_ip TEXT NOT NULL,
                     tajuk_kes TEXT NOT NULL,
                     akta_utama TEXT NOT NULL,
@@ -515,6 +543,18 @@ class UIPDatabase:
                 )
                 """
             )
+            conn.execute(
+                """
+                CREATE TABLE IF NOT EXISTS user_sessions (
+                    token TEXT PRIMARY KEY,
+                    user_id TEXT NOT NULL,
+                    created_at TEXT NOT NULL,
+                    last_seen_at TEXT NOT NULL,
+                    expires_at TEXT NOT NULL DEFAULT '',
+                    FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
+                )
+                """
+            )
             conn.commit()
             if self.use_postgres:
                 conn.execute(
@@ -523,28 +563,25 @@ class UIPDatabase:
                 conn.execute(
                     "ALTER TABLE users ADD COLUMN IF NOT EXISTS last_seen_at TEXT NOT NULL DEFAULT ''"
                 )
+                conn.execute(
+                    "ALTER TABLE ip_cases ADD COLUMN IF NOT EXISTS owner_user_id TEXT NOT NULL DEFAULT ''"
+                )
+                conn.execute(
+                    "ALTER TABLE user_sessions ADD COLUMN IF NOT EXISTS expires_at TEXT NOT NULL DEFAULT ''"
+                )
                 conn.commit()
             else:
                 for col_sql in (
                     "ALTER TABLE users ADD COLUMN auth_provider TEXT NOT NULL DEFAULT 'email'",
                     "ALTER TABLE users ADD COLUMN last_seen_at TEXT NOT NULL DEFAULT ''",
+                    "ALTER TABLE ip_cases ADD COLUMN owner_user_id TEXT NOT NULL DEFAULT ''",
+                    "ALTER TABLE user_sessions ADD COLUMN expires_at TEXT NOT NULL DEFAULT ''",
                 ):
                     try:
                         conn.execute(col_sql)
                     except sqlite3.OperationalError:
                         pass
                 conn.commit()
-            conn.execute(
-                """
-                CREATE TABLE IF NOT EXISTS user_sessions (
-                    token TEXT PRIMARY KEY,
-                    user_id TEXT NOT NULL,
-                    created_at TEXT NOT NULL,
-                    last_seen_at TEXT NOT NULL,
-                    FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
-                )
-                """
-            )
             conn.execute(
                 """
                 CREATE TABLE IF NOT EXISTS activity_logs (
@@ -731,8 +768,12 @@ class UIPDatabase:
                 if key not in payload or payload[key] is None:
                     continue
                 val = str(payload[key]).strip()
-                # Jangan timpa kunci API sebenar dengan rentetan bertopeng atau kosong melainkan diminta jelas
-                if key == "gemini_api_key" and "..." in val and "*" not in val and len(val) <= 15:
+                # Jangan timpa kunci API sebenar dengan rentetan bertopeng atau placeholder
+                if key == "gemini_api_key" and (
+                    val == settings.masked_gemini_key
+                    or ("..." in val and len(val) <= 20)
+                    or (val and set(val) <= {"*", "."})
+                ):
                     continue
                 conn.execute(
                     """
@@ -757,6 +798,7 @@ class UIPDatabase:
             self.upsert_case(
                 {
                     "id": sample["id"],
+                    "owner_user_id": "",
                     "tajuk_kes": sample["title"],
                     "akta_utama": sample["akta_utama"],
                     "workflow": sample["workflow"],
@@ -770,19 +812,37 @@ class UIPDatabase:
                 }
             )
 
-    def list_cases(self) -> List[Dict[str, Any]]:
+    def list_cases(
+        self, owner_user_id: Optional[str] = None, is_admin: bool = False
+    ) -> List[Dict[str, Any]]:
         with self._connect() as conn:
-            rows = conn.execute(
-                """
-                SELECT id, no_ip, tajuk_kes, akta_utama, workflow, badge,
-                       nama_okt, no_kp_okt, nama_premis, no_ssm, alamat_kejadian,
-                       tarikh_kejadian, masa_kejadian, pegawai_io, no_kad_kuasa,
-                       status_kes, skor_audit, case_text, checklist_json,
-                       audit_json, draft_json, created_at, updated_at
-                FROM ip_cases
-                ORDER BY updated_at DESC
-                """
-            ).fetchall()
+            if is_admin or not owner_user_id:
+                rows = conn.execute(
+                    """
+                    SELECT id, owner_user_id, no_ip, tajuk_kes, akta_utama, workflow, badge,
+                           nama_okt, no_kp_okt, nama_premis, no_ssm, alamat_kejadian,
+                           tarikh_kejadian, masa_kejadian, pegawai_io, no_kad_kuasa,
+                           status_kes, skor_audit, case_text, checklist_json,
+                           audit_json, draft_json, created_at, updated_at
+                    FROM ip_cases
+                    ORDER BY updated_at DESC
+                    """
+                ).fetchall()
+            else:
+                # Pegawai hanya melihat kes miliknya sendiri + kes sampel rujukan sistem (owner_user_id = '')
+                rows = conn.execute(
+                    """
+                    SELECT id, owner_user_id, no_ip, tajuk_kes, akta_utama, workflow, badge,
+                           nama_okt, no_kp_okt, nama_premis, no_ssm, alamat_kejadian,
+                           tarikh_kejadian, masa_kejadian, pegawai_io, no_kad_kuasa,
+                           status_kes, skor_audit, case_text, checklist_json,
+                           audit_json, draft_json, created_at, updated_at
+                    FROM ip_cases
+                    WHERE owner_user_id = ? OR owner_user_id = '' OR id LIKE 'kes-akta-%'
+                    ORDER BY updated_at DESC
+                    """,
+                    (owner_user_id,),
+                ).fetchall()
         return [self._row_to_dict(r) for r in rows]
 
     def get_case(self, case_id: str) -> Optional[Dict[str, Any]]:
@@ -790,10 +850,29 @@ class UIPDatabase:
             row = conn.execute("SELECT * FROM ip_cases WHERE id = ?", (case_id,)).fetchone()
         return self._row_to_dict(row) if row else None
 
-    def upsert_case(self, data: Dict[str, Any]) -> Dict[str, Any]:
+    def upsert_case(
+        self,
+        data: Dict[str, Any],
+        owner_user_id: Optional[str] = None,
+        is_admin: bool = False,
+    ) -> Dict[str, Any]:
         now = _utc_now_iso()
         case_id = str(data.get("id") or f"kes-{uuid.uuid4().hex[:8]}").strip()
         existing = self.get_case(case_id)
+
+        if existing and owner_user_id and not is_admin:
+            existing_owner = str(existing.get("owner_user_id") or "").strip()
+            if existing_owner and existing_owner != owner_user_id:
+                raise PermissionError("Akses disekat: Kes IP ini milik pegawai lain.")
+
+        resolved_owner = (
+            str(existing.get("owner_user_id") or "")
+            if existing and str(existing.get("owner_user_id") or "")
+            else str(owner_user_id if owner_user_id is not None else (data.get("owner_user_id") or ""))
+        )
+        # Kekalkan kes sampel sistem sebagai rujukan bersama kecuali diubah suai
+        if case_id.startswith("kes-akta-") and not (existing and existing.get("owner_user_id")):
+            resolved_owner = ""
 
         case_text = str(data.get("case_text") or (existing["case_text"] if existing else ""))
         parsed = self._quick_extract_metadata(case_text)
@@ -837,14 +916,15 @@ class UIPDatabase:
             conn.execute(
                 """
                 INSERT INTO ip_cases (
-                    id, no_ip, tajuk_kes, akta_utama, workflow, badge,
+                    id, owner_user_id, no_ip, tajuk_kes, akta_utama, workflow, badge,
                     nama_okt, no_kp_okt, nama_premis, no_ssm, alamat_kejadian,
                     tarikh_kejadian, masa_kejadian, pegawai_io, no_kad_kuasa,
                     status_kes, skor_audit, case_text, checklist_json,
                     audit_json, draft_json, created_at, updated_at
                 )
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ON CONFLICT(id) DO UPDATE SET
+                    owner_user_id=excluded.owner_user_id,
                     no_ip=excluded.no_ip,
                     tajuk_kes=excluded.tajuk_kes,
                     akta_utama=excluded.akta_utama,
@@ -869,6 +949,7 @@ class UIPDatabase:
                 """,
                 (
                     case_id,
+                    resolved_owner,
                     no_ip,
                     tajuk_kes,
                     akta_utama,
@@ -896,7 +977,21 @@ class UIPDatabase:
             conn.commit()
         return self.get_case(case_id) or {}
 
-    def delete_case(self, case_id: str) -> bool:
+    def delete_case(
+        self,
+        case_id: str,
+        owner_user_id: Optional[str] = None,
+        is_admin: bool = False,
+    ) -> bool:
+        existing = self.get_case(case_id)
+        if not existing:
+            return False
+        if owner_user_id and not is_admin:
+            existing_owner = str(existing.get("owner_user_id") or "").strip()
+            if existing_owner and existing_owner != owner_user_id:
+                raise PermissionError("Akses disekat: Anda tidak dibenarkan memadam kes milik pegawai lain.")
+            if not existing_owner and case_id.startswith("kes-akta-"):
+                raise PermissionError("Akses disekat: Kes sampel rujukan sistem tidak boleh dipadam oleh akaun biasa.")
         with self._connect() as conn:
             cur = conn.execute("DELETE FROM ip_cases WHERE id = ?", (case_id,))
             conn.commit()
@@ -1015,7 +1110,27 @@ class UIPDatabase:
                 raise ValueError("Maklumat emel daripada token Google tidak lengkap.")
             return {"email": email, "full_name": full_name}
 
-        # Aliran Access Token (OAuth 2.0 Token Client Popup)
+        # Aliran Access Token (OAuth 2.0 Token Client Popup): sahkan audience jika Google Client ID dikonfigurasi
+        if settings.google_client_id:
+            try:
+                ti_resp = httpx.get(
+                    "https://oauth2.googleapis.com/tokeninfo",
+                    params={"access_token": access_token},
+                    timeout=10.0,
+                )
+            except Exception as exc:
+                raise ValueError(
+                    f"Gagal mengesahkan audience token akses Google: {exc}"
+                ) from exc
+            if ti_resp.status_code != 200:
+                raise ValueError("Token akses Google OAuth tidak sah atau sudah tamat tempoh.")
+            ti_claims = ti_resp.json()
+            aud_val = str(ti_claims.get("aud") or ti_claims.get("azp") or "").strip()
+            if aud_val and aud_val != settings.google_client_id:
+                raise ValueError(
+                    "Token akses Google tidak dikeluarkan untuk Google OAuth Client ID aplikasi ini."
+                )
+
         try:
             resp = httpx.get(
                 "https://www.googleapis.com/oauth2/v3/userinfo",
@@ -1097,11 +1212,13 @@ class UIPDatabase:
 
     def create_session(self, user_id: str) -> str:
         token = secrets.token_urlsafe(32)
+        token_stored = _hash_session_token(token)
         now = _utc_now_iso()
+        expires_at = _utc_plus_days_iso(30)
         with self._connect() as conn:
             conn.execute(
-                "INSERT INTO user_sessions (token, user_id, created_at, last_seen_at) VALUES (?, ?, ?, ?)",
-                (token, user_id, now, now),
+                "INSERT INTO user_sessions (token, user_id, created_at, last_seen_at, expires_at) VALUES (?, ?, ?, ?, ?)",
+                (token_stored, user_id, now, now, expires_at),
             )
             conn.execute(
                 "UPDATE users SET last_seen_at = ? WHERE id = ?",
@@ -1118,22 +1235,47 @@ class UIPDatabase:
     def get_user_by_token(self, token: str) -> Optional[Dict[str, Any]]:
         if not token:
             return None
+        hashed = _hash_session_token(token)
+        now = _utc_now_iso()
         with self._connect() as conn:
             row = conn.execute(
                 """
-                SELECT u.* FROM users u
+                SELECT u.*, s.token AS _sess_token, s.last_seen_at AS _sess_last_seen, s.expires_at AS _sess_expires
+                FROM users u
                 JOIN user_sessions s ON s.user_id = u.id
-                WHERE s.token = ?
+                WHERE s.token = ? OR s.token = ?
                 """,
-                (token,),
+                (hashed, token),
             ).fetchone()
-            if row:
+            if not row:
+                return None
+            sess_expires = str(row["_sess_expires"] or "").strip()
+            if sess_expires and sess_expires < now:
+                conn.execute("DELETE FROM user_sessions WHERE token = ?", (row["_sess_token"],))
+                conn.commit()
+                return None
+            # Kemas kini last_seen_at hanya jika lebih 5 minit sejak kemas kini terakhir (elak tulis DB setiap GET)
+            should_touch = True
+            prev_seen = str(row["_sess_last_seen"] or "").strip()
+            if prev_seen:
+                try:
+                    dt_prev = datetime.strptime(prev_seen, "%Y-%m-%d %H:%M:%S")
+                    dt_now = datetime.strptime(now, "%Y-%m-%d %H:%M:%S")
+                    if abs((dt_now - dt_prev).total_seconds()) < 300:
+                        should_touch = False
+                except Exception:
+                    pass
+            if should_touch:
                 conn.execute(
                     "UPDATE user_sessions SET last_seen_at = ? WHERE token = ?",
-                    (_utc_now_iso(), token),
+                    (now, row["_sess_token"]),
                 )
                 conn.commit()
-        return self._safe_user_dict(row) if row else None
+        d = self._safe_user_dict(row)
+        d.pop("_sess_token", None)
+        d.pop("_sess_last_seen", None)
+        d.pop("_sess_expires", None)
+        return d
 
     def update_user_profile(
         self, user_id: str, payload: Dict[str, Any]
@@ -1179,8 +1321,12 @@ class UIPDatabase:
     def logout_session(self, token: str) -> bool:
         if not token:
             return False
+        hashed = _hash_session_token(token)
         with self._connect() as conn:
-            cur = conn.execute("DELETE FROM user_sessions WHERE token = ?", (token,))
+            cur = conn.execute(
+                "DELETE FROM user_sessions WHERE token = ? OR token = ?",
+                (hashed, token),
+            )
             conn.commit()
             return cur.rowcount > 0
 

@@ -92,7 +92,7 @@ const PRIVACY_FLOW_STEPS = [
   {
     step: "3 · AI",
     title: "Semakan & AI",
-    desc: "RAG Akta / Gemini / Statutori",
+    desc: "Pustaka Akta / AI Awan",
   },
   {
     step: "4 · Output",
@@ -607,11 +607,11 @@ export default function OnboardingCardsModal({
                   id="onboarding-card-title"
                   className="mt-2.5 text-xl font-black text-[#241b1b] sm:text-2xl"
                 >
-                  Buku Panduan &amp; 6 Akta Verbatim
+                  Buku Panduan &amp; 6 Akta Rasmi
                 </h2>
                 <p className="mt-2 text-xs leading-relaxed text-[#4c3f3f]">
-                  Rujukan digital 4 fasa operasi UIP, cheat sheet 4 akta teras, Formula 5W1H,
-                  senarai 10 kesilapan maut PPKP &amp; carian ayat akta sebenar (ChromaDB / BM25).
+                  Rujukan digital 4 fasa operasi UIP, panduan ringkas 4 akta teras, Formula 5W1H,
+                  senarai 10 kesilapan utama PPKP &amp; carian ayat akta sebenar.
                 </p>
 
                 <div className="mt-3.5 grid grid-cols-1 gap-2 sm:grid-cols-2">

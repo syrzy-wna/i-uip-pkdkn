@@ -53,7 +53,7 @@ type AdvisorResultTab = "evidence" | "charges" | "statutes";
 
 const QUICK_CHIPS = [
   "Guru tangkap pelajar sedang hisap vape dalam tandas sekolah",
-  "Guru maklum PPKP ada pelajar memiliki vape semasa checking bag",
+  "Guru maklum PPKP ada pelajar memiliki vape semasa pemeriksaan beg sekolah",
   "Restoran kotor ada najis tikus & tiada tifoid",
   "Kedai pamer vape secara terbuka di kaunter",
 ];
@@ -557,7 +557,7 @@ export default function UIPAdvisorPanel({
           : result.ai_succeeded
             ? isDevAdmin
               ? result.engine_used
-              : "Analisa AI"
+              : "Analisis AI"
             : isDevAdmin
               ? result.engine_used || "Rujukan Pantas UIP"
               : "Rujukan Akta KKM";
@@ -674,7 +674,7 @@ export default function UIPAdvisorPanel({
                   className="inline-flex shrink-0 items-center gap-1 rounded-lg border border-teal-300 bg-white px-2.5 py-1.5 text-[11px] font-bold text-teal-900 hover:bg-teal-100 disabled:opacity-50"
                 >
                   <Sparkles className="h-3 w-3 text-indigo-700" />
-                  {deepLoading ? "Menganalisa AI..." : "Analisa Baharu (AI)"}
+                  {deepLoading ? "Menganalisis AI..." : "Analisis Baharu (AI)"}
                 </button>
               </div>
             )}
@@ -756,7 +756,7 @@ export default function UIPAdvisorPanel({
                               ) : null}
                             </span>
                             <span className="rounded-full bg-amber-100 px-2.5 py-0.5 text-[10px] font-extrabold text-amber-950">
-                              Unsur Tidak Terpenuhi
+                              Unsur Tidak Dipenuhi
                             </span>
                           </div>
                           <ul className="space-y-1.5 text-xs">
@@ -779,7 +779,11 @@ export default function UIPAdvisorPanel({
                                         : "bg-amber-100 text-amber-900"
                                   }`}
                                 >
-                                  {el.status || "PERLU BUKTI TAMBAHAN"}
+                                  {el.status === "TIDAK TERPENUHI"
+                                    ? "TIDAK DIPENUHI"
+                                    : el.status === "TERPENUHI"
+                                      ? "DIPENUHI"
+                                      : el.status || "PERLU BUKTI TAMBAHAN"}
                                 </span>
                               </li>
                             ))}
@@ -875,7 +879,7 @@ export default function UIPAdvisorPanel({
                     ) : (
                       <Sparkles className="h-3.5 w-3.5" />
                     )}
-                    {deepLoading ? "Sedang Analisa AI..." : "Perlu penjelasan tambahan? Cuba Analisa AI"}
+                    {deepLoading ? "Sedang Menganalisis AI..." : "Perlu penjelasan tambahan? Cuba Analisis AI"}
                   </button>
                 </div>
               </div>
@@ -1030,9 +1034,9 @@ export default function UIPAdvisorPanel({
                         <Sparkles className="h-3.5 w-3.5" />
                       )}
                       {deepLoading
-                        ? "Sedang Analisa AI..."
+                        ? "Sedang Menganalisis AI..."
                         : result.ai_succeeded
-                          ? "Analisa Semula dengan AI"
+                          ? "Analisis Semula dengan AI"
                           : "Perlu jawapan lebih terperinci? Cuba AI"}
                     </button>
                   </div>
@@ -1098,9 +1102,9 @@ export default function UIPAdvisorPanel({
                                   }`}
                                 >
                                   {ev.action_blocked
-                                    ? "Unsur Tidak Terpenuhi"
+                                    ? "Unsur Tidak Dipenuhi"
                                     : ev.all_elements_satisfied
-                                      ? "Fakta Asas Terpenuhi"
+                                      ? "Fakta Asas Dipenuhi"
                                       : "Sahkan Bukti Di Lokasi"}
                                 </span>
                               </div>
@@ -1132,7 +1136,11 @@ export default function UIPAdvisorPanel({
                                                 : "bg-amber-100 text-amber-900"
                                           }`}
                                         >
-                                          {el.status || "PERLU BUKTI TAMBAHAN"}
+                                          {el.status === "TERPENUHI"
+                                            ? "DIPENUHI"
+                                            : el.status === "TIDAK TERPENUHI"
+                                              ? "TIDAK DIPENUHI"
+                                              : el.status || "PERLU BUKTI TAMBAHAN"}
                                         </span>
                                       </td>
                                       <td className="p-2.5 text-slate-600">
@@ -1378,7 +1386,7 @@ export default function UIPAdvisorPanel({
               }}
               className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-bold text-slate-700 hover:bg-slate-100"
             >
-              Reset Tapisan
+              Set Semula Tapisan
             </button>
           </div>
         ) : (
@@ -1448,10 +1456,10 @@ export default function UIPAdvisorPanel({
                                 >
                                   {item.is_ai_answered ? (
                                     <>
-                                      <Sparkles className="h-2.5 w-2.5" /> Analisa AI
+                                      <Sparkles className="h-2.5 w-2.5" /> Analisis AI
                                     </>
                                   ) : (
-                                    "Statutori"
+                                    "Rujukan Akta"
                                   )}
                                 </span>
                                 {item.ask_count > 1 && (

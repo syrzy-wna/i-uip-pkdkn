@@ -612,7 +612,8 @@ class StatutoryRAGStore:
         )
         domain_act, domain_expansions = (None, []) if norm_filter else self._infer_domain_signals(query)
 
-        # Jika isyarat domain tunggal jelas (cth: vape/rokok -> Akta 852), kunci penapisan supaya Akta 171 / Akta 281 tidak bocor
+        # Jika isyarat domain tunggal jelas (cth: vape/rokok -> Akta 852), kunci penapisan supaya Akta 171 / Akta 281 tidak bocor,
+        # namun kekalkan laluan Akta 56 (keterangan digital), Akta 593 (KTJ S.112) & Akta 611 (kanak-kanak) jika disebut khusus.
         locked_acts: Optional[set[str]] = None
         if domain_act:
             from backend.rag.legal_engine import canonical_akta_code_for_statute, infer_domain_statute_ids

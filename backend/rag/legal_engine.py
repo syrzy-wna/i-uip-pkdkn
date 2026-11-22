@@ -23,8 +23,8 @@ import pymupdf as fitz
 
 from backend.core.config import settings
 
-INITIAL_STATUTE_LIBRARY_VERSION = "2.5.0-closed-book-agc-pdf"
-PARSER_VERSION = "3.3-agc-gazette-pdf"
+INITIAL_STATUTE_LIBRARY_VERSION = "2.6.0-closed-book-agc-pdf"
+PARSER_VERSION = "3.4-agc-gazette-pdf"
 
 TOKEN_RE = re.compile(r"[a-zA-Z0-9]+")
 
@@ -60,9 +60,10 @@ AMENDMENT_COMPANIONS: Dict[str, Dict[str, Any]] = {
             "ARAHAN KERAS PINDAAN STATUTORI (AKTA 342 <-> AKTA A1742 & P.U.(A) 139/2025): "
             "Apabila merujuk Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988 [Akta 342], "
             "ANDA WAJIB MENGUTAMAKAN teks pindaan terkini Akta A1742 (berkuat kuasa 1 Mei 2025) dan kadar kompaun "
-            "P.U. (A) 139/2025 (kompaun individu maks RM5,000 / pertubuhan perbadanan maks RM50,000; Penalti Am Seksyen 24 "
-            "dipinda kepada individu maks RM100,000 atau penjara 7 tahun & korporat maks RM2,000,000; Seksyen 22A liabiliti korporat) "
-            "BERBANDING teks asal cetakan 1988 (kadar lama RM1,000 / 2 tahun)."
+            "P.U. (A) 139/2025: Penalti Am Seksyen 24(a) individu maks RM10,000 atau penjara maks 2 tahun atau kedua-duanya "
+            "& Seksyen 24(b) pertubuhan perbadanan maks RM100,000; had kompaun Seksyen 25 individu maks RM5,000 / pertubuhan perbadanan maks RM50,000 "
+            "HANYA bagi kesalahan Jadual Pertama P.U.(A) 139/2025 dengan keizinan bertulis Pendakwa Raya; Seksyen 22A liabiliti korporat "
+            "(BERBANDING kadar lama cetakan 1988 RM1,000 / 2 tahun)."
         ),
     },
     "AKTA_281": {
@@ -74,7 +75,7 @@ AMENDMENT_COMPANIONS: Dict[str, Dict[str, Any]] = {
             "ARAHAN KERAS PINDAAN STATUTORI (AKTA 281 <-> AKTA A1702): "
             "Apabila merujuk Akta Makanan 1983 [Akta 281], ANDA WAJIB MENYEMAK DAN MENGUTAMAKAN "
             "pindaan terkini Akta Makanan (Pindaan) 2024 [Akta A1702] (berkuat kuasa 1 Oktober 2024 — termasuk "
-            "pemotongan definisi tembakau/hasil tembakau yang dipindahkan ke Akta 852 serta pindaan Seksyen 2, 34 & 36) "
+            "pemotongan takrif tembakau/hasil tembakau di Seksyen 2 serta pemotongan Seksyen 36 yang dipindahkan ke Akta 852) "
             "BERBANDING teks asal Akta 281 sebelum pindaan 2024."
         ),
     },
@@ -214,10 +215,10 @@ DEFAULT_REPEALED_AND_BLOCKED_PROVISIONS: List[Dict[str, Any]] = [
         "replacement_statute_id": "AKTA_593",
         "replacement_section": "Seksyen 112 Kanun Tatacara Jenayah [Akta 593] (dengan pematuhan subseksyen (2) hingga (5))",
         "warning_message_bm": (
-            "DISEKAT (PERUNTUKAN DIMANSUHKAN): Pernyataan beramaran Seksyen 113 KTJ telah dimansuhkan. "
-            "Semua rakaman percakapan saksi dan OYDS diambil di bawah Seksyen 112 KTJ."
+            "DISEKAT (PERUNTUKAN LAMA DIGANTI): Pernyataan beramaran lama di bawah Seksyen 113 KTJ telah diganti melalui Akta A1274 (2007). "
+            "Semua rakaman percakapan saksi dan OYDS wajib diambil di bawah Seksyen 112 KTJ."
         ),
-        "key_differences_note": "Wajib rekodkan pemakluman amaran Seksyen 112(2) & (3) mengikut S.112(4) dan tandatangan S.112(5) KTJ.",
+        "key_differences_note": "Seksyen 113 KTJ terkini menyekat kebolehterimaan pernyataan kepada pegawai penyiasat sebagai keterangan pendakwaan kecuali bagi tujuan tertentu; rakaman percakapan wajib mematuhi Seksyen 112(2)–(5) KTJ.",
     },
 ]
 
@@ -523,18 +524,18 @@ DEFAULT_MASTER_OFFENCES_MATRIX: List[Dict[str, Any]] = [
             "Produk yang masih berada dalam tempoh peralihan pendaftaran statutori yang sah mengikut jadual kuat kuasa P.U. (A) 262/2024 tidak boleh dituduh tanpa semakan tarikh kuat kuasa fasa pendaftaran.",
             "Jangan kelirukan kesalahan pengedaran tanpa daftar (S.3) dengan kesalahan pameran terbuka di kedai runcit (S.10(1) + Peraturan 6 P.U. (A) 260/2024).",
         ],
-        "penalty_section": "Seksyen 3(2) [Individu] / Seksyen 3(3) [Pertubuhan Perbadanan] Akta 852",
+        "penalty_section": "Seksyen 3(2)(a) [Bukan Pertubuhan Perbadanan] / Seksyen 3(2)(b) [Pertubuhan Perbadanan] Akta 852",
         "penalty_first_offence": {
             "max_fine_rm": 20000,
             "max_jail_months": 12,
             "other_orders": "Bagi Pertubuhan Perbadanan: Denda RM20,000 hingga RM100,000 atau penjara maks 2 tahun",
-            "verbatim_penalty": "Individu: Denda tidak melebihi RM20,000 atau penjara tidak melebihi 1 tahun atau kedua-duanya | Pertubuhan Perbadanan: Denda tidak kurang RM20,000 dan tidak melebihi RM100,000 atau penjara tidak melebihi 2 tahun.",
+            "verbatim_penalty": "Bukan Pertubuhan Perbadanan: Denda tidak melebihi RM20,000 atau penjara tidak melebihi 1 tahun atau kedua-duanya | Pertubuhan Perbadanan: Denda tidak kurang RM20,000 dan tidak melebihi RM100,000 atau penjara tidak melebihi 2 tahun.",
         },
         "penalty_subsequent_offence": {
             "max_fine_rm": 30000,
             "max_jail_months": 24,
             "other_orders": "Pertubuhan Perbadanan: Denda RM50,000 hingga RM300,000 atau penjara maks 3 tahun",
-            "verbatim_penalty": "Individu: Denda tidak melebihi RM30,000 atau penjara tidak melebihi 2 tahun | Pertubuhan Perbadanan: Denda RM50,000 hingga RM300,000 atau penjara tidak melebihi 3 tahun.",
+            "verbatim_penalty": "Bukan Pertubuhan Perbadanan: Denda tidak melebihi RM30,000 atau penjara tidak melebihi 2 tahun | Pertubuhan Perbadanan: Denda RM50,000 hingga RM300,000 atau penjara tidak melebihi 3 tahun.",
         },
         "compound_info": {
             "is_compoundable": False,
@@ -543,7 +544,7 @@ DEFAULT_MASTER_OFFENCES_MATRIX: List[Dict[str, Any]] = [
             "compound_amount_or_limit": "TIDAK BOLEH KOMPAUN — Wajib Sita (S.35/S.36) & Buka IP Terus",
             "max_compound_rm": None,
             "payment_days": None,
-            "notice_section": "Seksyen 47 Akta 852",
+            "notice_section": "Seksyen 47 Akta 852 [P.U. (A) 264/2024] (Notis Hadir Mahkamah)",
         },
         "special_legal_requirements": [
             "Borang Senarai Benda Disita Seksyen 36 Akta 852",
@@ -559,7 +560,7 @@ DEFAULT_MASTER_OFFENCES_MATRIX: List[Dict[str, Any]] = [
             "Bahawa kamu, pada [TARIKH], jam lebih kurang [MASA], bertempat di [TEMPAT_KEJADIAN], "
             "di dalam Daerah [DAERAH], di dalam Negeri [NEGERI], telah didapati mengedarkan produk pengganti tembakau / bahan merokok "
             "yang tidak didaftarkan di bawah Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024 [Akta 852] dan P.U. (A) 262/2024; "
-            "dan oleh yang demikian kamu telah melakukan suatu kesalahan di bawah Seksyen 3(1) Akta 852 yang boleh dihukum di bawah Seksyen 3(2)/(3) Akta yang sama."
+            "dan oleh yang demikian kamu telah melakukan suatu kesalahan di bawah Seksyen 3(1) Akta 852 yang boleh dihukum di bawah Seksyen 3(2)(a)/(b) Akta yang sama."
         ),
         "source_section_doc_ids": ["AKTA_852__S3", "AKTA_852_PERATURAN_PENDAFTARAN_2024__P3", "AKTA_852__S49"],
         "verified_status": "DRAFT_PENDING_REVIEW",
@@ -568,14 +569,14 @@ DEFAULT_MASTER_OFFENCES_MATRIX: List[Dict[str, Any]] = [
         "offence_id": "AKTA_852_S7_1",
         "statute_id": "AKTA_852",
         "offence_section": "Seksyen 7(1)",
-        "read_together_with": [],
+        "read_together_with": ["Seksyen 49 Akta 852 (jika pertubuhan perbadanan)", "Seksyen 114A Akta Keterangan 1950 (jika iklan digital/media sosial)"],
         "offence_title": "Menyiarkan, menyebabkan disiarkan atau memudahkan penyiaran iklan produk tembakau / bahan merokok / produk pengganti tembakau (vape)",
         "target_offender": "PENJUAL_PENGILANG",
         "mandatory_elements": [
             {
                 "element_no": 1,
                 "description": "OKT menyiarkan, menyebabkan disiarkan atau memudahkan penyiaran suatu iklan (poster, bunting, papan tanda, skrin LED atau hantaran media sosial).",
-                "must_prove": "Bahan iklan fizikal yang disita (Borang S.36) atau cetakan tangkapan skrin digital bersama Sijil S.90A(2) & bukti kawalan premis/akaun (SSM).",
+                "must_prove": "Bahan iklan fizikal yang disita (Borang S.36) atau cetakan tangkapan skrin digital bersama Sijil S.90A(2) & anggapan penerbitan S.114A Akta 56 serta bukti kawalan premis/akaun (SSM).",
             },
             {
                 "element_no": 2,
@@ -585,20 +586,20 @@ DEFAULT_MASTER_OFFENCES_MATRIX: List[Dict[str, Any]] = [
         ],
         "explicit_exclusions_and_traps": [
             "Senarai harga bertulis yang mematuhi spesifikasi tertutup di bawah P.U. (A) 260/2024 (hanya ditunjukkan atas permintaan pelanggan dewasa) BUKAN iklan haram S.7(1).",
-            "JANGAN campurkan kesalahan iklan S.7(1) dengan kesalahan pameran produk S.10(1) dalam satu Borang 114 yang sama (kesalahan Duplicity di bawah Seksyen 163 KTJ).",
+            "JANGAN campurkan kesalahan iklan S.7(1) dengan kesalahan pameran produk S.10(1) dalam satu Borang 114 yang sama (Pertindihan Pertuduhan di bawah Seksyen 163 KTJ).",
         ],
-        "penalty_section": "Seksyen 7(2)(a)/(b) [Individu] / Seksyen 7(3)(a)/(b) [Pertubuhan Perbadanan] Akta 852",
+        "penalty_section": "Seksyen 7(2)(a) [Bukan Pertubuhan Perbadanan] / Seksyen 7(2)(b) [Pertubuhan Perbadanan] Akta 852",
         "penalty_first_offence": {
             "max_fine_rm": 20000,
             "max_jail_months": 12,
             "other_orders": "Pertubuhan Perbadanan: Denda RM20,000 hingga RM100,000 atau penjara maks 2 tahun",
-            "verbatim_penalty": "Individu: Denda tidak melebihi RM20,000 atau penjara tidak melebihi 1 tahun atau kedua-duanya | Pertubuhan Perbadanan: Denda tidak kurang RM20,000 dan tidak melebihi RM100,000 atau penjara tidak melebihi 2 tahun.",
+            "verbatim_penalty": "Bukan Pertubuhan Perbadanan: Denda tidak melebihi RM20,000 atau penjara tidak melebihi 1 tahun atau kedua-duanya | Pertubuhan Perbadanan: Denda tidak kurang RM20,000 dan tidak melebihi RM100,000 atau penjara tidak melebihi 2 tahun.",
         },
         "penalty_subsequent_offence": {
             "max_fine_rm": 30000,
             "max_jail_months": 24,
             "other_orders": "Pertubuhan Perbadanan: Denda RM50,000 hingga RM300,000 atau penjara maks 3 tahun",
-            "verbatim_penalty": "Individu: Denda tidak melebihi RM30,000 atau penjara tidak melebihi 2 tahun | Pertubuhan Perbadanan: Denda RM50,000 hingga RM300,000 atau penjara tidak melebihi 3 tahun.",
+            "verbatim_penalty": "Bukan Pertubuhan Perbadanan: Denda tidak melebihi RM30,000 atau penjara tidak melebihi 2 tahun | Pertubuhan Perbadanan: Denda RM50,000 hingga RM300,000 atau penjara tidak melebihi 3 tahun.",
         },
         "compound_info": {
             "is_compoundable": False,
@@ -607,11 +608,11 @@ DEFAULT_MASTER_OFFENCES_MATRIX: List[Dict[str, Any]] = [
             "compound_amount_or_limit": "TIDAK BOLEH KOMPAUN di bawah Jadual Pertama P.U. (A) 259/2024 — Wajib Sita (S.35/S.36) & Buka IP Terus",
             "max_compound_rm": None,
             "payment_days": None,
-            "notice_section": "Seksyen 47 Akta 852",
+            "notice_section": "Seksyen 47 Akta 852 [P.U. (A) 264/2024] (Notis Hadir Mahkamah)",
         },
         "special_legal_requirements": [
             "Borang Senarai Benda Disita Seksyen 36 Akta 852 (bukan Seksyen 38)",
-            "Sijil Seksyen 90A(2) Akta Keterangan 1950",
+            "Sijil Seksyen 90A(2) & Seksyen 114A Akta Keterangan 1950 (jika iklan digital/media sosial)",
             "Seksyen 49 Akta 852 jika pertubuhan perbadanan",
         ],
         "mandatory_exhibits": [
@@ -623,16 +624,16 @@ DEFAULT_MASTER_OFFENCES_MATRIX: List[Dict[str, Any]] = [
             "Bahawa kamu, pada [TARIKH], jam lebih kurang [MASA], bertempat di [TEMPAT_KEJADIAN], "
             "di dalam Daerah [DAERAH], di dalam Negeri [NEGERI], telah didapati menyiarkan iklan yang menggalakkan atau mempromosikan "
             "penggunaan produk pengganti tembakau (rokok elektronik / vape); dan oleh yang demikian kamu telah melakukan suatu kesalahan "
-            "di bawah Seksyen 7(1) Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024 [Akta 852] yang boleh dihukum di bawah Seksyen 7(2)/(3) Akta yang sama."
+            "di bawah Seksyen 7(1) Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024 [Akta 852] yang boleh dihukum di bawah Seksyen 7(2)(a)/(b) Akta yang sama."
         ),
-        "source_section_doc_ids": ["AKTA_852__S7", "AKTA_852__S26", "AKTA_852__S49"],
+        "source_section_doc_ids": ["AKTA_852__S7", "AKTA_852__S26", "AKTA_852__S49", "AKTA_56__S114A"],
         "verified_status": "DRAFT_PENDING_REVIEW",
     },
     {
         "offence_id": "AKTA_852_S9_1",
         "statute_id": "AKTA_852",
         "offence_section": "Seksyen 9(1)",
-        "read_together_with": [],
+        "read_together_with": ["Seksyen 49 Akta 852 (jika pertubuhan perbadanan)"],
         "offence_title": "Mempromosikan atau menaja acara, aktiviti atau pemberian diskaun/hadiah berkaitan produk merokok",
         "target_offender": "PENJUAL_PENGILANG",
         "mandatory_elements": [
@@ -650,18 +651,18 @@ DEFAULT_MASTER_OFFENCES_MATRIX: List[Dict[str, Any]] = [
         "explicit_exclusions_and_traps": [
             "Tajaan atau aktiviti tanggungjawab sosial korporat (CSR) yang TIDAK menggunakan jenama/cap dagangan/imej produk merokok dan tidak mempromosikan produk merokok perlu disemak fakta elemen cap dagangannya.",
         ],
-        "penalty_section": "Seksyen 9(2) [Individu] / Seksyen 9(3) [Pertubuhan Perbadanan] Akta 852",
+        "penalty_section": "Seksyen 9(3)(a) [Bukan Pertubuhan Perbadanan] / Seksyen 9(3)(b) [Pertubuhan Perbadanan] Akta 852",
         "penalty_first_offence": {
             "max_fine_rm": 20000,
             "max_jail_months": 12,
             "other_orders": "Pertubuhan Perbadanan: Denda RM20,000 hingga RM100,000 atau penjara maks 2 tahun",
-            "verbatim_penalty": "Individu: Denda tidak melebihi RM20,000 atau penjara tidak melebihi 1 tahun | Pertubuhan Perbadanan: Denda RM20,000 hingga RM100,000 atau penjara tidak melebihi 2 tahun.",
+            "verbatim_penalty": "Bukan Pertubuhan Perbadanan: Denda tidak melebihi RM20,000 atau penjara tidak melebihi 1 tahun | Pertubuhan Perbadanan: Denda RM20,000 hingga RM100,000 atau penjara tidak melebihi 2 tahun.",
         },
         "penalty_subsequent_offence": {
             "max_fine_rm": 30000,
             "max_jail_months": 24,
             "other_orders": "Pertubuhan Perbadanan: Denda RM50,000 hingga RM300,000 atau penjara maks 3 tahun",
-            "verbatim_penalty": "Individu: Denda tidak melebihi RM30,000 atau penjara tidak melebihi 2 tahun | Pertubuhan Perbadanan: Denda RM50,000 hingga RM300,000.",
+            "verbatim_penalty": "Bukan Pertubuhan Perbadanan: Denda tidak melebihi RM30,000 atau penjara tidak melebihi 2 tahun | Pertubuhan Perbadanan: Denda RM50,000 hingga RM300,000.",
         },
         "compound_info": {
             "is_compoundable": False,
@@ -670,7 +671,7 @@ DEFAULT_MASTER_OFFENCES_MATRIX: List[Dict[str, Any]] = [
             "compound_amount_or_limit": "TIDAK BOLEH KOMPAUN — Wajib Sita (S.35/S.36) & Buka IP Terus",
             "max_compound_rm": None,
             "payment_days": None,
-            "notice_section": "Seksyen 47 Akta 852",
+            "notice_section": "Seksyen 47 Akta 852 [P.U. (A) 264/2024] (Notis Hadir Mahkamah)",
         },
         "special_legal_requirements": ["Borang Senarai Benda Disita Seksyen 36 Akta 852", "Sijil Seksyen 90A(2)"],
         "mandatory_exhibits": [
@@ -681,9 +682,9 @@ DEFAULT_MASTER_OFFENCES_MATRIX: List[Dict[str, Any]] = [
             "Bahawa kamu, pada [TARIKH], jam lebih kurang [MASA], bertempat di [TEMPAT_KEJADIAN], "
             "di dalam Daerah [DAERAH], di dalam Negeri [NEGERI], telah didapati mempromosikan atau menaja [BUTIRAN_PROMOSI] "
             "dengan menggunakan cap dagangan berkaitan produk merokok; dan oleh yang demikian kamu telah melakukan suatu kesalahan "
-            "di bawah Seksyen 9(1) Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024 [Akta 852] yang boleh dihukum di bawah Seksyen 9(2)/(3) Akta yang sama."
+            "di bawah Seksyen 9(1) Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024 [Akta 852] yang boleh dihukum di bawah Seksyen 9(3)(a)/(b) Akta yang sama."
         ),
-        "source_section_doc_ids": ["AKTA_852__S9"],
+        "source_section_doc_ids": ["AKTA_852__S9", "AKTA_852__S49"],
         "verified_status": "DRAFT_PENDING_REVIEW",
     },
     {
@@ -714,27 +715,27 @@ DEFAULT_MASTER_OFFENCES_MATRIX: List[Dict[str, Any]] = [
             "Produk merokok yang disimpan di dalam kabinet tertutup legap (opaque) yang mematuhi Peraturan 6 P.U. (A) 260/2024 dan hanya dibuka seketika semasa mengambil stok untuk pelanggan dewasa BUKAN kesalahan pameran terbuka S.10(1).",
             "JANGAN petik 'Borang Sitaan Seksyen 38' — Seksyen 38 ialah kos memegang barang disita; borang sitaan sah ialah Seksyen 36 Akta 852.",
         ],
-        "penalty_section": "Seksyen 10(2)(a)/(b) [Individu] / Seksyen 10(3)(a)/(b) [Pertubuhan Perbadanan] Akta 852",
+        "penalty_section": "Seksyen 10(2)(a) [Bukan Pertubuhan Perbadanan] / Seksyen 10(2)(b) [Pertubuhan Perbadanan] Akta 852",
         "penalty_first_offence": {
             "max_fine_rm": 20000,
             "max_jail_months": 12,
             "other_orders": "Pertubuhan Perbadanan: Denda RM20,000 hingga RM100,000 atau penjara maks 2 tahun",
-            "verbatim_penalty": "Individu: Denda tidak melebihi RM20,000 atau penjara tidak melebihi 1 tahun atau kedua-duanya | Pertubuhan Perbadanan: Denda tidak kurang RM20,000 dan tidak melebihi RM100,000 atau penjara tidak melebihi 2 tahun.",
+            "verbatim_penalty": "Bukan Pertubuhan Perbadanan: Denda tidak melebihi RM20,000 atau penjara tidak melebihi 1 tahun atau kedua-duanya | Pertubuhan Perbadanan: Denda tidak kurang RM20,000 dan tidak melebihi RM100,000 atau penjara tidak melebihi 2 tahun.",
         },
         "penalty_subsequent_offence": {
             "max_fine_rm": 30000,
             "max_jail_months": 24,
             "other_orders": "Pertubuhan Perbadanan: Denda RM50,000 hingga RM300,000 atau penjara maks 3 tahun",
-            "verbatim_penalty": "Individu: Denda tidak melebihi RM30,000 atau penjara tidak melebihi 2 tahun | Pertubuhan Perbadanan: Denda RM50,000 hingga RM300,000 atau penjara tidak melebihi 3 tahun.",
+            "verbatim_penalty": "Bukan Pertubuhan Perbadanan: Denda tidak melebihi RM30,000 atau penjara tidak melebihi 2 tahun | Pertubuhan Perbadanan: Denda RM50,000 hingga RM300,000 atau penjara tidak melebihi 3 tahun.",
         },
         "compound_info": {
             "is_compoundable": False,
-            "compound_authority_section": "Seksyen 48 Akta 852",
+            "compound_authority_section": None,
             "compound_regulation_ref": "P.U. (A) 259/2024",
-            "compound_amount_or_limit": "Seksyen 10(1) TIDAK tersenarai dalam Jadual Pertama P.U. (A) 259/2024 — Wajib Sita (S.35/S.36) & Buka IP Terus",
+            "compound_amount_or_limit": "TIDAK BOLEH KOMPAUN (Seksyen 10(1) tiada dalam Jadual Pertama P.U. (A) 259/2024) — Wajib Sita (S.35/S.36) & Buka IP Terus",
             "max_compound_rm": None,
-            "payment_days": 30,
-            "notice_section": "Seksyen 47 Akta 852",
+            "payment_days": None,
+            "notice_section": "Seksyen 47 Akta 852 [P.U. (A) 264/2024] (Notis Hadir Mahkamah)",
         },
         "special_legal_requirements": [
             "Penyitaan di bawah Seksyen 35 & Borang Senarai Benda Disita Seksyen 36 Akta 852",
@@ -753,7 +754,7 @@ DEFAULT_MASTER_OFFENCES_MATRIX: List[Dict[str, Any]] = [
             "di dalam Daerah [DAERAH], di dalam Negeri [NEGERI], telah didapati mempamerkan bagi maksud penjualan produk pengganti tembakau / bahan merokok "
             "secara terbuka di kaunter jualan yang melanggar Peraturan 6 Peraturan-Peraturan Kawalan Produk Merokok Demi Kesihatan Awam (Kawalan Penjualan) 2024 [P.U. (A) 260/2024]; "
             "dan oleh yang demikian kamu telah melakukan suatu kesalahan di bawah Seksyen 10(1) Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024 [Akta 852] "
-            "yang boleh dihukum di bawah Seksyen 10(2)/(3) Akta yang sama."
+            "yang boleh dihukum di bawah Seksyen 10(2)(a)/(b) Akta yang sama."
         ),
         "source_section_doc_ids": ["AKTA_852__S10", "AKTA_852_PERATURAN_JUALAN_2024__P6", "AKTA_852__S26", "AKTA_852__S49"],
         "verified_status": "DRAFT_PENDING_REVIEW",
@@ -781,27 +782,27 @@ DEFAULT_MASTER_OFFENCES_MATRIX: List[Dict[str, Any]] = [
             "Jika pembeli telah berumur 18 tahun ke atas pada tarikh kejadian mengikut tarikh lahir MyKad, kesalahan S.13(1) TIDAK wujud.",
             "Gagal melampirkan bukti rasmi tarikh lahir OBD (MyKad/JPN) akan menyebabkan pertuduhan S.13(1) gugur di mahkamah.",
         ],
-        "penalty_section": "Seksyen 13(2) [Individu] / Seksyen 13(3) [Pertubuhan Perbadanan] Akta 852",
+        "penalty_section": "Seksyen 13(2)(a) [Bukan Pertubuhan Perbadanan] / Seksyen 13(2)(b) [Pertubuhan Perbadanan] Akta 852",
         "penalty_first_offence": {
             "max_fine_rm": 20000,
             "max_jail_months": 12,
             "other_orders": "Pertubuhan Perbadanan: Denda RM20,000 hingga RM100,000 atau penjara maks 2 tahun",
-            "verbatim_penalty": "Individu: Denda tidak melebihi RM20,000 atau penjara tidak melebihi 1 tahun | Pertubuhan Perbadanan: Denda RM20,000 hingga RM100,000 atau penjara tidak melebihi 2 tahun.",
+            "verbatim_penalty": "Bukan Pertubuhan Perbadanan: Denda tidak melebihi RM20,000 atau penjara tidak melebihi 1 tahun | Pertubuhan Perbadanan: Denda RM20,000 hingga RM100,000 atau penjara tidak melebihi 2 tahun.",
         },
         "penalty_subsequent_offence": {
             "max_fine_rm": 30000,
             "max_jail_months": 24,
             "other_orders": "Pertubuhan Perbadanan: Denda RM50,000 hingga RM300,000 atau penjara maks 3 tahun",
-            "verbatim_penalty": "Individu: Denda tidak melebihi RM30,000 atau penjara tidak melebihi 2 tahun | Pertubuhan Perbadanan: Denda RM50,000 hingga RM300,000.",
+            "verbatim_penalty": "Bukan Pertubuhan Perbadanan: Denda tidak melebihi RM30,000 atau penjara tidak melebihi 2 tahun | Pertubuhan Perbadanan: Denda RM50,000 hingga RM300,000.",
         },
         "compound_info": {
             "is_compoundable": False,
             "compound_authority_section": None,
             "compound_regulation_ref": "P.U. (A) 259/2024",
-            "compound_amount_or_limit": "Kes penjualan kepada OBD disyorkan Buka IP Terus untuk pendakwaan mahkamah",
+            "compound_amount_or_limit": "TIDAK BOLEH KOMPAUN (S.13(1) tiada dalam Jadual Pertama P.U.(A) 259/2024) — Wajib Buka IP Terus untuk pendakwaan mahkamah",
             "max_compound_rm": None,
             "payment_days": None,
-            "notice_section": "Seksyen 47 Akta 852",
+            "notice_section": "Seksyen 47 Akta 852 [P.U. (A) 264/2024] (Notis Hadir Mahkamah)",
         },
         "special_legal_requirements": [
             "Bukti rasmi umur OBD < 18 tahun (MyKad / Sijil Lahir / JPN)",
@@ -818,9 +819,67 @@ DEFAULT_MASTER_OFFENCES_MATRIX: List[Dict[str, Any]] = [
             "Bahawa kamu, pada [TARIKH], jam lebih kurang [MASA], bertempat di [TEMPAT_KEJADIAN], "
             "di dalam Daerah [DAERAH], di dalam Negeri [NEGERI], telah didapati menjual produk merokok kepada seorang Orang Belum Dewasa "
             "berumur di bawah 18 tahun; dan oleh yang demikian kamu telah melakukan suatu kesalahan di bawah Seksyen 13(1) Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024 [Akta 852] "
-            "yang boleh dihukum di bawah Seksyen 13(2)/(3) Akta yang sama."
+            "yang boleh dihukum di bawah Seksyen 13(2)(a)/(b) Akta yang sama."
         ),
         "source_section_doc_ids": ["AKTA_852__S13", "AKTA_852__S49", "AKTA_611__S83"],
+        "verified_status": "DRAFT_PENDING_REVIEW",
+    },
+    {
+        "offence_id": "AKTA_852_S13_3",
+        "statute_id": "AKTA_852",
+        "offence_section": "Seksyen 13(3)",
+        "read_together_with": ["Akta Kanak-Kanak 2001 [Akta 611]", "Seksyen 48 Akta 852"],
+        "offence_title": "Orang Belum Dewasa (OBD < 18 tahun): Membeli produk tembakau, bahan merokok atau produk pengganti tembakau (vape)",
+        "target_offender": "OBD_BAWAH_18",
+        "mandatory_elements": [
+            {
+                "element_no": 1,
+                "description": "Pembeli ialah seorang Orang Belum Dewasa (berumur di bawah 18 tahun pada tarikh kejadian).",
+                "must_prove": "Salinan MyKad / Kad Pelajar / Sijil Lahir / Pengesahan JPN yang membuktikan umur < 18 tahun.",
+            },
+            {
+                "element_no": 2,
+                "description": "OBD benar-benar MEMBELI apa-apa produk tembakau, bahan merokok atau produk pengganti tembakau (vape) — bukan sekadar memiliki di dalam beg.",
+                "must_prove": "Saksi transaksi pembelian, resit bayaran/QR, rakaman CCTV kedai atau pengakuan bertulis + produk yang dibeli.",
+            },
+        ],
+        "explicit_exclusions_and_traps": [
+            "Jika pelajar/OBD hanya memiliki vape di dalam beg sekolah TANPA sebarang bukti transaksi pembelian olehnya atau perbuatan menghisap/menggunakan, kesalahan S.13(3) dan S.17(1) TIDAK terbentuk.",
+            "Siasat dan tuduh penjual di bawah Seksyen 13(1) (hukuman S.13(2)) jika kedai dikenal pasti menjual kepada OBD.",
+        ],
+        "penalty_section": "Seksyen 13(4) Akta 852",
+        "penalty_first_offence": {
+            "max_fine_rm": 500,
+            "max_jail_months": None,
+            "other_orders": "Perintah Khidmat Masyarakat (Akta 611 / Akta 593)",
+            "verbatim_penalty": "Didenda tidak melebihi lima ratus ringgit (RM500.00) atau diperintahkan melaksanakan khidmat masyarakat.",
+        },
+        "penalty_subsequent_offence": None,
+        "compound_info": {
+            "is_compoundable": True,
+            "compound_authority_section": "Seksyen 48(2) Akta 852",
+            "compound_regulation_ref": "Jadual Pertama & Kedua P.U. (A) 259/2024",
+            "compound_amount_or_limit": "Boleh dikompaun sehingga 50% daripada denda maks RM500 (= maks RM250.00, tawaran lazim RM50.00) dengan keizinan bertulis Pendakwa Raya (Borang 1 & Borang 2 P.U.(A) 259/2024) — tempoh 30 hari",
+            "max_compound_rm": 250,
+            "payment_days": 30,
+            "notice_section": "Tawaran Kompaun Borang 2 P.U.(A) 259/2024 & Notis Hadir Mahkamah S.47 [P.U.(A) 264/2024]",
+        },
+        "special_legal_requirements": [
+            "Akta Kanak-Kanak 2001 [Akta 611] — Makluman ibu bapa/penjaga, sekatan siaran media S.15 & tatacara S.83",
+            "Keizinan bertulis Pendakwa Raya (Borang 1 P.U.(A) 259/2024) bagi Tawaran Kompaun S.48(2)",
+        ],
+        "mandatory_exhibits": [
+            "Salinan MyKad / Pengesahan JPN OBD (< 18 tahun)",
+            "Resit bayaran / CCTV transaksi pembelian & produk vape/rokok yang dibeli",
+            "Rakaman percakapan S.112 saksi transaksi & OBD (dihadiri ibu bapa/penjaga)",
+        ],
+        "charge_sheet_template_bm": (
+            "Bahawa kamu (seorang Orang Belum Dewasa berumur di bawah 18 tahun), pada [TARIKH], jam lebih kurang [MASA], bertempat di [TEMPAT_KEJADIAN], "
+            "di dalam Daerah [DAERAH], di dalam Negeri [NEGERI], telah didapati membeli suatu produk pengganti tembakau (rokok elektronik / vape); "
+            "dan oleh yang demikian kamu telah melakukan suatu kesalahan di bawah Seksyen 13(3) Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024 [Akta 852] "
+            "yang boleh dihukum di bawah Seksyen 13(4) Akta yang sama."
+        ),
+        "source_section_doc_ids": ["AKTA_852__S13", "AKTA_852__S48", "AKTA_852_PERATURAN_KOMPAUN_2024__P2", "AKTA_611__S83"],
         "verified_status": "DRAFT_PENDING_REVIEW",
     },
     {
@@ -856,19 +915,19 @@ DEFAULT_MASTER_OFFENCES_MATRIX: List[Dict[str, Any]] = [
         "penalty_subsequent_offence": None,
         "compound_info": {
             "is_compoundable": True,
-            "compound_authority_section": "Seksyen 48 Akta 852",
-            "compound_regulation_ref": "P.U. (A) 259/2024",
-            "compound_amount_or_limit": "Kompaun RM250.00 (had statutori maks 50% daripada RM5,000 = RM2,500) — tempoh bayaran 30 hari",
+            "compound_authority_section": "Seksyen 48(2) Akta 852",
+            "compound_regulation_ref": "Jadual Pertama & Kedua P.U. (A) 259/2024",
+            "compound_amount_or_limit": "Boleh dikompaun RM250.00 (had maks 50% daripada RM5,000 = RM2,500) dengan keizinan bertulis Pendakwa Raya (Borang 1 & Borang 2 P.U.(A) 259/2024) — tempoh bayaran 30 hari",
             "max_compound_rm": 2500,
             "payment_days": 30,
-            "notice_section": "Seksyen 47 Akta 852 [P.U. (A) 264/2024]",
+            "notice_section": "Tawaran Kompaun Borang 2 P.U.(A) 259/2024 & Notis Hadir Mahkamah S.47 [P.U.(A) 264/2024]",
         },
         "special_legal_requirements": [
-            "Notis Seksyen 47 Akta 852 [P.U. (A) 264/2024]",
+            "Keizinan bertulis Pendakwa Raya (Borang 1) & Tawaran Kompaun (Borang 2) di bawah P.U. (A) 259/2024; Notis S.47 [P.U. (A) 264/2024] ialah Notis Hadir Mahkamah",
             "Tunggu tempoh kompaun 30 hari tamat & Sijil Unit Hasil PKD sebelum daftar mahkamah",
         ],
         "mandatory_exhibits": [
-            "Salinan pendua Notis Seksyen 47 bertandatangan terima / catatan saksi enggan tandatangan",
+            "Salinan pendua Tawaran Kompaun / Notis Seksyen 47 bertandatangan terima / catatan saksi enggan tandatangan",
             "Gambar foto bukti perokok di kawasan larangan + Sijil Seksyen 90A(2)",
             "Sijil Pengesahan Unit Hasil PKD bahawa kompaun tidak dibayar selepas tamat 30 hari",
         ],
@@ -916,20 +975,21 @@ DEFAULT_MASTER_OFFENCES_MATRIX: List[Dict[str, Any]] = [
         "penalty_subsequent_offence": None,
         "compound_info": {
             "is_compoundable": True,
-            "compound_authority_section": "Seksyen 48 Akta 852",
-            "compound_regulation_ref": "P.U. (A) 259/2024",
-            "compound_amount_or_limit": "Kompaun RM50.00 (maksimum statutori tidak melebihi 50% daripada RM500 = RM250) — tempoh 30 hari dengan pemakluman ibu bapa/penjaga",
+            "compound_authority_section": "Seksyen 48(2) Akta 852",
+            "compound_regulation_ref": "Jadual Pertama & Kedua P.U. (A) 259/2024",
+            "compound_amount_or_limit": "Kompaun RM50.00 (had maks 50% daripada RM500 = RM250) dengan keizinan bertulis Pendakwa Raya (Borang 1 & Borang 2 P.U.(A) 259/2024) — tempoh 30 hari dengan pemakluman ibu bapa/penjaga",
             "max_compound_rm": 250,
             "payment_days": 30,
-            "notice_section": "Seksyen 47 Akta 852",
+            "notice_section": "Tawaran Kompaun Borang 2 P.U.(A) 259/2024 & Notis Hadir Mahkamah S.47 [P.U.(A) 264/2024]",
         },
         "special_legal_requirements": [
-            "Akta Kanak-Kanak 2001 [Akta 611] — Pemakluman & kehadiran ibu bapa/penjaga; prosiding di Mahkamah Bagi Kanak-Kanak",
+            "Akta Kanak-Kanak 2001 [Akta 611] — Pemakluman & kehadiran ibu bapa/penjaga; sekatan media S.15; prosiding Mahkamah Bagi Kanak-Kanak",
+            "Keizinan bertulis Pendakwa Raya (Borang 1 P.U.(A) 259/2024) bagi Tawaran Kompaun S.48(2); Notis S.47 ialah Notis Hadir Mahkamah",
             "Bukti rasmi tarikh lahir OBD (< 18 tahun)",
         ],
         "mandatory_exhibits": [
             "Salinan MyKad / Pengesahan JPN OBD (membuktikan umur di bawah 18 tahun)",
-            "Salinan pendua Notis Seksyen 47 bertandatangan terima / saksi + rekod makluman ibu bapa/penjaga",
+            "Salinan pendua Tawaran Kompaun / Notis Seksyen 47 bertandatangan terima / saksi + rekod makluman ibu bapa/penjaga",
             "Puntung rokok / peranti vape yang sedang dihisap/digunakan + Borang S.36 (jika disita)",
             "Gambar foto kejadian OBD sedang menghisap/menggunakan + Sijil Seksyen 90A(2)",
         ],
@@ -974,16 +1034,16 @@ DEFAULT_MASTER_OFFENCES_MATRIX: List[Dict[str, Any]] = [
         "penalty_subsequent_offence": None,
         "compound_info": {
             "is_compoundable": True,
-            "compound_authority_section": "Seksyen 48 Akta 852",
-            "compound_regulation_ref": "P.U. (A) 259/2024",
-            "compound_amount_or_limit": "Boleh dikompaun RM250.00 – RM2,500.00 (maks 50% daripada RM5,000) — tempoh bayaran 30 hari",
+            "compound_authority_section": "Seksyen 48(2) Akta 852",
+            "compound_regulation_ref": "Jadual Pertama & Kedua P.U. (A) 259/2024",
+            "compound_amount_or_limit": "Boleh dikompaun RM250.00 – RM2,500.00 (maks 50% daripada RM5,000) dengan keizinan bertulis Pendakwa Raya (Borang 1 & Borang 2 P.U.(A) 259/2024) — tempoh bayaran 30 hari",
             "max_compound_rm": 2500,
             "payment_days": 30,
-            "notice_section": "Seksyen 47 Akta 852",
+            "notice_section": "Tawaran Kompaun Borang 2 P.U.(A) 259/2024 & Notis Hadir Mahkamah S.47 [P.U.(A) 264/2024]",
         },
-        "special_legal_requirements": ["Notis Seksyen 47 Akta 852", "Sijil Seksyen 90A(2)"],
+        "special_legal_requirements": ["Keizinan bertulis Pendakwa Raya (Borang 1 & Borang 2 P.U.(A) 259/2024); Notis Hadir Mahkamah S.47", "Sijil Seksyen 90A(2)"],
         "mandatory_exhibits": [
-            "Salinan pendua Notis Seksyen 47 bertandatangan terima / saksi",
+            "Salinan pendua Tawaran Kompaun / Notis Seksyen 47 bertandatangan terima / saksi",
             "Gambar foto dinding tanpa tanda amaran Kod QR atau bekas abu rokok + Sijil S.90A(2)",
             "Carian SSM / Lesen PBT premis & Sijil Unit Hasil PKD (jika gagal bayar kompaun 30 hari)",
         ],
@@ -1564,8 +1624,8 @@ DEFAULT_MASTER_OFFENCES_MATRIX: List[Dict[str, Any]] = [
         "mandatory_elements": [
             {
                 "element_no": 1,
-                "description": "OKT ialah pemunya atau penghuni premis / pengawal tapak pembinaan tempat pembiakan ditemui.",
-                "must_prove": "Bil utiliti / Carian SSM / Lesen PBT / Pendaftaran CIDB atau Surat Setuju Terima (LOA) kontraktor utama.",
+                "description": "OKT ialah pemunya, penduduk atau orang yang melakukan/membiarkan keadaan pembiakan di premis/tapak pembinaan (tanggungan bersama S.22(1) Akta 154).",
+                "must_prove": "Bil utiliti / Carian SSM / Lesen PBT / Pendaftaran CIDB atau Surat Setuju Terima (SST) kontraktor utama.",
             },
             {
                 "element_no": 2,
@@ -1580,8 +1640,9 @@ DEFAULT_MASTER_OFFENCES_MATRIX: List[Dict[str, Any]] = [
         ],
         "explicit_exclusions_and_traps": [
             "Takungan air kosong yang TIADA penemuan larva/pupa hidup atau keputusan Makmal Entomologi mengesahkan spesies BUKAN serangga pembawa penyakit tidak boleh dikompaun/dituduh di bawah Seksyen 13(1) (hanya boleh dikeluarkan Perintah Pencegahan Seksyen 8(1)).",
-            "HAD MUTLAK KOMPAUN S.25 AKTA 154: Amaun kompaun Seksyen 25 Akta 154 TIDAK BOLEH melebihi RM500.00! Sebarang notis kompaun > RM500 di bawah Akta 154 adalah TIDAK SAH (Ultra Vires).",
-            "Bagi tapak pembinaan, dasar penguatkuasaan KKM menetapkan TIADA tawaran kompaun RM500 — wajib keluarkan Perintah Seksyen 8(1) dan Buka IP Terus ke mahkamah.",
+            "Kesalahan pembiakan di kawasan luar kawalan pemunya/penduduk (S.22(1): dibuktikan dilakukan tanpa pengetahuan, persetujuan & pembiaran serta segala usaha wajar telah diambil) perlu disiasat terhadap pihak yang bertanggungjawab.",
+            "HAD MUTLAK KOMPAUN S.25 AKTA 154: Amaun kompaun Seksyen 25 Akta 154 TIDAK BOLEH melebihi RM500.00. Sebarang notis kompaun > RM500 di bawah Akta 154 adalah TIDAK SAH.",
+            "Bagi tapak pembinaan atau kesalahan berulang S.23(b): TIADA tawaran kompaun RM500 — wajib keluarkan Perintah Seksyen 8(1) dan Buka IP Terus ke mahkamah.",
         ],
         "penalty_section": "Seksyen 23(a) [Kesalahan Pertama] / Seksyen 23(b) [Kesalahan Kedua/Berikutnya] Akta 154",
         "penalty_first_offence": {
@@ -1600,7 +1661,7 @@ DEFAULT_MASTER_OFFENCES_MATRIX: List[Dict[str, Any]] = [
             "is_compoundable": True,
             "compound_authority_section": "Seksyen 25 Akta 154",
             "compound_regulation_ref": "Peraturan-Peraturan Pemusnahan Serangga Pembawa Penyakit (Mengkompaun Kesalahan) 1975",
-            "compound_amount_or_limit": "Maksimum RM500.00 (had statutori mutlak S.25 Akta 154 — tempoh 14 hari) bagi premis biasa; TIADA kompaun bagi tapak pembinaan (Buka IP Terus)",
+            "compound_amount_or_limit": "Maksimum RM500.00 (had mutlak S.25 Akta 154 — tempoh 14 hari) bagi premis biasa kesalahan pertama; TIADA kompaun bagi tapak pembinaan atau kes berulang S.23(b) (Buka IP Terus)",
             "max_compound_rm": 500,
             "payment_days": 14,
             "notice_section": "Seksyen 25 Akta 154",
@@ -1944,19 +2005,14 @@ DEFAULT_MASTER_OFFENCES_MATRIX: List[Dict[str, Any]] = [
             "PENGECUALIAN COVID-19 PASCA 15 JULAI 2024: Sejak pemansuhan HSO mandatori MySejahtera pada 15 Julai 2024, pekerja positif COVID-19 yang hadir bekerja TANPA Perintah Pengawasan bertulis Seksyen 15(1) atau Pengasingan Seksyen 14 yang diserahkan secara sah TIDAK melakukan kesalahan Seksyen 22(b) dan TIDAK BOLEH dikompaun serta-merta!",
             "JANGAN sesekali tulis 'Seksyen 22(b) Akta 514' (Akta 514 ialah OSHA 1994!). Akta Penyakit Berjangkit ialah Akta 342.",
         ],
-        "penalty_section": "Seksyen 24(a) / Seksyen 24 Akta 342 [APPPB 1988]",
+        "penalty_section": "Seksyen 24(a) [Individu] / Seksyen 24(b) [Pertubuhan Perbadanan] Akta 342 (Pindaan Akta A1742)",
         "penalty_first_offence": {
             "max_fine_rm": 10000,
             "max_jail_months": 24,
-            "other_orders": "Pertubuhan Perbadanan: Denda maks RM100,000 (Akta A1742)",
-            "verbatim_penalty": "Penjara selama tempoh tidak melebihi dua (2) tahun atau denda (tidak melebihi RM10,000.00 di bawah Akta A1742) atau kedua-duanya.",
+            "other_orders": "Pertubuhan Perbadanan [Seksyen 24(b)]: Denda tidak melebihi RM100,000.00 (Akta A1742)",
+            "verbatim_penalty": "Individu [S.24(a)]: Denda tidak melebihi RM10,000.00 atau penjara tidak melebihi dua (2) tahun atau kedua-duanya | Pertubuhan Perbadanan [S.24(b)]: Denda tidak melebihi RM100,000.00.",
         },
-        "penalty_subsequent_offence": {
-            "max_fine_rm": None,
-            "max_jail_months": 60,
-            "other_orders": "Kesalahan kedua/berikutnya di bawah S.24(b) asal: penjara tidak melebihi 5 tahun atau denda atau kedua-duanya",
-            "verbatim_penalty": "Penjara tidak melebihi lima (5) tahun atau denda atau kedua-duanya.",
-        },
+        "penalty_subsequent_offence": None,
         "compound_info": {
             "is_compoundable": True,
             "compound_authority_section": "Seksyen 25 Akta 342 (Pindaan Akta A1742)",
@@ -2620,6 +2676,26 @@ def sweep_sections_for_offences(
         ("enam bulan", 6),
     )
 
+    non_offence_admin_keys = {
+        ("AKTA_852", "2"), ("AKTA_852", "24"), ("AKTA_852", "25"), ("AKTA_852", "27"),
+        ("AKTA_852", "31"), ("AKTA_852", "35"), ("AKTA_852", "36"), ("AKTA_852", "38"),
+        ("AKTA_852", "44"), ("AKTA_852", "47"), ("AKTA_852", "48"), ("AKTA_852", "49"), ("AKTA_852", "51"),
+        ("AKTA_281", "2"), ("AKTA_281", "3"), ("AKTA_281", "4"), ("AKTA_281", "5"),
+        ("AKTA_281", "8"), ("AKTA_281", "9"), ("AKTA_281", "25"), ("AKTA_281", "32A"),
+        ("AKTA_281", "32B"), ("AKTA_281", "33"), ("AKTA_281", "33A"),
+        ("AKTA_154", "2"), ("AKTA_154", "3"), ("AKTA_154", "10A"), ("AKTA_154", "23"), ("AKTA_154", "25"),
+        ("AKTA_342", "2"), ("AKTA_342", "3"), ("AKTA_342", "24"), ("AKTA_342", "25"),
+        ("AKTA_342_PINDAAN_2025", "22A"), ("AKTA_342_PINDAAN_2025", "24"), ("AKTA_342_PINDAAN_2025", "25"),
+        ("PPKM_2009", "58"), ("PPKM_2009", "59"), ("PPKM_2009", "60"),
+    }
+    ppkm_2009_compoundable_nums = {
+        "3", "7", "8", "9", "10", "11",
+        "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40",
+        "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51",
+        "52", "53", "54", "55", "56",
+    }
+    akta_342_compoundable_nums = {"10", "11", "21A", "22"}
+
     discovered: List[Dict[str, Any]] = []
     seen_swept_keys: set[Tuple[str, str]] = set()
     for sec in sections:
@@ -2627,55 +2703,62 @@ def sweep_sections_for_offences(
         if not sec_code or sec_code.lower().startswith(("jadual", "schedule")):
             continue
 
+        sid = str(sec.get("statute_id") or statute_id)
+        # Peraturan prosedur kompaun/notis bukan akta kesalahan substantif
+        if sid in ("AKTA_852_PERATURAN_KOMPAUN_2024", "AKTA_342_PERATURAN_KOMPAUN_2025", "AKTA_852_PERATURAN_NOTIS_S47_2024"):
+            continue
+
         text = str(sec.get("verbatim_text_bm") or "")
         low = text.lower()
         heading_low = str(sec.get("section_heading") or "").lower()
 
-        # Abaikan seksyen tajuk ringkas/tafsiran/pelantikan semata-mata kecuali jika ia benar-benar mewujudkan kewajipan/kesalahan
+        sec_nums = re.findall(r"\d+[A-Za-z]{0,2}", sec_code)
+        primary_num = sec_nums[0].upper() if sec_nums else ""
+        if primary_num and (sid, primary_num) in non_offence_admin_keys:
+            continue
+
+        # Abaikan seksyen tajuk ringkas/tafsiran/pelantikan/kuasa pentadbiran semata-mata
         is_explicit_offence = any(k in low for k in explicit_offence_phrases)
         is_reg_prohibition = (
-            str(sec.get("statute_id") or "") in REGULATION_STATUTE_IDS
+            sid in REGULATION_STATUTE_IDS
             and sec_code.lower() not in ("1", "peraturan 1")
             and any(k in low for k in ("dilarang", "tidak boleh", "hendaklah mematuhi", "hendaklah memenuhi"))
         )
         if not is_explicit_offence and not is_reg_prohibition:
             continue
-        if (
-            any(
-                admin_h in heading_low
-                for admin_h in (
-                    "tajuk ringkas",
-                    "tafsiran",
-                    "pelantikan pegawai",
-                    "perakuan juruanalisis",
-                    "ejen provokasi",
-                    "bidang kuasa untuk membicarakan",
-                    "pendakwaan",
-                    "pengkompaunan kesalahan",
-                    "tatacara mengkompaun",
-                    "penyetujuterimaan kompaun",
-                    "pembayaran kompaun",
-                    "kuasa untuk mengkompaun",
-                    "kuasa untuk memerintahkan kehadiran",
-                    "kuasa untuk mengambil sampel",
-                    "kuasa mengambil sampel",
-                    "kuasa pegawai diberi kuasa",
-                    "kuasa penyiasatan",
-                    "penggeledahan dan penyitaan",
-                    "kuasa untuk memberhentikan",
-                    "kuasa meminta maklumat",
-                    "kuasa ketua pengarah",
-                )
-            )
-            and "melakukan suatu kesalahan" not in low
-            and "melakukan kesalahan" not in low
-            and "apabila disabitkan" not in low
-        ):
+        admin_heading_terms = (
+            "tajuk ringkas",
+            "tafsiran",
+            "pelantikan pegawai",
+            "perakuan pemberian kuasa",
+            "perakuan juruanalisis",
+            "ejen provokasi",
+            "bidang kuasa untuk membicarakan",
+            "pendakwaan",
+            "pengkompaunan kesalahan",
+            "tatacara mengkompaun",
+            "penyetujuterimaan kompaun",
+            "pembayaran kompaun",
+            "kuasa untuk mengkompaun",
+            "kuasa mengkompaun",
+            "liabiliti pertubuhan perbadanan",
+            "kesalahan oleh pertubuhan perbadanan",
+            "penalti am",
+            "tanggung rugi",
+            "perlindungan pemberi maklumat",
+            "kuasa untuk memerintahkan kehadiran",
+            "kuasa untuk mengambil sampel",
+            "kuasa mengambil sampel",
+            "kuasa pegawai diberi kuasa",
+            "kuasa penyiasatan",
+            "penggeledahan dan penyitaan",
+            "senarai benda yang disita",
+            "kuasa untuk memberhentikan",
+            "kuasa meminta maklumat",
+            "kuasa ketua pengarah",
+        )
+        if any(admin_h in heading_low for admin_h in admin_heading_terms):
             continue
-
-        sec_nums = re.findall(r"\d+[A-Za-z]{0,2}", sec_code)
-        primary_num = sec_nums[0].upper() if sec_nums else ""
-        sid = str(sec.get("statute_id") or statute_id)
 
         if primary_num and (sid, primary_num) in existing_by_sec:
             # Sudah wujud dalam matriks teras; pastikan source_section_doc_ids dipautkan
@@ -2715,7 +2798,19 @@ def sweep_sections_for_offences(
                     jail_months = months
                     break
 
-        is_comp = "kompaun" in low or sid in ("PPKM_2009", "AKTA_852_PERATURAN_JUALAN_2024", "AKTA_852_PERATURAN_TANDA_2024")
+        # Semak kebolehan kompaun secara deterministik berdasarkan Jadual Kompaun rasmi Warta
+        if sid == "PPKM_2009":
+            is_comp = primary_num in ppkm_2009_compoundable_nums
+        elif sid in ("AKTA_342", "AKTA_342_PINDAAN_2025"):
+            is_comp = primary_num in akta_342_compoundable_nums
+        elif sid.startswith("AKTA_852"):
+            # Hanya S.13(3), S.16(2), S.17(1), S.18(1) Akta 852 boleh dikompaun di bawah Jadual Pertama P.U.(A) 259/2024
+            is_comp = sid == "AKTA_852" and primary_num in ("16", "17", "18")
+        elif sid == "AKTA_154":
+            is_comp = primary_num == "13"
+        else:
+            is_comp = False
+
         is_reg_sid = sid in REGULATION_STATUTE_IDS or "PERATURAN" in sid or "PERINTAH" in sid
         label_prefix = "Peraturan" if is_reg_sid or "peraturan" in sec_code.lower() else "Seksyen"
         clean_sec_label = sec_code if sec_code.lower().startswith(("seksyen", "peraturan")) else f"{label_prefix} {sec_code}"
@@ -2752,11 +2847,11 @@ def sweep_sections_for_offences(
                     {
                         "element_no": 1,
                         "description": f"Pematuhan intipati perbuatan di bawah {clean_sec_label} ({sec.get('section_heading', '')}).",
-                        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & eksibit berkaitan.",
+                        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan.",
                     }
                 ],
                 "explicit_exclusions_and_traps": [
-                    f"Sahkan semua unsur verbatim dalam {clean_sec_label} dipenuhi sebelum mengeluarkan notis atau membuka IP."
+                    f"Sahkan semua unsur dalam {clean_sec_label} dipenuhi sebelum mengeluarkan notis atau membuka IP."
                 ],
                 "penalty_section": clean_sec_label,
                 "penalty_first_offence": {
@@ -2768,11 +2863,23 @@ def sweep_sections_for_offences(
                 "penalty_subsequent_offence": None,
                 "compound_info": {
                     "is_compoundable": is_comp,
-                    "compound_authority_section": None,
-                    "compound_regulation_ref": None,
-                    "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun" if is_comp else "Semak jadual kompaun / Buka IP",
+                    "compound_authority_section": (
+                        "Seksyen 25 Akta 342 (Pindaan Akta A1742)"
+                        if "342" in sid and is_comp
+                        else ("Peraturan 58 PPKM 2009 / Seksyen 33 Akta 281" if sid == "PPKM_2009" and is_comp else None)
+                    ),
+                    "compound_regulation_ref": (
+                        "Jadual Pertama P.U. (A) 139/2025"
+                        if "342" in sid and is_comp
+                        else ("Jadual Keempat PPKM 2009" if sid == "PPKM_2009" and is_comp else None)
+                    ),
+                    "compound_amount_or_limit": (
+                        "Boleh dikompaun mengikut jadual kompaun (dengan keizinan bertulis Pendakwa Raya)"
+                        if is_comp
+                        else "TIDAK BOLEH KOMPAUN — Sita (jika berkenaan) & Buka IP Terus"
+                    ),
                     "max_compound_rm": (fine_rm // 2) if (is_comp and fine_rm) else None,
-                    "payment_days": 30 if "852" in sid else 14,
+                    "payment_days": (30 if "852" in sid else 14) if is_comp else None,
                     "notice_section": None,
                 },
                 "special_legal_requirements": ["Sijil Seksyen 90A(2) Akta Keterangan 1950"],
@@ -2897,14 +3004,24 @@ def is_passive_vape_possession_question(text: str) -> bool:
 
 
 def infer_domain_statute_ids(question: str, akta_hint: str = "Semua") -> Optional[set[str]]:
-    """Kunci penapisan Akta mengikut konteks soalan/akta_hint supaya soalan vape/pelajar tidak menarik Akta 171 / Akta 281 / PPKM 2009."""
+    """Kunci penapisan Akta mengikut konteks soalan/akta_hint supaya soalan vape/pelajar tidak menarik Akta 171 / Akta 281 / PPKM 2009,
+    sambil membenarkan Akta 56 (Keterangan), Akta 593 (KTJ) dan Akta 611 (Kanak-Kanak) apabila isu keterangan/prosedur/OBD disebut.
+    """
     q_low = (question or "").lower()
     hint = (akta_hint or "").strip()
     hint_low = hint.lower()
 
     has_minor_signal = any(
         k in q_low
-        for k in ("pelajar", "murid", "budak", "sekolah", "obd", "bawah 18", "bawah umur", "kanak-kanak", "remaja")
+        for k in ("pelajar", "murid", "budak", "sekolah", "obd", "bawah 18", "bawah umur", "kanak-kanak", "remaja", "taska", "tadika")
+    )
+    has_evidence_signal = any(
+        k in q_low
+        for k in ("90a", "90b", "90c", "114a", "73aa", "akta 56", "akta keterangan", "keterangan digital", "cetakan komputer")
+    )
+    has_ktj_signal = any(
+        k in q_low
+        for k in ("112", "113", "119", "128", "152", "163", "376", "377", "ktj", "akta 593", "kanun tatacara", "diari siasatan", "rakaman percakapan")
     )
 
     akta_852_family = {
@@ -2921,22 +3038,28 @@ def infer_domain_statute_ids(question: str, akta_hint: str = "Semua") -> Optiona
     akta_154_family = {"AKTA_154"}
     akta_342_family = {"AKTA_342", "AKTA_342_PINDAAN_2025", "AKTA_342_PERATURAN_KOMPAUN_2025"}
 
+    def _attach_support_acts(allowed: set[str]) -> set[str]:
+        if has_minor_signal:
+            allowed.add("AKTA_611")
+        if has_evidence_signal:
+            allowed.add("AKTA_56")
+        if has_ktj_signal:
+            allowed.add("AKTA_593")
+        return allowed
+
     if hint and hint_low not in ("semua", "all"):
         if "852" in hint_low:
-            allowed = set(akta_852_family)
-            if has_minor_signal:
-                allowed.add("AKTA_611")
-            return allowed
+            return _attach_support_acts(set(akta_852_family))
         if "ppkm" in hint_low:
-            return {"PPKM_2009", "AKTA_281", "AKTA_281_PINDAAN_2024"}
+            return _attach_support_acts({"PPKM_2009", "AKTA_281", "AKTA_281_PINDAAN_2024"})
         if "ppm" in hint_low:
-            return {"PPM_1985", "AKTA_281", "AKTA_281_PINDAAN_2024"}
+            return _attach_support_acts({"PPM_1985", "AKTA_281", "AKTA_281_PINDAAN_2024"})
         if "281" in hint_low or "makanan" in hint_low:
-            return set(akta_281_family)
+            return _attach_support_acts(set(akta_281_family))
         if "154" in hint_low:
-            return set(akta_154_family)
+            return _attach_support_acts(set(akta_154_family))
         if "342" in hint_low or "apppb" in hint_low:
-            return set(akta_342_family)
+            return _attach_support_acts(set(akta_342_family))
         if "611" in hint_low:
             return {"AKTA_611"}
         if "593" in hint_low or "ktj" in hint_low:
@@ -2970,8 +3093,6 @@ def infer_domain_statute_ids(question: str, akta_hint: str = "Semua") -> Optiona
     locked: set[str] = set()
     if has_tobacco:
         locked |= akta_852_family
-        if has_minor_signal:
-            locked.add("AKTA_611")
     if has_food:
         locked |= akta_281_family
     if has_aedes:
@@ -2979,7 +3100,11 @@ def infer_domain_statute_ids(question: str, akta_hint: str = "Semua") -> Optiona
     if has_cdc:
         locked |= akta_342_family
 
-    return locked if locked else None
+    if locked:
+        return _attach_support_acts(locked)
+    if has_evidence_signal or has_ktj_signal or has_minor_signal:
+        return _attach_support_acts(set())
+    return None
 
 
 def evaluate_offence_elements_against_facts(
@@ -3017,6 +3142,31 @@ def evaluate_offence_elements_against_facts(
         and any(k in q_low for k in ("enggan mula", "taknak mula", "taknak mulakan", "belum mula"))
     )
 
+    # 4. Perangkap Khusus #4: PPM 1985 P.14(9) — Stok luput diasingkan dalam stor pelupusan khas / bukan untuk dijual
+    is_food_disposal_trap = bool(
+        any(k in q_low for k in ("luput", "expired", "tamat tempoh"))
+        and any(
+            k in q_low
+            for k in (
+                "untuk pelupusan", "tidak untuk dijual", "bukan untuk dijual",
+                "stor pelupusan", "diasingkan dalam stor", "tarikh ketahanan minimum", "best before",
+            )
+        )
+        and not any(k in q_low for k in ("di rak jualan", "dijual kepada pelanggan", "dipamer untuk jualan"))
+    )
+
+    # 5. Perangkap Khusus #5: Akta 154 S.13(1) — Takungan kosong tiada larva/pupa atau di luar sempadan kawalan pemunya
+    is_aedes_no_larva_trap = bool(
+        any(k in q_low for k in ("aedes", "takungan", "jentik", "larva", "154"))
+        and any(
+            k in q_low
+            for k in (
+                "tiada larva", "tiada jentik", "takungan kosong", "bukan aedes",
+                "bukan serangga pembawa", "luar sempadan", "tanah rizab awam", "parit majlis",
+            )
+        )
+    )
+
     # Semak sama ada kesalahan ini disekat oleh mana-mana perangkap sebelum menilai unsur individu
     if off_id == "AKTA_852_S17_1" and is_passive_possession_trap:
         blocked_action = True
@@ -3031,10 +3181,16 @@ def evaluate_offence_elements_against_facts(
         trap_triggered = "Tiada bukti transaksi pembelian oleh OBD dalam fakta soalan — Seksyen 13(3) tidak boleh dikenakan tanpa bukti pembelian."
     elif off_id == "AKTA_342_S22_B" and is_covid_no_order_trap:
         blocked_action = True
-        trap_triggered = "Tiada perintah statutori bertulis S.15(1)/S.14 yang diingkari — kompaun S.22(b) tidak boleh dikeluarkan."
+        trap_triggered = "Tiada perintah bertulis S.15(1)/S.14 yang diingkari — kompaun S.22(b) tidak boleh dikeluarkan."
     elif off_id == "AKTA_342_S22_B" and is_tb_smear_neg_trap:
         blocked_action = True
         trap_triggered = "Kes PTB Smear Negatif belum memenuhi unsur ingkar perintah sah Seksyen 22(b) Akta 342."
+    elif off_id == "PPM_1985_P14_9" and is_food_disposal_trap:
+        blocked_action = True
+        trap_triggered = "Stok makanan yang telah diasingkan untuk pelupusan (tidak didedahkan untuk jualan) tidak memenuhi unsur pendedahan untuk jualan di bawah Peraturan 14(9) PPM 1985."
+    elif off_id == "AKTA_154_S13_1" and is_aedes_no_larva_trap:
+        blocked_action = True
+        trap_triggered = "Tiada larva/pupa spesies pembawa penyakit yang disahkan atau lokasi di luar kawalan pemunya (S.13(1)/S.22(1) Akta 154) — kompaun S.25 tidak boleh dikeluarkan."
 
     has_active_smoking_fact = any(
         k in non_negated_q
@@ -3094,6 +3250,20 @@ def evaluate_offence_elements_against_facts(
             else:
                 status = "PERLU BUKTI TAMBAHAN"
                 reason = "Perlu laporan pengesahan klinikal MO/FMS dan serahan tangan notis bertulis dahulu."
+        elif off_id == "PPM_1985_P14_9" and is_food_disposal_trap:
+            if el_no == 1 or any(w in desc_low for w in ("menjual", "jualan", "mendedahkan")):
+                status = "TIDAK TERPENUHI"
+                reason = "Produk dinyatakan diasingkan dalam stor pelupusan / bukan untuk dijual — unsur mendedahkan untuk jualan tidak dipenuhi."
+            else:
+                status = "PERLU BUKTI TAMBAHAN"
+                reason = "Sahkan sama ada produk dilabel 'tarikh akhir' (use by) atau 'tarikh ketahanan minimum' (best before) serta pastikan ia dilupuskan segera."
+        elif off_id == "AKTA_154_S13_1" and is_aedes_no_larva_trap:
+            if el_no in (2, 3) or any(w in desc_low for w in ("larva", "spesies", "aedes")):
+                status = "TIDAK TERPENUHI"
+                reason = "Tiada larva/pupa hidup spesies Aedes disahkan atau takungan berada di luar sempadan kawalan pemunya."
+            else:
+                status = "PERLU BUKTI TAMBAHAN"
+                reason = "Gunakan Perintah Pencegahan Seksyen 8(1) Akta 154 jika wujud potensi pembiakan dalam premis atau rujuk PBT jika tanah rizab awam."
         else:
             # Penilaian berasaskan bukti fakta sebenar dalam soalan (hanya TERPENUHI jika fakta jelas dinyatakan!)
             if any(w in desc_low for w in ("belum dewasa", "bawah 18", "bawah umur", "umur")):
@@ -3396,37 +3566,46 @@ def validate_legal_output(
             verified_citations.append(raw_cit)
             continue
 
-        lookup_act = ""
+        explicit_act_lookup = ""
         if "852" in act_ref:
-            lookup_act = "AKTA 852"
+            explicit_act_lookup = "AKTA 852"
         elif "281" in act_ref or "PPKM" in act_ref or "PPM" in act_ref:
-            lookup_act = "AKTA 281"
+            explicit_act_lookup = "AKTA 281"
         elif "154" in act_ref:
-            lookup_act = "AKTA 154"
+            explicit_act_lookup = "AKTA 154"
         elif "342" in act_ref or "APPPB" in act_ref:
-            lookup_act = "AKTA 342"
+            explicit_act_lookup = "AKTA 342"
         elif "593" in act_ref or "KTJ" in act_ref:
-            lookup_act = "AKTA 593"
+            explicit_act_lookup = "AKTA 593"
         elif "56" in act_ref:
-            lookup_act = "AKTA 56"
+            explicit_act_lookup = "AKTA 56"
         elif "611" in act_ref:
-            lookup_act = "AKTA 611"
-        elif default_act in valid_sections_by_act:
-            lookup_act = default_act
+            explicit_act_lookup = "AKTA 611"
 
-        if lookup_act and lookup_act in valid_sections_by_act:
-            if base_num in valid_sections_by_act[lookup_act] or base_num in all_valid_section_nums:
+        lookup_act = explicit_act_lookup or (default_act if default_act in valid_sections_by_act else "")
+        procedural_support_nums = {"90A", "90B", "90C", "114A", "73AA", "112", "113", "119", "128", "152", "153", "154", "163", "376", "377", "15", "83", "91"}
+
+        if explicit_act_lookup and explicit_act_lookup in valid_sections_by_act:
+            # Apabila Akta dinyatakan secara jelas (cth: 'Seksyen 99 Akta 852'), WAJIB wujud dalam indeks Akta itu sahaja (tiada pintasan lintas-akta)
+            if base_num in valid_sections_by_act[explicit_act_lookup]:
                 verified_citations.append(raw_cit)
             else:
                 invalid_citations.append(
-                    f"{raw_cit} — Seksyen/Peraturan {cit['number']} TIDAK WUJUD dalam indeks verbatim {lookup_act}."
+                    f"{raw_cit} — Seksyen/Peraturan {cit['number']} TIDAK WUJUD dalam indeks {explicit_act_lookup}."
+                )
+        elif lookup_act and lookup_act in valid_sections_by_act:
+            if base_num in valid_sections_by_act[lookup_act] or base_num in procedural_support_nums:
+                verified_citations.append(raw_cit)
+            else:
+                invalid_citations.append(
+                    f"{raw_cit} — Seksyen/Peraturan {cit['number']} TIDAK WUJUD dalam indeks {lookup_act}."
                 )
         else:
             if base_num in all_valid_section_nums:
                 verified_citations.append(raw_cit)
             else:
                 invalid_citations.append(
-                    f"{raw_cit} — Seksyen/Peraturan {cit['number']} TIDAK WUJUD dalam Pustaka Akta Verbatim."
+                    f"{raw_cit} — Seksyen/Peraturan {cit['number']} TIDAK WUJUD dalam Pustaka Akta."
                 )
 
     # 2. Semak senarai hitam `repealed_and_blocked_provisions`
@@ -3475,7 +3654,7 @@ def validate_legal_output(
                 )
                 break
 
-    # 3. Semak kesepadanan nilai denda & had kompaun dengan `master_offences_matrix`
+    # 3. Semak kesepadanan nilai denda & had kompaun dengan `master_offences_matrix` dan Jadual Kompaun Rasmi
     penalty_mismatches: List[str] = []
     # Semak had kompaun Akta 154 (maksimum mutlak RM500)
     if "154" in low_combined:
@@ -3484,10 +3663,48 @@ def validate_legal_output(
                 val = float(comp_m.group(1).replace(",", ""))
                 if val > 500.0:
                     penalty_mismatches.append(
-                        f"Had kompaun Seksyen 25 Akta 154 ialah maksimum RM500.00 (nilai RM{val:,.2f} melebihi had statutori)."
+                        f"Had kompaun Seksyen 25 Akta 154 ialah maksimum RM500.00 (nilai RM{val:,.2f} melebihi had undang-undang)."
                     )
             except ValueError:
                 pass
+
+    # Semak had kompaun Akta 342 Pindaan Akta A1742 / P.U.(A) 139/2025 (Individu maks RM5,000 / Korporat maks RM50,000)
+    if "342" in low_combined:
+        for comp_m in re.finditer(r"kompaun(?:\s+individu)?\s+rm\s?([\d,]+(?:\.\d{1,2})?)", low_combined):
+            try:
+                val = float(comp_m.group(1).replace(",", ""))
+                ctx_after = low_combined[comp_m.start() : comp_m.end() + 45]
+                is_corp_ctx = any(k in ctx_after for k in ("syarikat", "korporat", "pertubuhan perbadanan"))
+                limit = 50000.0 if is_corp_ctx else 5000.0
+                if val > limit:
+                    penalty_mismatches.append(
+                        f"Had kompaun Seksyen 25 Akta 342 (Akta A1742) ialah maksimum RM{limit:,.0f} (nilai RM{val:,.2f} melebihi had)."
+                    )
+            except ValueError:
+                pass
+
+    # Semak kesilapan menawarkan kompaun bagi kesalahan TIDAK BOLEH KOMPAUN dalam `cadangan_pertuduhan`
+    non_comp_patterns = (
+        ("852", ("seksyen 3(", "seksyen 7(", "seksyen 9(", "seksyen 10(", "seksyen 13(1)", "s.3(", "s.7(", "s.9(", "s.10(", "s.13(1)"), "Jadual Pertama P.U. (A) 259/2024"),
+        ("281", ("seksyen 13(1)", "seksyen 13b", "seksyen 11(2)", "s.13(1)", "s.13b", "s.11(2)"), "Akta Makanan 1983 (wajib Buka IP)"),
+        ("154", ("seksyen 8(8)", "s.8(8)"), "Akta 154 (wajib Buka IP)"),
+        ("342", ("seksyen 12(", "seksyen 22(a)", "s.12(", "s.22(a)"), "Jadual Pertama P.U. (A) 139/2025"),
+    )
+    for c in resp_dict.get("cadangan_pertuduhan") or []:
+        if not isinstance(c, dict):
+            continue
+        sec_low = str(c.get("seksyen_kesalahan") or "").lower()
+        comp_low = str(c.get("boleh_kompaun") or "").lower()
+        claims_compoundable = (
+            ("boleh kompaun" in comp_low or "boleh dikompaun" in comp_low)
+            and not any(neg in comp_low for neg in ("tidak boleh", "tiada kompaun", "buka ip terus"))
+        )
+        if claims_compoundable:
+            for act_digits, sec_pats, sched_ref in non_comp_patterns:
+                if (act_digits in sec_low or act_digits in default_act.lower()) and any(p in sec_low for p in sec_pats):
+                    penalty_mismatches.append(
+                        f"Kesalahan {c.get('seksyen_kesalahan')} TIDAK BOLEH DIKOMPAUN di bawah {sched_ref} — wajib Buka IP Terus."
+                    )
 
     # Semak had denda Seksyen 17(2) Akta 852 (OBD maks RM500)
     if "17(1)" in low_combined or "17(2)" in low_combined:
@@ -3501,48 +3718,72 @@ def validate_legal_output(
                             f"Hukuman denda maksimum Seksyen 17(2) Akta 852 bagi OBD ialah RM500.00 (dipetik RM{val:,})."
                         )
 
-    # 4. Semak Unsur Mandatori Kesalahan (Mandatory Elements Guardrail)
+    # 4. Semak Unsur Mandatori Kesalahan (Mandatory Elements Guardrail — semua kesalahan berperangkap)
     element_evaluations: List[Dict[str, Any]] = []
     unfulfilled_element_errors: List[str] = []
     eval_context = f"{question_context} {combined_text}".strip()
+    eval_low = eval_context.lower()
+    declared_no_offence = str(resp_dict.get("status_kesalahan") or "").upper() == "TIADA_KESALAHAN"
+    keputusan_low = str(resp_dict.get("keputusan_tindakan") or "").lower()
+    keputusan_is_rejection = any(
+        neg in keputusan_low
+        for neg in ("tiada kesalahan", "tidak boleh", "ditolak", "bukan kesalahan", "unsur tidak terpenuhi", "unsur tidak dipenuhi", "jangan keluarkan", "belum")
+    )
 
     for off in offences_list:
         off_id = str(off.get("offence_id") or "")
-        # Jika kes melibatkan S.17(1) Akta 852 atau pemilikan pasif vape/rokok pelajar
+        should_eval = False
         if off_id == "AKTA_852_S17_1" and (
             "17(1)" in low_combined
             or is_passive_vape_possession_question(eval_context)
-            or ("pelajar" in eval_context.lower() and "vape" in eval_context.lower())
+            or ("pelajar" in eval_low and "vape" in eval_low)
         ):
-            ev = evaluate_offence_elements_against_facts(eval_context, off)
-            element_evaluations.append(ev)
-            if ev["action_blocked"]:
-                # Jika jawapan sudah dikelaskan TIADA_KESALAHAN tanpa caj aktif S.17(1), ia sah dan lulus validasi
-                declared_no_offence = str(resp_dict.get("status_kesalahan") or "").upper() == "TIADA_KESALAHAN"
-                keputusan_low = str(resp_dict.get("keputusan_tindakan") or "").lower()
-                active_s17_in_charges = any(
-                    "17(1)" in str(c.get("seksyen_kesalahan") or "")
-                    and not any(
-                        neg in str(c.get("perihal") or "").lower() + " " + str(c.get("boleh_kompaun") or "").lower()
-                        for neg in ("tiada kesalahan", "bukan kesalahan", "ditolak", "tidak boleh")
-                    )
-                    for c in (resp_dict.get("cadangan_pertuduhan") or [])
-                    if isinstance(c, dict)
+            should_eval = True
+        elif off_id == "AKTA_852_S13_3" and ("13(3)" in low_combined and is_passive_vape_possession_question(eval_context)):
+            should_eval = True
+        elif off_id == "AKTA_342_S22_B" and (
+            "22(b)" in low_combined or ("covid" in eval_low and "kerja" in eval_low) or "smear negatif" in eval_low
+        ):
+            should_eval = True
+        elif off_id == "PPM_1985_P14_9" and ("14(9)" in low_combined or "untuk pelupusan" in eval_low or "tidak untuk dijual" in eval_low):
+            should_eval = True
+        elif off_id == "AKTA_154_S13_1" and ("13(1)" in low_combined and any(k in eval_low for k in ("tiada larva", "takungan kosong", "luar sempadan", "bukan aedes"))):
+            should_eval = True
+
+        if not should_eval:
+            continue
+
+        ev = evaluate_offence_elements_against_facts(eval_context, off)
+        element_evaluations.append(ev)
+        if not ev["action_blocked"]:
+            continue
+
+        sec_marker = str(off.get("offence_section") or "").lower()
+        active_in_charges = any(
+            (sec_marker[:10] in str(c.get("seksyen_kesalahan") or "").lower() or off_id.split("_")[-2].lower() in str(c.get("seksyen_kesalahan") or "").lower())
+            and not any(
+                neg in str(c.get("perihal") or "").lower() + " " + str(c.get("boleh_kompaun") or "").lower()
+                for neg in ("tiada kesalahan", "bukan kesalahan", "ditolak", "tidak boleh", "fasa ")
+            )
+            for c in (resp_dict.get("cadangan_pertuduhan") or [])
+            if isinstance(c, dict)
+        )
+        actively_charging = active_in_charges or (
+            not declared_no_offence
+            and not keputusan_is_rejection
+            and any(k in keputusan_low for k in ("kompaun", "notis s.47", "tuduh", "buka ip", "s.17(1)"))
+        )
+        if actively_charging:
+            if off_id == "AKTA_852_S17_1":
+                unfulfilled_element_errors.append(
+                    "UNSUR MANDATORI TIDAK TERPENUHI (Seksyen 17(1) Akta 852): Pelajar memiliki vape di dalam beg tanpa bukti menghisap, "
+                    "mengunyah, menggunakan (S.17(1)) atau membeli (S.13(3)) BUKAN kesalahan di bawah Seksyen 17(1) Akta 852. "
+                    "Cadangan mengeluarkan Notis S.47 / Kompaun / Pertuduhan S.17(1) WAJIB DITOLAK!"
                 )
-                actively_charging_s17 = active_s17_in_charges or (
-                    not declared_no_offence
-                    and ("kompaun" in keputusan_low or "notis s.47" in keputusan_low or "tuduh" in keputusan_low or "s.17(1)" in keputusan_low)
-                    and not any(
-                        neg in keputusan_low
-                        for neg in ("tiada kesalahan", "tidak boleh", "ditolak", "bukan kesalahan", "unsur tidak terpenuhi", "jangan keluarkan")
-                    )
+            else:
+                unfulfilled_element_errors.append(
+                    f"UNSUR MANDATORI TIDAK DIPENUHI ({off.get('offence_section')}): {ev.get('trap_triggered') or 'Unsur kesalahan tidak dipenuhi berdasarkan fakta kes.'}"
                 )
-                if actively_charging_s17:
-                    unfulfilled_element_errors.append(
-                        "UNSUR MANDATORI TIDAK TERPENUHI (Seksyen 17(1) Akta 852): Pelajar memiliki vape di dalam beg tanpa bukti menghisap, "
-                        "mengunyah, menggunakan (S.17(1)) atau membeli (S.13(3)) BUKAN kesalahan di bawah Seksyen 17(1) Akta 852. "
-                        "Cadangan mengeluarkan Notis S.47 / Kompaun / Pertuduhan S.17(1) WAJIB DITOLAK!"
-                    )
 
     passed = (
         len(invalid_citations) == 0
@@ -3952,7 +4193,7 @@ class ClosedBookLegalLibrary:
 
     def bump_version(self, tag: str = "ingest") -> str:
         ts = datetime.now(timezone.utc).strftime("%Y%m%d%H%M%S")
-        self.statute_library_version = f"2.5.0-{tag}-{ts}"
+        self.statute_library_version = f"2.6.0-{tag}-{ts}"
         self._akta_dir_fingerprint = f"MUTATED_{tag}_{ts}"
         self._rebuild_runtime_caches()
         self._persist_json_snapshots()
