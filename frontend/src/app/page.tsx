@@ -1047,7 +1047,7 @@ export default function UIPCommandPage() {
                 <div>
                   <div className="text-sm font-extrabold text-slate-900">1. Tanya Pakar UIP</div>
                   <p className="mt-1 text-xs leading-relaxed text-slate-600">
-                    Tidak pasti seksyen caj, had denda, atau tindakan di lokasi? Tanya di sini dan terus dapat SOP lengkap.
+                    Tidak pasti seksyen kesalahan, had denda, atau tindakan di lokasi? Tanya di sini dan terus dapat SOP lengkap.
                   </p>
                 </div>
               </button>
@@ -1110,10 +1110,10 @@ export default function UIPCommandPage() {
                 </div>
                 <div>
                   <div className="text-sm font-extrabold text-slate-900">
-                    5. Direktori Kesalahan &amp; Pustaka Akta Verbatim (Warta AGC)
+                    5. Direktori Akta &amp; Kesalahan
                   </div>
                   <p className="mt-1 text-xs leading-relaxed text-slate-600">
-                    Semak teks verbatim Warta Kerajaan Persekutuan (Akta 852, Akta 281, PPKM 2009, PPM 1985, Akta 154, Akta 342), tapis semua kesalahan mengikut kategori pelaku (termasuk OBD &lt; 18 tahun), unsur mandatori, pengecualian &amp; muat naik PDF Warta.
+                    Semak senarai kesalahan mengikut Akta (Akta 852, Akta 281, PPKM 2009, PPM 1985, Akta 154, Akta 342), kategori pelaku, had kompaun, perkara wajib dibuktikan &amp; teks penuh akta.
                   </p>
                 </div>
               </button>
@@ -1182,6 +1182,7 @@ export default function UIPCommandPage() {
             aktaUtama={aktaUtama}
             authToken={authToken}
             officer={officer}
+            isDevAdmin={isDevAdmin}
             onApplyToCaseBuilder={(draftText, aktaDisyorkan, bukaIp) => {
               if (!confirmDiscardIfDirty()) return;
               setCaseText(draftText);

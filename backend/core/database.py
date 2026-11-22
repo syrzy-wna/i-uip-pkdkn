@@ -291,6 +291,32 @@ def _has_legal_fact_conflict(q_norm: str, cand_norm: str, cand_item: Dict[str, A
     if q_explicit_act and cand_act and q_explicit_act != cand_act:
         return True
 
+    # 7. Pemilikan pasif vape/rokok dalam beg vs perbuatan aktif sedang menghisap (Akta 852)
+    from backend.rag.legal_engine import is_passive_vape_possession_question
+
+    q_passive = is_passive_vape_possession_question(q_norm)
+    c_passive = is_passive_vape_possession_question(cand_norm)
+    if q_passive != c_passive:
+        return True
+
+    return False
+
+
+def _is_corrupted_or_fallback_qa(analysis: Dict[str, Any], raw_resp: str = "") -> bool:
+    """Mengesan jawapan fallback/ralat/Seksyen 2 Tafsiran yang dilarang berada dalam Koleksi Q&A."""
+    sc_id = str(analysis.get("scenario_id") or "").strip().lower()
+    if sc_id in ("rag_custom_query", "unindexed_statute_guard"):
+        return True
+    if analysis.get("is_fallback_response"):
+        return True
+    legal_val = analysis.get("legal_validation")
+    if isinstance(legal_val, dict) and legal_val.get("passed") is False:
+        return True
+    blob = f"{json.dumps(analysis.get('cadangan_pertuduhan') or [], ensure_ascii=False)} {analysis.get('keputusan_tindakan') or ''} {raw_resp}".lower()
+    if "tafsiran" in blob and ("seksyen 2" in blob or "sek. 2" in blob):
+        return True
+    if "rujukan statutori uip mengikut situasi soalan" in str(analysis.get("tajuk_nasihat") or "").lower():
+        return True
     return False
 
 
@@ -300,24 +326,20 @@ def _is_reusable_qa_answer(entry: Dict[str, Any]) -> bool:
         return False
     if str(entry.get("cache_status") or "").upper() == "STALE":
         return False
-    if entry.get("is_ai_answered"):
-        return True
     ans = entry.get("answer")
     if not isinstance(ans, dict):
         return False
     if not str(ans.get("statute_library_version") or "").strip():
         return False
-    charges = ans.get("cadangan_pertuduhan") or []
-    sop = ans.get("sop_lapangan") or []
-    sc_id = str(ans.get("scenario_id") or "")
-    alasan = str(ans.get("alasan_keputusan") or "").lower()
-    if sc_id != "rag_custom_query" and len(charges) >= 1:
+    if _is_corrupted_or_fallback_qa(ans):
+        return False
+    if entry.get("is_ai_answered"):
         return True
-    return (
-        len(charges) >= 1
-        and len(sop) >= 2
-        and "tiada padanan tepat dalam templat ringkas" not in alasan
-    )
+    if str(ans.get("status_kesalahan") or "").upper() == "TIADA_KESALAHAN":
+        return bool(str(ans.get("sebab_tidak_menyalahi") or ans.get("alasan_keputusan") or "").strip())
+    charges = ans.get("cadangan_pertuduhan") or []
+    sc_id = str(ans.get("scenario_id") or "")
+    return sc_id != "rag_custom_query" and len(charges) >= 1
 
 
 def normalize_sspa_grade(raw_grade: Optional[str], default: str = "U5") -> str:
@@ -642,7 +664,7 @@ class UIPDatabase:
             # Penjajaran gred SSM lama kepada SSPA (U29->U5, U32->U6, U36->U7, dll.)
             for old_g, new_g in LEGACY_TO_SSPA_GRADE.items():
                 conn.execute("UPDATE users SET grade = ? WHERE UPPER(grade) = ?", (new_g, old_g))
-            # FASA 3.5: Tandakan secara automatik semua rekod lama Koleksi Q&A pra-v2 yang tiada statute_library_version sebagai STALE
+            # FASA 3.5: Tandakan secara automatik semua rekod lama Koleksi Q&A pra-v2.5 atau tiada statute_library_version sebagai STALE
             conn.execute(
                 """
                 UPDATE dev_archive_records
@@ -652,9 +674,34 @@ class UIPDatabase:
                       redacted_analysis_json IS NULL
                       OR redacted_analysis_json = ''
                       OR redacted_analysis_json NOT LIKE ?
+                      OR redacted_analysis_json NOT LIKE ?
                   )
                 """,
-                ("TANYA_PAKAR_UIP_STALE", "ADVISOR_QA", "TANYA_PAKAR_UIP", "%statute_library_version%"),
+                ("TANYA_PAKAR_UIP_STALE", "ADVISOR_QA", "TANYA_PAKAR_UIP", "%statute_library_version%", "%status_kesalahan%"),
+            )
+            # Padamkan secara automatik rekod lama rosak (Seksyen 2 — Tafsiran / rag_custom_query / fallback lama) semasa startup
+            conn.execute(
+                """
+                DELETE FROM dev_archive_records
+                WHERE category = ?
+                  AND (
+                      LOWER(COALESCE(redacted_analysis_json, '')) LIKE ?
+                      OR LOWER(COALESCE(redacted_analysis_json, '')) LIKE ?
+                      OR LOWER(COALESCE(redacted_analysis_json, '')) LIKE ?
+                      OR LOWER(COALESCE(redacted_analysis_json, '')) LIKE ?
+                      OR LOWER(COALESCE(redacted_response_text, '')) LIKE ?
+                      OR LOWER(COALESCE(status_summary, '')) LIKE ?
+                  )
+                """,
+                (
+                    "ADVISOR_QA",
+                    "%seksyen 2%tafsiran%",
+                    "%rag_custom_query%",
+                    "%rujukan statutori uip mengikut situasi soalan%",
+                    "%\"is_fallback_response\": true%",
+                    "%seksyen 2%tafsiran%",
+                    "%seksyen 2%tafsiran%",
+                ),
             )
             conn.commit()
 
@@ -1815,8 +1862,19 @@ class UIPDatabase:
 
         return {
             "scenario_id": str(analysis.get("scenario_id") or "answered_archive"),
+            "status_kesalahan": (
+                str(analysis.get("status_kesalahan") or "").upper()
+                if str(analysis.get("status_kesalahan") or "").upper() in ("TIADA_KESALAHAN", "ADA_KESALAHAN")
+                else ("TIADA_KESALAHAN" if "tiada kesalahan" in str(analysis.get("keputusan_tindakan") or "").lower() else "ADA_KESALAHAN")
+            ),
             "akta_disyorkan": str(analysis.get("akta_disyorkan") or akta_group),
             "tajuk_nasihat": str(analysis.get("tajuk_nasihat") or fallback_title),
+            "ringkasan_keputusan": str(
+                analysis.get("ringkasan_keputusan")
+                or analysis.get("keputusan_tindakan")
+                or fallback_status
+                or ""
+            ),
             "keputusan_tindakan": str(
                 analysis.get("keputusan_tindakan")
                 or fallback_status
@@ -1824,6 +1882,9 @@ class UIPDatabase:
             ),
             "sesuai_buka_ip": bool(analysis.get("sesuai_buka_ip", False)),
             "alasan_keputusan": str(analysis.get("alasan_keputusan") or fallback_resp or ""),
+            "sebab_tidak_menyalahi": str(analysis.get("sebab_tidak_menyalahi") or ""),
+            "langkah_susulan_ppkp": _str_list("langkah_susulan_ppkp"),
+            "punca_kuasa": analysis.get("punca_kuasa") if isinstance(analysis.get("punca_kuasa"), dict) else None,
             "cadangan_pertuduhan": charges,
             "sop_lapangan": _str_list("sop_lapangan"),
             "eksibit_wajib": _str_list("eksibit_wajib"),
@@ -1833,7 +1894,7 @@ class UIPDatabase:
             "engine_used": str(
                 analysis.get("engine_used")
                 or fallback_model
-                or "Mod Pantas — Rujukan Statutori UIP"
+                or "Rujukan Pantas UIP"
             ),
             "ai_attempted": bool(analysis.get("ai_attempted", False)),
             "ai_succeeded": bool(analysis.get("ai_succeeded", False)),
@@ -1933,11 +1994,15 @@ class UIPDatabase:
                 except Exception:
                     analysis = {}
 
-            # Abaikan secara automatik sebarang rekod lama pra-v2 yang tiada medan statute_library_version atau bertanda STALE
+            # Abaikan secara automatik sebarang rekod lama pra-v2 yang tiada medan statute_library_version, STALE, atau fallback/rosak
             record_lib_ver = str(analysis.get("statute_library_version") or "").strip()
             if not record_lib_ver:
                 continue
             if str(analysis.get("cache_status") or "").upper() == "STALE":
+                continue
+
+            redacted_resp = str(row.get("redacted_response_text") or "").strip()
+            if _is_corrupted_or_fallback_qa(analysis, redacted_resp):
                 continue
 
             req_obj: Dict[str, Any] = {}
@@ -1952,7 +2017,6 @@ class UIPDatabase:
 
             is_scenario_click = bool(req_obj.get("scenario_id") and not req_obj.get("use_ai"))
 
-            redacted_resp = str(row.get("redacted_response_text") or "").strip()
             if not analysis and not redacted_resp:
                 continue
 

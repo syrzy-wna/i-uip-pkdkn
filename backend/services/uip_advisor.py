@@ -75,58 +75,65 @@ UIP_SCENARIO_LIBRARY: List[Dict[str, Any]] = [
     {
         "id": "ak852_obd_merokok_tepi_jalan",
         "akta_utama": "Akta 852",
-        "tajuk": "Pelajar / Orang Belum Dewasa (OBD < 18 Tahun) Merokok / Hisap Vape di Tepi Jalan atau Tempat Awam",
+        "tajuk": "Pelajar / Bawah 18 Tahun (OBD) Merokok atau Hisap Vape (Sekolah / Tandas / Tempat Awam)",
         "keywords": [
-            "budak sekolah", "pelajar sekolah", "pelajar merokok", "tepi jalan", "hisap rokok", "hisap vape",
-            "menghisap rokok", "seragam sekolah", "pondok bas", "seksyen 17", "17(1)",
+            "budak sekolah", "pelajar sekolah", "pelajar merokok", "pelajar hisap", "pelajar sedang hisap",
+            "pelajar menghisap", "tangkap pelajar", "tandas sekolah", "kawasan sekolah", "tepi jalan",
+            "hisap rokok", "hisap vape", "menghisap rokok", "menghisap vape", "hisap vape dalam",
+            "seragam sekolah", "pondok bas", "seksyen 17", "17(1)",
             "obd merokok", "remaja merokok", "bawah umur hisap",
         ],
         "negative_keywords": ["jual kepada", "menjual rokok", "kedai jual", "tanda larangan"],
         "incompatible_with": ["ak852_larangan_merokok"],
-        "keputusan_tindakan": "OBD MEROKOK: NOTIS KESALAHAN S.47 & KOMPAUN S.48 (BUKA IP JIKA ENGGAN BAYAR / JUALAN KEDAI: S.13(1))",
+        "keputusan_tindakan": "Keluarkan Notis S.47 & tawarkan kompaun S.48 di bawah Seksyen 17(1) Akta 852 (patuhi perlindungan Akta 611 & maklumkan ibu bapa/penjaga); siasat kedai penjual di bawah S.13(1).",
+        "ringkasan_keputusan": "Keluarkan Notis S.47 & tawarkan kompaun S.48 bagi kesalahan Seksyen 17(1) Akta 852 dengan pemakluman ibu bapa/penjaga (patuhi Akta 611), dan siasat kedai penjual di bawah Seksyen 13(1).",
         "sesuai_buka_ip": False,
         "alasan_keputusan": (
-            "Bagi pelajar sekolah atau individu bawah 18 tahun (OBD) yang dikesan menghisap rokok atau vape di tepi jalan/kawasan awam, "
-            "kesalahan di bawah Seksyen 17(1) Akta 852 boleh ditawarkan kompaun [P.U. (A) 259/2024] berserta pemakluman kepada ibu bapa/penjaga. "
-            "Hanya buka IP ke atas OBD jika gagal jelas kompaun (untuk Perintah Khidmat Masyarakat / denda S.17(2)), TETAPI wajib siasat kedai/penjual di bawah S.13(1)!"
+            "Pelajar atau individu bawah 18 tahun (OBD) yang ditangkap sedang menghisap vape atau rokok (termasuk di tandas sekolah, kawasan sekolah atau tempat awam) "
+            "melakukan kesalahan di bawah Seksyen 17(1) Akta 852. Kesalahan ini boleh dikompaun di bawah Seksyen 48 [P.U. (A) 259/2024] melalui Notis S.47 "
+            "dengan pemakluman wajib kepada ibu bapa/penjaga serta pematuhan perlindungan kanak-kanak di bawah Akta Kanak-Kanak 2001 [Akta 611]. "
+            "Buka IP terhadap OBD hanya jika gagal jelas kompaun dalam 30 hari, tetapi wajib siasat kedai/penjual di bawah Seksyen 13(1) Akta 852."
         ),
         "cadangan_pertuduhan": [
             {
-                "perihal": "OBD (< 18 tahun) merokok, mengunyah atau menggunakan apa-apa produk tembakau atau produk pengganti tembakau",
+                "perihal": "Bawah 18 Tahun (OBD) merokok, mengunyah atau menggunakan produk tembakau / vape",
                 "seksyen_kesalahan": "Seksyen 17(1) Akta 852",
                 "seksyen_hukuman": "Seksyen 17(2) Akta 852",
                 "hukuman_maksimum": "Denda tidak melebihi RM500 atau Perintah Khidmat Masyarakat (Akta 852)",
-                "boleh_kompaun": "Boleh kompaun di bawah Seksyen 48 [P.U. (A) 259/2024] dengan Notis S.47 (maklumkan ibu bapa/penjaga).",
+                "boleh_kompaun": "Boleh kompaun RM50 di bawah Seksyen 48 [P.U. (A) 259/2024] melalui Notis S.47 (tempoh 30 hari; maklumkan ibu bapa/penjaga).",
             },
             {
                 "perihal": "Penjual / Pekedai (Jika dikenal pasti menjual rokok/vape kepada pelajar tersebut)",
                 "seksyen_kesalahan": "Seksyen 13(1) Akta 852",
                 "seksyen_hukuman": "Seksyen 13(2) [Individu] / Seksyen 13(3) [Syarikat] Akta 852",
                 "hukuman_maksimum": "Individu: Denda maks RM20,000 / penjara 1 tahun | Syarikat: RM20,000 – RM100,000",
-                "boleh_kompaun": "Siasatan terhadap penjual disyorkan Buka IP Terus.",
+                "boleh_kompaun": "Terus Buka IP terhadap penjual jika transaksi jualan kepada OBD dibuktikan.",
             },
         ],
         "sop_lapangan": [
-            "Tunjukkan Kad Kuasa Rasmi KKM (Seksyen 25 Akta 852) secara berhemah apabila melihat OBD sedang menghisap rokok/vape.",
-            "Ambil gambar atau video ringkas kejadian serta puntung rokok/peranti vape yang masih dipegang sebagai bukti masa kejadian.",
-            "Semak MyKad / Kad Pelajar untuk sahkan umur di bawah 18 tahun pada tarikh kejadian, dan catat butiran ibu bapa/penjaga.",
-            "Keluarkan Notis Seksyen 47 (Seksyen 17(1) Akta 852), ambil pengesahan serahan, dan dapatkan maklumat kedai penjual untuk siasatan susulan Seksyen 13(1).",
+            "Tunjukkan Kad Kuasa Rasmi KKM (Seksyen 24(2) & Seksyen 25 Akta 852) kepada pihak pentadbiran sekolah / guru saksi dan pelajar secara berhemah.",
+            "Sahkan identiti serta umur pelajar (bawah 18 tahun pada tarikh kejadian) melalui MyKad atau Kad Pelajar, dan rekodkan butiran penuh ibu bapa/penjaga.",
+            "Rakam bukti kejadian dengan segera: ambil keterangan awal guru/saksi yang menangkap pelajar sedang menghisap vape (rakaman S.112 KTJ jika ke mahkamah), gambar lokasi/peranti vape (+ Sijil S.90A(2)), dan rantaian serahan peranti daripada guru kepada PPKP.",
+            "Keluarkan Notis Kesalahan Seksyen 47 (Seksyen 17(1) Akta 852) dengan tawaran kompaun Seksyen 48 (tempoh 30 hari), maklumkan kepada ibu bapa/penjaga, dan patuhi perlindungan identiti/privasi kanak-kanak di bawah Akta Kanak-Kanak 2001 [Akta 611] (Seksyen 15 & Seksyen 83).",
+            "Dapatkan maklumat kedai/pembekal vape daripada pelajar secara berhemah untuk tindakan pemeriksaan dan siasatan susulan terhadap penjual di bawah Seksyen 13(1) Akta 852.",
         ],
         "eksibit_wajib": [
-            "Salinan MyKad / Pengesahan JPN OBD (membuktikan umur di bawah 18 tahun)",
-            "Salinan pendua Notis Seksyen 47 bertandatangan terima / saksi + rekod makluman penjaga",
-            "Puntung rokok / peranti vape yang dirampas (jika kes mahkamah/sitaan S.36)",
-            "Gambar foto kejadian + Sijil Seksyen 90A(2)",
+            "Salinan MyKad / Kad Pelajar / Pengesahan JPN (membuktikan umur di bawah 18 tahun pada tarikh kejadian)",
+            "Keterangan saksi mata guru/pengawas yang melihat pelajar sedang menghisap vape (S.112 KTJ jika buka IP) + laporan disiplin sekolah",
+            "Salinan pendua Notis Seksyen 47 bertandatangan terima / saksi + rekod pemakluman ibu bapa/penjaga",
+            "Peranti vape / pod yang dirampas beserta rekod rantaian serahan daripada guru kepada PPKP (Borang S.36 jika disita)",
+            "Gambar foto peranti vape & lokasi kejadian (tandas/kawasan sekolah) + Sijil Seksyen 90A(2) Akta Keterangan 1950",
         ],
         "perangkap_kesilapan": [
-            "PEMILIKAN SEMATA-MATA BUKAN KESALAHAN S.17(1): Jika vape hanya dijumpai di dalam beg/poket pelajar tanpa bukti menghisap, mengunyah, menggunakan (S.17(1)) atau membeli (S.13(3)), JANGAN keluarkan kompaun S.17(1) (kesalahan memiliki OBD dalam Peraturan 13(1) PPKHT 2004 telah dimansuhkan)!",
-            "JANGAN caj pelajar di bawah Seksyen 16(2) jika lokasi kejadian di tepi jalan terbuka yang bukan kawasan larangan P.U.(A) 257/2024 — caj di bawah Seksyen 17(1) Akta 852!",
-            "Pastikan salinan bukti tarikh lahir (MyKad/JPN) ada untuk membuktikan status OBD (< 18 tahun).",
+            "PEMILIKAN SEMATA-MATA BUKAN KESALAHAN S.17(1): Kesalahan S.17(1) hanya sah jika ada bukti jelas pelajar sedang menghisap, mengunyah atau menggunakan — bukan sekadar jumpa dalam beg!",
+            "PERLINDUNGAN KANAK-KANAK (AKTA 611): JANGAN siarkan gambar/nama pelajar di media sosial atau soal siasat secara kasar tanpa kehadiran guru/penjaga — patuhi Seksyen 15 (sekatan penyiaran identiti) & Seksyen 83 Akta Kanak-Kanak 2001 [Akta 611].",
+            "RANTAIAN SERAHAN BARANG KES: Jika guru yang merampas vape terlebih dahulu di tandas sekolah, rekodkan tarikh/masa dan tandatangan serahan daripada guru kepada PPKP supaya rantaian eksibit tidak terputus.",
+            "Pastikan salinan bukti tarikh lahir (MyKad/JPN) dilampirkan untuk membuktikan status bawah 18 tahun (OBD).",
         ],
         "templat_ringkas": (
-            "Kesalahan: Orang Belum Dewasa (< 18 tahun) didapati merokok / menggunakan produk pengganti tembakau di tempat awam "
+            "Kesalahan: Orang Belum Dewasa (< 18 tahun) didapati sedang menghisap produk pengganti tembakau / rokok elektronik (vape) "
             "yang melanggar Seksyen 17(1) Akta 852 dan boleh dihukum di bawah Seksyen 17(2) Akta 852. "
-            "Notis Seksyen 47 serta makluman kepada penjaga telah dilaksanakan."
+            "Notis Seksyen 47, pemakluman kepada ibu bapa/penjaga dan pematuhan tatacara Akta Kanak-Kanak 2001 [Akta 611] telah dilaksanakan."
         ),
     },
     {
@@ -968,11 +975,15 @@ class _AdvisorChargeItemSchema(BaseModel):
 
 
 class _AdvisorLLMSchema(BaseModel):
+    status_kesalahan: Optional[str] = None
     akta_disyorkan: Optional[str] = None
     tajuk_nasihat: str = Field(...)
+    ringkasan_keputusan: Optional[str] = None
     keputusan_tindakan: str = Field(...)
     sesuai_buka_ip: bool = Field(...)
     alasan_keputusan: str = Field(...)
+    sebab_tidak_menyalahi: Optional[str] = None
+    langkah_susulan_ppkp: List[str] = Field(default_factory=list)
     cadangan_pertuduhan: List[_AdvisorChargeItemSchema] = Field(default_factory=list)
     sop_lapangan: List[str] = Field(default_factory=list)
     eksibit_wajib: List[str] = Field(default_factory=list)
@@ -984,6 +995,14 @@ class UIPAdvisorService:
     """Enjin Penasihat Undang-Undang & Prosedur Lapangan UIP KKM."""
 
     MIN_SCENARIO_SCORE = 1.8
+
+    _NO_OFFENCE_SCENARIO_IDS = {
+        "ak852_s17_unsur_tidak_terpenuhi",
+        "ak342_covid_positif_tempat_kerja",
+        "ak342_tibi_smear_negatif_enggan_mula",
+        "ak_silang_agensi_kacau_ganggu_racun",
+        "unindexed_statute_guard",
+    }
 
     def __init__(self, router: UIPModelRouter, db: Optional[Any] = None) -> None:
         self.router = router
@@ -1075,49 +1094,185 @@ class UIPAdvisorService:
             return clean_sec or clean_act
         return f"{clean_sec} ({clean_act})"
 
+    @staticmethod
+    def _enforcement_power_for_act(akta_code: str) -> str:
+        low = (akta_code or "").lower()
+        if "852" in low:
+            return "Kad Kuasa S.24(2), Pemeriksaan/Siasatan S.25–S.30, Sitaan S.35–S.36, Notis S.47 & Kompaun S.48 Akta 852"
+        if "281" in low or "ppkm" in low or "ppm" in low:
+            return "Kuasa Pemeriksaan & Sitaan S.4, Penutupan Premis S.11, Notis S.32B & Kompaun S.33 Akta Makanan 1983 [Akta 281]"
+        if "154" in low:
+            return "Kuasa Pemeriksaan S.3/S.5, Perintah Pembersihan/Penutupan S.8(1), Bantuan Polis S.24 & Kompaun S.25 Akta 154"
+        if "342" in low or "apppb" in low:
+            return "Kuasa Pemeriksaan S.14/S.15(1), Penutupan & Disinfeksi S.18(1)(d)&(f), serta Kompaun S.25 (Pindaan Akta A1742)"
+        return f"Kuasa pemeriksaan & penguatkuasaan di bawah {akta_code or 'Akta Kesihatan Awam KKM'}"
+
+    @classmethod
+    def _enrich_two_branch_structure(
+        cls,
+        result: Dict[str, Any],
+        question: str,
+        *,
+        is_fallback: bool = False,
+    ) -> Dict[str, Any]:
+        """Memastikan setiap respons Tanya Pakar UIP dikelaskan tegas kepada TIADA_KESALAHAN atau ADA_KESALAHAN."""
+        q_low = (question or "").lower()
+        sc_id = str(result.get("scenario_id") or "")
+        akta_code = str(result.get("akta_disyorkan") or "Akta KKM")
+        keputusan_up = str(result.get("keputusan_tindakan") or "").upper()
+        explicit_status = str(result.get("status_kesalahan") or "").strip().upper()
+        elem_evals = result.get("element_evaluations") or []
+        any_blocked = any(
+            isinstance(ev, dict) and bool(ev.get("action_blocked")) for ev in elem_evals
+        )
+
+        if explicit_status in ("TIADA_KESALAHAN", "ADA_KESALAHAN"):
+            status_kesalahan = explicit_status
+        elif (
+            sc_id in cls._NO_OFFENCE_SCENARIO_IDS
+            or any_blocked
+            or any(
+                k in keputusan_up
+                for k in (
+                    "TIADA KESALAHAN",
+                    "BUKAN KESALAHAN",
+                    "DITOLAK / TIADA TINDAKAN",
+                    "TIDAK BOLEH KOMPAUN SERTA-MERTA",
+                    "AKTA BELUM DIINDEKS",
+                )
+            )
+        ):
+            status_kesalahan = "TIADA_KESALAHAN"
+        else:
+            status_kesalahan = "ADA_KESALAHAN"
+
+        result["status_kesalahan"] = status_kesalahan
+        result["is_fallback_response"] = bool(
+            is_fallback or sc_id in ("rag_custom_query", "unindexed_statute_guard")
+        )
+
+        # Ringkasan keputusan 1-2 baris yang tegas & bahasa kerja PPKP
+        if not str(result.get("ringkasan_keputusan") or "").strip():
+            raw_kep = str(result.get("keputusan_tindakan") or "").strip()
+            result["ringkasan_keputusan"] = raw_kep
+
+        if status_kesalahan == "TIADA_KESALAHAN":
+            # Pastikan sebab & langkah susulan sentiasa lengkap
+            if not str(result.get("sebab_tidak_menyalahi") or "").strip():
+                result["sebab_tidak_menyalahi"] = str(result.get("alasan_keputusan") or "").strip()
+            if not result.get("langkah_susulan_ppkp"):
+                result["langkah_susulan_ppkp"] = list(result.get("sop_lapangan") or [])
+            result["punca_kuasa"] = None
+        else:
+            # Cabang B (ADA_KESALAHAN): bina objek Punca Kuasa yang jelas di bahagian atas
+            charges = result.get("cadangan_pertuduhan") or []
+            primary = charges[0] if charges and isinstance(charges[0], dict) else {}
+            comp_txt = str(primary.get("boleh_kompaun") or "").strip()
+            comp_low = comp_txt.lower()
+            is_comp_flag = bool(
+                comp_txt
+                and "boleh kompaun" in comp_low
+                or "boleh dikompaun" in comp_low
+                or "kompaun rm" in comp_low
+            ) and not any(
+                neg in comp_low
+                for neg in ("tidak boleh kompaun", "tidak boleh dikompaun", "tiada kompaun", "tidak disyorkan kompaun")
+            )
+            has_obd_minor = any(
+                k in f"{q_low} {akta_code.lower()} {str(primary.get('seksyen_kesalahan') or '').lower()} {str(result.get('tajuk_nasihat') or '').lower()}"
+                for k in ("pelajar", "budak", "murid", "obd", "bawah 18", "bawah umur", "sekolah", "17(1)", "13(3)", "kanak-kanak")
+            )
+            peringatan_611 = (
+                "Peringatan Akta Kanak-Kanak 2001 [Akta 611]: Pelaku melibatkan pelajar / bawah 18 tahun (OBD). "
+                "Wajib maklumkan ibu bapa atau penjaga, lindungi identiti/privasi pelajar (Seksyen 15 Akta 611), "
+                "dan patuhi tatacara Mahkamah Bagi Kanak-Kanak (Seksyen 83 Akta 611) sekiranya kes dirujuk ke mahkamah."
+                if has_obd_minor and "852" in akta_code
+                else None
+            )
+            result["punca_kuasa"] = {
+                "akta": akta_code,
+                "seksyen_kesalahan": str(primary.get("seksyen_kesalahan") or akta_code),
+                "seksyen_hukuman": str(primary.get("seksyen_hukuman") or "-"),
+                "had_hukuman": str(primary.get("hukuman_maksimum") or "-"),
+                "status_kompaun": comp_txt or ("Boleh Kompaun" if is_comp_flag else "Terus Mahkamah (Buka IP)"),
+                "boleh_kompaun_flag": is_comp_flag,
+                "kuasa_penguatkuasaan": cls._enforcement_power_for_act(akta_code),
+                "peringatan_akta_611": peringatan_611,
+            }
+            result.setdefault("sebab_tidak_menyalahi", "")
+            result.setdefault("langkah_susulan_ppkp", [])
+
+        return result
+
     @classmethod
     def _build_rag_fallback_scenario(
         cls,
         question: str,
         akta_hint: str,
         rag_hits: List[Any],
+        offence_doc_ids: Optional[set[str]] = None,
     ) -> Dict[str, Any]:
-        """Templat rujukan berasaskan RAG statutori apabila soalan di luar 17 templat teras."""
-        top_hit = rag_hits[0] if rag_hits else None
+        """Templat rujukan berasaskan RAG statutori apabila soalan di luar templat teras (sekat Seksyen 2 — Tafsiran)."""
+        # Tapis keluar Seksyen 1 / Seksyen 2 (Tafsiran/Tajuk Ringkas) & seksyen bukan kesalahan daripada dicalonkan sebagai caj
+        def _is_def_chunk(chunk: Any) -> bool:
+            sec_low = str(getattr(chunk, "section", "") or "").lower()
+            if any(m in sec_low for m in ("tafsiran", "tajuk ringkas", "permulaan kuat kuasa", "interpretation", "short title")):
+                return True
+            if re.match(r"^(?:seksyen|section)\s+[12]\b", sec_low):
+                cid = str(getattr(chunk, "chunk_id", "") or "")
+                if offence_doc_ids is not None and cid not in offence_doc_ids:
+                    return True
+            return False
+
+        clean_hits = [c for c in rag_hits if not _is_def_chunk(c)]
+        offence_hits = (
+            [c for c in clean_hits if str(getattr(c, "chunk_id", "") or "") in offence_doc_ids]
+            if offence_doc_ids
+            else clean_hits
+        )
+        charge_hits = offence_hits[:2]
+        top_hit = (charge_hits[0] if charge_hits else (clean_hits[0] if clean_hits else None))
+
         akta_label = (
             akta_hint
             if akta_hint and akta_hint != "Semua"
             else (top_hit.akta_code if top_hit else "Akta Kesihatan Awam KKM")
         )
         citations_summary = ", ".join(
-            dict.fromkeys(cls._format_section_label(c.section, c.akta_code) for c in rag_hits[:3])
-        ) or "Pangkalan data statutori tempatan"
+            dict.fromkeys(cls._format_section_label(c.section, c.akta_code) for c in (charge_hits or clean_hits[:2]))
+        ) or "Pustaka Akta KKM"
+
+        charges_list = [
+            {
+                "perihal": f"Peruntukan berkaitan di bawah {c.akta_code}",
+                "seksyen_kesalahan": cls._format_section_label(c.section, c.akta_code),
+                "seksyen_hukuman": "Semak peruntukan hukuman dalam Teks Asal Akta di bawah.",
+                "hukuman_maksimum": c.max_fine_hint or "Tertakluk had hukuman di bawah Akta berkaitan.",
+                "boleh_kompaun": c.is_compoundable_hint or "Semak jadual kompaun akta / rujuk Pegawai Pendakwa & UIP JKN.",
+            }
+            for c in charge_hits
+        ]
+
         return {
             "id": "rag_custom_query",
             "akta_utama": akta_label,
-            "tajuk": f"Rujukan Statutori UIP Mengikut Situasi Soalan ({akta_label})",
+            "tajuk": f"Keputusan & Panduan Tindakan ({akta_label})",
+            "ringkasan_keputusan": (
+                f"Semak peruntukan berkaitan ({citations_summary}) dan sahkan fakta serta kuasa di lokasi sebelum mengeluarkan notis atau membuka IP."
+            ),
             "keputusan_tindakan": (
-                f"RUJUK PERUNTUKAN STATUTORI TERPILIH ({citations_summary}) — SAHKAN FAKTA & SERAHAN NOTIS SEBELUM BUKA IP"
+                f"Semak peruntukan berkaitan ({citations_summary}) — sahkan fakta dan kuasa sebelum keluarkan notis atau buka IP."
             ),
             "sesuai_buka_ip": False,
             "alasan_keputusan": (
-                f"Soalan anda tiada padanan tepat dalam templat ringkas sedia ada, maka enjin memadankan peruntukan terdekat daripada stor undang-undang ({citations_summary}). "
-                "Klik butang Analisa AI untuk huraian kes khusus mengikut elemen pembuktian dan SOP PPKP."
+                f"Berdasarkan soalan anda, rujukan terdekat dalam Pustaka Akta ialah {citations_summary}. "
+                "Sila semak teks asal akta di bawah atau tekan Analisa AI untuk panduan kes khusus."
             ),
-            "cadangan_pertuduhan": [
-                {
-                    "perihal": f"Peruntukan berkaitan daripada {c.akta_title}",
-                    "seksyen_kesalahan": cls._format_section_label(c.section, c.akta_code),
-                    "seksyen_hukuman": "Semak peruntukan penalti dalam petikan Akta di tab 'Petikan Akta'.",
-                    "hukuman_maksimum": c.max_fine_hint or "Tertakluk had hukuman di bawah Akta berkaitan.",
-                    "boleh_kompaun": c.is_compoundable_hint or "Semak jadual kompaun akta / rujuk Pegawai Pendakwa & UIP JKN.",
-                }
-                for c in rag_hits[:2]
-            ],
+            "cadangan_pertuduhan": charges_list,
             "sop_lapangan": [
                 "Tunjukkan Kad Kuasa Rasmi KKM sebelum memulakan pemeriksaan atau siasatan di lokasi.",
-                "Sahkan status entiti (MyKad OKT / carian rasmi SSM jika syarikat) dan bidang kuasa akta terpakai.",
-                "Rekod gambar bertarikh + Sijil S.90A(2), catat Diari Siasatan, dan rujuk petikan Akta berkaitan atau klik Analisa AI untuk langkah kes khusus.",
+                "Sahkan identiti pihak terlibat (MyKad individu / carian rasmi SSM jika syarikat) dan bidang kuasa akta terpakai.",
+                "Rakam gambar bertarikh + Sijil S.90A(2), catat Diari Siasatan, dan semak Teks Asal Akta sebelum mengambil tindakan kompaun atau membuka IP.",
             ],
             "eksibit_wajib": [
                 "Diari Siasatan (DS) & Percakapan S.112 KTJ pegawai pengesan / saksi",
@@ -1125,11 +1280,12 @@ class UIPAdvisorService:
                 "Salinan Notis / Perintah bertulis bertandatangan terima (jika tindakan melibatkan pematuhan perintah)",
             ],
             "perangkap_kesilapan": [
-                "Pastikan akta dan seksyen yang digunakan berpadanan dengan status fakta lapangan serta kuasa di bawah akta tersebut.",
+                "Pastikan akta dan seksyen yang dipilih benar-benar merupakan peruntukan kesalahan yang sepadan dengan fakta lapangan.",
             ],
             "templat_ringkas": (
                 f"Rujukan siasatan awal di bawah {akta_label} berkaitan situasi: {question.strip()[:220]}."
             ),
+            "is_fallback_response": True,
         }
 
     @classmethod
@@ -1265,7 +1421,14 @@ class UIPAdvisorService:
         use_ai: bool = False,
         officer_profile: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
-        from backend.rag.legal_engine import get_legal_library, validate_legal_output
+        from backend.rag.legal_engine import (
+            canonical_akta_code_for_statute,
+            evaluate_offence_elements_against_facts,
+            get_legal_library,
+            is_non_offence_or_definition_section,
+            is_passive_vape_possession_question,
+            validate_legal_output,
+        )
 
         legal_lib = get_legal_library()
         lib_snapshot = legal_lib.to_snapshot_dict()
@@ -1274,7 +1437,7 @@ class UIPAdvisorService:
         grounding = legal_lib.search_closed_book_grounding(
             question=question,
             akta_hint=akta_hint,
-            top_k=5,
+            top_k=4,
         )
 
         # FASA 5.2: Jika akta belum dimuat naik PDF rasminya (total_sections_indexed == 0), enggan meneka!
@@ -1283,26 +1446,33 @@ class UIPAdvisorService:
             sid = unidx["statute_id"]
             unidx_msg = (
                 f"AKTA BELUM DIINDEKS — MUAT NAIK PDF WARTA: Peruntukan bagi {sid} ({unidx.get('official_title_bm', '')}) "
-                "belum dimuat naik PDF Warta Kerajaan Rasmi ke dalam pangkalan data `statute_sections_verbatim`. "
-                "Mengikut Seni Bina Perundangan Tertutup (Zero-Hallucination Engine), sistem enggan meneka sebarang nombor seksyen atau denda."
+                "belum dimuat naik PDF Warta Kerajaan Rasmi ke dalam Pustaka Akta. "
+                "Sistem enggan meneka nombor seksyen atau had denda tanpa teks asal Warta."
             )
-            res_unidx = {
+            res_unidx: Dict[str, Any] = {
                 "scenario_id": "unindexed_statute_guard",
+                "status_kesalahan": "TIADA_KESALAHAN",
                 "akta_disyorkan": unidx.get("canonical_akta_code") or sid,
                 "tajuk_nasihat": f"AKTA BELUM DIINDEKS — MUAT NAIK PDF WARTA ({sid})",
+                "ringkasan_keputusan": f"Fail PDF Warta rasmi bagi {sid} belum dimuat naik. Muat naik PDF Warta dahulu sebelum mengeluarkan notis atau pertuduhan.",
                 "keputusan_tindakan": "AKTA BELUM DIINDEKS — MUAT NAIK PDF WARTA",
                 "sesuai_buka_ip": False,
                 "alasan_keputusan": unidx_msg,
+                "sebab_tidak_menyalahi": unidx_msg,
+                "langkah_susulan_ppkp": [
+                    f"Muat naik fail PDF Warta Kerajaan Rasmi ({sid}.pdf) daripada lom.agc.gov.my melalui tab Admin Warta.",
+                    "Semak teks seksyen dan sahkan Warta sebelum menggunakan rujukan akta ini.",
+                ],
                 "cadangan_pertuduhan": [],
                 "sop_lapangan": [
-                    f"Muat naik fail PDF Warta Kerajaan Rasmi ({sid}.pdf) daripada lom.agc.gov.my melalui Admin Panel Pustaka Akta atau skrip CLI scripts/ingest_statute.py.",
-                    "Semak Laporan Liputan 100% dan klik 'Sahkan Warta' sebelum menggunakan rujukan akta ini.",
+                    f"Muat naik fail PDF Warta Kerajaan Rasmi ({sid}.pdf) daripada lom.agc.gov.my melalui tab Admin Warta.",
+                    "Semak teks seksyen dan sahkan Warta sebelum menggunakan rujukan akta ini.",
                 ],
                 "eksibit_wajib": [],
                 "perangkap_kesilapan": [unidx_msg],
                 "templat_ringkas": unidx_msg,
                 "draf_teks_kes_cadangan": "",
-                "engine_used": "Closed-Book Statutory Guardrail (Zero-Hallucination)",
+                "engine_used": "Pustaka Akta KKM",
                 "ai_attempted": False,
                 "ai_succeeded": False,
                 "fallback_reason": None,
@@ -1313,26 +1483,23 @@ class UIPAdvisorService:
                 "matched_collection_ask_count": None,
                 "statute_library_version": legal_lib.statute_library_version,
                 "cache_status": "ACTIVE",
+                "unindexed_statute": True,
                 "element_evaluations": [],
                 "repealed_warnings": grounding.get("repealed_matches") or [],
                 "statutory_citations": [],
             }
+            self._enrich_two_branch_structure(res_unidx, question, is_fallback=True)
             res_unidx["legal_validation"] = validate_legal_output(
                 res_unidx, lib_snapshot, question_context=f"{question} {akta_hint}"
             )
             return res_unidx
 
-        # FASA 3.2 & FASA 5.1(c): Semak sama ada soalan mengenai pemilikan vape dalam beg oleh pelajar tanpa bukti menghisap/membeli (S.17(1) Akta 852 WAJIB DITOLAK)
-        q_low = (question or "").lower()
+        # CABANG A (TIADA_KESALAHAN): Pemilikan pasif vape/rokok dalam beg/checking bag oleh pelajar tanpa bukti menghisap/menggunakan/membeli
         s17_offence = next(
             (o for o in legal_lib.master_offences_matrix if o["offence_id"] == "AKTA_852_S17_1"),
             None,
         )
-        if s17_offence and any(
-            k in q_low for k in ("dalam beg", "dalam poket", "dalam loker", "pemilikan semata", "hanya memiliki")
-        ) and any(k in q_low for k in ("pelajar", "budak", "obd", "sekolah", "vape", "rokok", "17(1)")):
-            from backend.rag.legal_engine import evaluate_offence_elements_against_facts
-
+        if s17_offence and is_passive_vape_possession_question(question):
             s17_eval = evaluate_offence_elements_against_facts(question, s17_offence)
             if s17_eval["action_blocked"]:
                 s17_verbatim = [
@@ -1350,53 +1517,45 @@ class UIPAdvisorService:
                     for s in legal_lib.statute_sections_verbatim
                     if s["doc_id"] in ("AKTA_852__S17", "AKTA_852__S13")
                 ]
+                sebab_txt = (
+                    "Seksyen 17(1) Akta 852 hanya terpakai bagi perbuatan 'merokok, mengunyah atau menggunakan' produk tembakau "
+                    "atau produk pengganti tembakau (termasuk vape) oleh Orang Belum Dewasa (bawah 18 tahun), manakala Seksyen 13(3) "
+                    "hanya terpakai jika terbukti perbuatan 'membeli'. Unsur perbuatan menghisap/menggunakan TIDAK TERPENUHI dalam kes ini — "
+                    "pemilikan vape dalam beg semata-mata telah digugurkan selepas PPKHT 2004 (Peraturan 13(1)) dimansuhkan."
+                )
+                langkah_susulan = [
+                    "Tindakan Pentadbiran Sekolah: Serahkan urusan rampasan vape dan tindakan tatatertib dalam kawasan sekolah kepada pihak pentadbiran sekolah di bawah peraturan disiplin Kementerian Pendidikan Malaysia (KPM) berserta pemakluman kepada ibu bapa/penjaga.",
+                    "Syarat Buka Siasatan Seksyen 17(1) Akta 852: Hanya boleh keluarkan Notis S.47 / kompaun S.48 terhadap pelajar jika ada saksi mata (guru/pengawas) atau rakaman CCTV yang jelas membuktikan pelajar sedang menghisap, mengunyah atau menggunakan vape tersebut.",
+                    "Syarat Buka Siasatan Seksyen 13(1) & Seksyen 13(3) Akta 852: Dapatkan maklumat secara berhemah daripada pelajar mengenai premis/kedai yang menjual vape itu. Jika terdapat bukti jualan (resit, keterangan atau operasi pemantauan kedai), siasat penjual di bawah Seksyen 13(1) (dan pembelian OBD di bawah Seksyen 13(3) jika transaksi belian terbukti).",
+                ]
                 trap_res: Dict[str, Any] = {
                     "scenario_id": "ak852_s17_unsur_tidak_terpenuhi",
+                    "status_kesalahan": "TIADA_KESALAHAN",
                     "akta_disyorkan": "Akta 852",
-                    "tajuk_nasihat": "SEKSYEN 17(1) AKTA 852 DITOLAK — Pemilikan Semata-Mata Vape Dalam Beg Tanpa Bukti Menghisap/Membeli BUKAN Kesalahan",
+                    "tajuk_nasihat": "TIADA KESALAHAN DI BAWAH AKTA 852",
+                    "ringkasan_keputusan": "Jangan keluarkan Notis S.47 atau kompaun atas pemilikan vape dalam beg semata-mata.",
                     "keputusan_tindakan": (
-                        "DITOLAK / TIADA TINDAKAN KOMPAUN ATAU PERTUDUHAN S.17(1) AKTA 852 — "
-                        "UNSUR MANDATORI TIDAK TERPENUHI (Pemilikan Semata-Mata Dalam Beg Bukan Kesalahan S.17(1))"
+                        "TIADA KESALAHAN DI BAWAH AKTA 852 — Pemilikan dalam beg bukan kesalahan Seksyen 17(1) "
+                        "(Unsur mandatori tidak terpenuhi; jangan keluarkan Notis S.47 atau kompaun)"
                     ),
                     "sesuai_buka_ip": False,
-                    "alasan_keputusan": (
-                        "Mengikut teks penuh verbatim Seksyen 17(1) Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024 [Akta 852], "
-                        "kesalahan Orang Belum Dewasa (OBD < 18 tahun) HANYA terpakai bagi perbuatan 'merokok, mengunyah atau menggunakan' "
-                        "produk tembakau atau produk pengganti tembakau (manakala Seksyen 13(3) hanya terpakai bagi perbuatan 'membeli'). "
-                        "Berbeza dengan Peraturan 13(1) PPKHT 2004 yang telah DIMANSUHKAN, pemilikan semata-mata di dalam beg sekolah/poket "
-                        "tanpa bukti saksi mata pelajar sedang menghisap, mengunyah, menggunakan atau membeli BUKAN suatu kesalahan di bawah Seksyen 17(1) Akta 852. "
-                        "Pengeluaran Notis Seksyen 47 / Kompaun Seksyen 48 atau Pertuduhan Borang 114 ke atas pelajar tersebut WAJIB DISEKAT!"
-                    ),
-                    "cadangan_pertuduhan": [
-                        {
-                            "perihal": "SEKSYEN 17(1) AKTA 852 DITOLAK — Unsur Mandatori #2 (Merokok/Mengunyah/Menggunakan) TIDAK TERPENUHI",
-                            "seksyen_kesalahan": "TIADA KESALAHAN di bawah Seksyen 17(1) Akta 852 bagi pemilikan pasif dalam beg",
-                            "seksyen_hukuman": "Tindakan Tatatertib Disiplin Sekolah (KPM) & Kaunseling Berhenti Merokok",
-                            "hukuman_maksimum": "Tiada denda / tiada kompaun Akta 852 terhadap pelajar bagi pemilikan semata-mata.",
-                            "boleh_kompaun": "TIDAK BOLEH DIKOMPAUN — Haram mengeluarkan Notis S.47/S.48 tanpa bukti menghisap/menggunakan/membeli.",
-                        },
-                        {
-                            "perihal": "Siasatan Susulan Terhadap Pekedai / Penjual (Hanya Jika Terdapat Bukti Jualan Kepada OBD)",
-                            "seksyen_kesalahan": "Seksyen 13(1) Akta 852",
-                            "seksyen_hukuman": "Seksyen 13(2) [Individu] / Seksyen 13(3) [Syarikat] Akta 852",
-                            "hukuman_maksimum": "Individu: Denda maks RM20,000 / penjara 1 tahun | Syarikat: RM20,000 – RM100,000",
-                            "boleh_kompaun": "Siasat punca bekalan kedai yang menjual kepada pelajar.",
-                        },
-                    ],
-                    "sop_lapangan": [
-                        "JANGAN keluarkan Notis Kesalahan Seksyen 47 atau tawaran kompaun Seksyen 48 Akta 852 kepada pelajar yang hanya dijumpai menyimpan vape di dalam beg tanpa bukti menghisap/membeli.",
-                        "Serahkan urusan rampasan dalam kawasan sekolah kepada pihak pengurusan disiplin sekolah mengikut garis panduan Kementerian Pendidikan Malaysia (KPM) dan maklumkan ibu bapa/penjaga.",
-                        "Dapatkan maklumat daripada pelajar secara berhemah mengenai premis/kedai yang menjual vape tersebut bagi menjalankan operasi pemeriksaan dan siasatan penjual di bawah Seksyen 13(1) & Seksyen 10(1) Akta 852.",
-                    ],
+                    "alasan_keputusan": sebab_txt,
+                    "sebab_tidak_menyalahi": sebab_txt,
+                    "langkah_susulan_ppkp": langkah_susulan,
+                    "cadangan_pertuduhan": [],
+                    "sop_lapangan": langkah_susulan,
                     "eksibit_wajib": [
-                        "Rekod maklumat risikan premis penjual bagi siasatan Seksyen 13(1) Akta 852 (tiada eksibit pertuduhan S.17(1) ke atas pelajar)",
+                        "Tiada barang kes pertuduhan S.17(1) terhadap pelajar — rekodkan maklumat risikan kedai penjual sahaja jika mahu menyiasat di bawah Seksyen 13(1) Akta 852.",
                     ],
-                    "perangkap_kesilapan": list(s17_offence.get("explicit_exclusions_and_traps") or []),
+                    "perangkap_kesilapan": [
+                        "JANGAN guna Peraturan 13(1) PPKHT 2004 (telah dimansuhkan oleh Akta 852).",
+                        "JANGAN keluarkan Notis S.47 atau kompaun S.17(1) atas pemilikan dalam beg semata-mata tanpa bukti menghisap, mengunyah, menggunakan atau membeli.",
+                    ],
                     "templat_ringkas": (
-                        "Semakan Unsur Seksyen 17(1) Akta 852: Pemilikan vape di dalam beg pelajar tanpa bukti perbuatan merokok, mengunyah, "
-                        "menggunakan (S.17(1)) atau membeli (S.13(3)) TIDAK memenuhi unsur kesalahan di bawah Akta 852. Tiada Notis S.47 / kompaun dikeluarkan kepada pelajar."
+                        "Semakan Akta 852: Pemilikan vape dalam beg pelajar tanpa bukti menghisap, mengunyah, menggunakan (S.17(1)) "
+                        "atau membeli (S.13(3)) bukan suatu kesalahan di bawah Akta 852. Tiada Notis S.47 atau kompaun dikeluarkan kepada pelajar."
                     ),
-                    "engine_used": "Closed-Book Statutory Engine + Mandatory Element Guardrail",
+                    "engine_used": "Rujukan Akta KKM",
                     "ai_attempted": False,
                     "ai_succeeded": False,
                     "fallback_reason": None,
@@ -1411,10 +1570,8 @@ class UIPAdvisorService:
                     "repealed_warnings": grounding.get("repealed_matches") or [],
                     "statutory_citations": s17_verbatim,
                 }
-                trap_res["draf_teks_kes_cadangan"] = self._build_prefilled_case_template(
-                    {"akta_utama": "Akta 852", "templat_ringkas": trap_res["templat_ringkas"]},
-                    officer_profile=officer_profile,
-                )
+                trap_res["draf_teks_kes_cadangan"] = ""
+                self._enrich_two_branch_structure(trap_res, question, is_fallback=False)
                 trap_res["legal_validation"] = validate_legal_output(
                     trap_res, lib_snapshot, question_context=question
                 )
@@ -1422,6 +1579,9 @@ class UIPAdvisorService:
 
         verbatim_by_doc_id: Dict[str, Dict[str, Any]] = {
             s["doc_id"]: s for s in legal_lib.statute_sections_verbatim
+        }
+        offence_doc_ids: set[str] = {
+            s["doc_id"] for s in legal_lib.statute_sections_verbatim if s.get("is_offence_provision")
         }
 
         # 0. Semak Koleksi Soalan & Jawapan Pakar dahulu apabila pengguna tidak memaksa Analisa AI segar
@@ -1442,73 +1602,81 @@ class UIPAdvisorService:
 
             if matched_qa and isinstance(matched_qa.get("answer"), dict):
                 ans = dict(matched_qa["answer"])
-                # Sahkan jawapan cache menggunakan validate_legal_output sebelum dipetik semula
-                val_check = validate_legal_output(ans, lib_snapshot, question_context=question)
-                if val_check["passed"]:
-                    # Pulihkan teks verbatim 100% aksara-demi-aksara daripada statute_sections_verbatim
-                    restored_cits: List[Dict[str, Any]] = []
-                    for c_item in ans.get("statutory_citations") or []:
-                        if not isinstance(c_item, dict):
-                            continue
-                        did = str(c_item.get("doc_id") or c_item.get("chunk_id") or "")
-                        if did in verbatim_by_doc_id:
-                            s_v = verbatim_by_doc_id[did]
-                            restored_cits.append(
+                # Tolak cache rosak (fallback / Seksyen 2 Tafsiran)
+                ans_dump_low = str(ans.get("cadangan_pertuduhan") or "").lower()
+                if (
+                    ans.get("scenario_id") not in ("rag_custom_query", "unindexed_statute_guard")
+                    and "seksyen 2" not in ans_dump_low
+                    and "tafsiran" not in ans_dump_low
+                ):
+                    self._enrich_two_branch_structure(ans, question, is_fallback=False)
+                    # Sahkan jawapan cache menggunakan validate_legal_output sebelum dipetik semula
+                    val_check = validate_legal_output(ans, lib_snapshot, question_context=question)
+                    if val_check["passed"]:
+                        # Pulihkan teks verbatim 100% aksara-demi-aksara daripada statute_sections_verbatim
+                        restored_cits: List[Dict[str, Any]] = []
+                        for c_item in ans.get("statutory_citations") or []:
+                            if not isinstance(c_item, dict):
+                                continue
+                            did = str(c_item.get("doc_id") or c_item.get("chunk_id") or "")
+                            if did in verbatim_by_doc_id:
+                                s_v = verbatim_by_doc_id[did]
+                                restored_cits.append(
+                                    {
+                                        **c_item,
+                                        "chunk_id": s_v["doc_id"],
+                                        "doc_id": s_v["doc_id"],
+                                        "statute_id": s_v["statute_id"],
+                                        "text": s_v["verbatim_text_bm"],
+                                        "verbatim": True,
+                                    }
+                                )
+                        if not restored_cits:
+                            restored_cits = [
                                 {
-                                    **c_item,
-                                    "chunk_id": s_v["doc_id"],
-                                    "doc_id": s_v["doc_id"],
-                                    "statute_id": s_v["statute_id"],
-                                    "text": s_v["verbatim_text_bm"],
+                                    "chunk_id": vh["doc_id"],
+                                    "doc_id": vh["doc_id"],
+                                    "statute_id": vh["statute_id"],
+                                    "akta_code": vh["akta_code"],
+                                    "akta_title": vh["akta_code"],
+                                    "section": f"{vh['section_code']} - {vh['section_heading']}",
+                                    "text": vh["verbatim_text_bm"],
+                                    "score": vh["score"],
                                     "verbatim": True,
                                 }
-                            )
-                    if not restored_cits:
-                        restored_cits = [
+                                for vh in (grounding.get("verbatim_sections") or [])
+                            ]
+                        ans["statutory_citations"] = restored_cits
+                        resolved_act = str(
+                            ans.get("akta_disyorkan") or matched_qa.get("akta_group") or "Akta 852"
+                        )
+                        ans["akta_disyorkan"] = resolved_act
+                        ans["draf_teks_kes_cadangan"] = self._build_prefilled_case_template(
                             {
-                                "chunk_id": vh["doc_id"],
-                                "doc_id": vh["doc_id"],
-                                "statute_id": vh["statute_id"],
-                                "akta_code": vh["akta_code"],
-                                "akta_title": vh["akta_code"],
-                                "section": f"{vh['section_code']} - {vh['section_heading']}",
-                                "text": vh["verbatim_text_bm"],
-                                "score": vh["score"],
-                                "verbatim": True,
-                            }
-                            for vh in (grounding.get("verbatim_sections") or [])
-                        ]
-                    ans["statutory_citations"] = restored_cits
-                    resolved_act = str(
-                        ans.get("akta_disyorkan") or matched_qa.get("akta_group") or "Akta 852"
-                    )
-                    ans["akta_disyorkan"] = resolved_act
-                    ans["draf_teks_kes_cadangan"] = self._build_prefilled_case_template(
-                        {
-                            "akta_utama": resolved_act,
-                            "templat_ringkas": str(
-                                ans.get("templat_ringkas") or ans.get("keputusan_tindakan") or ""
-                            ),
-                        },
-                        officer_profile=officer_profile,
-                    )
-                    sim_pct = int(matched_qa.get("similarity_percent") or 100)
-                    src_label = (
-                        "AI Terdahulu" if matched_qa.get("is_ai_answered") else "Statutori UIP"
-                    )
-                    ans["engine_used"] = f"Koleksi Q&A Pakar ({src_label} · Padanan {sim_pct}%)"
-                    ans["ai_attempted"] = False
-                    ans["ai_succeeded"] = bool(matched_qa.get("is_ai_answered"))
-                    ans["fallback_reason"] = None
-                    ans["from_qa_collection"] = True
-                    ans["matched_collection_id"] = matched_qa.get("id")
-                    ans["matched_collection_question"] = matched_qa.get("question")
-                    ans["matched_collection_similarity"] = sim_pct
-                    ans["matched_collection_ask_count"] = int(matched_qa.get("ask_count") or 1)
-                    ans["statute_library_version"] = legal_lib.statute_library_version
-                    ans["cache_status"] = "ACTIVE"
-                    ans["legal_validation"] = val_check
-                    return ans
+                                "akta_utama": resolved_act,
+                                "templat_ringkas": str(
+                                    ans.get("templat_ringkas") or ans.get("keputusan_tindakan") or ""
+                                ),
+                            },
+                            officer_profile=officer_profile,
+                        )
+                        sim_pct = int(matched_qa.get("similarity_percent") or 100)
+                        src_label = (
+                            "AI Terdahulu" if matched_qa.get("is_ai_answered") else "Rujukan UIP"
+                        )
+                        ans["engine_used"] = f"Koleksi Q&A Pakar ({src_label} · Padanan {sim_pct}%)"
+                        ans["ai_attempted"] = False
+                        ans["ai_succeeded"] = bool(matched_qa.get("is_ai_answered"))
+                        ans["fallback_reason"] = None
+                        ans["from_qa_collection"] = True
+                        ans["matched_collection_id"] = matched_qa.get("id")
+                        ans["matched_collection_question"] = matched_qa.get("question")
+                        ans["matched_collection_similarity"] = sim_pct
+                        ans["matched_collection_ask_count"] = int(matched_qa.get("ask_count") or 1)
+                        ans["statute_library_version"] = legal_lib.statute_library_version
+                        ans["cache_status"] = "ACTIVE"
+                        ans["legal_validation"] = val_check
+                        return ans
 
         matched, kw_score, confident_match = self._match_composite_scenarios(
             question, akta_hint=akta_hint, scenario_id=scenario_id
@@ -1518,13 +1686,23 @@ class UIPAdvisorService:
             if confident_match
             else question
         )
+        effective_rag_akta = (
+            None
+            if akta_hint in ("", "Semua")
+            else akta_hint
+        )
+        if not effective_rag_akta and confident_match and matched.get("akta_utama", "").startswith("Akta "):
+            effective_rag_akta = matched["akta_utama"]
+
         rag_hits = self.router.rag_store.search_statutes(
             query=rag_query,
-            akta_filter=None if akta_hint in ("", "Semua") else akta_hint,
+            akta_filter=effective_rag_akta,
             top_k=5,
         )
         if not confident_match:
-            matched = self._build_rag_fallback_scenario(question, akta_hint, rag_hits)
+            matched = self._build_rag_fallback_scenario(
+                question, akta_hint, rag_hits, offence_doc_ids=offence_doc_ids
+            )
 
         # Pastikan pautan wajib Akta Induk <-> Akta Pindaan (AMENDMENT_COMPANIONS) sentiasa aktif apabila Akta 342 / Akta 281 disyorkan
         matched_akta_code = str(matched.get("akta_utama") or "")
@@ -1539,7 +1717,11 @@ class UIPAdvisorService:
                 top_k=4,
             )
 
-        # FASA 3.4 & 5.3: Pastikan `statutory_citations` memaparkan `verbatim_text_bm` 100% aksara-demi-aksara daripada `statute_sections_verbatim`
+        # FASA 3.4 & 5.3: Pastikan `statutory_citations` memaparkan `verbatim_text_bm` 100% aksara-demi-aksara tanpa Seksyen 2 Tafsiran
+        q_low_cit = (question or "").lower()
+        asks_def_cit = any(
+            k in q_low_cit for k in ("tafsiran", "definisi", "maksud ", "seksyen 2", "sek. 2", "s.2 ")
+        )
         verbatim_by_text: Dict[str, Dict[str, Any]] = {
             s["verbatim_text_bm"]: s for s in legal_lib.statute_sections_verbatim
         }
@@ -1548,6 +1730,8 @@ class UIPAdvisorService:
 
         for vh in grounding.get("verbatim_sections") or []:
             v_txt = vh["verbatim_text_bm"]
+            if not asks_def_cit and is_non_offence_or_definition_section(vh):
+                continue
             if v_txt not in seen_cit_texts:
                 seen_cit_texts.add(v_txt)
                 citations_dict.append(
@@ -1568,8 +1752,10 @@ class UIPAdvisorService:
 
         for c in rag_hits:
             if c.text in verbatim_by_text and c.text not in seen_cit_texts:
-                seen_cit_texts.add(c.text)
                 s_obj = verbatim_by_text[c.text]
+                if not asks_def_cit and is_non_offence_or_definition_section(s_obj):
+                    continue
+                seen_cit_texts.add(c.text)
                 citations_dict.append(
                     {
                         "chunk_id": s_obj["doc_id"],
@@ -1585,20 +1771,44 @@ class UIPAdvisorService:
                 )
 
         if not citations_dict and legal_lib.statute_sections_verbatim:
-            first_s = legal_lib.statute_sections_verbatim[0]
-            citations_dict.append(
-                {
-                    "chunk_id": first_s["doc_id"],
-                    "doc_id": first_s["doc_id"],
-                    "statute_id": first_s["statute_id"],
-                    "akta_code": "Akta 852",
-                    "akta_title": "Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024",
-                    "section": f"{first_s['section_code']} - {first_s['section_heading']}",
-                    "text": first_s["verbatim_text_bm"],
-                    "score": 0.85,
-                    "verbatim": True,
-                }
+            # Cari seksyen kesalahan sebenar dari Akta yang sepadan — JANGAN sekali-kali jatuh ke Seksyen 1 / Seksyen 2 Tafsiran!
+            fallback_sec = next(
+                (
+                    s
+                    for s in legal_lib.statute_sections_verbatim
+                    if s.get("is_offence_provision")
+                    and not is_non_offence_or_definition_section(s)
+                    and (
+                        not matched_akta_code
+                        or matched_akta_code.lower() in canonical_akta_code_for_statute(s["statute_id"]).lower()
+                    )
+                ),
+                None,
+            ) or next(
+                (
+                    s
+                    for s in legal_lib.statute_sections_verbatim
+                    if s.get("is_offence_provision") and not is_non_offence_or_definition_section(s)
+                ),
+                None,
             )
+            if fallback_sec:
+                fb_act = canonical_akta_code_for_statute(fallback_sec["statute_id"])
+                citations_dict.append(
+                    {
+                        "chunk_id": fallback_sec["doc_id"],
+                        "doc_id": fallback_sec["doc_id"],
+                        "statute_id": fallback_sec["statute_id"],
+                        "akta_code": fb_act,
+                        "akta_title": fb_act,
+                        "section": f"Seksyen {fallback_sec['section_code']} - {fallback_sec['section_heading']}"
+                        if not str(fallback_sec["section_code"]).lower().startswith(("seksyen", "peraturan", "jadual"))
+                        else f"{fallback_sec['section_code']} - {fallback_sec['section_heading']}",
+                        "text": fallback_sec["verbatim_text_bm"],
+                        "score": 0.85,
+                        "verbatim": True,
+                    }
+                )
 
         element_evals = [
             off["element_evaluation"]
@@ -1619,6 +1829,7 @@ class UIPAdvisorService:
             "scenario_id": matched["id"],
             "akta_disyorkan": matched["akta_utama"],
             "tajuk_nasihat": matched["tajuk"],
+            "ringkasan_keputusan": matched.get("ringkasan_keputusan") or matched["keputusan_tindakan"],
             "keputusan_tindakan": matched["keputusan_tindakan"],
             "sesuai_buka_ip": matched["sesuai_buka_ip"],
             "alasan_keputusan": matched["alasan_keputusan"],
@@ -1627,9 +1838,7 @@ class UIPAdvisorService:
             "eksibit_wajib": matched["eksibit_wajib"],
             "perangkap_kesilapan": perangkap_merged,
             "templat_ringkas": matched["templat_ringkas"],
-            "engine_used": "Mod Pantas — Closed-Book Statutory Engine + Strict RAG"
-            if confident_match
-            else "Mod Pantas — Strict Statutory RAG UIP",
+            "engine_used": "Rujukan Pantas UIP" if confident_match else "Carian Akta UIP",
             "ai_attempted": False,
             "ai_succeeded": False,
             "fallback_reason": None,
@@ -1643,6 +1852,7 @@ class UIPAdvisorService:
             "element_evaluations": element_evals,
             "repealed_warnings": repealed_warnings,
             "amendment_companions_applied": grounding.get("amendment_companions_applied") or [],
+            "is_fallback_response": bool(matched.get("is_fallback_response", False)),
         }
 
         effective_question = question.strip()
@@ -1679,12 +1889,13 @@ class UIPAdvisorService:
                 result["ai_attempted"] = True
                 result["ai_succeeded"] = True
                 result["fallback_reason"] = None
-                result["engine_used"] = f"{cached_ai.get('engine_used', 'Gemini AI')} [Cache]"
+                result["is_fallback_response"] = False
+                result["engine_used"] = f"{cached_ai.get('engine_used', 'Analisa AI')} [Cache]"
             else:
                 statutory_context_block = grounding["statutory_context_block"]
                 amendment_directives_list = grounding.get("amendment_directives") or []
                 amendment_rule_str = (
-                    "5) KEUTAMAAN AKTA PINDAAN TERKINI (MANDATORI): "
+                    "6) KEUTAMAAN AKTA PINDAAN TERKINI (MANDATORI): "
                     + " | ".join(amendment_directives_list)
                     + "\n"
                     if amendment_directives_list
@@ -1703,14 +1914,16 @@ class UIPAdvisorService:
                 )
                 base_closed_book_prompt = (
                     "Anda ialah Ketua UIP / Pegawai Pendakwa Kanan Kementerian Kesihatan Malaysia (KKM).\n"
-                    "Jawab soalan PPKP ini menggunakan Bahasa Melayu kerja harian PPKP yang jelas, padat, terperinci, dan tepat.\n"
+                    "Jawab soalan PPKP ini menggunakan Bahasa Melayu kerja harian PPKP yang jelas, padat, praktikal di lapangan, dan tepat.\n"
                     "ARAHAN KUNCI TERTUTUP (STRICT CLOSED-BOOK PROMPTING):\n"
-                    "1) Anda DILARANG KERAS memetik mana-mana nombor seksyen, peraturan, denda, atau kompaun yang TIDAK WUJUD dalam blok <STATUTORY_CONTEXT> di bawah. "
-                    "Jika maklumat tiada dalam <STATUTORY_CONTEXT>, nyatakan secara terus terang bahawa peruntukan tersebut belum diindeks dalam Pustaka Akta dan perlukan semakan manual Warta AGC.\n"
-                    "2) WAJIB semak SETIAP SATU `mandatory_elements` dan `explicit_exclusions_and_traps` (TERPENUHI / TIDAK TERPENUHI / PERLU BUKTI TAMBAHAN) sebelum membuat keputusan tindakan. "
-                    "Jika mana-mana unsur mandatori berstatus TIDAK TERPENUHI (contohnya pelajar hanya memiliki vape dalam beg tanpa bukti menghisap/menggunakan/membeli di bawah S.17(1) Akta 852, atau kes COVID-19 pasca 15 Julai 2024 tanpa perintah bertulis S.15(1)/S.14, atau PTB Smear Negatif belum disahkan aktif), keputusan tindakan MESTI menyekat pengeluaran Notis/Kompaun/Pertuduhan bagi seksyen tersebut.\n"
-                    "3) DILARANG mencadangkan sebarang akta/peraturan dalam SENARAI HITAM PERUNTUKAN DIMANSUHKAN (seperti PPKHT 2004 atau Ordinan Darurat 2021).\n"
-                    "4) Bagi setiap cadangan_pertuduhan, wajib sertakan 5 kunci tepat: perihal, seksyen_kesalahan, seksyen_hukuman, hukuman_maksimum, boleh_kompaun.\n"
+                    "1) WAJIB kelaskan `status_kesalahan` kepada tepat satu daripada 2 nilai: `TIADA_KESALAHAN` atau `ADA_KESALAHAN`, serta tulis `ringkasan_keputusan` 1–2 baris yang tegas.\n"
+                    "   - Jika `TIADA_KESALAHAN`: jelaskan punca ia bukan kesalahan dalam `sebab_tidak_menyalahi`, berikan tindakan pentadbiran/agensi & syarat bukti tambahan dalam `langkah_susulan_ppkp`, dan kosongkan `cadangan_pertuduhan`.\n"
+                    "   - Jika `ADA_KESALAHAN`: nyatakan seksyen kesalahan & hukuman tepat, tindakan segera, SOP lapangan bernombor kronologi, dan eksibit wajib.\n"
+                    "2) Anda DILARANG KERAS memetik mana-mana nombor seksyen, peraturan, denda, atau kompaun yang TIDAK WUJUD dalam blok <STATUTORY_CONTEXT> di bawah, dan DILARANG mencadangkan Seksyen 2 (Tafsiran) sebagai seksyen kesalahan.\n"
+                    "3) WAJIB semak SETIAP SATU `mandatory_elements` dan `explicit_exclusions_and_traps` (TERPENUHI / TIDAK TERPENUHI / PERLU BUKTI TAMBAHAN) sebelum membuat keputusan tindakan. "
+                    "Jika mana-mana unsur mandatori berstatus TIDAK TERPENUHI (contohnya pelajar hanya memiliki vape dalam beg tanpa bukti menghisap/menggunakan/membeli di bawah S.17(1) Akta 852, atau kes COVID-19 pasca 15 Julai 2024 tanpa perintah bertulis S.15(1)/S.14, atau PTB Smear Negatif belum disahkan aktif), tetapkan `status_kesalahan = 'TIADA_KESALAHAN'`.\n"
+                    "4) DILARANG mencadangkan sebarang akta/peraturan dalam SENARAI HITAM PERUNTUKAN DIMANSUHKAN (seperti PPKHT 2004 atau Ordinan Darurat 2021).\n"
+                    "5) Bagi setiap cadangan_pertuduhan (jika ADA_KESALAHAN), wajib sertakan 5 kunci tepat: perihal, seksyen_kesalahan, seksyen_hukuman, hukuman_maksimum, boleh_kompaun.\n"
                     f"{amendment_rule_str}\n"
                     f"SOALAN PPKP:\n{effective_question}\n\n"
                     f"{ref_block}"
@@ -1736,26 +1949,44 @@ class UIPAdvisorService:
                     max_output_tokens=2600,
                 )
 
-                # FASA 3.3: Pengesah Kod Pasca-Penjanaan + Self-Correction Retry jika gagal validasi
-                if ai_json:
-                    candidate_patch = {
+                def _build_ai_patch(raw_ai: Dict[str, Any]) -> Dict[str, Any]:
+                    raw_status = str(raw_ai.get("status_kesalahan") or "").strip().upper()
+                    patch: Dict[str, Any] = {
                         "akta_disyorkan": self._canonicalize_akta_code(
-                            str(ai_json.get("akta_disyorkan") or ""),
+                            str(raw_ai.get("akta_disyorkan") or ""),
                             result["akta_disyorkan"],
                         ),
-                        "tajuk_nasihat": str(ai_json.get("tajuk_nasihat") or result["tajuk_nasihat"]),
-                        "keputusan_tindakan": str(ai_json.get("keputusan_tindakan") or result["keputusan_tindakan"]),
-                        "sesuai_buka_ip": bool(ai_json.get("sesuai_buka_ip", result["sesuai_buka_ip"])),
-                        "alasan_keputusan": str(ai_json.get("alasan_keputusan") or result["alasan_keputusan"]),
-                        "cadangan_pertuduhan": self._normalize_charge_items(
-                            ai_json.get("cadangan_pertuduhan"),
-                            matched.get("cadangan_pertuduhan", []),
+                        "tajuk_nasihat": str(raw_ai.get("tajuk_nasihat") or result["tajuk_nasihat"]),
+                        "ringkasan_keputusan": str(
+                            raw_ai.get("ringkasan_keputusan")
+                            or raw_ai.get("keputusan_tindakan")
+                            or result["ringkasan_keputusan"]
                         ),
-                        "sop_lapangan": list(ai_json.get("sop_lapangan") or result["sop_lapangan"]),
-                        "eksibit_wajib": list(ai_json.get("eksibit_wajib") or result["eksibit_wajib"]),
-                        "perangkap_kesilapan": list(ai_json.get("perangkap_kesilapan") or result["perangkap_kesilapan"]),
-                        "templat_ringkas": str(ai_json.get("templat_ringkas") or result["templat_ringkas"]),
+                        "keputusan_tindakan": str(raw_ai.get("keputusan_tindakan") or result["keputusan_tindakan"]),
+                        "sesuai_buka_ip": bool(raw_ai.get("sesuai_buka_ip", result["sesuai_buka_ip"])),
+                        "alasan_keputusan": str(raw_ai.get("alasan_keputusan") or result["alasan_keputusan"]),
+                        "sebab_tidak_menyalahi": str(raw_ai.get("sebab_tidak_menyalahi") or ""),
+                        "langkah_susulan_ppkp": list(raw_ai.get("langkah_susulan_ppkp") or []),
+                        "cadangan_pertuduhan": (
+                            []
+                            if raw_status == "TIADA_KESALAHAN"
+                            else self._normalize_charge_items(
+                                raw_ai.get("cadangan_pertuduhan"),
+                                matched.get("cadangan_pertuduhan", []),
+                            )
+                        ),
+                        "sop_lapangan": list(raw_ai.get("sop_lapangan") or result["sop_lapangan"]),
+                        "eksibit_wajib": list(raw_ai.get("eksibit_wajib") or result["eksibit_wajib"]),
+                        "perangkap_kesilapan": list(raw_ai.get("perangkap_kesilapan") or result["perangkap_kesilapan"]),
+                        "templat_ringkas": str(raw_ai.get("templat_ringkas") or result["templat_ringkas"]),
                     }
+                    if raw_status in ("TIADA_KESALAHAN", "ADA_KESALAHAN"):
+                        patch["status_kesalahan"] = raw_status
+                    return patch
+
+                # FASA 3.3: Pengesah Kod Pasca-Penjanaan + Self-Correction Retry jika gagal validasi
+                if ai_json:
+                    candidate_patch = _build_ai_patch(ai_json)
                     ai_val = validate_legal_output(
                         candidate_patch, lib_snapshot, question_context=effective_question
                     )
@@ -1776,24 +2007,7 @@ class UIPAdvisorService:
                             max_output_tokens=2600,
                         )
                         if retry_json:
-                            candidate_patch = {
-                                "akta_disyorkan": self._canonicalize_akta_code(
-                                    str(retry_json.get("akta_disyorkan") or ""),
-                                    result["akta_disyorkan"],
-                                ),
-                                "tajuk_nasihat": str(retry_json.get("tajuk_nasihat") or result["tajuk_nasihat"]),
-                                "keputusan_tindakan": str(retry_json.get("keputusan_tindakan") or result["keputusan_tindakan"]),
-                                "sesuai_buka_ip": bool(retry_json.get("sesuai_buka_ip", result["sesuai_buka_ip"])),
-                                "alasan_keputusan": str(retry_json.get("alasan_keputusan") or result["alasan_keputusan"]),
-                                "cadangan_pertuduhan": self._normalize_charge_items(
-                                    retry_json.get("cadangan_pertuduhan"),
-                                    matched.get("cadangan_pertuduhan", []),
-                                ),
-                                "sop_lapangan": list(retry_json.get("sop_lapangan") or result["sop_lapangan"]),
-                                "eksibit_wajib": list(retry_json.get("eksibit_wajib") or result["eksibit_wajib"]),
-                                "perangkap_kesilapan": list(retry_json.get("perangkap_kesilapan") or result["perangkap_kesilapan"]),
-                                "templat_ringkas": str(retry_json.get("templat_ringkas") or result["templat_ringkas"]),
-                            }
+                            candidate_patch = _build_ai_patch(retry_json)
                             used_model = f"{retry_model} [Self-Corrected]"
                             ai_val = validate_legal_output(
                                 candidate_patch, lib_snapshot, question_context=effective_question
@@ -1802,10 +2016,11 @@ class UIPAdvisorService:
                     if ai_val["passed"]:
                         ai_patch = {
                             **candidate_patch,
-                            "engine_used": f"{used_model} + Strict Statutory RAG",
+                            "engine_used": f"Analisa AI ({used_model})",
                             "ai_attempted": True,
                             "ai_succeeded": True,
                             "fallback_reason": None,
+                            "is_fallback_response": False,
                             "legal_validation": ai_val,
                         }
                         if len(self._consult_cache) >= 64:
@@ -1813,23 +2028,31 @@ class UIPAdvisorService:
                         self._consult_cache[cache_key] = ai_patch
                         result.update(ai_patch)
                     else:
-                        # Sekat jawapan AI yang cacat dan papar amaran sekatan merah + rujukan deterministik yang sah
                         result["ai_attempted"] = True
                         result["ai_succeeded"] = False
                         result["fallback_reason"] = ai_val["warning_banner"]
                         result["legal_validation"] = ai_val
                 else:
                     err_detail = self.router._last_ai_error or (
-                        "Analisa AI tidak dapat dicapai buat sementara waktu. Paparan menggunakan rujukan statutori tempatan."
+                        "Analisa AI tidak dapat dicapai buat sementara waktu. Paparan menggunakan rujukan tempatan."
                     )
                     logger.warning("Tanya Pakar fallback ke enjin tempatan: %s", err_detail)
                     result["ai_attempted"] = True
                     result["ai_succeeded"] = False
                     result["fallback_reason"] = err_detail
 
-        result["draf_teks_kes_cadangan"] = self._build_prefilled_case_template(
-            {**matched, "templat_ringkas": result["templat_ringkas"]},
-            officer_profile=officer_profile,
+        self._enrich_two_branch_structure(
+            result,
+            effective_question,
+            is_fallback=bool(result.get("is_fallback_response") and not result.get("ai_succeeded")),
+        )
+        result["draf_teks_kes_cadangan"] = (
+            ""
+            if result.get("status_kesalahan") == "TIADA_KESALAHAN"
+            else self._build_prefilled_case_template(
+                {**matched, "templat_ringkas": result["templat_ringkas"]},
+                officer_profile=officer_profile,
+            )
         )
         result["statutory_citations"] = citations_dict
         if "legal_validation" not in result or result["legal_validation"] is None:

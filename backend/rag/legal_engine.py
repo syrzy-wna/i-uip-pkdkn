@@ -23,8 +23,8 @@ import pymupdf as fitz
 
 from backend.core.config import settings
 
-INITIAL_STATUTE_LIBRARY_VERSION = "2.4.0-closed-book-agc-pdf"
-PARSER_VERSION = "3.2-agc-gazette-pdf"
+INITIAL_STATUTE_LIBRARY_VERSION = "2.5.0-closed-book-agc-pdf"
+PARSER_VERSION = "3.3-agc-gazette-pdf"
 
 TOKEN_RE = re.compile(r"[a-zA-Z0-9]+")
 
@@ -2797,40 +2797,212 @@ def sweep_sections_for_offences(
 # 5. SEMAKAN UNSUR MANDATORI & PENGESAH KOD PASCA-PENJANAAN (FASA 3)
 # =====================================================================
 
+_GROUNDING_STOPWORDS: set[str] = {
+    "yang", "dan", "atau", "di", "ke", "dari", "daripada", "pada", "dalam",
+    "untuk", "dengan", "oleh", "adalah", "ialah", "apa", "mana", "suatu",
+    "jika", "tidak", "tiada", "boleh", "hendaklah", "telah", "ini", "itu",
+    "kepada", "ada", "akan", "sudah", "sedang", "masih", "sahaja", "saja",
+    "nak", "bolehkah", "adakah", "apakah", "bagaimana", "kenapa", "kalau",
+    "bila", "apabila", "tersebut", "secara", "terhadap", "mengenai", "tentang",
+    "juga", "lagi", "hanya", "belum", "pernah", "kerana", "sebab", "tetapi",
+    "tapi", "namun", "supaya", "agar", "semasa", "seorang", "orang", "guru",
+    "cikgu", "maklum", "ppkp", "kkm", "pkd", "uip", "kes", "tindakan", "perlu",
+    "wajib", "check", "checking", "bag", "the", "and", "for", "with", "that",
+    "bawah", "atas", "serta", "bagi", "sebagai", "antara", "lain", "satu",
+    "mana2", "sekiranya", "sebarang", "seseorang", "individu", "pihak",
+}
+
+_NON_OFFENCE_HEADING_MARKERS: Tuple[str, ...] = (
+    "tafsiran",
+    "tajuk ringkas",
+    "permulaan kuat kuasa",
+    "pemakaian",
+    "interpretation",
+    "short title",
+    "commencement",
+    "citation and commencement",
+)
+
+_NEGATED_ACTIVE_SMOKING_RE = re.compile(
+    r"\b(?:tanpa|tiada|tidak|tak|bukan)\s+(?:bukti\s+|saksi\s+(?:mata\s+)?(?:yang\s+)?(?:nampak\s+|melihat\s+)?)?"
+    r"(?:pelajar\s+|murid\s+|budak\s+|obd\s+)?(?:sedang\s+)?"
+    r"(?:menghisap|hisap|merokok|mengunyah|menggunakan|guna|membeli|beli)"
+    r"(?:\s*(?:,|atau|dan|/)\s*(?:menghisap|hisap|merokok|mengunyah|menggunakan|guna|membeli|beli))*",
+    re.I,
+)
+
+
+def is_non_offence_or_definition_section(sec: Dict[str, Any]) -> bool:
+    """Mengenal pasti seksyen tafsiran/tajuk ringkas/bukan kesalahan agar tidak pernah dicalonkan sebagai kesalahan."""
+    heading_low = str(sec.get("section_heading") or "").strip().lower()
+    code_low = str(sec.get("section_code") or "").strip().lower()
+    if any(marker in heading_low for marker in _NON_OFFENCE_HEADING_MARKERS):
+        return True
+    if code_low in ("1", "2", "seksyen 1", "seksyen 2", "section 1", "section 2"):
+        if not bool(sec.get("is_offence_provision")):
+            return True
+    return False
+
+
+def _strip_negated_active_smoking(text_low: str) -> str:
+    return _NEGATED_ACTIVE_SMOKING_RE.sub(" ", text_low or "")
+
+
+def is_passive_vape_possession_question(text: str) -> bool:
+    """Mengesan situasi pemilikan pasif vape/rokok oleh pelajar/OBD (beg/checking bag/spotcheck) tanpa bukti menghisap/menggunakan/membeli."""
+    q_low = (text or "").lower()
+    has_tobacco_vape = any(
+        k in q_low
+        for k in ("vape", "pod", "rokok", "tembakau", "e-rokok", "17(1)")
+    )
+    has_minor_or_school = any(
+        k in q_low
+        for k in (
+            "pelajar", "murid", "budak", "obd", "sekolah", "tingkatan",
+            "bawah 18", "bawah umur", "kanak-kanak", "guru", "cikgu",
+        )
+    )
+    if not (has_tobacco_vape and has_minor_or_school):
+        return False
+
+    has_passive_signal = any(
+        k in q_low
+        for k in (
+            "dalam beg", "checking bag", "check bag", "periksa beg", "pemeriksaan beg",
+            "spotcheck", "spot check", "dalam poket", "dalam loker", "rampas dari beg",
+            "simpan vape", "simpan rokok", "bawa vape", "bawa rokok",
+            "memiliki vape", "memiliki rokok", "miliki vape", "miliki rokok",
+            "pemilikan semata", "hanya memiliki", "pemilikan vape", "pemilikan pasif",
+            "ada vape dalam", "jumpa vape", "dijumpai vape", "jumpa pod", "dijumpai pod",
+            "pegang vape sahaja",
+        )
+    )
+    if not has_passive_signal:
+        return False
+
+    # Buang frasa penafian dahulu (cth: "tiada saksi nampak pelajar menghisap atau membeli") sebelum semak bukti aktif
+    non_negated = _strip_negated_active_smoking(q_low)
+    has_active_use_or_buy = any(
+        k in non_negated
+        for k in (
+            "sedang hisap", "sedang menghisap", "sedang merokok", "dilihat menghisap",
+            "nampak hisap", "nampak menghisap", "tangkap pelajar sedang", "ditangkap hisap",
+            "ditangkap menghisap", "hisap vape", "menghisap vape", "hisap rokok",
+            "menghisap rokok", "sedang menggunakan", "mengunyah",
+            "membeli vape", "membeli rokok", "beli vape", "beli rokok",
+            "kedai jual", "pekedai jual", "menjual kepada", "jual kepada obd",
+        )
+    )
+    return not has_active_use_or_buy
+
+
+def infer_domain_statute_ids(question: str, akta_hint: str = "Semua") -> Optional[set[str]]:
+    """Kunci penapisan Akta mengikut konteks soalan/akta_hint supaya soalan vape/pelajar tidak menarik Akta 171 / Akta 281 / PPKM 2009."""
+    q_low = (question or "").lower()
+    hint = (akta_hint or "").strip()
+    hint_low = hint.lower()
+
+    has_minor_signal = any(
+        k in q_low
+        for k in ("pelajar", "murid", "budak", "sekolah", "obd", "bawah 18", "bawah umur", "kanak-kanak", "remaja")
+    )
+
+    akta_852_family = {
+        "AKTA_852",
+        "AKTA_852_PERINTAH_LARANGAN_2024",
+        "AKTA_852_PERATURAN_TANDA_2024",
+        "AKTA_852_PERATURAN_KOMPAUN_2024",
+        "AKTA_852_PERATURAN_JUALAN_2024",
+        "AKTA_852_PERATURAN_PEMBUNGKUSAN_2024",
+        "AKTA_852_PERATURAN_PENDAFTARAN_2024",
+        "AKTA_852_PERATURAN_NOTIS_S47_2024",
+    }
+    akta_281_family = {"AKTA_281", "AKTA_281_PINDAAN_2024", "PPKM_2009", "PPM_1985"}
+    akta_154_family = {"AKTA_154"}
+    akta_342_family = {"AKTA_342", "AKTA_342_PINDAAN_2025", "AKTA_342_PERATURAN_KOMPAUN_2025"}
+
+    if hint and hint_low not in ("semua", "all"):
+        if "852" in hint_low:
+            allowed = set(akta_852_family)
+            if has_minor_signal:
+                allowed.add("AKTA_611")
+            return allowed
+        if "ppkm" in hint_low:
+            return {"PPKM_2009", "AKTA_281", "AKTA_281_PINDAAN_2024"}
+        if "ppm" in hint_low:
+            return {"PPM_1985", "AKTA_281", "AKTA_281_PINDAAN_2024"}
+        if "281" in hint_low or "makanan" in hint_low:
+            return set(akta_281_family)
+        if "154" in hint_low:
+            return set(akta_154_family)
+        if "342" in hint_low or "apppb" in hint_low:
+            return set(akta_342_family)
+        if "611" in hint_low:
+            return {"AKTA_611"}
+        if "593" in hint_low or "ktj" in hint_low:
+            return {"AKTA_593"}
+        if "56" in hint_low:
+            return {"AKTA_56"}
+        return {hint.upper()}
+
+    def _has_any(terms: Tuple[str, ...]) -> bool:
+        return any(re.search(rf"(?<!\w){re.escape(t)}(?!\w)", q_low) for t in terms)
+
+    has_tobacco = _has_any((
+        "vape", "rokok", "pod", "shisha", "tembakau", "merokok", "hisap", "menghisap",
+        "ashtray", "obd", "ppkht", "852", "257/2024", "259/2024", "260/2024",
+    )) or "17(1)" in q_low
+    has_food = _has_any((
+        "makanan", "restoran", "kedai makan", "dapur", "tifoid", "typhoid", "lpm", "slpm",
+        "fosim", "keracunan", "najis tikus", "lipas", "lilati", "luput", "expired",
+        "ppkm", "ppm", "mja", "pengendali makanan", "281",
+    ))
+    has_aedes = _has_any((
+        "aedes", "denggi", "jentik", "larva", "nyamuk", "fogging", "entomologi",
+        "tapak bina", "tapak pembinaan", "154",
+    ))
+    has_cdc = _has_any((
+        "covid", "tibi", "tuberkulosis", "ptb", "afb", "tbis", "hfmd", "taska",
+        "tadika", "leptospirosis", "kencing tikus", "measles", "wabak", "hso",
+        "kuarantin", "pengasingan", "unit cdc", "342", "a1742", "139/2025",
+    ))
+
+    locked: set[str] = set()
+    if has_tobacco:
+        locked |= akta_852_family
+        if has_minor_signal:
+            locked.add("AKTA_611")
+    if has_food:
+        locked |= akta_281_family
+    if has_aedes:
+        locked |= akta_154_family
+    if has_cdc:
+        locked |= akta_342_family
+
+    return locked if locked else None
+
 
 def evaluate_offence_elements_against_facts(
     question_or_facts: str,
     offence: Dict[str, Any],
 ) -> Dict[str, Any]:
-    """Menilai setiap mandatory_elements & explicit_exclusions_and_traps terhadap fakta kes/soalan."""
+    """Menilai setiap mandatory_elements & explicit_exclusions_and_traps terhadap fakta kes/soalan.
+
+    Prinsip ketat:
+    - Unsur yang tiada bukti eksplisit dalam soalan WAJIB berstatus `PERLU BUKTI TAMBAHAN` atau `TIDAK TERPENUHI`
+      (JANGAN sesekali menetapkan lalai kepada `TERPENUHI`).
+    - Apabila perangkap pengecualian tercetus (`action_blocked = True`), tiada unsur bertanda hijau palsu `TERPENUHI`
+      yang bercanggah dengan keputusan utama `TIADA_KESALAHAN`.
+    """
     q_low = (question_or_facts or "").lower()
+    non_negated_q = _strip_negated_active_smoking(q_low)
     off_id = str(offence.get("offence_id") or "")
     evaluations: List[Dict[str, Any]] = []
     trap_triggered: Optional[str] = None
     blocked_action = False
 
-    # 1. Perangkap Khusus #1: Akta 852 Seksyen 17(1) — Pemilikan vape/rokok dalam beg oleh pelajar/OBD tanpa bukti menghisap/mengunyah/menggunakan/membeli
-    is_passive_possession_trap = bool(
-        (
-            "dalam beg" in q_low
-            or "dalam poket" in q_low
-            or "dalam loker" in q_low
-            or "spotcheck" in q_low
-            or "rampas dari beg" in q_low
-            or "pemilikan semata" in q_low
-            or "hanya memiliki" in q_low
-            or "jumpa vape dalam beg" in q_low
-            or "ada vape dalam beg" in q_low
-        )
-        and (
-            "tanpa bukti" in q_low
-            or "tidak menghisap" in q_low
-            or "tak hisap" in q_low
-            or "tidak merokok" in q_low
-            or "bukan sedang hisap" in q_low
-            or not any(k in q_low for k in ("sedang hisap", "sedang menghisap", "sedang merokok", "dilihat menghisap"))
-        )
-    )
+    # 1. Perangkap Khusus #1: Akta 852 Seksyen 17(1) / 13(3) — Pemilikan pasif vape/rokok oleh pelajar/OBD tanpa bukti menghisap/menggunakan/membeli
+    is_passive_possession_trap = is_passive_vape_possession_question(q_low)
 
     # 2. Perangkap Khusus #2: Akta 342 Seksyen 22(b) — Kes COVID-19 datang kerja pasca 15 Julai 2024 tanpa perintah bertulis S.15(1)/S.14
     is_covid_no_order_trap = bool(
@@ -2845,38 +3017,151 @@ def evaluate_offence_elements_against_facts(
         and any(k in q_low for k in ("enggan mula", "taknak mula", "taknak mulakan", "belum mula"))
     )
 
+    # Semak sama ada kesalahan ini disekat oleh mana-mana perangkap sebelum menilai unsur individu
+    if off_id == "AKTA_852_S17_1" and is_passive_possession_trap:
+        blocked_action = True
+        trap_triggered = (
+            offence.get("explicit_exclusions_and_traps")
+            or [
+                "Seksyen 17(1) Akta 852 hanya terpakai bagi perbuatan merokok, mengunyah atau menggunakan — pemilikan dalam beg semata-mata BUKAN kesalahan."
+            ]
+        )[0]
+    elif off_id == "AKTA_852_S13_3" and is_passive_possession_trap:
+        blocked_action = True
+        trap_triggered = "Tiada bukti transaksi pembelian oleh OBD dalam fakta soalan — Seksyen 13(3) tidak boleh dikenakan tanpa bukti pembelian."
+    elif off_id == "AKTA_342_S22_B" and is_covid_no_order_trap:
+        blocked_action = True
+        trap_triggered = "Tiada perintah statutori bertulis S.15(1)/S.14 yang diingkari — kompaun S.22(b) tidak boleh dikeluarkan."
+    elif off_id == "AKTA_342_S22_B" and is_tb_smear_neg_trap:
+        blocked_action = True
+        trap_triggered = "Kes PTB Smear Negatif belum memenuhi unsur ingkar perintah sah Seksyen 22(b) Akta 342."
+
+    has_active_smoking_fact = any(
+        k in non_negated_q
+        for k in (
+            "sedang hisap", "sedang menghisap", "hisap vape", "menghisap vape",
+            "hisap rokok", "menghisap rokok", "sedang merokok", "merokok di",
+            "pelajar merokok", "dilihat menghisap", "tangkap pelajar sedang",
+        )
+    )
+
     for el in offence.get("mandatory_elements") or []:
         el_no = int(el.get("element_no") or 1)
         desc = str(el.get("description") or "")
+        desc_low = desc.lower()
         must_prove = str(el.get("must_prove") or "")
-        status = "TERPENUHI"
-        reason = "Fakta sejajar dengan keperluan pembuktian asas."
+        status = "PERLU BUKTI TAMBAHAN"
+        reason = must_prove or "Perlu dibuktikan di lapangan dengan keterangan saksi, gambar atau dokumen rasmi."
 
-        if off_id == "AKTA_852_S17_1" and el_no == 2 and is_passive_possession_trap:
-            status = "TIDAK TERPENUHI"
-            reason = (
-                "UNSUR GAGAL: Seksyen 17(1) Akta 852 hanya memperuntukkan kesalahan 'merokok, mengunyah atau menggunakan' "
-                "produk tembakau/pengganti tembakau oleh OBD. Pemilikan semata-mata di dalam beg tanpa bukti menghisap, "
-                "mengunyah, menggunakan (S.17(1)) atau membeli (S.13(3)) BUKAN kesalahan di bawah Seksyen 17(1) Akta 852!"
-            )
-            trap_triggered = (offence.get("explicit_exclusions_and_traps") or [reason])[0]
-            blocked_action = True
-        elif off_id == "AKTA_342_S22_B" and el_no == 2 and is_covid_no_order_trap:
-            status = "TIDAK TERPENUHI"
-            reason = (
-                "UNSUR GAGAL: Tiada Perintah Pengawasan Seksyen 15(1) atau Pengasingan Seksyen 14 Akta 342 bertulis yang dikeluarkan "
-                "dan diserahkan secara sah (HSO mandatori MySejahtera telah dimansuhkan sejak 15 Julai 2024)."
-            )
-            trap_triggered = "Tiada perintah statutori bertulis S.15(1)/S.14 yang diingkari — kompaun S.22(b) tidak boleh dikeluarkan."
-            blocked_action = True
-        elif off_id == "AKTA_342_S22_B" and el_no in (1, 2) and is_tb_smear_neg_trap:
-            status = "TIDAK TERPENUHI"
-            reason = (
-                "UNSUR GAGAL: Keputusan kahak PTB Smear Negatif (AFB Negatif) peringkat saringan belum mempunyai pengesahan diagnosis "
-                "aktif MO/FMS (CXR/GeneXpert/Kultur TBIS 20C) dan belum ada Notis Arahan Rawatan bertulis yang diserahkan secara tangan."
-            )
-            trap_triggered = "Kes PTB Smear Negatif belum memenuhi unsur ingkar perintah sah Seksyen 22(b) Akta 342."
-            blocked_action = True
+        # Kes disekat (TIADA_KESALAHAN): unsur gagal ditanda TIDAK TERPENUHI, unsur lain TIDAK pernah ditanda hijau TERPENUHI
+        if off_id == "AKTA_852_S17_1" and is_passive_possession_trap:
+            if el_no == 2 or any(w in desc_low for w in ("merokok", "mengunyah", "menggunakan")):
+                status = "TIDAK TERPENUHI"
+                reason = (
+                    "Tiada bukti pelajar merokok, mengunyah atau menggunakan vape/rokok. "
+                    "Pemilikan dalam beg semata-mata BUKAN kesalahan di bawah Seksyen 17(1) Akta 852."
+                )
+            elif any(w in desc_low for w in ("belum dewasa", "bawah 18", "umur")):
+                status = "PERLU BUKTI TAMBAHAN"
+                reason = "Pelajar sekolah dinyatakan, namun umur < 18 tahun hanya relevan jika wujud kesalahan aktif dan perlu disahkan melalui MyKad/Kad Pelajar."
+            else:
+                status = "PERLU BUKTI TAMBAHAN"
+                reason = "Peranti vape ditemui dalam beg, namun tanpa perbuatan menghisap/menggunakan ia tidak membentuk kesalahan S.17(1)."
+        elif off_id == "AKTA_852_S13_3" and is_passive_possession_trap:
+            if any(w in desc_low for w in ("membeli", "beli", "transaksi")):
+                status = "TIDAK TERPENUHI"
+                reason = "Tiada bukti transaksi pembelian produk merokok oleh pelajar dinyatakan dalam situasi ini."
+            else:
+                status = "PERLU BUKTI TAMBAHAN"
+                reason = "Perlu siasatan sumber pembelian & pengesahan umur (MyKad) sebelum mempertimbangkan S.13(3)."
+        elif off_id == "AKTA_342_S22_B" and is_covid_no_order_trap:
+            if el_no == 2 or any(w in desc_low for w in ("perintah", "arahan", "notis", "ingkar")):
+                status = "TIDAK TERPENUHI"
+                reason = (
+                    "Tiada Perintah Pengawasan Seksyen 15(1) atau Pengasingan Seksyen 14 Akta 342 bertulis yang diserahkan "
+                    "(HSO mandatori MySejahtera telah dimansuhkan sejak 15 Julai 2024)."
+                )
+            else:
+                status = "PERLU BUKTI TAMBAHAN"
+                reason = "Perlu semakan e-Notifikasi & penilaian risiko kluster Unit CDC terlebih dahulu."
+        elif off_id == "AKTA_342_S22_B" and is_tb_smear_neg_trap:
+            if el_no in (1, 2):
+                status = "TIDAK TERPENUHI"
+                reason = (
+                    "Kes PTB Smear Negatif peringkat saringan belum mempunyai pengesahan diagnosis aktif MO/FMS "
+                    "(CXR/GeneXpert/Kultur TBIS 20C) dan belum ada Notis Arahan Rawatan bertulis serahan tangan."
+                )
+            else:
+                status = "PERLU BUKTI TAMBAHAN"
+                reason = "Perlu laporan pengesahan klinikal MO/FMS dan serahan tangan notis bertulis dahulu."
+        else:
+            # Penilaian berasaskan bukti fakta sebenar dalam soalan (hanya TERPENUHI jika fakta jelas dinyatakan!)
+            if any(w in desc_low for w in ("belum dewasa", "bawah 18", "bawah umur", "umur")):
+                if any(k in q_low for k in ("mykad", "sijil lahir", "jpn", "berumur 1", "bawah 18 tahun", "tingkatan")):
+                    status = "TERPENUHI"
+                    reason = "Status umur bawah 18 tahun (OBD) dinyatakan dalam fakta; pastikan salinan MyKad/Kad Pelajar dilampirkan."
+                else:
+                    status = "PERLU BUKTI TAMBAHAN"
+                    reason = "Pelajar/OBD dinyatakan, tetapi umur sebenar (< 18 tahun pada tarikh kejadian) wajib disahkan dengan MyKad atau Kad Pelajar."
+            elif any(w in desc_low for w in ("merokok", "mengunyah", "menggunakan", "menghisap")):
+                if has_active_smoking_fact:
+                    status = "TERPENUHI"
+                    reason = "Perbuatan menghisap/merokok dinyatakan jelas dalam laporan kes; kukuhkan dengan keterangan saksi mata/guru, foto & rakaman S.112."
+                else:
+                    status = "PERLU BUKTI TAMBAHAN"
+                    reason = "Perlu bukti saksi mata, video/CCTV atau pengakuan menunjukkan suspek benar-benar sedang merokok/menggunakan."
+            elif any(w in desc_low for w in ("produk tembakau", "pengganti tembakau", "produk merokok", "rokok elektronik", "vape")):
+                if any(k in q_low for k in ("vape", "pod", "rokok", "shisha", "tembakau")):
+                    status = "TERPENUHI"
+                    reason = "Produk merokok/vape dikenal pasti dalam fakta kes; pastikan peranti/cecair dirampas & dilak jika perlu untuk pembuktian."
+                else:
+                    status = "PERLU BUKTI TAMBAHAN"
+                    reason = "Perlu pengesahan fizikal jenis produk merokok/pengganti tembakau."
+            elif any(w in desc_low for w in ("mempamerkan", "pameran")):
+                if any(k in q_low for k in ("pamer", "mempamer", "pameran", "di kaunter", "terbuka")):
+                    status = "TERPENUHI"
+                    reason = "Fakta pameran terbuka dinyatakan; ambil gambar sudut jauh & dekat sebelum sitaan S.35/S.36."
+                else:
+                    status = "PERLU BUKTI TAMBAHAN"
+                    reason = "Perlu bukti gambar foto produk dipamerkan secara terbuka di kaunter jualan."
+            elif any(w in desc_low for w in ("menjual", "jualan", "pembelian", "membeli")):
+                if any(k in q_low for k in ("jual", "menjual", "membeli", "beli", "resit", "transaksi")):
+                    status = "TERPENUHI"
+                    reason = "Transaksi jualan/belian dinyatakan; lengkapkan resit pembelian, barang kes & percakapan S.112 saksi."
+                else:
+                    status = "PERLU BUKTI TAMBAHAN"
+                    reason = "Perlu bukti transaksi jualan (resit, saksi pembelian atau CCTV kedai)."
+            elif any(w in desc_low for w in ("mengiklankan", "iklan", "promosi")):
+                if any(k in q_low for k in ("iklan", "poster", "bunting", "promosi", "skrin")):
+                    status = "TERPENUHI"
+                    reason = "Bahan iklan/promosi dinyatakan; ambil gambar sebelum sitaan atau cetak paparan digital dengan Sijil S.90A."
+            elif any(w in desc_low for w in ("kawasan larangan", "tempat larangan", "tempat makan")):
+                if any(k in q_low for k in ("restoran", "tempat makan", "sekolah", "tandas sekolah", "hospital", "kawasan larangan")):
+                    status = "TERPENUHI"
+                    reason = "Lokasi termasuk dalam kawasan/tempat larangan di bawah P.U. (A) 257/2024."
+            elif any(w in desc_low for w in ("tifoid", "vaksin", "pemeriksaan perubatan")):
+                if any(k in q_low for k in ("tiada tifoid", "tiada suntikan", "belum suntik", "tifoid")):
+                    status = "TERPENUHI"
+                    reason = "Ketiadaan suntikan anti-tifoid dinyatakan; sahkan kad suntikan & ambil gambar pekerja sedang mengendali makanan."
+            elif any(w in desc_low for w in ("latihan pengendali", "slpm", "lpm")):
+                if any(k in q_low for k in ("tiada sijil lpm", "tiada slpm", "tiada latihan")):
+                    status = "TERPENUHI"
+                    reason = "Ketiadaan Sijil Latihan Pengendali Makanan (SLPM) dinyatakan."
+            elif any(w in desc_low for w in ("tidak bersih", "kotor", "perosak", "tikus", "lipas")):
+                if any(k in q_low for k in ("kotor", "najis tikus", "lipas", "tikus", "lalat", "lilati")):
+                    status = "TERPENUHI"
+                    reason = "Keadaan premis tidak bersih / perosak dinyatakan; dokumentasikan dengan Borang KMM & foto + Sijil S.90A."
+            elif any(w in desc_low for w in ("jentik", "larva", "aedes", "pembiakan")):
+                if any(k in q_low for k in ("entomologi", "disahkan aedes")):
+                    status = "TERPENUHI"
+                    reason = "Pengesahan spesies Aedes dinyatakan."
+                else:
+                    status = "PERLU BUKTI TAMBAHAN"
+                    reason = "Penemuan jentik-jentik/takungan masih wajib disahkan spesies Aedes melalui Sijil Makmal Entomologi sebelum kompaun/pendakwaan."
+            elif any(w in desc_low for w in ("perintah", "notis", "s.15", "s.14", "s.8")):
+                if any(k in q_low for k in ("ingkar perintah", "telah diserahkan", "notis arahan")):
+                    status = "PERLU BUKTI TAMBAHAN"
+                    reason = "Wajib lampirkan salinan asal notis/perintah bertulis bertandatangan terima & saksi serahan tangan."
 
         evaluations.append(
             {
@@ -2888,11 +3173,16 @@ def evaluate_offence_elements_against_facts(
             }
         )
 
+    all_sat = (
+        not blocked_action
+        and bool(evaluations)
+        and all(ev["status"] == "TERPENUHI" for ev in evaluations)
+    )
     return {
         "offence_id": off_id,
         "offence_section": offence.get("offence_section"),
         "statute_id": offence.get("statute_id"),
-        "all_elements_satisfied": not blocked_action,
+        "all_elements_satisfied": all_sat,
         "action_blocked": blocked_action,
         "trap_triggered": trap_triggered,
         "element_evaluations": evaluations,
@@ -2911,7 +3201,7 @@ def extract_legal_citations_from_text(text: str) -> List[Dict[str, str]]:
     paired_re = re.compile(
         r"\b(Seksyen|Peraturan)\s+(\d+[A-Za-z]?(?:\(\d+\))?(?:\([a-z]\))?)"
         r"(?:\s+(?:dibaca\s+bersama\s+[^,\n.;]{1,40}\s+)?)?"
-        r"\s*(Akta\s+\d+|PPKM\s*2009|PPM\s*1985|PPKHT\s*2004|KTJ|APPPB\s*1988)?",
+        r"\s*(Akta\s+\d+|Akta\s+Kerja\s*1955|OSHA\s*1994|PPKM\s*2009|PPM\s*1985|PPKHT\s*2004|KTJ|APPPB\s*1988)?",
         re.I,
     )
     for m in paired_re.finditer(text):
@@ -2922,7 +3212,7 @@ def extract_legal_citations_from_text(text: str) -> List[Dict[str, str]]:
         if not act_raw:
             tail = text[m.end() : m.end() + 75]
             tail_m = re.search(
-                r"\b(Akta\s+\d+|PPKM\s*2009|PPM\s*1985|PPKHT\s*2004|KTJ|APPPB\s*1988|P\.U\.\s*\(A\)\s*\d+/\d{4})\b",
+                r"\b(Akta\s+\d+|Akta\s+Kerja\s*1955|OSHA\s*1994|PPKM\s*2009|PPM\s*1985|PPKHT\s*2004|KTJ|APPPB\s*1988|P\.U\.\s*\(A\)\s*\d+/\d{4})\b",
                 tail,
                 re.I,
             )
@@ -3075,7 +3365,7 @@ def validate_legal_output(
     invalid_citations: List[str] = []
 
     # Akta rujukan silang luaran yang sah disebut dalam konteks rujukan agensi
-    cross_agency_acts = {"AKTA 171", "AKTA 366", "AKTA 368", "AKTA 290", "AKTA 586", "AKTA 260", "AKTA 127", "AKTA 655", "AKTA 265", "AKTA 514", "AKTA 574"}
+    cross_agency_acts = {"AKTA 171", "AKTA 366", "AKTA 368", "AKTA 290", "AKTA 586", "AKTA 260", "AKTA 127", "AKTA 655", "AKTA 265", "AKTA 514", "AKTA 574", "AKTA KERJA 1955", "OSHA 1994"}
     default_act = canonical_akta_code_for_statute(str(resp_dict.get("akta_disyorkan") or "")).upper()
 
     charges_sec_only_check = " ".join(
@@ -3218,33 +3508,33 @@ def validate_legal_output(
 
     for off in offences_list:
         off_id = str(off.get("offence_id") or "")
-        # Jika kes melibatkan S.17(1) Akta 852
+        # Jika kes melibatkan S.17(1) Akta 852 atau pemilikan pasif vape/rokok pelajar
         if off_id == "AKTA_852_S17_1" and (
             "17(1)" in low_combined
-            or "dalam beg" in eval_context.lower()
+            or is_passive_vape_possession_question(eval_context)
             or ("pelajar" in eval_context.lower() and "vape" in eval_context.lower())
         ):
             ev = evaluate_offence_elements_against_facts(eval_context, off)
             element_evaluations.append(ev)
             if ev["action_blocked"]:
-                # Semak sama ada jawapan AI cuba mencadangkan kompaun/notis/pertuduhan aktif S.17(1)
+                # Jika jawapan sudah dikelaskan TIADA_KESALAHAN tanpa caj aktif S.17(1), ia sah dan lulus validasi
+                declared_no_offence = str(resp_dict.get("status_kesalahan") or "").upper() == "TIADA_KESALAHAN"
                 keputusan_low = str(resp_dict.get("keputusan_tindakan") or "").lower()
-                actively_charging_s17 = (
-                    any(
-                         "17(1)" in str(c.get("seksyen_kesalahan") or "")
-                        and not any(
-                            neg in str(c.get("perihal") or "").lower() + " " + str(c.get("boleh_kompaun") or "").lower()
-                            for neg in ("tiada kesalahan", "bukan kesalahan", "ditolak", "tidak boleh")
-                        )
-                        for c in (resp_dict.get("cadangan_pertuduhan") or [])
-                        if isinstance(c, dict)
+                active_s17_in_charges = any(
+                    "17(1)" in str(c.get("seksyen_kesalahan") or "")
+                    and not any(
+                        neg in str(c.get("perihal") or "").lower() + " " + str(c.get("boleh_kompaun") or "").lower()
+                        for neg in ("tiada kesalahan", "bukan kesalahan", "ditolak", "tidak boleh")
                     )
-                    or (
-                        ("kompaun" in keputusan_low or "notis s.47" in keputusan_low or "tuduh" in keputusan_low or "s.17(1)" in keputusan_low)
-                        and not any(
-                            neg in keputusan_low
-                            for neg in ("tiada kesalahan", "tidak boleh", "ditolak", "bukan kesalahan", "unsur tidak terpenuhi")
-                        )
+                    for c in (resp_dict.get("cadangan_pertuduhan") or [])
+                    if isinstance(c, dict)
+                )
+                actively_charging_s17 = active_s17_in_charges or (
+                    not declared_no_offence
+                    and ("kompaun" in keputusan_low or "notis s.47" in keputusan_low or "tuduh" in keputusan_low or "s.17(1)" in keputusan_low)
+                    and not any(
+                        neg in keputusan_low
+                        for neg in ("tiada kesalahan", "tidak boleh", "ditolak", "bukan kesalahan", "unsur tidak terpenuhi", "jangan keluarkan")
                     )
                 )
                 if actively_charging_s17:
@@ -3662,7 +3952,7 @@ class ClosedBookLegalLibrary:
 
     def bump_version(self, tag: str = "ingest") -> str:
         ts = datetime.now(timezone.utc).strftime("%Y%m%d%H%M%S")
-        self.statute_library_version = f"2.4.0-{tag}-{ts}"
+        self.statute_library_version = f"2.5.0-{tag}-{ts}"
         self._akta_dir_fingerprint = f"MUTATED_{tag}_{ts}"
         self._rebuild_runtime_caches()
         self._persist_json_snapshots()
@@ -4110,13 +4400,26 @@ class ClosedBookLegalLibrary:
 
         Mencari:
         a) Padanan dalam `repealed_and_blocked_provisions`.
-        b) Semua calon kesalahan berkaitan dalam `master_offences_matrix`.
-        c) Teks penuh verbatim yang sepadan daripada `statute_sections_verbatim`.
+        b) Hanya 1–2 calon kesalahan yang benar-benar berkaitan dalam `master_offences_matrix` (dikunci mengikut domain Akta).
+        c) Teks penuh verbatim yang sepadan daripada `statute_sections_verbatim` (menapis keluar Seksyen 1/2 Tafsiran kecuali diminta).
         """
         q_raw = (question or "").strip()
         q_low = q_raw.lower()
         q_vec = compute_deterministic_embedding(q_raw)
-        q_tokens = {t.lower() for t in TOKEN_RE.findall(q_low) if len(t) >= 2}
+        q_tokens = {
+            t.lower()
+            for t in TOKEN_RE.findall(q_low)
+            if len(t) >= 2 and t.lower() not in _GROUNDING_STOPWORDS
+        }
+        asks_definition = any(
+            k in q_low for k in ("tafsiran", "definisi", "maksud ", "seksyen 2", "sek. 2", "s.2 ")
+        )
+        allowed_sids = infer_domain_statute_ids(q_raw, akta_hint)
+        is_passive_vape = is_passive_vape_possession_question(q_raw)
+        has_minor_signal = any(
+            k in q_low
+            for k in ("pelajar", "murid", "budak", "sekolah", "obd", "bawah 18", "bawah umur", "kanak-kanak")
+        )
 
         # 0. Semak sama ada soalan/akta_hint merujuk akta yang belum diindeks (total_sections_indexed == 0)
         unindexed_hit: Optional[Dict[str, Any]] = None
@@ -4142,35 +4445,83 @@ class ClosedBookLegalLibrary:
                     repealed_matches.append(rep)
                     break
 
-        # b) Calon kesalahan dalam `master_offences_matrix`
+        # b) Calon kesalahan dalam `master_offences_matrix` (terhad kepada domain Akta & 1-2 kesalahan paling relevan)
         scored_offences: List[Tuple[float, Dict[str, Any], Dict[str, Any]]] = []
-        for off in self.master_offences_matrix:
-            sid = str(off.get("statute_id") or "")
-            c_act = canonical_akta_code_for_statute(sid)
-            if akta_hint and akta_hint not in ("", "Semua"):
-                if akta_hint.lower() not in c_act.lower() and akta_hint.lower() not in sid.lower():
+        if is_passive_vape:
+            # Bagi kes pemilikan pasif vape/rokok pelajar, nilai HANYA Seksyen 17(1) (dan S.13(3) jika pembelian disebut)
+            target_oids = ["AKTA_852_S17_1"]
+            if any(k in q_low for k in ("beli", "membeli", "13(3)", "kedai", "penjual")):
+                target_oids.append("AKTA_852_S13_3")
+            for oid in target_oids:
+                matched_off = next(
+                    (o for o in self.master_offences_matrix if o.get("offence_id") == oid),
+                    None,
+                )
+                if matched_off:
+                    ev = evaluate_offence_elements_against_facts(q_raw, matched_off)
+                    scored_offences.append((10.0 if oid == "AKTA_852_S17_1" else 6.0, matched_off, ev))
+        else:
+            for off in self.master_offences_matrix:
+                sid = str(off.get("statute_id") or "")
+                c_act = canonical_akta_code_for_statute(sid)
+                if allowed_sids is not None and sid not in allowed_sids:
                     continue
-            off_text = (
-                f"{off.get('offence_section', '')} {off.get('offence_title', '')} "
-                f"{' '.join(off.get('read_together_with') or [])} "
-                f"{' '.join(off.get('explicit_exclusions_and_traps') or [])}"
-            ).lower()
-            off_tokens = {t.lower() for t in TOKEN_RE.findall(off_text) if len(t) >= 2}
-            overlap = len(q_tokens & off_tokens)
-            score = float(overlap)
-            # Bonus padanan nombor seksyen atau kata kunci domain
-            sec_nums = re.findall(r"\d+[A-Za-z]?", str(off.get("offence_section") or ""))
-            if sec_nums and sec_nums[0].lower() in q_tokens:
-                score += 4.5
-            if off["offence_id"] == "AKTA_852_S17_1" and any(
-                k in q_low for k in ("pelajar", "budak sekolah", "obd", "bawah 18", "dalam beg", "17(1)")
-            ):
-                score += 5.0
-            if score > 0:
-                eval_res = evaluate_offence_elements_against_facts(q_raw, off)
-                scored_offences.append((score, off, eval_res))
+                if akta_hint and akta_hint not in ("", "Semua"):
+                    if (
+                        akta_hint.lower() not in c_act.lower()
+                        and akta_hint.lower() not in sid.lower()
+                        and not (sid == "AKTA_611" and has_minor_signal)
+                    ):
+                        continue
+                off_text = (
+                    f"{off.get('offence_section', '')} {off.get('offence_title', '')} "
+                    f"{' '.join(off.get('read_together_with') or [])}"
+                ).lower()
+                off_tokens = {
+                    t.lower()
+                    for t in TOKEN_RE.findall(off_text)
+                    if len(t) >= 2 and t.lower() not in _GROUNDING_STOPWORDS
+                }
+                overlap = len(q_tokens & off_tokens)
+                score = float(overlap)
+                # Bonus padanan nombor seksyen tepat
+                sec_nums = re.findall(r"\d+[A-Za-z]?", str(off.get("offence_section") or ""))
+                if sec_nums and sec_nums[0].lower() in q_tokens:
+                    score += 4.5
+                # Bonus tepat untuk OBD merokok/hisap vape (S.17(1) Akta 852)
+                if off["offence_id"] == "AKTA_852_S17_1" and has_minor_signal and any(
+                    k in q_low for k in ("vape", "rokok", "hisap", "merokok", "17(1)")
+                ):
+                    score += 8.0
+                if off["offence_id"] == "AKTA_852_S13_1" and any(
+                    k in q_low for k in ("jual", "menjual", "pekedai", "penjual", "kedai")
+                ) and has_minor_signal:
+                    score += 6.5
+                if off["offence_id"] == "AKTA_852_S10_1" and any(
+                    k in q_low for k in ("pamer", "pameran", "kaunter", "terbuka")
+                ):
+                    score += 6.0
+                if off["offence_id"] == "AKTA_852_S16_2" and any(
+                    k in q_low for k in ("restoran", "tempat makan", "kawasan larangan", "larangan merokok")
+                ) and not has_minor_signal:
+                    score += 6.0
+                if score >= 1.0:
+                    eval_res = evaluate_offence_elements_against_facts(q_raw, off)
+                    scored_offences.append((score, off, eval_res))
 
         scored_offences.sort(key=lambda x: x[0], reverse=True)
+        # Hadkan kepada maksimum 1-2 kesalahan yang benar-benar relevan (BUKAN 5 seksyen rawak)
+        max_offences = min(top_k, 2)
+        if scored_offences:
+            top_score = scored_offences[0][0]
+            focused_offences = [
+                item
+                for idx, item in enumerate(scored_offences[:max_offences])
+                if idx == 0 or (item[0] >= 2.0 and item[0] >= top_score * 0.55)
+            ]
+        else:
+            focused_offences = []
+
         top_offences = [
             {
                 **off,
@@ -4178,7 +4529,7 @@ class ClosedBookLegalLibrary:
                 "match_score": round(sc, 2),
                 "element_evaluation": ev,
             }
-            for sc, off, ev in scored_offences[:top_k]
+            for sc, off, ev in focused_offences
         ]
 
         # c) Teks penuh verbatim daripada `statute_sections_verbatim`
@@ -4190,8 +4541,10 @@ class ClosedBookLegalLibrary:
         for off in top_offences:
             for did in off.get("source_section_doc_ids") or []:
                 if did in sec_map and did not in seen_doc_ids:
-                    seen_doc_ids.add(did)
                     s_obj = sec_map[did]
+                    if not asks_definition and is_non_offence_or_definition_section(s_obj):
+                        continue
+                    seen_doc_ids.add(did)
                     verbatim_hits.append(
                         {
                             "doc_id": s_obj["doc_id"],
@@ -4200,27 +4553,56 @@ class ClosedBookLegalLibrary:
                             "section_code": s_obj["section_code"],
                             "section_heading": s_obj["section_heading"],
                             "verbatim_text_bm": s_obj["verbatim_text_bm"],
+                            "is_offence_provision": bool(s_obj.get("is_offence_provision")),
                             "score": 0.96,
                         }
                     )
 
-        # Tambah carian hibrid BM25/kata kunci + vektor ke atas `statute_sections_verbatim`
+        # Jika kes pelajar/OBD di bawah Akta 852, masukkan rujukan Akta 611 (S.83) jika tersedia
+        if has_minor_signal and allowed_sids and "AKTA_611" in allowed_sids and not is_passive_vape:
+            for ak611_did in ("AKTA_611__S83", "AKTA_611__S15"):
+                if ak611_did in sec_map and ak611_did not in seen_doc_ids:
+                    s_obj = sec_map[ak611_did]
+                    seen_doc_ids.add(ak611_did)
+                    verbatim_hits.append(
+                        {
+                            "doc_id": s_obj["doc_id"],
+                            "statute_id": s_obj["statute_id"],
+                            "akta_code": canonical_akta_code_for_statute(s_obj["statute_id"]),
+                            "section_code": s_obj["section_code"],
+                            "section_heading": s_obj["section_heading"],
+                            "verbatim_text_bm": s_obj["verbatim_text_bm"],
+                            "is_offence_provision": bool(s_obj.get("is_offence_provision")),
+                            "score": 0.90,
+                        }
+                    )
+
+        # Tambah carian hibrid BM25/kata kunci + vektor ke atas `statute_sections_verbatim` (dikunci mengikut domain & tapis Tafsiran)
         scored_secs: List[Tuple[float, Dict[str, Any]]] = []
         for s_obj in self.statute_sections_verbatim:
             if s_obj["doc_id"] in seen_doc_ids:
                 continue
+            if not asks_definition and is_non_offence_or_definition_section(s_obj):
+                continue
             sid = s_obj["statute_id"]
             c_act = canonical_akta_code_for_statute(sid)
+            if allowed_sids is not None and sid not in allowed_sids:
+                continue
             if akta_hint and akta_hint not in ("", "Semua"):
-                if akta_hint.lower() not in c_act.lower() and akta_hint.lower() not in sid.lower():
+                if (
+                    akta_hint.lower() not in c_act.lower()
+                    and akta_hint.lower() not in sid.lower()
+                    and not (sid == "AKTA_611" and has_minor_signal)
+                ):
                     continue
             s_toks = self._section_token_cache.get(s_obj["doc_id"])
             if s_toks is None:
                 s_toks = {t.lower() for t in TOKEN_RE.findall(s_obj["verbatim_text_bm"][:2400].lower()) if len(t) >= 2}
             kw_overlap = len(q_tokens & s_toks)
             sem_sim = cosine_similarity(q_vec, s_obj.get("embedding_vector") or [])
-            combined_sc = (kw_overlap * 0.35) + max(0.0, sem_sim)
-            if combined_sc > 0.15:
+            offence_bonus = 0.25 if s_obj.get("is_offence_provision") else 0.0
+            combined_sc = (kw_overlap * 0.35) + max(0.0, sem_sim) + offence_bonus
+            if combined_sc > 0.20:
                 scored_secs.append((combined_sc, s_obj))
 
         scored_secs.sort(key=lambda x: x[0], reverse=True)
@@ -4234,6 +4616,7 @@ class ClosedBookLegalLibrary:
                     "section_code": s_obj["section_code"],
                     "section_heading": s_obj["section_heading"],
                     "verbatim_text_bm": s_obj["verbatim_text_bm"],
+                    "is_offence_provision": bool(s_obj.get("is_offence_provision")),
                     "score": round(min(0.95, max(0.10, sc)), 4),
                 }
             )

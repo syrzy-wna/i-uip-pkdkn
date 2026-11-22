@@ -45,13 +45,15 @@ interface UIPAdvisorPanelProps {
   aktaUtama: string;
   authToken: string | null;
   officer: OfficerProfile | null;
+  isDevAdmin?: boolean;
   onApplyToCaseBuilder: (draftText: string, aktaDisyorkan: string, bukaIp: boolean) => void;
 }
 
-type AdvisorResultTab = "sop" | "charges" | "statutes" | "elements";
+type AdvisorResultTab = "evidence" | "charges" | "statutes";
 
 const QUICK_CHIPS = [
-  "Budak sekolah hisap vape di tepi jalan",
+  "Guru tangkap pelajar sedang hisap vape dalam tandas sekolah",
+  "Guru maklum PPKP ada pelajar memiliki vape semasa checking bag",
   "Restoran kotor ada najis tikus & tiada tifoid",
   "Kedai pamer vape secara terbuka di kaunter",
 ];
@@ -129,6 +131,7 @@ function formatShortTimestamp(raw: string): string {
 export default function UIPAdvisorPanel({
   authToken,
   officer,
+  isDevAdmin = false,
   onApplyToCaseBuilder,
 }: UIPAdvisorPanelProps) {
   const [question, setQuestion] = useState("");
@@ -140,7 +143,8 @@ export default function UIPAdvisorPanel({
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<AdvisorConsultResult | null>(null);
   const [showLibrary, setShowLibrary] = useState(false);
-  const [resultTab, setResultTab] = useState<AdvisorResultTab>("sop");
+  const [resultTab, setResultTab] = useState<AdvisorResultTab>("evidence");
+  const [showNoOffenceStatutes, setShowNoOffenceStatutes] = useState(false);
   const [answeredData, setAnsweredData] = useState<AdvisorAnsweredListResponse | null>(null);
   const [answeredLoading, setAnsweredLoading] = useState(false);
   const [answeredActFilter, setAnsweredActFilter] = useState<string>("Semua");
@@ -224,7 +228,8 @@ export default function UIPAdvisorPanel({
         officerProfile: officer,
       });
       setResult(res);
-      setResultTab("sop");
+      setResultTab("evidence");
+      setShowNoOffenceStatutes(false);
       setShowLibrary(false);
       setSelectedAnsweredId(res.matched_collection_id || null);
       void loadAnsweredQuestions();
@@ -245,9 +250,10 @@ export default function UIPAdvisorPanel({
     setError(null);
     setCopiedSummary(false);
     setShowLibrary(false);
+    setShowNoOffenceStatutes(false);
     if (item.answer) {
       setResult(item.answer);
-      setResultTab("sop");
+      setResultTab("evidence");
       window.setTimeout(() => {
         resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
       }, 90);
@@ -258,14 +264,42 @@ export default function UIPAdvisorPanel({
 
   const handleCopySummary = () => {
     if (!result) return;
+    const isNoOff =
+      result.status_kesalahan === "TIADA_KESALAHAN" ||
+      (!result.status_kesalahan &&
+        (result.keputusan_tindakan.toUpperCase().includes("TIADA KESALAHAN") ||
+          result.keputusan_tindakan.toUpperCase().includes("BUKAN KESALAHAN")));
+
+    if (isNoOff) {
+      const steps =
+        result.langkah_susulan_ppkp && result.langkah_susulan_ppkp.length > 0
+          ? result.langkah_susulan_ppkp
+          : result.sop_lapangan;
+      const text = [
+        `${result.tajuk_nasihat} (${result.akta_disyorkan})`,
+        `KEPUTUSAN: ${result.ringkasan_keputusan || result.keputusan_tindakan}`,
+        `SEBAB TIDAK MENYALAHI UNDANG-UNDANG:\n${result.sebab_tidak_menyalahi || result.alasan_keputusan}`,
+        steps.length
+          ? `LANGKAH SUSULAN PPKP:\n${steps.map((s, i) => `${i + 1}. ${s}`).join("\n")}`
+          : "",
+      ]
+        .filter(Boolean)
+        .join("\n\n");
+      navigator.clipboard?.writeText(text);
+      setCopiedSummary(true);
+      setTimeout(() => setCopiedSummary(false), 2000);
+      return;
+    }
+
     const primary = result.cadangan_pertuduhan[0];
+    const punca = result.punca_kuasa;
     const text = [
       `RUJUKAN UIP KKM: ${result.tajuk_nasihat} (${result.akta_disyorkan})`,
-      `KEPUTUSAN: ${result.keputusan_tindakan}`,
-      primary ? `CAJ KESALAHAN: ${primary.seksyen_kesalahan}` : "",
-      primary ? `HUKUMAN: ${primary.seksyen_hukuman} (${primary.hukuman_maksimum})` : "",
-      `SOP LAPANGAN:\n${result.sop_lapangan.map((s, i) => `${i + 1}. ${s}`).join("\n")}`,
-      `EKSIBIT WAJIB:\n${result.eksibit_wajib.map((e) => `- ${e}`).join("\n")}`,
+      `SEKSYEN KESALAHAN: ${punca?.seksyen_kesalahan || primary?.seksyen_kesalahan || result.akta_disyorkan}`,
+      `HUKUMAN: ${punca?.seksyen_hukuman || primary?.seksyen_hukuman || "-"} (${punca?.had_hukuman || primary?.hukuman_maksimum || "-"})`,
+      `TINDAKAN SEGERA: ${result.ringkasan_keputusan || result.keputusan_tindakan}`,
+      `LANGKAH LAPANGAN:\n${result.sop_lapangan.map((s, i) => `${i + 1}. ${s}`).join("\n")}`,
+      `BARANG BUKTI WAJIB:\n${result.eksibit_wajib.map((e) => `- ${e}`).join("\n")}`,
     ]
       .filter(Boolean)
       .join("\n\n");
@@ -342,7 +376,7 @@ export default function UIPAdvisorPanel({
                 Tanya Pakar UIP (Seksyen &amp; SOP Lapangan)
               </h2>
               <p className="text-xs text-slate-500">
-                Ceritakan situasi yang anda jumpa di lokasi untuk semak seksyen caj, had kompaun dan langkah SOP.
+                Ceritakan situasi yang anda jumpa di lokasi untuk semak seksyen kesalahan, had kompaun dan langkah SOP.
               </p>
             </div>
           </div>
@@ -483,484 +517,721 @@ export default function UIPAdvisorPanel({
         )}
       </section>
 
-      {/* 2. KEPUTUSAN BERSIH & TERATUR */}
-      {result && (
-        <section
-          ref={resultRef}
-          className="space-y-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6"
-        >
-          {/* Header Keputusan & 1 CTA Utama */}
-          <div className="flex flex-wrap items-start justify-between gap-3 border-b border-slate-200 pb-4">
-            <div className="space-y-1">
+      {/* 2. KEPUTUSAN 2-CABANG YANG TEGAS (TIADA_KESALAHAN vs ADA_KESALAHAN) */}
+      {result && (() => {
+        const isNoOffence =
+          result.status_kesalahan === "TIADA_KESALAHAN" ||
+          (!result.status_kesalahan &&
+            (result.keputusan_tindakan.toUpperCase().includes("TIADA KESALAHAN") ||
+              result.keputusan_tindakan.toUpperCase().includes("BUKAN KESALAHAN")));
+
+        const showValidationAlert = Boolean(activeValidation && !activeValidation.passed);
+        const showQaBanner =
+          !showValidationAlert &&
+          Boolean(result.from_qa_collection && result.matched_collection_question);
+        const showFallbackBanner =
+          !showValidationAlert &&
+          !showQaBanner &&
+          Boolean(result.ai_attempted && result.ai_succeeded === false && result.fallback_reason);
+
+        const punca = result.punca_kuasa || {
+          akta: result.akta_disyorkan,
+          seksyen_kesalahan: primaryCharge?.seksyen_kesalahan || result.akta_disyorkan,
+          seksyen_hukuman: primaryCharge?.seksyen_hukuman || "-",
+          had_hukuman: primaryCharge?.hukuman_maksimum || "-",
+          status_kompaun:
+            primaryCharge?.boleh_kompaun ||
+            (result.sesuai_buka_ip ? "Terus Mahkamah (Buka IP)" : "Boleh Kompaun"),
+          boleh_kompaun_flag: !result.sesuai_buka_ip,
+          kuasa_penguatkuasaan: "",
+          peringatan_akta_611: null,
+        };
+
+        const followUpSteps =
+          result.langkah_susulan_ppkp && result.langkah_susulan_ppkp.length > 0
+            ? result.langkah_susulan_ppkp
+            : result.sop_lapangan;
+
+        const cleanEngineLabel = result.from_qa_collection
+          ? `Koleksi Q&A · Padanan ${result.matched_collection_similarity ?? 100}%`
+          : result.ai_succeeded
+            ? isDevAdmin
+              ? result.engine_used
+              : "Analisa AI"
+            : isDevAdmin
+              ? result.engine_used || "Rujukan Pantas UIP"
+              : "Rujukan Akta KKM";
+
+        return (
+          <section
+            ref={resultRef}
+            className="space-y-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6"
+          >
+            {/* Bar Atas: Tag Ringkas + Butang Salin / Tindakan */}
+            <div className="flex flex-wrap items-center justify-between gap-2.5 border-b border-slate-200 pb-3">
               <div className="flex flex-wrap items-center gap-2">
                 <span className="rounded-md bg-[#0f2744] px-2.5 py-0.5 text-[11px] font-bold text-white">
                   {result.akta_disyorkan}
                 </span>
-                {result.from_qa_collection ? (
-                  <span className="inline-flex items-center gap-1 rounded-full border border-teal-300 bg-teal-50 px-2.5 py-0.5 text-[11px] font-bold text-teal-900">
-                    <History className="h-3 w-3" /> Dipetik dari Koleksi Q&amp;A · Padanan{" "}
-                    {result.matched_collection_similarity ?? 100}%
-                  </span>
-                ) : result.ai_succeeded ? (
-                  <span className="inline-flex items-center gap-1 rounded-full border border-indigo-200 bg-indigo-50 px-2.5 py-0.5 text-[11px] font-bold text-indigo-800">
-                    <Sparkles className="h-3 w-3" /> {result.engine_used}
-                  </span>
-                ) : (
-                  <span className="inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-[11px] font-semibold text-emerald-800">
-                    <Zap className="h-3 w-3" /> {result.engine_used || "Mod Pantas — Rujukan Statutori UIP"}
-                  </span>
-                )}
-                {activeValidation && activeValidation.passed && (
-                  <span className="inline-flex items-center gap-1 rounded-full border border-emerald-300 bg-emerald-50 px-2.5 py-0.5 text-[11px] font-extrabold text-emerald-900">
-                    <ShieldCheck className="h-3.5 w-3.5 text-emerald-700" />
-                    Disahkan Pustaka Akta ({result.statute_library_version || activeValidation.statute_library_version})
-                  </span>
-                )}
-              </div>
-              <h3 className="text-base font-extrabold text-slate-900">{result.tajuk_nasihat}</h3>
-            </div>
-
-            <div className="flex flex-wrap items-center gap-2">
-              <button
-                type="button"
-                onClick={handleCopySummary}
-                className="inline-flex min-h-[40px] items-center gap-1.5 rounded-xl border border-slate-300 bg-white px-3.5 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50"
-              >
-                {copiedSummary ? (
-                  <ClipboardCheck className="h-4 w-4 text-emerald-600" />
-                ) : (
-                  <Copy className="h-4 w-4" />
-                )}
-                {copiedSummary ? "Disalin!" : "Salin Ringkasan"}
-              </button>
-
-              {(!activeValidation || activeValidation.passed) && !result.unindexed_statute && (
-                <button
-                  type="button"
-                  onClick={() =>
-                    onApplyToCaseBuilder(
-                      result.draf_teks_kes_cadangan,
-                      result.akta_disyorkan,
-                      result.sesuai_buka_ip
-                    )
-                  }
-                  className="inline-flex min-h-[40px] items-center gap-1.5 rounded-xl bg-blue-600 px-4 py-2 text-xs font-extrabold text-white shadow-sm hover:bg-blue-700"
-                >
-                  <ArrowRightCircle className="h-4 w-4" />
-                  {result.sesuai_buka_ip
-                    ? "Terus Buka Editor Fail IP"
-                    : "Isi ke Borang Notis Kompaun"}
-                </button>
-              )}
-            </div>
-          </div>
-
-          {/* PENGAWAL PETIKAN DETERMINISTIK SELEPAS JANAAN (POST-GENERATION CITATION GUARDRAIL) */}
-          {activeValidation && !activeValidation.passed && (
-            <div className="rounded-2xl border-2 border-rose-500 bg-rose-50 p-4 text-xs text-rose-950 shadow-sm">
-              <div className="flex items-start gap-2.5">
-                <ShieldAlert className="mt-0.5 h-5 w-5 shrink-0 text-rose-700" />
-                <div className="space-y-1.5">
-                  <div className="text-sm font-extrabold text-rose-900">
-                    {activeValidation.warning_banner ||
-                      "Amaran Sistem: Cadangan petikan undang-undang gagal pengesahan Pustaka Akta."}
-                  </div>
-                  <p className="font-semibold text-rose-800">
-                    Pengawal Petikan Deterministik (<code>validateLegalOutput</code>) telah menyekat cadangan Notis Kompaun / Pertuduhan ini atas sebab berikut:
-                  </p>
-                  <ul className="list-disc space-y-1 pl-5 font-medium text-rose-900">
-                    {[
-                      ...(activeValidation.invalid_citations || []),
-                      ...(activeValidation.repealed_hits || []).map((r) => r.warning_message_bm),
-                      ...(activeValidation.penalty_mismatches || []),
-                      ...(activeValidation.unfulfilled_element_errors || []),
-                    ].map((errItem, idx) => (
-                      <li key={idx}>{errItem}</li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {result.from_qa_collection && result.matched_collection_question && (
-            <div className="flex flex-wrap items-center justify-between gap-2.5 rounded-xl border border-teal-200 bg-teal-50/70 px-3.5 py-2.5 text-xs text-teal-950">
-              <div className="flex min-w-0 flex-1 items-start gap-2.5">
-                <History className="mt-0.5 h-4 w-4 shrink-0 text-teal-700" />
-                <div className="space-y-0.5">
-                  <div>
-                    <span className="font-extrabold">Dipetik Segera daripada Koleksi Q&amp;A Pakar:</span>{" "}
-                    <span>&ldquo;{result.matched_collection_question}&rdquo;</span>
-                  </div>
-                  <div className="flex flex-wrap items-center gap-2 text-[11px] font-semibold text-teal-800">
-                    <span>Padanan {result.matched_collection_similarity ?? 100}%</span>
-                    <span>•</span>
-                    <span>{result.ai_succeeded ? "Jawapan AI Terdahulu" : "Rujukan Statutori UIP"}</span>
-                    {typeof result.matched_collection_ask_count === "number" &&
-                      result.matched_collection_ask_count > 1 && (
-                        <>
-                          <span>•</span>
-                          <span>Dirujuk {result.matched_collection_ask_count}× oleh pengguna</span>
-                        </>
-                      )}
-                  </div>
-                </div>
-              </div>
-              <button
-                type="button"
-                disabled={loading || deepLoading}
-                onClick={() => handleConsult(undefined, undefined, true)}
-                className="inline-flex shrink-0 items-center gap-1 rounded-lg border border-teal-300 bg-white px-2.5 py-1.5 text-[11px] font-bold text-teal-900 shadow-xs hover:bg-teal-100 disabled:opacity-50"
-              >
-                <Sparkles className="h-3 w-3 text-indigo-700" />
-                {deepLoading ? "Menganalisa AI..." : "Analisa Baharu dengan AI"}
-              </button>
-            </div>
-          )}
-
-          {result.ai_attempted && result.ai_succeeded === false && result.fallback_reason && (
-            <div className="flex flex-wrap items-center justify-between gap-2.5 rounded-xl border border-amber-300 bg-amber-50 px-3.5 py-2.5 text-xs text-amber-950">
-              <div className="flex min-w-0 flex-1 items-start gap-2.5">
-                <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-700" />
-                <div>
-                  <span className="font-bold">Mod Rujukan Tempatan Aktif:</span>{" "}
-                  {result.fallback_reason}
-                </div>
-              </div>
-              <button
-                type="button"
-                disabled={loading || deepLoading}
-                onClick={() => {
-                  const typed = question.trim();
-                  handleConsult(
-                    typed ? undefined : result.tajuk_nasihat,
-                    typed ? undefined : result.scenario_id,
-                    true
-                  );
-                }}
-                className="inline-flex shrink-0 items-center gap-1 rounded-lg border border-amber-400 bg-white px-2.5 py-1.5 text-[11px] font-bold text-amber-900 shadow-xs hover:bg-amber-100 disabled:opacity-50"
-              >
-                <Sparkles className="h-3 w-3" />
-                {deepLoading ? "Mencuba AI..." : "Cuba Semula AI"}
-              </button>
-            </div>
-          )}
-
-          {/* Ringkasan Eksekutif Bersih: 1 Keputusan + 2 Kad Garis Sisi */}
-          <div
-            className={`rounded-xl border border-slate-200 border-l-4 p-4 ${
-              result.keputusan_tindakan.toUpperCase().includes("TIADA KESALAHAN") ||
-              result.unindexed_statute
-                ? "border-l-rose-600 bg-rose-50/50"
-                : result.sesuai_buka_ip
-                  ? "border-l-amber-500 bg-amber-50/40"
-                  : "border-l-emerald-600 bg-emerald-50/40"
-            }`}
-          >
-            <div className="text-[11px] font-extrabold uppercase tracking-wide text-slate-600">
-              Keputusan Tindakan Segera
-            </div>
-            <div className="mt-1 text-sm font-extrabold text-slate-900">
-              {result.keputusan_tindakan}
-            </div>
-            <p className="mt-1.5 text-xs leading-relaxed text-slate-700">
-              {result.alasan_keputusan}
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-            <div className="rounded-xl border border-slate-200 border-l-4 border-l-blue-600 bg-white p-3.5">
-              <div className="text-[11px] font-extrabold uppercase tracking-wide text-blue-800">
-                Seksyen Kesalahan &amp; Hukuman Utama
-              </div>
-              <div className="mt-1 text-sm font-bold text-slate-900">
-                {primaryCharge?.seksyen_kesalahan || result.akta_disyorkan}
-              </div>
-              <div className="mt-1 text-xs text-slate-600">
-                <strong>Hukuman:</strong> {primaryCharge?.seksyen_hukuman || "-"} —{" "}
-                {primaryCharge?.hukuman_maksimum || "-"}
-              </div>
-            </div>
-
-            <div className="rounded-xl border border-slate-200 border-l-4 border-l-teal-600 bg-white p-3.5">
-              <div className="text-[11px] font-extrabold uppercase tracking-wide text-teal-800">
-                Bukti &amp; Borang Kritikal Di Lokasi
-              </div>
-              <ul className="mt-1.5 list-disc space-y-1 pl-4 text-xs font-medium text-slate-700">
-                {result.eksibit_wajib.slice(0, 3).map((item, i) => (
-                  <li key={i}>{item}</li>
-                ))}
-              </ul>
-            </div>
-          </div>
-
-          {/* 4 Tab Kemas Untuk Perincian (SOP, Unsur Mandatori, Pertuduhan, Petikan Akta Verbatim) */}
-          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-2 pt-1">
-            <div className="flex gap-1.5 overflow-x-auto no-scrollbar">
-              {[
-                { id: "sop" as AdvisorResultTab, label: "SOP, Eksibit & Amaran" },
-                {
-                  id: "elements" as AdvisorResultTab,
-                  label: `Semakan Unsur Mandatori (${result.element_evaluations?.length ?? 0})`,
-                },
-                {
-                  id: "charges" as AdvisorResultTab,
-                  label: `Pertuduhan Penuh (${result.cadangan_pertuduhan.length})`,
-                },
-                {
-                  id: "statutes" as AdvisorResultTab,
-                  label: `Petikan Akta Verbatim (${result.statutory_citations.length})`,
-                },
-              ].map((t) => (
-                <button
-                  key={t.id}
-                  type="button"
-                  onClick={() => setResultTab(t.id)}
-                  className={`shrink-0 rounded-lg px-3 py-2 text-xs font-bold transition ${
-                    resultTab === t.id
-                      ? "bg-[#0f2744] text-white"
-                      : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                <span
+                  className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-[11px] font-bold ${
+                    result.from_qa_collection
+                      ? "border-teal-300 bg-teal-50 text-teal-900"
+                      : result.ai_succeeded
+                        ? "border-indigo-200 bg-indigo-50 text-indigo-800"
+                        : "border-slate-200 bg-slate-50 text-slate-700"
                   }`}
                 >
-                  {t.label}
+                  {result.from_qa_collection ? (
+                    <History className="h-3 w-3" />
+                  ) : result.ai_succeeded ? (
+                    <Sparkles className="h-3 w-3" />
+                  ) : (
+                    <Zap className="h-3 w-3 text-emerald-700" />
+                  )}
+                  {cleanEngineLabel}
+                </span>
+                {isDevAdmin && activeValidation && activeValidation.passed && (
+                  <span className="inline-flex items-center gap-1 rounded-full border border-emerald-300 bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-900">
+                    <ShieldCheck className="h-3 w-3 text-emerald-700" />
+                    {result.statute_library_version || activeValidation.statute_library_version}
+                  </span>
+                )}
+              </div>
+
+              <div className="flex flex-wrap items-center gap-2">
+                <button
+                  type="button"
+                  onClick={handleCopySummary}
+                  className="inline-flex min-h-[38px] items-center gap-1.5 rounded-xl border border-slate-300 bg-white px-3 py-1.5 text-xs font-bold text-slate-700 hover:bg-slate-50"
+                >
+                  {copiedSummary ? (
+                    <ClipboardCheck className="h-4 w-4 text-emerald-600" />
+                  ) : (
+                    <Copy className="h-4 w-4" />
+                  )}
+                  {copiedSummary ? "Disalin!" : "Salin Ringkasan"}
                 </button>
-              ))}
+
+                {!isNoOffence && (!activeValidation || activeValidation.passed) && !result.unindexed_statute && (
+                  <button
+                    type="button"
+                    onClick={() =>
+                      onApplyToCaseBuilder(
+                        result.draf_teks_kes_cadangan,
+                        result.akta_disyorkan,
+                        result.sesuai_buka_ip
+                      )
+                    }
+                    className="inline-flex min-h-[38px] items-center gap-1.5 rounded-xl bg-blue-600 px-4 py-1.5 text-xs font-extrabold text-white shadow-sm hover:bg-blue-700"
+                  >
+                    <ArrowRightCircle className="h-4 w-4" />
+                    {result.sesuai_buka_ip
+                      ? "Terus Buka Editor Fail IP"
+                      : "Isi ke Borang Notis Kompaun"}
+                  </button>
+                )}
+              </div>
             </div>
 
-            <button
-              type="button"
-              disabled={loading || deepLoading}
-              onClick={() => {
-                const typed = question.trim();
-                handleConsult(
-                  typed ? undefined : result.tajuk_nasihat,
-                  typed ? undefined : result.scenario_id,
-                  true
-                );
-              }}
-              className="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-700 hover:underline disabled:opacity-50"
-            >
-              {deepLoading ? (
-                <Loader2 className="h-3.5 w-3.5 animate-spin" />
-              ) : (
-                <Sparkles className="h-3.5 w-3.5" />
-              )}
-              {deepLoading
-                ? "Sedang Analisa AI..."
-                : result.ai_succeeded
-                  ? "Analisa Semula dengan AI"
-                  : "Perlu jawapan lebih terperinci? Cuba AI (~15s)"}
-            </button>
-          </div>
-
-          {resultTab === "sop" && (
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              <div className="space-y-2">
-                <h4 className="flex items-center gap-1.5 text-xs font-extrabold text-slate-900">
-                  <ClipboardList className="h-4 w-4 text-emerald-700" />
-                  Langkah Tindakan (SOP Lapangan)
-                </h4>
-                <ol className="list-decimal space-y-2 pl-5 text-xs leading-relaxed text-slate-700">
-                  {result.sop_lapangan.map((step, i) => (
-                    <li key={i}>{step}</li>
-                  ))}
-                </ol>
+            {/* MAKSIMUM 1 BANNER STATUS SAHAJA DI BAHAGIAN ATAS */}
+            {showValidationAlert && activeValidation && (
+              <div className="rounded-xl border border-rose-300 bg-rose-50 p-3.5 text-xs text-rose-950">
+                <div className="flex items-start gap-2.5">
+                  <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0 text-rose-700" />
+                  <div className="space-y-1">
+                    <div className="font-extrabold text-rose-900">
+                      Semakan Akta Memerlukan Perhatian
+                    </div>
+                    <ul className="list-disc space-y-0.5 pl-4 font-medium text-rose-900">
+                      {[
+                        ...(activeValidation.invalid_citations || []),
+                        ...(activeValidation.repealed_hits || []).map((r) => r.warning_message_bm),
+                        ...(activeValidation.penalty_mismatches || []),
+                        ...(activeValidation.unfulfilled_element_errors || []),
+                      ].map((errItem, idx) => (
+                        <li key={idx}>{errItem}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
               </div>
+            )}
 
+            {showQaBanner && (
+              <div className="flex flex-wrap items-center justify-between gap-2.5 rounded-xl border border-teal-200 bg-teal-50/70 px-3.5 py-2.5 text-xs text-teal-950">
+                <div className="flex min-w-0 flex-1 items-start gap-2">
+                  <History className="mt-0.5 h-4 w-4 shrink-0 text-teal-700" />
+                  <div className="min-w-0">
+                    <span className="font-bold">Dipetik daripada Koleksi Q&amp;A:</span>{" "}
+                    <span className="text-teal-900">&ldquo;{result.matched_collection_question}&rdquo;</span>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  disabled={loading || deepLoading}
+                  onClick={() => handleConsult(undefined, undefined, true)}
+                  className="inline-flex shrink-0 items-center gap-1 rounded-lg border border-teal-300 bg-white px-2.5 py-1.5 text-[11px] font-bold text-teal-900 hover:bg-teal-100 disabled:opacity-50"
+                >
+                  <Sparkles className="h-3 w-3 text-indigo-700" />
+                  {deepLoading ? "Menganalisa AI..." : "Analisa Baharu (AI)"}
+                </button>
+              </div>
+            )}
+
+            {showFallbackBanner && (
+              <div className="flex flex-wrap items-center justify-between gap-2.5 rounded-xl border border-amber-200 bg-amber-50 px-3.5 py-2.5 text-xs text-amber-950">
+                <div className="flex min-w-0 flex-1 items-start gap-2">
+                  <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-700" />
+                  <div>
+                    <span className="font-bold">Paparan Rujukan Tempatan:</span>{" "}
+                    {result.fallback_reason}
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  disabled={loading || deepLoading}
+                  onClick={() => {
+                    const typed = question.trim();
+                    handleConsult(
+                      typed ? undefined : result.tajuk_nasihat,
+                      typed ? undefined : result.scenario_id,
+                      true
+                    );
+                  }}
+                  className="inline-flex shrink-0 items-center gap-1 rounded-lg border border-amber-300 bg-white px-2.5 py-1.5 text-[11px] font-bold text-amber-900 hover:bg-amber-100 disabled:opacity-50"
+                >
+                  <Sparkles className="h-3 w-3" />
+                  {deepLoading ? "Mencuba AI..." : "Cuba Semula AI"}
+                </button>
+              </div>
+            )}
+
+            {/* ================================================================= */}
+            {/* CABANG A: TIADA_KESALAHAN (Susunan Bersih Warna Ambar/Biru)       */}
+            {/* ================================================================= */}
+            {isNoOffence ? (
               <div className="space-y-4">
-                <div>
-                  <h4 className="mb-2 flex items-center gap-1.5 text-xs font-extrabold text-slate-900">
-                    <CheckCircle2 className="h-4 w-4 text-teal-700" />
-                    Senarai Penuh Barang Bukti &amp; Borang
-                  </h4>
-                  <ul className="list-disc space-y-1.5 pl-5 text-xs leading-relaxed text-slate-700">
-                    {result.eksibit_wajib.map((ex, i) => (
-                      <li key={i}>{ex}</li>
-                    ))}
-                  </ul>
+                {/* 1. Kad Keputusan Utama (Warna Ambar/Biru Bersih — BUKAN kotak ralat merah) */}
+                <div className="rounded-2xl border border-amber-300 bg-gradient-to-br from-amber-50/90 via-white to-sky-50/70 p-4 sm:p-5">
+                  <div className="inline-flex items-center gap-1.5 rounded-full bg-amber-100 px-2.5 py-0.5 text-[11px] font-extrabold text-amber-950">
+                    <AlertTriangle className="h-3.5 w-3.5 text-amber-700" />
+                    Keputusan Semakan Undang-Undang
+                  </div>
+                  <h3 className="mt-2 text-base font-extrabold tracking-tight text-slate-900 sm:text-lg">
+                    {result.tajuk_nasihat.toUpperCase().startsWith("TIADA KESALAHAN") ||
+                    result.tajuk_nasihat.toUpperCase().startsWith("AKTA BELUM DIINDEKS")
+                      ? result.tajuk_nasihat
+                      : `TIADA KESALAHAN DI BAWAH ${result.akta_disyorkan.toUpperCase()}`}
+                  </h3>
+                  <p className="mt-1.5 text-sm font-bold leading-snug text-slate-800">
+                    {result.ringkasan_keputusan || result.keputusan_tindakan}
+                  </p>
                 </div>
 
-                <div className="rounded-xl border border-rose-200 border-l-4 border-l-rose-600 bg-rose-50/40 p-3">
-                  <h4 className="mb-1.5 flex items-center gap-1.5 text-xs font-extrabold text-rose-950">
-                    <ShieldAlert className="h-4 w-4 text-rose-700" />
-                    Elak Kesilapan Biasa PPKP &amp; Pengecualian Eksplisit
+                {/* 2. Sebab Tidak Menyalahi Undang-Undang */}
+                <div className="rounded-2xl border border-sky-200 bg-sky-50/40 p-4">
+                  <h4 className="flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wide text-sky-950">
+                    <BookOpen className="h-4 w-4 text-sky-700" />
+                    Sebab Tidak Menyalahi Undang-Undang
                   </h4>
-                  <ul className="space-y-1.5 text-xs text-rose-900">
-                    {result.perangkap_kesilapan.map((trap, i) => (
-                      <li key={i} className="flex items-start gap-1.5">
-                        <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-rose-600" />
-                        <span>{trap}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </div>
-          )}
+                  <p className="mt-2 text-xs leading-relaxed text-slate-800 sm:text-[13px]">
+                    {result.sebab_tidak_menyalahi || result.alasan_keputusan}
+                  </p>
 
-          {resultTab === "elements" && (
-            <div className="space-y-3">
-              {(!result.element_evaluations || result.element_evaluations.length === 0) ? (
-                <p className="text-xs text-slate-500">
-                  Tiada jadual unsur mandatori tambahan dilampirkan untuk situasi ini.
-                </p>
-              ) : (
-                <div className="space-y-3">
-                  {result.element_evaluations.map((ev) => (
-                    <div
-                      key={ev.offence_id}
-                      className="overflow-x-auto rounded-xl border border-slate-200"
-                    >
-                      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 bg-slate-50 px-3 py-2 text-xs">
-                        <span className="font-extrabold text-slate-900">
-                          {ev.offence_id} — {ev.offence_section}
-                        </span>
-                        <span
-                          className={`rounded-full px-2.5 py-0.5 text-[10px] font-extrabold ${
-                            ev.action_blocked
-                              ? "bg-rose-100 text-rose-900"
-                              : ev.all_elements_satisfied
-                                ? "bg-emerald-100 text-emerald-900"
-                                : "bg-amber-100 text-amber-900"
-                          }`}
-                        >
-                          {ev.action_blocked
-                            ? "TINDAKAN KOMPAUN/PERTUDUHAN DISEKAT"
-                            : ev.all_elements_satisfied
-                              ? "SEMUA UNSUR MANDATORI TERPENUHI"
-                              : "PERLU BUKTI TAMBAHAN"}
-                        </span>
+                  {result.element_evaluations && result.element_evaluations.length > 0 && (
+                    <div className="mt-3 space-y-2 border-t border-sky-200/70 pt-3">
+                      <div className="text-[11px] font-extrabold uppercase tracking-wide text-slate-700">
+                        Perkara Wajib Dibuktikan (Punca Penolakan)
                       </div>
-                      <table className="w-full border-collapse text-left text-xs">
-                        <thead>
-                          <tr className="border-b border-slate-200 bg-white text-[11px] font-extrabold uppercase text-slate-600">
-                            <th className="p-2.5">Bil</th>
-                            <th className="p-2.5">Unsur Mandatori Kesalahan (Warta)</th>
-                            <th className="p-2.5">Status Semakan</th>
-                            <th className="p-2.5">Bukti Wajib / Catatan</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-slate-200">
-                          {ev.element_evaluations.map((el) => (
-                            <tr key={el.element_no} className="hover:bg-slate-50/60">
-                              <td className="p-2.5 font-mono font-bold text-slate-900">
-                                #{el.element_no}
-                              </td>
-                              <td className="p-2.5 font-medium text-slate-800">
-                                {el.description}
-                              </td>
-                              <td className="p-2.5">
+                      {result.element_evaluations.map((ev) => (
+                        <div key={ev.offence_id} className="space-y-1.5 rounded-xl border border-slate-200 bg-white p-3">
+                          <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
+                            <span className="font-extrabold text-slate-900">
+                              {ev.offence_section || result.akta_disyorkan}
+                              {isDevAdmin ? (
+                                <span className="ml-1.5 font-mono text-[10px] font-semibold text-slate-500">
+                                  ({ev.offence_id})
+                                </span>
+                              ) : null}
+                            </span>
+                            <span className="rounded-full bg-amber-100 px-2.5 py-0.5 text-[10px] font-extrabold text-amber-950">
+                              Unsur Tidak Terpenuhi
+                            </span>
+                          </div>
+                          <ul className="space-y-1.5 text-xs">
+                            {ev.element_evaluations.map((el) => (
+                              <li key={el.element_no} className="flex flex-wrap items-start justify-between gap-2 border-t border-slate-100 pt-1.5">
+                                <div className="min-w-0 flex-1">
+                                  <span className="font-semibold text-slate-800">
+                                    {el.element_no}. {el.description}
+                                  </span>
+                                  {el.notes && (
+                                    <p className="mt-0.5 text-[11px] text-slate-600">{el.notes}</p>
+                                  )}
+                                </div>
                                 <span
-                                  className={`inline-flex rounded-full px-2.5 py-0.5 text-[10px] font-extrabold ${
-                                    el.status === "TERPENUHI"
-                                      ? "bg-emerald-100 text-emerald-900"
-                                      : el.status === "TIDAK TERPENUHI"
-                                        ? "bg-rose-100 text-rose-900"
+                                  className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-extrabold ${
+                                    el.status === "TIDAK TERPENUHI"
+                                      ? "bg-rose-100 text-rose-900"
+                                      : el.status === "TERPENUHI"
+                                        ? "bg-emerald-100 text-emerald-900"
                                         : "bg-amber-100 text-amber-900"
                                   }`}
                                 >
                                   {el.status || "PERLU BUKTI TAMBAHAN"}
                                 </span>
-                              </td>
-                              <td className="p-2.5 text-slate-600">
-                                {el.notes || el.must_prove}
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-
-          {resultTab === "charges" && (
-            <div className="space-y-2.5">
-              {result.cadangan_pertuduhan.map((c, idx) => (
-                <div
-                  key={idx}
-                  className="rounded-xl border border-slate-200 bg-slate-50/40 p-3.5 text-xs"
-                >
-                  <div className="flex items-center gap-2 font-extrabold text-slate-900">
-                    <Gavel className="h-4 w-4 text-blue-700" />
-                    <span>{c.perihal}</span>
-                  </div>
-                  <div className="mt-2 grid grid-cols-1 gap-1.5 sm:grid-cols-2">
-                    <div>
-                      <span className="font-semibold text-slate-500">Seksyen Kesalahan: </span>
-                      <span className="font-bold text-blue-900">{c.seksyen_kesalahan}</span>
-                    </div>
-                    <div>
-                      <span className="font-semibold text-slate-500">Seksyen Hukuman: </span>
-                      <span className="font-bold text-indigo-900">{c.seksyen_hukuman}</span>
-                    </div>
-                    <div>
-                      <span className="font-semibold text-slate-500">Penalti Maksimum: </span>
-                      <span className="text-slate-800">{c.hukuman_maksimum}</span>
-                    </div>
-                    <div>
-                      <span className="font-semibold text-slate-500">Status Kompaun: </span>
-                      <span className="font-bold text-emerald-800">{c.boleh_kompaun}</span>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {resultTab === "statutes" && (
-            <div className="space-y-2.5">
-              {result.statutory_citations.length === 0 ? (
-                <p className="text-xs text-slate-500">
-                  Tiada petikan akta tambahan dilampirkan untuk pertanyaan ini.
-                </p>
-              ) : (
-                result.statutory_citations.map((cit, i) => {
-                  const matchedStatute = legalSnapshot?.statutes_registry?.find(
-                    (s) =>
-                      (cit.statute_id && s.statute_id === cit.statute_id) ||
-                      (cit.doc_id && cit.doc_id.startsWith(`${s.statute_id}__`))
-                  );
-                  const isVerifiedAgc = Boolean(matchedStatute?.verified_by_admin);
-                  return (
-                    <div
-                      key={i}
-                      className="rounded-xl border border-teal-200 bg-teal-50/25 p-3.5 text-xs text-slate-800"
-                    >
-                      <div className="flex flex-wrap items-center justify-between gap-2">
-                        <div className="font-extrabold text-teal-900">
-                          {cit.section.toLowerCase().includes(cit.akta_code.toLowerCase())
-                            ? cit.section
-                            : `${cit.akta_code} — ${cit.section}`}
+                              </li>
+                            ))}
+                          </ul>
                         </div>
-                        <div className="flex items-center gap-1.5">
-                          {cit.doc_id && (
-                            <span className="rounded bg-white px-2 py-0.5 font-mono text-[10px] font-bold text-slate-600 ring-1 ring-slate-200">
-                              {cit.doc_id}
-                            </span>
-                          )}
-                          {isVerifiedAgc ? (
-                            <span className="rounded bg-teal-100 px-2 py-0.5 text-[10px] font-extrabold text-teal-900">
-                              100% Verbatim Warta AGC
-                            </span>
-                          ) : (
-                            <span className="rounded-full border border-yellow-300 bg-yellow-100 px-2 py-0.5 text-[10px] font-extrabold text-yellow-900">
-                              Perlu Semakan Manual Warta AGC
-                            </span>
-                          )}
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* 3. Langkah & Tindakan Susulan PPKP (Jika Perlu) */}
+                {followUpSteps.length > 0 && (
+                  <div className="rounded-2xl border border-slate-200 bg-white p-4">
+                    <h4 className="flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wide text-slate-900">
+                      <ClipboardList className="h-4 w-4 text-indigo-700" />
+                      Langkah &amp; Tindakan Susulan PPKP (Jika Perlu)
+                    </h4>
+                    <ol className="mt-2.5 space-y-2.5 text-xs leading-relaxed text-slate-700 sm:text-[13px]">
+                      {followUpSteps.map((step, idx) => (
+                        <li key={idx} className="flex items-start gap-2.5">
+                          <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#0f2744] text-[11px] font-extrabold text-white">
+                            {idx + 1}
+                          </span>
+                          <span>{step}</span>
+                        </li>
+                      ))}
+                    </ol>
+                  </div>
+                )}
+
+                {/* 4. Rujukan Teks Asal Akta (Akordion Kemas) */}
+                {result.statutory_citations.length > 0 && (
+                  <div className="overflow-hidden rounded-2xl border border-slate-200 bg-slate-50/40">
+                    <button
+                      type="button"
+                      onClick={() => setShowNoOffenceStatutes((v) => !v)}
+                      className="flex w-full items-center justify-between gap-2 px-4 py-3 text-left text-xs font-extrabold text-slate-900 hover:bg-slate-100/70"
+                    >
+                      <span className="flex items-center gap-2">
+                        <BookOpen className="h-4 w-4 text-teal-700" />
+                        Rujukan Teks Asal Akta ({result.statutory_citations.length} Seksyen — untuk tunjuk kepada guru / pengadu)
+                      </span>
+                      {showNoOffenceStatutes ? (
+                        <ChevronUp className="h-4 w-4 text-slate-500" />
+                      ) : (
+                        <ChevronDown className="h-4 w-4 text-slate-500" />
+                      )}
+                    </button>
+
+                    {showNoOffenceStatutes && (
+                      <div className="space-y-2.5 border-t border-slate-200 bg-white p-4">
+                        {result.statutory_citations.map((cit, i) => (
+                          <div
+                            key={i}
+                            className="rounded-xl border border-teal-200 bg-teal-50/25 p-3.5 text-xs text-slate-800"
+                          >
+                            <div className="flex flex-wrap items-center justify-between gap-2">
+                              <div className="font-extrabold text-teal-900">
+                                {cit.section.toLowerCase().includes(cit.akta_code.toLowerCase())
+                                  ? cit.section
+                                  : `${cit.akta_code} — ${cit.section}`}
+                              </div>
+                              {isDevAdmin && cit.doc_id && (
+                                <span className="rounded bg-white px-2 py-0.5 font-mono text-[10px] font-bold text-slate-600 ring-1 ring-slate-200">
+                                  {cit.doc_id}
+                                </span>
+                              )}
+                            </div>
+                            <p className="mt-1.5 whitespace-pre-line leading-relaxed">{cit.text}</p>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                <div className="flex justify-end pt-1">
+                  <button
+                    type="button"
+                    disabled={loading || deepLoading}
+                    onClick={() => {
+                      const typed = question.trim();
+                      handleConsult(
+                        typed ? undefined : result.tajuk_nasihat,
+                        typed ? undefined : result.scenario_id,
+                        true
+                      );
+                    }}
+                    className="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-700 hover:underline disabled:opacity-50"
+                  >
+                    {deepLoading ? (
+                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                    ) : (
+                      <Sparkles className="h-3.5 w-3.5" />
+                    )}
+                    {deepLoading ? "Sedang Analisa AI..." : "Perlu penjelasan tambahan? Cuba Analisa AI"}
+                  </button>
+                </div>
+              </div>
+            ) : (
+              /* ================================================================= */
+              /* CABANG B: ADA_KESALAHAN (Turutan Kerja Lapangan PPKP)             */
+              /* ================================================================= */
+              <div className="space-y-4">
+                <h3 className="text-base font-extrabold text-slate-900 sm:text-lg">
+                  {result.tajuk_nasihat}
+                </h3>
+
+                {/* 1. PUNCA KUASA (Teratas & Jelas) */}
+                <div className="rounded-2xl border border-blue-200 bg-blue-50/35 p-4">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <div className="flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wide text-blue-950">
+                      <Gavel className="h-4 w-4 text-blue-700" />
+                      1. Punca Kuasa
+                    </div>
+                    <span
+                      className={`rounded-full px-2.5 py-0.5 text-[11px] font-extrabold ${
+                        punca.boleh_kompaun_flag
+                          ? "bg-emerald-100 text-emerald-900"
+                          : "bg-amber-100 text-amber-950"
+                      }`}
+                    >
+                      {punca.boleh_kompaun_flag ? "Boleh Kompaun" : "Terus Mahkamah"}
+                    </span>
+                  </div>
+
+                  <div className="mt-3 grid grid-cols-1 gap-2.5 text-xs sm:grid-cols-2">
+                    <div className="rounded-xl border border-blue-100 bg-white p-3">
+                      <div className="text-[11px] font-semibold text-slate-500">Seksyen Kesalahan</div>
+                      <div className="mt-0.5 text-sm font-extrabold text-blue-950">
+                        {punca.seksyen_kesalahan}
+                      </div>
+                      <div className="mt-1.5 text-[11px] text-slate-600">
+                        <span className="font-semibold">Seksyen Hukuman:</span> {punca.seksyen_hukuman}
+                      </div>
+                    </div>
+
+                    <div className="rounded-xl border border-blue-100 bg-white p-3">
+                      <div className="text-[11px] font-semibold text-slate-500">Had Denda / Penjara &amp; Kompaun</div>
+                      <div className="mt-0.5 font-bold text-slate-900">{punca.had_hukuman}</div>
+                      <div className="mt-1.5 text-[11px] font-semibold text-emerald-800">
+                        {punca.status_kompaun}
+                      </div>
+                    </div>
+                  </div>
+
+                  {punca.kuasa_penguatkuasaan && (
+                    <div className="mt-2.5 rounded-xl border border-slate-200/80 bg-white px-3 py-2 text-xs text-slate-700">
+                      <span className="font-bold text-slate-900">Kuasa Penguatkuasaan: </span>
+                      {punca.kuasa_penguatkuasaan}
+                    </div>
+                  )}
+
+                  {punca.peringatan_akta_611 && (
+                    <div className="mt-2.5 flex items-start gap-2 rounded-xl border border-indigo-200 bg-indigo-50/80 px-3 py-2.5 text-xs text-indigo-950">
+                      <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-indigo-700" />
+                      <span>{punca.peringatan_akta_611}</span>
+                    </div>
+                  )}
+                </div>
+
+                {/* 2. CADANGAN TINDAKAN SEGERA */}
+                <div
+                  className={`rounded-2xl border border-slate-200 border-l-4 p-4 ${
+                    result.sesuai_buka_ip
+                      ? "border-l-amber-500 bg-amber-50/40"
+                      : "border-l-emerald-600 bg-emerald-50/40"
+                  }`}
+                >
+                  <div className="text-xs font-extrabold uppercase tracking-wide text-slate-700">
+                    2. Cadangan Tindakan Segera
+                  </div>
+                  <div className="mt-1 text-sm font-extrabold text-slate-900">
+                    {result.ringkasan_keputusan || result.keputusan_tindakan}
+                  </div>
+                  <p className="mt-1.5 text-xs leading-relaxed text-slate-700">
+                    {result.alasan_keputusan}
+                  </p>
+                </div>
+
+                {/* 3. LANGKAH PERLU DIAMBIL (SOP LAPANGAN — BERNOMBOR KRONOLOGI) */}
+                <div className="rounded-2xl border border-slate-200 bg-white p-4">
+                  <h4 className="flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wide text-slate-900">
+                    <ClipboardList className="h-4 w-4 text-emerald-700" />
+                    3. Langkah Perlu Diambil (SOP Lapangan)
+                  </h4>
+                  <ol className="mt-2.5 space-y-2.5 text-xs leading-relaxed text-slate-700 sm:text-[13px]">
+                    {result.sop_lapangan.map((step, i) => (
+                      <li key={i} className="flex items-start gap-2.5">
+                        <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-700 text-[11px] font-extrabold text-white">
+                          {i + 1}
+                        </span>
+                        <span>{step}</span>
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+
+                {/* 4. TAB TAMBAHAN YANG KEMAS DI BAWAH SOP */}
+                <div className="space-y-3 pt-1">
+                  <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-2">
+                    <div className="flex gap-1.5 overflow-x-auto no-scrollbar">
+                      {[
+                        {
+                          id: "evidence" as AdvisorResultTab,
+                          label: "Barang Bukti & Perkara Wajib Buktikan",
+                        },
+                        {
+                          id: "charges" as AdvisorResultTab,
+                          label: `Draf Pertuduhan (${result.cadangan_pertuduhan.length})`,
+                        },
+                        {
+                          id: "statutes" as AdvisorResultTab,
+                          label: `Teks Asal Akta (${result.statutory_citations.length})`,
+                        },
+                      ].map((t) => (
+                        <button
+                          key={t.id}
+                          type="button"
+                          onClick={() => setResultTab(t.id)}
+                          className={`shrink-0 rounded-lg px-3 py-2 text-xs font-bold transition ${
+                            resultTab === t.id
+                              ? "bg-[#0f2744] text-white"
+                              : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                          }`}
+                        >
+                          {t.label}
+                        </button>
+                      ))}
+                    </div>
+
+                    <button
+                      type="button"
+                      disabled={loading || deepLoading}
+                      onClick={() => {
+                        const typed = question.trim();
+                        handleConsult(
+                          typed ? undefined : result.tajuk_nasihat,
+                          typed ? undefined : result.scenario_id,
+                          true
+                        );
+                      }}
+                      className="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-700 hover:underline disabled:opacity-50"
+                    >
+                      {deepLoading ? (
+                        <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                      ) : (
+                        <Sparkles className="h-3.5 w-3.5" />
+                      )}
+                      {deepLoading
+                        ? "Sedang Analisa AI..."
+                        : result.ai_succeeded
+                          ? "Analisa Semula dengan AI"
+                          : "Perlu jawapan lebih terperinci? Cuba AI"}
+                    </button>
+                  </div>
+
+                  {/* TAB 1: BARANG BUKTI & PERKARA WAJIB BUKTIKAN + ELAK KESILAPAN BIASA */}
+                  {resultTab === "evidence" && (
+                    <div className="space-y-4">
+                      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                        <div className="rounded-xl border border-slate-200 bg-slate-50/40 p-3.5">
+                          <h4 className="mb-2 flex items-center gap-1.5 text-xs font-extrabold text-slate-900">
+                            <CheckCircle2 className="h-4 w-4 text-teal-700" />
+                            Senarai Barang Bukti &amp; Borang Wajib
+                          </h4>
+                          <ul className="list-disc space-y-1.5 pl-5 text-xs leading-relaxed text-slate-700">
+                            {result.eksibit_wajib.map((ex, i) => (
+                              <li key={i}>{ex}</li>
+                            ))}
+                          </ul>
+                        </div>
+
+                        <div className="rounded-xl border border-amber-200 border-l-4 border-l-amber-500 bg-amber-50/40 p-3.5">
+                          <h4 className="mb-1.5 flex items-center gap-1.5 text-xs font-extrabold text-amber-950">
+                            <AlertTriangle className="h-4 w-4 text-amber-700" />
+                            Elak Kesilapan Biasa PPKP
+                          </h4>
+                          <ul className="space-y-1.5 text-xs text-amber-950">
+                            {result.perangkap_kesilapan.map((trap, i) => (
+                              <li key={i} className="flex items-start gap-1.5">
+                                <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-amber-600" />
+                                <span>{trap}</span>
+                              </li>
+                            ))}
+                          </ul>
                         </div>
                       </div>
-                      <p className="mt-1.5 whitespace-pre-line leading-relaxed">{cit.text}</p>
+
+                      {result.element_evaluations && result.element_evaluations.length > 0 && (
+                        <div className="space-y-2.5">
+                          <h4 className="text-xs font-extrabold uppercase tracking-wide text-slate-700">
+                            Perkara Wajib Dibuktikan
+                          </h4>
+                          {result.element_evaluations.map((ev) => (
+                            <div
+                              key={ev.offence_id}
+                              className="overflow-x-auto rounded-xl border border-slate-200"
+                            >
+                              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 bg-slate-50 px-3 py-2 text-xs">
+                                <span className="font-extrabold text-slate-900">
+                                  {ev.offence_section || result.akta_disyorkan}
+                                  {isDevAdmin ? (
+                                    <span className="ml-1.5 font-mono text-[10px] font-semibold text-slate-500">
+                                      ({ev.offence_id})
+                                    </span>
+                                  ) : null}
+                                </span>
+                                <span
+                                  className={`rounded-full px-2.5 py-0.5 text-[10px] font-extrabold ${
+                                    ev.action_blocked
+                                      ? "bg-rose-100 text-rose-900"
+                                      : ev.all_elements_satisfied
+                                        ? "bg-emerald-100 text-emerald-900"
+                                        : "bg-amber-100 text-amber-900"
+                                  }`}
+                                >
+                                  {ev.action_blocked
+                                    ? "Unsur Tidak Terpenuhi"
+                                    : ev.all_elements_satisfied
+                                      ? "Fakta Asas Terpenuhi"
+                                      : "Sahkan Bukti Di Lokasi"}
+                                </span>
+                              </div>
+                              <table className="w-full border-collapse text-left text-xs">
+                                <thead>
+                                  <tr className="border-b border-slate-200 bg-white text-[11px] font-extrabold uppercase text-slate-600">
+                                    <th className="p-2.5">Bil</th>
+                                    <th className="p-2.5">Perkara Wajib Dibuktikan</th>
+                                    <th className="p-2.5">Status</th>
+                                    <th className="p-2.5">Catatan Bukti</th>
+                                  </tr>
+                                </thead>
+                                <tbody className="divide-y divide-slate-200">
+                                  {ev.element_evaluations.map((el) => (
+                                    <tr key={el.element_no} className="hover:bg-slate-50/60">
+                                      <td className="p-2.5 font-mono font-bold text-slate-900">
+                                        {el.element_no}
+                                      </td>
+                                      <td className="p-2.5 font-medium text-slate-800">
+                                        {el.description}
+                                      </td>
+                                      <td className="p-2.5">
+                                        <span
+                                          className={`inline-flex rounded-full px-2.5 py-0.5 text-[10px] font-extrabold ${
+                                            el.status === "TERPENUHI"
+                                              ? "bg-emerald-100 text-emerald-900"
+                                              : el.status === "TIDAK TERPENUHI"
+                                                ? "bg-rose-100 text-rose-900"
+                                                : "bg-amber-100 text-amber-900"
+                                          }`}
+                                        >
+                                          {el.status || "PERLU BUKTI TAMBAHAN"}
+                                        </span>
+                                      </td>
+                                      <td className="p-2.5 text-slate-600">
+                                        {el.notes || el.must_prove}
+                                      </td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
-                  );
-                })
-              )}
-            </div>
-          )}
-        </section>
-      )}
+                  )}
+
+                  {/* TAB 2: DRAF PERTUDUHAN */}
+                  {resultTab === "charges" && (
+                    <div className="space-y-3">
+                      {result.cadangan_pertuduhan.map((c, idx) => (
+                        <div
+                          key={idx}
+                          className="rounded-xl border border-slate-200 bg-slate-50/40 p-3.5 text-xs"
+                        >
+                          <div className="flex items-center gap-2 font-extrabold text-slate-900">
+                            <Gavel className="h-4 w-4 text-blue-700" />
+                            <span>{c.perihal}</span>
+                          </div>
+                          <div className="mt-2 grid grid-cols-1 gap-1.5 sm:grid-cols-2">
+                            <div>
+                              <span className="font-semibold text-slate-500">Seksyen Kesalahan: </span>
+                              <span className="font-bold text-blue-900">{c.seksyen_kesalahan}</span>
+                            </div>
+                            <div>
+                              <span className="font-semibold text-slate-500">Seksyen Hukuman: </span>
+                              <span className="font-bold text-indigo-900">{c.seksyen_hukuman}</span>
+                            </div>
+                            <div>
+                              <span className="font-semibold text-slate-500">Had Hukuman: </span>
+                              <span className="text-slate-800">{c.hukuman_maksimum}</span>
+                            </div>
+                            <div>
+                              <span className="font-semibold text-slate-500">Status Kompaun: </span>
+                              <span className="font-bold text-emerald-800">{c.boleh_kompaun}</span>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+
+                      {result.templat_ringkas && (
+                        <div className="rounded-xl border border-slate-200 bg-white p-3.5 text-xs">
+                          <div className="font-extrabold text-slate-900">
+                            Rangka Ringkas Pertuduhan / Borang 114
+                          </div>
+                          <p className="mt-1.5 leading-relaxed text-slate-700">
+                            {result.templat_ringkas}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* TAB 3: TEKS ASAL AKTA */}
+                  {resultTab === "statutes" && (
+                    <div className="space-y-2.5">
+                      {result.statutory_citations.length === 0 ? (
+                        <p className="text-xs text-slate-500">
+                          Tiada petikan akta tambahan dilampirkan untuk pertanyaan ini.
+                        </p>
+                      ) : (
+                        result.statutory_citations.map((cit, i) => (
+                          <div
+                            key={i}
+                            className="rounded-xl border border-teal-200 bg-teal-50/25 p-3.5 text-xs text-slate-800"
+                          >
+                            <div className="flex flex-wrap items-center justify-between gap-2">
+                              <div className="font-extrabold text-teal-900">
+                                {cit.section.toLowerCase().includes(cit.akta_code.toLowerCase())
+                                  ? cit.section
+                                  : `${cit.akta_code} — ${cit.section}`}
+                              </div>
+                              {isDevAdmin && cit.doc_id && (
+                                <span className="rounded bg-white px-2 py-0.5 font-mono text-[10px] font-bold text-slate-600 ring-1 ring-slate-200">
+                                  {cit.doc_id}
+                                </span>
+                              )}
+                            </div>
+                            <p className="mt-1.5 whitespace-pre-line leading-relaxed">{cit.text}</p>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+          </section>
+        );
+      })()}
 
       {/* 3. SENARAI SOALAN TELAH DIJAWAB PAKAR (DIKUMPUL DARI SEMUA PENGGUNA & DIKELASKAN MENGIKUT AKTA) */}
       <section

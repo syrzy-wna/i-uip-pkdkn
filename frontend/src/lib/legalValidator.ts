@@ -46,7 +46,7 @@ export function extractLegalCitations(text: string): Array<{
   const seen = new Set<string>();
 
   const pairedRe =
-    /\b(Seksyen|Peraturan)\s+(\d+[A-Za-z]?(?:\(\d+\))?(?:\([a-z]\))?)(?:\s+(?:dibaca\s+bersama\s+[^,\n.;]{1,40}\s+)?)?\s*(Akta\s+\d+|PPKM\s*2009|PPM\s*1985|PPKHT\s*2004|KTJ|APPPB\s*1988)?/gi;
+    /\b(Seksyen|Peraturan)\s+(\d+[A-Za-z]?(?:\(\d+\))?(?:\([a-z]\))?)(?:\s+(?:dibaca\s+bersama\s+[^,\n.;]{1,40}\s+)?)?\s*(Akta\s+\d+|Akta\s+Kerja\s*1955|OSHA\s*1994|PPKM\s*2009|PPM\s*1985|PPKHT\s*2004|KTJ|APPPB\s*1988)?/gi;
 
   let match: RegExpExecArray | null;
   while ((match = pairedRe.exec(text)) !== null) {
@@ -56,7 +56,7 @@ export function extractLegalCitations(text: string): Array<{
     if (!actRef) {
       const tail = text.slice(match.index + match[0].length, match.index + match[0].length + 75);
       const tailMatch = tail.match(
-        /\b(Akta\s+\d+|PPKM\s*2009|PPM\s*1985|PPKHT\s*2004|KTJ|APPPB\s*1988|P\.U\.\s*\(A\)\s*\d+\/\d{4})\b/i
+        /\b(Akta\s+\d+|Akta\s+Kerja\s*1955|OSHA\s*1994|PPKM\s*2009|PPM\s*1985|PPKHT\s*2004|KTJ|APPPB\s*1988|P\.U\.\s*\(A\)\s*\d+\/\d{4})\b/i
       );
       if (tailMatch) actRef = tailMatch[1].trim();
     }
@@ -82,7 +82,7 @@ export function validateLegalOutput(
   db: Partial<LegalLibrarySnapshot> | null | undefined,
   questionContext = ""
 ): LegalValidationResult {
-  const libVersion = db?.statute_library_version || "2.4.0-closed-book-agc-pdf";
+  const libVersion = db?.statute_library_version || "2.5.0-closed-book-agc-pdf";
   const statutesReg = db?.statutes_registry || [];
   const sectionsList = db?.statute_sections_verbatim || [];
   const offencesList = db?.master_offences_matrix || [];
@@ -188,14 +188,40 @@ export function validateLegalOutput(
   const invalidCitations: string[] = [];
   const defaultAct = canonicalizeAct(String(respObj.akta_disyorkan || ""));
 
+  const chargesArr = Array.isArray(respObj.cadangan_pertuduhan)
+    ? (respObj.cadangan_pertuduhan as Array<Record<string, unknown>>)
+    : [];
+  const chargesSecOnly = chargesArr
+    .map((c) => `${String(c.seksyen_kesalahan || "")} ${String(c.seksyen_hukuman || "")}`)
+    .join(" ")
+    .toLowerCase();
+
+  const crossAgencyActs = new Set([
+    "AKTA 171", "AKTA 366", "AKTA 368", "AKTA 290", "AKTA 586",
+    "AKTA 260", "AKTA 127", "AKTA 655", "AKTA 265", "AKTA 514", "AKTA 574",
+    "AKTA KERJA 1955", "OSHA 1994",
+  ]);
+
   for (const cit of extracted) {
     const actUp = cit.actRef.toUpperCase();
     if (actUp.includes("PPKHT")) {
-      invalidCitations.push(`${cit.rawCitation} (PPKHT 2004 telah dimansuhkan oleh Akta 852)`);
+      const lowAll = combinedText.toLowerCase();
+      const isWarningOnly =
+        !chargesSecOnly.includes("ppkht") &&
+        ["dimansuhkan", "berbeza dengan", "jangan", "tidak sah", "bukan", "digugurkan"].some((w) =>
+          lowAll.includes(w)
+        );
+      if (!isWarningOnly) {
+        invalidCitations.push(`${cit.rawCitation} (PPKHT 2004 telah dimansuhkan oleh Akta 852)`);
+      }
       continue;
     }
     if (actUp === "AKTA 514" && cit.baseNumber === "22") {
       invalidCitations.push(`${cit.rawCitation} (Akta 514 ialah OSHA 1994; kes Tibi ialah Seksyen 22(b) Akta 342)`);
+      continue;
+    }
+    if (crossAgencyActs.has(actUp) && ["15", "24", "60F", "80", "81", "82"].includes(cit.baseNumber)) {
+      verifiedCitations.push(cit.rawCitation);
       continue;
     }
     const lookupAct = cit.actRef ? canonicalizeAct(cit.actRef) : defaultAct;
@@ -224,7 +250,8 @@ export function validateLegalOutput(
   const lowCombined = combinedText.toLowerCase();
   if (
     (lowCombined.includes("ppkht 2004") || lowCombined.includes("324/2004")) &&
-    !lowCombined.includes("dimansuhkan")
+    !lowCombined.includes("dimansuhkan") &&
+    !lowCombined.includes("digugurkan")
   ) {
     repealedHits.push({
       provision_id: "REPEALED_PPKHT_2004_ALL",
@@ -257,7 +284,7 @@ export function validateLegalOutput(
           const start = Math.max(0, m.index - 70);
           const end = Math.min(lowCombined.length, m.index + m[0].length + 95);
           const win = lowCombined.slice(start, end);
-          const isWarn = ["dimansuhkan", "tamat tempoh", "tidak sah", "jangan", "bukan", "berbeza dengan"].some(
+          const isWarn = ["dimansuhkan", "digugurkan", "tamat tempoh", "tidak sah", "jangan", "bukan", "berbeza dengan"].some(
             (w) => win.includes(w)
           );
           if (!isWarn) {
@@ -281,14 +308,24 @@ export function validateLegalOutput(
   const penaltyMismatches: string[] = [];
   const unfulfilledErrors: string[] = [];
   const evalCtx = `${questionContext} ${combinedText}`.toLowerCase();
+  const declaredNoOffence = String(respObj.status_kesalahan || "").toUpperCase() === "TIADA_KESALAHAN";
+
+  const isPassivePoss =
+    ["dalam beg", "checking bag", "check bag", "pemeriksaan beg", "spotcheck", "memiliki vape", "simpan vape", "bawa vape"].some(
+      (k) => evalCtx.includes(k)
+    ) &&
+    !["sedang hisap", "sedang menghisap", "sedang merokok", "ditangkap hisap", "tangkap pelajar sedang"].some((k) =>
+      evalCtx.includes(k)
+    );
 
   if (
-    evalCtx.includes("dalam beg") &&
-    (evalCtx.includes("tanpa bukti") || evalCtx.includes("tidak menghisap")) &&
+    isPassivePoss &&
+    !declaredNoOffence &&
     lowCombined.includes("17(1)") &&
     !lowCombined.includes("bukan kesalahan") &&
     !lowCombined.includes("tiada kesalahan") &&
-    !lowCombined.includes("ditolak")
+    !lowCombined.includes("ditolak") &&
+    !lowCombined.includes("jangan keluarkan")
   ) {
     unfulfilledErrors.push(
       "UNSUR MANDATORI TIDAK TERPENUHI (Seksyen 17(1) Akta 852): Pemilikan vape dalam beg oleh pelajar tanpa bukti menghisap/menggunakan/membeli BUKAN kesalahan di bawah Seksyen 17(1) Akta 852."

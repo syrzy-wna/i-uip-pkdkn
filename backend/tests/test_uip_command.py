@@ -2153,3 +2153,205 @@ def test_admin_verification_and_trap_edits_persist_across_library_restart() -> N
         db.delete_legal_admin_override("OFFENCE", "AKTA_154_S13_1")
         lib._bootstrap_library(force_rebuild=True)
 
+
+def test_two_branch_advisor_vape_checking_bag_vs_smoking_and_corrupt_cache_purge() -> None:
+    """
+    Sahkan Rombakan Aliran Keputusan 2-Cabang & 4 Pembaikan Pepijat Kritikal:
+    1. Cabang A (`TIADA_KESALAHAN`): 'Guru maklum PPKP ada pelajar memiliki vape semasa checking bag'
+       - status_kesalahan == 'TIADA_KESALAHAN'
+       - Terangkan sebab tidak menyalahi S.17(1) Akta 852
+       - Cadangkan langkah susulan (serah sekolah/KPM + bukti tambahan S.13(1) / S.13(3))
+       - TIADA Seksyen 2 (Tafsiran) / Akta 171 / Akta 281 / PPKM 2009 / unsur palsu TERPENUHI
+    2. Cabang B (`ADA_KESALAHAN`): 'Guru tangkap pelajar sedang hisap vape dalam tandas sekolah'
+       - status_kesalahan == 'ADA_KESALAHAN'
+       - Punca Kuasa lengkap: Seksyen 17(1) Akta 852 + peringatan Akta 611
+       - Cadangan tindakan segera, SOP lapangan bernombor, barang bukti wajib, dan teks verbatim sah
+       - TIADA Akta 171 / PPKM 2009 / Seksyen 2 (Tafsiran)
+    3. Sekat & Bersihkan Cache Rosak:
+       - Rekod lama/rosak 'Seksyen 2 — Tafsiran' / 'rag_custom_query' disorok daripada Koleksi Q&A
+         dan dipadamkan dari DB semasa startup (`_init_schema()`).
+    """
+    import uuid
+    from backend.core.database import get_uip_db
+
+    headers = _get_auth_headers()
+    db = get_uip_db()
+
+    # ------------------------------------------------------------------
+    # CABANG A: TIADA_KESALAHAN (Pelajar memiliki vape semasa checking bag)
+    # ------------------------------------------------------------------
+    resp_bag = client.post(
+        "/api/advisor/consult",
+        headers=headers,
+        json={
+            "question": "Guru maklum PPKP ada pelajar memiliki vape semasa checking bag",
+            "akta_hint": "Semua",
+            "use_ai": False,
+        },
+    )
+    assert resp_bag.status_code == 200
+    bag = resp_bag.json()
+    assert bag["status_kesalahan"] == "TIADA_KESALAHAN"
+    assert bag["tajuk_nasihat"] == "TIADA KESALAHAN DI BAWAH AKTA 852"
+    assert bag["sesuai_buka_ip"] is False
+    assert bag["cadangan_pertuduhan"] == []
+    assert bag["ringkasan_keputusan"]
+    assert "17(1)" in (bag.get("sebab_tidak_menyalahi") or "")
+    assert "PPKHT 2004" in (bag.get("sebab_tidak_menyalahi") or "")
+
+    follow_ups_text = " ".join(bag.get("langkah_susulan_ppkp") or [])
+    assert "sekolah" in follow_ups_text.lower() or "kpm" in follow_ups_text.lower()
+    assert "13(1)" in follow_ups_text
+    assert "13(3)" in follow_ups_text
+
+    # Pastikan TIADA Akta 171 / Akta 281 / PPKM 2009 / Seksyen 2 (Tafsiran) bocor ke respons
+    bag_serialized = json.dumps(bag, ensure_ascii=False)
+    assert "Akta 171" not in bag_serialized
+    assert "PPKM 2009" not in bag_serialized
+    assert "PPKM_2009" not in bag_serialized
+    assert "Akta 281" not in bag_serialized
+    for cit in bag.get("statutory_citations") or []:
+        assert "tafsiran" not in str(cit.get("section") or "").lower()
+        assert str(cit.get("statute_id") or "").startswith(("AKTA_852", "AKTA_611"))
+
+    # Penilaian unsur mesti 1-2 seksyen Akta 852 relevan sahaja dan TIADA unsur palsu TERPENUHI
+    bag_evals = bag.get("element_evaluations") or []
+    assert 1 <= len(bag_evals) <= 2
+    for ev in bag_evals:
+        assert str(ev.get("offence_id") or "").startswith("AKTA_852")
+        assert ev.get("action_blocked") is True
+        assert ev.get("all_elements_satisfied") is False
+        assert any(
+            el.get("status") == "TIDAK TERPENUHI"
+            for el in (ev.get("element_evaluations") or [])
+        )
+        assert not any(
+            el.get("status") == "TERPENUHI"
+            for el in (ev.get("element_evaluations") or [])
+        )
+    assert bag["legal_validation"]["passed"] is True
+
+    # ------------------------------------------------------------------
+    # CABANG B: ADA_KESALAHAN (Pelajar ditangkap sedang hisap vape)
+    # ------------------------------------------------------------------
+    resp_smoke = client.post(
+        "/api/advisor/consult",
+        headers=headers,
+        json={
+            "question": "Guru tangkap pelajar sedang hisap vape dalam tandas sekolah",
+            "akta_hint": "Semua",
+            "use_ai": False,
+        },
+    )
+    assert resp_smoke.status_code == 200
+    smoke = resp_smoke.json()
+    assert smoke["status_kesalahan"] == "ADA_KESALAHAN"
+    assert smoke["akta_disyorkan"] == "Akta 852"
+
+    punca = smoke.get("punca_kuasa") or {}
+    assert "17(1)" in str(punca.get("seksyen_kesalahan") or "")
+    assert "852" in str(punca.get("seksyen_kesalahan") or "")
+    assert "17(2)" in str(punca.get("seksyen_hukuman") or "")
+    assert punca.get("kuasa_penguatkuasaan")
+    assert "Akta 611" in str(punca.get("peringatan_akta_611") or "")
+
+    assert smoke.get("ringkasan_keputusan")
+    assert len(smoke.get("sop_lapangan") or []) >= 4
+    assert len(smoke.get("eksibit_wajib") or []) >= 3
+    assert len(smoke.get("cadangan_pertuduhan") or []) >= 1
+    assert any("17(1)" in c.get("seksyen_kesalahan", "") for c in smoke["cadangan_pertuduhan"])
+
+    # Pastikan TIADA Akta 171 / Akta 281 / PPKM 2009 / Seksyen 2 (Tafsiran) dalam jawapan vape
+    smoke_serialized = json.dumps(smoke, ensure_ascii=False)
+    assert "Akta 171" not in smoke_serialized
+    assert "PPKM 2009" not in smoke_serialized
+    assert "PPKM_2009" not in smoke_serialized
+    assert "Akta 281" not in smoke_serialized
+    smoke_doc_ids = {c.get("doc_id") for c in (smoke.get("statutory_citations") or [])}
+    assert "AKTA_852__S17" in smoke_doc_ids
+    assert "AKTA_611__S83" in smoke_doc_ids
+    for cit in smoke.get("statutory_citations") or []:
+        assert "tafsiran" not in str(cit.get("section") or "").lower()
+    assert smoke["legal_validation"]["passed"] is True
+
+    # Pastikan cache Q&A tidak mencampurkan soalan memiliki vape dengan soalan hisap vape
+    assert smoke.get("matched_collection_id") != bag.get("matched_collection_id") or (
+        smoke.get("from_qa_collection") is False
+    )
+
+    # ------------------------------------------------------------------
+    # SEMAKAN PEMBERSIHAN CACHE ROSAK ('Seksyen 2 — Tafsiran')
+    # ------------------------------------------------------------------
+    corrupt_tag = f"corruptsec2{uuid.uuid4().hex[:6]}"
+    corrupt_id = f"arc-corrupt-{uuid.uuid4().hex[:8]}"
+    corrupt_analysis = {
+        "scenario_id": "rag_custom_query",
+        "akta_disyorkan": "Akta 852",
+        "tajuk_nasihat": f"Rujukan Statutori UIP Mengikut Situasi Soalan ({corrupt_tag})",
+        "keputusan_tindakan": "SEMAK AKTA",
+        "sesuai_buka_ip": False,
+        "alasan_keputusan": "Fallback rosak.",
+        "cadangan_pertuduhan": [
+            {
+                "perihal": "Tafsiran",
+                "seksyen_kesalahan": "Seksyen 2 — Tafsiran",
+                "seksyen_hukuman": "Seksyen 2",
+                "hukuman_maksimum": "-",
+                "boleh_kompaun": "-",
+            }
+        ],
+        "sop_lapangan": ["Langkah 1"],
+        "eksibit_wajib": ["Bukti 1"],
+        "perangkap_kesilapan": [],
+        "templat_ringkas": "",
+        "statute_library_version": "2.5.0-closed-book-agc-pdf",
+        "is_fallback_response": True,
+    }
+    with db._connect() as conn:
+        conn.execute(
+            """
+            INSERT INTO dev_archive_records (
+                id, category, action_type, endpoint, user_email, user_name,
+                akta_utama, title, preview_text, redacted_input_text,
+                redacted_response_text, request_json, redacted_analysis_json,
+                model_used, is_cloud_api, status_summary, created_at
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            (
+                corrupt_id,
+                "ADVISOR_QA",
+                "TANYA_PAKAR_UIP",
+                "/api/advisor/consult",
+                "corrupt@moh.gov.my",
+                "Pegawai Ujian",
+                "Akta 852",
+                f"Soalan Rosak {corrupt_tag}",
+                f"Soalan Rosak {corrupt_tag}",
+                f"pelajar memiliki vape {corrupt_tag}",
+                "Seksyen 2 — Tafsiran",
+                json.dumps({"question": f"pelajar memiliki vape {corrupt_tag}"}),
+                json.dumps(corrupt_analysis, ensure_ascii=False),
+                "rag-fallback",
+                0,
+                "FALLBACK",
+                "2026-01-01 08:00:00",
+            ),
+        )
+        conn.commit()
+
+    # 1. Endpoint /api/advisor/answered WAJIB menyembunyikan rekod rosak ini serta-merta
+    ans_check = client.get("/api/advisor/answered", headers=headers, params={"q": corrupt_tag})
+    assert ans_check.status_code == 200
+    assert ans_check.json()["items"] == []
+
+    # 2. _init_schema() (startup produksi) WAJIB memadamkan rekod rosak dari DB
+    db._init_schema()
+    with db._connect() as conn:
+        remaining = conn.execute(
+            "SELECT COUNT(*) AS cnt FROM dev_archive_records WHERE id = ?",
+            (corrupt_id,),
+        ).fetchone()
+    assert int(remaining["cnt"]) == 0
+
+

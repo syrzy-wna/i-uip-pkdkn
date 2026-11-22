@@ -536,13 +536,29 @@ export interface LegalLibrarySnapshot {
   repealed_and_blocked_provisions: RepealedProvisionRecord[];
 }
 
+export interface AdvisorPuncaKuasa {
+  akta: string;
+  seksyen_kesalahan: string;
+  seksyen_hukuman: string;
+  had_hukuman: string;
+  status_kompaun: string;
+  boleh_kompaun_flag: boolean;
+  kuasa_penguatkuasaan: string;
+  peringatan_akta_611?: string | null;
+}
+
 export interface AdvisorConsultResult {
   scenario_id: string;
+  status_kesalahan?: "TIADA_KESALAHAN" | "ADA_KESALAHAN";
   akta_disyorkan: string;
   tajuk_nasihat: string;
+  ringkasan_keputusan?: string;
   keputusan_tindakan: string;
   sesuai_buka_ip: boolean;
   alasan_keputusan: string;
+  sebab_tidak_menyalahi?: string;
+  langkah_susulan_ppkp?: string[];
+  punca_kuasa?: AdvisorPuncaKuasa | null;
   cadangan_pertuduhan: AdvisorChargeItem[];
   sop_lapangan: string[];
   eksibit_wajib: string[];
@@ -561,6 +577,7 @@ export interface AdvisorConsultResult {
   statute_library_version?: string;
   cache_status?: "ACTIVE" | "STALE" | string;
   unindexed_statute?: boolean;
+  is_fallback_response?: boolean;
   element_evaluations?: OffenceElementEvaluation[];
   repealed_warnings?: RepealedProvisionHit[];
   legal_validation?: LegalValidationResult | null;

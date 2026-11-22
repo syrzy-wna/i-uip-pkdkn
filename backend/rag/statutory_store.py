@@ -603,7 +603,25 @@ class StatutoryRAGStore:
         if norm_filter in ("", "semua", "all"):
             norm_filter = ""
 
+        q_low = (query or "").lower()
+        asks_definition = any(
+            k in q_low for k in ("tafsiran", "definisi", "maksud ", "seksyen 2", "sek. 2", "s.2 ")
+        )
+        has_minor_signal = any(
+            k in q_low for k in ("pelajar", "murid", "budak", "sekolah", "obd", "bawah 18", "bawah umur", "kanak-kanak")
+        )
         domain_act, domain_expansions = (None, []) if norm_filter else self._infer_domain_signals(query)
+
+        # Jika isyarat domain tunggal jelas (cth: vape/rokok -> Akta 852), kunci penapisan supaya Akta 171 / Akta 281 tidak bocor
+        locked_acts: Optional[set[str]] = None
+        if domain_act:
+            from backend.rag.legal_engine import canonical_akta_code_for_statute, infer_domain_statute_ids
+
+            dom_sids = infer_domain_statute_ids(query, "Semua")
+            if dom_sids:
+                locked_acts = {canonical_akta_code_for_statute(s) for s in dom_sids}
+                if domain_act == "Akta 852" and has_minor_signal:
+                    locked_acts.add("Akta 611")
 
         chroma_scores: Dict[str, float] = {}
         if self._collection is not None:
@@ -617,6 +635,8 @@ class StatutoryRAGStore:
                     }
                     if len(matched_codes) == 1:
                         where_clause = {"akta_code": next(iter(matched_codes))}
+                elif locked_acts and len(locked_acts) == 1:
+                    where_clause = {"akta_code": next(iter(locked_acts))}
                 res = self._collection.query(
                     query_texts=[_normalize_query_text(query)],
                     n_results=min(max(top_k * 3, 8), len(self._chunks)),
@@ -640,8 +660,19 @@ class StatutoryRAGStore:
         for chunk in self._chunks:
             if norm_filter:
                 haystack_meta = f"{chunk.akta_code} {chunk.akta_title} {chunk.source_file}".lower()
-                if norm_filter not in haystack_meta:
+                if norm_filter not in haystack_meta and not (
+                    "852" in norm_filter and has_minor_signal and chunk.akta_code == "Akta 611"
+                ):
                     continue
+            elif locked_acts is not None and chunk.akta_code not in locked_acts:
+                continue
+
+            sec_low = chunk.section.lower()
+            if not asks_definition and any(
+                m in sec_low
+                for m in ("tafsiran", "tajuk ringkas", "permulaan kuat kuasa", "interpretation", "short title")
+            ):
+                continue
 
             c_cnt = self._chunk_counters.get(chunk.chunk_id, Counter())
             doc_len = self._chunk_lengths.get(chunk.chunk_id, 1)
@@ -665,7 +696,6 @@ class StatutoryRAGStore:
                 bm25 += 0.45 * idf * ((tf * (k1 + 1.0)) / denom)
 
             # Bonus padanan nombor seksyen atau Peraturan tepat
-            sec_low = chunk.section.lower()
             for qt in unique_q_tokens:
                 if qt in sec_low and (qt.isdigit() or "90a" in qt or "32b" in qt or "112" in qt):
                     bm25 += 3.0

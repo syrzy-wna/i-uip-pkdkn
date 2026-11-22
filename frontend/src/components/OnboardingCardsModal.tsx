@@ -368,7 +368,7 @@ export default function OnboardingCardsModal({
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#9e1b32]" />
-                    <span>Terima seksyen caj tepat, bukti kritikal di lokasi &amp; langkah SOP serta-merta.</span>
+                    <span>Terima seksyen kesalahan tepat, bukti kritikal di lokasi &amp; langkah SOP serta-merta.</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#9e1b32]" />

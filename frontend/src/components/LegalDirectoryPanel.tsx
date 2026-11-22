@@ -22,10 +22,11 @@ import {
   Save,
   Scale,
   Search,
-  ShieldAlert,
   ShieldCheck,
+  SlidersHorizontal,
   Trash2,
   WifiOff,
+  X,
 } from "lucide-react";
 import {
   fetchLegalRegistry,
@@ -58,13 +59,19 @@ type DirectorySubTab = "offences" | "statutes" | "repealed" | "admin";
 
 const OFFENDER_CATEGORY_LABELS: Record<TargetOffenderCategory | "SEMUA", string> = {
   SEMUA: "Semua Kategori Pelaku",
-  INDIVIDU: "Individu Dewasa",
-  OBD_BAWAH_18: "Orang Belum Dewasa (OBD < 18 Tahun)",
-  PERTUBUHAN_PERBADANAN: "Pertubuhan Perbadanan / Syarikat (Sdn. Bhd.)",
+  INDIVIDU: "Individu",
+  OBD_BAWAH_18: "Bawah 18 Tahun (OBD)",
+  PERTUBUHAN_PERBADANAN: "Syarikat",
   PENGENDALI_MAKANAN: "Pengendali Makanan",
-  TUAN_PUNYA_PREMIS: "Tuan Punya / Penghuni Premis",
-  PENJUAL_PENGILANG: "Penjual / Pengilang / Pengimport",
+  TUAN_PUNYA_PREMIS: "Pemilik Premis",
+  PENJUAL_PENGILANG: "Penjual / Pengilang",
 };
+
+function formatOffenderLabel(raw?: string | null): string {
+  if (!raw) return "Individu";
+  const key = raw.trim().toUpperCase() as TargetOffenderCategory | "SEMUA";
+  return OFFENDER_CATEGORY_LABELS[key] || raw.replace(/_/g, " ");
+}
 
 const CORE_STATUTE_FILE_GUIDE = [
   {
@@ -213,11 +220,20 @@ export default function LegalDirectoryPanel({
   const [offenceSearch, setOffenceSearch] = useState<string>("");
   const [selectedOffenceId, setSelectedOffenceId] = useState<string>("");
   const [copiedCharge, setCopiedCharge] = useState<boolean>(false);
+  const [showMobileFilters, setShowMobileFilters] = useState<boolean>(false);
+  const [mobileOffenceDrawerOpen, setMobileOffenceDrawerOpen] = useState<boolean>(false);
+  const [mobileSectionDrawerOpen, setMobileSectionDrawerOpen] = useState<boolean>(false);
 
   // Tapisan Pustaka Akta Verbatim
   const [selectedStatuteId, setSelectedStatuteId] = useState<string>("AKTA_852");
   const [sectionSearch, setSectionSearch] = useState<string>("");
   const [selectedDocId, setSelectedDocId] = useState<string>("");
+
+  useEffect(() => {
+    if (!isDevAdmin && subTab === "admin") {
+      setSubTab("offences");
+    }
+  }, [isDevAdmin, subTab]);
 
   // Borang Admin: Muat Naik Warta PDF & Sunting Pengecualian
   const [uploadFile, setUploadFile] = useState<File | null>(null);
@@ -535,42 +551,330 @@ export default function LegalDirectoryPanel({
     }
   };
 
+  const activeFilterCount =
+    (aktaFilter !== "Semua" ? 1 : 0) +
+    (categoryFilter !== "SEMUA" ? 1 : 0) +
+    (compoundFilter !== "SEMUA" ? 1 : 0);
+
+  const unverifiedOffencesCount = useMemo(
+    () =>
+      (snapshot?.master_offences_matrix || []).filter(
+        (o) => o.verified_status !== "VERIFIED_AGC"
+      ).length,
+    [snapshot]
+  );
+
+  const renderOffenceDetailContent = (off: MasterOffenceRecord) => {
+    const isComp = Boolean(off.compound_info?.is_compoundable);
+    return (
+      <div className="space-y-4">
+        {/* Header Kesalahan & Butang Tindakan */}
+        <div className="flex flex-wrap items-start justify-between gap-3 border-b border-slate-200 pb-4">
+          <div className="space-y-1.5">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="rounded-md bg-[#0f2744] px-2.5 py-0.5 text-xs font-extrabold text-white">
+                {off.canonical_akta_code || off.statute_id}
+              </span>
+              <span
+                className={`rounded-full px-2.5 py-0.5 text-[11px] font-extrabold ${
+                  isComp
+                    ? "bg-emerald-100 text-emerald-900"
+                    : "bg-amber-100 text-amber-950"
+                }`}
+              >
+                {isComp ? "Boleh Kompaun" : "Terus Mahkamah"}
+              </span>
+              <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-[11px] font-bold text-slate-700">
+                {formatOffenderLabel(off.target_offender)}
+              </span>
+              {isDevAdmin && (
+                <span className="rounded bg-slate-100 px-2 py-0.5 font-mono text-[10px] font-bold text-slate-600">
+                  {off.offence_id}
+                </span>
+              )}
+            </div>
+            <h3 className="text-base font-extrabold text-slate-900">{off.offence_title}</h3>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                setMobileOffenceDrawerOpen(false);
+                onApplyOffenceToCase(
+                  off.charge_sheet_template_bm,
+                  off.canonical_akta_code || "Akta 852",
+                  true
+                );
+              }}
+              className="inline-flex min-h-[38px] items-center gap-1.5 rounded-xl bg-blue-600 px-3.5 py-2 text-xs font-extrabold text-white shadow-sm hover:bg-blue-700"
+            >
+              <FileText className="h-4 w-4" />
+              Buka di Editor Fail IP
+            </button>
+
+            {isComp && (
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileOffenceDrawerOpen(false);
+                  onApplyOffenceToCase(
+                    off.charge_sheet_template_bm,
+                    off.canonical_akta_code || "Akta 852",
+                    false
+                  );
+                }}
+                className="inline-flex min-h-[38px] items-center gap-1.5 rounded-xl bg-emerald-600 px-3.5 py-2 text-xs font-extrabold text-white shadow-sm hover:bg-emerald-700"
+              >
+                <FileCheck2 className="h-4 w-4" />
+                Isi Notis Kompaun
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* 1. Ringkasan Seksyen, Denda & Kompaun */}
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <div className="rounded-xl border border-blue-200 bg-blue-50/40 p-3.5 text-xs">
+            <div className="text-[11px] font-extrabold uppercase text-blue-900">
+              Seksyen Kesalahan &amp; Hukuman
+            </div>
+            <div className="mt-1 font-extrabold text-slate-900">
+              Seksyen Kesalahan: {off.offence_section}
+            </div>
+            <div className="mt-1 font-bold text-indigo-900">
+              Hukuman: {off.penalty_section}
+            </div>
+            <div className="mt-1 text-slate-700">
+              {off.penalty_first_offence?.verbatim_penalty}
+            </div>
+          </div>
+
+          <div className="rounded-xl border border-emerald-200 bg-emerald-50/40 p-3.5 text-xs">
+            <div className="text-[11px] font-extrabold uppercase text-emerald-900">
+              Had Denda &amp; Status Kompaun
+            </div>
+            <div className="mt-1 font-extrabold text-slate-900">
+              {isComp ? "Boleh Kompaun" : "Terus Mahkamah (Buka IP)"}
+            </div>
+            <div className="mt-1 text-slate-700">
+              <strong>Punca Kuasa Kompaun:</strong>{" "}
+              {off.compound_info?.compound_authority_section ||
+                off.compound_info?.compound_regulation_ref ||
+                "Tiada Kompaun"}
+            </div>
+            <div className="mt-1 text-slate-700">
+              <strong>Denda Maksimum:</strong>{" "}
+              {off.penalty_first_offence?.max_fine_rm
+                ? `RM ${off.penalty_first_offence.max_fine_rm.toLocaleString("en-MY")}`
+                : "-"}{" "}
+              • <strong>Kompaun:</strong>{" "}
+              {off.compound_info?.compound_amount_or_limit || "Tiada Kompaun"}
+            </div>
+          </div>
+        </div>
+
+        {/* 2. Perkara Wajib Dibuktikan */}
+        <div className="space-y-2 rounded-xl border border-slate-200 bg-slate-50/50 p-4">
+          <h4 className="flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wide text-slate-900">
+            <CheckCircle2 className="h-4 w-4 text-blue-700" />
+            Perkara Wajib Dibuktikan
+          </h4>
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse text-left text-xs">
+              <thead>
+                <tr className="border-b border-slate-200 text-[11px] font-extrabold uppercase text-slate-600">
+                  <th className="py-2 pr-3">Bil</th>
+                  <th className="py-2 pr-3">Perkara Wajib Dibuktikan</th>
+                  <th className="py-2">Bukti Di Lokasi</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-200/70">
+                {off.mandatory_elements.map((el) => (
+                  <tr key={el.element_no}>
+                    <td className="py-2 pr-3 font-mono font-bold text-blue-900">
+                      {el.element_no}
+                    </td>
+                    <td className="py-2 pr-3 font-medium text-slate-800">{el.description}</td>
+                    <td className="py-2 text-[11px] text-slate-600">{el.must_prove}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* 3. Elak Kesilapan Biasa PPKP */}
+        <div className="space-y-2 rounded-xl border border-amber-200 border-l-4 border-l-amber-500 bg-amber-50/40 p-4">
+          <div className="flex items-center justify-between gap-2">
+            <h4 className="flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wide text-amber-950">
+              <AlertTriangle className="h-4 w-4 text-amber-700" />
+              Elak Kesilapan Biasa PPKP &amp; Pengecualian
+            </h4>
+            {isDevAdmin && (
+              <button
+                type="button"
+                onClick={() => {
+                  setEditingOffenceId(off.offence_id);
+                  setEditingExclusionsText(off.explicit_exclusions_and_traps.join("\n"));
+                }}
+                className="inline-flex items-center gap-1 rounded-lg border border-amber-300 bg-white px-2.5 py-1 text-[11px] font-bold text-amber-950 hover:bg-amber-100"
+              >
+                <Edit3 className="h-3 w-3" />
+                Sunting
+              </button>
+            )}
+          </div>
+
+          {isDevAdmin && editingOffenceId === off.offence_id ? (
+            <div className="space-y-2 pt-1">
+              <textarea
+                rows={4}
+                value={editingExclusionsText}
+                onChange={(e) => setEditingExclusionsText(e.target.value)}
+                className="w-full rounded-xl border border-amber-300 bg-white p-2.5 text-xs text-slate-900"
+                placeholder="Satu pengecualian / perangkap setiap baris..."
+              />
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  disabled={savingOffenceEdit}
+                  onClick={() => void handleSaveOffenceExclusions(off.offence_id)}
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-amber-700 px-3 py-1.5 text-xs font-extrabold text-white hover:bg-amber-800"
+                >
+                  <Save className="h-3.5 w-3.5" />
+                  {savingOffenceEdit ? "Menyimpan..." : "Simpan & Sahkan Warta"}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setEditingOffenceId(null)}
+                  className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-bold text-slate-700"
+                >
+                  Batal
+                </button>
+              </div>
+            </div>
+          ) : (
+            <ul className="space-y-1.5 text-xs text-amber-950">
+              {off.explicit_exclusions_and_traps.map((trap, i) => (
+                <li key={i} className="flex items-start gap-2">
+                  <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-amber-600" />
+                  <span>{trap}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+
+        {/* 4. Barang Bukti Wajib & Draf Pertuduhan Borang 114 */}
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <div className="rounded-xl border border-slate-200 bg-white p-3.5 text-xs">
+            <h4 className="font-extrabold text-slate-900">Barang Bukti &amp; Borang Wajib</h4>
+            <ul className="mt-2 list-disc space-y-1.5 pl-4 text-slate-700">
+              {off.mandatory_exhibits.map((ex, i) => (
+                <li key={i}>{ex}</li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="rounded-xl border border-slate-200 bg-slate-50 p-3.5 text-xs">
+            <div className="flex items-center justify-between gap-2">
+              <h4 className="font-extrabold text-slate-900">Draf Pertuduhan (Borang 114)</h4>
+              <button
+                type="button"
+                onClick={() => handleCopyChargeTemplate(off.charge_sheet_template_bm)}
+                className="inline-flex items-center gap-1 rounded border border-slate-300 bg-white px-2 py-1 text-[11px] font-bold text-slate-700 hover:bg-slate-100"
+              >
+                {copiedCharge ? (
+                  <ClipboardCheck className="h-3.5 w-3.5 text-emerald-600" />
+                ) : (
+                  <Copy className="h-3.5 w-3.5" />
+                )}
+                {copiedCharge ? "Disalin!" : "Salin"}
+              </button>
+            </div>
+            <p className="mt-2 rounded-lg border border-slate-200 bg-white p-2.5 text-[11px] leading-relaxed text-slate-800">
+              {off.charge_sheet_template_bm}
+            </p>
+          </div>
+        </div>
+
+        {/* 5. Teks Asal Akta */}
+        <div className="space-y-2 rounded-xl border border-teal-200 bg-teal-50/30 p-4">
+          <h4 className="flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wide text-teal-950">
+            <BookOpen className="h-4 w-4 text-teal-700" />
+            Teks Asal Akta (Warta Kerajaan)
+          </h4>
+
+          {linkedVerbatimForActiveOffence.length === 0 ? (
+            <p className="text-xs text-slate-600">Tiada petikan seksyen dipautkan untuk rekod ini.</p>
+          ) : (
+            <div className="space-y-2.5">
+              {linkedVerbatimForActiveOffence.map((sec) => (
+                <div
+                  key={sec.doc_id}
+                  className="rounded-lg border border-teal-200/80 bg-white p-3 text-xs"
+                >
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <span className="font-extrabold text-teal-900">
+                      Seksyen {sec.section_code} — {sec.section_heading}
+                    </span>
+                    {isDevAdmin && (
+                      <span className="rounded bg-slate-100 px-2 py-0.5 font-mono text-[10px] font-bold text-slate-600">
+                        {sec.doc_id}
+                      </span>
+                    )}
+                  </div>
+                  <p className="mt-1.5 whitespace-pre-line leading-relaxed text-slate-800">
+                    {sec.verbatim_text_bm}
+                  </p>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="mx-auto max-w-[1600px] space-y-4">
-      {/* Header Utama Direktori Kesalahan & Pustaka Akta Verbatim */}
+      {/* Header Utama Direktori Akta & Kesalahan */}
       <section className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="flex items-start gap-3">
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#0f2744] text-amber-300 shadow-sm">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#0f2744] text-amber-300 shadow-sm">
               <Scale className="h-5 w-5" />
             </div>
             <div>
               <div className="flex flex-wrap items-center gap-2">
                 <h2 className="text-base font-extrabold text-slate-900 sm:text-lg">
-                  Direktori Kesalahan &amp; Pustaka Akta Penuh (Zero-Hallucination Legal Engine)
+                  Direktori Akta &amp; Kesalahan
                 </h2>
-                <span className="inline-flex items-center gap-1 rounded-full border border-emerald-300 bg-emerald-50 px-2.5 py-0.5 text-[11px] font-extrabold text-emerald-900">
-                  <ShieldCheck className="h-3.5 w-3.5 text-emerald-700" />
-                  Closed-Book Verbatim AGC • {snapshot?.statute_library_version || "v2"}
-                </span>
+                {isDevAdmin && (
+                  <span className="inline-flex items-center gap-1 rounded-full border border-emerald-300 bg-emerald-50 px-2.5 py-0.5 text-[10px] font-extrabold text-emerald-900">
+                    <ShieldCheck className="h-3 w-3 text-emerald-700" />
+                    {snapshot?.statute_library_version || "v2.5"}
+                  </span>
+                )}
                 {offlineMode && (
                   <span className="inline-flex items-center gap-1 rounded-full border border-amber-300 bg-amber-50 px-2.5 py-0.5 text-[11px] font-bold text-amber-900">
-                    <WifiOff className="h-3 w-3" /> Mod Cache Luar Talian
+                    <WifiOff className="h-3 w-3" /> Mod Luar Talian
                   </span>
                 )}
               </div>
-              <p className="mt-1 text-xs text-slate-600">
-                Rujukan terus teks verbatim Warta Kerajaan Persekutuan (AGC), jadual unsur mandatori setiap kesalahan, pengecualian undang-undang, dan senarai hitam peruntukan terbatal.
+              <p className="mt-0.5 text-xs text-slate-600">
+                Rujukan pantas senarai kesalahan, had kompaun, perkara wajib dibuktikan dan teks asal akta KKM.
               </p>
             </div>
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
-            <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-bold text-slate-700">
+            <div className="hidden items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-bold text-slate-700 sm:flex">
               <Database className="h-3.5 w-3.5 text-blue-700" />
-              <span>{snapshot?.statute_sections_verbatim.length ?? 0} Seksyen Verbatim</span>
+              <span>{snapshot?.master_offences_matrix.length ?? 0} Kesalahan</span>
               <span>•</span>
-              <span>{snapshot?.master_offences_matrix.length ?? 0} Jadual Kesalahan</span>
+              <span>{snapshot?.statute_sections_verbatim.length ?? 0} Seksyen</span>
             </div>
 
             <button
@@ -585,7 +889,7 @@ export default function LegalDirectoryPanel({
           </div>
         </div>
 
-        {/* Bar Navigasi Sub-Tab */}
+        {/* Bar Navigasi Sub-Tab Ringkas (Tab Admin Warta HANYA untuk Admin) */}
         <div className="mt-4 flex flex-wrap gap-1.5 border-t border-slate-200 pt-3">
           <button
             type="button"
@@ -597,7 +901,7 @@ export default function LegalDirectoryPanel({
             }`}
           >
             <Gavel className="h-4 w-4 text-amber-300" />
-            <span>1. Direktori Semua Kesalahan ({snapshot?.master_offences_matrix.length ?? 0})</span>
+            <span>Senarai Kesalahan ({snapshot?.master_offences_matrix.length ?? 0})</span>
           </button>
 
           <button
@@ -610,7 +914,7 @@ export default function LegalDirectoryPanel({
             }`}
           >
             <BookOpen className="h-4 w-4 text-sky-300" />
-            <span>2. Pustaka Akta Verbatim ({snapshot?.statutes_registry.length ?? 0} Akta/Peraturan)</span>
+            <span>Teks Penuh Akta ({snapshot?.statutes_registry.length ?? 0})</span>
           </button>
 
           <button
@@ -624,24 +928,24 @@ export default function LegalDirectoryPanel({
           >
             <Ban className="h-4 w-4" />
             <span>
-              3. Senarai Hitam Undang-Undang Lapuk ({snapshot?.repealed_and_blocked_provisions.length ?? 0})
+              Akta Dimansuhkan ({snapshot?.repealed_and_blocked_provisions.length ?? 0})
             </span>
           </button>
 
-          <button
-            type="button"
-            onClick={() => setSubTab("admin")}
-            className={`inline-flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-extrabold transition ${
-              subTab === "admin"
-                ? "bg-indigo-700 text-white shadow-sm"
-                : "bg-indigo-50 text-indigo-900 hover:bg-indigo-100"
-            }`}
-          >
-            <FileUp className="h-4 w-4" />
-            <span>
-              4. Pustaka Akta &amp; Semakan Kesalahan {isDevAdmin ? "(Admin)" : "(Audit Liputan)"}
-            </span>
-          </button>
+          {isDevAdmin && (
+            <button
+              type="button"
+              onClick={() => setSubTab("admin")}
+              className={`inline-flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-extrabold transition ${
+                subTab === "admin"
+                  ? "bg-indigo-700 text-white shadow-sm"
+                  : "bg-indigo-50 text-indigo-900 hover:bg-indigo-100"
+              }`}
+            >
+              <FileUp className="h-4 w-4" />
+              <span>Admin Warta</span>
+            </button>
+          )}
         </div>
       </section>
 
@@ -671,21 +975,57 @@ export default function LegalDirectoryPanel({
       {loading && !snapshot ? (
         <div className="flex items-center justify-center rounded-2xl border border-slate-200 bg-white p-12 text-xs font-bold text-slate-600">
           <Loader2 className="mr-2 h-5 w-5 animate-spin text-blue-700" />
-          Memuatkan Pustaka Akta Verbatim &amp; Jadual Induk Kesalahan...
+          Memuatkan Direktori Akta &amp; Kesalahan...
         </div>
       ) : null}
 
       {/* ===================================================================== */}
-      {/* SUB-TAB 1: DIREKTORI SEMUA KESALAHAN (MASTER OFFENCES MATRIX)         */}
+      {/* SUB-TAB 1: SENARAI KESALAHAN                                          */}
       {/* ===================================================================== */}
       {subTab === "offences" && snapshot && (
         <div className="space-y-4">
-          {/* Bar Tapisan & Carian Kesalahan */}
-          <section className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-            <div className="grid grid-cols-1 gap-3 md:grid-cols-4">
+          {/* Bar Carian + Butang Tapis (Mesra Telefon & Desktop) */}
+          <section className="rounded-2xl border border-slate-200 bg-white p-3.5 shadow-sm sm:p-4">
+            {/* Baris Utama: Carian + Butang Tapis pada telefon */}
+            <div className="flex items-center gap-2 md:hidden">
+              <div className="relative flex-1">
+                <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                <input
+                  type="text"
+                  value={offenceSearch}
+                  onChange={(e) => setOffenceSearch(e.target.value)}
+                  placeholder="Cari seksyen, kesalahan atau kata kunci..."
+                  className="w-full rounded-xl border border-slate-300 bg-slate-50/70 py-2.5 pl-9 pr-3 text-sm text-slate-900 focus:border-blue-600 focus:bg-white focus:outline-none"
+                />
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowMobileFilters((v) => !v)}
+                className={`inline-flex min-h-[42px] shrink-0 items-center gap-1.5 rounded-xl border px-3.5 py-2 text-xs font-extrabold transition ${
+                  showMobileFilters || activeFilterCount > 0
+                    ? "border-[#0f2744] bg-[#0f2744] text-white"
+                    : "border-slate-300 bg-white text-slate-700"
+                }`}
+              >
+                <SlidersHorizontal className="h-3.5 w-3.5" />
+                <span>Tapis</span>
+                {activeFilterCount > 0 && (
+                  <span className="rounded-full bg-amber-400 px-1.5 py-0.5 text-[10px] font-extrabold text-slate-950">
+                    {activeFilterCount}
+                  </span>
+                )}
+              </button>
+            </div>
+
+            {/* Penapis Lanjutan (Boleh buka/tutup di telefon; sentiasa kelihatan di desktop) */}
+            <div
+              className={`${
+                showMobileFilters ? "mt-3 grid" : "hidden md:grid"
+              } grid-cols-1 gap-3 md:grid-cols-4`}
+            >
               <div>
-                <label className="mb-1 block text-[11px] font-extrabold uppercase text-slate-600">
-                  1. Tapis Mengikut Akta / Peraturan
+                <label className="mb-1 block text-[11px] font-bold text-slate-600">
+                  Akta / Peraturan
                 </label>
                 <select
                   aria-label="Tapis Akta Kesalahan"
@@ -693,19 +1033,19 @@ export default function LegalDirectoryPanel({
                   onChange={(e) => setAktaFilter(e.target.value)}
                   className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs font-bold text-slate-800"
                 >
-                  <option value="Semua">Semua Akta &amp; Peraturan KKM</option>
-                  <option value="Akta 852">Akta 852 (Kawalan Produk Merokok 2024)</option>
-                  <option value="Akta 281">Akta 281 (Akta Makanan 1983 &amp; Peraturan)</option>
-                  <option value="PPKM 2009">PPKM 2009 [P.U. (A) 95/2009]</option>
-                  <option value="PPM 1985">Peraturan-Peraturan Makanan 1985</option>
-                  <option value="Akta 154">Akta 154 (Pemusnahan Serangga / Aedes)</option>
-                  <option value="Akta 342">Akta 342 (Penyakit Berjangkit 1988)</option>
+                  <option value="Semua">Semua Akta KKM</option>
+                  <option value="Akta 852">Akta 852 (Merokok / Vape)</option>
+                  <option value="Akta 281">Akta 281 (Makanan)</option>
+                  <option value="PPKM 2009">PPKM 2009 (Kebersihan Makanan)</option>
+                  <option value="PPM 1985">PPM 1985 (Peraturan Makanan)</option>
+                  <option value="Akta 154">Akta 154 (Aedes / Vektor)</option>
+                  <option value="Akta 342">Akta 342 (Penyakit Berjangkit)</option>
                 </select>
               </div>
 
               <div>
-                <label className="mb-1 block text-[11px] font-extrabold uppercase text-slate-600">
-                  2. Kategori Pelaku / Subjek
+                <label className="mb-1 block text-[11px] font-bold text-slate-600">
+                  Kategori Pelaku
                 </label>
                 <select
                   aria-label="Tapis Kategori Pelaku"
@@ -724,8 +1064,8 @@ export default function LegalDirectoryPanel({
               </div>
 
               <div>
-                <label className="mb-1 block text-[11px] font-extrabold uppercase text-slate-600">
-                  3. Status Kompaun / Mahkamah
+                <label className="mb-1 block text-[11px] font-bold text-slate-600">
+                  Status Kompaun
                 </label>
                 <select
                   aria-label="Tapis Status Kompaun"
@@ -737,17 +1077,15 @@ export default function LegalDirectoryPanel({
                   }
                   className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs font-bold text-slate-800"
                 >
-                  <option value="SEMUA">Semua (Kompaun &amp; Terus Mahkamah)</option>
-                  <option value="BOLEH_KOMPAUN">Boleh Dikompaun Sahaja</option>
-                  <option value="TERUS_MAHKAMAH">
-                    Tidak Boleh Kompaun (Terus Buka IP / Mahkamah)
-                  </option>
+                  <option value="SEMUA">Semua Status</option>
+                  <option value="BOLEH_KOMPAUN">Boleh Kompaun</option>
+                  <option value="TERUS_MAHKAMAH">Terus Mahkamah (IP)</option>
                 </select>
               </div>
 
-              <div>
-                <label className="mb-1 block text-[11px] font-extrabold uppercase text-slate-600">
-                  4. Cari Seksyen / Kata Kunci
+              <div className="hidden md:block">
+                <label className="mb-1 block text-[11px] font-bold text-slate-600">
+                  Carian Pantas
                 </label>
                 <div className="relative">
                   <Search className="pointer-events-none absolute left-3 top-2.5 h-3.5 w-3.5 text-slate-400" />
@@ -755,7 +1093,7 @@ export default function LegalDirectoryPanel({
                     type="text"
                     value={offenceSearch}
                     onChange={(e) => setOffenceSearch(e.target.value)}
-                    placeholder="Cth: Seksyen 17, beg, tifoid, jentik-jentik..."
+                    placeholder="Cth: Seksyen 17, tifoid, jentik..."
                     className="w-full rounded-xl border border-slate-300 bg-slate-50/60 py-2 pl-8 pr-3 text-xs font-medium text-slate-900 focus:border-blue-600 focus:bg-white focus:outline-none"
                   />
                 </div>
@@ -763,21 +1101,34 @@ export default function LegalDirectoryPanel({
             </div>
           </section>
 
-          {/* Paparan 2 Lajur: Senarai Kesalahan Kiri + Perincian Verbatim Kanan */}
+          {/* 1 Nota Ringkas Di Bahagian Atas Senarai (TIDAK diulang pada setiap 117 kad) */}
+          {unverifiedOffencesCount > 0 && (
+            <div className="flex items-center gap-2 rounded-xl border border-amber-200 bg-amber-50/70 px-3.5 py-2 text-xs text-amber-950">
+              <AlertTriangle className="h-3.5 w-3.5 shrink-0 text-amber-700" />
+              <span>
+                Teks seksyen dipetik terus daripada PDF Warta rasmi. Sebahagian rekod ({unverifiedOffencesCount}) masih menunggu semakan akhir Admin Warta.
+              </span>
+            </div>
+          )}
+
+          {/* Paparan 2 Lajur (Desktop) + Modal/Drawer (Telefon) */}
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-12">
-            {/* Lajur Kiri: Senarai Kesalahan */}
+            {/* Lajur Kiri: Senarai Kesalahan (Maksimum 2 Lencana Setiap Kad) */}
             <div className="space-y-2 lg:col-span-5">
-              <div className="flex items-center justify-between px-1 text-xs font-extrabold text-slate-700">
+              <div className="flex items-center justify-between px-1 text-xs font-bold text-slate-700">
                 <span className="flex items-center gap-1.5">
                   <Filter className="h-3.5 w-3.5 text-blue-700" />
-                  Hasil Tapisan ({filteredOffences.length} Kesalahan)
+                  {filteredOffences.length} Kesalahan Ditemui
+                </span>
+                <span className="text-[11px] font-medium text-slate-500 lg:hidden">
+                  Ketik kad untuk perincian
                 </span>
               </div>
 
               <div className="max-h-[720px] space-y-2 overflow-y-auto pr-1">
                 {filteredOffences.length === 0 ? (
                   <div className="rounded-2xl border border-slate-200 bg-white p-6 text-center text-xs text-slate-500">
-                    Tiada kesalahan ditemui untuk tapisan ini. Cuba tukar tapisan Akta atau Kategori Pelaku.
+                    Tiada kesalahan ditemui untuk tapisan ini. Cuba ubah carian atau penapis.
                   </div>
                 ) : (
                   filteredOffences.map((off) => {
@@ -788,58 +1139,41 @@ export default function LegalDirectoryPanel({
                       <button
                         key={off.offence_id}
                         type="button"
-                        onClick={() => setSelectedOffenceId(off.offence_id)}
+                        onClick={() => {
+                          setSelectedOffenceId(off.offence_id);
+                          setMobileOffenceDrawerOpen(true);
+                        }}
                         className={`flex w-full flex-col items-start rounded-2xl border p-3.5 text-left transition ${
                           isSelected
                             ? "border-blue-600 bg-blue-50/70 ring-1 ring-blue-600"
                             : "border-slate-200 bg-white hover:border-blue-300 hover:bg-slate-50"
                         }`}
                       >
-                        <div className="flex w-full flex-wrap items-center justify-between gap-1.5">
-                          <div className="flex items-center gap-1.5">
-                            <span className="rounded-md bg-[#0f2744] px-2 py-0.5 text-[10px] font-extrabold text-white">
-                              {actBadge}
-                            </span>
-                            <span className="rounded bg-slate-100 px-2 py-0.5 font-mono text-[10px] font-bold text-slate-700">
-                              {off.offence_id}
-                            </span>
-                          </div>
+                        {/* MAKSIMUM 2 LENCANA SAHAJA: Akta & Seksyen di kiri + Status Kompaun di kanan */}
+                        <div className="flex w-full items-center justify-between gap-2">
+                          <span className="truncate rounded-md bg-[#0f2744] px-2 py-0.5 text-[11px] font-extrabold text-white">
+                            {actBadge} · {off.offence_section}
+                          </span>
                           <span
-                            className={`rounded-full px-2 py-0.5 text-[10px] font-extrabold ${
+                            className={`shrink-0 rounded-full px-2.5 py-0.5 text-[10px] font-extrabold ${
                               isComp
                                 ? "bg-emerald-100 text-emerald-900"
                                 : "bg-amber-100 text-amber-950"
                             }`}
                           >
-                            {isComp ? "Boleh Kompaun" : "Terus Mahkamah (IP)"}
+                            {isComp ? "Boleh Kompaun" : "Terus Mahkamah"}
                           </span>
                         </div>
 
-                        <div className="mt-2 text-xs font-extrabold text-slate-900">
+                        <div className="mt-2 text-xs font-extrabold leading-snug text-slate-900 sm:text-[13px]">
                           {off.offence_title}
                         </div>
 
-                        <div className="mt-1 text-[11px] font-semibold text-blue-900">
-                          Pertuduhan: {off.offence_section}
-                        </div>
-                        <div className="mt-0.5 text-[11px] text-slate-600">
-                          Hukuman: {off.penalty_section}
-                        </div>
-
-                        <div className="mt-2 flex flex-wrap items-center gap-1.5">
-                          <span className="rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-bold text-slate-700">
-                            {off.target_offender}
+                        <div className="mt-1.5 flex w-full flex-wrap items-center justify-between gap-1 text-[11px] text-slate-600">
+                          <span>Pelaku: {formatOffenderLabel(off.target_offender)}</span>
+                          <span className="font-semibold text-slate-700">
+                            Hukuman: {off.penalty_section}
                           </span>
-                          {off.verified_status !== "VERIFIED_AGC" ? (
-                            <span className="inline-flex items-center gap-1 rounded-full border border-yellow-300 bg-yellow-100 px-2 py-0.5 text-[10px] font-extrabold text-yellow-900">
-                              <AlertTriangle className="h-3 w-3 text-yellow-700" />
-                              Perlu Semakan Manual Warta AGC
-                            </span>
-                          ) : (
-                            <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-extrabold text-emerald-900">
-                              <CheckCircle2 className="h-3 w-3" /> Disahkan Warta AGC
-                            </span>
-                          )}
                         </div>
                       </button>
                     );
@@ -848,311 +1182,59 @@ export default function LegalDirectoryPanel({
               </div>
             </div>
 
-            {/* Lajur Kanan: Perincian Penuh Kesalahan */}
-            <div className="lg:col-span-7">
+            {/* Lajur Kanan (Desktop sahaja): Perincian Penuh Kesalahan */}
+            <div className="hidden lg:col-span-7 lg:block">
               {!activeOffence ? (
                 <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center text-xs text-slate-500">
-                  Pilih mana-mana kesalahan di sebelah kiri untuk melihat teks verbatim Warta, jadual unsur mandatori, pengecualian, dan templat pertuduhan Borang 114.
+                  Pilih mana-mana kesalahan di sebelah kiri untuk melihat perkara wajib dibuktikan, draf pertuduhan dan teks asal akta.
                 </div>
               ) : (
-                <div className="space-y-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
-                  {/* Header Kesalahan & Butang Tindakan */}
-                  <div className="flex flex-wrap items-start justify-between gap-3 border-b border-slate-200 pb-4">
-                    <div className="space-y-1">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <span className="rounded-md bg-[#0f2744] px-2.5 py-0.5 text-xs font-extrabold text-white">
-                          {activeOffence.canonical_akta_code || activeOffence.statute_id}
-                        </span>
-                        <span className="rounded bg-slate-100 px-2 py-0.5 font-mono text-xs font-bold text-slate-700">
-                          {activeOffence.offence_id}
-                        </span>
-                        <span
-                          className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-extrabold ${
-                            activeOffence.verified_status === "VERIFIED_AGC"
-                              ? "bg-emerald-100 text-emerald-900"
-                              : "border border-yellow-300 bg-yellow-100 text-yellow-900"
-                          }`}
-                        >
-                          {activeOffence.verified_status === "VERIFIED_AGC" ? (
-                            <>
-                              <CheckCircle2 className="h-3.5 w-3.5" /> Disahkan Warta AGC
-                            </>
-                          ) : (
-                            <>
-                              <AlertTriangle className="h-3.5 w-3.5 text-yellow-700" /> Perlu Semakan Manual Warta AGC
-                            </>
-                          )}
-                        </span>
-                      </div>
-                      <h3 className="text-base font-extrabold text-slate-900">
-                        {activeOffence.offence_title}
-                      </h3>
-                    </div>
-
-                    <div className="flex flex-wrap items-center gap-2">
-                      <button
-                        type="button"
-                        onClick={() =>
-                          onApplyOffenceToCase(
-                            activeOffence.charge_sheet_template_bm,
-                            activeOffence.canonical_akta_code || "Akta 852",
-                            true
-                          )
-                        }
-                        className="inline-flex min-h-[38px] items-center gap-1.5 rounded-xl bg-blue-600 px-3.5 py-2 text-xs font-extrabold text-white shadow-sm hover:bg-blue-700"
-                      >
-                        <FileText className="h-4 w-4" />
-                        Hantar ke Bina Fail IP / Borang 114
-                      </button>
-
-                      {activeOffence.compound_info?.is_compoundable && (
-                        <button
-                          type="button"
-                          onClick={() =>
-                            onApplyOffenceToCase(
-                              activeOffence.charge_sheet_template_bm,
-                              activeOffence.canonical_akta_code || "Akta 852",
-                              false
-                            )
-                          }
-                          className="inline-flex min-h-[38px] items-center gap-1.5 rounded-xl bg-emerald-600 px-3.5 py-2 text-xs font-extrabold text-white shadow-sm hover:bg-emerald-700"
-                        >
-                          <FileCheck2 className="h-4 w-4" />
-                          Isi Notis Kompaun
-                        </button>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* 1. Ringkasan Seksyen, Denda & Kompaun */}
-                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                    <div className="rounded-xl border border-blue-200 bg-blue-50/40 p-3.5 text-xs">
-                      <div className="text-[11px] font-extrabold uppercase text-blue-900">
-                        Seksyen Kesalahan &amp; Seksyen Hukuman
-                      </div>
-                      <div className="mt-1 font-extrabold text-slate-900">
-                        Caj: {activeOffence.offence_section}
-                      </div>
-                      <div className="mt-1 font-bold text-indigo-900">
-                        Hukuman: {activeOffence.penalty_section}
-                      </div>
-                      <div className="mt-1 text-slate-700">
-                        {activeOffence.penalty_first_offence?.verbatim_penalty}
-                      </div>
-                    </div>
-
-                    <div className="rounded-xl border border-emerald-200 bg-emerald-50/40 p-3.5 text-xs">
-                      <div className="text-[11px] font-extrabold uppercase text-emerald-900">
-                        Had Denda &amp; Status Kompaun
-                      </div>
-                      <div className="mt-1 font-extrabold text-slate-900">
-                        Status:{" "}
-                        {activeOffence.compound_info?.is_compoundable
-                          ? "BOLEH DIKOMPAUN"
-                          : "TIDAK BOLEH DIKOMPAUN (TERUS MAHKAMAH)"}
-                      </div>
-                      <div className="mt-1 text-slate-700">
-                        <strong>Punca Kuasa Kompaun:</strong>{" "}
-                        {activeOffence.compound_info?.compound_authority_section ||
-                          activeOffence.compound_info?.compound_regulation_ref ||
-                          "Tiada Kompaun"}
-                      </div>
-                      <div className="mt-1 text-slate-700">
-                        <strong>Denda Maksimum:</strong>{" "}
-                        {activeOffence.penalty_first_offence?.max_fine_rm
-                          ? `RM ${activeOffence.penalty_first_offence.max_fine_rm.toLocaleString("en-MY")}`
-                          : "-"}{" "}
-                        • <strong>Kompaun:</strong>{" "}
-                        {activeOffence.compound_info?.compound_amount_or_limit || "Tiada Kompaun"}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* 2. Teks Verbatim Warta (statute_sections_verbatim) */}
-                  <div className="space-y-2 rounded-xl border border-teal-200 bg-teal-50/30 p-4">
-                    <div className="flex items-center justify-between">
-                      <h4 className="flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wide text-teal-950">
-                        <BookOpen className="h-4 w-4 text-teal-700" />
-                        Teks Verbatim Warta Kerajaan Persekutuan (statute_sections_verbatim)
-                      </h4>
-                      <span className="rounded bg-teal-100 px-2 py-0.5 text-[10px] font-extrabold text-teal-900">
-                        100% Aksara-demi-Aksara
-                      </span>
-                    </div>
-
-                    {linkedVerbatimForActiveOffence.length === 0 ? (
-                      <p className="text-xs text-slate-600">
-                        Tiada seksyen verbatim dipautkan untuk rekod ini.
-                      </p>
-                    ) : (
-                      <div className="space-y-2.5">
-                        {linkedVerbatimForActiveOffence.map((sec) => (
-                          <div
-                            key={sec.doc_id}
-                            className="rounded-lg border border-teal-200/80 bg-white p-3 text-xs"
-                          >
-                            <div className="flex flex-wrap items-center justify-between gap-2">
-                              <span className="font-extrabold text-teal-900">
-                                {sec.statute_id} — {sec.section_code}: {sec.section_heading}
-                              </span>
-                              <span className="rounded bg-slate-100 px-2 py-0.5 font-mono text-[10px] font-bold text-slate-600">
-                                {sec.doc_id}
-                              </span>
-                            </div>
-                            <p className="mt-1.5 whitespace-pre-line leading-relaxed text-slate-800">
-                              {sec.verbatim_text_bm}
-                            </p>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* 3. Jadual Unsur Mandatori (mandatory_elements) */}
-                  <div className="space-y-2 rounded-xl border border-slate-200 bg-slate-50/50 p-4">
-                    <h4 className="flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wide text-slate-900">
-                      <CheckCircle2 className="h-4 w-4 text-blue-700" />
-                      Unsur Mandatori Kesalahan (Wajib Dibuktikan Semuanya Sebelum Kompaun / Pertuduhan)
-                    </h4>
-                    <div className="overflow-x-auto">
-                      <table className="w-full border-collapse text-left text-xs">
-                        <thead>
-                          <tr className="border-b border-slate-200 text-[11px] font-extrabold uppercase text-slate-600">
-                            <th className="py-2 pr-3">Bil</th>
-                            <th className="py-2 pr-3">Perihal Unsur Mandatori (Actus Reus / Subjek)</th>
-                            <th className="py-2">Bukti Wajib</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-slate-200/70">
-                          {activeOffence.mandatory_elements.map((el) => (
-                            <tr key={el.element_no}>
-                              <td className="py-2 pr-3 font-mono font-bold text-blue-900">
-                                #{el.element_no}
-                              </td>
-                              <td className="py-2 pr-3 font-medium text-slate-800">
-                                {el.description}
-                              </td>
-                              <td className="py-2 text-[11px] text-slate-600">
-                                {el.must_prove}
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-
-                  {/* 4. Pengecualian Eksplisit & Perangkap Kesilapan (explicit_exclusions_and_traps) */}
-                  <div className="space-y-2 rounded-xl border border-rose-200 border-l-4 border-l-rose-600 bg-rose-50/40 p-4">
-                    <div className="flex items-center justify-between gap-2">
-                      <h4 className="flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wide text-rose-950">
-                        <ShieldAlert className="h-4 w-4 text-rose-700" />
-                        Pengecualian Undang-Undang &amp; Perangkap Kesilapan PPKP
-                      </h4>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setEditingOffenceId(activeOffence.offence_id);
-                          setEditingExclusionsText(
-                            activeOffence.explicit_exclusions_and_traps.join("\n")
-                          );
-                        }}
-                        className="inline-flex items-center gap-1 rounded-lg border border-rose-300 bg-white px-2.5 py-1 text-[11px] font-bold text-rose-900 hover:bg-rose-100"
-                      >
-                        <Edit3 className="h-3 w-3" />
-                        Sunting Pengecualian
-                      </button>
-                    </div>
-
-                    {editingOffenceId === activeOffence.offence_id ? (
-                      <div className="space-y-2 pt-1">
-                        <textarea
-                          rows={4}
-                          value={editingExclusionsText}
-                          onChange={(e) => setEditingExclusionsText(e.target.value)}
-                          className="w-full rounded-xl border border-rose-300 bg-white p-2.5 text-xs text-slate-900"
-                          placeholder="Satu pengecualian / perangkap setiap baris..."
-                        />
-                        <div className="flex items-center gap-2">
-                          <button
-                            type="button"
-                            disabled={savingOffenceEdit}
-                            onClick={() =>
-                              void handleSaveOffenceExclusions(activeOffence.offence_id)
-                            }
-                            className="inline-flex items-center gap-1.5 rounded-lg bg-rose-700 px-3 py-1.5 text-xs font-extrabold text-white hover:bg-rose-800"
-                          >
-                            <Save className="h-3.5 w-3.5" />
-                            {savingOffenceEdit ? "Menyimpan..." : "Simpan & Sahkan Warta"}
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => setEditingOffenceId(null)}
-                            className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-bold text-slate-700"
-                          >
-                            Batal
-                          </button>
-                        </div>
-                      </div>
-                    ) : (
-                      <ul className="space-y-1.5 text-xs text-rose-950">
-                        {activeOffence.explicit_exclusions_and_traps.map((trap, i) => (
-                          <li key={i} className="flex items-start gap-2">
-                            <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-rose-600" />
-                            <span>{trap}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </div>
-
-                  {/* 5. Eksibit Wajib & Templat Pertuduhan Borang 114 */}
-                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                    <div className="rounded-xl border border-slate-200 bg-white p-3.5 text-xs">
-                      <h4 className="font-extrabold text-slate-900">
-                        Senarai Eksibit &amp; Bukti Wajib
-                      </h4>
-                      <ul className="mt-2 list-disc space-y-1.5 pl-4 text-slate-700">
-                        {activeOffence.mandatory_exhibits.map((ex, i) => (
-                          <li key={i}>{ex}</li>
-                        ))}
-                      </ul>
-                    </div>
-
-                    <div className="rounded-xl border border-slate-200 bg-slate-50 p-3.5 text-xs">
-                      <div className="flex items-center justify-between gap-2">
-                        <h4 className="font-extrabold text-slate-900">
-                          Templat Pertuduhan Borang 114
-                        </h4>
-                        <button
-                          type="button"
-                          onClick={() =>
-                            handleCopyChargeTemplate(activeOffence.charge_sheet_template_bm)
-                          }
-                          className="inline-flex items-center gap-1 rounded border border-slate-300 bg-white px-2 py-1 text-[11px] font-bold text-slate-700 hover:bg-slate-100"
-                        >
-                          {copiedCharge ? (
-                            <ClipboardCheck className="h-3.5 w-3.5 text-emerald-600" />
-                          ) : (
-                            <Copy className="h-3.5 w-3.5" />
-                          )}
-                          {copiedCharge ? "Disalin!" : "Salin"}
-                        </button>
-                      </div>
-                      <p className="mt-2 rounded-lg border border-slate-200 bg-white p-2.5 font-mono text-[11px] leading-relaxed text-slate-800">
-                        {activeOffence.charge_sheet_template_bm}
-                      </p>
-                    </div>
-                  </div>
+                <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                  {renderOffenceDetailContent(activeOffence)}
                 </div>
               )}
             </div>
           </div>
+
+          {/* Modal / Drawer Perincian Kesalahan Untuk Telefon & Tablet (< lg) */}
+          {mobileOffenceDrawerOpen && activeOffence && (
+            <div
+              onClick={(e) => {
+                if (e.target === e.currentTarget) setMobileOffenceDrawerOpen(false);
+              }}
+              className="fixed inset-0 z-50 flex items-end justify-center bg-slate-900/50 backdrop-blur-[1px] lg:hidden"
+            >
+              <div className="flex max-h-[90dvh] w-full flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl">
+                <div className="flex items-center justify-between border-b border-slate-200 bg-slate-50 px-4 py-3">
+                  <div className="min-w-0 pr-2">
+                    <div className="text-[11px] font-extrabold uppercase tracking-wide text-blue-900">
+                      {activeOffence.canonical_akta_code || activeOffence.statute_id} ·{" "}
+                      {activeOffence.offence_section}
+                    </div>
+                    <div className="truncate text-xs font-bold text-slate-800">
+                      Perincian Kesalahan
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setMobileOffenceDrawerOpen(false)}
+                    aria-label="Tutup perincian kesalahan"
+                    className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-slate-300 bg-white text-slate-700 hover:bg-slate-100"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
+                <div className="overflow-y-auto p-4">
+                  {renderOffenceDetailContent(activeOffence)}
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       )}
 
       {/* ===================================================================== */}
-      {/* SUB-TAB 2: PUSTAKA AKTA VERBATIM (STATUTE SECTIONS VERBATIM)          */}
+      {/* SUB-TAB 2: TEKS PENUH AKTA                                            */}
       {/* ===================================================================== */}
       {subTab === "statutes" && snapshot && (
         <div className="space-y-4">
@@ -1199,7 +1281,7 @@ export default function LegalDirectoryPanel({
                   type="text"
                   value={sectionSearch}
                   onChange={(e) => setSectionSearch(e.target.value)}
-                  placeholder="Cari Seksyen / Peraturan / Teks Warta..."
+                  placeholder="Cari Seksyen / Peraturan / Teks Akta..."
                   className="w-full rounded-xl border border-slate-300 bg-slate-50 py-2 pl-8 pr-3 text-xs font-medium text-slate-900 focus:border-blue-600 focus:bg-white focus:outline-none"
                 />
               </div>
@@ -1215,42 +1297,36 @@ export default function LegalDirectoryPanel({
                     ({activeStatuteMeta.act_number_or_pu}) • Kuat Kuasa:{" "}
                     {activeStatuteMeta.effective_date}
                   </span>
-                  {activeStatuteMeta.verified_by_admin ? (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2.5 py-0.5 text-[10px] font-extrabold text-emerald-900">
-                      <CheckCircle2 className="h-3 w-3" /> Disahkan Warta AGC
-                    </span>
-                  ) : (
-                    <span className="inline-flex items-center gap-1 rounded-full border border-yellow-300 bg-yellow-100 px-2.5 py-0.5 text-[10px] font-extrabold text-yellow-900">
-                      <AlertTriangle className="h-3 w-3 text-yellow-700" /> Perlu Semakan Manual Warta AGC
-                    </span>
-                  )}
                 </div>
-                <div className="flex items-center gap-2 font-mono text-[11px] text-slate-600">
-                  <span>SHA256: {(activeStatuteMeta.source_pdf_hash || "").slice(0, 12)}...</span>
-                </div>
+                {isDevAdmin && (
+                  <div className="font-mono text-[11px] text-slate-500">
+                    SHA256: {(activeStatuteMeta.source_pdf_hash || "").slice(0, 12)}...
+                  </div>
+                )}
               </div>
             )}
           </section>
 
-          {/* Jika Akta Belum Diindeks (total_sections_indexed === 0) */}
+          {/* Jika Akta Belum Diindeks */}
           {activeStatuteMeta && activeStatuteMeta.total_sections_indexed === 0 ? (
-            <div className="rounded-2xl border-2 border-rose-400 bg-rose-50 p-6 text-center shadow-sm">
-              <AlertOctagon className="mx-auto h-10 w-10 text-rose-700" />
-              <h3 className="mt-2 text-base font-extrabold text-rose-950">
-                AKTA BELUM DIINDEKS — MUAT NAIK PDF WARTA
+            <div className="rounded-2xl border border-amber-300 bg-amber-50 p-6 text-center shadow-sm">
+              <AlertOctagon className="mx-auto h-9 w-9 text-amber-700" />
+              <h3 className="mt-2 text-base font-extrabold text-slate-900">
+                Teks Warta Belum Dimuat Naik
               </h3>
-              <p className="mx-auto mt-1 max-w-xl text-xs leading-relaxed text-rose-900">
-                Statut <strong>{activeStatuteMeta.official_title_bm}</strong> mempunyai{" "}
-                <code>total_sections_indexed == 0</code> dalam Pustaka Akta Verbatim. Sistem dilarang sama sekali meneka kandungan seksyen daripada pengetahuan am AI. Sila muat naik fail PDF Warta Kerajaan Persekutuan di tab Admin.
+              <p className="mx-auto mt-1 max-w-xl text-xs leading-relaxed text-slate-700">
+                Fail PDF Warta rasmi bagi <strong>{activeStatuteMeta.official_title_bm}</strong> belum dimuat naik ke dalam sistem.
               </p>
-              <button
-                type="button"
-                onClick={() => setSubTab("admin")}
-                className="mt-4 inline-flex items-center gap-1.5 rounded-xl bg-rose-700 px-4 py-2 text-xs font-extrabold text-white hover:bg-rose-800"
-              >
-                <FileUp className="h-4 w-4" />
-                Muat Naik PDF Warta Sekarang
-              </button>
+              {isDevAdmin && (
+                <button
+                  type="button"
+                  onClick={() => setSubTab("admin")}
+                  className="mt-4 inline-flex items-center gap-1.5 rounded-xl bg-indigo-700 px-4 py-2 text-xs font-extrabold text-white hover:bg-indigo-800"
+                >
+                  <FileUp className="h-4 w-4" />
+                  Muat Naik PDF Warta (Admin)
+                </button>
+              )}
             </div>
           ) : (
             <div className="grid grid-cols-1 gap-4 lg:grid-cols-12">
@@ -1271,7 +1347,10 @@ export default function LegalDirectoryPanel({
                           <button
                             key={sec.doc_id}
                             type="button"
-                            onClick={() => setSelectedDocId(sec.doc_id)}
+                            onClick={() => {
+                              setSelectedDocId(sec.doc_id);
+                              setMobileSectionDrawerOpen(true);
+                            }}
                             className={`flex w-full flex-col items-start rounded-xl border p-2.5 text-left text-xs transition ${
                               isSel
                                 ? "border-blue-600 bg-blue-50/70 font-bold text-blue-950"
@@ -1282,12 +1361,12 @@ export default function LegalDirectoryPanel({
                               <span className="font-extrabold text-slate-900">
                                 {sec.section_code} — {sec.section_heading}
                               </span>
-                              <span className="rounded bg-white px-1.5 py-0.5 font-mono text-[10px] text-slate-600">
+                              <span className="shrink-0 rounded bg-white px-1.5 py-0.5 text-[10px] font-bold text-slate-600">
                                 {sec.is_offence_provision
-                                  ? "KESALAHAN"
+                                  ? "Kesalahan"
                                   : sec.is_penalty_provision
-                                    ? "PENALTI"
-                                    : "PROSEDUR"}
+                                    ? "Hukuman"
+                                    : "Prosedur"}
                               </span>
                             </div>
                           </button>
@@ -1298,22 +1377,24 @@ export default function LegalDirectoryPanel({
                 ))}
               </div>
 
-              {/* Lajur Kanan: Paparan Teks Verbatim Penuh */}
-              <div className="lg:col-span-7">
+              {/* Lajur Kanan (Desktop sahaja): Paparan Teks Penuh Seksyen */}
+              <div className="hidden lg:col-span-7 lg:block">
                 {activeSectionDetail ? (
                   <div className="space-y-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
                     <div className="flex flex-wrap items-start justify-between gap-2 border-b border-slate-200 pb-3">
                       <div>
                         <div className="flex items-center gap-2">
                           <span className="rounded-md bg-[#0f2744] px-2.5 py-0.5 text-xs font-extrabold text-white">
-                            {activeSectionDetail.statute_id}
+                            {activeStatuteMeta?.act_number_or_pu || activeSectionDetail.statute_id}
                           </span>
-                          <span className="rounded bg-teal-50 px-2 py-0.5 font-mono text-xs font-bold text-teal-900">
-                            {activeSectionDetail.doc_id}
-                          </span>
+                          {isDevAdmin && (
+                            <span className="rounded bg-teal-50 px-2 py-0.5 font-mono text-[10px] font-bold text-teal-900">
+                              {activeSectionDetail.doc_id}
+                            </span>
+                          )}
                         </div>
                         <h3 className="mt-2 text-base font-extrabold text-slate-900">
-                          {activeSectionDetail.section_code}:{" "}
+                          Seksyen {activeSectionDetail.section_code}:{" "}
                           {activeSectionDetail.section_heading}
                         </h3>
                         <p className="mt-0.5 text-xs text-slate-500">
@@ -1325,19 +1406,19 @@ export default function LegalDirectoryPanel({
                         type="button"
                         onClick={() =>
                           handleCopyChargeTemplate(
-                            `${activeSectionDetail.statute_id} — ${activeSectionDetail.section_code} (${activeSectionDetail.section_heading}):\n${activeSectionDetail.verbatim_text_bm}`
+                            `${activeStatuteMeta?.act_number_or_pu || activeSectionDetail.statute_id} — Seksyen ${activeSectionDetail.section_code} (${activeSectionDetail.section_heading}):\n${activeSectionDetail.verbatim_text_bm}`
                           )
                         }
                         className="inline-flex items-center gap-1.5 rounded-xl border border-slate-300 bg-white px-3 py-1.5 text-xs font-bold text-slate-700 hover:bg-slate-50"
                       >
                         <Copy className="h-3.5 w-3.5" />
-                        Salin Teks Verbatim
+                        Salin Teks
                       </button>
                     </div>
 
                     <div className="rounded-xl border border-teal-200 bg-teal-50/25 p-4">
                       <div className="mb-2 text-[11px] font-extrabold uppercase tracking-wide text-teal-900">
-                        Teks Verbatim Warta Kerajaan Persekutuan (Bahasa Melayu)
+                        Teks Asal Warta Kerajaan
                       </div>
                       <p className="whitespace-pre-line text-sm leading-relaxed text-slate-900">
                         {activeSectionDetail.verbatim_text_bm}
@@ -1346,9 +1427,59 @@ export default function LegalDirectoryPanel({
                   </div>
                 ) : (
                   <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center text-xs text-slate-500">
-                    Pilih mana-mana seksyen di sebelah kiri untuk membaca teks verbatim Warta.
+                    Pilih mana-mana seksyen di sebelah kiri untuk membaca teks asal akta.
                   </div>
                 )}
+              </div>
+            </div>
+          )}
+
+          {/* Modal / Drawer Teks Seksyen Untuk Telefon & Tablet (< lg) */}
+          {mobileSectionDrawerOpen && activeSectionDetail && (
+            <div
+              onClick={(e) => {
+                if (e.target === e.currentTarget) setMobileSectionDrawerOpen(false);
+              }}
+              className="fixed inset-0 z-50 flex items-end justify-center bg-slate-900/50 backdrop-blur-[1px] lg:hidden"
+            >
+              <div className="flex max-h-[90dvh] w-full flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl">
+                <div className="flex items-center justify-between border-b border-slate-200 bg-slate-50 px-4 py-3">
+                  <div className="min-w-0 pr-2">
+                    <div className="text-[11px] font-extrabold text-blue-900">
+                      {activeStatuteMeta?.act_number_or_pu || activeSectionDetail.statute_id}
+                    </div>
+                    <div className="truncate text-xs font-extrabold text-slate-900">
+                      Seksyen {activeSectionDetail.section_code} — {activeSectionDetail.section_heading}
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setMobileSectionDrawerOpen(false)}
+                    aria-label="Tutup teks seksyen"
+                    className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-slate-300 bg-white text-slate-700 hover:bg-slate-100"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
+                <div className="space-y-3 overflow-y-auto p-4">
+                  <div className="rounded-xl border border-teal-200 bg-teal-50/25 p-4">
+                    <p className="whitespace-pre-line text-sm leading-relaxed text-slate-900">
+                      {activeSectionDetail.verbatim_text_bm}
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      handleCopyChargeTemplate(
+                        `${activeStatuteMeta?.act_number_or_pu || activeSectionDetail.statute_id} — Seksyen ${activeSectionDetail.section_code}:\n${activeSectionDetail.verbatim_text_bm}`
+                      )
+                    }
+                    className="inline-flex w-full items-center justify-center gap-1.5 rounded-xl border border-slate-300 bg-white py-2.5 text-xs font-bold text-slate-800 hover:bg-slate-50"
+                  >
+                    <Copy className="h-3.5 w-3.5" />
+                    Salin Teks Asal Seksyen
+                  </button>
+                </div>
               </div>
             </div>
           )}
@@ -1356,7 +1487,7 @@ export default function LegalDirectoryPanel({
       )}
 
       {/* ===================================================================== */}
-      {/* SUB-TAB 3: SENARAI HITAM UNDANG-UNDANG LAPUK / TERBATAL               */}
+      {/* SUB-TAB 3: AKTA DIMANSUHKAN                                           */}
       {/* ===================================================================== */}
       {subTab === "repealed" && snapshot && (
         <section className="space-y-3 rounded-2xl border border-rose-200 bg-white p-4 shadow-sm sm:p-6">
@@ -1366,10 +1497,10 @@ export default function LegalDirectoryPanel({
             </div>
             <div>
               <h3 className="text-sm font-extrabold text-rose-950 sm:text-base">
-                Senarai Hitam Undang-Undang Terbatal / Lapuk (repealed_and_blocked_provisions)
+                Senarai Akta &amp; Peraturan Yang Telah Dimansuhkan
               </h3>
               <p className="text-xs text-slate-600">
-                Pengawal Petikan Deterministik (<code>validateLegalOutput</code>) menyekat mana-mana output AI, Notis Kompaun, atau Borang 114 yang memetik peruntukan di bawah.
+                Elakkan memetik mana-mana peruntukan lapuk di bawah dalam Notis Kompaun atau Borang 114.
               </p>
             </div>
           </div>
@@ -1381,25 +1512,33 @@ export default function LegalDirectoryPanel({
                 className="rounded-2xl border border-rose-200 border-l-4 border-l-rose-600 bg-rose-50/35 p-4 text-xs"
               >
                 <div className="flex items-center justify-between gap-2">
-                  <span className="rounded bg-rose-700 px-2 py-0.5 font-mono text-[10px] font-extrabold text-white">
-                    DISEKAT • {rep.provision_id}
+                  <span className="rounded-full bg-rose-700 px-2.5 py-0.5 text-[10px] font-extrabold text-white">
+                    {rep.status === "DIMANSUHKAN"
+                      ? "Dimansuhkan"
+                      : rep.status === "TAMAT_TEMPOH"
+                        ? "Tamat Tempoh"
+                        : "Tidak Sah Digunakan"}
                   </span>
-                  <span className="font-bold text-rose-900">Status: {rep.status}</span>
+                  {isDevAdmin && (
+                    <span className="font-mono text-[10px] font-bold text-rose-900">
+                      {rep.provision_id}
+                    </span>
+                  )}
                 </div>
                 <h4 className="mt-2 text-sm font-extrabold text-slate-900">
                   {rep.repealed_statute_or_section}
                 </h4>
                 <p className="mt-1.5 leading-relaxed text-slate-800">
-                  <strong>Amaran Sistem:</strong> {rep.warning_message_bm}
+                  {rep.warning_message_bm}
                 </p>
                 {rep.replacement_section && (
                   <div className="mt-2 rounded-lg border border-emerald-200 bg-emerald-50/70 p-2.5 text-emerald-950">
-                    <strong>Peruntukan Gantian Berkuat Kuasa:</strong> {rep.replacement_section}
+                    <strong>Gantian Berkuat Kuasa:</strong> {rep.replacement_section}
                   </div>
                 )}
                 {rep.key_differences_note && (
                   <div className="mt-2 rounded-lg border border-amber-200 bg-amber-50/70 p-2.5 text-amber-950">
-                    <strong>Perbezaan Kritikal Unsur Kesalahan:</strong> {rep.key_differences_note}
+                    <strong>Perbezaan Penting:</strong> {rep.key_differences_note}
                   </div>
                 )}
               </div>
@@ -1409,9 +1548,9 @@ export default function LegalDirectoryPanel({
       )}
 
       {/* ===================================================================== */}
-      {/* SUB-TAB 4: ADMIN PANEL — PUSTAKA AKTA & SEMAKAN KESALAHAN (FASA 2 & 4)*/}
+      {/* SUB-TAB 4: ADMIN WARTA (DIPAPARKAN KEPADA AKAUN ADMIN SAHAJA)         */}
       {/* ===================================================================== */}
-      {subTab === "admin" && (
+      {isDevAdmin && subTab === "admin" && (
         <div className="space-y-4">
           {/* 1. Papan Pemuka Audit Liputan Akta (Coverage Audit Dashboard) */}
           <section className="space-y-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6">

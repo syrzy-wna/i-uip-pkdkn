@@ -283,7 +283,13 @@ def healthz() -> Dict[str, str]:
 
 @app.get("/api/status")
 def get_status() -> Dict[str, Any]:
-    return router_service.get_system_status()
+    import os
+    from backend.rag.legal_engine import get_legal_library
+
+    payload = dict(router_service.get_system_status())
+    payload["cloud_run_revision"] = os.getenv("K_REVISION") or "local"
+    payload["statute_library_version"] = get_legal_library().statute_library_version
+    return payload
 
 
 @app.get("/api/settings")
@@ -1244,9 +1250,14 @@ def consult_uip_advisor(
         est_output_tokens=_est_tokens(res.get("alasan_keputusan", "")) + 650 if is_cloud else 0,
         latency_ms=latency_ms,
     )
+    # Larang jawapan fallback / ralat / gagal validasi / Seksyen 2 Tafsiran disimpan sebagai cache Koleksi Q&A (TANYA_PAKAR_UIP);
+    # rekod bukan cache disimpan di bawah TANYA_PAKAR_UIP_NO_CACHE untuk audit Dev Vault sahaja (tidak muncul dalam Koleksi Q&A).
+    from backend.core.database import _is_corrupted_or_fallback_qa
+
+    is_cacheable_qa = not _is_corrupted_or_fallback_qa(res)
     _archive_safely(
         category="ADVISOR_QA",
-        action_type="TANYA_PAKAR_UIP",
+        action_type="TANYA_PAKAR_UIP" if is_cacheable_qa else "TANYA_PAKAR_UIP_NO_CACHE",
         endpoint="/api/advisor/consult",
         user=current_officer,
         title=f"Tanya Pakar ({res.get('akta_disyorkan', req.akta_hint)}): {q_preview}",
@@ -1259,6 +1270,7 @@ def consult_uip_advisor(
             "scenario_id": req.scenario_id,
             "use_ai": req.use_ai,
             "reused_from_qa_id": res.get("matched_collection_id"),
+            "cacheable_qa": is_cacheable_qa,
         },
         analysis_payload=res,
         model_used=model_used,
