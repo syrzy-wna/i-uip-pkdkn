@@ -467,7 +467,7 @@ def test_uip_advisor_scenarios_and_consult() -> None:
     resp_list = client.get("/api/advisor/scenarios", headers=headers)
     assert resp_list.status_code == 200
     scenarios = resp_list.json()["scenarios"]
-    assert len(scenarios) == 18
+    assert len(scenarios) == 19
     acts = {s["akta_utama"] for s in scenarios}
     assert {"Akta 852", "Akta 281", "Akta 154", "Akta 342"}.issubset(acts)
 
@@ -2700,6 +2700,204 @@ def test_mall_multistorey_parking_smoking_s16_2_and_corrupt_context_guard() -> N
             "sebab_tidak_menyalahi": "Tiada seksyen kesalahan merokok di kawasan larangan dibekalkan dalam konteks rujukan tertutup ini.",
         }
     ) is True
+
+
+def test_four_expert_smart_grounding_cafeteria_s18_and_field_cases() -> None:
+    """Ujian menyeluruh rombakan 4 pakar:
+    1. Kes sebenar pengguna: Kafeteria universiti tiada tanda larangan merokok (alasan universiti sudah pasang di pintu masuk) -> ADA_KESALAHAN Seksyen 18(1)(a) Akta 852 + P.U.(A) 258/2024 + Boleh Kompaun.
+    2. Penanda aras 14+ kes lapangan PPKP (Akta 852, 281/PPKM/PPM, 154, 342): tiada kebuluran retrieval, tiada pemotongan Jadual Pertama, dan katalog domain lengkap tersedia.
+    3. Penjaga konflik fakta Q&A & pembersihan cache rosak.
+    4. Pengesah pasca-penjanaan `validate_legal_output` tanpa false-positive sambil kekal menyekat kesalahan tulen.
+    """
+    from backend.core.database import _has_legal_fact_conflict, _is_corrupted_or_fallback_qa
+    from backend.rag.legal_engine import (
+        _has_active_smoking_action,
+        _has_signage_or_premise_smoking_duty_signal,
+        get_legal_library,
+        infer_domain_statute_ids,
+        validate_legal_output,
+    )
+
+    lib = get_legal_library()
+
+    # ------------------------------------------------------------------
+    # 1. KES SEBENAR PENGGUNA: KAFETERIA UNIVERSITI TIADA TANDA LARANGAN MEROKOK
+    # ------------------------------------------------------------------
+    q_cafe = (
+        "dalam cafetaria sebuah universiti, tiada tanda larangan merokok dipasang. "
+        "peniaga cafe atas alasan universiti dah pasang pintu masuk university. boleh kompaun?"
+    )
+    assert _has_active_smoking_action(q_cafe) is False
+    assert _has_signage_or_premise_smoking_duty_signal(q_cafe) is True
+
+    g_cafe = lib.search_closed_book_grounding(q_cafe, akta_hint="Semua")
+    assert g_cafe["candidate_offences"], "Mesti memulangkan calon kesalahan bagi kes papan tanda kafe"
+    assert g_cafe["candidate_offences"][0]["offence_id"] == "AKTA_852_S18_1"
+    sec_ids_cafe = [s["doc_id"] for s in g_cafe["verbatim_sections"]]
+    assert "AKTA_852__S18" in sec_ids_cafe
+    assert "AKTA_852_PERATURAN_TANDA_2024__P2" in sec_ids_cafe
+    assert "AKTA_852_PERATURAN_TANDA_2024__JADUAL_PERTAMA" in sec_ids_cafe
+    assert "AKTA_852_PERINTAH_LARANGAN_2024__JADUAL_PERTAMA" in sec_ids_cafe
+    assert "[KATALOG RINGKAS SEMUA KESALAHAN DOMAIN" in g_cafe["statutory_context_block"]
+
+    # Semak evaluasi unsur S.18(1)(a) sahaja (BUKAN S.16(2) individu merokok!)
+    s18_eval = g_cafe["candidate_offences"][0]["element_evaluation"]
+    assert s18_eval["offence_id"] == "AKTA_852_S18_1"
+    assert s18_eval["action_blocked"] is False
+
+    # Semak penuh endpoint /api/advisor/consult (Mod Pantas)
+    headers = _get_auth_headers()
+    resp_cafe = client.post(
+        "/api/advisor/consult",
+        headers=headers,
+        json={"question": q_cafe, "akta_hint": "Semua", "use_ai": False},
+    )
+    assert resp_cafe.status_code == 200
+    d_cafe = resp_cafe.json()
+    assert d_cafe["status_kesalahan"] == "ADA_KESALAHAN"
+    assert d_cafe["akta_disyorkan"] == "Akta 852"
+    assert "18(1)(a)" in d_cafe["punca_kuasa"]["seksyen_kesalahan"]
+    assert "258/2024" in d_cafe["punca_kuasa"]["seksyen_kesalahan"]
+    assert d_cafe["punca_kuasa"]["boleh_kompaun_flag"] is True
+    assert d_cafe["legal_validation"]["passed"] is True
+    assert all(ev["offence_id"] != "AKTA_852_S16_2" for ev in d_cafe["element_evaluations"])
+    cit_ids_cafe = [c.get("doc_id") for c in d_cafe["statutory_citations"]]
+    assert "AKTA_852__S18" in cit_ids_cafe
+    assert "AKTA_852_PERATURAN_TANDA_2024__P2" in cit_ids_cafe
+    # Pastikan alasan universiti / pintu masuk dijawab terus dalam penjelasan
+    reason_blob = f"{d_cafe['alasan_keputusan']} {d_cafe['keputusan_tindakan']}".lower()
+    assert "pintu masuk" in reason_blob or "universiti" in reason_blob or "tempat makan" in reason_blob
+    # Pastikan draf kes juga merujuk S.18(1)(a) & BUKAN S.16(2)
+    assert "18(1)(a)" in d_cafe["draf_teks_kes_cadangan"]
+
+    # ------------------------------------------------------------------
+    # 2. PENANDA ARAS 12 KES LAPANGAN PPKP (RETRIEVAL + DOMAIN ROUTING)
+    # ------------------------------------------------------------------
+    field_benchmark = [
+        ("Orang merokok di kawasan parkir terbuka R&R lebuh raya, boleh kompaun?", "AKTA_852", "AKTA_852__S16"),
+        ("Kedai runcit simpan rokok dalam kabinet bertutup legap tidak nampak dari luar", "AKTA_852", "AKTA_852__S10"),
+        ("Kedai serbaneka jual vape kepada remaja 16 tahun tanpa semak kad pengenalan", "AKTA_852", "AKTA_852__S13"),
+        ("Restoran sudah daftar FoSIM tetapi gagal pamer sijil pendaftaran di dinding premis", "PPKM_2009", "PPKM_2009__P8"),
+        ("Pekerja dapur tidak ambil suntikan tifoid dan tidak pakai apron semasa masak", "PPKM_2009", "PPKM_2009__P31"),
+        ("Restoran kena perintah tutup Seksyen 11 tetapi buka pintu untuk cuci dapur sahaja bukan jual makanan", "AKTA_281", "AKTA_281__S11"),
+        ("Jumpa lipas dalam makanan yang dihidangkan kepada pelanggan di restoran", "AKTA_281", "AKTA_281__S13B"),
+        ("Makanan tamat tarikh luput diasingkan dalam stor pelupusan khas bukan di rak jualan", "PPM_1985", "PPM_1985__P14"),
+        ("Pemeriksaan rumah jumpa bekas kosong ada air bertakung tetapi tiada larva Aedes", "AKTA_154", "AKTA_154__S13"),
+        ("Tapak pembinaan ingkar perintah pembersihan Seksyen 8 Akta 154, boleh kompaun RM500?", "AKTA_154", "AKTA_154__S8"),
+        ("Tuan rumah kunci pagar dan enggan beri kerjasama semburan kabus fogging denggi", "AKTA_154", "AKTA_154__S21"),
+        ("Wabak HFMD dikesan di sebuah taska swasta, seksyen apa untuk tutup premis?", "AKTA_342", "AKTA_342__S18"),
+    ]
+    for q_text, expected_statute, expected_doc in field_benchmark:
+        g = lib.search_closed_book_grounding(q_text, akta_hint="Semua")
+        inferred = infer_domain_statute_ids(q_text, akta_hint="Semua")
+        assert expected_statute in inferred, f"Domain salah untuk '{q_text}': dapat {inferred}"
+        doc_ids = [s["doc_id"] for s in g["verbatim_sections"]]
+        assert expected_doc in doc_ids, f"Dokumen verbatim '{expected_doc}' tercicir bagi '{q_text}': dapat {doc_ids}"
+        assert "[KATALOG RINGKAS SEMUA KESALAHAN DOMAIN" in g["statutory_context_block"]
+
+    # Pastikan Jadual Pertama P.U.(A) 257/2024 diindeks PENUH termasuk item 12 (IPT) & item 28 (dobi)
+    g_dobi = lib.search_closed_book_grounding("Ada orang merokok di dalam kedai dobi layan diri", akta_hint="Semua")
+    dobi_docs = [s["doc_id"] for s in g_dobi["verbatim_sections"]]
+    assert "AKTA_852_PERINTAH_LARANGAN_2024__JADUAL_PERTAMA" in dobi_docs
+
+    # Pastikan konflik auto-swept P.U.(A) 258/2024 Peraturan 2 telah diperbetulkan kepada boleh kompaun
+    p2_258 = next(
+        (o for o in lib.master_offences_matrix if o.get("offence_id") == "AKTA_852_PERATURAN_TANDA_2024_PERATURAN_2"),
+        None,
+    )
+    if p2_258 is not None:
+        assert p2_258["compound_info"]["is_compoundable"] is True
+
+    # ------------------------------------------------------------------
+    # 3. PENJAGA KONFLIK FAKTA Q&A & CACHE ROSAK
+    # ------------------------------------------------------------------
+    assert _has_legal_fact_conflict(
+        "Merokok di parkir terbuka R&R",
+        "Merokok dalam kereta di parking bertingkat mall",
+        {},
+    ) is True
+    assert _has_legal_fact_conflict(
+        "dalam cafetaria universiti tiada tanda larangan merokok dipasang",
+        "orang merokok dalam restoran di universiti",
+        {},
+    ) is True
+    assert _has_legal_fact_conflict(
+        "Juruwang restoran tidak ambil suntikan tifoid dan tidak pegang makanan",
+        "Pekerja dapur tidak ambil suntikan tifoid semasa memasak",
+        {},
+    ) is True
+    assert _is_corrupted_or_fallback_qa(
+        {
+            "status_kesalahan": "TIADA_KESALAHAN",
+            "ringkasan_keputusan": "Sila rujuk teks penuh Akta 852 di UIP.",
+            "sebab_tidak_menyalahi": "Tidak boleh dikompaun terhadap peniaga kafe kerana peruntukan tersebut hanya terpakai kepada individu merokok.",
+        }
+    ) is True
+
+    # ------------------------------------------------------------------
+    # 4. PENGESAH PASCA-PENJANAAN `validate_legal_output` (TIADA FALSE POSITIVE)
+    # ------------------------------------------------------------------
+    # a) Seksyen 90A(2) bersama Akta 852 & amaran had Akta 154 tidak disekat secara palsu
+    valid_ai_sample = {
+        "akta_disyorkan": "Akta 852",
+        "status_kesalahan": "ADA_KESALAHAN",
+        "tajuk_nasihat": "Kegagalan Mempamerkan Tanda Larangan Merokok di Kafeteria Universiti",
+        "keputusan_tindakan": "ADA KESALAHAN — Keluarkan Notis Seksyen 47 dan tawarkan kompaun Seksyen 48 Akta 852.",
+        "alasan_keputusan": (
+            "Pemunya kafe melanggar Seksyen 18(1)(a) Akta 852 dibaca bersama Peraturan 2(1) P.U. (A) 258/2024. "
+            "Sertakan gambar bersama Sijil Seksyen 90A(2) Akta Keterangan 1950. "
+            "Berbeza dengan PPKHT 2004 yang telah dimansuhkan, Akta 852 mengawal selia kewajipan ini secara tegas."
+        ),
+        "cadangan_pertuduhan": [
+            {
+                "perihal": "Gagal mempamerkan tanda larangan merokok mengikut spesifikasi",
+                "seksyen_kesalahan": "Seksyen 18(1)(a) Akta 852 dibaca bersama Peraturan 2(1) P.U. (A) 258/2024",
+                "seksyen_hukuman": "Seksyen 18(2) Akta 852",
+                "hukuman_maksimum": "Denda maksimum RM5,000.00",
+                "boleh_kompaun": "Boleh Kompaun — RM250 hingga RM2,500 (tempoh 30 hari)",
+            }
+        ],
+    }
+    v_ok = validate_legal_output(valid_ai_sample, lib.to_snapshot_dict(), question_context=q_cafe)
+    assert v_ok["passed"] is True, f"Sepatutnya LULUS tetapi gagal: {v_ok}"
+
+    # b) Kompaun korporat Akta 342 RM50,000 diluluskan, manakala Akta 154 RM1,000 aktif DISEKAT
+    corp_342_sample = {
+        "akta_disyorkan": "Akta 342",
+        "status_kesalahan": "ADA_KESALAHAN",
+        "keputusan_tindakan": "Syarikat boleh dikenakan kompaun RM50,000 di bawah Seksyen 25 Akta 342 (Pindaan Akta A1742).",
+        "alasan_keputusan": "Seksyen 25 Akta 342 membenarkan had kompaun korporat sehingga RM50,000 bagi pertubuhan perbadanan.",
+        "cadangan_pertuduhan": [],
+    }
+    assert validate_legal_output(corp_342_sample, lib.to_snapshot_dict(), question_context="Kilang ingkar arahan Akta 342")["passed"] is True
+
+    warn_154_sample = {
+        "akta_disyorkan": "Akta 154",
+        "status_kesalahan": "ADA_KESALAHAN",
+        "keputusan_tindakan": "Buka IP Terus di bawah Seksyen 8(8) Akta 154.",
+        "alasan_keputusan": "Jangan keluarkan kompaun RM1,000 di bawah Akta 154 kerana melebihi had RM500 dan tidak sah.",
+        "cadangan_pertuduhan": [],
+    }
+    assert validate_legal_output(warn_154_sample, lib.to_snapshot_dict(), question_context="Tapak binaan ingkar perintah Seksyen 8 Akta 154")["passed"] is True
+
+    bad_154_sample = {
+        "akta_disyorkan": "Akta 154",
+        "status_kesalahan": "ADA_KESALAHAN",
+        "keputusan_tindakan": "Tawarkan kompaun RM1,000 di bawah Seksyen 25 Akta 154.",
+        "alasan_keputusan": "Keluarkan kompaun RM1,000 segera.",
+        "cadangan_pertuduhan": [],
+    }
+    assert validate_legal_output(bad_154_sample, lib.to_snapshot_dict(), question_context="Pembiakan Aedes di rumah")["passed"] is False
+
+    bad_sec_sample = {
+        "akta_disyorkan": "Akta 852",
+        "status_kesalahan": "ADA_KESALAHAN",
+        "keputusan_tindakan": "Tuduh di bawah Seksyen 99 Akta 852.",
+        "alasan_keputusan": "Kesalahan di bawah Seksyen 99 Akta 852.",
+        "cadangan_pertuduhan": [],
+    }
+    assert validate_legal_output(bad_sec_sample, lib.to_snapshot_dict(), question_context="Merokok di restoran")["passed"] is False
+
 
 
 

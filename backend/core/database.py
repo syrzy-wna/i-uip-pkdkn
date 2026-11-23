@@ -292,12 +292,47 @@ def _has_legal_fact_conflict(q_norm: str, cand_norm: str, cand_item: Dict[str, A
         return True
 
     # 7. Pemilikan pasif vape/rokok dalam beg vs perbuatan aktif sedang menghisap (Akta 852)
-    from backend.rag.legal_engine import is_passive_vape_possession_question
+    from backend.rag.legal_engine import (
+        _has_active_smoking_action,
+        _has_signage_or_premise_smoking_duty_signal,
+        is_passive_vape_possession_question,
+    )
 
     q_passive = is_passive_vape_possession_question(q_norm)
     c_passive = is_passive_vape_possession_question(cand_norm)
     if q_passive != c_passive:
         return True
+
+    # 8. Parkir/bangunan berbumbung vs tempat letak kereta terbuka / luar bangunan
+    indoor_terms = ("bertingkat", "berbumbung", "dalam bangunan", "dalam mall", "dalam kompleks")
+    outdoor_terms = ("terbuka", "open air", "open-air", "open car park", "luar bangunan", "luar 3 meter", "tepi jalan")
+    q_in = any(t in q_norm for t in indoor_terms)
+    c_in = any(t in cand_norm for t in indoor_terms)
+    q_out = any(t in q_norm for t in outdoor_terms)
+    c_out = any(t in cand_norm for t in outdoor_terms)
+    if (q_in and c_out and not c_in) or (c_in and q_out and not q_in):
+        return True
+
+    # 9. Kewajipan papan tanda/ashtray premis (S.18) vs individu merokok (S.16)
+    q_sign = _has_signage_or_premise_smoking_duty_signal(q_norm)
+    c_sign = _has_signage_or_premise_smoking_duty_signal(cand_norm)
+    q_smk = _has_active_smoking_action(q_norm)
+    c_smk = _has_active_smoking_action(cand_norm)
+    if (q_sign and not q_smk and c_smk and not c_sign) or (c_sign and not c_smk and q_smk and not q_sign):
+        return True
+
+    # 10. Ketidakseimbangan klausa alasan / pengecualian / pembelaan (elak jawapan generik memintas soalan bernuansa!)
+    nuance_markers = (
+        "atas alasan", "alasan", "tetapi", "namun", "walaupun", "kecuali", "hanya",
+        "juruwang", "tidak pegang", "baru pindah", "dah pasang", "sudah pasang",
+        "pintu masuk", "universiti", "university", "cafetaria", "kafeteria",
+        "berkunci", "outstation", "kabinet bertutup", "menyental",
+    )
+    for nm in nuance_markers:
+        in_q = nm in q_norm
+        in_c = nm in cand_norm
+        if in_q != in_c:
+            return True
 
     return False
 
@@ -322,6 +357,8 @@ def _is_corrupted_or_fallback_qa(analysis: Dict[str, Any], raw_resp: str = "") -
             "dalam konteks rujukan tertutup",
             "tidak dibekalkan dalam konteks",
             "dibekalkan dalam konteks rujukan",
+            "rujuk teks penuh akta 852 di uip",
+            "terhadap peniaga kafe kerana peruntukan tersebut hanya terpakai",
         )
     ):
         return True
@@ -2360,9 +2397,9 @@ class UIPDatabase:
         question: str,
         *,
         akta_hint: str = "Semua",
-        min_score: float = 0.62,
+        min_score: float = 0.78,
     ) -> Optional[Dict[str, Any]]:
-        """Mencari padanan soalan tepat atau lebih kurang sama daripada Koleksi Soalan & Jawapan Pakar."""
+        """Mencari padanan soalan tepat atau hampir sama daripada Koleksi Soalan & Jawapan Pakar (ketat bagi elak jawapan salah)."""
         raw_q = (question or "").strip()
         if len(raw_q) < 8 or raw_q.lower().startswith("rujuk templat situasi ini"):
             return None
@@ -2403,8 +2440,16 @@ class UIPDatabase:
             if q_norm == cand_norm:
                 sim = 1.0
             else:
+                # Untuk padanan kabur (bukan teks tepat), hanya guna semula jawapan AI berkualiti tinggi
+                if not item.get("is_ai_answered"):
+                    continue
                 shared_spec = q_spec & cand_spec
                 if len(shared_spec) < 2:
+                    continue
+                # Elak soalan pendek/generik memintas soalan baharu yang membawa >=3 fakta baharu
+                unmatched_new_facts = len(q_spec - cand_spec)
+                spec_ratio = len(shared_spec) / max(1, max(len(q_spec), len(cand_spec)))
+                if unmatched_new_facts >= 3 and spec_ratio < 0.72:
                     continue
 
                 def _is_ref_code(tok: str) -> bool:

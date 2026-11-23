@@ -18,10 +18,12 @@ import type {
 
 function canonicalizeAct(raw: string): string {
   const up = (raw || "").toUpperCase();
-  if (up.includes("852")) return "AKTA 852";
-  if (up.includes("281") || up.includes("PPKM") || up.includes("PPM")) return "AKTA 281";
+  if (up.includes("852") || /25[7-9]\/2024|26[0-4]\/2024/.test(up)) return "AKTA 852";
+  if (up.includes("281") || up.includes("A1702") || up.includes("PPKM") || up.includes("PPM") || up.includes("95/2009")) {
+    return "AKTA 281";
+  }
   if (up.includes("154")) return "AKTA 154";
-  if (up.includes("342") || up.includes("APPPB")) return "AKTA 342";
+  if (up.includes("342") || up.includes("A1742") || up.includes("APPPB") || up.includes("139/2025")) return "AKTA 342";
   if (up.includes("593") || up.includes("KTJ")) return "AKTA 593";
   if (up.includes("56")) return "AKTA 56";
   if (up.includes("611")) return "AKTA 611";
@@ -33,6 +35,7 @@ export function extractLegalCitations(text: string): Array<{
   number: string;
   baseNumber: string;
   actRef: string;
+  inferredFromTail: boolean;
   rawCitation: string;
 }> {
   if (!text) return [];
@@ -41,24 +44,31 @@ export function extractLegalCitations(text: string): Array<{
     number: string;
     baseNumber: string;
     actRef: string;
+    inferredFromTail: boolean;
     rawCitation: string;
   }> = [];
   const seen = new Set<string>();
 
   const pairedRe =
-    /\b(Seksyen|Peraturan)\s+(\d+[A-Za-z]?(?:\(\d+\))?(?:\([a-z]\))?)(?:\s+(?:dibaca\s+bersama\s+[^,\n.;]{1,40}\s+)?)?\s*(Akta\s+\d+|Akta\s+Kerja\s*1955|OSHA\s*1994|PPKM\s*2009|PPM\s*1985|PPKHT\s*2004|KTJ|APPPB\s*1988)?/gi;
+    /\b(Seksyen|Peraturan)\s+(\d+[A-Za-z]?(?:\(\d+\))?(?:\([a-z]\))?)(?:\s+(?:dibaca\s+bersama\s+[^,\n.;]{1,40}\s+)?)?\s*(Akta\s+A?\d+|Akta\s+Kerja\s*1955|OSHA\s*1994|PPKM\s*2009|PPM\s*1985|PPKHT\s*2004|KTJ|APPPB\s*1988|P\.U\.\s*\(A\)\s*\d+\/\d{4})?/gi;
 
   let match: RegExpExecArray | null;
   while ((match = pairedRe.exec(text)) !== null) {
     const kind = match[1];
     const num = match[2].trim();
     let actRef = (match[3] || "").trim();
+    let inferredFromTail = false;
     if (!actRef) {
-      const tail = text.slice(match.index + match[0].length, match.index + match[0].length + 75);
+      const rawTail = text.slice(match.index + match[0].length, match.index + match[0].length + 75);
+      const clauseStop = rawTail.search(/[.;\n]|\b(?:Seksyen|Peraturan)\s+\d+/i);
+      const tail = clauseStop >= 0 ? rawTail.slice(0, clauseStop) : rawTail;
       const tailMatch = tail.match(
-        /\b(Akta\s+\d+|Akta\s+Kerja\s*1955|OSHA\s*1994|PPKM\s*2009|PPM\s*1985|PPKHT\s*2004|KTJ|APPPB\s*1988|P\.U\.\s*\(A\)\s*\d+\/\d{4})\b/i
+        /\b(Akta\s+A?\d+|Akta\s+Kerja\s*1955|OSHA\s*1994|PPKM\s*2009|PPM\s*1985|PPKHT\s*2004|KTJ|APPPB\s*1988|P\.U\.\s*\(A\)\s*\d+\/\d{4})\b/i
       );
-      if (tailMatch) actRef = tailMatch[1].trim();
+      if (tailMatch) {
+        actRef = tailMatch[1].trim();
+        inferredFromTail = true;
+      }
     }
     const baseMatch = num.match(/^\d+[A-Za-z]?/);
     const baseNumber = (baseMatch ? baseMatch[0] : num).toUpperCase();
@@ -70,6 +80,7 @@ export function extractLegalCitations(text: string): Array<{
         number: num,
         baseNumber,
         actRef,
+        inferredFromTail,
         rawCitation: match[0].trim(),
       });
     }
@@ -140,13 +151,13 @@ export function validateLegalOutput(
   for (const sec of sectionsList) {
     const actKey = canonicalizeAct(sec.statute_id);
     const raw = `${sec.section_code} ${sec.section_heading} ${sec.verbatim_text_bm}`;
-    const re = /(?:Seksyen|Peraturan)\s+(\d+[A-Za-z]?)/gi;
+    const re = /(?:Seksyen|Peraturan|Section|Regulation)\s+(\d+[A-Za-z]?)/gi;
     let m: RegExpExecArray | null;
     while ((m = re.exec(raw)) !== null) {
       addValid(actKey, m[1]);
       addValid(sec.statute_id.toUpperCase(), m[1]);
     }
-    const leadMatch = sec.section_code.match(/^\s*(\d+[A-Za-z]?)\b/);
+    const leadMatch = sec.section_code.match(/^(?:Peraturan\s+|Seksyen\s+|Section\s+)?(\d+[A-Za-z]?)\b/i);
     if (leadMatch) {
       addValid(actKey, leadMatch[1]);
       addValid(sec.statute_id.toUpperCase(), leadMatch[1]);
@@ -199,9 +210,12 @@ export function validateLegalOutput(
   const crossAgencyActs = new Set([
     "AKTA 171", "AKTA 366", "AKTA 368", "AKTA 290", "AKTA 586",
     "AKTA 260", "AKTA 127", "AKTA 655", "AKTA 265", "AKTA 514", "AKTA 574",
-    "AKTA KERJA 1955", "OSHA 1994",
+    "AKTA 550", "AKTA 50", "AKTA 804", "AKTA KERJA 1955", "OSHA 1994",
   ]);
-  const proceduralCrossRefs = new Set(["90A", "112", "114", "114A", "119", "128", "152", "153", "154", "163", "376", "377", "399"]);
+  const proceduralCrossRefs = new Set([
+    "90A", "90B", "90C", "114", "114A", "73AA", "111", "112", "113", "119",
+    "128", "152", "153", "154", "163", "376", "377", "399", "15", "83", "91",
+  ]);
 
   for (const cit of extracted) {
     const actUp = cit.actRef.toUpperCase();
@@ -209,8 +223,8 @@ export function validateLegalOutput(
       const lowAll = combinedText.toLowerCase();
       const isWarningOnly =
         !chargesSecOnly.includes("ppkht") &&
-        ["dimansuhkan", "berbeza dengan", "jangan", "tidak sah", "bukan", "digugurkan"].some((w) =>
-          lowAll.includes(w)
+        ["dimansuhkan", "digugurkan", "diganti", "mansuh", "berbeza dengan", "jangan", "tidak sah", "bukan"].some(
+          (w) => lowAll.includes(w)
         );
       if (!isWarningOnly) {
         invalidCitations.push(`${cit.rawCitation} (PPKHT 2004 telah dimansuhkan oleh Akta 852)`);
@@ -221,14 +235,23 @@ export function validateLegalOutput(
       invalidCitations.push(`${cit.rawCitation} (Akta 514 ialah OSHA 1994; kes Tibi ialah Seksyen 22(b) Akta 342)`);
       continue;
     }
-    if (crossAgencyActs.has(actUp) && ["15", "24", "60F", "80", "81", "82"].includes(cit.baseNumber)) {
+    if (crossAgencyActs.has(actUp)) {
       verifiedCitations.push(cit.rawCitation);
       continue;
     }
-    const lookupAct = cit.actRef ? canonicalizeAct(cit.actRef) : defaultAct;
+    const explicitActLookup = cit.actRef ? canonicalizeAct(cit.actRef) : "";
+    const lookupAct = explicitActLookup || defaultAct;
     const actSet = validSectionsByAct.get(lookupAct);
-    if (actSet) {
-      if (actSet.has(cit.baseNumber) || (!cit.actRef && proceduralCrossRefs.has(cit.baseNumber))) {
+    if (explicitActLookup && actSet) {
+      if (actSet.has(cit.baseNumber) || (cit.inferredFromTail && proceduralCrossRefs.has(cit.baseNumber))) {
+        verifiedCitations.push(cit.rawCitation);
+      } else {
+        invalidCitations.push(
+          `${cit.rawCitation} — Seksyen/Peraturan ${cit.number} TIDAK WUJUD dalam indeks verbatim ${lookupAct}.`
+        );
+      }
+    } else if (actSet) {
+      if (actSet.has(cit.baseNumber) || proceduralCrossRefs.has(cit.baseNumber)) {
         verifiedCitations.push(cit.rawCitation);
       } else {
         invalidCitations.push(
@@ -236,7 +259,7 @@ export function validateLegalOutput(
         );
       }
     } else if (allValidNums.size > 0) {
-      if (allValidNums.has(cit.baseNumber)) {
+      if (allValidNums.has(cit.baseNumber) || proceduralCrossRefs.has(cit.baseNumber)) {
         verifiedCitations.push(cit.rawCitation);
       } else {
         invalidCitations.push(
@@ -249,10 +272,25 @@ export function validateLegalOutput(
   // Semak peruntukan dimansuhkan / tamat tempoh
   const repealedHits: RepealedProvisionHit[] = [];
   const lowCombined = combinedText.toLowerCase();
+  const repealedWarnKeywords = [
+    "dimansuhkan",
+    "digugurkan",
+    "diganti",
+    "mansuh",
+    "terbatal",
+    "dibatalkan",
+    "tamat tempoh",
+    "tidak sah",
+    "jangan",
+    "bukan",
+    "berbeza dengan",
+    "disekat",
+    "ralat",
+    "salah",
+  ];
   if (
     (lowCombined.includes("ppkht 2004") || lowCombined.includes("324/2004")) &&
-    !lowCombined.includes("dimansuhkan") &&
-    !lowCombined.includes("digugurkan")
+    (chargesSecOnly.includes("ppkht") || !repealedWarnKeywords.some((w) => lowCombined.includes(w)))
   ) {
     repealedHits.push({
       provision_id: "REPEALED_PPKHT_2004_ALL",
@@ -265,7 +303,7 @@ export function validateLegalOutput(
   if (
     lowCombined.includes("ordinan darurat") &&
     lowCombined.includes("2021") &&
-    !lowCombined.includes("tamat tempoh")
+    (chargesSecOnly.includes("ordinan darurat") || !repealedWarnKeywords.some((w) => lowCombined.includes(w)))
   ) {
     repealedHits.push({
       provision_id: "EXPIRED_ORDINAN_DARURAT_342_2021",
@@ -282,13 +320,12 @@ export function validateLegalOutput(
         const re = new RegExp(pat, "i");
         const m = re.exec(lowCombined);
         if (m) {
-          const start = Math.max(0, m.index - 70);
-          const end = Math.min(lowCombined.length, m.index + m[0].length + 95);
+          const start = Math.max(0, m.index - 75);
+          const end = Math.min(lowCombined.length, m.index + m[0].length + 100);
           const win = lowCombined.slice(start, end);
-          const isWarn = ["dimansuhkan", "digugurkan", "tamat tempoh", "tidak sah", "jangan", "bukan", "berbeza dengan"].some(
-            (w) => win.includes(w)
-          );
-          if (!isWarn) {
+          const isWarn = repealedWarnKeywords.some((w) => win.includes(w));
+          const inActiveCharge = re.test(chargesSecOnly);
+          if (inActiveCharge || !isWarn) {
             repealedHits.push({
               provision_id: rep.provision_id,
               matched_text: m[0],
@@ -307,33 +344,66 @@ export function validateLegalOutput(
 
   // Semak ketidaksepadanan had denda/kompaun & status boleh kompaun
   const penaltyMismatches: string[] = [];
-  if (lowCombined.includes("akta 154") && lowCombined.includes("kompaun")) {
-    const rmHits = Array.from(lowCombined.matchAll(/kompaun[^.\n]{0,40}rm\s*([\d,]+)/gi));
+  if (/\bakta\s+154\b/i.test(lowCombined) && lowCombined.includes("kompaun")) {
+    const rmHits = Array.from(lowCombined.matchAll(/kompaun\s+rm\s?([\d,]+(?:\.\d{1,2})?)/gi));
     for (const m of rmHits) {
       const val = parseFloat((m[1] || "0").replace(/,/g, ""));
       if (val > 500) {
+        const idx = m.index ?? 0;
+        const win = lowCombined.slice(Math.max(0, idx - 55), Math.min(lowCombined.length, idx + m[0].length + 55));
+        const isWarn154 = ["jangan", "bukan", "salah", "ultra vires", "tidak sah", "dilarang", "melebihi had", "ditolak"].some(
+          (w) => win.includes(w)
+        );
+        if (!isWarn154) {
+          penaltyMismatches.push(
+            `Had kompaun maksimum Seksyen 25 Akta 154 ialah RM 500 (cadangan menyebut RM ${val.toLocaleString()}).`
+          );
+        }
+      }
+    }
+  }
+  if (/\bakta\s+342\b/i.test(lowCombined) && lowCombined.includes("kompaun")) {
+    const rmHits = Array.from(lowCombined.matchAll(/kompaun(?:\s+individu)?\s+rm\s?([\d,]+(?:\.\d{1,2})?)/gi));
+    for (const m of rmHits) {
+      const val = parseFloat((m[1] || "0").replace(/,/g, ""));
+      const idx = m.index ?? 0;
+      const win = lowCombined.slice(Math.max(0, idx - 65), Math.min(lowCombined.length, idx + m[0].length + 55));
+      const isCorp = ["syarikat", "korporat", "pertubuhan perbadanan"].some((k) => win.includes(k));
+      const limit = isCorp ? 50000 : 5000;
+      if (val > limit) {
         penaltyMismatches.push(
-          `Had kompaun maksimum Seksyen 25 Akta 154 ialah RM 500 (cadangan menyebut RM ${val.toLocaleString()}).`
+          `Had kompaun Seksyen 25 Akta 342 (Akta A1742) ialah maksimum RM ${limit.toLocaleString()} (nilai RM ${val.toLocaleString()} melebihi had).`
         );
       }
     }
   }
-  if (lowCombined.includes("akta 852")) {
-    for (const c of chargesArr) {
-      const sec = String(c.seksyen_kesalahan || "").toLowerCase();
-      const comp = String(c.boleh_kompaun || "").toLowerCase();
-      const nonComp852 = /\b(?:3\(1\)|7\(1\)|9\(1\)|10\(1\)|13\(1\))\b/.test(sec);
-      if (nonComp852 && comp.includes("boleh") && !comp.includes("tidak")) {
+  const nonCompRules: Array<[string, RegExp, string]> = [
+    ["852", /\b(?:3\(1\)|7\(1\)|9\(1\)|10\(1\)|13\(1\))\b/i, "Jadual Pertama P.U. (A) 259/2024"],
+    ["281", /\b(?:13\(1\)|13b|11\(2\))\b/i, "Akta Makanan 1983 (wajib Buka IP)"],
+    ["154", /\b8\(8\)\b/i, "Akta 154 (wajib Buka IP)"],
+    ["342", /\b(?:12\(|22\(a\))\b/i, "Jadual Pertama P.U. (A) 139/2025"],
+  ];
+  for (const c of chargesArr) {
+    const sec = String(c.seksyen_kesalahan || "").toLowerCase();
+    const comp = String(c.boleh_kompaun || "").toLowerCase();
+    const claimsComp =
+      (comp.includes("boleh kompaun") || comp.includes("boleh dikompaun")) &&
+      !["tidak boleh", "tiada kompaun", "buka ip terus"].some((neg) => comp.includes(neg));
+    if (!claimsComp) continue;
+    const chargeActs = ["852", "281", "154", "342"].filter((d) => new RegExp(`\\b${d}\\b`).test(sec));
+    const effActs = chargeActs.length > 0 ? chargeActs : ["852", "281", "154", "342"].filter((d) => defaultAct.includes(d));
+    for (const [actDigits, secRe, schedRef] of nonCompRules) {
+      if (effActs.includes(actDigits) && secRe.test(sec)) {
         penaltyMismatches.push(
-          `${String(c.seksyen_kesalahan || "Seksyen Akta 852")} TIDAK BOLEH dikompaun di bawah Jadual Pertama P.U. (A) 259/2024.`
+          `${String(c.seksyen_kesalahan || "Seksyen")} TIDAK BOLEH dikompaun di bawah ${schedRef}.`
         );
       }
     }
   }
 
-  // Semak unsur wajib S.17(1) Akta 852 (pemilikan vape dalam beg tanpa bukti menghisap/membeli)
+  // Semak unsur wajib S.17(1) Akta 852 berdasarkan questionContext SAHAJA jika tersedia (elak amaran AI memicu perangkap kendiri)
   const unfulfilledErrors: string[] = [];
-  const evalCtx = `${questionContext} ${combinedText}`.toLowerCase();
+  const evalCtx = (questionContext.trim() ? questionContext : combinedText).toLowerCase();
   const declaredNoOffence = String(respObj.status_kesalahan || "").toUpperCase() === "TIADA_KESALAHAN";
 
   const isPassivePoss =
@@ -347,7 +417,7 @@ export function validateLegalOutput(
   if (
     isPassivePoss &&
     !declaredNoOffence &&
-    lowCombined.includes("17(1)") &&
+    /\b17\(1\)/.test(chargesSecOnly) &&
     !lowCombined.includes("bukan kesalahan") &&
     !lowCombined.includes("tiada kesalahan") &&
     !lowCombined.includes("ditolak") &&

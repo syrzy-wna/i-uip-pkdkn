@@ -668,6 +668,38 @@ export default function UIPAdvisorPanel({
               ? result.engine_used || "Panduan Akta Rasmi"
               : "Panduan Akta Rasmi";
 
+        const rawElementEvals = Array.isArray(result.element_evaluations)
+          ? result.element_evaluations
+          : [];
+
+        const visibleNoOffenceEvals = rawElementEvals.filter((ev) => {
+          const els = Array.isArray(ev.element_evaluations) ? ev.element_evaluations : [];
+          const hasUnmet =
+            Boolean(ev.action_blocked) ||
+            els.some((el) => el.status === "TIDAK TERPENUHI");
+          return hasUnmet;
+        });
+
+        const activeChargeBlob = [
+          punca.seksyen_kesalahan || "",
+          ...(result.cadangan_pertuduhan || []).map((c) => c.seksyen_kesalahan || ""),
+        ]
+          .join(" ")
+          .toLowerCase();
+        const activeSecNums = new Set(
+          (activeChargeBlob.match(/\b\d+[a-z]?(?:\(\d+\))?/gi) || []).map((s) =>
+            s.toLowerCase().replace(/\(\d+\)$/, "")
+          )
+        );
+        const visibleOffenceEvals = rawElementEvals.filter((ev) => {
+          if (activeSecNums.size === 0) return true;
+          const evSec = String(ev.offence_section || "").toLowerCase();
+          const evNums = (evSec.match(/\b\d+[a-z]?(?:\(\d+\))?/gi) || []).map((s) =>
+            s.toLowerCase().replace(/\(\d+\)$/, "")
+          );
+          return evNums.length === 0 || evNums.some((n) => activeSecNums.has(n));
+        });
+
         return (
           <section
             ref={resultRef}
@@ -870,12 +902,12 @@ export default function UIPAdvisorPanel({
                     {result.sebab_tidak_menyalahi || result.alasan_keputusan}
                   </p>
 
-                  {result.element_evaluations && result.element_evaluations.length > 0 && (
+                  {visibleNoOffenceEvals.length > 0 && (
                     <div className="mt-3 space-y-2 border-t border-sky-200/70 pt-3">
                       <div className="text-[11px] font-extrabold uppercase tracking-wide text-slate-700">
                         Perkara Wajib Dibuktikan (Punca Penolakan)
                       </div>
-                      {result.element_evaluations.map((ev) => (
+                      {visibleNoOffenceEvals.map((ev) => (
                         <div key={ev.offence_id} className="space-y-1.5 rounded-xl border border-slate-200 bg-white p-3">
                           <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
                             <span className="font-extrabold text-slate-900">
@@ -906,14 +938,14 @@ export default function UIPAdvisorPanel({
                                     el.status === "TIDAK TERPENUHI"
                                       ? "bg-rose-100 text-rose-900"
                                       : el.status === "TERPENUHI"
-                                        ? "bg-emerald-100 text-emerald-900"
+                                        ? "bg-slate-100 text-slate-700"
                                         : "bg-amber-100 text-amber-900"
                                   }`}
                                 >
                                   {el.status === "TIDAK TERPENUHI"
                                     ? "TIDAK DIPENUHI"
                                     : el.status === "TERPENUHI"
-                                      ? "DIPENUHI"
+                                      ? "FAKTA ASAS"
                                       : el.status || "PERLU BUKTI TAMBAHAN"}
                                 </span>
                               </li>
@@ -1228,12 +1260,12 @@ export default function UIPAdvisorPanel({
                         </div>
                       </div>
 
-                      {result.element_evaluations && result.element_evaluations.length > 0 && (
+                      {visibleOffenceEvals.length > 0 && (
                         <div className="space-y-2.5">
                           <h4 className="text-xs font-extrabold uppercase tracking-wide text-slate-700">
                             Perkara Wajib Dibuktikan
                           </h4>
-                          {result.element_evaluations.map((ev) => (
+                          {visibleOffenceEvals.map((ev) => (
                             <div
                               key={ev.offence_id}
                               className="overflow-x-auto rounded-xl border border-slate-200"

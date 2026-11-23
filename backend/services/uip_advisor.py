@@ -194,13 +194,13 @@ UIP_SCENARIO_LIBRARY: List[Dict[str, Any]] = [
     {
         "id": "ak852_larangan_merokok",
         "akta_utama": "Akta 852",
-        "tajuk": "Merokok / Vape di Tempat Larangan (Restoran) & Pemilik Tiada Papan Tanda Kod QR / Sedia Bekas Abu Rokok",
+        "tajuk": "Merokok / Vape di Tempat Larangan (Restoran) & Pemilik Sedia Bekas Abu Rokok",
         "keywords": [
-            "kawasan larangan merokok", "larangan merokok", "tempat makan", "tanda amaran", "tanda larangan",
-            "kod qr", "ashtray", "bekas abu", "rokok dalam restoran", "merokok di restoran",
-            "seksyen 16", "seksyen 18 akta 852", "257/2024", "258/2024",
+            "kawasan larangan merokok", "tempat makan", "rokok dalam restoran",
+            "merokok di restoran", "hisap rokok di restoran", "hisap vape di restoran",
+            "seksyen 16", "257/2024",
         ],
-        "negative_keywords": ["tepi jalan", "budak sekolah", "najis tikus", "suntikan tifoid"],
+        "negative_keywords": ["tepi jalan", "budak sekolah", "najis tikus", "suntikan tifoid", "tiada tanda", "tanda larangan", "papan tanda", "kod qr", "258/2024"],
         "incompatible_with": ["ak852_obd_merokok_tepi_jalan"],
         "keputusan_tindakan": "KOMPAUN DAHULU (Tawaran Kompaun S.48(2) & Notis S.47 — 30 Hari); BUKA IP HANYA JIKA GAGAL BAYAR",
         "sesuai_buka_ip": False,
@@ -244,6 +244,63 @@ UIP_SCENARIO_LIBRARY: List[Dict[str, Any]] = [
             "Kesalahan: Menghisap rokok / rokok elektronik di tempat makan yang diisytiharkan sebagai kawasan larangan merokok di bawah P.U. (A) 257/2024 "
             "yang melanggar Seksyen 16(2) Akta 852 dan boleh dihukum di bawah Seksyen 16(3) Akta 852. "
             "Notis Seksyen 47 dan tawaran kompaun Seksyen 48(2) [30 hari] telah diserahkan."
+        ),
+    },
+    {
+        "id": "ak852_tanda_larangan_premis",
+        "akta_utama": "Akta 852",
+        "tajuk": "Pemilik / Penghuni Premis (Restoran / Kafeteria / Kedai) Gagal Pamer Tanda Amaran Larangan Merokok Kod QR atau Sedia Bekas Abu Rokok",
+        "keywords": [
+            "tiada tanda larangan", "tanda larangan merokok", "tanda amaran", "papan tanda",
+            "kod qr", "258/2024", "seksyen 18", "ashtray", "bekas abu",
+            "cafetaria", "kafeteria", "peniaga cafe", "tidak pasang tanda", "tak pasang tanda",
+        ],
+        "negative_keywords": ["pelajar hisap", "budak sekolah", "najis tikus", "suntikan tifoid"],
+        "status_kesalahan": "ADA_KESALAHAN",
+        "ringkasan_keputusan": (
+            "ADA KESALAHAN & BOLEH KOMPAUN di bawah Seksyen 18(1)(a) Akta 852 dibaca bersama Peraturan 2(1) & 2(2) P.U. (A) 258/2024 "
+            "— keluarkan Notis S.47 & tawarkan kompaun S.48(2) (RM250–RM2,500, tempoh 30 hari). Alasan tanda sudah dipasang di pintu pagar utama universiti/kompleks TIDAK membebaskan penghuni tempat makan."
+        ),
+        "keputusan_tindakan": "BOLEH KOMPAUN — KELUARKAN NOTIS S.47 & TAWARAN KOMPAUN S.48(2) AKTA 852 (RM250–RM2,500; 30 HARI) DI BAWAH SEKSYEN 18(1)(a)",
+        "sesuai_buka_ip": False,
+        "alasan_keputusan": (
+            "Di bawah Seksyen 18(1)(a) Akta 852 dibaca bersama Peraturan 2(1) & 2(2) P.U. (A) 258/2024, 'Tuan punya atau penghuni' mana-mana kawasan atau tempat "
+            "larangan merokok wajib pada setiap masa mempamerkan tanda amaran larangan merokok berspesifikasi Jadual Pertama (min 40 sm x 50 sm di dalam bangunan dengan Kod QR 10 sm x 10 sm, "
+            "atau 60 sm x 90 sm di laluan masuk) di bahagian yang mudah dilihat. "
+            "Kafeteria / kafe ialah suatu 'tempat makan' tersendiri (Bil. 4 Jadual Pertama & Perenggan 2 P.U. (A) 257/2024), berasingan daripada kategori kawasan institusi pendidikan tinggi (Bil. 12). "
+            "Oleh itu, pengusaha/penyewa kafeteria ialah 'penghuni' yang memikul kewajipan statutori tersendiri dan alasan bahawa pihak universiti/kompleks sudah memasang papan tanda di pintu pagar utama TIDAK sah untuk mengecualikan kompaun."
+        ),
+        "cadangan_pertuduhan": [
+            {
+                "perihal": "Tuan punya atau penghuni tempat makan / premis larangan merokok gagal mempamerkan tanda amaran larangan merokok mengikut spesifikasi Kod QR",
+                "seksyen_kesalahan": "Seksyen 18(1)(a) Akta 852 dibaca bersama Peraturan 2(1) & 2(2), Jadual Pertama & Kedua P.U. (A) 258/2024 serta Bil. 4 Jadual Pertama P.U. (A) 257/2024",
+                "seksyen_hukuman": "Seksyen 18(2) Akta 852",
+                "hukuman_maksimum": "Denda tidak melebihi RM5,000",
+                "boleh_kompaun": "Boleh dikompaun RM250.00 – RM2,500.00 di bawah Seksyen 48(2) & Jadual Pertama(d) P.U. (A) 259/2024 (tempoh bayaran 30 hari).",
+            },
+        ],
+        "sop_lapangan": [
+            "Tunjukkan Kad Kuasa KKM (Seksyen 24(2) Akta 852) kepada pengusaha / peniaga / pengurus premis makan secara berhemah.",
+            "Sahkan status OKT sebagai 'tuan punya atau penghuni' premis makan tersebut (semak perjanjian sewaan/tender kafeteria, lesen PBT atau Carian SSM) dan sahkan premis memang beroperasi menghidang/menjual makanan (takrif 'tempat makan' Perenggan 2 & Bil. 4 P.U. (A) 257/2024).",
+            "Periksa seluruh bahagian dinding mudah dilihat di dalam bangunan dan laluan masuk kafeteria; ambil gambar foto menyeluruh sudut jauh & dekat membuktikan tiada tanda amaran larangan merokok Kod QR (min 40 sm x 50 sm di dalam bangunan, Bil. 1 Jadual Pertama P.U. (A) 258/2024) beserta Sijil Seksyen 90A(2).",
+            "Jelaskan kepada peniaga bahawa kewajipan di bawah Seksyen 18(1)(a) & Peraturan 2(1) P.U. (A) 258/2024 terletak terus ke atas 'penghuni' tempat makan tersebut, dan papan tanda universiti/kompleks di pintu masuk utama tidak melepaskan kewajipan di dalam kafeteria.",
+            "Serahkan Tawaran Kompaun Borang 2 P.U. (A) 259/2024 (Seksyen 48(2), tempoh bayaran 30 hari) berserta Notis Hadir Mahkamah Seksyen 47; hanya buka Fail IP jika kompaun gagal dibayar selepas tamat 30 hari.",
+        ],
+        "eksibit_wajib": [
+            "Gambar foto sudut jauh & dekat bahagian dalam dan laluan masuk kafeteria/premis membuktikan ketiadaan tanda amaran larangan merokok Kod QR + Sijil Seksyen 90A(2)",
+            "Bukti status 'penghuni / tuan punya' premis (salinan perjanjian sewaan/tender kafeteria universiti, Carian SSM atau lesen PBT)",
+            "Salinan pendua Tawaran Kompaun Borang 2 P.U. (A) 259/2024 & Notis Seksyen 47 bertandatangan terima / catatan saksi PPKP",
+            "Sijil Unit Hasil PKD bahawa kompaun tidak dijelaskan selepas tamat 30 hari (jika kes dibawa ke mahkamah)",
+        ],
+        "perangkap_kesilapan": [
+            "JANGAN salah petik Seksyen 16(2) Akta 852 (kesalahan individu merokok) bagi kes ketiadaan papan tanda — kesalahan tuan punya/penghuni premis ialah Seksyen 18(1)(a) Akta 852!",
+            "JANGAN petik 'Peraturan 3 P.U. (A) 258/2024' (tidak wujud — P.U. (A) 258/2024 hanya mempunyai Peraturan 1, Peraturan 2, Jadual Pertama & Jadual Kedua) dan jangan anggap kes ini tidak boleh kompaun.",
+            "Pastikan OKT dinamakan betul sebagai 'penghuni' (peniaga/pengendali kafeteria yang sah melalui surat tawaran/sewaan) dan bukan pekerja biasa tanpa kuasa pengurusan.",
+        ],
+        "templat_ringkas": (
+            "Kesalahan: Tuan punya atau penghuni tempat makan (kafeteria) gagal pada setiap masa mempamerkan tanda amaran larangan merokok mengikut spesifikasi "
+            "Jadual Pertama & Kedua Peraturan-Peraturan Kawalan Produk Merokok Demi Kesihatan Awam (Tanda Amaran Larangan Merokok) 2024 [P.U. (A) 258/2024], "
+            "melanggar Seksyen 18(1)(a) Akta 852 dan boleh dihukum di bawah Seksyen 18(2) Akta 852. Notis S.47 & Tawaran Kompaun S.48(2) [30 hari] telah diserahkan."
         ),
     },
     {
@@ -1929,7 +1986,38 @@ class UIPAdvisorService:
             effective_question = matched["tajuk"]
 
         ai_requested = bool(use_ai)
-        auto_ai_needed = (not confident_match) and len(effective_question) >= 12
+        # Kesan soalan bernuansa (mengandungi alasan/pembelaan, pengecualian, syarat sempadan atau perbandingan pihak)
+        # supaya 'Semak Kes Ini' juga menggunakan penaakulan AI (bukan melambak templat kaku yang menjawab soalan lain!)
+        q_nuance_low = effective_question.lower()
+        is_nuanced_question = (not scenario_id) and (
+            any(
+                m in q_nuance_low
+                for m in (
+                    "atas alasan", "alasan ", "alasan:", "mendakwa", "dakwa ", "tuan tanah",
+                    "pihak universiti", "pihak pengurusan", "tanggungjawab siapa", "siapa yang salah",
+                    "baru pindah", "dah pasang", "sudah pasang", "juruwang", "tidak pegang makanan",
+                    "open car park", "open air", "tempat letak kereta awam terbuka", "parkir terbuka",
+                    "luar bangunan", "luar 3 meter", "kabinet bertutup", "kabinet legap", "opaque",
+                    "menyental", "berkunci mangga", "outstation", "bersiar-siar",
+                )
+            )
+            or (
+                bool(re.search(r"\b(?:tetapi|tapi|namun|walaupun|kecuali|melainkan)\b", q_nuance_low))
+                and len(effective_question.split()) >= 14
+            )
+        )
+        # Kekalkan laluan pantas tempatan bagi senario tersuai yang memang dibina tepat untuk kes sempadan tersebut
+        fast_handled_nuance_ids = {
+            "ak852_tanda_larangan_premis",
+            "ak852_larangan_merokok_bangunan_mall_parkir",
+            "ak342_tibi_smear_negatif_enggan_mula",
+            "ak342_covid_positif_tempat_kerja",
+            "ak281_makanan_luput_pelabelan",
+        }
+        auto_ai_needed = (
+            (not confident_match)
+            or (is_nuanced_question and matched.get("id") not in fast_handled_nuance_ids)
+        ) and len(effective_question) >= 12
         should_call_ai = ai_requested or auto_ai_needed
 
         if should_call_ai and self.router._genai_client is None:
@@ -1972,35 +2060,47 @@ class UIPAdvisorService:
                     if amendment_directives_list
                     else ""
                 )
+                # Semak sama ada templat padanan selari dengan kesalahan teratas grounding supaya templat tidak memutarbelitkan AI!
+                top_cand_sec = str((grounding.get("candidate_offences") or [{}])[0].get("offence_section") or "").lower()
+                matched_first_sec = str((matched.get("cadangan_pertuduhan") or [{}])[0].get("seksyen_kesalahan") or "").lower()
+                top_sec_digits = re.findall(r"\d+[A-Za-z]?", top_cand_sec)
+                preset_aligns_with_grounding = bool(
+                    scenario_id
+                    or not top_sec_digits
+                    or (top_sec_digits[0] in matched_first_sec)
+                )
                 charges_summary = "\n".join(
                     f"- {c.get('perihal', '')}: {c.get('seksyen_kesalahan', '')} | Hukuman: {c.get('seksyen_hukuman', '')}"
                     for c in matched.get("cadangan_pertuduhan", [])
                 )
                 ref_block = (
-                    f"MATRIKS SOP RUJUKAN TERDEKAT ({matched['tajuk']}):\n"
-                    f"Keputusan asas: {matched['keputusan_tindakan']}\n"
-                    f"Pertuduhan rujukan:\n{charges_summary}\n\n"
-                    if confident_match
-                    else "TIADA TEMPLAT SEDIA ADA YANG PADAN — analisis terus daripada fakta soalan dan <STATUTORY_CONTEXT> di bawah.\n\n"
+                    f"RUJUKAN TEMPLAT SOP UMUM ({matched['tajuk']}) — GUNAKAN SEBAGAI PANDUAN SAHAJA, ABAIKAN JIKA SOALAN PPKP MEMBINCANGKAN KESALAHAN/PIHAK/PENGECUALIAN BERBEZA:\n"
+                    f"Keputusan asas templat: {matched['keputusan_tindakan']}\n"
+                    f"Pertuduhan templat:\n{charges_summary}\n\n"
+                    if (confident_match and preset_aligns_with_grounding)
+                    else "ANALISIS TERUS DARIPADA SOALAN PPKP, [KATALOG RINGKAS SEMUA KESALAHAN DOMAIN], DAN [TEKS PENUH VERBATIM WARTA] DI BAWAH.\n\n"
                 )
                 deep_mode_instruction = (
                     "\nMOD SEMAKAN MENDALAM (DIMINTA KHUSUS OLEH PEGAWAI):\n"
-                    "- Berikan kupasan undang-undang yang LEBIH MENDALAM dan spesifik kepada fakta tepat yang ditaip pegawai (bukan jawapan templat umum).\n"
-                    "- Terangkan perbezaan kes sempadan (contohnya: kawasan berbumbung/struktur bangunan vs parkir terbuka, kenderaan persendirian vs awam, had kuasa pemeriksaan, atau pengecualian dalam Jadual).\n"
-                    "- Nyatakan strategi pembuktian dan potensi hujah pembelaan yang perlu dijangka oleh PPKP/TPR.\n"
+                    "- Jawab soalan sebenar yang ditanya oleh pegawai secara TERUS TERANG pada ayat pertama `ringkasan_keputusan` (cth: boleh kompaun atau tidak, alasan pihak premis sah atau ditolak).\n"
+                    "- Nilai setiap fakta, alasan/pembelaan, pengecualian Jadual, dan siapa yang memikul liabiliti statutori (cth. tuan punya vs penghuni, penyewa vs pengurusan bangunan, individu vs syarikat) berdasarkan teks verbatim Warta dalam <STATUTORY_CONTEXT>.\n"
+                    "- Nyatakan strategi pembuktian kukuh, eksibit kritikal, dan potensi hujah pembelaan yang perlu dijangka oleh PPKP/TPR.\n"
                     if ai_requested
                     else ""
                 )
                 base_closed_book_prompt = (
-                    "Anda ialah Ketua UIP / Pegawai Pendakwa Kanan Kementerian Kesihatan Malaysia (KKM).\n"
-                    "Jawab soalan PPKP ini menggunakan Bahasa Melayu kerja harian PPKP yang jelas, padat, praktikal di lapangan, dan tepat.\n"
-                    "ARAHAN KUNCI TERTUTUP (STRICT CLOSED-BOOK PROMPTING):\n"
-                    "1) WAJIB kelaskan `status_kesalahan` kepada tepat satu daripada 2 nilai: `TIADA_KESALAHAN` atau `ADA_KESALAHAN`, serta tulis `ringkasan_keputusan` 1–2 baris yang tegas.\n"
-                    "   - Jika `TIADA_KESALAHAN`: jelaskan punca ia bukan kesalahan dalam `sebab_tidak_menyalahi`, berikan tindakan pentadbiran/agensi & syarat bukti tambahan dalam `langkah_susulan_ppkp`, dan kosongkan `cadangan_pertuduhan`.\n"
-                    "   - Jika `ADA_KESALAHAN`: nyatakan seksyen kesalahan & hukuman tepat, tindakan segera, SOP lapangan bernombor kronologi, dan eksibit wajib.\n"
+                    "Anda ialah Ketua UIP / Pegawai Pendakwa Kanan Kementerian Kesihatan Malaysia (KKM) yang amat teliti dan pintar dalam undang-undang kesihatan awam.\n"
+                    "Jawab SOALAN TEPAT YANG DITANYA OLEH PPKP menggunakan Bahasa Melayu kerja harian PPKP yang jelas, padat, praktikal di lapangan, dan tepat.\n"
+                    "ARAHAN KUNCI TERTUTUP & KETEPATAN PENAAKULAN (STRICT CLOSED-BOOK REASONING):\n"
+                    "0) FOKUS 100% PADA SOALAN SEBENAR PEGAWAI: Baca dengan teliti apa yang ditanya (siapa pelaku/pihak terlibat, apa perbuatan atau peninggalan, apa alasan/pengecualian yang disebut). "
+                    "JANGAN sesekali menjawab tentang seksyen lain yang tidak ditanya (contohnya: jika soalan tentang tiada tanda larangan merokok oleh peniaga, rujuk Seksyen 18(1)(a) & P.U. (A) 258/2024 — BUKAN Seksyen 16(2) perokok individu!). "
+                    "Semak [KATALOG RINGKAS SEMUA KESALAHAN DOMAIN] dan [TEKS PENUH VERBATIM WARTA] untuk memilih seksyen yang PALING TEPAT.\n"
+                    "1) WAJIB kelaskan `status_kesalahan` kepada tepat satu daripada 2 nilai: `TIADA_KESALAHAN` atau `ADA_KESALAHAN`, serta tulis `ringkasan_keputusan` 1–2 baris yang tegas dan terus menjawab soalan pegawai.\n"
+                    "   - Jika `TIADA_KESALAHAN`: jelaskan dengan tepat mengapa perbuatan/situasi itu tidak menjadi kesalahan atau termasuk dalam pengecualian Jadual dalam `sebab_tidak_menyalahi`, berikan langkah susulan pentadbiran/bukti tambahan dalam `langkah_susulan_ppkp`, dan kosongkan `cadangan_pertuduhan`.\n"
+                    "   - Jika `ADA_KESALAHAN`: letakkan seksyen kesalahan PALING UTAMA bagi soalan pegawai di indeks pertama `cadangan_pertuduhan[0]`, nyatakan hukuman & status kompaun tepat, tindakan segera, SOP lapangan bernombor kronologi, dan eksibit wajib.\n"
                     "2) Anda DILARANG KERAS memetik mana-mana nombor seksyen, peraturan, denda, atau kompaun yang TIDAK WUJUD dalam blok <STATUTORY_CONTEXT> di bawah, dan DILARANG mencadangkan Seksyen 2 (Tafsiran) sebagai seksyen kesalahan.\n"
-                    "3) WAJIB semak SETIAP SATU `mandatory_elements` dan `explicit_exclusions_and_traps` (TERPENUHI / TIDAK TERPENUHI / PERLU BUKTI TAMBAHAN) sebelum membuat keputusan tindakan. "
-                    "Jika mana-mana unsur mandatori berstatus TIDAK TERPENUHI (contohnya pelajar hanya memiliki vape dalam beg tanpa bukti menghisap/menggunakan/membeli di bawah S.17(1) Akta 852, atau kes COVID-19 pasca 15 Julai 2024 tanpa perintah bertulis S.15(1)/S.14, atau PTB Smear Negatif belum disahkan aktif), tetapkan `status_kesalahan = 'TIADA_KESALAHAN'`.\n"
+                    "3) WAJIB semak unsur mandatori dan pengecualian/perangkap sebenar dalam teks Warta sebelum memutuskan kesalahan. "
+                    "Jika fakta soalan jelas memenuhi pengecualian statutori atau unsur mandatori tidak dipenuhi (cth. pemilikan pasif vape pelajar tanpa menghisap/membeli, merokok di tempat letak kereta awam terbuka R&R Bil. 24, kabinet bertutup legap P.U.(A) 260/2024, pembersihan dapur tanpa menjual semasa perintah tutup S.11, makanan luput diasingkan untuk pelupusan, takungan kosong tiada larva S.13(1) Akta 154, premis berkunci tiada penghuni S.21 Akta 154, atau COVID-19 pasca 15 Julai 2024 tanpa perintah bertulis S.15(1)/S.14), WAJIB tetapkan `status_kesalahan = 'TIADA_KESALAHAN'`.\n"
                     "4) DILARANG mencadangkan sebarang akta/peraturan dalam SENARAI HITAM PERUNTUKAN DIMANSUHKAN (seperti PPKHT 2004 atau Ordinan Darurat 2021).\n"
                     "5) Bagi setiap cadangan_pertuduhan (jika ADA_KESALAHAN), wajib sertakan 5 kunci tepat: perihal, seksyen_kesalahan, seksyen_hukuman, hukuman_maksimum, boleh_kompaun.\n"
                     f"{amendment_rule_str}"
@@ -2026,11 +2126,13 @@ class UIPAdvisorService:
                     temperature=0.15 if ai_requested else 0.1,
                     prefer_flash=not ai_requested,
                     prefer_fast_gc=True,
-                    max_output_tokens=3000 if ai_requested else 2600,
+                    max_output_tokens=3400 if ai_requested else 2800,
                 )
 
                 def _build_ai_patch(raw_ai: Dict[str, Any]) -> Dict[str, Any]:
                     raw_status = str(raw_ai.get("status_kesalahan") or "").strip().upper()
+                    raw_charges = raw_ai.get("cadangan_pertuduhan")
+                    fallback_charges = matched.get("cadangan_pertuduhan", []) if preset_aligns_with_grounding else []
                     patch: Dict[str, Any] = {
                         "akta_disyorkan": self._canonicalize_akta_code(
                             str(raw_ai.get("akta_disyorkan") or ""),
@@ -2050,10 +2152,7 @@ class UIPAdvisorService:
                         "cadangan_pertuduhan": (
                             []
                             if raw_status == "TIADA_KESALAHAN"
-                            else self._normalize_charge_items(
-                                raw_ai.get("cadangan_pertuduhan"),
-                                matched.get("cadangan_pertuduhan", []),
-                            )
+                            else self._normalize_charge_items(raw_charges, fallback_charges)
                         ),
                         "sop_lapangan": list(raw_ai.get("sop_lapangan") or result["sop_lapangan"]),
                         "eksibit_wajib": list(raw_ai.get("eksibit_wajib") or result["eksibit_wajib"]),
@@ -2084,7 +2183,7 @@ class UIPAdvisorService:
                             temperature=0.0,
                             prefer_flash=True,
                             prefer_fast_gc=True,
-                            max_output_tokens=2600,
+                            max_output_tokens=2800,
                         )
                         if retry_json:
                             candidate_patch = _build_ai_patch(retry_json)
@@ -2122,6 +2221,16 @@ class UIPAdvisorService:
                     result["ai_succeeded"] = False
                     result["fallback_reason"] = err_detail
 
+        # PENYELARASAN PASCA-JAWAPAN: Selaraskan `element_evaluations` dan `statutory_citations`
+        # supaya 100% sepadan dengan kesalahan SEBENAR yang dipilih oleh jawapan (bukan sisa pra-AI yang bercanggah!)
+        self._reconcile_post_answer_grounding(
+            result=result,
+            effective_question=effective_question,
+            legal_lib=legal_lib,
+            citations_dict=citations_dict,
+            verbatim_by_doc_id=verbatim_by_doc_id,
+        )
+
         self._enrich_two_branch_structure(
             result,
             effective_question,
@@ -2131,7 +2240,7 @@ class UIPAdvisorService:
             ""
             if result.get("status_kesalahan") == "TIADA_KESALAHAN"
             else self._build_prefilled_case_template(
-                {**matched, "templat_ringkas": result["templat_ringkas"]},
+                {**matched, "akta_utama": result["akta_disyorkan"], "templat_ringkas": result["templat_ringkas"]},
                 officer_profile=officer_profile,
             )
         )
@@ -2141,3 +2250,139 @@ class UIPAdvisorService:
                 result, lib_snapshot, question_context=effective_question
             )
         return result
+
+    @staticmethod
+    def _reconcile_post_answer_grounding(
+        *,
+        result: Dict[str, Any],
+        effective_question: str,
+        legal_lib: Any,
+        citations_dict: List[Dict[str, Any]],
+        verbatim_by_doc_id: Dict[str, Dict[str, Any]],
+    ) -> None:
+        """Menyelaraskan `element_evaluations` & susunan `statutory_citations` mengikut kesalahan sebenar yang dipilih."""
+        from backend.rag.legal_engine import (
+            canonical_akta_code_for_statute,
+            evaluate_offence_elements_against_facts,
+        )
+
+        status_up = str(result.get("status_kesalahan") or "").upper()
+        charges = [c for c in (result.get("cadangan_pertuduhan") or []) if isinstance(c, dict)]
+        ans_act = str(result.get("akta_disyorkan") or "").upper()
+
+        if status_up == "TIADA_KESALAHAN":
+            # Hanya kekalkan penilaian unsur yang benar-benar disekat / mempunyai unsur TIDAK TERPENUHI
+            # dan pastikan tiada unsur hijau TERPENUHI dipaparkan pada kad TIADA_KESALAHAN.
+            cleaned_no_off_evals: List[Dict[str, Any]] = []
+            for ev in result.get("element_evaluations") or []:
+                if not isinstance(ev, dict):
+                    continue
+                els = ev.get("element_evaluations") or []
+                has_unmet = bool(ev.get("action_blocked")) or any(
+                    str(e.get("status") or "").upper() == "TIDAK TERPENUHI" for e in els
+                )
+                if not has_unmet:
+                    continue
+                sanitized_els = [
+                    {
+                        **e,
+                        "status": "PERLU BUKTI TAMBAHAN"
+                        if str(e.get("status") or "").upper() == "TERPENUHI"
+                        else e.get("status"),
+                    }
+                    for e in els
+                ]
+                cleaned_no_off_evals.append(
+                    {
+                        **ev,
+                        "all_elements_satisfied": False,
+                        "element_evaluations": sanitized_els,
+                    }
+                )
+            result["element_evaluations"] = cleaned_no_off_evals[:2]
+            return
+
+        if not charges:
+            return
+
+        # Padankan kesalahan sebenar dalam `cadangan_pertuduhan` dengan entri `master_offences_matrix`
+        matched_offs: List[Dict[str, Any]] = []
+        seen_oids: set[str] = set()
+        for ch in charges[:2]:
+            ch_sec = str(ch.get("seksyen_kesalahan") or "").lower()
+            sec_m = re.search(r"(?:seksyen|peraturan|s\.|p\.)\s*(\d+[a-z]?(?:\(\d+\))?)", ch_sec, re.I)
+            if not sec_m:
+                continue
+            sec_full = sec_m.group(1).lower()
+            sec_base = re.findall(r"^\d+[a-z]?", sec_full)[0]
+            ch_act_digits = re.findall(r"\b(852|281|154|342|593|56|611)\b", ch_sec)
+            if not ch_act_digits:
+                ch_act_digits = re.findall(r"\b(852|281|154|342|593|56|611)\b", ans_act)
+            is_ppkm_ch = "ppkm" in ch_sec or "95/2009" in ch_sec
+            is_ppm_ch = "ppm" in ch_sec or "1985" in ch_sec
+
+            best_off = None
+            best_rank = -1
+            for off in legal_lib.master_offences_matrix:
+                oid = str(off.get("offence_id") or "")
+                if oid in seen_oids or oid == "AKTA_852_PERATURAN_TANDA_2024_PERATURAN_2":
+                    continue
+                sid = str(off.get("statute_id") or "").upper()
+                o_sec = str(off.get("offence_section") or "").lower()
+                if is_ppkm_ch and sid != "PPKM_2009":
+                    continue
+                if is_ppm_ch and sid != "PPM_1985":
+                    continue
+                if ch_act_digits and not (is_ppkm_ch or is_ppm_ch):
+                    c_act = canonical_akta_code_for_statute(sid)
+                    if not any(d in c_act or d in sid for d in ch_act_digits):
+                        continue
+                rank = 0
+                if sec_full in o_sec:
+                    rank = 3
+                elif re.search(rf"\b{re.escape(sec_base)}(?:\(|\b)", o_sec):
+                    rank = 2
+                if rank > best_rank:
+                    best_rank = rank
+                    best_off = off
+            if best_off and best_rank >= 2:
+                seen_oids.add(best_off["offence_id"])
+                matched_offs.append(best_off)
+
+        if matched_offs:
+            result["element_evaluations"] = [
+                evaluate_offence_elements_against_facts(effective_question, off)
+                for off in matched_offs
+            ]
+            # Pastikan seksyen verbatim daripada kesalahan yang benar-benar dipilih berada di bahagian paling atas `citations_dict`
+            existing_ids = {str(c.get("doc_id") or c.get("chunk_id") or "") for c in citations_dict}
+            priority_cits: List[Dict[str, Any]] = []
+            priority_ids: set[str] = set()
+            for off in matched_offs:
+                for did in off.get("source_section_doc_ids") or []:
+                    if did in verbatim_by_doc_id and did not in priority_ids:
+                        s_v = verbatim_by_doc_id[did]
+                        priority_ids.add(did)
+                        act_c = canonical_akta_code_for_statute(s_v["statute_id"])
+                        sc_code = str(s_v["section_code"])
+                        priority_cits.append(
+                            {
+                                "chunk_id": s_v["doc_id"],
+                                "doc_id": s_v["doc_id"],
+                                "statute_id": s_v["statute_id"],
+                                "akta_code": act_c,
+                                "akta_title": act_c,
+                                "section": f"Seksyen {sc_code} - {s_v['section_heading']}"
+                                if not sc_code.lower().startswith(("seksyen", "peraturan", "jadual"))
+                                else f"{sc_code} - {s_v['section_heading']}",
+                                "text": s_v["verbatim_text_bm"],
+                                "score": 0.98,
+                                "verbatim": True,
+                            }
+                        )
+            if priority_cits:
+                rest = [
+                    c for c in citations_dict
+                    if str(c.get("doc_id") or c.get("chunk_id") or "") not in priority_ids
+                ]
+                citations_dict[:] = priority_cits + rest[: max(0, 10 - len(priority_cits))]
