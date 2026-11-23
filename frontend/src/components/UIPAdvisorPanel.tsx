@@ -12,6 +12,7 @@ import {
   ClipboardList,
   Clock,
   Copy,
+  Database,
   Gavel,
   History,
   Loader2,
@@ -24,6 +25,7 @@ import {
   X,
   Zap,
 } from "lucide-react";
+import LegalDirectoryPanel, { type CompoundPrefillMeta } from "@/components/LegalDirectoryPanel";
 import {
   consultUipAdvisor,
   fetchAdvisorAnsweredQuestions,
@@ -41,21 +43,32 @@ import type {
   OfficerProfile,
 } from "@/lib/types";
 
+export type PakarWorkspaceTab = "ask" | "directory" | "history";
+
 interface UIPAdvisorPanelProps {
   aktaUtama: string;
   authToken: string | null;
   officer: OfficerProfile | null;
   isDevAdmin?: boolean;
-  onApplyToCaseBuilder: (draftText: string, aktaDisyorkan: string, bukaIp: boolean) => void;
+  initialQuestion?: string | null;
+  initialQuestionNonce?: number;
+  initialWorkspaceTab?: PakarWorkspaceTab;
+  workspaceTabNonce?: number;
+  onApplyToCaseBuilder: (
+    draftText: string,
+    aktaDisyorkan: string,
+    bukaIp: boolean,
+    compoundMeta?: CompoundPrefillMeta
+  ) => void;
 }
 
 type AdvisorResultTab = "evidence" | "charges" | "statutes";
 
 const QUICK_CHIPS = [
-  "Guru tangkap pelajar sedang hisap vape dalam tandas sekolah",
-  "Guru maklum PPKP ada pelajar memiliki vape semasa pemeriksaan beg sekolah",
-  "Restoran kotor ada najis tikus & tiada tifoid",
-  "Kedai pamer vape secara terbuka di kaunter",
+  "Pelajar hisap vape dalam tandas sekolah",
+  "Pelajar bawa vape dalam beg sekolah",
+  "Restoran kotor & pekerja tiada tifoid",
+  "Kedai pamer vape terbuka di kaunter",
 ];
 
 const CORE_ACT_CODES = ["Akta 852", "Akta 281", "Akta 154", "Akta 342"] as const;
@@ -132,8 +145,13 @@ export default function UIPAdvisorPanel({
   authToken,
   officer,
   isDevAdmin = false,
+  initialQuestion = null,
+  initialQuestionNonce = 0,
+  initialWorkspaceTab = "ask",
+  workspaceTabNonce = 0,
   onApplyToCaseBuilder,
 }: UIPAdvisorPanelProps) {
+  const [workspaceTab, setWorkspaceTab] = useState<PakarWorkspaceTab>(initialWorkspaceTab);
   const [question, setQuestion] = useState("");
   const [aktaFilter, setAktaFilter] = useState<string>("Semua");
   const [scenarios, setScenarios] = useState<AdvisorScenarioItem[]>([]);
@@ -142,6 +160,7 @@ export default function UIPAdvisorPanel({
   const [copiedSummary, setCopiedSummary] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<AdvisorConsultResult | null>(null);
+  const [checkedSop, setCheckedSop] = useState<Record<number, boolean>>({});
   const [showLibrary, setShowLibrary] = useState(false);
   const [resultTab, setResultTab] = useState<AdvisorResultTab>("evidence");
   const [showNoOffenceStatutes, setShowNoOffenceStatutes] = useState(false);
@@ -154,6 +173,10 @@ export default function UIPAdvisorPanel({
   const [legalSnapshot, setLegalSnapshot] = useState<LegalLibrarySnapshot | null>(null);
   const resultRef = useRef<HTMLDivElement | null>(null);
   const answeredSectionRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    setWorkspaceTab(initialWorkspaceTab);
+  }, [initialWorkspaceTab, workspaceTabNonce]);
 
   useEffect(() => {
     fetchAdvisorScenarios()
@@ -210,17 +233,18 @@ export default function UIPAdvisorPanel({
   ) => {
     const q = (customQuestion ?? question).trim();
     if (!q && !scenarioId) {
-      setError("Sila taip situasi kesalahan atau pilih daripada pustaka situasi lazim.");
+      setError("Sila taip situasi yang ditemui atau pilih daripada Contoh Situasi.");
       return;
     }
     if (forceAi) setDeepLoading(true);
     else setLoading(true);
     setError(null);
     setCopiedSummary(false);
+    setWorkspaceTab("ask");
 
     try {
       const res = await consultUipAdvisor({
-        question: q || "Rujuk templat situasi ini",
+        question: q || "Rujuk contoh situasi ini",
         aktaHint: aktaFilter,
         scenarioId,
         useAi: forceAi,
@@ -228,6 +252,7 @@ export default function UIPAdvisorPanel({
         officerProfile: officer,
       });
       setResult(res);
+      setCheckedSop({});
       setResultTab("evidence");
       setShowNoOffenceStatutes(false);
       setShowLibrary(false);
@@ -244,6 +269,15 @@ export default function UIPAdvisorPanel({
     }
   };
 
+  useEffect(() => {
+    if (initialQuestionNonce > 0 && initialQuestion && initialQuestion.trim()) {
+      setQuestion(initialQuestion.trim());
+      setWorkspaceTab("ask");
+      void handleConsult(initialQuestion.trim());
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialQuestionNonce]);
+
   const handleSelectAnsweredItem = (item: AdvisorAnsweredItem) => {
     setQuestion(item.question);
     setSelectedAnsweredId(item.id);
@@ -251,8 +285,10 @@ export default function UIPAdvisorPanel({
     setCopiedSummary(false);
     setShowLibrary(false);
     setShowNoOffenceStatutes(false);
+    setWorkspaceTab("ask");
     if (item.answer) {
       setResult(item.answer);
+      setCheckedSop({});
       setResultTab("evidence");
       window.setTimeout(() => {
         resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -364,28 +400,66 @@ export default function UIPAdvisorPanel({
 
   return (
     <div className="mx-auto max-w-5xl space-y-4">
-      {/* 1. KOTAK SOALAN TENANG & BERPUSAT */}
+      {/* BAR 3 TAB BERSIH: GABUNGAN TANYA SITUASI + SENARAI KESALAHAN & AKTA + SOALAN TERDAHULU */}
+      <div className="flex gap-1.5 overflow-x-auto rounded-2xl border border-slate-200 bg-white p-1.5 shadow-sm no-scrollbar">
+        {[
+          { id: "ask" as PakarWorkspaceTab, label: "Tanya Situasi", icon: MessageSquareQuote },
+          { id: "directory" as PakarWorkspaceTab, label: "Senarai Kesalahan & Teks Akta", icon: Database },
+          {
+            id: "history" as PakarWorkspaceTab,
+            label: `Soalan Terdahulu (${answeredData?.total_questions ?? 0})`,
+            icon: History,
+          },
+        ].map((tab) => {
+          const Icon = tab.icon;
+          const active = workspaceTab === tab.id;
+          return (
+            <button
+              key={tab.id}
+              type="button"
+              onClick={() => setWorkspaceTab(tab.id)}
+              className={`inline-flex min-h-[42px] shrink-0 flex-1 items-center justify-center gap-2 rounded-xl px-4 py-2 text-xs font-extrabold transition ${
+                active
+                  ? "bg-[#0f2744] text-white shadow-sm"
+                  : "text-slate-700 hover:bg-slate-100 hover:text-slate-900"
+              }`}
+            >
+              <Icon className="h-4 w-4 shrink-0" />
+              <span className="whitespace-nowrap">{tab.label}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* TAB 2: SENARAI KESALAHAN & TEKS PENUH AKTA */}
+      {workspaceTab === "directory" && (
+        <LegalDirectoryPanel
+          authToken={authToken}
+          officer={officer}
+          isDevAdmin={isDevAdmin}
+          onApplyOffenceToCase={onApplyToCaseBuilder}
+        />
+      )}
+
+      {/* TAB 1: TANYA SITUASI DI LOKASI */}
+      {workspaceTab === "ask" && (
+        <>
       <section className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <div className="flex items-center gap-2.5">
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-indigo-700">
-              <MessageSquareQuote className="h-5 w-5" />
-            </div>
-            <div>
-              <h2 className="text-sm font-extrabold text-slate-900 sm:text-base">
-                Tanya Pakar UIP (Seksyen &amp; SOP Lapangan)
-              </h2>
-              <p className="text-xs text-slate-500">
-                Ceritakan situasi yang anda jumpa di lokasi untuk semak seksyen kesalahan, had kompaun dan langkah SOP.
-              </p>
-            </div>
+          <div>
+            <h2 className="text-base font-extrabold text-slate-900">
+              Tak pasti seksyen atau tindakan di lokasi?
+            </h2>
+            <p className="mt-0.5 text-xs text-slate-600 sm:text-sm">
+              Taip sahaja apa yang anda jumpa untuk semak seksyen tepat, kompaun atau buka IP, dan langkah SOP.
+            </p>
           </div>
 
           <select
             aria-label="Tapis Akta KKM"
             value={aktaFilter}
             onChange={(e) => setAktaFilter(e.target.value)}
-            className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-base font-semibold text-slate-800 sm:w-auto sm:text-sm"
+            className="min-h-[42px] w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-base font-semibold text-slate-800 sm:w-auto sm:text-sm"
           >
             <option value="Semua">Semua Akta KKM</option>
             <option value="Akta 852">Akta 852 (Merokok/Vape)</option>
@@ -405,49 +479,40 @@ export default function UIPAdvisorPanel({
                 handleConsult();
               }
             }}
-            placeholder="Contoh: Ada budak sekolah hisap rokok di tepi jalan, nak guna seksyen mana dan apa prosedur?"
-            className="w-full rounded-xl border border-slate-300 bg-slate-50/40 p-3 text-base leading-relaxed text-slate-900 transition focus:border-indigo-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-100 sm:text-sm"
+            placeholder="Contoh: Ada pelajar hisap vape di tandas sekolah, atau kedai pamer vape terbuka di kaunter..."
+            className="w-full rounded-xl border border-slate-300 bg-slate-50/40 p-3.5 text-base leading-relaxed text-slate-900 transition focus:border-[#0f2744] focus:bg-white focus:outline-none focus:ring-2 focus:ring-slate-200 sm:text-sm"
           />
 
-          {/* Cip Pantas + Butang Pustaka */}
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="text-xs font-semibold text-slate-500">Contoh pantas:</span>
-            {QUICK_CHIPS.map((chip) => (
-              <button
-                key={chip}
-                type="button"
-                onClick={() => {
-                  setQuestion(chip);
-                  handleConsult(chip);
-                }}
-                className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-medium text-slate-700 transition hover:border-indigo-300 hover:bg-indigo-50 hover:text-indigo-900"
-              >
-                {chip}
-              </button>
-            ))}
-          </div>
+          {/* Cip Pantas Pendek (Dilipat automatik sebaik jawapan muncul supaya skrin tenang) */}
+          {!result && (
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-xs font-semibold text-slate-500">Contoh pantas:</span>
+              {QUICK_CHIPS.map((chip) => (
+                <button
+                  key={chip}
+                  type="button"
+                  onClick={() => {
+                    setQuestion(chip);
+                    handleConsult(chip);
+                  }}
+                  className="min-h-[38px] rounded-full border border-slate-200 bg-slate-50 px-3.5 py-1.5 text-xs font-semibold text-slate-700 transition hover:border-[#0f2744] hover:bg-slate-100 hover:text-slate-900"
+                >
+                  {chip}
+                </button>
+              ))}
+            </div>
+          )}
 
           <div className="flex flex-col gap-2 pt-1 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex flex-wrap items-center gap-2">
               <button
                 type="button"
                 onClick={() => setShowLibrary((v) => !v)}
-                className="inline-flex min-h-[40px] items-center justify-center gap-1.5 rounded-xl border border-slate-300 bg-white px-3.5 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50"
+                className="inline-flex min-h-[42px] items-center justify-center gap-1.5 rounded-xl border border-slate-300 bg-white px-3.5 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50"
               >
-                <BookOpen className="h-4 w-4 text-indigo-600" />
-                <span>Pustaka {filteredScenarios.length} Situasi Lazim</span>
+                <BookOpen className="h-4 w-4 text-[#0f2744]" />
+                <span>Contoh Situasi ({filteredScenarios.length})</span>
                 {showLibrary ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-              </button>
-
-              <button
-                type="button"
-                onClick={() =>
-                  answeredSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })
-                }
-                className="inline-flex min-h-[40px] items-center justify-center gap-1.5 rounded-xl border border-emerald-200 bg-emerald-50/70 px-3.5 py-2 text-xs font-bold text-emerald-900 hover:bg-emerald-100/70"
-              >
-                <History className="h-4 w-4 text-emerald-700" />
-                <span>Koleksi Q&amp;A ({answeredData?.total_questions ?? 0})</span>
               </button>
             </div>
 
@@ -455,14 +520,14 @@ export default function UIPAdvisorPanel({
               type="button"
               disabled={loading || deepLoading}
               onClick={() => handleConsult()}
-              className="inline-flex min-h-[44px] items-center justify-center gap-2 rounded-xl bg-[#0f2744] px-6 py-2.5 text-sm font-extrabold text-white shadow-sm hover:bg-slate-800 disabled:opacity-60"
+              className="inline-flex min-h-[46px] items-center justify-center gap-2 rounded-xl bg-[#0f2744] px-6 py-2.5 text-sm font-extrabold text-white shadow-sm hover:bg-slate-800 disabled:opacity-60"
             >
               {loading ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
               ) : (
-                <Search className="h-4 w-4 text-amber-300" />
+                <Search className="h-4 w-4" />
               )}
-              Tanya Pakar Sekarang
+              {loading ? "Sedang menyemak..." : "Semak Kes Ini"}
             </button>
           </div>
 
@@ -473,11 +538,11 @@ export default function UIPAdvisorPanel({
           )}
         </div>
 
-        {/* Pustaka Situasi Boleh Lipat */}
+        {/* Contoh Situasi Boleh Lipat */}
         {showLibrary && (
           <div className="mt-4 border-t border-slate-200 pt-4">
             <div className="mb-2.5 text-xs font-bold text-slate-700">
-              Klik mana-mana situasi di bawah untuk paparan keputusan segera:
+              Pilih satu situasi untuk terus lihat seksyen &amp; SOP:
             </div>
             <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
               {filteredScenarios.map((sc) => {
@@ -553,14 +618,14 @@ export default function UIPAdvisorPanel({
             : result.sop_lapangan;
 
         const cleanEngineLabel = result.from_qa_collection
-          ? `Koleksi Q&A · Padanan ${result.matched_collection_similarity ?? 100}%`
+          ? "Jawapan Soalan Serupa"
           : result.ai_succeeded
             ? isDevAdmin
               ? result.engine_used
-              : "Analisis AI"
+              : "Bantuan AI"
             : isDevAdmin
-              ? result.engine_used || "Rujukan Pantas UIP"
-              : "Rujukan Akta KKM";
+              ? result.engine_used || "Panduan Akta Rasmi"
+              : "Panduan Akta Rasmi";
 
         return (
           <section
@@ -570,29 +635,29 @@ export default function UIPAdvisorPanel({
             {/* Bar Atas: Tag Ringkas + Butang Salin / Tindakan */}
             <div className="flex flex-wrap items-center justify-between gap-2.5 border-b border-slate-200 pb-3">
               <div className="flex flex-wrap items-center gap-2">
-                <span className="rounded-md bg-[#0f2744] px-2.5 py-0.5 text-[11px] font-bold text-white">
+                <span className="rounded-md bg-[#0f2744] px-2.5 py-0.5 text-xs font-bold text-white">
                   {result.akta_disyorkan}
                 </span>
                 <span
-                  className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-[11px] font-bold ${
+                  className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-xs font-bold ${
                     result.from_qa_collection
                       ? "border-teal-300 bg-teal-50 text-teal-900"
                       : result.ai_succeeded
-                        ? "border-indigo-200 bg-indigo-50 text-indigo-800"
+                        ? "border-slate-300 bg-slate-100 text-slate-800"
                         : "border-slate-200 bg-slate-50 text-slate-700"
                   }`}
                 >
                   {result.from_qa_collection ? (
-                    <History className="h-3 w-3" />
+                    <History className="h-3.5 w-3.5" />
                   ) : result.ai_succeeded ? (
-                    <Sparkles className="h-3 w-3" />
+                    <Sparkles className="h-3.5 w-3.5" />
                   ) : (
-                    <Zap className="h-3 w-3 text-emerald-700" />
+                    <Zap className="h-3.5 w-3.5 text-emerald-700" />
                   )}
                   {cleanEngineLabel}
                 </span>
                 {isDevAdmin && activeValidation && activeValidation.passed && (
-                  <span className="inline-flex items-center gap-1 rounded-full border border-emerald-300 bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-900">
+                  <span className="inline-flex items-center gap-1 rounded-full border border-emerald-300 bg-emerald-50 px-2 py-0.5 text-xs font-bold text-emerald-900">
                     <ShieldCheck className="h-3 w-3 text-emerald-700" />
                     {result.statute_library_version || activeValidation.statute_library_version}
                   </span>
@@ -603,7 +668,7 @@ export default function UIPAdvisorPanel({
                 <button
                   type="button"
                   onClick={handleCopySummary}
-                  className="inline-flex min-h-[38px] items-center gap-1.5 rounded-xl border border-slate-300 bg-white px-3 py-1.5 text-xs font-bold text-slate-700 hover:bg-slate-50"
+                  className="inline-flex min-h-[40px] items-center gap-1.5 rounded-xl border border-slate-300 bg-white px-3.5 py-1.5 text-xs font-bold text-slate-700 hover:bg-slate-50"
                 >
                   {copiedSummary ? (
                     <ClipboardCheck className="h-4 w-4 text-emerald-600" />
@@ -616,19 +681,44 @@ export default function UIPAdvisorPanel({
                 {!isNoOffence && (!activeValidation || activeValidation.passed) && !result.unindexed_statute && (
                   <button
                     type="button"
-                    onClick={() =>
+                    onClick={() => {
+                      const amtMatch = (punca.status_kompaun || "").match(/RM\s*[\d,]+(?:\.\d{2})?/i);
                       onApplyToCaseBuilder(
                         result.draf_teks_kes_cadangan,
                         result.akta_disyorkan,
+                        result.sesuai_buka_ip,
                         result.sesuai_buka_ip
-                      )
-                    }
-                    className="inline-flex min-h-[38px] items-center gap-1.5 rounded-xl bg-blue-600 px-4 py-1.5 text-xs font-extrabold text-white shadow-sm hover:bg-blue-700"
+                          ? undefined
+                          : {
+                              seksyen: punca.seksyen_kesalahan || primaryCharge?.seksyen_kesalahan || "",
+                              kuasaKompaun:
+                                result.akta_disyorkan === "Akta 852"
+                                  ? "Seksyen 48 Akta 852 [P.U. (A) 259/2024]"
+                                  : result.akta_disyorkan === "Akta 154"
+                                    ? "Seksyen 25 Akta 154"
+                                    : result.akta_disyorkan === "Akta 342"
+                                      ? "Seksyen 25 Akta 342 [P.U. (A) 139/2025]"
+                                      : "Notis Seksyen 32B & Seksyen 33 Akta Makanan 1983",
+                              amaun: amtMatch
+                                ? amtMatch[0].toUpperCase()
+                                : result.akta_disyorkan === "Akta 154"
+                                  ? "RM 500.00"
+                                  : "RM 250.00",
+                              tempoh:
+                                result.akta_disyorkan === "Akta 852"
+                                  ? "30 hari dari tarikh tawaran kompaun"
+                                  : "14 hari dari tarikh serahan notis",
+                              kesalahanRingkas:
+                                primaryCharge?.perihal || result.tajuk_nasihat || question.trim(),
+                            }
+                      );
+                    }}
+                    className="inline-flex min-h-[42px] items-center gap-1.5 rounded-xl bg-[#0f2744] px-4 py-2 text-xs font-extrabold text-white shadow-sm hover:bg-slate-800"
                   >
                     <ArrowRightCircle className="h-4 w-4" />
                     {result.sesuai_buka_ip
-                      ? "Terus Buka Editor Fail IP"
-                      : "Isi ke Borang Notis Kompaun"}
+                      ? "Bina Draf Fail IP →"
+                      : "Isi Notis Kompaun →"}
                   </button>
                 )}
               </div>
@@ -663,7 +753,7 @@ export default function UIPAdvisorPanel({
                 <div className="flex min-w-0 flex-1 items-start gap-2">
                   <History className="mt-0.5 h-4 w-4 shrink-0 text-teal-700" />
                   <div className="min-w-0">
-                    <span className="font-bold">Dipetik daripada Koleksi Q&amp;A:</span>{" "}
+                    <span className="font-bold">Jawapan daripada soalan terdahulu yang serupa:</span>{" "}
                     <span className="text-teal-900">&ldquo;{result.matched_collection_question}&rdquo;</span>
                   </div>
                 </div>
@@ -671,10 +761,10 @@ export default function UIPAdvisorPanel({
                   type="button"
                   disabled={loading || deepLoading}
                   onClick={() => handleConsult(undefined, undefined, true)}
-                  className="inline-flex shrink-0 items-center gap-1 rounded-lg border border-teal-300 bg-white px-2.5 py-1.5 text-[11px] font-bold text-teal-900 hover:bg-teal-100 disabled:opacity-50"
+                  className="inline-flex min-h-[36px] shrink-0 items-center gap-1 rounded-lg border border-teal-300 bg-white px-3 py-1.5 text-xs font-bold text-teal-900 hover:bg-teal-100 disabled:opacity-50"
                 >
-                  <Sparkles className="h-3 w-3 text-indigo-700" />
-                  {deepLoading ? "Menganalisis AI..." : "Analisis Baharu (AI)"}
+                  <Sparkles className="h-3.5 w-3.5 text-[#0f2744]" />
+                  {deepLoading ? "AI sedang menyemak..." : "Semak Baharu Dengan AI"}
                 </button>
               </div>
             )}
@@ -684,7 +774,7 @@ export default function UIPAdvisorPanel({
                 <div className="flex min-w-0 flex-1 items-start gap-2">
                   <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-700" />
                   <div>
-                    <span className="font-bold">Paparan Rujukan Tempatan:</span>{" "}
+                    <span className="font-bold">Dipaparkan daripada Panduan Rasmi (bantuan AI tidak tersedia buat sementara):</span>{" "}
                     {result.fallback_reason}
                   </div>
                 </div>
@@ -699,10 +789,10 @@ export default function UIPAdvisorPanel({
                       true
                     );
                   }}
-                  className="inline-flex shrink-0 items-center gap-1 rounded-lg border border-amber-300 bg-white px-2.5 py-1.5 text-[11px] font-bold text-amber-900 hover:bg-amber-100 disabled:opacity-50"
+                  className="inline-flex min-h-[36px] shrink-0 items-center gap-1 rounded-lg border border-amber-300 bg-white px-3 py-1.5 text-xs font-bold text-amber-900 hover:bg-amber-100 disabled:opacity-50"
                 >
-                  <Sparkles className="h-3 w-3" />
-                  {deepLoading ? "Mencuba AI..." : "Cuba Semula AI"}
+                  <Sparkles className="h-3.5 w-3.5" />
+                  {deepLoading ? "AI sedang menyemak..." : "Cuba Semula AI"}
                 </button>
               </div>
             )}
@@ -879,7 +969,7 @@ export default function UIPAdvisorPanel({
                     ) : (
                       <Sparkles className="h-3.5 w-3.5" />
                     )}
-                    {deepLoading ? "Sedang Menganalisis AI..." : "Perlu penjelasan tambahan? Cuba Analisis AI"}
+                    {deepLoading ? "AI sedang menyemak kes anda..." : "Perlu penjelasan tambahan? Semak dengan AI"}
                   </button>
                 </div>
               </div>
@@ -893,14 +983,14 @@ export default function UIPAdvisorPanel({
                 </h3>
 
                 {/* 1. PUNCA KUASA (Teratas & Jelas) */}
-                <div className="rounded-2xl border border-blue-200 bg-blue-50/35 p-4">
+                <div className="rounded-2xl border border-slate-200 bg-slate-50/70 p-4">
                   <div className="flex flex-wrap items-center justify-between gap-2">
-                    <div className="flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wide text-blue-950">
-                      <Gavel className="h-4 w-4 text-blue-700" />
+                    <div className="flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wide text-[#0f2744]">
+                      <Gavel className="h-4 w-4 text-[#0f2744]" />
                       1. Punca Kuasa
                     </div>
                     <span
-                      className={`rounded-full px-2.5 py-0.5 text-[11px] font-extrabold ${
+                      className={`rounded-full px-3 py-0.5 text-xs font-extrabold ${
                         punca.boleh_kompaun_flag
                           ? "bg-emerald-100 text-emerald-900"
                           : "bg-amber-100 text-amber-950"
@@ -910,36 +1000,36 @@ export default function UIPAdvisorPanel({
                     </span>
                   </div>
 
-                  <div className="mt-3 grid grid-cols-1 gap-2.5 text-xs sm:grid-cols-2">
-                    <div className="rounded-xl border border-blue-100 bg-white p-3">
-                      <div className="text-[11px] font-semibold text-slate-500">Seksyen Kesalahan</div>
-                      <div className="mt-0.5 text-sm font-extrabold text-blue-950">
+                  <div className="mt-3 grid grid-cols-1 gap-3 text-xs sm:grid-cols-2">
+                    <div className="rounded-xl border border-slate-200 bg-white p-3.5">
+                      <div className="text-xs font-semibold text-slate-500">Seksyen Kesalahan</div>
+                      <div className="mt-0.5 text-sm font-extrabold text-[#0f2744]">
                         {punca.seksyen_kesalahan}
                       </div>
-                      <div className="mt-1.5 text-[11px] text-slate-600">
+                      <div className="mt-1.5 text-xs text-slate-600">
                         <span className="font-semibold">Seksyen Hukuman:</span> {punca.seksyen_hukuman}
                       </div>
                     </div>
 
-                    <div className="rounded-xl border border-blue-100 bg-white p-3">
-                      <div className="text-[11px] font-semibold text-slate-500">Had Denda / Penjara &amp; Kompaun</div>
-                      <div className="mt-0.5 font-bold text-slate-900">{punca.had_hukuman}</div>
-                      <div className="mt-1.5 text-[11px] font-semibold text-emerald-800">
+                    <div className="rounded-xl border border-slate-200 bg-white p-3.5">
+                      <div className="text-xs font-semibold text-slate-500">Had Denda / Penjara &amp; Kompaun</div>
+                      <div className="mt-0.5 text-sm font-bold text-slate-900">{punca.had_hukuman}</div>
+                      <div className="mt-1.5 text-xs font-semibold text-emerald-800">
                         {punca.status_kompaun}
                       </div>
                     </div>
                   </div>
 
                   {punca.kuasa_penguatkuasaan && (
-                    <div className="mt-2.5 rounded-xl border border-slate-200/80 bg-white px-3 py-2 text-xs text-slate-700">
+                    <div className="mt-2.5 rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-xs text-slate-700">
                       <span className="font-bold text-slate-900">Kuasa Penguatkuasaan: </span>
                       {punca.kuasa_penguatkuasaan}
                     </div>
                   )}
 
                   {punca.peringatan_akta_611 && (
-                    <div className="mt-2.5 flex items-start gap-2 rounded-xl border border-indigo-200 bg-indigo-50/80 px-3 py-2.5 text-xs text-indigo-950">
-                      <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-indigo-700" />
+                    <div className="mt-2.5 flex items-start gap-2 rounded-xl border border-amber-200 bg-amber-50 px-3.5 py-2.5 text-xs text-amber-950">
+                      <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-amber-700" />
                       <span>{punca.peringatan_akta_611}</span>
                     </div>
                   )}
@@ -959,26 +1049,50 @@ export default function UIPAdvisorPanel({
                   <div className="mt-1 text-sm font-extrabold text-slate-900">
                     {result.ringkasan_keputusan || result.keputusan_tindakan}
                   </div>
-                  <p className="mt-1.5 text-xs leading-relaxed text-slate-700">
+                  <p className="mt-1.5 text-xs leading-relaxed text-slate-700 sm:text-sm">
                     {result.alasan_keputusan}
                   </p>
                 </div>
 
-                {/* 3. LANGKAH PERLU DIAMBIL (SOP LAPANGAN — BERNOMBOR KRONOLOGI) */}
+                {/* 3. LANGKAH PERLU DIAMBIL (SOP LAPANGAN — SENARAI SEMAK INTERAKTIF) */}
                 <div className="rounded-2xl border border-slate-200 bg-white p-4">
-                  <h4 className="flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wide text-slate-900">
-                    <ClipboardList className="h-4 w-4 text-emerald-700" />
-                    3. Langkah Perlu Diambil (SOP Lapangan)
-                  </h4>
-                  <ol className="mt-2.5 space-y-2.5 text-xs leading-relaxed text-slate-700 sm:text-[13px]">
-                    {result.sop_lapangan.map((step, i) => (
-                      <li key={i} className="flex items-start gap-2.5">
-                        <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-700 text-[11px] font-extrabold text-white">
-                          {i + 1}
-                        </span>
-                        <span>{step}</span>
-                      </li>
-                    ))}
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <h4 className="flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wide text-slate-900">
+                      <ClipboardList className="h-4 w-4 text-emerald-700" />
+                      3. Langkah Perlu Diambil di Lokasi (Boleh Tanda Siap)
+                    </h4>
+                    <span className="text-xs font-semibold text-slate-500">
+                      {Object.values(checkedSop).filter(Boolean).length}/{result.sop_lapangan.length} selesai
+                    </span>
+                  </div>
+                  <ol className="mt-3 space-y-2 text-xs leading-relaxed text-slate-700 sm:text-sm">
+                    {result.sop_lapangan.map((step, i) => {
+                      const done = Boolean(checkedSop[i]);
+                      return (
+                        <li key={i}>
+                          <label
+                            className={`flex cursor-pointer items-start gap-3 rounded-xl border p-2.5 transition ${
+                              done
+                                ? "border-emerald-200 bg-emerald-50/40 text-slate-500 line-through"
+                                : "border-slate-200 bg-slate-50/40 hover:bg-slate-50"
+                            }`}
+                          >
+                            <input
+                              type="checkbox"
+                              checked={done}
+                              onChange={() =>
+                                setCheckedSop((prev) => ({ ...prev, [i]: !prev[i] }))
+                              }
+                              className="mt-0.5 h-4 w-4 shrink-0 rounded border-slate-300 text-[#0f2744]"
+                            />
+                            <span>
+                              <strong className="mr-1 text-[#0f2744] no-underline">{i + 1}.</strong>
+                              {step}
+                            </span>
+                          </label>
+                        </li>
+                      );
+                    })}
                   </ol>
                 </div>
 
@@ -989,7 +1103,7 @@ export default function UIPAdvisorPanel({
                       {[
                         {
                           id: "evidence" as AdvisorResultTab,
-                          label: "Barang Bukti & Perkara Wajib Buktikan",
+                          label: "Bukti & Syarat Kes",
                         },
                         {
                           id: "charges" as AdvisorResultTab,
@@ -1004,7 +1118,7 @@ export default function UIPAdvisorPanel({
                           key={t.id}
                           type="button"
                           onClick={() => setResultTab(t.id)}
-                          className={`shrink-0 rounded-lg px-3 py-2 text-xs font-bold transition ${
+                          className={`min-h-[40px] shrink-0 rounded-xl px-3.5 py-2 text-xs font-bold transition ${
                             resultTab === t.id
                               ? "bg-[#0f2744] text-white"
                               : "bg-slate-100 text-slate-700 hover:bg-slate-200"
@@ -1026,7 +1140,7 @@ export default function UIPAdvisorPanel({
                           true
                         );
                       }}
-                      className="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-700 hover:underline disabled:opacity-50"
+                      className="inline-flex min-h-[38px] items-center gap-1.5 text-xs font-bold text-[#0f2744] hover:underline disabled:opacity-50"
                     >
                       {deepLoading ? (
                         <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -1034,10 +1148,10 @@ export default function UIPAdvisorPanel({
                         <Sparkles className="h-3.5 w-3.5" />
                       )}
                       {deepLoading
-                        ? "Sedang Menganalisis AI..."
+                        ? "AI sedang menyemak kes anda..."
                         : result.ai_succeeded
-                          ? "Analisis Semula dengan AI"
-                          : "Perlu jawapan lebih terperinci? Cuba AI"}
+                          ? "Semak Semula Dengan AI"
+                          : "Perlu huraian lebih lanjut? Semak dengan AI"}
                     </button>
                   </div>
 
@@ -1240,27 +1354,30 @@ export default function UIPAdvisorPanel({
           </section>
         );
       })()}
+        </>
+      )}
 
-      {/* 3. SENARAI SOALAN TELAH DIJAWAB PAKAR (DIKUMPUL DARI SEMUA PENGGUNA & DIKELASKAN MENGIKUT AKTA) */}
+      {/* TAB 3: SOALAN TERDAHULU (TERASING DARIPADA KOTAK JAWAPAN SUPAYA SKRIN TENANG) */}
+      {workspaceTab === "history" && (
       <section
         ref={answeredSectionRef}
         className="space-y-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6"
       >
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="flex items-start gap-2.5">
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-[#0f2744]">
               <History className="h-5 w-5" />
             </div>
             <div>
-              <h3 className="text-sm font-extrabold text-slate-900 sm:text-base">
-                Koleksi Soalan &amp; Jawapan Pakar (Mengikut Akta)
+              <h3 className="text-base font-extrabold text-slate-900">
+                Soalan Terdahulu (Mengikut Akta)
               </h3>
-              <p className="mt-0.5 flex flex-wrap items-center gap-1.5 text-xs text-slate-500">
+              <p className="mt-0.5 flex flex-wrap items-center gap-1.5 text-xs text-slate-600">
                 <span>
-                  Himpunan soalan &amp; jawapan semua pengguna dikelaskan mengikut Akta — Pakar akan memetik jawapan daripada koleksi ini secara automatik jika soalan lebih kurang sama ditanya semula.
+                  Soalan yang pernah ditanya pegawai lain, disusun ikut Akta. Jawapan sedia ada terus dipaparkan jika situasi hampir sama.
                 </span>
-                <span className="inline-flex items-center gap-1 rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-semibold text-slate-700">
-                  <ShieldCheck className="h-3 w-3 text-emerald-700" /> Data Peribadi Disamarkan (PDPA)
+                <span className="inline-flex items-center gap-1 rounded bg-slate-100 px-2 py-0.5 text-xs font-semibold text-slate-700">
+                  <ShieldCheck className="h-3.5 w-3.5 text-emerald-700" /> Data Sulit Dilindungi
                 </span>
               </p>
             </div>
@@ -1275,10 +1392,10 @@ export default function UIPAdvisorPanel({
               onClick={() => void loadAnsweredQuestions()}
               disabled={answeredLoading}
               title="Muat semula senarai soalan"
-              className="inline-flex min-h-[36px] min-w-[36px] items-center justify-center rounded-lg border border-slate-300 bg-white px-2.5 text-xs font-bold text-slate-700 hover:bg-slate-50 disabled:opacity-60"
+              className="inline-flex min-h-[38px] min-w-[38px] items-center justify-center rounded-lg border border-slate-300 bg-white px-3 text-xs font-bold text-slate-700 hover:bg-slate-50 disabled:opacity-60"
             >
               <RefreshCw className={`h-3.5 w-3.5 ${answeredLoading ? "animate-spin" : ""}`} />
-              <span className="ml-1.5 hidden sm:inline">Segar Semula</span>
+              <span className="ml-1.5 hidden sm:inline">Muat Semula</span>
             </button>
           </div>
         </div>
@@ -1291,8 +1408,8 @@ export default function UIPAdvisorPanel({
               type="text"
               value={answeredSearch}
               onChange={(e) => setAnsweredSearch(e.target.value)}
-              placeholder="Cari soalan pengguna terdahulu, seksyen atau keputusan..."
-              className="w-full rounded-xl border border-slate-300 bg-slate-50/50 py-2 pl-9 pr-9 text-sm text-slate-900 placeholder:text-slate-400 focus:border-indigo-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-100"
+              placeholder="Cari soalan terdahulu, seksyen atau keputusan..."
+              className="min-h-[44px] w-full rounded-xl border border-slate-300 bg-slate-50/50 py-2 pl-9 pr-9 text-base text-slate-900 placeholder:text-slate-400 focus:border-[#0f2744] focus:bg-white focus:outline-none sm:text-sm"
             />
             {answeredSearch && (
               <button
@@ -1301,7 +1418,7 @@ export default function UIPAdvisorPanel({
                 aria-label="Kosongkan carian"
                 className="absolute right-2.5 top-1/2 -translate-y-1/2 rounded p-1 text-slate-400 hover:bg-slate-200 hover:text-slate-700"
               >
-                <X className="h-3.5 w-3.5" />
+                <X className="h-4 w-4" />
               </button>
             )}
           </div>
@@ -1310,15 +1427,15 @@ export default function UIPAdvisorPanel({
             <button
               type="button"
               onClick={() => setAnsweredActFilter("Semua")}
-              className={`inline-flex min-h-[34px] items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-bold transition ${
+              className={`inline-flex min-h-[38px] items-center gap-1.5 rounded-full border px-3.5 py-1 text-xs font-bold transition ${
                 answeredActFilter === "Semua"
-                  ? "border-[#0f2744] bg-[#0f2744] text-white shadow-xs"
+                  ? "border-[#0f2744] bg-[#0f2744] text-white"
                   : "border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100"
               }`}
             >
               <span>Semua Akta</span>
               <span
-                className={`rounded-full px-1.5 py-0.5 text-[10px] font-extrabold ${
+                className={`rounded-full px-1.5 py-0.5 text-xs font-extrabold ${
                   answeredActFilter === "Semua"
                     ? "bg-white/20 text-white"
                     : "bg-slate-200 text-slate-800"
@@ -1337,7 +1454,7 @@ export default function UIPAdvisorPanel({
                   key={code}
                   type="button"
                   onClick={() => setAnsweredActFilter(code)}
-                  className={`inline-flex min-h-[34px] items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-bold transition ${
+                  className={`inline-flex min-h-[38px] items-center gap-1.5 rounded-full border px-3.5 py-1 text-xs font-bold transition ${
                     active
                       ? st.pillActive
                       : "border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100"
@@ -1345,7 +1462,7 @@ export default function UIPAdvisorPanel({
                 >
                   <span>{code}</span>
                   <span
-                    className={`rounded-full px-1.5 py-0.5 text-[10px] font-extrabold ${
+                    className={`rounded-full px-1.5 py-0.5 text-xs font-extrabold ${
                       active ? "bg-white/20 text-white" : "bg-slate-200 text-slate-800"
                     }`}
                   >
@@ -1360,22 +1477,21 @@ export default function UIPAdvisorPanel({
         {/* Senarai Soalan Dikelompok Mengikut Akta */}
         {answeredLoading && !answeredData ? (
           <div className="flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-slate-50/50 py-8 text-xs font-semibold text-slate-600">
-            <Loader2 className="h-4 w-4 animate-spin text-indigo-600" />
-            Memuatkan himpunan soalan telah dijawab Pakar UIP...
+            <Loader2 className="h-4 w-4 animate-spin text-[#0f2744]" />
+            Sedang memuatkan soalan terdahulu...
           </div>
         ) : !answeredData || answeredData.total_questions === 0 ? (
           <div className="rounded-xl border border-dashed border-slate-300 bg-slate-50/50 px-4 py-8 text-center">
-            <p className="text-xs font-bold text-slate-700">
-              Belum ada soalan pengguna yang direkodkan setakat ini.
+            <p className="text-sm font-bold text-slate-700">
+              Belum ada soalan terdahulu direkodkan setakat ini.
             </p>
             <p className="mt-1 text-xs text-slate-500">
-              Setiap soalan yang dijawab di atas akan dikumpulkan di sini dan dikelaskan mengikut
-              Akta secara automatik untuk rujukan semua pegawai.
+              Setiap soalan yang disemak di tab Tanya Situasi akan disimpan di sini untuk rujukan pegawai lain.
             </p>
           </div>
         ) : filteredAnsweredGroups.length === 0 ? (
           <div className="flex flex-col items-center gap-2 rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-7 text-center">
-            <p className="text-xs font-bold text-slate-700">
+            <p className="text-sm font-bold text-slate-700">
               Tiada soalan direkodkan bagi tapisan ini.
             </p>
             <button
@@ -1384,15 +1500,14 @@ export default function UIPAdvisorPanel({
                 setAnsweredActFilter("Semua");
                 setAnsweredSearch("");
               }}
-              className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-bold text-slate-700 hover:bg-slate-100"
+              className="min-h-[38px] rounded-xl border border-slate-300 bg-white px-4 py-1.5 text-xs font-bold text-slate-700 hover:bg-slate-100"
             >
-              Set Semula Tapisan
+              Tunjuk Semua Semula
             </button>
           </div>
         ) : (
-          <div className="space-y-5">
+          <div className="space-y-4">
             {filteredAnsweredGroups.map((group) => {
-              const st = getActBadgeStyle(group.akta_code);
               const isExpanded = Boolean(expandedActGroups[group.akta_code]);
               const shownItems = isExpanded ? group.items : group.items.slice(0, 6);
               const hiddenCount = group.items.length - shownItems.length;
@@ -1400,27 +1515,23 @@ export default function UIPAdvisorPanel({
               return (
                 <div
                   key={group.akta_code}
-                  className="overflow-hidden rounded-xl border border-slate-200 bg-slate-50/30"
+                  className="overflow-hidden rounded-xl border border-slate-200 bg-white"
                 >
-                  <div
-                    className={`flex flex-wrap items-center justify-between gap-2 border-b px-3.5 py-2.5 ${st.headerBg}`}
-                  >
+                  <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 bg-slate-50 px-4 py-2.5">
                     <div className="flex min-w-0 flex-wrap items-center gap-2">
-                      <span
-                        className={`shrink-0 rounded-md px-2.5 py-0.5 text-[11px] font-extrabold ${st.badge}`}
-                      >
+                      <span className="shrink-0 rounded-md bg-[#0f2744] px-2.5 py-0.5 text-xs font-extrabold text-white">
                         {group.akta_code}
                       </span>
                       <span className="truncate text-xs font-bold text-slate-900">
                         {group.akta_title}
                       </span>
                     </div>
-                    <span className="shrink-0 rounded-full bg-white px-2.5 py-0.5 text-[11px] font-extrabold text-slate-700 ring-1 ring-slate-200">
+                    <span className="shrink-0 rounded-full bg-white px-2.5 py-0.5 text-xs font-bold text-slate-700 ring-1 ring-slate-200">
                       {group.items.length} soalan
                     </span>
                   </div>
 
-                  <div className="grid grid-cols-1 gap-2.5 p-3 md:grid-cols-2">
+                  <div className="divide-y divide-slate-200">
                     {shownItems.map((item) => {
                       const isSelected = selectedAnsweredId === item.id;
                       const tsLabel = formatShortTimestamp(item.last_asked_at);
@@ -1429,78 +1540,49 @@ export default function UIPAdvisorPanel({
                           key={item.id}
                           type="button"
                           onClick={() => handleSelectAnsweredItem(item)}
-                          className={`flex flex-col justify-between rounded-xl border p-3.5 text-left transition ${
+                          className={`flex w-full flex-col gap-1.5 p-4 text-left transition ${
                             isSelected
-                              ? "border-indigo-500 bg-indigo-50/60 ring-1 ring-indigo-500"
-                              : "border-slate-200 bg-white hover:border-indigo-300 hover:bg-indigo-50/20"
+                              ? "bg-slate-50"
+                              : "bg-white hover:bg-slate-50/70"
                           }`}
                         >
-                          <div>
-                            <div className="flex flex-wrap items-center justify-between gap-1.5">
-                              <div className="flex flex-wrap items-center gap-1.5">
-                                <span
-                                  className={`rounded px-2 py-0.5 text-[10px] font-extrabold ${
-                                    item.sesuai_buka_ip
-                                      ? "bg-amber-100 text-amber-900"
-                                      : "bg-emerald-100 text-emerald-800"
-                                  }`}
-                                >
-                                  {item.sesuai_buka_ip ? "Buka IP" : "Kompaun / Rujukan"}
-                                </span>
-                                <span
-                                  className={`inline-flex items-center gap-1 rounded px-2 py-0.5 text-[10px] font-bold ${
-                                    item.is_ai_answered
-                                      ? "bg-indigo-100 text-indigo-800"
-                                      : "bg-slate-100 text-slate-700"
-                                  }`}
-                                >
-                                  {item.is_ai_answered ? (
-                                    <>
-                                      <Sparkles className="h-2.5 w-2.5" /> Analisis AI
-                                    </>
-                                  ) : (
-                                    "Rujukan Akta"
-                                  )}
-                                </span>
-                                {item.ask_count > 1 && (
-                                  <span className="rounded bg-blue-50 px-2 py-0.5 text-[10px] font-bold text-blue-800">
-                                    Ditanya {item.ask_count}×
-                                  </span>
-                                )}
-                              </div>
-
-                              {tsLabel && (
-                                <span className="inline-flex items-center gap-1 text-[10px] font-medium text-slate-500">
-                                  <Clock className="h-3 w-3" />
-                                  {tsLabel}
+                          <div className="flex flex-wrap items-center justify-between gap-2">
+                            <div className="flex flex-wrap items-center gap-1.5">
+                              <span
+                                className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${
+                                  item.sesuai_buka_ip
+                                    ? "bg-amber-100 text-amber-900"
+                                    : "bg-emerald-100 text-emerald-800"
+                                }`}
+                              >
+                                {item.sesuai_buka_ip ? "Buka IP" : "Kompaun / Rujukan"}
+                              </span>
+                              {item.ask_count > 1 && (
+                                <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-semibold text-slate-700">
+                                  Ditanya {item.ask_count} kali
                                 </span>
                               )}
                             </div>
 
-                            <p className="mt-2 line-clamp-2 text-xs font-extrabold leading-snug text-slate-900 sm:text-[13px]">
-                              &ldquo;{item.question}&rdquo;
-                            </p>
-
-                            {item.seksyen_utama && (
-                              <p className="mt-1.5 text-[11px] font-bold text-blue-900">
-                                Seksyen: {item.seksyen_utama}
-                              </p>
+                            {tsLabel && (
+                              <span className="inline-flex items-center gap-1 text-xs text-slate-500">
+                                <Clock className="h-3.5 w-3.5" />
+                                {tsLabel}
+                              </span>
                             )}
-
-                            <p className="mt-1 line-clamp-2 text-[11px] leading-relaxed text-slate-600">
-                              {item.keputusan_tindakan}
-                            </p>
                           </div>
 
-                          <div className="mt-2.5 flex items-center justify-between border-t border-slate-100 pt-2 text-[11px] font-bold">
-                            <span
-                              className={
-                                isSelected ? "text-indigo-700" : "text-blue-700"
-                              }
-                            >
-                              {isSelected
-                                ? "Sedang dipaparkan ✓"
-                                : "Klik untuk lihat jawapan penuh →"}
+                          <p className="text-sm font-bold leading-snug text-slate-900">
+                            &ldquo;{item.question}&rdquo;
+                          </p>
+
+                          <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-slate-600">
+                            <span>
+                              {item.seksyen_utama ? `${item.seksyen_utama} • ` : ""}
+                              {item.keputusan_tindakan}
+                            </span>
+                            <span className="font-bold text-[#0f2744]">
+                              Lihat jawapan →
                             </span>
                           </div>
                         </button>
@@ -1509,7 +1591,7 @@ export default function UIPAdvisorPanel({
                   </div>
 
                   {group.items.length > 6 && (
-                    <div className="border-t border-slate-200 bg-white px-3.5 py-2 text-center">
+                    <div className="border-t border-slate-200 bg-slate-50 px-3.5 py-2.5 text-center">
                       <button
                         type="button"
                         onClick={() =>
@@ -1518,16 +1600,16 @@ export default function UIPAdvisorPanel({
                             [group.akta_code]: !prev[group.akta_code],
                           }))
                         }
-                        className="inline-flex items-center gap-1 text-xs font-bold text-indigo-700 hover:underline"
+                        className="inline-flex min-h-[36px] items-center gap-1 text-xs font-bold text-[#0f2744] hover:underline"
                       >
                         {isExpanded ? (
                           <>
-                            Lipat senarai {group.akta_code} <ChevronUp className="h-3.5 w-3.5" />
+                            Sembunyikan senarai {group.akta_code} <ChevronUp className="h-4 w-4" />
                           </>
                         ) : (
                           <>
-                            Papar {hiddenCount} lagi soalan {group.akta_code}{" "}
-                            <ChevronDown className="h-3.5 w-3.5" />
+                            Tunjuk {hiddenCount} lagi soalan {group.akta_code}{" "}
+                            <ChevronDown className="h-4 w-4" />
                           </>
                         )}
                       </button>
@@ -1539,6 +1621,7 @@ export default function UIPAdvisorPanel({
           </div>
         )}
       </section>
+      )}
     </div>
   );
 }

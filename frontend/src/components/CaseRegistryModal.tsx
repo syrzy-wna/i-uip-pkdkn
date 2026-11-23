@@ -16,8 +16,17 @@ interface CaseRegistryModalProps {
   officer?: OfficerProfile | null;
 }
 
+const AKTA_CHOICES = [
+  { value: "Akta 852", label: "Akta 852 — Produk Merokok & Vape" },
+  { value: "Akta 281", label: "Akta 281 — Makanan 1983 & PPKM 2009" },
+  { value: "Akta 154", label: "Akta 154 — Aedes & Serangga Pembawa Penyakit" },
+  { value: "Akta 342", label: "Akta 342 — Penyakit Berjangkit / Tibi" },
+  { value: "Akta 593", label: "Akta 593 — Kanun Tatacara Jenayah (KTJ)" },
+  { value: "Akta 56", label: "Akta 56 — Akta Keterangan 1950" },
+];
+
 const INPUT_CLASS =
-  "mt-0.5 w-full rounded-lg border border-slate-300 bg-white px-2.5 py-2 text-base text-slate-900 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-100 sm:py-1.5 sm:text-xs";
+  "mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-base text-slate-900 focus:border-[#0f2744] focus:outline-none focus:ring-2 focus:ring-slate-200 sm:text-sm";
 
 export default function CaseRegistryModal({
   open,
@@ -108,7 +117,7 @@ Masa Kejadian: ${masa || "Sila isi masa"}
 Nama Premis: ${namaPremis || "Sila isi nama premis"}
 No. SSM: ${noSsm || "-"}
 Alamat Kejadian: ${alamat || "Sila isi alamat lengkap"}
-Nama Suspek (OKT): ${namaOkt || "Sila isi nama penuh ikut MyKad"}
+Nama Tertuduh (OKT): ${namaOkt || "Sila isi nama penuh ikut MyKad"}
 No. K/P: ${noKpOkt || "Sila isi 12 digit MyKad"}
 Pegawai Penyiasat (IO): ${pegawaiIo || "PPKP"} (No. Kad Kuasa: ${kadKuasa || "-"})
 
@@ -135,7 +144,6 @@ Kesalahan: ${kesalahan || "Sila nyatakan butiran kesalahan yang ditemui semasa p
       });
       onCasesUpdated([created, ...cases]);
       onSelectCase(created);
-      // Kosongkan borang supaya pendaftaran kes seterusnya bersih
       setNoIp(`PKD-KN/UIP/${akta.replace(/\D/g, "") || "852"}/${currentYear}/`);
       setTarikh("");
       setMasa("");
@@ -169,32 +177,32 @@ Kesalahan: ${kesalahan || "Sila nyatakan butiran kesalahan yang ditemui semasa p
     <div
       role="dialog"
       aria-modal="true"
-      aria-label="Daftar Fail Kertas Siasatan PKD"
+      aria-label="Fail Kes Saya"
       onClick={onClose}
       className="fixed inset-0 z-50 flex items-end justify-center bg-slate-900/65 p-0 backdrop-blur-sm sm:items-center sm:p-4"
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="flex max-h-[92dvh] w-full max-w-3xl flex-col overflow-hidden rounded-t-2xl border border-slate-200 bg-white p-4 shadow-2xl sm:rounded-2xl sm:p-5"
+        className="flex max-h-[92dvh] w-full max-w-3xl flex-col overflow-hidden rounded-t-2xl border border-slate-200 bg-white p-4 shadow-2xl sm:rounded-2xl sm:p-6"
       >
-        <div className="flex flex-col gap-2.5 border-b border-slate-100 pb-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-3 border-b border-slate-200 pb-3.5 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center justify-between gap-2">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2.5">
               <FolderOpen className="h-5 w-5 shrink-0 text-[#0f2744]" />
               <div>
-                <h2 className="text-sm font-extrabold text-slate-900">
-                  Daftar Fail Kertas Siasatan (IP) PKD Kuala Nerus
+                <h2 className="text-base font-extrabold text-slate-900">
+                  Fail Kes Saya
                 </h2>
-                <p className="text-[11px] text-slate-600">
-                  Semua kes, keputusan semakan Pra-TPR &amp; draf dokumen disimpan dalam akaun anda.
+                <p className="text-xs text-slate-600">
+                  Pilih mana-mana fail untuk terus buka ruang kerja, atau daftar fail baharu.
                 </p>
               </div>
             </div>
             <button
               type="button"
               onClick={onClose}
-              aria-label="Tutup daftar kes"
-              className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg p-1.5 text-slate-500 hover:bg-slate-100 hover:text-slate-800 sm:hidden"
+              aria-label="Tutup senarai fail"
+              className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100 hover:text-slate-800 sm:hidden"
             >
               <X className="h-5 w-5" />
             </button>
@@ -204,16 +212,16 @@ Kesalahan: ${kesalahan || "Sila nyatakan butiran kesalahan yang ditemui semasa p
             <button
               type="button"
               onClick={() => setMode(mode === "list" ? "new" : "list")}
-              className="inline-flex min-h-[44px] flex-1 items-center justify-center gap-1.5 rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-bold text-white hover:bg-blue-700 sm:flex-none"
+              className="inline-flex min-h-[44px] flex-1 items-center justify-center gap-1.5 rounded-xl bg-[#0f2744] px-4 py-2 text-xs font-bold text-white hover:bg-slate-800 sm:flex-none"
             >
-              <Plus className="h-3.5 w-3.5" />
-              {mode === "list" ? "Daftar Kes IP Baharu" : "Lihat Senarai Kes"}
+              <Plus className="h-4 w-4" />
+              {mode === "list" ? "Daftar Kes Baharu" : "Lihat Senarai Fail"}
             </button>
             <button
               type="button"
               onClick={onClose}
-              aria-label="Tutup daftar kes"
-              className="hidden min-h-[44px] min-w-[44px] items-center justify-center rounded-lg p-1.5 text-slate-500 hover:bg-slate-100 hover:text-slate-800 sm:inline-flex"
+              aria-label="Tutup senarai fail"
+              className="hidden min-h-[44px] min-w-[44px] items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100 hover:text-slate-800 sm:inline-flex"
             >
               <X className="h-5 w-5" />
             </button>
@@ -221,132 +229,130 @@ Kesalahan: ${kesalahan || "Sila nyatakan butiran kesalahan yang ditemui semasa p
         </div>
 
         {errorMsg && (
-          <div className="mt-3 rounded-lg border border-rose-300 bg-rose-50 px-3 py-2 text-xs font-semibold text-rose-800">
+          <div className="mt-3 rounded-xl border border-rose-300 bg-rose-50 px-3.5 py-2.5 text-xs font-semibold text-rose-800">
             {errorMsg}
           </div>
         )}
 
-        <div className="mt-3 flex-1 overflow-y-auto pr-1">
+        <div className="mt-4 flex-1 overflow-y-auto pr-1">
           {mode === "list" ? (
             <div className="space-y-3">
-              {/* Bar Carian & Penapis Akta */}
               <div className="flex flex-wrap items-center gap-2">
-                <div className="relative flex-1 min-w-[180px]">
-                  <Search className="absolute left-2.5 top-2.5 h-3.5 w-3.5 text-slate-400" />
+                <div className="relative min-w-[180px] flex-1">
+                  <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
                   <input
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Cari No. IP, nama OKT atau premis..."
-                    className="w-full rounded-lg border border-slate-300 pl-8 pr-3 py-1.5 text-base focus:border-blue-500 focus:outline-none sm:text-xs"
+                    placeholder="Cari No. IP, nama atau premis..."
+                    className="w-full rounded-xl border border-slate-300 py-2 pl-9 pr-3 text-base focus:border-[#0f2744] focus:outline-none sm:text-sm"
                   />
                 </div>
                 <select
                   value={aktaFilter}
                   onChange={(e) => setAktaFilter(e.target.value)}
-                  className="rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-base font-semibold text-slate-700 sm:text-xs"
+                  className="min-h-[42px] rounded-xl border border-slate-300 bg-white px-3 py-2 text-base font-semibold text-slate-700 sm:text-sm"
                 >
                   <option value="SEMUA">Semua Akta</option>
-                  <option value="Akta 852">Akta 852</option>
-                  <option value="Akta 281">Akta 281</option>
-                  <option value="Akta 154">Akta 154</option>
-                  <option value="Akta 342">Akta 342</option>
+                  {AKTA_CHOICES.map((a) => (
+                    <option key={a.value} value={a.value}>
+                      {a.value}
+                    </option>
+                  ))}
                 </select>
               </div>
 
               {filteredCases.length === 0 ? (
-                <div className="rounded-xl border border-dashed border-slate-300 bg-slate-50/70 p-8 text-center">
-                  <p className="text-xs font-semibold text-slate-600">
+                <div className="rounded-xl border border-dashed border-slate-300 bg-slate-50 p-8 text-center">
+                  <p className="text-sm font-semibold text-slate-600">
                     Tiada fail kes sepadan ditemui.
                   </p>
                   <button
                     type="button"
                     onClick={() => setMode("new")}
-                    className="mt-3 inline-flex min-h-[40px] items-center gap-1.5 rounded-lg bg-[#0f2744] px-4 py-2 text-xs font-bold text-white hover:bg-slate-800"
+                    className="mt-3 inline-flex min-h-[44px] items-center gap-1.5 rounded-xl bg-[#0f2744] px-4 py-2 text-xs font-bold text-white hover:bg-slate-800"
                   >
-                    <Plus className="h-3.5 w-3.5" />
-                    Daftar Kes IP Baharu
+                    <Plus className="h-4 w-4" />
+                    Daftar Kes Baharu
                   </button>
                 </div>
               ) : (
-                <div className="space-y-2">
+                <div className="divide-y divide-slate-200 rounded-xl border border-slate-200">
                   {filteredCases.map((c) => {
                     const isActive = c.id === activeCaseId;
                     const confirming = confirmDeleteId === c.id;
+                    const isSample = c.id.startsWith("kes-");
                     return (
                       <div
                         key={c.id}
-                        className={`flex flex-wrap items-center justify-between gap-2 rounded-xl border p-3 transition ${
-                          isActive
-                            ? "border-blue-600 bg-blue-50/75"
-                            : "border-slate-200 bg-slate-50/40 hover:border-blue-300 hover:bg-blue-50/30"
+                        className={`flex flex-wrap items-center justify-between gap-3 p-3.5 transition ${
+                          isActive ? "bg-slate-50" : "bg-white hover:bg-slate-50/70"
                         }`}
                       >
                         <div
-                          className="flex-1 cursor-pointer min-w-[200px]"
+                          className="min-w-[200px] flex-1 cursor-pointer"
                           onClick={() => {
                             onSelectCase(c);
                             onClose();
                           }}
                         >
-                          <div className="flex flex-wrap items-center gap-1.5">
-                            <span className="rounded bg-[#0f2744] px-2 py-0.5 text-[10px] font-bold text-white">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <span className="rounded-md bg-[#0f2744] px-2 py-0.5 text-xs font-bold text-white">
                               {c.akta_utama}
                             </span>
-                            {isActive && (
-                              <span className="rounded bg-blue-600 px-2 py-0.5 text-[10px] font-bold text-white">
-                                Sedang Dibuka
-                              </span>
-                            )}
-                            <span className="text-xs font-bold text-slate-900">{c.tajuk_kes}</span>
-                            <span className="rounded bg-amber-100 px-2 py-0.5 text-[10px] font-semibold text-amber-800">
-                              {c.status_kes}
+                            <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-semibold text-slate-700">
+                              {c.skor_audit ? `Skor ${c.skor_audit}%` : isSample ? "Contoh Kes" : c.status_kes}
                             </span>
                           </div>
-                          <div className="mt-1 text-[11px] text-slate-600">
-                            OKT: <strong>{c.nama_okt || "-"}</strong> ({c.no_kp_okt || "-"}) • Premis:{" "}
-                            <strong>{c.nama_premis || "-"}</strong> • Skor: {c.skor_audit || 0}%
+                          <div className="mt-1.5 text-sm font-bold text-slate-900">
+                            {c.tajuk_kes.replace(/^Kes \d+:\s*/, "")}
+                          </div>
+                          <div className="mt-0.5 text-xs text-slate-600">
+                            {c.nama_okt || "-"} {c.nama_premis ? `• ${c.nama_premis}` : ""}
                           </div>
                         </div>
 
-                        <div className="flex items-center gap-1.5">
+                        <div className="flex items-center gap-2">
                           <button
                             type="button"
                             onClick={() => {
                               onSelectCase(c);
                               onClose();
                             }}
-                            className="min-h-[38px] rounded-lg bg-white px-3 py-1.5 text-xs font-bold text-blue-700 ring-1 ring-blue-300 hover:bg-blue-50"
+                            className="min-h-[40px] rounded-lg border border-slate-300 bg-white px-3.5 py-1.5 text-xs font-bold text-[#0f2744] hover:bg-slate-100"
                           >
-                            Buka Kes
+                            Buka Fail
                           </button>
 
-                          {confirming ? (
-                            <div className="flex items-center gap-1 rounded-lg bg-rose-50 p-1 ring-1 ring-rose-300">
+                          {!isSample && (
+                            confirming ? (
+                              <div className="flex items-center gap-1 rounded-lg bg-rose-50 p-1 ring-1 ring-rose-300">
+                                <button
+                                  type="button"
+                                  onClick={() => handleDelete(c.id)}
+                                  className="min-h-[34px] rounded bg-rose-600 px-2.5 py-1 text-xs font-bold text-white hover:bg-rose-700"
+                                >
+                                  Padam
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => setConfirmDeleteId(null)}
+                                  className="min-h-[34px] rounded bg-white px-2.5 py-1 text-xs font-semibold text-slate-700"
+                                >
+                                  Batal
+                                </button>
+                              </div>
+                            ) : (
                               <button
                                 type="button"
-                                onClick={() => handleDelete(c.id)}
-                                className="rounded bg-rose-600 px-2 py-1 text-[11px] font-bold text-white hover:bg-rose-700"
+                                onClick={() => setConfirmDeleteId(c.id)}
+                                className="inline-flex min-h-[40px] min-w-[40px] items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-500 hover:border-rose-200 hover:bg-rose-50 hover:text-rose-600"
+                                title="Padam fail kes"
+                                aria-label="Padam fail kes"
                               >
-                                Ya, Padam
+                                <Trash2 className="h-4 w-4" />
                               </button>
-                              <button
-                                type="button"
-                                onClick={() => setConfirmDeleteId(null)}
-                                className="rounded bg-white px-2 py-1 text-[11px] font-semibold text-slate-700"
-                              >
-                                Batal
-                              </button>
-                            </div>
-                          ) : (
-                            <button
-                              type="button"
-                              onClick={() => setConfirmDeleteId(c.id)}
-                              className="inline-flex min-h-[38px] min-w-[38px] items-center justify-center rounded-lg bg-rose-50 text-rose-600 ring-1 ring-rose-200 hover:bg-rose-100"
-                              title="Padam kes"
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </button>
+                            )
                           )}
                         </div>
                       </div>
@@ -356,12 +362,12 @@ Kesalahan: ${kesalahan || "Sila nyatakan butiran kesalahan yang ditemui semasa p
               )}
             </div>
           ) : (
-            <form onSubmit={handleCreateNew} className="grid grid-cols-1 gap-2.5 text-xs sm:grid-cols-2">
-              <div className="rounded-lg border border-blue-200 bg-blue-50/60 px-3 py-2 text-[11px] text-blue-900 sm:col-span-2">
-                Tip: Jika anda sudah ada fail PDF/Word atau gambar bukti kes, anda juga boleh terus muat naik fail tersebut di skrin utama tanpa perlu mengisi semua ruangan di bawah.
+            <form onSubmit={handleCreateNew} className="grid grid-cols-1 gap-3 text-xs sm:grid-cols-2">
+              <div className="rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-xs text-slate-700 sm:col-span-2">
+                Tip: Jika anda sudah ada fail PDF/Word atau gambar bukti kes, anda juga boleh terus muat naik fail tersebut di ruang <strong>Fail IP</strong> tanpa mengisi semua ruangan di bawah.
               </div>
               <div>
-                <label className="font-semibold text-slate-700">
+                <label className="text-xs font-semibold text-slate-700">
                   No. Fail IP PKD <span className="text-rose-600">*</span>
                 </label>
                 <input
@@ -373,7 +379,7 @@ Kesalahan: ${kesalahan || "Sila nyatakan butiran kesalahan yang ditemui semasa p
                 />
               </div>
               <div>
-                <label className="font-semibold text-slate-700">
+                <label className="text-xs font-semibold text-slate-700">
                   Akta Utama <span className="text-rose-600">*</span>
                 </label>
                 <select
@@ -381,14 +387,15 @@ Kesalahan: ${kesalahan || "Sila nyatakan butiran kesalahan yang ditemui semasa p
                   onChange={(e) => handleAktaChange(e.target.value)}
                   className={INPUT_CLASS}
                 >
-                  <option value="Akta 852">Akta 852 (Produk Merokok &amp; Vape)</option>
-                  <option value="Akta 281">Akta Makanan 1983 &amp; PPKM 2009</option>
-                  <option value="Akta 154">Akta 154 (Aedes / Serangga Pembawa Penyakit)</option>
-                  <option value="Akta 342">Akta 342 (Penyakit Berjangkit)</option>
+                  {AKTA_CHOICES.map((a) => (
+                    <option key={a.value} value={a.value}>
+                      {a.label}
+                    </option>
+                  ))}
                 </select>
               </div>
               <div>
-                <label className="font-semibold text-slate-700">Daerah / Negeri</label>
+                <label className="text-xs font-semibold text-slate-700">Daerah / Negeri</label>
                 <input
                   type="text"
                   value={daerah}
@@ -398,7 +405,7 @@ Kesalahan: ${kesalahan || "Sila nyatakan butiran kesalahan yang ditemui semasa p
               </div>
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="font-semibold text-slate-700">Tarikh Kejadian</label>
+                  <label className="text-xs font-semibold text-slate-700">Tarikh Kejadian</label>
                   <input
                     type="text"
                     placeholder="cth: 18 Nov 2026"
@@ -408,7 +415,7 @@ Kesalahan: ${kesalahan || "Sila nyatakan butiran kesalahan yang ditemui semasa p
                   />
                 </div>
                 <div>
-                  <label className="font-semibold text-slate-700">Masa</label>
+                  <label className="text-xs font-semibold text-slate-700">Masa</label>
                   <input
                     type="text"
                     placeholder="cth: 10.15 pagi"
@@ -419,7 +426,7 @@ Kesalahan: ${kesalahan || "Sila nyatakan butiran kesalahan yang ditemui semasa p
                 </div>
               </div>
               <div>
-                <label className="font-semibold text-slate-700">Nama Premis / Syarikat</label>
+                <label className="text-xs font-semibold text-slate-700">Nama Premis / Syarikat</label>
                 <input
                   type="text"
                   value={namaPremis}
@@ -428,7 +435,7 @@ Kesalahan: ${kesalahan || "Sila nyatakan butiran kesalahan yang ditemui semasa p
                 />
               </div>
               <div>
-                <label className="font-semibold text-slate-700">No. Pendaftaran SSM</label>
+                <label className="text-xs font-semibold text-slate-700">No. Pendaftaran SSM</label>
                 <input
                   type="text"
                   value={noSsm}
@@ -437,7 +444,7 @@ Kesalahan: ${kesalahan || "Sila nyatakan butiran kesalahan yang ditemui semasa p
                 />
               </div>
               <div className="sm:col-span-2">
-                <label className="font-semibold text-slate-700">Alamat Lengkap Tempat Kejadian</label>
+                <label className="text-xs font-semibold text-slate-700">Alamat Lengkap Tempat Kejadian</label>
                 <input
                   type="text"
                   value={alamat}
@@ -446,7 +453,7 @@ Kesalahan: ${kesalahan || "Sila nyatakan butiran kesalahan yang ditemui semasa p
                 />
               </div>
               <div>
-                <label className="font-semibold text-slate-700">Nama Penuh OKT / Pemilik (MyKad)</label>
+                <label className="text-xs font-semibold text-slate-700">Nama Penuh OKT / Pemilik (MyKad)</label>
                 <input
                   type="text"
                   value={namaOkt}
@@ -455,10 +462,9 @@ Kesalahan: ${kesalahan || "Sila nyatakan butiran kesalahan yang ditemui semasa p
                 />
               </div>
               <div>
-                <label className="font-semibold text-slate-700">No. Kad Pengenalan (12 Digit)</label>
+                <label className="text-xs font-semibold text-slate-700">No. K/P (12 Digit) / Pasport</label>
                 <input
                   type="text"
-                  inputMode="numeric"
                   placeholder="XXXXXX-XX-XXXX"
                   value={noKpOkt}
                   onChange={(e) => setNoKpOkt(e.target.value)}
@@ -466,7 +472,7 @@ Kesalahan: ${kesalahan || "Sila nyatakan butiran kesalahan yang ditemui semasa p
                 />
               </div>
               <div>
-                <label className="font-semibold text-slate-700">Nama Pegawai Penyiasat (IO)</label>
+                <label className="text-xs font-semibold text-slate-700">Nama Pegawai Penyiasat (IO)</label>
                 <input
                   type="text"
                   value={pegawaiIo}
@@ -475,7 +481,7 @@ Kesalahan: ${kesalahan || "Sila nyatakan butiran kesalahan yang ditemui semasa p
                 />
               </div>
               <div>
-                <label className="font-semibold text-slate-700">No. Kad Kuasa KKM</label>
+                <label className="text-xs font-semibold text-slate-700">No. Kad Kuasa KKM</label>
                 <input
                   type="text"
                   value={kadKuasa}
@@ -484,7 +490,7 @@ Kesalahan: ${kesalahan || "Sila nyatakan butiran kesalahan yang ditemui semasa p
                 />
               </div>
               <div className="sm:col-span-2">
-                <label className="font-semibold text-slate-700">Ringkasan Fakta Kesalahan Lapangan</label>
+                <label className="text-xs font-semibold text-slate-700">Ringkasan Kesalahan Ditemui</label>
                 <textarea
                   rows={3}
                   value={kesalahan}
@@ -497,17 +503,17 @@ Kesalahan: ${kesalahan || "Sila nyatakan butiran kesalahan yang ditemui semasa p
                 <button
                   type="button"
                   onClick={() => setMode("list")}
-                  className="min-h-[40px] rounded-lg border border-slate-300 px-4 py-2 font-semibold text-slate-700"
+                  className="min-h-[44px] rounded-xl border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
                   disabled={saving}
-                  className="inline-flex min-h-[40px] items-center gap-1.5 rounded-lg bg-[#0f2744] px-4 py-2 font-bold text-white hover:bg-slate-800 disabled:opacity-60"
+                  className="inline-flex min-h-[44px] items-center gap-2 rounded-xl bg-[#0f2744] px-5 py-2 text-sm font-bold text-white hover:bg-slate-800 disabled:opacity-60"
                 >
-                  {saving && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
-                  Daftar &amp; Simpan Kes IP
+                  {saving && <Loader2 className="h-4 w-4 animate-spin" />}
+                  Simpan &amp; Buka Fail IP
                 </button>
               </div>
             </form>

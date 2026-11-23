@@ -3,7 +3,7 @@
 import React from "react";
 import {
   FileCheck2,
-  FileText,
+  FolderOpen,
   Home,
   MessageSquareQuote,
   Scale,
@@ -13,85 +13,96 @@ import type { ActiveAppMode } from "@/components/TopNavbar";
 interface MobileBottomNavProps {
   activeMode: ActiveAppMode;
   onSelectMode: (mode: ActiveAppMode) => void;
+  onOpenCases?: () => void;
+  caseCount?: number;
   badges?: Partial<Record<ActiveAppMode, string>>;
 }
-
-const MOBILE_ITEMS: Array<{
-  id: ActiveAppMode;
-  matches: ActiveAppMode[];
-  label: string;
-  icon: React.ReactNode;
-}> = [
-  {
-    id: "home",
-    matches: ["home", "directory", "guide"],
-    label: "Mula",
-    icon: <Home className="h-5 w-5" />,
-  },
-  {
-    id: "advisor",
-    matches: ["advisor"],
-    label: "Pakar",
-    icon: <MessageSquareQuote className="h-5 w-5" />,
-  },
-  {
-    id: "compound",
-    matches: ["compound"],
-    label: "Kompaun",
-    icon: <FileCheck2 className="h-5 w-5" />,
-  },
-  {
-    id: "audit",
-    matches: ["audit", "redaction"],
-    label: "Semak IP",
-    icon: <Scale className="h-5 w-5" />,
-  },
-  {
-    id: "draft",
-    matches: ["draft"],
-    label: "Bina IP",
-    icon: <FileText className="h-5 w-5" />,
-  },
-];
 
 export default function MobileBottomNav({
   activeMode,
   onSelectMode,
+  onOpenCases,
+  caseCount = 0,
   badges,
 }: MobileBottomNavProps) {
+  const navItems: Array<{
+    key: string;
+    label: string;
+    active: boolean;
+    badge?: string;
+    icon: React.ReactNode;
+    onClick: () => void;
+  }> = [
+    {
+      key: "home",
+      label: "Utama",
+      active: activeMode === "home",
+      icon: <Home className="h-5 w-5" />,
+      onClick: () => onSelectMode("home"),
+    },
+    {
+      key: "advisor",
+      label: "Pakar",
+      active: activeMode === "advisor" || activeMode === "directory",
+      icon: <MessageSquareQuote className="h-5 w-5" />,
+      onClick: () => onSelectMode("advisor"),
+    },
+    {
+      key: "compound",
+      label: "Kompaun",
+      active: activeMode === "compound",
+      icon: <FileCheck2 className="h-5 w-5" />,
+      onClick: () => onSelectMode("compound"),
+    },
+    {
+      key: "ip",
+      label: "Fail IP",
+      active: activeMode === "audit" || activeMode === "draft" || activeMode === "redaction",
+      badge: badges?.audit || badges?.draft,
+      icon: <Scale className="h-5 w-5" />,
+      onClick: () => onSelectMode("audit"),
+    },
+    {
+      key: "cases",
+      label: "Fail Saya",
+      active: false,
+      badge: caseCount > 0 ? String(caseCount) : undefined,
+      icon: <FolderOpen className="h-5 w-5" />,
+      onClick: () => {
+        if (onOpenCases) onOpenCases();
+      },
+    },
+  ];
+
   return (
     <nav
-      aria-label="Navigasi Mudah Alih i-UIP Nerus"
-      className="fixed inset-x-0 bottom-0 z-40 border-t border-slate-700/70 bg-[#0f2744] text-white shadow-lg pb-safe lg:hidden"
+      aria-label="Navigasi Mudah Alih"
+      className="fixed inset-x-0 bottom-0 z-40 border-t border-slate-200 bg-white text-slate-700 shadow-[0_-4px_16px_rgba(15,39,68,0.08)] pb-safe lg:hidden"
     >
       <div className="grid grid-cols-5">
-        {MOBILE_ITEMS.map((item) => {
-          const active = item.matches.includes(activeMode);
-          const badge = badges?.[item.id];
-          return (
-            <button
-              key={item.id}
-              type="button"
-              onClick={() => onSelectMode(item.id)}
-              aria-current={active ? "page" : undefined}
-              className={`relative flex min-h-[58px] flex-col items-center justify-center gap-0.5 border-t-2 px-1 py-1.5 text-[11px] font-bold transition ${
-                active
-                  ? "border-amber-400 bg-blue-600/85 text-amber-200"
-                  : "border-transparent text-slate-300 hover:bg-white/10 hover:text-white"
-              }`}
-            >
-              <span className="relative inline-flex items-center justify-center">
-                {item.icon}
-                {badge && (
-                  <span className="absolute -right-3 -top-1.5 rounded-full bg-amber-400 px-1.5 text-[9px] font-extrabold leading-tight text-slate-950 shadow-sm">
-                    {badge}
-                  </span>
-                )}
-              </span>
-              <span className="truncate">{item.label}</span>
-            </button>
-          );
-        })}
+        {navItems.map((item) => (
+          <button
+            key={item.key}
+            type="button"
+            onClick={item.onClick}
+            aria-current={item.active ? "page" : undefined}
+            className={`relative flex min-h-[60px] flex-col items-center justify-center gap-1 border-t-2 px-1 py-1.5 text-xs font-bold transition ${
+              item.active
+                ? "border-[#0f2744] bg-slate-50 text-[#0f2744]"
+                : "border-transparent text-slate-500 hover:bg-slate-50 hover:text-slate-900"
+            }`}
+          >
+            <span className="relative inline-flex items-center justify-center">
+              {item.icon}
+              {item.badge && (
+                <span className="absolute -right-3.5 -top-1.5 rounded-full bg-[#0f2744] px-1.5 py-0.5 text-[10px] font-extrabold leading-none text-white">
+                  {item.badge}
+                </span>
+              )}
+            </span>
+            <span className="truncate">{item.label}</span>
+          </button>
+        ))}
       </div>
     </nav>
   );

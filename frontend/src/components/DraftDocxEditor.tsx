@@ -15,12 +15,18 @@ import {
   Loader2,
   Pencil,
   Plus,
+  RefreshCw,
   Save,
   Sparkles,
   Trash2,
+  UserCheck,
+  X,
 } from "lucide-react";
 import { downloadDocx } from "@/lib/api";
+import type { AuditFixContext } from "@/components/AuditPanel";
 import type { DraftGenerationResponse, MinitEntry } from "@/lib/types";
+
+export type EditorGroupTab = "pertuduhan" | "fakta_minit" | "saksi_eksibit" | "rakaman_diari";
 
 interface DraftDocxEditorProps {
   draft: DraftGenerationResponse | null;
@@ -28,18 +34,23 @@ interface DraftDocxEditorProps {
   hasCaseInput: boolean;
   activeCaseTitle?: string;
   draftLoading: boolean;
+  auditLoading?: boolean;
   hasUnsavedChanges?: boolean;
   savingCase?: boolean;
   initialSection?: string | null;
+  activeFixContext?: AuditFixContext | null;
+  onDismissFixContext?: () => void;
+  auditIssueCounts?: Partial<Record<EditorGroupTab, number>>;
+  missingKadKuasa?: boolean;
+  onOpenProfile?: () => void;
   onGenerateDraft: () => void;
+  onReRunAudit?: () => void;
   onStartBlankDraft: () => void;
   onSaveDraft: () => void;
   onSwitchToInput: () => void;
   onLoadSampleCase: () => void;
   onDownloaded?: (filename: string) => void;
 }
-
-type EditorGroupTab = "pertuduhan" | "fakta_minit" | "saksi_eksibit" | "rakaman_diari";
 
 const GROUP_TABS: Array<{ id: EditorGroupTab; label: string }> = [
   { id: "pertuduhan", label: "1. Pertuduhan & Saman" },
@@ -48,7 +59,7 @@ const GROUP_TABS: Array<{ id: EditorGroupTab; label: string }> = [
   { id: "rakaman_diari", label: "4. Rakaman S.112 & Diari" },
 ];
 
-function mapSectionToGroup(secId?: string | null): EditorGroupTab {
+export function mapSectionToGroup(secId?: string | null): EditorGroupTab {
   if (!secId) return "pertuduhan";
   if (secId === "borang114" || secId === "saman111") return "pertuduhan";
   if (secId === "minit" || secId === "fakta" || secId === "kronologi" || secId === "cadangan") {
@@ -61,10 +72,23 @@ function mapSectionToGroup(secId?: string | null): EditorGroupTab {
 }
 
 const INPUT_CLASS =
-  "mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-base text-slate-900 shadow-sm transition hover:border-blue-400 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-100 sm:text-sm";
+  "mt-1 w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-base text-slate-900 transition hover:border-slate-400 focus:border-[#0f2744] focus:outline-none focus:ring-2 focus:ring-slate-200 sm:text-sm";
 
 const TEXTAREA_CLASS =
-  "mt-1 w-full rounded-lg border border-slate-300 bg-white p-3 text-base leading-relaxed text-slate-900 shadow-sm transition hover:border-blue-400 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-100 sm:text-sm";
+  "mt-1 w-full rounded-xl border border-slate-300 bg-white p-3 text-base leading-relaxed text-slate-900 transition hover:border-slate-400 focus:border-[#0f2744] focus:outline-none focus:ring-2 focus:ring-slate-200 sm:text-sm";
+
+const DOC_BADGES = [
+  "Kulit & Indeks A–G",
+  "Minit 1–4",
+  "Borang 114 (Pertuduhan)",
+  "Borang 143 (Pengaduan)",
+  "Saman 111",
+  "Fakta Kes",
+  "Sijil S.90A",
+  "Senarai Saksi & Eksibit",
+  "Rakaman S.112",
+  "Diari Siasatan S.119",
+];
 
 export default function DraftDocxEditor({
   draft,
@@ -72,10 +96,17 @@ export default function DraftDocxEditor({
   hasCaseInput,
   activeCaseTitle,
   draftLoading,
+  auditLoading = false,
   hasUnsavedChanges = false,
   savingCase = false,
   initialSection = null,
+  activeFixContext = null,
+  onDismissFixContext,
+  auditIssueCounts,
+  missingKadKuasa = false,
+  onOpenProfile,
   onGenerateDraft,
+  onReRunAudit,
   onStartBlankDraft,
   onSaveDraft,
   onSwitchToInput,
@@ -104,22 +135,33 @@ export default function DraftDocxEditor({
 
   if (!draft) {
     return (
-      <div className="space-y-4 rounded-2xl border border-dashed border-slate-300 bg-slate-50/70 p-6 text-center sm:p-8">
-        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-100 text-blue-700">
+      <div className="mx-auto max-w-3xl space-y-5 rounded-2xl border border-dashed border-slate-300 bg-white p-6 text-center sm:p-8">
+        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-100 text-[#0f2744]">
           <FileEdit className="h-6 w-6" />
         </div>
-        <div className="space-y-1">
+        <div className="space-y-1.5">
           <h3 className="text-base font-extrabold text-slate-900">
-            Bina &amp; Edit Fail Kertas Siasatan Lengkap (.docx)
+            Sedia &amp; Edit Fail Kertas Siasatan Lengkap (Word)
           </h3>
-          <p className="mx-auto max-w-lg text-xs leading-relaxed text-slate-600">
-            Sistem membina Kulit IP, Minit 1–4, Borang 114, Borang 143, Saman 111, Fakta Kes, Sijil 90A, Senarai Saksi &amp; Eksibit, Rakaman S.112, dan Diari Siasatan untuk anda sunting sebelum muat turun Word.
+          <p className="mx-auto max-w-lg text-sm leading-relaxed text-slate-600">
+            Daripada satu catatan kes, sistem menyediakan semua dokumen rasmi di bawah untuk anda semak dan muat turun dalam format Microsoft Word:
           </p>
         </div>
 
+        <div className="flex flex-wrap justify-center gap-1.5">
+          {DOC_BADGES.map((label) => (
+            <span
+              key={label}
+              className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold text-slate-700"
+            >
+              {label}
+            </span>
+          ))}
+        </div>
+
         {activeCaseTitle && hasCaseInput && (
-          <div className="mx-auto max-w-xl rounded-xl border border-blue-200 bg-blue-50 px-3.5 py-2 text-xs text-blue-950">
-            Kes sedia ada dipilih: <strong>{activeCaseTitle}</strong>
+          <div className="mx-auto max-w-xl rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-xs text-slate-800">
+            Bahan kes sedia: <strong>{activeCaseTitle}</strong>
           </div>
         )}
 
@@ -129,40 +171,36 @@ export default function DraftDocxEditor({
               type="button"
               disabled={draftLoading}
               onClick={onGenerateDraft}
-              className="inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-6 py-2.5 text-sm font-extrabold text-white shadow-sm hover:bg-blue-700 disabled:opacity-60 sm:w-auto"
+              className="inline-flex min-h-[46px] w-full items-center justify-center gap-2 rounded-xl bg-[#0f2744] px-6 py-2.5 text-sm font-extrabold text-white shadow-sm hover:bg-slate-800 disabled:opacity-60 sm:w-auto"
             >
-              {draftLoading ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <Sparkles className="h-4 w-4 text-amber-200" />
-              )}
-              Jana Draf Fail IP Sekarang
+              {draftLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+              {draftLoading ? "Sedang menyediakan draf..." : "Bina Draf Fail IP Sekarang"}
             </button>
           ) : (
             <button
               type="button"
               onClick={onSwitchToInput}
-              className="inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-xl bg-[#0f2744] px-6 py-2.5 text-sm font-extrabold text-white shadow-sm hover:bg-slate-800 sm:w-auto"
+              className="inline-flex min-h-[46px] w-full items-center justify-center gap-2 rounded-xl bg-[#0f2744] px-6 py-2.5 text-sm font-extrabold text-white shadow-sm hover:bg-slate-800 sm:w-auto"
             >
-              <FolderOpen className="h-4 w-4 text-amber-300" />
-              Muat Naik Fail / Isi Fakta Kes
+              <FolderOpen className="h-4 w-4" />
+              Masukkan Bahan Kes Dahulu
             </button>
           )}
 
           <button
             type="button"
             onClick={onStartBlankDraft}
-            className="inline-flex min-h-[44px] w-full items-center justify-center gap-1.5 rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-xs font-bold text-slate-800 hover:bg-slate-100 sm:w-auto"
+            className="inline-flex min-h-[44px] w-full items-center justify-center gap-1.5 rounded-xl border border-slate-300 bg-white px-4 py-2 text-xs font-bold text-slate-800 hover:bg-slate-50 sm:w-auto"
           >
             <Pencil className="h-3.5 w-3.5" />
-            Mula Borang Kosong (Isi Manual)
+            Isi Borang Kosong
           </button>
 
           {!hasCaseInput && (
             <button
               type="button"
               onClick={onLoadSampleCase}
-              className="inline-flex min-h-[44px] w-full items-center justify-center gap-1.5 rounded-xl border border-indigo-200 bg-indigo-50 px-4 py-2.5 text-xs font-bold text-indigo-800 hover:bg-indigo-100 sm:w-auto"
+              className="inline-flex min-h-[44px] w-full items-center justify-center gap-1.5 rounded-xl border border-slate-300 bg-white px-4 py-2 text-xs font-bold text-[#0f2744] hover:bg-slate-50 sm:w-auto"
             >
               <FileText className="h-3.5 w-3.5" />
               Cuba Contoh Kes Sebenar
@@ -188,11 +226,11 @@ export default function DraftDocxEditor({
     try {
       const fname = await downloadDocx(docType, draft as unknown as Record<string, unknown>);
       setDownloadOkMsg(
-        `Fail ${fname} telah dimuat turun — semak folder Muat Turun / Files peranti anda.`
+        `Fail ${fname} telah dimuat turun — semak folder Muat Turun pada peranti anda.`
       );
       if (onDownloaded) onDownloaded(fname);
     } catch (err) {
-      setExportError(err instanceof Error ? err.message : "Gagal muat turun fail .docx");
+      setExportError(err instanceof Error ? err.message : "Gagal memuat turun fail Word.");
     } finally {
       setExporting(null);
     }
@@ -281,27 +319,83 @@ export default function DraftDocxEditor({
   };
 
   return (
-    <div className="space-y-4">
-      {/* 1. BAR TINDAKAN TUNGGAL EDITOR (GABUNG SIMPAN + EKSPORT .DOCX) */}
-      <div className="rounded-2xl border border-slate-200 bg-white p-3.5 shadow-sm sm:p-4">
+    <div className="mx-auto max-w-4xl space-y-4">
+      {/* Tip Kontekstual Profil */}
+      {missingKadKuasa && onOpenProfile && (
+        <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-amber-200 bg-amber-50 px-4 py-2.5 text-xs text-amber-950">
+          <div className="flex items-center gap-2">
+            <UserCheck className="h-4 w-4 shrink-0 text-amber-700" />
+            <span>
+              Simpan <strong>No. Kad Kuasa &amp; model komputer pejabat</strong> dalam profil supaya Sijil 90A &amp; Borang 114 terisi automatik.
+            </span>
+          </div>
+          <button
+            type="button"
+            onClick={onOpenProfile}
+            className="font-bold text-[#0f2744] hover:underline"
+          >
+            Lengkapkan Profil →
+          </button>
+        </div>
+      )}
+
+      {/* Banner Peringatan Melekat Jika Lompat Dari Kuiri Semakan Pra-TPR */}
+      {activeFixContext && (
+        <div className="flex flex-wrap items-start justify-between gap-3 rounded-2xl border border-amber-300 bg-amber-50 p-4 text-xs text-amber-950 shadow-sm">
+          <div className="space-y-1">
+            <div className="font-extrabold text-amber-950">
+              Sedang Membaiki Perkara Pra-TPR: {activeFixContext.title}
+            </div>
+            <p className="leading-relaxed text-amber-900">
+              <strong>Tindakan:</strong> {activeFixContext.recommendation}
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
+            {onReRunAudit && (
+              <button
+                type="button"
+                disabled={auditLoading}
+                onClick={onReRunAudit}
+                className="inline-flex min-h-[38px] items-center gap-1.5 rounded-xl bg-[#0f2744] px-3.5 py-1.5 text-xs font-bold text-white hover:bg-slate-800 disabled:opacity-60"
+              >
+                {auditLoading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <RefreshCw className="h-3.5 w-3.5" />}
+                Semak Semula Skor
+              </button>
+            )}
+            {onDismissFixContext && (
+              <button
+                type="button"
+                onClick={onDismissFixContext}
+                aria-label="Tutup nota baiki"
+                className="inline-flex min-h-[38px] min-w-[38px] items-center justify-center rounded-lg text-amber-800 hover:bg-amber-100"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* 1. BAR TINDAKAN TUNGGAL EDITOR */}
+      <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
           <div className="space-y-0.5">
             <div className="flex flex-wrap items-center gap-2">
-              <h3 className="text-sm font-extrabold text-slate-900">
-                Editor Kertas Siasatan ({draft.akta_utama})
+              <h3 className="text-base font-extrabold text-slate-900">
+                Langkah 3: Edit Draf &amp; Muat Turun Word ({draft.akta_utama})
               </h3>
               {hasUnsavedChanges ? (
-                <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2.5 py-0.5 text-[11px] font-bold text-amber-900">
-                  <AlertCircle className="h-3 w-3" /> Belum Disimpan
+                <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-bold text-amber-900">
+                  <AlertCircle className="h-3.5 w-3.5" /> Belum Disimpan
                 </span>
               ) : (
-                <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2.5 py-0.5 text-[11px] font-bold text-emerald-800">
-                  <CheckCircle2 className="h-3 w-3" /> Disimpan
+                <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-bold text-emerald-800">
+                  <CheckCircle2 className="h-3.5 w-3.5" /> Disimpan
                 </span>
               )}
             </div>
-            <p className="text-xs text-slate-500">
-              Semak dan edit mana-mana ruangan di bawah sebelum memuat turun pakej Word rasmi.
+            <p className="text-xs text-slate-600">
+              Ubah mana-mana ruangan di bawah, semak semula skor Pra-TPR jika perlu, atau terus muat turun fail Word.
             </p>
           </div>
 
@@ -310,26 +404,38 @@ export default function DraftDocxEditor({
               type="button"
               disabled={savingCase}
               onClick={onSaveDraft}
-              className={`inline-flex min-h-[40px] items-center gap-1.5 rounded-xl border px-3.5 py-2 text-xs font-bold transition disabled:opacity-60 ${
+              className={`inline-flex min-h-[42px] items-center gap-1.5 rounded-xl border px-3.5 py-2 text-xs font-bold transition disabled:opacity-60 ${
                 hasUnsavedChanges
                   ? "border-amber-400 bg-amber-50 text-amber-950 hover:bg-amber-100"
                   : "border-slate-300 bg-white text-slate-700 hover:bg-slate-50"
               }`}
             >
               {savingCase ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
-              {hasUnsavedChanges ? "Simpan Perubahan*" : "Simpan"}
+              {hasUnsavedChanges ? "Simpan Kes*" : "Simpan Kes"}
             </button>
+
+            {onReRunAudit && (
+              <button
+                type="button"
+                disabled={auditLoading}
+                onClick={onReRunAudit}
+                className="inline-flex min-h-[42px] items-center gap-1.5 rounded-xl border border-slate-300 bg-white px-3.5 py-2 text-xs font-bold text-[#0f2744] hover:bg-slate-50 disabled:opacity-60"
+              >
+                {auditLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
+                Semak Semula Skor
+              </button>
+            )}
 
             <button
               type="button"
               disabled={exporting !== null}
               onClick={() => handleExport("pakej_ip")}
-              className="inline-flex min-h-[40px] items-center gap-2 rounded-xl bg-emerald-700 px-4 py-2 text-xs font-extrabold text-white shadow-sm hover:bg-emerald-800 disabled:opacity-60"
+              className="inline-flex min-h-[44px] items-center gap-2 rounded-xl bg-[#0f2744] px-4 py-2 text-xs font-extrabold text-white shadow-sm hover:bg-slate-800 disabled:opacity-60"
             >
               {exporting === "pakej_ip" ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
               ) : (
-                <FileCheck2 className="h-4 w-4 text-amber-200" />
+                <FileCheck2 className="h-4 w-4" />
               )}
               Muat Turun Pakej IP (.docx)
             </button>
@@ -338,15 +444,15 @@ export default function DraftDocxEditor({
               <button
                 type="button"
                 onClick={() => setShowMoreExports((v) => !v)}
-                className="inline-flex min-h-[40px] items-center gap-1 rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50"
+                className="inline-flex min-h-[42px] items-center gap-1 rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50"
               >
-                <Download className="h-3.5 w-3.5 text-blue-700" />
-                Borang Lain
+                <Download className="h-3.5 w-3.5 text-[#0f2744]" />
+                Muat Turun Asing
                 <ChevronDown className="h-3.5 w-3.5" />
               </button>
 
               {showMoreExports && (
-                <div className="absolute right-0 z-20 mt-1.5 w-48 rounded-xl border border-slate-200 bg-white p-1.5 shadow-lg">
+                <div className="absolute right-0 z-20 mt-1.5 w-52 rounded-xl border border-slate-200 bg-white p-1.5 shadow-lg">
                   {[
                     { type: "borang_114" as const, label: "Borang 114 Sahaja" },
                     { type: "saman_111" as const, label: "Saman 111 Sahaja" },
@@ -358,9 +464,9 @@ export default function DraftDocxEditor({
                       type="button"
                       disabled={exporting !== null}
                       onClick={() => handleExport(item.type)}
-                      className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-semibold text-slate-700 hover:bg-blue-50 hover:text-blue-900"
+                      className="flex min-h-[40px] w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-semibold text-slate-700 hover:bg-slate-100 hover:text-slate-900"
                     >
-                      <Download className="h-3.5 w-3.5 text-blue-600" />
+                      <Download className="h-3.5 w-3.5 text-[#0f2744]" />
                       {item.label}
                     </button>
                   ))}
@@ -371,32 +477,46 @@ export default function DraftDocxEditor({
         </div>
 
         {exportError && (
-          <p className="mt-2 text-xs font-semibold text-rose-700">{exportError}</p>
+          <p className="mt-2.5 text-xs font-semibold text-rose-700">{exportError}</p>
         )}
         {downloadOkMsg && (
-          <div className="mt-2.5 flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs font-bold text-emerald-900">
+          <div className="mt-3 flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-3.5 py-2.5 text-xs font-bold text-emerald-900">
             <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />
             <span>{downloadOkMsg}</span>
           </div>
         )}
       </div>
 
-      {/* 2. NAVIGASI 4 KUMPULAN DOKUMEN (BERSIH, TIADA 11 AKORDION BERTINDAN) */}
+      {/* 2. NAVIGASI 4 KUMPULAN DOKUMEN DENGAN LENCANA BILANGAN ISU */}
       <div className="flex gap-1.5 overflow-x-auto pb-1 no-scrollbar">
-        {GROUP_TABS.map((tab) => (
-          <button
-            key={tab.id}
-            type="button"
-            onClick={() => setActiveGroup(tab.id)}
-            className={`shrink-0 rounded-xl px-3.5 py-2.5 text-xs font-extrabold transition ${
-              activeGroup === tab.id
-                ? "bg-[#0f2744] text-white shadow-sm"
-                : "border border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
-            }`}
-          >
-            {tab.label}
-          </button>
-        ))}
+        {GROUP_TABS.map((tab) => {
+          const issues = auditIssueCounts?.[tab.id] || 0;
+          return (
+            <button
+              key={tab.id}
+              type="button"
+              onClick={() => setActiveGroup(tab.id)}
+              className={`inline-flex min-h-[42px] shrink-0 items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-extrabold transition ${
+                activeGroup === tab.id
+                  ? "bg-[#0f2744] text-white shadow-sm"
+                  : "border border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
+              }`}
+            >
+              <span>{tab.label}</span>
+              {issues > 0 && (
+                <span
+                  className={`rounded-full px-1.5 py-0.5 text-[11px] font-extrabold ${
+                    activeGroup === tab.id
+                      ? "bg-amber-300 text-slate-950"
+                      : "bg-rose-100 text-rose-800"
+                  }`}
+                >
+                  {issues}
+                </span>
+              )}
+            </button>
+          );
+        })}
       </div>
 
       {/* KUMPULAN 1: BORANG 114 & SAMAN 111 */}
@@ -1117,7 +1237,7 @@ export default function DraftDocxEditor({
                 />
               </div>
               <div>
-                <label className="text-xs font-semibold text-slate-600">Kamera / Peranti Input</label>
+                <label className="text-xs font-semibold text-slate-600">Kamera / Telefon Digunakan</label>
                 <input
                   type="text"
                   value={draft.sijil_90a.peranti_kamera || ""}

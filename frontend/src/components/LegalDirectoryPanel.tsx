@@ -48,11 +48,24 @@ import type {
 
 const OFFLINE_CACHE_KEY = "uip_offline_legal_library_v2";
 
+export interface CompoundPrefillMeta {
+  seksyen?: string;
+  kuasaKompaun?: string;
+  amaun?: string;
+  tempoh?: string;
+  kesalahanRingkas?: string;
+}
+
 interface LegalDirectoryPanelProps {
   authToken: string | null;
   officer: OfficerProfile | null;
   isDevAdmin: boolean;
-  onApplyOffenceToCase: (draftText: string, aktaCode: string, bukaIp: boolean) => void;
+  onApplyOffenceToCase: (
+    draftText: string,
+    aktaCode: string,
+    bukaIp: boolean,
+    compoundMeta?: CompoundPrefillMeta
+  ) => void;
 }
 
 type DirectorySubTab = "offences" | "statutes" | "repealed" | "admin";
@@ -530,11 +543,11 @@ export default function LegalDirectoryPanel({
       setUploadFile(null);
       const ing = res.legal_library_ingest;
       showToast(
-        `Warta ${ing.statute_id} berjaya diindeks (${ing.sections_extracted} seksyen verbatim, ${ing.new_offences_swept} kesalahan baharu disapu, versi ${ing.statute_library_version}).`
+        `Warta ${ing.statute_id} berjaya diindeks (${ing.sections_extracted} seksyen penuh, ${ing.new_offences_swept} kesalahan baharu dikesan, versi ${ing.statute_library_version}).`
       );
       await loadLegalLibrary();
     } catch (err) {
-      setErrorMsg(err instanceof Error ? err.message : "Gagal memproses fail Warta AGC.");
+      setErrorMsg(err instanceof Error ? err.message : "Gagal memproses fail Warta rasmi.");
     } finally {
       setUploadingPdf(false);
     }
@@ -544,7 +557,7 @@ export default function LegalDirectoryPanel({
     try {
       const res = await purgeAdvisorQaCache(undefined, authToken);
       showToast(
-        `${res.stale_records_marked} rekod cache Koleksi Q&A lama ditandakan STALE (Versi Pustaka: ${res.statute_library_version}).`
+        `${res.stale_records_marked} jawapan terdahulu lama telah disegarkan (Versi Pustaka: ${res.statute_library_version}).`
       );
     } catch (err) {
       setErrorMsg(err instanceof Error ? err.message : "Gagal membersihkan cache Koleksi Q&A.");
@@ -619,18 +632,31 @@ export default function LegalDirectoryPanel({
                 onClick={() => {
                   if (off.verified_status !== "VERIFIED_AGC") {
                     const proceed = window.confirm(
-                      `Peringatan Semakan Warta:\nRekod ${off.offence_section} masih berstatus Draf (Belum Disahkan Warta AGC oleh Pentadbir).\n\nSila pastikan seksyen dan had kompaun disemak semula dengan teks Warta rasmi sebelum menyerahkan notis.\n\nTeruskan isi ke Borang Notis Kompaun?`
+                      `Sila semak semula seksyen (${off.offence_section}) dan had kompaun ini dengan Warta rasmi sebelum keluarkan notis.\n\nTeruskan isi ke Borang Notis Kompaun?`
                     );
                     if (!proceed) return;
                   }
+                  const aktaCode = off.canonical_akta_code || "Akta 852";
+                  const rawLimit = off.compound_info?.compound_amount_or_limit || "";
+                  const amtMatch = rawLimit.match(/RM\s*[\d,]+(?:\.\d{2})?/i);
                   setMobileOffenceDrawerOpen(false);
                   onApplyOffenceToCase(
                     off.charge_sheet_template_bm,
-                    off.canonical_akta_code || "Akta 852",
-                    false
+                    aktaCode,
+                    false,
+                    {
+                      seksyen: `${off.offence_section} ${aktaCode}`.trim(),
+                      kuasaKompaun: off.compound_info?.compound_authority_section || "",
+                      amaun: amtMatch ? amtMatch[0].toUpperCase() : aktaCode === "Akta 154" ? "RM 500.00" : "RM 250.00",
+                      tempoh:
+                        aktaCode === "Akta 852"
+                          ? "30 hari dari tarikh tawaran kompaun"
+                          : "14 hari dari tarikh serahan notis",
+                      kesalahanRingkas: off.offence_title || off.charge_sheet_template_bm,
+                    }
                   );
                 }}
-                className="inline-flex min-h-[38px] items-center gap-1.5 rounded-xl bg-emerald-600 px-3.5 py-2 text-xs font-extrabold text-white shadow-sm hover:bg-emerald-700"
+                className="inline-flex min-h-[40px] items-center gap-1.5 rounded-xl bg-[#0f2744] px-4 py-2 text-xs font-extrabold text-white shadow-sm hover:bg-slate-800"
               >
                 <FileCheck2 className="h-4 w-4" />
                 Isi Notis Kompaun
@@ -890,7 +916,7 @@ export default function LegalDirectoryPanel({
               className="inline-flex min-h-[36px] items-center gap-1.5 rounded-xl border border-slate-300 bg-white px-3 py-1.5 text-xs font-bold text-slate-700 hover:bg-slate-50 disabled:opacity-50"
             >
               <RefreshCw className={`h-3.5 w-3.5 ${loading ? "animate-spin" : ""}`} />
-              Segar Semula
+              Muat Semula
             </button>
           </div>
         </div>
@@ -1107,27 +1133,17 @@ export default function LegalDirectoryPanel({
             </div>
           </section>
 
-          {/* 1 Nota Ringkas Di Bahagian Atas Senarai (TIDAK diulang pada setiap 117 kad) */}
-          {unverifiedOffencesCount > 0 && (
-            <div className="flex items-center gap-2 rounded-xl border border-amber-200 bg-amber-50/70 px-3.5 py-2 text-xs text-amber-950">
-              <AlertTriangle className="h-3.5 w-3.5 shrink-0 text-amber-700" />
-              <span>
-                Teks seksyen dipetik terus daripada PDF Warta rasmi. Sebahagian rekod ({unverifiedOffencesCount}) masih menunggu semakan akhir Admin Warta.
-              </span>
-            </div>
-          )}
-
           {/* Paparan 2 Lajur (Desktop) + Modal/Drawer (Telefon) */}
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-12">
             {/* Lajur Kiri: Senarai Kesalahan (Maksimum 2 Lencana Setiap Kad) */}
             <div className="space-y-2 lg:col-span-5">
               <div className="flex items-center justify-between px-1 text-xs font-bold text-slate-700">
                 <span className="flex items-center gap-1.5">
-                  <Filter className="h-3.5 w-3.5 text-blue-700" />
+                  <Filter className="h-3.5 w-3.5 text-[#0f2744]" />
                   {filteredOffences.length} Kesalahan Ditemui
                 </span>
-                <span className="text-[11px] font-medium text-slate-500 lg:hidden">
-                  Ketik kad untuk perincian
+                <span className="text-xs font-medium text-slate-500 lg:hidden">
+                  Tekan mana-mana kesalahan untuk lihat butiran
                 </span>
               </div>
 
@@ -1244,52 +1260,43 @@ export default function LegalDirectoryPanel({
       {/* ===================================================================== */}
       {subTab === "statutes" && snapshot && (
         <div className="space-y-4">
-          {/* Pilihan Akta & Carian Seksyen */}
+          {/* Pilihan Akta (Dropdown Bersih) & Carian Seksyen */}
           <section className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <div className="flex flex-wrap items-center gap-1.5">
-                {snapshot.statutes_registry.map((st) => {
-                  const active = activeStatuteMeta?.statute_id === st.statute_id;
-                  return (
-                    <button
-                      key={st.statute_id}
-                      type="button"
-                      onClick={() => {
-                        setSelectedStatuteId(st.statute_id);
-                        setSelectedDocId("");
-                      }}
-                      className={`inline-flex items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-extrabold transition ${
-                        active
-                          ? "bg-[#0f2744] text-white shadow-sm"
-                          : "border border-slate-200 bg-slate-50 text-slate-800 hover:bg-slate-100"
-                      }`}
-                    >
-                      <span>{st.act_number_or_pu || st.statute_id}</span>
-                      <span
-                        className={`rounded-full px-1.5 py-0.5 text-[10px] ${
-                          st.total_sections_indexed === 0
-                            ? "bg-rose-600 text-white"
-                            : active
-                              ? "bg-amber-400 text-slate-950"
-                              : "bg-slate-200 text-slate-700"
-                        }`}
-                      >
-                        {st.total_sections_indexed}
-                      </span>
-                    </button>
-                  );
-                })}
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-12">
+              <div className="sm:col-span-7">
+                <label className="mb-1 block text-xs font-bold text-slate-700">
+                  Pilih Akta / Peraturan Rasmi ({snapshot.statutes_registry.length})
+                </label>
+                <select
+                  value={activeStatuteMeta?.statute_id || ""}
+                  onChange={(e) => {
+                    setSelectedStatuteId(e.target.value);
+                    setSelectedDocId("");
+                  }}
+                  className="min-h-[44px] w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-base font-semibold text-slate-900 focus:border-[#0f2744] focus:outline-none sm:text-sm"
+                >
+                  {snapshot.statutes_registry.map((st) => (
+                    <option key={st.statute_id} value={st.statute_id}>
+                      {st.act_number_or_pu || st.statute_id} — {st.official_title_bm} ({st.total_sections_indexed} seksyen)
+                    </option>
+                  ))}
+                </select>
               </div>
 
-              <div className="relative w-full sm:w-72">
-                <Search className="pointer-events-none absolute left-3 top-2.5 h-3.5 w-3.5 text-slate-400" />
-                <input
-                  type="text"
-                  value={sectionSearch}
-                  onChange={(e) => setSectionSearch(e.target.value)}
-                  placeholder="Cari Seksyen / Peraturan / Teks Akta..."
-                  className="w-full rounded-xl border border-slate-300 bg-slate-50 py-2 pl-8 pr-3 text-xs font-medium text-slate-900 focus:border-blue-600 focus:bg-white focus:outline-none"
-                />
+              <div className="sm:col-span-5">
+                <label className="mb-1 block text-xs font-bold text-slate-700">
+                  Cari Seksyen atau Perkataan
+                </label>
+                <div className="relative">
+                  <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                  <input
+                    type="text"
+                    value={sectionSearch}
+                    onChange={(e) => setSectionSearch(e.target.value)}
+                    placeholder="cth: Seksyen 17, sitaan, tifoid..."
+                    className="min-h-[44px] w-full rounded-xl border border-slate-300 bg-slate-50 py-2 pl-9 pr-3 text-base font-medium text-slate-900 focus:border-[#0f2744] focus:bg-white focus:outline-none sm:text-sm"
+                  />
+                </div>
               </div>
             </div>
 
@@ -1539,7 +1546,7 @@ export default function LegalDirectoryPanel({
                 </p>
                 {rep.replacement_section && (
                   <div className="mt-2 rounded-lg border border-emerald-200 bg-emerald-50/70 p-2.5 text-emerald-950">
-                    <strong>Gantian Berkuat Kuasa:</strong> {rep.replacement_section}
+                    <strong>Guna Seksyen Ini Sebagai Ganti:</strong> {rep.replacement_section}
                   </div>
                 )}
                 {rep.key_differences_note && (
@@ -1563,20 +1570,20 @@ export default function LegalDirectoryPanel({
             <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 pb-3">
               <div>
                 <h3 className="text-sm font-extrabold text-slate-900 sm:text-base">
-                  Papan Pemuka Audit Liputan Pustaka Akta (statutes_registry)
+                  Semakan Liputan Pustaka Akta
                 </h3>
                 <p className="text-xs text-slate-600">
-                  Semak bilangan seksyen verbatim yang diindeks berbanding dokumen Warta, status pengesahan Admin (&ldquo;Sahkan Warta&rdquo;), dan versi Pustaka Akta.
+                  Semak bilangan seksyen penuh yang diindeks daripada Warta rasmi, status pengesahan pentadbir dan versi pustaka akta.
                 </p>
               </div>
 
               <button
                 type="button"
                 onClick={() => void handlePurgeQaCache()}
-                className="inline-flex items-center gap-1.5 rounded-xl border border-rose-300 bg-rose-50 px-3.5 py-2 text-xs font-extrabold text-rose-900 hover:bg-rose-100"
+                className="inline-flex min-h-[40px] items-center gap-1.5 rounded-xl border border-rose-300 bg-rose-50 px-3.5 py-2 text-xs font-extrabold text-rose-900 hover:bg-rose-100"
               >
                 <Trash2 className="h-3.5 w-3.5 text-rose-700" />
-                Bersihkan Cache Koleksi Q&amp;A Lama (STALE)
+                Segarkan Jawapan Terdahulu Lama
               </button>
             </div>
 
@@ -1584,7 +1591,7 @@ export default function LegalDirectoryPanel({
               <div className="flex items-center gap-2 rounded-xl border border-amber-300 bg-amber-50 px-3.5 py-2.5 text-xs font-bold text-amber-950">
                 <AlertTriangle className="h-4 w-4 shrink-0 text-amber-700" />
                 <span>
-                  Amaran Liputan: Statut berikut belum disahkan sepenuhnya oleh Admin:{" "}
+                  Nota Semakan: Statut berikut belum disahkan oleh pentadbir:{" "}
                   {coverage.unverified_statutes.join(", ")}
                 </span>
               </div>
@@ -1593,7 +1600,7 @@ export default function LegalDirectoryPanel({
             <div className="overflow-x-auto">
               <table className="w-full border-collapse text-left text-xs">
                 <thead>
-                  <tr className="border-b border-slate-200 bg-slate-50 text-[11px] font-extrabold uppercase text-slate-600">
+                  <tr className="border-b border-slate-200 bg-slate-50 text-xs font-extrabold uppercase text-slate-600">
                     <th className="p-2.5">Kod Statut</th>
                     <th className="p-2.5">Tajuk Rasmi &amp; Warta</th>
                     <th className="p-2.5">Kuat Kuasa</th>
@@ -1613,13 +1620,13 @@ export default function LegalDirectoryPanel({
                       >
                         <td className="p-2.5 font-mono font-extrabold text-slate-900">
                           {st.statute_id}
-                          <div className="text-[10px] font-semibold text-blue-800">
+                          <div className="text-xs font-semibold text-[#0f2744]">
                             {st.canonical_akta_code}
                           </div>
                         </td>
                         <td className="p-2.5">
                           <div className="font-bold text-slate-900">{st.official_title_bm}</div>
-                          <div className="text-[11px] text-slate-500">
+                          <div className="text-xs text-slate-500">
                             {st.act_number_or_pu} • SHA256:{" "}
                             {(st.source_pdf_hash || "").slice(0, 10)}...
                           </div>
@@ -1629,8 +1636,8 @@ export default function LegalDirectoryPanel({
                         </td>
                         <td className="p-2.5">
                           {isUnindexed ? (
-                            <span className="rounded bg-rose-700 px-2 py-0.5 text-[10px] font-extrabold text-white">
-                              0 Seksyen (BELUM DIINDEKS)
+                            <span className="rounded bg-rose-700 px-2 py-0.5 text-xs font-extrabold text-white">
+                              0 Seksyen (Belum Diindeks)
                             </span>
                           ) : (
                             <span className="font-extrabold text-emerald-900">
@@ -1644,12 +1651,12 @@ export default function LegalDirectoryPanel({
                         </td>
                         <td className="p-2.5">
                           {st.verified_by_admin ? (
-                            <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2.5 py-0.5 text-[10px] font-extrabold text-emerald-900">
-                              <CheckCircle2 className="h-3 w-3" /> Disahkan Warta AGC
+                            <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-extrabold text-emerald-900">
+                              <CheckCircle2 className="h-3 w-3" /> Disahkan Warta
                             </span>
                           ) : (
-                            <span className="inline-flex items-center gap-1 rounded-full border border-yellow-300 bg-yellow-100 px-2.5 py-0.5 text-[10px] font-extrabold text-yellow-900">
-                              <AlertTriangle className="h-3 w-3 text-yellow-700" /> Perlu Semakan Manual Warta AGC
+                            <span className="inline-flex items-center gap-1 rounded-full border border-yellow-300 bg-yellow-100 px-2.5 py-0.5 text-xs font-extrabold text-yellow-900">
+                              <AlertTriangle className="h-3 w-3 text-yellow-700" /> Perlu Semakan Warta
                             </span>
                           )}
                         </td>
@@ -1659,13 +1666,13 @@ export default function LegalDirectoryPanel({
                             onClick={() =>
                               void handleVerifyStatute(st.statute_id, !st.verified_by_admin)
                             }
-                            className={`rounded-lg px-2.5 py-1 text-[11px] font-extrabold transition ${
+                            className={`min-h-[36px] rounded-lg px-3 py-1 text-xs font-extrabold transition ${
                               st.verified_by_admin
                                 ? "border border-slate-300 bg-white text-slate-700 hover:bg-slate-100"
                                 : "bg-emerald-600 text-white hover:bg-emerald-700"
                             }`}
                           >
-                            {st.verified_by_admin ? "Nyah-Sahkan" : "Sahkan Warta"}
+                            {st.verified_by_admin ? "Batal Pengesahan" : "Sahkan Warta"}
                           </button>
                         </td>
                       </tr>
@@ -1676,20 +1683,20 @@ export default function LegalDirectoryPanel({
             </div>
           </section>
 
-          {/* 2. Borang Muat Naik PDF Warta Kerajaan Persekutuan (AGC) & Panduan Penamaan Fail */}
+          {/* 2. Borang Muat Naik PDF Warta Kerajaan Persekutuan */}
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-12">
             <form
               onSubmit={handleUploadGazettePdf}
               className="space-y-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5 lg:col-span-7"
             >
               <div className="flex items-center gap-2 border-b border-slate-200 pb-2.5">
-                <FileUp className="h-5 w-5 text-indigo-700" />
+                <FileUp className="h-5 w-5 text-[#0f2744]" />
                 <div>
                   <h4 className="text-sm font-extrabold text-slate-900">
-                    Muat Naik &amp; Indeks Fail PDF / Teks Warta Rasmi AGC (lom.agc.gov.my)
+                    Muat Naik &amp; Indeks Fail PDF Warta Kerajaan Rasmi
                   </h4>
-                  <p className="text-xs text-slate-500">
-                    Penghurai deterministik akan memetakan setiap Bahagian, Seksyen &amp; Jadual ke dalam <code>statute_sections_verbatim</code> serta menanda cache Q&amp;A lama sebagai <code>STALE</code>.
+                  <p className="text-xs text-slate-600">
+                    Sistem akan membaca dan menyusun setiap Bahagian, Seksyen &amp; Jadual secara automatik serta menyegarkan jawapan terdahulu lama.
                   </p>
                 </div>
               </div>

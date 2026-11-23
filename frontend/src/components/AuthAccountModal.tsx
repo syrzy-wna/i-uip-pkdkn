@@ -618,148 +618,141 @@ export default function AuthAccountModal({
             </div>
           )}
 
-          {/* TAB 2: DAFTAR AKAUN BAHARU */}
+          {/* TAB 2: DAFTAR AKAUN BAHARU (3 MEDAN ASAS DAHULU — BUTIRAN LAIN PILIHAN) */}
           {tab === "register" && !officer && (
             <form onSubmit={handleRegister} className="space-y-4">
-              <div className="rounded-xl border border-slate-200 bg-slate-50/60 p-3.5 space-y-3">
-                <h4 className="flex items-center gap-1.5 text-xs font-bold text-slate-900">
-                  <ShieldCheck className="h-4 w-4 text-blue-700" />
-                  1. Maklumat Log Masuk &amp; Perjawatan KKM
-                </h4>
-                <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+              <div className="rounded-xl border border-slate-200 bg-slate-50/70 p-4 space-y-3">
+                <div>
+                  <h4 className="flex items-center gap-1.5 text-sm font-extrabold text-slate-900">
+                    <ShieldCheck className="h-4 w-4 text-[#0f2744]" />
+                    Daftar Akaun Pegawai (30 Saat)
+                  </h4>
+                  <p className="mt-0.5 text-xs text-slate-600">
+                    Isi 3 ruangan asas sahaja untuk terus masuk. No. Kad Kuasa &amp; butiran Sijil 90A boleh diisi kemudian.
+                  </p>
+                </div>
+
+                <div className="space-y-3">
                   <div>
-                    <label className="text-[11px] font-semibold text-slate-700">Emel Rasmi KKM / Kerja *</label>
+                    <label className="text-xs font-semibold text-slate-700">
+                      E-mel Rasmi KKM / Kerja <span className="text-rose-600">*</span>
+                    </label>
                     <input
                       type="email"
                       required
                       placeholder="nama@moh.gov.my"
                       value={regForm.email}
                       onChange={(e) => setRegForm({ ...regForm, email: e.target.value })}
-                      className="mt-0.5 w-full rounded border border-slate-300 bg-white px-2.5 py-1.5 text-xs"
+                      className="mt-1 w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-base text-slate-900 sm:text-sm"
                     />
                   </div>
                   <div>
-                    <label className="text-[11px] font-semibold text-slate-700">Kata Laluan (min. 6 aksara) *</label>
+                    <label className="text-xs font-semibold text-slate-700">
+                      Kata Laluan (min. 6 aksara) <span className="text-rose-600">*</span>
+                    </label>
                     <input
                       type="password"
                       required
                       minLength={6}
                       value={regForm.password}
                       onChange={(e) => setRegForm({ ...regForm, password: e.target.value })}
-                      className="mt-0.5 w-full rounded border border-slate-300 bg-white px-2.5 py-1.5 text-xs"
+                      className="mt-1 w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-base text-slate-900 sm:text-sm"
                     />
                   </div>
                   <div>
-                    <label className="text-[11px] font-semibold text-slate-700">Nama Penuh &amp; Gelaran Pegawai *</label>
+                    <label className="text-xs font-semibold text-slate-700">
+                      Nama Penuh &amp; Gelaran Pegawai <span className="text-rose-600">*</span>
+                    </label>
                     <input
                       type="text"
                       required
                       placeholder="cth: PPKP Mohd Amirul bin Zaki"
                       value={regForm.full_name}
                       onChange={(e) => setRegForm({ ...regForm, full_name: e.target.value })}
-                      className="mt-0.5 w-full rounded border border-slate-300 bg-white px-2.5 py-1.5 text-xs"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-[11px] font-semibold text-slate-700">No. Kad Pengenalan (untuk Sijil 90A)</label>
-                    <input
-                      type="text"
-                      placeholder="890101-10-5511"
-                      value={regForm.ic_number}
-                      onChange={(e) => setRegForm({ ...regForm, ic_number: e.target.value })}
-                      className="mt-0.5 w-full rounded border border-slate-300 bg-white px-2.5 py-1.5 text-xs"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-[11px] font-semibold text-slate-700">Jawatan</label>
-                    <select
-                      value={regForm.designation}
-                      onChange={(e) => setRegForm({ ...regForm, designation: e.target.value })}
-                      className="mt-0.5 w-full rounded border border-slate-300 bg-white px-2.5 py-1.5 text-xs"
-                    >
-                      <option>Penolong Pegawai Kesihatan Persekitaran (PPKP)</option>
-                      <option>Pegawai Kesihatan Persekitaran (PKP)</option>
-                      <option>Pegawai Perubatan Kesihatan Daerah (PKD)</option>
-                      <option>Pegawai Sains (Entomologi / Mikrobiologi)</option>
-                    </select>
-                  </div>
-                  <div className="grid grid-cols-2 gap-2">
-                    <div>
-                      <label className="text-[11px] font-semibold text-slate-700">Gred (SSPA)</label>
-                      <select
-                        value={regForm.grade}
-                        onChange={(e) => setRegForm({ ...regForm, grade: e.target.value })}
-                        className="mt-0.5 w-full rounded border border-slate-300 bg-white px-2 py-1.5 text-xs"
-                      >
-                        {renderSspaGradeOptions()}
-                      </select>
-                    </div>
-                    <div>
-                      <label className="text-[11px] font-semibold text-slate-700">Peranan UIP</label>
-                      <select
-                        value={regForm.system_role}
-                        onChange={(e) => setRegForm({ ...regForm, system_role: e.target.value })}
-                        className="mt-0.5 w-full rounded border border-slate-300 bg-white px-2 py-1.5 text-xs"
-                      >
-                        <option value="PEGAWAI_PEMERIKSA">Pegawai Pemeriksa</option>
-                        <option value="PEGAWAI_PENYIASAT">Pegawai Penyiasat (IO)</option>
-                        <option value="PENYEMAK_KANAN_UIP">Penyemak Kanan / KPPKP</option>
-                        <option value="PEGAWAI_PENDAKWA">Pegawai Pendakwa (PO)</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div>
-                    <label className="text-[11px] font-semibold text-slate-700">No. Kad Kuasa Rasmi KKM</label>
-                    <input
-                      type="text"
-                      placeholder="cth: KKM/SEL/PKD-PTG/0991"
-                      value={regForm.kkm_authority_card_no}
-                      onChange={(e) => setRegForm({ ...regForm, kkm_authority_card_no: e.target.value })}
-                      className="mt-0.5 w-full rounded border border-slate-300 bg-white px-2.5 py-1.5 text-xs"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-[11px] font-semibold text-slate-700">No. Tauliah S.377(b) KTJ (Jika PO)</label>
-                    <input
-                      type="text"
-                      placeholder="Pilihan - hanya jika Pegawai Pendakwa"
-                      value={regForm.prosecution_authorization_no}
-                      onChange={(e) => setRegForm({ ...regForm, prosecution_authorization_no: e.target.value })}
-                      className="mt-0.5 w-full rounded border border-slate-300 bg-white px-2.5 py-1.5 text-xs"
+                      className="mt-1 w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-base text-slate-900 sm:text-sm"
                     />
                   </div>
                 </div>
               </div>
 
-              <div className="rounded-xl border border-slate-200 bg-slate-50/60 p-3.5">
+              <div className="rounded-xl border border-slate-200 bg-white p-3.5">
                 <button
                   type="button"
                   onClick={() => setShowOfficeDefaults((v) => !v)}
-                  className="flex w-full items-center justify-between gap-2 text-left"
+                  className="flex min-h-[40px] w-full items-center justify-between gap-2 text-left"
                 >
                   <div>
                     <h4 className="flex items-center gap-1.5 text-xs font-bold text-slate-900">
                       <Building2 className="h-4 w-4 text-emerald-700" />
-                      2. Penempatan PKD &amp; Perkakasan Sijil 90A (Dipra-isi)
+                      Lengkapkan Kad Kuasa, Gred SSPA &amp; PKD (Pilihan — boleh isi kemudian)
                     </h4>
-                    <p className="mt-0.5 text-[11px] text-slate-500">
-                      PKD Kuala Nerus • Mahkamah Kuala Terengganu (Klik untuk ubah jika perlu)
+                    <p className="mt-0.5 text-xs text-slate-500">
+                      Lalai: PPKP Gred U5 • PKD Kuala Nerus • Mahkamah Kuala Terengganu
                     </p>
                   </div>
-                  <span className="shrink-0 text-xs font-bold text-blue-700">
-                    {showOfficeDefaults ? "Tutup ▴" : "Ubah ▾"}
+                  <span className="shrink-0 text-xs font-bold text-[#0f2744]">
+                    {showOfficeDefaults ? "Tutup ▴" : "Isi Sekarang ▾"}
                   </span>
                 </button>
                 {showOfficeDefaults && (
-                  <div className="mt-3 grid grid-cols-1 gap-2.5 border-t border-slate-200 pt-3 sm:grid-cols-2">
+                  <div className="mt-3 grid grid-cols-1 gap-3 border-t border-slate-200 pt-3 sm:grid-cols-2">
                     <div>
-                      <label className="text-xs font-semibold text-slate-700">Jabatan Kesihatan Negeri (JKN)</label>
+                      <label className="text-xs font-semibold text-slate-700">No. Kad Kuasa Rasmi KKM</label>
                       <input
                         type="text"
-                        value={regForm.state_jkn}
-                        onChange={(e) => setRegForm({ ...regForm, state_jkn: e.target.value })}
-                        className="mt-0.5 w-full rounded-lg border border-slate-300 bg-white px-2.5 py-2 text-base sm:text-sm"
+                        placeholder="cth: KKM-TRG-2026-088"
+                        value={regForm.kkm_authority_card_no}
+                        onChange={(e) => setRegForm({ ...regForm, kkm_authority_card_no: e.target.value })}
+                        className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-base sm:text-sm"
                       />
+                    </div>
+                    <div>
+                      <label className="text-xs font-semibold text-slate-700">No. K/P (untuk Sijil 90A)</label>
+                      <input
+                        type="text"
+                        placeholder="890101-11-5511"
+                        value={regForm.ic_number}
+                        onChange={(e) => setRegForm({ ...regForm, ic_number: e.target.value })}
+                        className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-base sm:text-sm"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs font-semibold text-slate-700">Jawatan</label>
+                      <select
+                        value={regForm.designation}
+                        onChange={(e) => setRegForm({ ...regForm, designation: e.target.value })}
+                        className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-base sm:text-sm"
+                      >
+                        <option>Penolong Pegawai Kesihatan Persekitaran (PPKP)</option>
+                        <option>Pegawai Kesihatan Persekitaran (PKP)</option>
+                        <option>Pegawai Perubatan Kesihatan Daerah (PKD)</option>
+                        <option>Pegawai Sains (Entomologi / Mikrobiologi)</option>
+                      </select>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2">
+                      <div>
+                        <label className="text-xs font-semibold text-slate-700">Gred (SSPA)</label>
+                        <select
+                          value={regForm.grade}
+                          onChange={(e) => setRegForm({ ...regForm, grade: e.target.value })}
+                          className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-2.5 py-2 text-base sm:text-sm"
+                        >
+                          {renderSspaGradeOptions()}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="text-xs font-semibold text-slate-700">Peranan UIP</label>
+                        <select
+                          value={regForm.system_role}
+                          onChange={(e) => setRegForm({ ...regForm, system_role: e.target.value })}
+                          className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-2.5 py-2 text-base sm:text-sm"
+                        >
+                          <option value="PEGAWAI_PEMERIKSA">Pegawai Pemeriksa</option>
+                          <option value="PEGAWAI_PENYIASAT">Pegawai Penyiasat (IO)</option>
+                          <option value="PENYEMAK_KANAN_UIP">Penyemak Kanan / KPPKP</option>
+                          <option value="PEGAWAI_PENDAKWA">Pegawai Pendakwa (PO)</option>
+                        </select>
+                      </div>
                     </div>
                     <div>
                       <label className="text-xs font-semibold text-slate-700">Pejabat Kesihatan Daerah (PKD)</label>
@@ -767,7 +760,17 @@ export default function AuthAccountModal({
                         type="text"
                         value={regForm.district_pkd}
                         onChange={(e) => setRegForm({ ...regForm, district_pkd: e.target.value })}
-                        className="mt-0.5 w-full rounded-lg border border-slate-300 bg-white px-2.5 py-2 text-base sm:text-sm"
+                        className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-base sm:text-sm"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs font-semibold text-slate-700">No. Tauliah S.377(b) KTJ (Jika PO)</label>
+                      <input
+                        type="text"
+                        placeholder="Pilihan"
+                        value={regForm.prosecution_authorization_no}
+                        onChange={(e) => setRegForm({ ...regForm, prosecution_authorization_no: e.target.value })}
+                        className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-base sm:text-sm"
                       />
                     </div>
                     <div className="sm:col-span-2">
@@ -776,7 +779,7 @@ export default function AuthAccountModal({
                         type="text"
                         value={regForm.default_magistrate_court}
                         onChange={(e) => setRegForm({ ...regForm, default_magistrate_court: e.target.value })}
-                        className="mt-0.5 w-full rounded-lg border border-slate-300 bg-white px-2.5 py-2 text-base sm:text-sm"
+                        className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-base sm:text-sm"
                       />
                     </div>
                     <div>
@@ -785,7 +788,7 @@ export default function AuthAccountModal({
                         type="text"
                         value={regForm.default_camera_desc}
                         onChange={(e) => setRegForm({ ...regForm, default_camera_desc: e.target.value })}
-                        className="mt-0.5 w-full rounded-lg border border-slate-300 bg-white px-2.5 py-2 text-base sm:text-sm"
+                        className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-base sm:text-sm"
                       />
                     </div>
                     <div>
@@ -794,7 +797,7 @@ export default function AuthAccountModal({
                         type="text"
                         value={regForm.default_computer_desc}
                         onChange={(e) => setRegForm({ ...regForm, default_computer_desc: e.target.value })}
-                        className="mt-0.5 w-full rounded-lg border border-slate-300 bg-white px-2.5 py-2 text-base sm:text-sm"
+                        className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-base sm:text-sm"
                       />
                     </div>
                   </div>
@@ -810,10 +813,10 @@ export default function AuthAccountModal({
               <button
                 type="submit"
                 disabled={loading}
-                className="inline-flex min-h-[44px] w-full items-center justify-center gap-1.5 rounded-xl bg-emerald-700 px-4 py-2.5 text-xs font-bold text-white hover:bg-emerald-800 disabled:opacity-60 sm:w-auto"
+                className="inline-flex min-h-[46px] w-full items-center justify-center gap-2 rounded-xl bg-[#0f2744] px-5 py-2.5 text-sm font-bold text-white hover:bg-slate-800 disabled:opacity-60 sm:w-auto"
               >
                 {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <UserPlus className="h-4 w-4" />}
-                Daftar &amp; Aktifkan Akaun Pegawai
+                Daftar &amp; Mula Guna
               </button>
             </form>
           )}
