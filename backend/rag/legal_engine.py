@@ -3197,7 +3197,7 @@ def evaluate_offence_elements_against_facts(
         for k in (
             "sedang hisap", "sedang menghisap", "hisap vape", "menghisap vape",
             "hisap rokok", "menghisap rokok", "sedang merokok", "merokok di",
-            "pelajar merokok", "dilihat menghisap", "tangkap pelajar sedang",
+            "merokok dalam", "pelajar merokok", "dilihat menghisap", "tangkap pelajar sedang",
         )
     )
 
@@ -3266,20 +3266,27 @@ def evaluate_offence_elements_against_facts(
                 reason = "Gunakan Perintah Pencegahan Seksyen 8(1) Akta 154 jika wujud potensi pembiakan dalam premis atau rujuk PBT jika tanah rizab awam."
         else:
             # Penilaian berasaskan bukti fakta sebenar dalam soalan (hanya TERPENUHI jika fakta jelas dinyatakan!)
-            if any(w in desc_low for w in ("belum dewasa", "bawah 18", "bawah umur", "umur")):
+            if any(w in desc_low for w in ("mengimport", "mengilang", "mengedarkan", "tidak didaftarkan", "pendaftaran")):
+                if any(k in q_low for k in ("import", "kilang", "edar", "pengedar", "tidak berdaftar", "belum daftar")):
+                    status = "PERLU BUKTI TAMBAHAN"
+                    reason = must_prove or "Perlu invois/rekod pengedaran, barang kes disita (S.36) dan surat pengesahan pendaftaran KKM."
+                else:
+                    status = "TIDAK TERPENUHI"
+                    reason = "Tiada aktiviti mengimport, mengilang atau mengedarkan produk tidak berdaftar dinyatakan dalam situasi ini."
+            elif any(w in desc_low for w in ("belum dewasa", "bawah 18", "bawah umur", "umur")):
                 if any(k in q_low for k in ("mykad", "sijil lahir", "jpn", "berumur 1", "bawah 18 tahun", "tingkatan")):
                     status = "TERPENUHI"
                     reason = "Status umur bawah 18 tahun (OBD) dinyatakan dalam fakta; pastikan salinan MyKad/Kad Pelajar dilampirkan."
                 else:
                     status = "PERLU BUKTI TAMBAHAN"
                     reason = "Pelajar/OBD dinyatakan, tetapi umur sebenar (< 18 tahun pada tarikh kejadian) wajib disahkan dengan MyKad atau Kad Pelajar."
-            elif any(w in desc_low for w in ("merokok", "mengunyah", "menggunakan", "menghisap")):
+            elif any(w in desc_low for w in ("sedang merokok", "merokok atau", "mengunyah", "menggunakan produk", "menghisap")):
                 if has_active_smoking_fact:
                     status = "TERPENUHI"
-                    reason = "Perbuatan menghisap/merokok dinyatakan jelas dalam laporan kes; kukuhkan dengan keterangan saksi mata/guru, foto & rakaman S.112."
+                    reason = "Perbuatan merokok/menghisap dinyatakan dalam laporan kes; kukuhkan dengan pemerhatian langsung PPKP/saksi, gambar kejadian & bukti asap/peranti."
                 else:
                     status = "PERLU BUKTI TAMBAHAN"
-                    reason = "Perlu bukti saksi mata, video/CCTV atau pengakuan menunjukkan suspek benar-benar sedang merokok/menggunakan."
+                    reason = "Perlu bukti pemerhatian langsung PPKP, saksi mata, foto/CCTV atau pengakuan menunjukkan suspek benar-benar sedang merokok/menggunakan."
             elif any(w in desc_low for w in ("produk tembakau", "pengganti tembakau", "produk merokok", "rokok elektronik", "vape")):
                 if any(k in q_low for k in ("vape", "pod", "rokok", "shisha", "tembakau")):
                     status = "TERPENUHI"
@@ -3287,6 +3294,34 @@ def evaluate_offence_elements_against_facts(
                 else:
                     status = "PERLU BUKTI TAMBAHAN"
                     reason = "Perlu pengesahan fizikal jenis produk merokok/pengganti tembakau."
+            elif any(w in desc_low for w in ("kawasan larangan", "tempat larangan", "tempat makan")):
+                if any(
+                    k in q_low
+                    for k in (
+                        "mall", "kompleks", "pusat beli", "pusat membeli",
+                        "parking bertingkat", "parkir bertingkat", "tempat letak kereta bertingkat",
+                    )
+                ):
+                    status = "TERPENUHI"
+                    reason = (
+                        "Kompleks membeli-belah (Bil. 15 Jadual Pertama P.U. (A) 257/2024) dan keseluruhan kawasan di dalam struktur "
+                        "bangunannya — termasuk parkir bertingkat berbumbung / bumbung kekal bersambung atau jarak 3 meter dari garisan bangunan "
+                        "(Perenggan 1(b)) — ialah kawasan larangan merokok; sahkan dengan gambar struktur & papan tanda aras parkir mall."
+                    )
+                elif any(
+                    k in q_low
+                    for k in (
+                        "restoran", "tempat makan", "sekolah", "tandas", "hospital", "klinik",
+                        "kawasan larangan", "lif", "dobi", "stesen minyak", "lapangan terbang",
+                        "kenderaan awam", "bas sekolah", "kedai berhawa dingin", "bangunan tempat kerja",
+                        "stadium", "perpustakaan", "kompleks sukan", "r&r", "taman awam",
+                    )
+                ):
+                    status = "TERPENUHI"
+                    reason = "Lokasi termasuk dalam kawasan/tempat larangan merokok yang diisytiharkan di bawah Jadual Pertama P.U. (A) 257/2024."
+                else:
+                    status = "PERLU BUKTI TAMBAHAN"
+                    reason = "Sahkan lokasi kejadian tersenarai dalam Jadual Pertama P.U. (A) 257/2024 (bukan tempat letak kereta awam terbuka di luar garisan 3 meter bangunan)."
             elif any(w in desc_low for w in ("mempamerkan", "pameran")):
                 if any(k in q_low for k in ("pamer", "mempamer", "pameran", "di kaunter", "terbuka")):
                     status = "TERPENUHI"
@@ -3294,8 +3329,8 @@ def evaluate_offence_elements_against_facts(
                 else:
                     status = "PERLU BUKTI TAMBAHAN"
                     reason = "Perlu bukti gambar foto produk dipamerkan secara terbuka di kaunter jualan."
-            elif any(w in desc_low for w in ("menjual", "jualan", "pembelian", "membeli")):
-                if any(k in q_low for k in ("jual", "menjual", "membeli", "beli", "resit", "transaksi")):
+            elif any(w in desc_low.replace("membeli-belah", "") for w in ("menjual", "jualan", "pembelian", "membeli")):
+                if any(k in q_low.replace("membeli-belah", "") for k in ("jual", "menjual", "membeli", "beli", "resit", "transaksi")):
                     status = "TERPENUHI"
                     reason = "Transaksi jualan/belian dinyatakan; lengkapkan resit pembelian, barang kes & percakapan S.112 saksi."
                 else:
@@ -3305,10 +3340,6 @@ def evaluate_offence_elements_against_facts(
                 if any(k in q_low for k in ("iklan", "poster", "bunting", "promosi", "skrin")):
                     status = "TERPENUHI"
                     reason = "Bahan iklan/promosi dinyatakan; ambil gambar sebelum sitaan atau cetak paparan digital dengan Sijil S.90A."
-            elif any(w in desc_low for w in ("kawasan larangan", "tempat larangan", "tempat makan")):
-                if any(k in q_low for k in ("restoran", "tempat makan", "sekolah", "tandas sekolah", "hospital", "kawasan larangan")):
-                    status = "TERPENUHI"
-                    reason = "Lokasi termasuk dalam kawasan/tempat larangan di bawah P.U. (A) 257/2024."
             elif any(w in desc_low for w in ("tifoid", "vaksin", "pemeriksaan perubatan")):
                 if any(k in q_low for k in ("tiada tifoid", "tiada suntikan", "belum suntik", "tifoid")):
                     status = "TERPENUHI"
@@ -4742,10 +4773,30 @@ class ClosedBookLegalLibrary:
                     k in q_low for k in ("pamer", "pameran", "kaunter", "terbuka")
                 ):
                     score += 6.0
-                if off["offence_id"] == "AKTA_852_S16_2" and any(
-                    k in q_low for k in ("restoran", "tempat makan", "kawasan larangan", "larangan merokok")
-                ) and not has_minor_signal:
-                    score += 6.0
+                if off["offence_id"] == "AKTA_852_S16_2" and not has_minor_signal and any(
+                    k in q_low
+                    for k in (
+                        "restoran", "tempat makan", "kawasan larangan", "larangan merokok",
+                        "mall", "kompleks", "pusat beli", "pusat membeli",
+                        "parking", "parkir", "letak kereta", "kereta", "kenderaan",
+                        "hospital", "klinik", "lif", "tandas", "dobi", "lapangan terbang",
+                        "stesen minyak", "bangunan", "pejabat", "tempat kerja", "taman awam",
+                        "r&r", "bas", "stadium", "masjid", "surau", "kafe", "hentian",
+                        "kedai berhawa dingin", "kaki lima", "bertingkat",
+                        "merokok di", "merokok dalam", "hisap rokok di", "hisap rokok dalam",
+                        "hisap vape di", "hisap vape dalam",
+                    )
+                ):
+                    score += 8.0
+                # Elak Seksyen 3(1) (import/kilang/edar produk tidak berdaftar) tersalah padan hanya kerana perkataan 'merokok'
+                if off["offence_id"] == "AKTA_852_S3_1" and not any(
+                    k in q_low
+                    for k in (
+                        "import", "kilang", "mengilang", "edar", "mengedar", "pengedar",
+                        "daftar", "pendaftaran", "tidak berdaftar", "262/2024", "s.3", "seksyen 3",
+                    )
+                ):
+                    score = 0.0
                 if score >= 1.0:
                     eval_res = evaluate_offence_elements_against_facts(q_raw, off)
                     scored_offences.append((score, off, eval_res))
@@ -4780,10 +4831,25 @@ class ClosedBookLegalLibrary:
 
         # Utamakan seksyen verbatim yang dipautkan terus oleh top_offences
         for off in top_offences:
-            for did in off.get("source_section_doc_ids") or []:
+            linked_doc_ids = list(off.get("source_section_doc_ids") or [])
+            # Jika kesalahan ialah Seksyen 16(2) Akta 852, wajib sertakan Jadual Pertama & Tafsiran P2 P.U. (A) 257/2024
+            # supaya 28 kawasan larangan merokok + takrif 'bangunan'/'kawasan'/'kompleks membeli-belah' sentiasa tersedia!
+            if off.get("offence_id") == "AKTA_852_S16_2":
+                for extra_did in (
+                    "AKTA_852_PERINTAH_LARANGAN_2024__JADUAL_PERTAMA",
+                    "AKTA_852_PERINTAH_LARANGAN_2024__P2",
+                ):
+                    if extra_did not in linked_doc_ids:
+                        linked_doc_ids.append(extra_did)
+
+            for did in linked_doc_ids:
                 if did in sec_map and did not in seen_doc_ids:
                     s_obj = sec_map[did]
-                    if not asks_definition and is_non_offence_or_definition_section(s_obj):
+                    allow_pu257_scope = did in (
+                        "AKTA_852_PERINTAH_LARANGAN_2024__JADUAL_PERTAMA",
+                        "AKTA_852_PERINTAH_LARANGAN_2024__P2",
+                    )
+                    if not asks_definition and not allow_pu257_scope and is_non_offence_or_definition_section(s_obj):
                         continue
                     seen_doc_ids.add(did)
                     verbatim_hits.append(

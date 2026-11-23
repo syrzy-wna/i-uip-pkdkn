@@ -247,6 +247,69 @@ UIP_SCENARIO_LIBRARY: List[Dict[str, Any]] = [
         ),
     },
     {
+        "id": "ak852_larangan_merokok_bangunan_mall_parkir",
+        "akta_utama": "Akta 852",
+        "tajuk": "Merokok / Vape Di Dalam Kompleks Membeli-Belah, Parkir Bertingkat Mall atau Bangunan Larangan (Termasuk Dalam Kereta)",
+        "keywords": [
+            "parking bertingkat", "parkir bertingkat", "tempat letak kereta bertingkat",
+            "merokok dalam kereta", "hisap rokok dalam kereta", "hisap vape dalam kereta",
+            "mall", "kompleks membeli-belah", "pusat beli-belah", "pusat membeli-belah",
+            "parking mall", "parkir mall", "letak kereta", "dalam bangunan",
+            "kenderaan awam", "bas sekolah", "stesen minyak", "tandas awam", "lif",
+            "kedai berhawa dingin", "bangunan dobi", "bangunan tempat kerja",
+        ],
+        "negative_keywords": ["pelajar", "murid", "budak sekolah", "najis tikus", "suntikan tifoid"],
+        "incompatible_with": ["ak852_obd_merokok_tepi_jalan"],
+        "status_kesalahan": "ADA_KESALAHAN",
+        "ringkasan_keputusan": (
+            "ADA KESALAHAN di bawah Seksyen 16(2) Akta 852 jika parkir bertingkat tersebut sebahagian daripada struktur bangunan / "
+            "bumbung kekal kompleks membeli-belah (Bil. 15 & Perenggan 1(b), Jadual Pertama P.U. (A) 257/2024) — keluarkan Notis S.47 & tawarkan kompaun S.48(2) (RM250, 30 hari)."
+        ),
+        "keputusan_tindakan": "KELUARKAN NOTIS S.47 & TAWARKAN KOMPAUN S.48(2) (RM250 — 30 HARI) JIKA DALAM STRUKTUR BANGUNAN / BUMBUNG KEKAL MALL",
+        "sesuai_buka_ip": False,
+        "alasan_keputusan": (
+            "Di bawah Seksyen 16(2) Akta 852 dibaca bersama Perenggan 3 dan Jadual Pertama (Bil. 15 — Kompleks membeli-belah & Perenggan 1(b) takrif 'bangunan') "
+            "Perintah P.U. (A) 257/2024, keseluruhan kawasan di dalam struktur bangunan kompleks membeli-belah — termasuk tempat letak kereta bertingkat berbumbung, "
+            "bumbung kekal bersambung dan lingkungan jarak 3 meter dari garisan bangunan — adalah KAWASAN LARANGAN MEROKOK. "
+            "Walaupun individu merokok di dalam kereta persendirian, kesalahan tetap terpakai kerana kenderaan itu berada di dalam bangunan larangan merokok "
+            "(pengecualian 'tempat letak kereta awam terbuka' hanya disebut bagi R&R [Bil. 24] dan Taman Awam [Bil. 25], bukannya bangunan kompleks membeli-belah). "
+            "Sebaliknya, jika kereta berada di tempat letak kereta awam terbuka (open-air) di luar jarak 3 meter dari garisan bangunan mall dan bukan kenderaan awam/bas sekolah, ia TIDAK menjadi kesalahan."
+        ),
+        "cadangan_pertuduhan": [
+            {
+                "perihal": "Individu merokok / menggunakan produk pengganti tembakau (vape) di dalam bangunan kompleks membeli-belah (termasuk ruang parkir bertingkat berbumbung)",
+                "seksyen_kesalahan": "Seksyen 16(2) Akta 852 dibaca bersama Perenggan 3 & Jadual Pertama (Perenggan 1(b) & Bil. 15) P.U. (A) 257/2024",
+                "seksyen_hukuman": "Seksyen 16(3) Akta 852",
+                "hukuman_maksimum": "Denda tidak melebihi RM5,000",
+                "boleh_kompaun": "Boleh dikompaun RM250.00 di bawah Seksyen 48(2) Akta 852 [P.U. (A) 259/2024] — tempoh bayaran 30 hari.",
+            },
+        ],
+        "sop_lapangan": [
+            "Sahkan lokasi kejadian secara fizikal: pastikan tempat letak kereta bertingkat itu benar-benar berada di dalam struktur bangunan / di bawah bumbung kekal bersambungan kompleks membeli-belah (atau dalam jarak 3 meter dari garisan bangunan mall), BUKAN parkir terbuka (open-air) luar bangunan.",
+            "Saksikan sendiri perbuatan suspek sedang merokok atau menghembus asap/wap rokok/vape dengan jelas (contohnya melalui tingkap kereta terbuka). Ambil gambar kedudukan kereta, asap/rokok, papan tanda aras parkir dan sambungan ke bangunan mall.",
+            "Tunjukkan Kad Kuasa KKM (Seksyen 24(2) Akta 852) dengan berhemah dari luar kenderaan — JANGAN sekali-kali membuka pintu kereta persendirian atau merampas barang secara paksa tanpa punca kuasa.",
+            "Semak pengenalan diri (MyKad) suspek, jelaskan kesalahan di bawah Seksyen 16(2) Akta 852 & Bil. 15 Jadual Pertama P.U. (A) 257/2024, dan serahkan Tawaran Kompaun S.48(2) (Borang 2 P.U. (A) 259/2024) serta Notis Hadir Mahkamah S.47 (tempoh bayaran 30 hari).",
+            "Jika suspek enggan menandatangani notis, catatkan 'Enggan Tandatangan' berserta tandatangan saksi PPKP. Hanya buka Fail IP jika kompaun gagal dibayar selepas tamat tempoh 30 hari.",
+        ],
+        "eksibit_wajib": [
+            "Gambar foto sudut jauh & dekat menunjukkan kereta berada di dalam struktur parkir bertingkat / berbumbung kompleks membeli-belah (beserta papan tanda aras/nama mall) + Sijil Seksyen 90A(2)",
+            "Gambar foto atau catatan pemerhatian langsung PPKP saksi bahawa suspek benar-benar sedang merokok/memegang rokok bernyala atau vape",
+            "Salinan pendua Tawaran Kompaun Borang 2 P.U. (A) 259/2024 & Notis Seksyen 47 bertandatangan terima / catatan saksi",
+            "Sijil pengesahan Unit Hasil PKD bahawa kompaun tidak dijelaskan selepas tamat 30 hari (hanya jika dibawa ke mahkamah)",
+        ],
+        "perangkap_kesilapan": [
+            "BEZA PARKIR BERTINGKAT VS PARKIR TERBUKA: Jangan keluarkan kompaun jika kereta berada di tempat letak kereta awam terbuka (open-air) yang terletak lebih 3 meter dari garisan bangunan kompleks membeli-belah.",
+            "HAD KUASA PEMERIKSAAN KERETA PERSENDIRIAN: Jangan membuka pintu kenderaan persendirian secara paksa atau bertindak jika tingkap gelap/tertutup rapat tanpa pengesahan visual jelas perbuatan merokok.",
+            "JANGAN salah petik Seksyen 16(1) (kuasa Menteri mengisytihar) atau Seksyen 3(1) (produk tidak berdaftar) — seksyen kesalahan individu merokok ialah Seksyen 16(2) Akta 852.",
+        ],
+        "templat_ringkas": (
+            "Kesalahan: Menghisap rokok / rokok elektronik di dalam ruang tempat letak kereta bertingkat bangunan kompleks membeli-belah "
+            "yang diisytiharkan sebagai kawasan larangan merokok di bawah Bil. 15 & Perenggan 1(b), Jadual Pertama P.U. (A) 257/2024, "
+            "melanggar Seksyen 16(2) Akta 852 dan boleh dihukum di bawah Seksyen 16(3) Akta 852. "
+            "Notis Seksyen 47 dan tawaran kompaun Seksyen 48(2) [RM250, 30 hari] telah diserahkan."
+        ),
+    },
+    {
         "id": "ak852_iklan_vape",
         "akta_utama": "Akta 852",
         "tajuk": "Iklan, Poster, Gegantung atau Promosi Produk Vape / Rokok (Fizikal atau Skrin Digital)",
@@ -1732,7 +1795,11 @@ class UIPAdvisorService:
 
         for vh in grounding.get("verbatim_sections") or []:
             v_txt = vh["verbatim_text_bm"]
-            if not asks_def_cit and is_non_offence_or_definition_section(vh):
+            allow_pu257_scope = vh.get("doc_id") in (
+                "AKTA_852_PERINTAH_LARANGAN_2024__JADUAL_PERTAMA",
+                "AKTA_852_PERINTAH_LARANGAN_2024__P2",
+            )
+            if not asks_def_cit and not allow_pu257_scope and is_non_offence_or_definition_section(vh):
                 continue
             if v_txt not in seen_cit_texts:
                 seen_cit_texts.add(v_txt)
@@ -1869,7 +1936,7 @@ class UIPAdvisorService:
             result["ai_attempted"] = ai_requested
             if ai_requested:
                 result["fallback_reason"] = (
-                    "Fungsi Analisis AI belum diaktifkan oleh pentadbir sistem. Paparan menggunakan rujukan akta tempatan."
+                    "Fungsi Semakan Mendalam AI belum diaktifkan oleh pentadbir sistem. Paparan menggunakan rujukan akta tempatan."
                 )
         elif should_call_ai:
             result["ai_attempted"] = True
@@ -1885,7 +1952,9 @@ class UIPAdvisorService:
                     settings.standard_fallback_model,
                 ]
             )
-            cached_ai = self._consult_cache.get(cache_key)
+            # Apabila pengguna klik secara eksplisit 'Semakan Mendalam dengan AI' (use_ai=True),
+            # sentiasa jalankan analisis AI segar (jangan pulangkan cache lama) supaya pengguna nampak kupasan mendalam yang baharu!
+            cached_ai = None if ai_requested else self._consult_cache.get(cache_key)
             if cached_ai:
                 result.update(cached_ai)
                 result["ai_attempted"] = True
@@ -1914,6 +1983,14 @@ class UIPAdvisorService:
                     if confident_match
                     else "TIADA TEMPLAT SEDIA ADA YANG PADAN — analisis terus daripada fakta soalan dan <STATUTORY_CONTEXT> di bawah.\n\n"
                 )
+                deep_mode_instruction = (
+                    "\nMOD SEMAKAN MENDALAM (DIMINTA KHUSUS OLEH PEGAWAI):\n"
+                    "- Berikan kupasan undang-undang yang LEBIH MENDALAM dan spesifik kepada fakta tepat yang ditaip pegawai (bukan jawapan templat umum).\n"
+                    "- Terangkan perbezaan kes sempadan (contohnya: kawasan berbumbung/struktur bangunan vs parkir terbuka, kenderaan persendirian vs awam, had kuasa pemeriksaan, atau pengecualian dalam Jadual).\n"
+                    "- Nyatakan strategi pembuktian dan potensi hujah pembelaan yang perlu dijangka oleh PPKP/TPR.\n"
+                    if ai_requested
+                    else ""
+                )
                 base_closed_book_prompt = (
                     "Anda ialah Ketua UIP / Pegawai Pendakwa Kanan Kementerian Kesihatan Malaysia (KKM).\n"
                     "Jawab soalan PPKP ini menggunakan Bahasa Melayu kerja harian PPKP yang jelas, padat, praktikal di lapangan, dan tepat.\n"
@@ -1926,16 +2003,17 @@ class UIPAdvisorService:
                     "Jika mana-mana unsur mandatori berstatus TIDAK TERPENUHI (contohnya pelajar hanya memiliki vape dalam beg tanpa bukti menghisap/menggunakan/membeli di bawah S.17(1) Akta 852, atau kes COVID-19 pasca 15 Julai 2024 tanpa perintah bertulis S.15(1)/S.14, atau PTB Smear Negatif belum disahkan aktif), tetapkan `status_kesalahan = 'TIADA_KESALAHAN'`.\n"
                     "4) DILARANG mencadangkan sebarang akta/peraturan dalam SENARAI HITAM PERUNTUKAN DIMANSUHKAN (seperti PPKHT 2004 atau Ordinan Darurat 2021).\n"
                     "5) Bagi setiap cadangan_pertuduhan (jika ADA_KESALAHAN), wajib sertakan 5 kunci tepat: perihal, seksyen_kesalahan, seksyen_hukuman, hukuman_maksimum, boleh_kompaun.\n"
-                    f"{amendment_rule_str}\n"
+                    f"{amendment_rule_str}"
+                    f"{deep_mode_instruction}\n"
                     f"SOALAN PPKP:\n{effective_question}\n\n"
                     f"{ref_block}"
                     f"{statutory_context_block}"
                 )
                 model_candidates = (
                     [
+                        settings.reasoning_model,
                         "gemini-3.8-flash",
                         settings.multimodal_model,
-                        settings.reasoning_model,
                         settings.standard_fallback_model,
                     ]
                     if ai_requested
@@ -1945,10 +2023,10 @@ class UIPAdvisorService:
                     model_candidates=model_candidates,
                     input_payload=base_closed_book_prompt,
                     schema=_AdvisorLLMSchema.model_json_schema(),
-                    temperature=0.1,
+                    temperature=0.15 if ai_requested else 0.1,
                     prefer_flash=not ai_requested,
                     prefer_fast_gc=True,
-                    max_output_tokens=2600,
+                    max_output_tokens=3000 if ai_requested else 2600,
                 )
 
                 def _build_ai_patch(raw_ai: Dict[str, Any]) -> Dict[str, Any]:
@@ -2016,9 +2094,10 @@ class UIPAdvisorService:
                             )
 
                     if ai_val["passed"]:
+                        engine_prefix = "Semakan Mendalam AI" if ai_requested else "Analisis AI"
                         ai_patch = {
                             **candidate_patch,
-                            "engine_used": f"Analisis AI ({used_model})",
+                            "engine_used": f"{engine_prefix} ({used_model})",
                             "ai_attempted": True,
                             "ai_succeeded": True,
                             "fallback_reason": None,
@@ -2036,7 +2115,7 @@ class UIPAdvisorService:
                         result["legal_validation"] = ai_val
                 else:
                     err_detail = self.router._last_ai_error or (
-                        "Analisis AI tidak dapat dicapai buat sementara waktu. Paparan menggunakan rujukan tempatan."
+                        "Semakan Mendalam AI tidak dapat dicapai buat sementara waktu. Paparan menggunakan rujukan tempatan."
                     )
                     logger.warning("Tanya Pakar fallback ke enjin tempatan: %s", err_detail)
                     result["ai_attempted"] = True

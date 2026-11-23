@@ -312,8 +312,18 @@ def _is_corrupted_or_fallback_qa(analysis: Dict[str, Any], raw_resp: str = "") -
     legal_val = analysis.get("legal_validation")
     if isinstance(legal_val, dict) and legal_val.get("passed") is False:
         return True
-    blob = f"{json.dumps(analysis.get('cadangan_pertuduhan') or [], ensure_ascii=False)} {analysis.get('keputusan_tindakan') or ''} {raw_resp}".lower()
+    blob = f"{json.dumps(analysis.get('cadangan_pertuduhan') or [], ensure_ascii=False)} {analysis.get('keputusan_tindakan') or ''} {analysis.get('sebab_tidak_menyalahi') or ''} {analysis.get('ringkasan_keputusan') or ''} {raw_resp}".lower()
     if "tafsiran" in blob and ("seksyen 2" in blob or "sek. 2" in blob):
+        return True
+    if any(
+        bad_marker in blob
+        for bad_marker in (
+            "dalam konteks statutori semasa",
+            "dalam konteks rujukan tertutup",
+            "tidak dibekalkan dalam konteks",
+            "dibekalkan dalam konteks rujukan",
+        )
+    ):
         return True
     if "rujukan statutori uip mengikut situasi soalan" in str(analysis.get("tajuk_nasihat") or "").lower():
         return True

@@ -467,7 +467,7 @@ def test_uip_advisor_scenarios_and_consult() -> None:
     resp_list = client.get("/api/advisor/scenarios", headers=headers)
     assert resp_list.status_code == 200
     scenarios = resp_list.json()["scenarios"]
-    assert len(scenarios) == 17
+    assert len(scenarios) == 18
     acts = {s["akta_utama"] for s in scenarios}
     assert {"Akta 852", "Akta 281", "Akta 154", "Akta 342"}.issubset(acts)
 
@@ -2646,6 +2646,60 @@ def test_five_expert_audit_remediations_security_legal_compound_and_docx() -> No
     comp_docx_text = "\n".join(c_parts)
     assert "Unit Hasil" in comp_docx_text or "UNIT HASIL" in comp_docx_text
     assert "Saksi" in comp_docx_text or "SAKSI" in comp_docx_text
+
+
+def test_mall_multistorey_parking_smoking_s16_2_and_corrupt_context_guard() -> None:
+    """Sahkan kes 'Merokok dalam kereta di parking bertingkat mall' memetik S.16(2) Akta 852 + Jadual Pertama P.U.(A) 257/2024
+    (BUKAN Seksyen 3(1) import/edar), semua unsur S.16(2) tepat tanpa bocoran 'transaksi jualan',
+    dan cache rosak konteks tertutup ditolak automatik."""
+    from backend.core.database import _is_corrupted_or_fallback_qa
+    from backend.rag.legal_engine import get_legal_library
+
+    lib = get_legal_library()
+    q = "Merokok dalam kereta di parking bertingkat mall"
+    grounding = lib.search_closed_book_grounding(q, akta_hint="Semua")
+
+    cand_ids = [o["offence_id"] for o in grounding["candidate_offences"]]
+    assert "AKTA_852_S16_2" in cand_ids
+    assert "AKTA_852_S3_1" not in cand_ids
+
+    sec_ids = [s["doc_id"] for s in grounding["verbatim_sections"]]
+    assert "AKTA_852__S16" in sec_ids
+    assert "AKTA_852_PERINTAH_LARANGAN_2024__JADUAL_PERTAMA" in sec_ids
+
+    s16_eval = grounding["candidate_offences"][0]["element_evaluation"]
+    assert s16_eval["offence_id"] == "AKTA_852_S16_2"
+    assert s16_eval["all_elements_satisfied"] is True
+    notes_blob = " ".join(e["notes"] for e in s16_eval["element_evaluations"]).lower()
+    assert "transaksi jualan" not in notes_blob
+    assert "257/2024" in notes_blob
+
+    # Ujian penuh endpoint /api/advisor/consult
+    headers = _get_auth_headers()
+    resp = client.post(
+        "/api/advisor/consult",
+        headers=headers,
+        json={"question": q, "akta_hint": "Semua", "use_ai": False},
+    )
+    assert resp.status_code == 200
+    data = resp.json()
+    assert data["status_kesalahan"] == "ADA_KESALAHAN"
+    assert "16(2)" in data["punca_kuasa"]["seksyen_kesalahan"]
+    assert "257/2024" in data["punca_kuasa"]["seksyen_kesalahan"]
+    assert data["punca_kuasa"]["boleh_kompaun_flag"] is True
+    assert data["legal_validation"]["passed"] is True
+    cit_ids = [c.get("doc_id") for c in data["statutory_citations"]]
+    assert "AKTA_852__S16" in cit_ids
+    assert "AKTA_852_PERINTAH_LARANGAN_2024__JADUAL_PERTAMA" in cit_ids
+
+    # Pastikan jawapan cache lama yang bocor mesej 'dalam konteks statutori semasa' dikesan sebagai rosak
+    assert _is_corrupted_or_fallback_qa(
+        {
+            "status_kesalahan": "TIADA_KESALAHAN",
+            "ringkasan_keputusan": "TIADA KESALAHAN dapat dibuktikan di bawah peruntukan yang dibekalkan dalam konteks statutori semasa.",
+            "sebab_tidak_menyalahi": "Tiada seksyen kesalahan merokok di kawasan larangan dibekalkan dalam konteks rujukan tertutup ini.",
+        }
+    ) is True
 
 
 

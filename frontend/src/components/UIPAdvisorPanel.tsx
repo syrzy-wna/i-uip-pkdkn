@@ -236,8 +236,14 @@ export default function UIPAdvisorPanel({
       setError("Sila taip situasi yang ditemui atau pilih daripada Contoh Situasi.");
       return;
     }
-    if (forceAi) setDeepLoading(true);
-    else setLoading(true);
+    if (forceAi) {
+      setDeepLoading(true);
+      window.setTimeout(() => {
+        resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 40);
+    } else {
+      setLoading(true);
+    }
     setError(null);
     setCopiedSummary(false);
     setWorkspaceTab("ask");
@@ -516,19 +522,35 @@ export default function UIPAdvisorPanel({
               </button>
             </div>
 
-            <button
-              type="button"
-              disabled={loading || deepLoading}
-              onClick={() => handleConsult()}
-              className="inline-flex min-h-[46px] items-center justify-center gap-2 rounded-xl bg-[#0f2744] px-6 py-2.5 text-sm font-extrabold text-white shadow-sm hover:bg-slate-800 disabled:opacity-60"
-            >
-              {loading ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <Search className="h-4 w-4" />
-              )}
-              {loading ? "Sedang menyemak..." : "Semak Kes Ini"}
-            </button>
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+              <button
+                type="button"
+                disabled={loading || deepLoading}
+                onClick={() => handleConsult(undefined, undefined, false)}
+                className="inline-flex min-h-[46px] items-center justify-center gap-2 rounded-xl bg-[#0f2744] px-5 py-2.5 text-sm font-extrabold text-white shadow-sm transition hover:bg-slate-800 disabled:opacity-60"
+              >
+                {loading ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Search className="h-4 w-4" />
+                )}
+                {loading ? "Sedang menyemak..." : "Semak Kes Ini"}
+              </button>
+
+              <button
+                type="button"
+                disabled={loading || deepLoading}
+                onClick={() => handleConsult(undefined, undefined, true)}
+                className="inline-flex min-h-[46px] items-center justify-center gap-2 rounded-xl border border-[#0f2744]/30 bg-slate-50 px-5 py-2.5 text-sm font-extrabold text-[#0f2744] shadow-sm transition hover:border-[#0f2744] hover:bg-slate-100 disabled:opacity-60"
+              >
+                {deepLoading ? (
+                  <Loader2 className="h-4 w-4 animate-spin text-amber-600" />
+                ) : (
+                  <Sparkles className="h-4 w-4 text-amber-600" />
+                )}
+                {deepLoading ? "AI sedang menyemak..." : "Semakan Mendalam dengan AI"}
+              </button>
+            </div>
           </div>
 
           {error && (
@@ -581,6 +603,25 @@ export default function UIPAdvisorPanel({
           </div>
         )}
       </section>
+
+      {/* Penunjuk Jelas Semasa Semakan Berjalan */}
+      {(loading || deepLoading) && (
+        <div className="flex items-center gap-3 rounded-2xl border border-[#0f2744]/20 bg-white px-4 py-3.5 text-xs text-slate-800 shadow-sm">
+          <Loader2 className="h-5 w-5 shrink-0 animate-spin text-[#0f2744]" />
+          <div>
+            <div className="font-extrabold text-[#0f2744]">
+              {deepLoading
+                ? "Sedang menjalankan Semakan Mendalam dengan AI..."
+                : "Sedang menyemak seksyen undang-undang & SOP..."}
+            </div>
+            <p className="mt-0.5 text-slate-600">
+              {deepLoading
+                ? "AI sedang meneliti teks penuh akta Warta, pengecualian Jadual dan huraian kes anda."
+                : "Mencari peruntukan akta yang tepat daripada pustaka undang-undang rasmi."}
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* 2. KEPUTUSAN 2-CABANG YANG TEGAS (TIADA_KESALAHAN vs ADA_KESALAHAN) */}
       {result && (() => {
@@ -914,7 +955,7 @@ export default function UIPAdvisorPanel({
                     >
                       <span className="flex items-center gap-2">
                         <BookOpen className="h-4 w-4 text-teal-700" />
-                        Rujukan Teks Asal Akta ({result.statutory_citations.length} Seksyen — untuk tunjuk kepada guru / pengadu)
+                        Rujukan Teks Asal Akta ({result.statutory_citations.length} Seksyen — untuk semakan / rujukan pengadu)
                       </span>
                       {showNoOffenceStatutes ? (
                         <ChevronUp className="h-4 w-4 text-slate-500" />
@@ -962,14 +1003,16 @@ export default function UIPAdvisorPanel({
                         true
                       );
                     }}
-                    className="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-700 hover:underline disabled:opacity-50"
+                    className="inline-flex min-h-[38px] items-center gap-1.5 rounded-xl border border-[#0f2744]/25 bg-slate-50 px-3.5 py-1.5 text-xs font-bold text-[#0f2744] transition hover:bg-slate-100 disabled:opacity-50"
                   >
                     {deepLoading ? (
-                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                      <Loader2 className="h-3.5 w-3.5 animate-spin text-amber-600" />
                     ) : (
-                      <Sparkles className="h-3.5 w-3.5" />
+                      <Sparkles className="h-3.5 w-3.5 text-amber-600" />
                     )}
-                    {deepLoading ? "AI sedang menyemak kes anda..." : "Perlu penjelasan tambahan? Semak dengan AI"}
+                    {deepLoading
+                      ? "AI sedang menyemak mendalam..."
+                      : "Jalankan Semakan Mendalam dengan AI"}
                   </button>
                 </div>
               </div>
@@ -1140,18 +1183,16 @@ export default function UIPAdvisorPanel({
                           true
                         );
                       }}
-                      className="inline-flex min-h-[38px] items-center gap-1.5 text-xs font-bold text-[#0f2744] hover:underline disabled:opacity-50"
+                      className="inline-flex min-h-[38px] items-center gap-1.5 rounded-xl border border-[#0f2744]/25 bg-slate-50 px-3 py-1.5 text-xs font-bold text-[#0f2744] transition hover:bg-slate-100 disabled:opacity-50"
                     >
                       {deepLoading ? (
-                        <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                        <Loader2 className="h-3.5 w-3.5 animate-spin text-amber-600" />
                       ) : (
-                        <Sparkles className="h-3.5 w-3.5" />
+                        <Sparkles className="h-3.5 w-3.5 text-amber-600" />
                       )}
                       {deepLoading
-                        ? "AI sedang menyemak kes anda..."
-                        : result.ai_succeeded
-                          ? "Semak Semula Dengan AI"
-                          : "Perlu huraian lebih lanjut? Semak dengan AI"}
+                        ? "AI sedang menyemak mendalam..."
+                        : "Semakan Mendalam dengan AI"}
                     </button>
                   </div>
 
