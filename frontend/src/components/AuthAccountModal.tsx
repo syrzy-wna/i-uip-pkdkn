@@ -4,6 +4,8 @@ import React, { useEffect, useRef, useState } from "react";
 import {
   BadgeCheck,
   Building2,
+  Eye,
+  EyeOff,
   KeyRound,
   Loader2,
   LogOut,
@@ -21,9 +23,35 @@ import {
   registerOfficer,
   updateOfficerProfile,
 } from "@/lib/api";
+import type { OfficerProfile } from "@/lib/types";
 
 const DEFAULT_GOOGLE_CLIENT_ID =
   "290203327893-b7f42feigfscdd4rfo1eh1a3n5age7ev.apps.googleusercontent.com";
+
+export const MALAYSIA_JKN_OPTIONS: Array<{ value: string; label: string }> = [
+  { value: "", label: "— Pilih Jabatan Kesihatan Negeri (JKN / JKWP) —" },
+  { value: "Jabatan Kesihatan Negeri Johor", label: "JKN Johor (PKD)" },
+  { value: "Jabatan Kesihatan Negeri Kedah", label: "JKN Kedah (PKD)" },
+  { value: "Jabatan Kesihatan Negeri Kelantan", label: "JKN Kelantan (PKD)" },
+  { value: "Jabatan Kesihatan Negeri Melaka", label: "JKN Melaka (PKD)" },
+  { value: "Jabatan Kesihatan Negeri Sembilan", label: "JKN Negeri Sembilan (PKD)" },
+  { value: "Jabatan Kesihatan Negeri Pahang", label: "JKN Pahang (PKD)" },
+  { value: "Jabatan Kesihatan Negeri Perak", label: "JKN Perak (PKD)" },
+  { value: "Jabatan Kesihatan Negeri Perlis", label: "JKN Perlis (PKD)" },
+  { value: "Jabatan Kesihatan Negeri Pulau Pinang", label: "JKN Pulau Pinang (PKD)" },
+  { value: "Jabatan Kesihatan Negeri Sabah", label: "JKN Sabah (Pejabat Kesihatan Kawasan / PKK)" },
+  { value: "Jabatan Kesihatan Negeri Sarawak", label: "JKN Sarawak (Pejabat Kesihatan Bahagian / PKB)" },
+  { value: "Jabatan Kesihatan Negeri Selangor", label: "JKN Selangor (PKD)" },
+  { value: "Jabatan Kesihatan Negeri Terengganu", label: "JKN Terengganu (PKD)" },
+  {
+    value: "Jabatan Kesihatan Wilayah Persekutuan Kuala Lumpur & Putrajaya",
+    label: "JKWPKL&P — WP Kuala Lumpur & Putrajaya",
+  },
+  {
+    value: "Jabatan Kesihatan Wilayah Persekutuan Labuan",
+    label: "JKWP Labuan — WP Labuan",
+  },
+];
 
 const SSPA_GRADE_GROUPS: Array<{
   label: string;
@@ -81,7 +109,6 @@ function renderSspaGradeOptions() {
     </optgroup>
   ));
 }
-import type { OfficerProfile } from "@/lib/types";
 
 declare global {
   interface Window {
@@ -107,7 +134,7 @@ interface AuthAccountModalProps {
   officer: OfficerProfile | null;
   authToken: string | null;
   initialTab?: "google" | "login" | "register" | "profile";
-  onAuthenticated: (officer: OfficerProfile, token: string) => void;
+  onAuthenticated: (officer: OfficerProfile, token: string, isNewAccount?: boolean) => void;
   onProfileUpdated: (officer: OfficerProfile) => void;
   onLoggedOut: () => void;
 }
@@ -138,31 +165,35 @@ export default function AuthAccountModal({
   // Borang Log Masuk E-mel Biasa
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
+  const [showLoginPw, setShowLoginPw] = useState(false);
+  const [showForgotHelp, setShowForgotHelp] = useState(false);
 
-  // Borang Daftar Akaun E-mel Biasa (Lalai PKD Kuala Nerus, Terengganu)
+  // Borang Daftar Akaun E-mel Biasa (Neutral Seluruh Malaysia)
   const [regForm, setRegForm] = useState({
     email: "",
     password: "",
+    confirm_password: "",
     full_name: "",
     ic_number: "",
     designation: "Penolong Pegawai Kesihatan Persekitaran (PPKP)",
     grade: "U5",
     kkm_authority_card_no: "",
     prosecution_authorization_no: "",
-    state_jkn: "Jabatan Kesihatan Negeri Terengganu",
-    district_pkd: "Pejabat Kesihatan Daerah Kuala Nerus",
-    office_address: "Lot PT 37820, Taman Permint Perdana, Seberang Takir, 21300 Kuala Nerus, Terengganu",
+    state_jkn: "",
+    district_pkd: "",
+    office_address: "",
     unit_assignment: "Unit Inspektorat dan Perundangan (UIP)",
-    default_magistrate_court: "MAHKAMAH MAJISTRET DI KUALA TERENGGANU, DALAM NEGERI TERENGGANU DARUL IMAN",
+    default_magistrate_court: "",
     system_role: "PEGAWAI_PENYIASAT",
-    default_computer_desc: "Komputer Meja Rasmi KKM Dell OptiPlex Pejabat UIP PKD Kuala Nerus",
-    default_printer_desc: "Pencetak Laser Warna Pejabat UIP PKD Kuala Nerus",
-    default_camera_desc: "Kamera Digital Rasmi Penguatkuasaan PKD Kuala Nerus",
+    default_computer_desc: "Komputer Meja Rasmi KKM Pejabat Kesihatan",
+    default_printer_desc: "Pencetak Laser Warna Pejabat Kesihatan",
+    default_camera_desc: "Kamera Digital Rasmi Pejabat Kesihatan",
   });
+  const [showRegPw, setShowRegPw] = useState(false);
 
   // Borang Sunting Profil & Progressive Disclosure Pendaftaran
   const [profileForm, setProfileForm] = useState<Partial<OfficerProfile>>({});
-  const [showOfficeDefaults, setShowOfficeDefaults] = useState(false);
+  const [showOfficeDefaults, setShowOfficeDefaults] = useState(true);
 
   useEffect(() => {
     if (!open) return;
@@ -177,6 +208,7 @@ export default function AuthAccountModal({
     if (!open) return;
     setError(null);
     setSuccessMsg(null);
+    setShowForgotHelp(false);
     if (officer) {
       setTab("profile");
       setProfileForm(officer);
@@ -217,11 +249,11 @@ export default function AuthAccountModal({
             try {
               const res = await googleSignInOfficer({
                 id_token: response.credential,
-                district_pkd: "Pejabat Kesihatan Daerah Kuala Nerus",
-                state_jkn: "Jabatan Kesihatan Negeri Terengganu",
               });
-              onAuthenticated(res.user, res.token);
-              onClose();
+              onAuthenticated(res.user, res.token, res.is_new_account);
+              if (!res.is_new_account && res.user.district_pkd && res.user.state_jkn) {
+                onClose();
+              }
             } catch (err) {
               setError(
                 err instanceof Error
@@ -303,11 +335,11 @@ export default function AuthAccountModal({
         try {
           const res = await googleSignInOfficer({
             access_token: tokenResp.access_token,
-            district_pkd: "Pejabat Kesihatan Daerah Kuala Nerus",
-            state_jkn: "Jabatan Kesihatan Negeri Terengganu",
           });
-          onAuthenticated(res.user, res.token);
-          onClose();
+          onAuthenticated(res.user, res.token, res.is_new_account);
+          if (!res.is_new_account && res.user.district_pkd && res.user.state_jkn) {
+            onClose();
+          }
         } catch (err) {
           setError(
             err instanceof Error
@@ -328,7 +360,7 @@ export default function AuthAccountModal({
     setError(null);
     try {
       const res = await loginOfficer(loginEmail, loginPassword);
-      onAuthenticated(res.user, res.token);
+      onAuthenticated(res.user, res.token, false);
       onClose();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Gagal log masuk.");
@@ -339,11 +371,21 @@ export default function AuthAccountModal({
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (regForm.password.length < 8) {
+      setError("Kata laluan mestilah sekurang-kurangnya 8 aksara.");
+      return;
+    }
+    if (regForm.password !== regForm.confirm_password) {
+      setError("Kata laluan dan pengesahan kata laluan tidak sepadan. Sila semak semula.");
+      return;
+    }
     setLoading(true);
     setError(null);
     try {
-      const res = await registerOfficer(regForm);
-      onAuthenticated(res.user, res.token);
+      const { confirm_password: _unused, ...submitPayload } = regForm;
+      void _unused;
+      const res = await registerOfficer(submitPayload);
+      onAuthenticated(res.user, res.token, true);
       onClose();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Gagal mendaftar akaun.");
@@ -361,7 +403,7 @@ export default function AuthAccountModal({
     try {
       const updated = await updateOfficerProfile(authToken, profileForm);
       onProfileUpdated(updated);
-      setSuccessMsg("Profil pegawai & tetapan perkakasan S.90A berjaya dikemas kini.");
+      setSuccessMsg("Profil pegawai, pejabat PKD/PKK/PKB & tetapan perkakasan S.90A berjaya dikemas kini.");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Gagal mengemas kini profil.");
     } finally {
@@ -395,10 +437,10 @@ export default function AuthAccountModal({
             <UserCheck className="h-5 w-5 shrink-0 text-amber-300" />
             <div className="min-w-0">
               <h2 className="truncate text-xs font-bold sm:text-sm">
-                Akaun Rasmi Pegawai UIP KKM
+                Akaun Rasmi Pegawai UIP KKM (Seluruh Malaysia)
               </h2>
               <p className="truncate text-[10px] text-slate-300 sm:text-[11px]">
-                Auto-isi Kad Kuasa, PKD, Mahkamah &amp; perkakasan S.90A ke dokumen rasmi.
+                Auto-isi Kad Kuasa, PKD/PKK/PKB, Mahkamah &amp; perkakasan S.90A ke dokumen rasmi.
               </p>
             </div>
           </div>
@@ -433,7 +475,7 @@ export default function AuthAccountModal({
               <button
                 type="button"
                 onClick={() => setTab("login")}
-                className={`inline-flex min-h-[38px] items-center justify-center gap-1 rounded-lg px-2 py-1.5 text-[11px] font-bold transition sm:text-xs ${
+                className={`inline-flex min-h-[40px] items-center justify-center gap-1 rounded-lg px-2 py-1.5 text-[11px] font-bold transition sm:text-xs ${
                   tab === "login"
                     ? "bg-[#0f2744] text-white shadow-sm"
                     : "bg-white text-slate-600 ring-1 ring-slate-200 hover:text-slate-900"
@@ -444,7 +486,7 @@ export default function AuthAccountModal({
               <button
                 type="button"
                 onClick={() => setTab("register")}
-                className={`inline-flex min-h-[38px] items-center justify-center gap-1 rounded-lg px-2 py-1.5 text-[11px] font-bold transition sm:text-xs ${
+                className={`inline-flex min-h-[40px] items-center justify-center gap-1 rounded-lg px-2 py-1.5 text-[11px] font-bold transition sm:text-xs ${
                   tab === "register"
                     ? "bg-[#0f2744] text-white shadow-sm"
                     : "bg-white text-slate-600 ring-1 ring-slate-200 hover:text-slate-900"
@@ -464,7 +506,7 @@ export default function AuthAccountModal({
           )}
         </div>
 
-        <div className="flex-1 overflow-y-auto p-5 space-y-4">
+        <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4">
           {error && (
             <div className="rounded-lg border border-rose-300 bg-rose-50 px-3 py-2 text-xs font-semibold text-rose-800">
               {error}
@@ -508,7 +550,7 @@ export default function AuthAccountModal({
                 {googleClientId ? (
                   <div className="space-y-3">
                     <p className="text-xs text-slate-600 leading-relaxed">
-                      Klik butang Google rasmi di bawah untuk log masuk pantas dengan akaun Google anda.
+                      Klik butang Google rasmi di bawah untuk log masuk pantas dengan akaun Google anda. Selepas masuk kali pertama, anda boleh terus menetapkan PKD/PKK/PKB dan Negeri anda.
                     </p>
                     {gsiFailed && (
                       <div className="rounded-lg border border-amber-300 bg-amber-50 p-3 text-[11px] text-amber-950 leading-relaxed space-y-2">
@@ -519,14 +561,14 @@ export default function AuthAccountModal({
                           <button
                             type="button"
                             onClick={() => setTab("login")}
-                            className="inline-flex items-center gap-1.5 rounded-lg bg-[#0f2744] px-3 py-1.5 text-[11px] font-bold text-white hover:bg-slate-800"
+                            className="inline-flex min-h-[40px] items-center gap-1.5 rounded-lg bg-[#0f2744] px-3 py-1.5 text-[11px] font-bold text-white hover:bg-slate-800"
                           >
                             <KeyRound className="h-3.5 w-3.5" /> Masuk E-mel
                           </button>
                           <button
                             type="button"
                             onClick={() => setTab("register")}
-                            className="inline-flex items-center gap-1.5 rounded-lg border border-amber-400 bg-white px-3 py-1.5 text-[11px] font-bold text-amber-950 hover:bg-amber-100"
+                            className="inline-flex min-h-[40px] items-center gap-1.5 rounded-lg border border-amber-400 bg-white px-3 py-1.5 text-[11px] font-bold text-amber-950 hover:bg-amber-100"
                           >
                             <UserPlus className="h-3.5 w-3.5" /> Daftar Akaun E-mel
                           </button>
@@ -555,7 +597,7 @@ export default function AuthAccountModal({
                     <button
                       type="button"
                       onClick={() => setTab("register")}
-                      className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-700 px-3.5 py-2 text-xs font-bold text-white hover:bg-emerald-800"
+                      className="inline-flex min-h-[44px] items-center gap-1.5 rounded-lg bg-emerald-700 px-3.5 py-2 text-xs font-bold text-white hover:bg-emerald-800"
                     >
                       <UserPlus className="h-3.5 w-3.5" /> Daftar Akaun E-mel Pegawai
                     </button>
@@ -571,8 +613,8 @@ export default function AuthAccountModal({
               <form onSubmit={handleLogin} className="space-y-3 rounded-xl border border-slate-200 bg-slate-50/70 p-4">
                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                   <div>
-                    <label className="block text-[11px] font-bold text-slate-700">
-                      Emel Rasmi Pegawai
+                    <label className="block text-xs font-bold text-slate-700">
+                      E-mel Rasmi Pegawai
                     </label>
                     <input
                       type="email"
@@ -580,60 +622,92 @@ export default function AuthAccountModal({
                       placeholder="contoh: nama@moh.gov.my"
                       value={loginEmail}
                       onChange={(e) => setLoginEmail(e.target.value)}
-                      className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs"
+                      className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-base sm:text-sm"
                     />
                   </div>
                   <div>
-                    <label className="block text-[11px] font-bold text-slate-700">
+                    <label className="block text-xs font-bold text-slate-700">
                       Kata Laluan
                     </label>
-                    <input
-                      type="password"
-                      required
-                      placeholder="Masukkan kata laluan"
-                      value={loginPassword}
-                      onChange={(e) => setLoginPassword(e.target.value)}
-                      className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs"
-                    />
+                    <div className="relative mt-1">
+                      <input
+                        type={showLoginPw ? "text" : "password"}
+                        required
+                        placeholder="Masukkan kata laluan"
+                        value={loginPassword}
+                        onChange={(e) => setLoginPassword(e.target.value)}
+                        className="w-full rounded-lg border border-slate-300 bg-white py-2 pl-3 pr-10 text-base sm:text-sm"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowLoginPw((v) => !v)}
+                        aria-label={showLoginPw ? "Sembunyikan kata laluan" : "Tunjukkan kata laluan"}
+                        className="absolute right-2 top-1/2 -translate-y-1/2 rounded p-1 text-slate-500 hover:text-slate-800"
+                      >
+                        {showLoginPw ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      </button>
+                    </div>
                   </div>
                 </div>
-                <div className="flex flex-wrap items-center justify-between gap-2">
+                <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
                   <button
                     type="submit"
                     disabled={loading}
-                    className="inline-flex items-center gap-1.5 rounded-lg bg-[#0f2744] px-4 py-2 text-xs font-bold text-white hover:bg-slate-800 disabled:opacity-60"
+                    className="inline-flex min-h-[44px] items-center gap-1.5 rounded-lg bg-[#0f2744] px-4 py-2 text-xs font-bold text-white hover:bg-slate-800 disabled:opacity-60"
                   >
                     {loading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <KeyRound className="h-3.5 w-3.5" />}
-                    Log Masuk ke i-UIP Nerus
+                    Log Masuk ke i-UIP
                   </button>
-                  <button
-                    type="button"
-                    onClick={() => setTab("register")}
-                    className="text-xs font-bold text-blue-700 hover:underline"
-                  >
-                    Belum ada akaun? Daftar Akaun Sebenar →
-                  </button>
+                  <div className="flex flex-wrap items-center gap-3">
+                    <button
+                      type="button"
+                      onClick={() => setShowForgotHelp((v) => !v)}
+                      className="text-xs font-semibold text-slate-600 hover:underline"
+                    >
+                      Lupa Kata Laluan?
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setTab("register")}
+                      className="text-xs font-bold text-blue-700 hover:underline"
+                    >
+                      Belum ada akaun? Daftar Akaun Baharu →
+                    </button>
+                  </div>
                 </div>
+                {showForgotHelp && (
+                  <div className="rounded-lg border border-blue-200 bg-blue-50 p-3 text-xs text-blue-950 leading-relaxed">
+                    <strong>Bantuan Pemulihan Akaun:</strong> Jika e-mel anda ialah akaun Google/Workspace, klik tab{" "}
+                    <button
+                      type="button"
+                      onClick={() => setTab("google")}
+                      className="font-bold underline"
+                    >
+                      Google
+                    </button>{" "}
+                    untuk log masuk terus tanpa kata laluan (sistem akan menyambungkan akaun e-mel anda secara automatik).
+                  </div>
+                )}
               </form>
             </div>
           )}
 
-          {/* TAB 2: DAFTAR AKAUN BAHARU (3 MEDAN ASAS DAHULU — BUTIRAN LAIN PILIHAN) */}
+          {/* TAB 2: DAFTAR AKAUN BAHARU */}
           {tab === "register" && !officer && (
             <form onSubmit={handleRegister} className="space-y-4">
               <div className="rounded-xl border border-slate-200 bg-slate-50/70 p-4 space-y-3">
                 <div>
                   <h4 className="flex items-center gap-1.5 text-sm font-extrabold text-slate-900">
                     <ShieldCheck className="h-4 w-4 text-[#0f2744]" />
-                    Daftar Akaun Pegawai (30 Saat)
+                    Daftar Akaun Pegawai UIP (Seluruh Malaysia)
                   </h4>
                   <p className="mt-0.5 text-xs text-slate-600">
-                    Isi 3 ruangan asas sahaja untuk terus masuk. No. Kad Kuasa &amp; butiran Sijil 90A boleh diisi kemudian.
+                    Isi maklumat asas pegawai dan pilih Negeri / PKD / PKK / PKB anda supaya semua dokumen mahkamah &amp; kompaun dijana mengikut bidang kuasa daerah anda.
                   </p>
                 </div>
 
-                <div className="space-y-3">
-                  <div>
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                  <div className="sm:col-span-2">
                     <label className="text-xs font-semibold text-slate-700">
                       E-mel Rasmi KKM / Kerja <span className="text-rose-600">*</span>
                     </label>
@@ -648,18 +722,43 @@ export default function AuthAccountModal({
                   </div>
                   <div>
                     <label className="text-xs font-semibold text-slate-700">
-                      Kata Laluan (min. 6 aksara) <span className="text-rose-600">*</span>
+                      Kata Laluan (min. 8 aksara) <span className="text-rose-600">*</span>
+                    </label>
+                    <div className="relative mt-1">
+                      <input
+                        type={showRegPw ? "text" : "password"}
+                        required
+                        minLength={8}
+                        maxLength={128}
+                        value={regForm.password}
+                        onChange={(e) => setRegForm({ ...regForm, password: e.target.value })}
+                        className="w-full rounded-xl border border-slate-300 bg-white py-2 pl-3 pr-10 text-base text-slate-900 sm:text-sm"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowRegPw((v) => !v)}
+                        aria-label={showRegPw ? "Sembunyikan kata laluan" : "Tunjukkan kata laluan"}
+                        className="absolute right-2 top-1/2 -translate-y-1/2 rounded p-1 text-slate-500 hover:text-slate-800"
+                      >
+                        {showRegPw ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      </button>
+                    </div>
+                  </div>
+                  <div>
+                    <label className="text-xs font-semibold text-slate-700">
+                      Sahkan Kata Laluan <span className="text-rose-600">*</span>
                     </label>
                     <input
-                      type="password"
+                      type={showRegPw ? "text" : "password"}
                       required
-                      minLength={6}
-                      value={regForm.password}
-                      onChange={(e) => setRegForm({ ...regForm, password: e.target.value })}
+                      minLength={8}
+                      maxLength={128}
+                      value={regForm.confirm_password}
+                      onChange={(e) => setRegForm({ ...regForm, confirm_password: e.target.value })}
                       className="mt-1 w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-base text-slate-900 sm:text-sm"
                     />
                   </div>
-                  <div>
+                  <div className="sm:col-span-2">
                     <label className="text-xs font-semibold text-slate-700">
                       Nama Penuh &amp; Gelaran Pegawai <span className="text-rose-600">*</span>
                     </label>
@@ -669,6 +768,34 @@ export default function AuthAccountModal({
                       placeholder="cth: PPKP Mohd Amirul bin Zaki"
                       value={regForm.full_name}
                       onChange={(e) => setRegForm({ ...regForm, full_name: e.target.value })}
+                      className="mt-1 w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-base text-slate-900 sm:text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs font-semibold text-slate-700">
+                      Jabatan Kesihatan Negeri (JKN / JKWP)
+                    </label>
+                    <select
+                      value={regForm.state_jkn}
+                      onChange={(e) => setRegForm({ ...regForm, state_jkn: e.target.value })}
+                      className="mt-1 w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-base text-slate-900 sm:text-sm"
+                    >
+                      {MALAYSIA_JKN_OPTIONS.map((opt) => (
+                        <option key={opt.value} value={opt.value}>
+                          {opt.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="text-xs font-semibold text-slate-700">
+                      Pejabat Kesihatan (PKD / PKK Sabah / PKB Sarawak)
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="cth: PKD Petaling / PKK Kota Kinabalu / PKB Kuching"
+                      value={regForm.district_pkd}
+                      onChange={(e) => setRegForm({ ...regForm, district_pkd: e.target.value })}
                       className="mt-1 w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-base text-slate-900 sm:text-sm"
                     />
                   </div>
@@ -684,10 +811,10 @@ export default function AuthAccountModal({
                   <div>
                     <h4 className="flex items-center gap-1.5 text-xs font-bold text-slate-900">
                       <Building2 className="h-4 w-4 text-emerald-700" />
-                      Lengkapkan Kad Kuasa, Gred SSPA &amp; PKD (Pilihan — boleh isi kemudian)
+                      Lengkapkan Kad Kuasa, Gred SSPA, Mahkamah &amp; Sijil 90A (Pilihan)
                     </h4>
                     <p className="mt-0.5 text-xs text-slate-500">
-                      Lalai: PPKP Gred U5 • PKD Kuala Nerus • Mahkamah Kuala Terengganu
+                      Boleh diisi sekarang atau dikemas kini bila-bila masa dalam Profil Pegawai
                     </p>
                   </div>
                   <span className="shrink-0 text-xs font-bold text-[#0f2744]">
@@ -700,7 +827,7 @@ export default function AuthAccountModal({
                       <label className="text-xs font-semibold text-slate-700">No. Kad Kuasa Rasmi KKM</label>
                       <input
                         type="text"
-                        placeholder="cth: KKM-TRG-2026-088"
+                        placeholder="cth: KKM-SEL-2026-088"
                         value={regForm.kkm_authority_card_no}
                         onChange={(e) => setRegForm({ ...regForm, kkm_authority_card_no: e.target.value })}
                         className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-base sm:text-sm"
@@ -710,7 +837,7 @@ export default function AuthAccountModal({
                       <label className="text-xs font-semibold text-slate-700">No. K/P (untuk Sijil 90A)</label>
                       <input
                         type="text"
-                        placeholder="890101-11-5511"
+                        placeholder="890101-10-5511"
                         value={regForm.ic_number}
                         onChange={(e) => setRegForm({ ...regForm, ic_number: e.target.value })}
                         className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-base sm:text-sm"
@@ -754,12 +881,22 @@ export default function AuthAccountModal({
                         </select>
                       </div>
                     </div>
-                    <div>
-                      <label className="text-xs font-semibold text-slate-700">Pejabat Kesihatan Daerah (PKD)</label>
+                    <div className="sm:col-span-2">
+                      <label className="text-xs font-semibold text-slate-700">Alamat Lengkap Pejabat Kesihatan (untuk Notis Kompaun &amp; Saman)</label>
                       <input
                         type="text"
-                        value={regForm.district_pkd}
-                        onChange={(e) => setRegForm({ ...regForm, district_pkd: e.target.value })}
+                        placeholder="cth: Pejabat Kesihatan Daerah Petaling, No. 101, Persiaran Kayangan, 40000 Shah Alam, Selangor"
+                        value={regForm.office_address}
+                        onChange={(e) => setRegForm({ ...regForm, office_address: e.target.value })}
+                        className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-base sm:text-sm"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs font-semibold text-slate-700">Unit / Seksyen</label>
+                      <input
+                        type="text"
+                        value={regForm.unit_assignment}
+                        onChange={(e) => setRegForm({ ...regForm, unit_assignment: e.target.value })}
                         className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-base sm:text-sm"
                       />
                     </div>
@@ -777,6 +914,7 @@ export default function AuthAccountModal({
                       <label className="text-xs font-semibold text-slate-700">Mahkamah Majistret Bidang Kuasa</label>
                       <input
                         type="text"
+                        placeholder="cth: MAHKAMAH MAJISTRET DI SHAH ALAM, DALAM NEGERI SELANGOR"
                         value={regForm.default_magistrate_court}
                         onChange={(e) => setRegForm({ ...regForm, default_magistrate_court: e.target.value })}
                         className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-base sm:text-sm"
@@ -800,15 +938,18 @@ export default function AuthAccountModal({
                         className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-base sm:text-sm"
                       />
                     </div>
+                    <div className="sm:col-span-2">
+                      <label className="text-xs font-semibold text-slate-700">Pencetak Pejabat S.90A</label>
+                      <input
+                        type="text"
+                        value={regForm.default_printer_desc}
+                        onChange={(e) => setRegForm({ ...regForm, default_printer_desc: e.target.value })}
+                        className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-base sm:text-sm"
+                      />
+                    </div>
                   </div>
                 )}
               </div>
-
-              {error && (
-                <div className="rounded-lg border border-rose-300 bg-rose-50 px-3 py-2 text-xs font-semibold text-rose-800">
-                  {error}
-                </div>
-              )}
 
               <button
                 type="submit"
@@ -830,34 +971,50 @@ export default function AuthAccountModal({
                     {officer.full_name} ({officer.grade})
                   </div>
                   <div className="text-[11px] text-emerald-800">
-                    {officer.email} | Kad Kuasa: {officer.kkm_authority_card_no || "-"} | {officer.district_pkd}
+                    {officer.email} | Kad Kuasa: {officer.kkm_authority_card_no || "Belum diisi"} | {officer.district_pkd || "Sila pilih PKD/PKK/PKB"}
                   </div>
                 </div>
                 <button
                   type="button"
                   onClick={handleLogout}
-                  className="inline-flex items-center gap-1 rounded-lg bg-rose-600 px-3 py-1.5 text-xs font-bold text-white hover:bg-rose-700"
+                  className="inline-flex min-h-[38px] items-center gap-1 rounded-lg bg-rose-600 px-3 py-1.5 text-xs font-bold text-white hover:bg-rose-700"
                 >
                   <LogOut className="h-3.5 w-3.5" /> Log Keluar
                 </button>
               </div>
 
+              {(!profileForm.state_jkn || !profileForm.district_pkd) && (
+                <div className="rounded-xl border border-amber-300 bg-amber-50 px-3.5 py-2.5 text-xs font-semibold text-amber-950">
+                  Sila pilih <strong>Jabatan Kesihatan Negeri (JKN/JKWP)</strong> dan masukkan <strong>Pejabat Kesihatan (PKD / PKK / PKB)</strong> anda di bawah supaya kepala surat Borang 114, Saman 111 dan Notis Kompaun dicetak mengikut daerah anda.
+                </div>
+              )}
+
               <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
                 <div>
-                  <label className="text-[11px] font-semibold text-slate-700">Nama Penuh Pegawai</label>
+                  <label className="text-xs font-semibold text-slate-700">Nama Penuh Pegawai</label>
                   <input
                     type="text"
                     value={profileForm.full_name || ""}
                     onChange={(e) => setProfileForm({ ...profileForm, full_name: e.target.value })}
-                    className="mt-0.5 w-full rounded border border-slate-300 px-2.5 py-1.5 text-xs"
+                    className="mt-0.5 w-full rounded-lg border border-slate-300 px-2.5 py-2 text-base sm:text-xs"
                   />
                 </div>
                 <div>
-                  <label className="text-[11px] font-semibold text-slate-700">Jawatan</label>
+                  <label className="text-xs font-semibold text-slate-700">No. K/P (untuk Sijil 90A)</label>
+                  <input
+                    type="text"
+                    placeholder="cth: 890101-10-5511"
+                    value={profileForm.ic_number || ""}
+                    onChange={(e) => setProfileForm({ ...profileForm, ic_number: e.target.value })}
+                    className="mt-0.5 w-full rounded-lg border border-slate-300 px-2.5 py-2 text-base sm:text-xs"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-semibold text-slate-700">Jawatan</label>
                   <select
                     value={profileForm.designation || "Penolong Pegawai Kesihatan Persekitaran (PPKP)"}
                     onChange={(e) => setProfileForm({ ...profileForm, designation: e.target.value })}
-                    className="mt-0.5 w-full rounded border border-slate-300 bg-white px-2.5 py-1.5 text-xs"
+                    className="mt-0.5 w-full rounded-lg border border-slate-300 bg-white px-2.5 py-2 text-base sm:text-xs"
                   >
                     <option>Penolong Pegawai Kesihatan Persekitaran (PPKP)</option>
                     <option>Pegawai Kesihatan Persekitaran (PKP)</option>
@@ -865,91 +1022,136 @@ export default function AuthAccountModal({
                     <option>Pegawai Sains (Entomologi / Mikrobiologi)</option>
                   </select>
                 </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="text-xs font-semibold text-slate-700">Gred (SSPA)</label>
+                    <select
+                      value={profileForm.grade || "U5"}
+                      onChange={(e) => setProfileForm({ ...profileForm, grade: e.target.value })}
+                      className="mt-0.5 w-full rounded-lg border border-slate-300 bg-white px-2.5 py-2 text-base sm:text-xs"
+                    >
+                      {renderSspaGradeOptions()}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="text-xs font-semibold text-slate-700">Peranan UIP</label>
+                    <select
+                      value={profileForm.system_role || "PEGAWAI_PENYIASAT"}
+                      onChange={(e) => setProfileForm({ ...profileForm, system_role: e.target.value })}
+                      className="mt-0.5 w-full rounded-lg border border-slate-300 bg-white px-2.5 py-2 text-base sm:text-xs"
+                    >
+                      <option value="PEGAWAI_PEMERIKSA">Pegawai Pemeriksa</option>
+                      <option value="PEGAWAI_PENYIASAT">Pegawai Penyiasat (IO)</option>
+                      <option value="PENYEMAK_KANAN_UIP">Penyemak Kanan / KPPKP</option>
+                      <option value="PEGAWAI_PENDAKWA">Pegawai Pendakwa (PO)</option>
+                    </select>
+                  </div>
+                </div>
                 <div>
-                  <label className="text-[11px] font-semibold text-slate-700">Gred (SSPA)</label>
+                  <label className="text-xs font-semibold text-slate-700">No. Kad Kuasa KKM</label>
+                  <input
+                    type="text"
+                    placeholder="cth: KKM-SEL-2026-088"
+                    value={profileForm.kkm_authority_card_no || ""}
+                    onChange={(e) => setProfileForm({ ...profileForm, kkm_authority_card_no: e.target.value })}
+                    className="mt-0.5 w-full rounded-lg border border-slate-300 px-2.5 py-2 text-base sm:text-xs"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-semibold text-slate-700">No. Tauliah S.377(b) KTJ (Jika PO)</label>
+                  <input
+                    type="text"
+                    placeholder="Pilihan"
+                    value={profileForm.prosecution_authorization_no || ""}
+                    onChange={(e) => setProfileForm({ ...profileForm, prosecution_authorization_no: e.target.value })}
+                    className="mt-0.5 w-full rounded-lg border border-slate-300 px-2.5 py-2 text-base sm:text-xs"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-semibold text-slate-700">Jabatan Kesihatan Negeri (JKN / JKWP)</label>
                   <select
-                    value={profileForm.grade || "U5"}
-                    onChange={(e) => setProfileForm({ ...profileForm, grade: e.target.value })}
-                    className="mt-0.5 w-full rounded border border-slate-300 bg-white px-2.5 py-1.5 text-xs"
+                    value={profileForm.state_jkn || ""}
+                    onChange={(e) => setProfileForm({ ...profileForm, state_jkn: e.target.value })}
+                    className="mt-0.5 w-full rounded-lg border border-slate-300 bg-white px-2.5 py-2 text-base sm:text-xs"
                   >
-                    {renderSspaGradeOptions()}
+                    {MALAYSIA_JKN_OPTIONS.map((opt) => (
+                      <option key={opt.value} value={opt.value}>
+                        {opt.label}
+                      </option>
+                    ))}
+                    {profileForm.state_jkn &&
+                      !MALAYSIA_JKN_OPTIONS.some((o) => o.value === profileForm.state_jkn) && (
+                        <option value={profileForm.state_jkn}>{profileForm.state_jkn}</option>
+                      )}
                   </select>
                 </div>
                 <div>
-                  <label className="text-[11px] font-semibold text-slate-700">No. Kad Kuasa KKM</label>
+                  <label className="text-xs font-semibold text-slate-700">Pejabat Kesihatan (PKD / PKK Sabah / PKB Sarawak)</label>
                   <input
                     type="text"
-                    value={profileForm.kkm_authority_card_no || ""}
-                    onChange={(e) => setProfileForm({ ...profileForm, kkm_authority_card_no: e.target.value })}
-                    className="mt-0.5 w-full rounded border border-slate-300 px-2.5 py-1.5 text-xs"
-                  />
-                </div>
-                <div>
-                  <label className="text-[11px] font-semibold text-slate-700">Pejabat Kesihatan Daerah (PKD)</label>
-                  <input
-                    type="text"
+                    placeholder="cth: PKD Petaling / PKK Kota Kinabalu / PKB Kuching"
                     value={profileForm.district_pkd || ""}
                     onChange={(e) => setProfileForm({ ...profileForm, district_pkd: e.target.value })}
-                    className="mt-0.5 w-full rounded border border-slate-300 px-2.5 py-1.5 text-xs"
+                    className="mt-0.5 w-full rounded-lg border border-slate-300 px-2.5 py-2 text-base sm:text-xs"
                   />
                 </div>
                 <div>
-                  <label className="text-[11px] font-semibold text-slate-700">JKN Negeri</label>
+                  <label className="text-xs font-semibold text-slate-700">Alamat Lengkap Pejabat Kesihatan</label>
                   <input
                     type="text"
-                    value={profileForm.state_jkn || ""}
-                    onChange={(e) => setProfileForm({ ...profileForm, state_jkn: e.target.value })}
-                    className="mt-0.5 w-full rounded border border-slate-300 px-2.5 py-1.5 text-xs"
+                    placeholder="Untuk bayaran kaunter Notis Kompaun & Saman"
+                    value={profileForm.office_address || ""}
+                    onChange={(e) => setProfileForm({ ...profileForm, office_address: e.target.value })}
+                    className="mt-0.5 w-full rounded-lg border border-slate-300 px-2.5 py-2 text-base sm:text-xs"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-semibold text-slate-700">Unit / Seksyen</label>
+                  <input
+                    type="text"
+                    value={profileForm.unit_assignment || ""}
+                    onChange={(e) => setProfileForm({ ...profileForm, unit_assignment: e.target.value })}
+                    className="mt-0.5 w-full rounded-lg border border-slate-300 px-2.5 py-2 text-base sm:text-xs"
                   />
                 </div>
                 <div className="sm:col-span-2">
-                  <label className="text-[11px] font-semibold text-slate-700">Mahkamah Majistret Tetap</label>
+                  <label className="text-xs font-semibold text-slate-700">Mahkamah Majistret Tetap</label>
                   <input
                     type="text"
+                    placeholder="cth: MAHKAMAH MAJISTRET DI SHAH ALAM, DALAM NEGERI SELANGOR"
                     value={profileForm.default_magistrate_court || ""}
                     onChange={(e) => setProfileForm({ ...profileForm, default_magistrate_court: e.target.value })}
-                    className="mt-0.5 w-full rounded border border-slate-300 px-2.5 py-1.5 text-xs"
+                    className="mt-0.5 w-full rounded-lg border border-slate-300 px-2.5 py-2 text-base sm:text-xs"
                   />
                 </div>
                 <div>
-                  <label className="text-[11px] font-semibold text-slate-700">Kamera Rasmi (Sijil 90A)</label>
+                  <label className="text-xs font-semibold text-slate-700">Kamera Rasmi (Sijil 90A)</label>
                   <input
                     type="text"
                     value={profileForm.default_camera_desc || ""}
                     onChange={(e) => setProfileForm({ ...profileForm, default_camera_desc: e.target.value })}
-                    className="mt-0.5 w-full rounded border border-slate-300 px-2.5 py-1.5 text-xs"
+                    className="mt-0.5 w-full rounded-lg border border-slate-300 px-2.5 py-2 text-base sm:text-xs"
                   />
                 </div>
                 <div>
-                  <label className="text-[11px] font-semibold text-slate-700">Komputer Pejabat (Sijil 90A)</label>
+                  <label className="text-xs font-semibold text-slate-700">Komputer Pejabat (Sijil 90A)</label>
                   <input
                     type="text"
                     value={profileForm.default_computer_desc || ""}
                     onChange={(e) => setProfileForm({ ...profileForm, default_computer_desc: e.target.value })}
-                    className="mt-0.5 w-full rounded border border-slate-300 px-2.5 py-1.5 text-xs"
+                    className="mt-0.5 w-full rounded-lg border border-slate-300 px-2.5 py-2 text-base sm:text-xs"
                   />
                 </div>
                 <div className="sm:col-span-2">
-                  <label className="text-[11px] font-semibold text-slate-700">Pencetak Pejabat (Sijil 90A)</label>
+                  <label className="text-xs font-semibold text-slate-700">Pencetak Pejabat (Sijil 90A)</label>
                   <input
                     type="text"
                     value={profileForm.default_printer_desc || ""}
                     onChange={(e) => setProfileForm({ ...profileForm, default_printer_desc: e.target.value })}
-                    className="mt-0.5 w-full rounded border border-slate-300 px-2.5 py-1.5 text-xs"
+                    className="mt-0.5 w-full rounded-lg border border-slate-300 px-2.5 py-2 text-base sm:text-xs"
                   />
                 </div>
               </div>
-
-              {error && (
-                <div className="rounded-lg border border-rose-300 bg-rose-50 px-3 py-2 text-xs font-semibold text-rose-800">
-                  {error}
-                </div>
-              )}
-              {successMsg && (
-                <div className="rounded-lg border border-emerald-300 bg-emerald-50 px-3 py-2 text-xs font-semibold text-emerald-800">
-                  {successMsg}
-                </div>
-              )}
 
               <button
                 type="submit"

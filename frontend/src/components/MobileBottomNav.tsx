@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   FileCheck2,
   FolderOpen,
@@ -25,6 +25,24 @@ export default function MobileBottomNav({
   caseCount = 0,
   badges,
 }: MobileBottomNavProps) {
+  // Sembunyikan bar bawah semasa papan kekunci telefon dibuka supaya tidak menutup ruang menaip.
+  const [typing, setTyping] = useState(false);
+  useEffect(() => {
+    const isField = (el: Element | null) =>
+      !!el && ["INPUT", "TEXTAREA", "SELECT"].includes(el.tagName) &&
+      (el as HTMLInputElement).type !== "file" &&
+      (el as HTMLInputElement).type !== "checkbox" &&
+      (el as HTMLInputElement).type !== "radio";
+    const onIn = (e: FocusEvent) => setTyping(isField(e.target as Element));
+    const onOut = () => setTyping(false);
+    window.addEventListener("focusin", onIn);
+    window.addEventListener("focusout", onOut);
+    return () => {
+      window.removeEventListener("focusin", onIn);
+      window.removeEventListener("focusout", onOut);
+    };
+  }, []);
+
   const navItems: Array<{
     key: string;
     label: string;
@@ -73,6 +91,8 @@ export default function MobileBottomNav({
       },
     },
   ];
+
+  if (typing) return null;
 
   return (
     <nav

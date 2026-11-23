@@ -108,7 +108,7 @@ export default function AppGuidePanel({ onNavigateMode }: AppGuidePanelProps) {
             <span className="inline-block rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-bold text-[#0f2744]">
               Langkah 3 • Keluarkan Kompaun
             </span>
-            <h3 className="text-sm font-extrabold text-slate-900">Snap Foto SSM &amp; Semak 10 Perkara Wajib</h3>
+            <h3 className="text-sm font-extrabold text-slate-900">Imbas Foto SSM &amp; Semak 10 Perkara Wajib</h3>
             <p className="text-xs leading-relaxed text-slate-600 sm:text-sm">
               Di menu <strong>Kompaun</strong>, ambil foto Sijil SSM atau pilih 1-klik kesalahan lazim. Sistem akan menyemak had amaun (cth. Akta 154 maks RM500), tempoh bayaran (14/30 hari), dan kesahihan MyKad/Pasport sebelum muat turun fail Word.
             </p>

@@ -25,7 +25,7 @@ interface SplashScreenModalProps {
   onEnterApp: (mode: ActiveAppMode) => void;
   onOpenGoogleAuth: () => void;
   onOpenEmailAuth: (initialTab: "login" | "register") => void;
-  onAuthenticated?: (officer: OfficerProfile, token: string) => void;
+  onAuthenticated?: (officer: OfficerProfile, token: string, isNewAccount?: boolean) => void;
   onClose: () => void;
 }
 
@@ -34,7 +34,7 @@ const PREVIEW_TABS = [
     id: "ssm",
     label: "Foto SSM → Kompaun",
     icon: Camera,
-    input: "Tangkap / muat naik foto Sijil SSM",
+    input: "Ambil / muat naik foto Sijil SSM",
     outputTitle: "Notis Kompaun Word (.docx) + 10 Semakan",
     outputNote: "Auto-isi nama, No. SSM & alamat; amaran terus jika amaun langgar had Akta.",
   },
@@ -118,11 +118,9 @@ export default function SplashScreenModal({
             try {
               const res = await googleSignInOfficer({
                 id_token: response.credential,
-                district_pkd: "Pejabat Kesihatan Daerah Kuala Nerus",
-                state_jkn: "Jabatan Kesihatan Negeri Terengganu",
               });
               if (onAuthenticated) {
-                onAuthenticated(res.user, res.token);
+                onAuthenticated(res.user, res.token, res.is_new_account);
               } else {
                 onClose();
               }
@@ -200,11 +198,9 @@ export default function SplashScreenModal({
         try {
           const res = await googleSignInOfficer({
             access_token: tokenResp.access_token,
-            district_pkd: "Pejabat Kesihatan Daerah Kuala Nerus",
-            state_jkn: "Jabatan Kesihatan Negeri Terengganu",
           });
           if (onAuthenticated) {
-            onAuthenticated(res.user, res.token);
+            onAuthenticated(res.user, res.token, res.is_new_account);
           } else {
             onClose();
           }
@@ -253,7 +249,7 @@ export default function SplashScreenModal({
                       i-UIP Nerus
                     </h2>
                     <p className="text-xs font-medium text-slate-300">
-                      Unit Inspektorat &amp; Perundangan • PKD Kuala Nerus
+                      Unit Inspektorat &amp; Perundangan KKM • Seluruh Malaysia
                     </p>
                   </div>
                 </div>
@@ -261,7 +257,7 @@ export default function SplashScreenModal({
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src="/images/logo-pkdkn.png"
-                    alt="Logo PKD Kuala Nerus"
+                    alt="Logo KKM"
                     className="h-7 w-auto object-contain"
                   />
                 </div>
@@ -272,7 +268,7 @@ export default function SplashScreenModal({
                   Pembantu Kerja Harian PPKP &amp; Pegawai Penyiasat (IO)
                 </h3>
                 <p className="text-sm leading-relaxed text-slate-200">
-                  Rujuk seksyen di lokasi, snap foto SSM terus jadi Notis Kompaun (Word), semak 20 perkara Pra-TPR &amp; siapkan Borang 114 dalam beberapa saat.
+                  Rujuk seksyen di lokasi, ambil foto SSM terus jadi Notis Kompaun (Word), semak 20 perkara Pra-TPR &amp; siapkan Borang 114 dalam beberapa saat.
                 </p>
               </div>
 

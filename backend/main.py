@@ -4,10 +4,14 @@ from __future__ import annotations
 
 import json
 import logging
+import os
 import re
+import threading
 import time
+from collections import defaultdict, deque
 from dataclasses import asdict
 from typing import Any, Dict, Optional
+from urllib.parse import quote, urlparse
 
 from fastapi import APIRouter, Depends, FastAPI, File, Form, Header, HTTPException, Query, Request, UploadFile
 from fastapi.concurrency import run_in_threadpool
@@ -28,6 +32,7 @@ from backend.services.uip_advisor import UIPAdvisorService
 logger = logging.getLogger("uip.dev_vault")
 MAX_UPLOAD_BYTES = 15 * 1024 * 1024  # Had 15 MB bagi setiap muat naik fail
 IMAGE_UPLOAD_EXTENSIONS = (".jpg", ".jpeg", ".png", ".webp")
+_ALLOWED_OLLAMA_HOSTS = {"127.0.0.1", "localhost", "::1", "host.docker.internal"}
 
 db_service = get_uip_db()
 router_service = UIPModelRouter()
@@ -35,6 +40,51 @@ auditor_service = IPTechnicalAuditor(router=router_service)
 compound_checker = CompoundNoticeChecker()
 advisor_service = UIPAdvisorService(router=router_service, db=db_service)
 dev_vault_service = DevArchiveVaultService(db=db_service, redactor=router_service.redactor)
+
+_rate_limit_lock = threading.Lock()
+_rate_limit_buckets: Dict[str, deque[float]] = defaultdict(deque)
+
+
+def _check_rate_limit(bucket_key: str, max_requests: int, window_sec: float = 60.0) -> None:
+    """Penghad kadar permintaan (sliding window) dalam memori untuk melindungi titik akhir pengesahan & AI."""
+    now = time.monotonic()
+    with _rate_limit_lock:
+        dq = _rate_limit_buckets[bucket_key]
+        while dq and now - dq[0] > window_sec:
+            dq.popleft()
+        if len(dq) >= max_requests:
+            raise HTTPException(
+                status_code=429,
+                detail="Terlalu banyak permintaan dalam masa singkat. Sila tunggu sebentar dan cuba semula.",
+            )
+        dq.append(now)
+
+
+def _client_ip(request: Optional[Request]) -> str:
+    if request is None:
+        return "local"
+    xff = request.headers.get("x-forwarded-for") or ""
+    if xff:
+        return xff.split(",")[0].strip() or "unknown"
+    if request.client and request.client.host:
+        return request.client.host
+    return "unknown"
+
+
+def _validate_ollama_base_url(raw_url: Optional[str]) -> Optional[str]:
+    if raw_url is None:
+        return None
+    val = raw_url.strip()
+    if not val:
+        return ""
+    parsed = urlparse(val)
+    host = (parsed.hostname or "").lower()
+    if parsed.scheme not in ("http", "https") or host not in _ALLOWED_OLLAMA_HOSTS:
+        raise HTTPException(
+            status_code=400,
+            detail="Alamat pelayan Ollama hanya dibenarkan pada hos tempatan (localhost / 127.0.0.1 / host.docker.internal).",
+        )
+    return val
 
 
 async def _read_upload_limited(upload: UploadFile, max_bytes: int = MAX_UPLOAD_BYTES) -> bytes:
@@ -128,13 +178,19 @@ def _est_tokens(text: Optional[str]) -> int:
         return 0
     return max(1, len(text) // 4)
 
+
+_is_cloud_run = bool(os.getenv("K_SERVICE"))
+
 app = FastAPI(
     title="UIP-Command API",
     description=(
         "Aplikasi Pengurusan Kertas Siasatan (IP), Notis Kompaun & Semakan Pra-TPR "
         "untuk Unit Inspektorat dan Perundangan (UIP), Kementerian Kesihatan Malaysia."
     ),
-    version="2.2.0",
+    version="2.6.0",
+    docs_url=None if _is_cloud_run else "/docs",
+    redoc_url=None if _is_cloud_run else "/redoc",
+    openapi_url=None if _is_cloud_run else "/openapi.json",
 )
 
 app.add_middleware(
@@ -185,15 +241,15 @@ class RegisterAccountRequest(BaseModel):
     grade: str = "U5"
     kkm_authority_card_no: str = ""
     prosecution_authorization_no: str = ""
-    state_jkn: str = "Jabatan Kesihatan Negeri Terengganu"
-    district_pkd: str = "Pejabat Kesihatan Daerah Kuala Nerus"
+    state_jkn: str = ""
+    district_pkd: str = ""
     office_address: str = ""
     unit_assignment: str = "Unit Inspektorat dan Perundangan (UIP)"
-    default_magistrate_court: str = "MAHKAMAH MAJISTRET DI KUALA TERENGGANU, DALAM NEGERI TERENGGANU DARUL IMAN"
+    default_magistrate_court: str = ""
     system_role: str = "PEGAWAI_PENYIASAT"
-    default_computer_desc: str = "Komputer Meja Rasmi KKM Dell OptiPlex Pejabat PKD"
-    default_printer_desc: str = "Pencetak Laser Warna Pejabat PKD"
-    default_camera_desc: str = "Kamera Digital Rasmi Pejabat KKM"
+    default_computer_desc: str = "Komputer Meja Rasmi KKM Pejabat Kesihatan"
+    default_printer_desc: str = "Pencetak Laser Warna Pejabat Kesihatan"
+    default_camera_desc: str = "Kamera Digital Rasmi Pejabat Kesihatan"
 
 
 class LoginRequest(BaseModel):
@@ -207,8 +263,8 @@ class GoogleAuthRequest(BaseModel):
     kkm_authority_card_no: str = ""
     grade: str = "U5"
     designation: str = "Penolong Pegawai Kesihatan Persekitaran (PPKP)"
-    state_jkn: str = "Jabatan Kesihatan Negeri Terengganu"
-    district_pkd: str = "Pejabat Kesihatan Daerah Kuala Nerus"
+    state_jkn: str = ""
+    district_pkd: str = ""
 
 
 class UpdateProfileRequest(BaseModel):
@@ -304,7 +360,7 @@ def root() -> Dict[str, str]:
     return {
         "aplikasi": "UIP-Command API",
         "status": "aktif",
-        "dokumentasi": "/docs",
+        "dokumentasi": "/docs" if not _is_cloud_run else "disabled",
     }
 
 
@@ -318,11 +374,23 @@ def healthz() -> Dict[str, str]:
 
 
 @app.get("/api/status")
-def get_status() -> Dict[str, Any]:
-    import os
+def get_status(
+    authorization: Optional[str] = Header(default=None),
+    x_auth_token: Optional[str] = Header(default=None, alias="X-Auth-Token"),
+) -> Dict[str, Any]:
     from backend.rag.legal_engine import get_legal_library
 
+    caller = _resolve_current_officer(authorization, x_auth_token)
+    is_admin = bool(caller and str(caller.get("email") or "").strip().lower() in settings.dev_admin_emails)
+
     payload = dict(router_service.get_system_status())
+    if not is_admin:
+        payload["masked_api_key"] = "********" if settings.has_gemini_key else ""
+        if isinstance(payload.get("ollama"), dict):
+            payload["ollama"] = {
+                **payload["ollama"],
+                "base_url": "",
+            }
     payload["cloud_run_revision"] = os.getenv("K_REVISION") or "local"
     payload["statute_library_version"] = get_legal_library().statute_library_version
     return payload
@@ -340,7 +408,7 @@ def get_runtime_settings(
         "masked_gemini_api_key": settings.masked_gemini_key if is_admin else ("********" if settings.has_gemini_key else ""),
         "google_client_id": settings.google_client_id,
         "google_client_id_configured": bool(settings.google_client_id),
-        "ollama_base_url": settings.ollama_base_url,
+        "ollama_base_url": settings.ollama_base_url if is_admin else "",
         "ollama_model": settings.ollama_model,
         "decision_model": settings.decision_model,
         "multimodal_model": settings.multimodal_model,
@@ -354,7 +422,10 @@ def update_runtime_settings(
     req: RuntimeSettingsRequest,
     _admin: Dict[str, Any] = Depends(_require_dev_admin),
 ) -> Dict[str, Any]:
-    db_service.save_runtime_settings(req.model_dump())
+    dump = req.model_dump()
+    if dump.get("ollama_base_url") is not None:
+        dump["ollama_base_url"] = _validate_ollama_base_url(dump["ollama_base_url"])
+    db_service.save_runtime_settings(dump)
     router_service.refresh_clients()
     advisor_service.clear_cache()
     return {
@@ -525,6 +596,8 @@ async def audit_ip_endpoint(
     file: Optional[UploadFile] = File(default=None),
     current_officer: Dict[str, Any] = Depends(_require_authenticated_officer),
 ) -> Dict[str, Any]:
+    if not fast_mode:
+        _check_rate_limit(f"ai:{current_officer.get('id') or 'anon'}", max_requests=25, window_sec=60.0)
     t0 = time.perf_counter()
     raw_text = (text or "").strip()
     filename = "teks_kertas_siasatan.txt"
@@ -541,31 +614,38 @@ async def audit_ip_endpoint(
         upload_filename = filename
         upload_mime = file.content_type or "application/octet-stream"
         low_fn = filename.lower()
-        if low_fn.endswith(IMAGE_UPLOAD_EXTENSIONS) or upload_mime.startswith("image/"):
-            ocr_res = await run_in_threadpool(
-                router_service.extract_multimodal_evidence,
-                file_bytes=file_bytes,
-                filename=filename,
-                mime_type=upload_mime,
-                doc_hint="dokumen_kertas_siasatan",
-            )
-            extracted = (ocr_res.raw_text or ocr_res.structured_summary or "").strip()
-        else:
-            extracted = await run_in_threadpool(extract_text_from_upload, file_bytes, filename)
-            if low_fn.endswith(".pdf") and len(re.sub(r"--- Muka Surat \d+ ---|\s+", "", extracted)) < 40:
-                # PDF imbasan tanpa lapisan teks -> ekstrak melalui OCR multimodal
+        try:
+            if low_fn.endswith(IMAGE_UPLOAD_EXTENSIONS) or upload_mime.startswith("image/"):
                 ocr_res = await run_in_threadpool(
                     router_service.extract_multimodal_evidence,
                     file_bytes=file_bytes,
                     filename=filename,
-                    mime_type="application/pdf",
+                    mime_type=upload_mime,
                     doc_hint="dokumen_kertas_siasatan",
                 )
-                ocr_text = (ocr_res.raw_text or ocr_res.structured_summary or "").strip()
-                if ocr_text:
-                    extracted = ocr_text
-        if extracted.strip():
-            raw_text = f"{extracted}\n\n{raw_text}".strip() if raw_text else extracted
+                extracted = (ocr_res.raw_text or ocr_res.structured_summary or "").strip()
+            else:
+                extracted = await run_in_threadpool(extract_text_from_upload, file_bytes, filename)
+                if low_fn.endswith(".pdf") and len(re.sub(r"--- Muka Surat \d+ ---|\s+", "", extracted)) < 40:
+                    # PDF imbasan tanpa lapisan teks -> ekstrak melalui OCR multimodal
+                    ocr_res = await run_in_threadpool(
+                        router_service.extract_multimodal_evidence,
+                        file_bytes=file_bytes,
+                        filename=filename,
+                        mime_type="application/pdf",
+                        doc_hint="dokumen_kertas_siasatan",
+                    )
+                    ocr_text = (ocr_res.raw_text or ocr_res.structured_summary or "").strip()
+                    if ocr_text:
+                        extracted = ocr_text
+        except ValueError as exc:
+            raise HTTPException(status_code=400, detail=str(exc))
+        ext_clean = extracted.strip()
+        if ext_clean:
+            if not raw_text:
+                raw_text = ext_clean
+            elif ext_clean not in raw_text:
+                raw_text = f"{ext_clean}\n\n{raw_text}".strip()
 
     if not raw_text:
         raise HTTPException(
@@ -662,22 +742,27 @@ async def extract_evidence_endpoint(
     doc_hint: str = Form(default="bukti_kesalahan"),
     current_officer: Dict[str, Any] = Depends(_require_authenticated_officer),
 ) -> Dict[str, Any]:
+    _check_rate_limit(f"ai:{current_officer.get('id') or 'anon'}", max_requests=25, window_sec=60.0)
     t0 = time.perf_counter()
     file_bytes = await _read_upload_limited(file)
     if not file_bytes:
         raise HTTPException(status_code=400, detail="Fail bukti kosong.")
-    result = await run_in_threadpool(
-        router_service.extract_multimodal_evidence,
-        file_bytes=file_bytes,
-        filename=file.filename or "bukti.jpg",
-        mime_type=file.content_type or "application/octet-stream",
-        doc_hint=doc_hint,
-    )
+    safe_filename = file.filename or "bukti.jpg"
+    try:
+        result = await run_in_threadpool(
+            router_service.extract_multimodal_evidence,
+            file_bytes=file_bytes,
+            filename=safe_filename,
+            mime_type=file.content_type or "application/octet-stream",
+            doc_hint=doc_hint,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
     is_cloud = "gemini" in (result.model_used or "").lower() and "sim" not in (result.model_used or "").lower()
     latency_ms = int((time.perf_counter() - t0) * 1000)
     db_service.log_activity(
         action_type="EKSTRAK_BUKTI_OCR",
-        action_detail=f"Ekstrak gambar/fail bukti: {file.filename or 'bukti'} ({doc_hint})",
+        action_detail=f"Ekstrak gambar/fail bukti: {safe_filename} ({doc_hint})",
         user=current_officer,
         model_used=result.model_used,
         est_input_tokens=1300 if is_cloud else 0,
@@ -685,7 +770,7 @@ async def extract_evidence_endpoint(
         latency_ms=latency_ms,
     )
     payload_out = {
-        "filename": file.filename,
+        "filename": safe_filename,
         "extracted_fields": result.extracted_fields,
         "structured_summary": result.structured_summary,
         "raw_text": result.raw_text,
@@ -698,17 +783,17 @@ async def extract_evidence_endpoint(
         action_type="EKSTRAK_BUKTI_OCR",
         endpoint="/api/extract-evidence",
         user=current_officer,
-        title=f"Ekstrak OCR ({doc_hint}): {file.filename or 'bukti.jpg'}",
+        title=f"Ekstrak OCR ({doc_hint}): {safe_filename}",
         raw_input_text=result.raw_text or "",
         raw_response_text=result.structured_summary or "",
-        request_payload={"doc_hint": doc_hint, "filename": file.filename},
+        request_payload={"doc_hint": doc_hint, "filename": safe_filename},
         analysis_payload=payload_out,
         model_used=result.model_used or "",
         is_cloud_api=is_cloud,
         latency_ms=latency_ms,
         status_summary=f"Keyakinan OCR {round((result.confidence or 0) * 100)}%",
         attachment_bytes=file_bytes,
-        attachment_filename=file.filename or "bukti.jpg",
+        attachment_filename=safe_filename,
         attachment_mime=file.content_type or "application/octet-stream",
     )
     return payload_out
@@ -719,6 +804,8 @@ def generate_draft_endpoint(
     req: GenerateDraftRequest,
     current_officer: Dict[str, Any] = Depends(_require_authenticated_officer),
 ) -> Dict[str, Any]:
+    if not req.fast_mode:
+        _check_rate_limit(f"ai:{current_officer.get('id') or 'anon'}", max_requests=25, window_sec=60.0)
     t0 = time.perf_counter()
     active_officer = _merge_authoritative_officer(current_officer, req.officer_profile)
     result = router_service.generate_legal_drafts(
@@ -788,7 +875,14 @@ def export_docx_endpoint(
     current_officer: Dict[str, Any] = Depends(_require_authenticated_officer),
 ) -> Response:
     t0 = time.perf_counter()
-    docx_bytes, filename = generate_docx_by_type(req.doc_type, req.payload)
+    enriched_payload = dict(req.payload or {})
+    if "officer_profile" not in enriched_payload or not isinstance(enriched_payload.get("officer_profile"), dict):
+        enriched_payload["officer_profile"] = current_officer
+    else:
+        enriched_payload["officer_profile"] = _merge_authoritative_officer(
+            current_officer, enriched_payload.get("officer_profile")
+        )
+    docx_bytes, filename = generate_docx_by_type(req.doc_type, enriched_payload)
     latency_ms = int((time.perf_counter() - t0) * 1000)
     db_service.log_activity(
         action_type="EXPORT_DOCX",
@@ -815,10 +909,15 @@ def export_docx_endpoint(
         attachment_mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
     )
     safe_fname = sanitize_filename(filename, "dokumen.docx")
+    encoded_fname = quote(safe_fname)
     return Response(
         content=docx_bytes,
         media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-        headers={"Content-Disposition": f'attachment; filename="{safe_fname}"'},
+        headers={
+            "Content-Disposition": f"attachment; filename=\"{safe_fname}\"; filename*=UTF-8''{encoded_fname}",
+            "X-Content-Type-Options": "nosniff",
+            "Cache-Control": "no-store, private",
+        },
     )
 
 
@@ -832,9 +931,10 @@ def query_statutory_rag(
     t0 = time.perf_counter()
     chunks = router_service.rag_store.search_statutes(query=q, akta_filter=akta, top_k=top_k)
     latency_ms = int((time.perf_counter() - t0) * 1000)
+    redacted_q = router_service.redactor.redact(q[:120], use_ollama=False).redacted_text
     db_service.log_activity(
         action_type="CARIAN_RAG_AKTA",
-        action_detail=f"Cari teks akta ({akta or 'Semua'}): {q[:80]}",
+        action_detail=f"Cari teks akta ({akta or 'Semua'}): {redacted_q[:80]}",
         user=current_officer,
         model_used=router_service.rag_store.engine_name,
         latency_ms=latency_ms,
@@ -880,17 +980,20 @@ async def ingest_statutory_act(
     fname = file.filename or "akta_tambahan.txt"
     if not fname.lower().endswith((".txt", ".pdf", ".md")):
         raise HTTPException(status_code=400, detail="Hanya fail .txt, .md atau .pdf disokong.")
-    total_chunks = await run_in_threadpool(router_service.rag_store.ingest_uploaded_file, fname, raw_bytes)
-    legal_lib = get_legal_library()
-    ingest_meta = await run_in_threadpool(
-        legal_lib.ingest_statute_bytes,
-        filename=fname,
-        raw_bytes=raw_bytes,
-        statute_id=statute_id,
-        official_title_bm=official_title_bm,
-        act_number_or_pu=act_number_or_pu,
-        verified_by_admin=verified_by_admin,
-    )
+    try:
+        total_chunks = await run_in_threadpool(router_service.rag_store.ingest_uploaded_file, fname, raw_bytes)
+        legal_lib = get_legal_library()
+        ingest_meta = await run_in_threadpool(
+            legal_lib.ingest_statute_bytes,
+            filename=fname,
+            raw_bytes=raw_bytes,
+            statute_id=statute_id,
+            official_title_bm=official_title_bm,
+            act_number_or_pu=act_number_or_pu,
+            verified_by_admin=verified_by_admin,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
     stale_marked = db_service.invalidate_advisor_qa_cache(
         akta_code=ingest_meta["canonical_akta_code"],
         new_version=ingest_meta["statute_library_version"],
@@ -1172,13 +1275,14 @@ def get_demo_accounts() -> Dict[str, Any]:
 
 
 @app.post("/api/auth/register")
-def register_officer_account(req: RegisterAccountRequest) -> Dict[str, Any]:
+def register_officer_account(req: RegisterAccountRequest, request: Request) -> Dict[str, Any]:
+    _check_rate_limit(f"auth:reg:{_client_ip(request)}", max_requests=15, window_sec=60.0)
     try:
         res = db_service.register_user(req.model_dump())
         try:
             db_service.log_activity(
                 action_type="REGISTER_ACCOUNT",
-                action_detail=f"Daftar akaun baharu (Emel KKM): {res['user'].get('email', '')}",
+                action_detail=f"Daftar akaun baharu (E-mel KKM): {res['user'].get('email', '')}",
                 user=res.get("user"),
                 model_used="local-sqlite-auth",
                 latency_ms=15,
@@ -1190,13 +1294,13 @@ def register_officer_account(req: RegisterAccountRequest) -> Dict[str, Any]:
             action_type="REGISTER_ACCOUNT",
             endpoint="/api/auth/register",
             user=res.get("user"),
-            title=f"Daftar Pegawai (Emel): {res['user'].get('full_name', '')} ({res['user'].get('email', '')})",
-            raw_input_text=f"Nama: {res['user'].get('full_name', '')}\nEmel: {res['user'].get('email', '')}\nGred: {res['user'].get('grade', '')}\nPKD: {res['user'].get('district_pkd', '')}\nKad Kuasa: {res['user'].get('kkm_authority_card_no', '')}",
-            request_payload=req.model_dump(),
+            title=f"Daftar Pegawai (E-mel): {res['user'].get('full_name', '')} ({res['user'].get('email', '')})",
+            raw_input_text=f"Nama: {res['user'].get('full_name', '')}\nE-mel: {res['user'].get('email', '')}\nGred: {res['user'].get('grade', '')}\nPejabat: {res['user'].get('district_pkd', '')}\nKad Kuasa: {res['user'].get('kkm_authority_card_no', '')}",
+            request_payload={k: v for k, v in req.model_dump().items() if k != "password"},
             analysis_payload={"user": res.get("user"), "auth_provider": "email"},
             model_used="local-sqlite-auth",
             latency_ms=15,
-            status_summary="Pendaftaran Emel KKM",
+            status_summary="Pendaftaran E-mel KKM",
         )
         return res
     except ValueError as exc:
@@ -1204,17 +1308,18 @@ def register_officer_account(req: RegisterAccountRequest) -> Dict[str, Any]:
 
 
 @app.post("/api/auth/login")
-def login_officer_account(req: LoginRequest) -> Dict[str, Any]:
+def login_officer_account(req: LoginRequest, request: Request) -> Dict[str, Any]:
+    _check_rate_limit(f"auth:login:{_client_ip(request)}", max_requests=20, window_sec=60.0)
     res = db_service.authenticate_user(req.email, req.password)
     if not res:
         raise HTTPException(
             status_code=401,
-            detail="Emel atau kata laluan tidak tepat. Sila semak semula.",
+            detail="E-mel atau kata laluan tidak tepat. Sila semak semula.",
         )
     try:
         db_service.log_activity(
             action_type="LOGIN_EMAIL",
-            action_detail=f"Log masuk emel: {res['user'].get('email', '')}",
+            action_detail=f"Log masuk e-mel: {res['user'].get('email', '')}",
             user=res.get("user"),
             model_used="local-sqlite-auth",
             latency_ms=12,
@@ -1225,7 +1330,8 @@ def login_officer_account(req: LoginRequest) -> Dict[str, Any]:
 
 
 @app.post("/api/auth/google")
-def google_auth_officer(req: GoogleAuthRequest) -> Dict[str, Any]:
+def google_auth_officer(req: GoogleAuthRequest, request: Request) -> Dict[str, Any]:
+    _check_rate_limit(f"auth:google:{_client_ip(request)}", max_requests=20, window_sec=60.0)
     try:
         res = db_service.authenticate_or_register_google_user(req.model_dump())
         status_txt = "Daftar baharu" if res.get("is_new_account") else "Log masuk pantas"
@@ -1246,8 +1352,8 @@ def google_auth_officer(req: GoogleAuthRequest) -> Dict[str, Any]:
                 endpoint="/api/auth/google",
                 user=res.get("user"),
                 title=f"Daftar Pegawai (Google OAuth): {res['user'].get('full_name', '')} ({res['user'].get('email', '')})",
-                raw_input_text=f"Nama: {res['user'].get('full_name', '')}\nEmel: {res['user'].get('email', '')}\nGred: {res['user'].get('grade', '')}\nPKD: {res['user'].get('district_pkd', '')}\nKad Kuasa: {res['user'].get('kkm_authority_card_no', '')}",
-                request_payload=req.model_dump(),
+                raw_input_text=f"Nama: {res['user'].get('full_name', '')}\nE-mel: {res['user'].get('email', '')}\nGred: {res['user'].get('grade', '')}\nPejabat: {res['user'].get('district_pkd', '')}\nKad Kuasa: {res['user'].get('kkm_authority_card_no', '')}",
+                request_payload={k: v for k, v in req.model_dump().items() if k not in ("id_token", "access_token")},
                 analysis_payload={"user": res.get("user"), "auth_provider": "google", "is_new_account": True},
                 model_used="google-oauth2-gis",
                 latency_ms=14,
@@ -1285,12 +1391,12 @@ def update_my_officer_profile(
         action_type="UPDATE_PROFILE",
         endpoint="/api/auth/profile",
         user=updated or user,
-        title=f"Kemaskini Profil Pegawai: {(updated or user).get('full_name', '')}",
+        title=f"Kemas Kini Profil Pegawai: {(updated or user).get('full_name', '')}",
         raw_input_text=json.dumps(changes, ensure_ascii=False),
         request_payload=changes,
         analysis_payload={"user": updated or user, "changed_fields": list(changes.keys())},
         model_used="local-sqlite-auth",
-        status_summary=f"{len(changes)} medan dikemaskini",
+        status_summary=f"{len(changes)} medan dikemas kini",
     )
     return {"user": updated}
 
@@ -1338,6 +1444,8 @@ def consult_uip_advisor(
             status_code=400,
             detail="Sila taip soalan situasi kes atau pilih salah satu templat situasi.",
         )
+    if req.use_ai:
+        _check_rate_limit(f"ai:{current_officer.get('id') or 'anon'}", max_requests=25, window_sec=60.0)
     t0 = time.perf_counter()
     officer = _merge_authoritative_officer(current_officer, req.officer_profile)
     res = advisor_service.consult(
@@ -1355,7 +1463,8 @@ def consult_uip_advisor(
         and "cache" not in model_used.lower()
         and "koleksi" not in model_used.lower()
     )
-    q_preview = (req.question or req.scenario_id or "Situasi UIP").strip()[:100]
+    raw_q_preview = (req.question or req.scenario_id or "Situasi UIP").strip()[:140]
+    q_preview = router_service.redactor.redact(raw_q_preview, use_ollama=False).redacted_text[:100]
     latency_ms = int((time.perf_counter() - t0) * 1000)
     db_service.log_activity(
         action_type="TANYA_PAKAR_UIP",

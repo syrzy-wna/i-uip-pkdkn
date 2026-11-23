@@ -535,8 +535,31 @@ class StatutoryRAGStore:
         self._avg_doc_len = (total_len / len(self._chunks)) if self._chunks else 1.0
 
     def ingest_uploaded_file(self, filename: str, raw_bytes: bytes) -> int:
-        safe_name = Path(filename).name
-        target_path = self.akta_dir / safe_name
+        if not raw_bytes:
+            raise ValueError("Fail yang dimuat naik kosong (0 bait).")
+        safe_name = re.sub(r"[^A-Za-z0-9._-]+", "_", Path(filename or "statute.pdf").name).lstrip(".")
+        if not safe_name:
+            raise ValueError("Nama fail tidak sah.")
+        low_name = safe_name.lower()
+        if not low_name.endswith((".pdf", ".txt", ".md")):
+            raise ValueError("Hanya fail .pdf, .txt atau .md dibenarkan bagi pustaka akta.")
+        if low_name.endswith(".pdf"):
+            if not raw_bytes.lstrip().startswith(b"%PDF"):
+                raise ValueError("Fail PDF Warta tidak sah atau rosak.")
+            try:
+                with fitz.open(stream=raw_bytes, filetype="pdf") as doc:
+                    if getattr(doc, "is_encrypted", False) and not doc.authenticate(""):
+                        raise ValueError("Fail PDF Warta berkunci kata laluan.")
+                    extracted_chars = sum(len((p.get_text("text") or "").strip()) for p in doc)
+                    if extracted_chars < 20:
+                        raise ValueError("Fail PDF Warta tidak mengandungi lapisan teks (imbasan gambar semata-mata).")
+            except ValueError:
+                raise
+            except Exception:
+                raise ValueError("Fail PDF Warta rosak atau tidak dapat dibaca.")
+        target_path = (self.akta_dir / safe_name).resolve()
+        if not target_path.is_relative_to(self.akta_dir.resolve()):
+            raise ValueError("Laluan fail tidak dibenarkan.")
         target_path.write_bytes(raw_bytes)
         return self.ingest_directory()
 
@@ -561,12 +584,12 @@ class StatutoryRAGStore:
                     "covid", "koronavirus", "cdc", "hso", "kuarantin", "pengasingan", "isolasi",
                     "wabak", "berjangkit", "tibi", "ptb", "afb", "tbis", "hfmd", "leptospirosis",
                     "measles", "campak", "kolera", "difteria", "influenza", "mpox", "rabies",
-                    "kontak rapat", "e-notifikasi", "enotifikasi", "apppb", "a1742",
+                    "kontak rapat", "e-notifikasi", "enotifikasi", "notifikasi", "apppb", "a1742",
                 ),
                 ["penyakit", "berjangkit", "342", "pengawasan", "perintah"],
             ),
             "Akta 852": (
-                ("rokok", "vape", "pod", "shisha", "obd", "ashtray", "merokok", "257", "259", "260"),
+                ("rokok", "vape", "pod", "shisha", "obd", "ashtray", "merokok", "257", "258", "259", "260", "261"),
                 ["merokok", "852"],
             ),
             "Akta 281": (
@@ -576,6 +599,18 @@ class StatutoryRAGStore:
             "Akta 154": (
                 ("aedes", "denggi", "jentik", "larva", "nyamuk", "fogging", "entomologi", "tapak bina"),
                 ["aedes", "154"],
+            ),
+            "Akta 593": (
+                ("ktj", "kanun tatacara jenayah", "rakaman percakapan", "diari siasatan", "pertindihan pertuduhan", "s.112", "seksyen 112", "s.119", "seksyen 119", "seksyen 163", "borang 114", "borang 143", "izin mendakwa"),
+                ["593", "examination", "witness", "diary", "charge", "112", "119", "163"],
+            ),
+            "Akta 56": (
+                ("akta keterangan", "sijil 90a", "seksyen 90a", "s.90a", "gambar digital", "cetakan komputer", "seksyen 114a", "73aa"),
+                ["56", "computer", "document", "certificate", "90a", "114a"],
+            ),
+            "Akta 611": (
+                ("akta kanak-kanak", "akta 611", "mahkamah bagi kanak-kanak", "identiti kanak-kanak", "seksyen 15 akta 611"),
+                ["611", "child", "kanak-kanak", "15", "83", "91"],
             ),
         }
         scores: Dict[str, int] = {}

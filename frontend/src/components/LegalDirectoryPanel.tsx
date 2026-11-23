@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   AlertOctagon,
   AlertTriangle,
@@ -232,6 +232,10 @@ export default function LegalDirectoryPanel({
   >("SEMUA");
   const [offenceSearch, setOffenceSearch] = useState<string>("");
   const [selectedOffenceId, setSelectedOffenceId] = useState<string>("");
+  const selectedOffenceIdRef = useRef<string>("");
+  useEffect(() => {
+    selectedOffenceIdRef.current = selectedOffenceId;
+  }, [selectedOffenceId]);
   const [copiedCharge, setCopiedCharge] = useState<boolean>(false);
   const [showMobileFilters, setShowMobileFilters] = useState<boolean>(false);
   const [mobileOffenceDrawerOpen, setMobileOffenceDrawerOpen] = useState<boolean>(false);
@@ -285,7 +289,7 @@ export default function LegalDirectoryPanel({
           // Abaikan jika kuota localStorage penuh
         }
       }
-      if (!selectedOffenceId && snap.master_offences_matrix.length > 0) {
+      if (!selectedOffenceIdRef.current && snap.master_offences_matrix.length > 0) {
         setSelectedOffenceId(snap.master_offences_matrix[0].offence_id);
       }
     } catch (err) {
@@ -296,7 +300,7 @@ export default function LegalDirectoryPanel({
             const parsed = JSON.parse(cachedRaw) as LegalLibrarySnapshot;
             setSnapshot(parsed);
             setOfflineMode(true);
-            if (!selectedOffenceId && parsed.master_offences_matrix.length > 0) {
+            if (!selectedOffenceIdRef.current && parsed.master_offences_matrix.length > 0) {
               setSelectedOffenceId(parsed.master_offences_matrix[0].offence_id);
             }
             return;
@@ -313,7 +317,7 @@ export default function LegalDirectoryPanel({
     } finally {
       setLoading(false);
     }
-  }, [authToken, selectedOffenceId]);
+  }, [authToken]);
 
   useEffect(() => {
     void loadLegalLibrary();

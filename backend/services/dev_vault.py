@@ -45,6 +45,7 @@ SENSITIVE_KEYS = {
     "dev_archive_s3_access_key",
     "dev_archive_s3_secret_key",
     "secret_key",
+    "token_map",
 }
 
 EMPTY_SHA256 = hashlib.sha256(b"").hexdigest()
@@ -748,7 +749,7 @@ class DevArchiveVaultService:
 
         with zipfile.ZipFile(buf, "w", compression=zipfile.ZIP_DEFLATED) as zf:
             manifest = {
-                "application": "i-UIP Nerus (PKD Kuala Nerus)",
+                "application": "i-UIP Nerus (KKM Malaysia)",
                 "developer": "g.dev/syrzy (zero4eleven@gmail.com)",
                 "export_mode": safe_mode,
                 "generated_at_utc": _utc_now_iso(),

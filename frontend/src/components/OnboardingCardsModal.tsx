@@ -200,13 +200,13 @@ export default function OnboardingCardsModal({
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src="/images/logo-pkdkn.png"
-                        alt="Logo PKD Kuala Nerus"
+                        alt="Logo i-UIP Nerus"
                         className="h-6 w-auto object-contain"
                       />
                     </div>
                   </div>
                   <span className="text-[11px] font-bold text-amber-300">
-                    UIP • PKD Kuala Nerus
+                    UIP • KKM Seluruh Malaysia
                   </span>
                 </div>
 

@@ -48,9 +48,9 @@ IP_AUDIT_CRITERIA: List[Dict[str, Any]] = [
         "category": "Identiti OKT",
         "threshold": 0.88,
         "description": "Cetakan carian rasmi SSM (e-Info/MyData) dan lesen PBT dilampirkan; jika melibatkan syarikat Sdn. Bhd., rujuk Seksyen 49 Akta 852 / Seksyen 33A Akta 281.",
-        "positive_keywords": ["[no_ssm_1]", "ssm", "e-info", "mydata", "lesen premis", "pengarah", "seksyen 49", "seksyen 51", "seksyen 33a"],
+        "positive_keywords": ["[no_ssm_1]", "ssm", "e-info", "mydata", "lesen premis", "pengarah", "seksyen 49", "seksyen 33a", "seksyen 22(2)", "seksyen 22a"],
         "negative_keywords": ["tiada carian ssm", "belum buat carian ssm"],
-        "statute_ref": "Seksyen 49 Akta 852 / Seksyen 33A Akta Makanan 1983 / Akta Syarikat 2016",
+        "statute_ref": "Seksyen 49 Akta 852 / Seksyen 33A Akta Makanan 1983 / Seksyen 22(2) Akta 154 / Seksyen 22A Akta 342",
         "remedy": "Lampirkan cetakan carian rasmi e-Info SSM bersama Sijil S.90A dan sahkan sama ada pertuduhan dikenakan ke atas syarikat atau pengarah (S.49 Akta 852 / S.33A Akta 281).",
     },
     {
@@ -132,25 +132,25 @@ IP_AUDIT_CRITERIA: List[Dict[str, Any]] = [
     },
     {
         "code": "C11",
-        "title": "Perakuan Juruanalisis (S.19 Akta 281) / Entomologi (Akta 154) / Makmal TBIS 20C (Akta 342)",
+        "title": "Perakuan Juruanalisis (S.19/S.20 Akta 281) / Entomologi (Akta 154) / Makmal TBIS 20C (Akta 342)",
         "category": "Bukti Makmal",
         "threshold": 0.88,
-        "description": "Bagi kes persampelan makanan (S.19 Akta 281 — serah salinan kepada OKT sekurang-kurangnya 10 hari genap sebelum bicara di bawah S.19(2)), pembiakan Aedes (Akta 154), atau kes Tibi (TBIS 20C di bawah Akta 342), laporan rasmi makmal/entomologi/kahak wajib dilampirkan.",
-        "positive_keywords": ["perakuan juruanalisis", "seksyen 19", "laporan makmal", "entomologi", "mkak", "laporan analisis", "tbis 20c", "smear positif"],
+        "description": "Bagi kes persampelan makanan Akta 281 (Perakuan Juruanalisis dalam 90 hari S.19(1A); pendakwaan dalam had masa 150 hari S.19(2); serah salinan kepada OKT ≥10 hari genap sebelum bicara di bawah S.20(ii)), pembiakan Aedes (Akta 154), atau kes Tibi (TBIS 20C di bawah Akta 342), laporan rasmi makmal/entomologi/kahak wajib dilampirkan.",
+        "positive_keywords": ["perakuan juruanalisis", "seksyen 19", "seksyen 20", "laporan makmal", "entomologi", "mkak", "laporan analisis", "tbis 20c", "smear positif"],
         "negative_keywords": ["tiada laporan makmal", "laporan entomologi belum diterima", "najis tikus ke makmal"],
-        "statute_ref": "Seksyen 19(1)-(2) Akta Makanan 1983 / Seksyen 399 KTJ / Akta 154 / Akta 342 (TBIS 20C)",
-        "remedy": "Lampirkan Perakuan Juruanalisis Makanan (S.19 Akta 281 — ingat serahan 10 hari genap S.19(2) sebelum bicara), Sijil Pengecaman Entomologi (Akta 154), atau Keputusan Makmal TBIS 20C (Akta 342).",
+        "statute_ref": "Seksyen 19(1A), 19(2) & 20(ii) Akta Makanan 1983 / Seksyen 399 KTJ / Akta 154 / Akta 342 (TBIS 20C)",
+        "remedy": "Lampirkan Perakuan Juruanalisis Makanan (ingat had 90 hari S.19(1A), had masa pendakwaan 150 hari S.19(2), & serahan ≥10 hari genap S.20(ii) sebelum bicara), Sijil Entomologi (Akta 154), atau Keputusan Makmal TBIS 20C (Akta 342).",
     },
     {
         "code": "C12",
-        "title": "Sijil Seksyen 90A(2) Akta Keterangan 1950 (Cetakan Digital & SSM)",
+        "title": "Sijil Seksyen 90A(2) & (3)(a) Akta Keterangan 1950 (Cetakan Digital & SSM)",
         "category": "Keterangan Digital",
         "threshold": 0.95,
-        "description": "Setiap gambar digital yang dicetak dan cetakan komputer e-Info SSM wajib disertai Sijil Seksyen 90A(2) dengan spesifikasi kamera/komputer dan klausa 'sepanjang pengetahuan dan kepercayaan'.",
+        "description": "Setiap gambar digital yang dicetak dan cetakan komputer e-Info SSM wajib disertai Sijil Seksyen 90A(2) & (3)(a) dengan spesifikasi kamera/komputer dan klausa 'sepanjang pengetahuan dan kepercayaan'.",
         "positive_keywords": ["sijil seksyen 90a", "90a(2)", "sepanjang pengetahuan dan kepercayaan", "beroperasi dalam keadaan baik", "pengendalian biasa"],
-        "negative_keywords": ["belum ditandatangani dan belum dilampirkan", "tiada sijil seksyen 90a", "tanpa sijil 90a", "belum dilampirkan", "akan disediakan kemudian", "masih dalam tindakan"],
-        "statute_ref": "Seksyen 90A(1), (2) & (4) Akta Keterangan 1950 [Akta 56]",
-        "remedy": "Sediakan dan tandatangani Sijil Seksyen 90A(2) lengkap dengan model kamera, komputer, pencetak, tarikh cetakan, dan klausa 'sepanjang pengetahuan dan kepercayaan saya'.",
+        "negative_keywords": ["belum ditandatangani dan belum dilampirkan", "tiada sijil seksyen 90a", "tanpa sijil 90a", "tidak disediakan", "belum dibuat", "belum dilampirkan", "akan disediakan kemudian", "masih dalam tindakan"],
+        "statute_ref": "Seksyen 90A(1), (2), (3)(a) & (4) Akta Keterangan 1950 [Akta 56]",
+        "remedy": "Sediakan dan tandatangani Sijil Seksyen 90A(2) & (3)(a) lengkap dengan model kamera, komputer, pencetak, KEW.PA, tarikh cetakan, dan klausa 'sepanjang pengetahuan dan kepercayaan saya'.",
     },
     {
         "code": "C13",
@@ -168,10 +168,10 @@ IP_AUDIT_CRITERIA: List[Dict[str, Any]] = [
         "title": "Ketepatan Seksyen Kesalahan & Hukuman Borang 114 (Tiada Pertindihan Pertuduhan)",
         "category": "Kertas Pertuduhan",
         "threshold": 0.95,
-        "description": "Borang 114 memisahkan Seksyen Kesalahan dengan Seksyen Hukuman secara tepat, tidak mencampurkan dua kesalahan berlainan (S.163 KTJ), serta disertakan draf Borang 143 & Izin Mendakwa TPR.",
+        "description": "Borang 114 memisahkan Seksyen Kesalahan dengan Seksyen Hukuman secara tepat, tidak mencampurkan dua kesalahan berlainan (S.163 KTJ), serta disertakan draf Borang 143 & Izin Mendakwa TPR (S.41 Akta 852 / S.32A Akta 281 / S.22A Akta 154 / S.23 Akta 342).",
         "positive_keywords": ["borang 114", "borang 143", "izin mendakwa", "dibaca bersama", "pertuduhan berasingan"],
-        "negative_keywords": ["pertindihan pertuduhan", "duplicity", "seksyen salah", "dalam satu pertuduhan yang sama"],
-        "statute_ref": "Seksyen 128, 152, 154, 163 & 376(3) KTJ [Akta 593]",
+        "negative_keywords": ["pertindihan pertuduhan", "duplicity", "seksyen salah", "dalam satu pertuduhan yang sama", "borang 114 belum disediakan", "izin mendakwa tpr belum dipohon"],
+        "statute_ref": "Seksyen 128, 152, 154, 163 & 376(3) KTJ / S.41 Akta 852 / S.32A Akta 281 / S.22A Akta 154 / S.23 Akta 342",
         "remedy": "Asingkan setiap kesalahan ke dalam Borang 114 berasingan (S.163 KTJ), nyatakan Seksyen Kesalahan dan Seksyen Hukuman secara tepat, serta sertakan Borang 143 & permohonan Izin Mendakwa TPR.",
     },
     {
@@ -187,14 +187,14 @@ IP_AUDIT_CRITERIA: List[Dict[str, Any]] = [
     },
     {
         "code": "C16",
-        "title": "Semakan Had Masa Pendakwaan & Tamat Tempoh Kompaun / Pendakwaan Terus S.22(b) Akta 342",
+        "title": "Semakan Had Masa Pendakwaan (150 Hari S.19(2) Akta 281) & Tamat Tempoh Kompaun",
         "category": "Kompaun & Had Masa",
         "threshold": 0.90,
-        "description": "Kes masih dalam had masa pendakwaan; jika tawaran kompaun dikeluarkan (S.48 Akta 852 [30 hari], S.33 Akta 281, atau S.25 Akta 154 [14 hari]), Unit Hasil sahkan belum dibayar. Kes ingkar rawatan Tibi (S.22(b) Akta 342 / TBIS 10D) dibawa terus ke mahkamah tanpa tawaran kompaun.",
+        "description": "Kes masih dalam had masa pendakwaan (ingat had 150 hari S.19(2) bagi persampelan Akta 281); jika tawaran kompaun dikeluarkan (S.48 Akta 852 [30 hari], S.33 Akta 281 / S.25 Akta 154 / S.25 Akta 342 [14 hari]), Unit Hasil sahkan belum dibayar. Kes ingkar rawatan Tibi (S.22(b) Akta 342 / TBIS 10D) dibawa terus ke mahkamah tanpa tawaran kompaun.",
         "positive_keywords": ["had masa", "tamat tempoh", "seksyen 48", "seksyen 33", "seksyen 25", "tanpa bayaran", "tbis 10d", "tiada tawaran kompaun", "izin mendakwa"],
         "negative_keywords": ["tamat had masa", "tempoh kompaun belum tamat", "kompaun telah dibayar", "kompaun seksyen 44"],
-        "statute_ref": "Seksyen 48 Akta 852 / Seksyen 33 Akta 281 / Seksyen 25 Akta 154 / Seksyen 22(b) & 24(a) Akta 342",
-        "remedy": "Lampirkan pengesahan Unit Hasil bahawa tawaran kompaun tidak dibayar selepas tamat tempoh ditetapkan, atau rujukan TBIS 10D/Izin Dakwa bagi kes pendakwaan terus Akta 342.",
+        "statute_ref": "Seksyen 19(2) Akta 281 / Seksyen 48 Akta 852 / Seksyen 33 Akta 281 / Seksyen 25 Akta 154 / Seksyen 22(b) & 24(a) Akta 342",
+        "remedy": "Lampirkan pengesahan Unit Hasil bahawa tawaran kompaun tidak dibayar selepas tamat tempoh ditetapkan, semak had masa 150 hari S.19(2) bagi sampel Akta 281, atau rujukan TBIS 10D/Izin Dakwa bagi kes pendakwaan terus Akta 342.",
     },
     {
         "code": "C17",
@@ -274,18 +274,74 @@ class IPAuditReport:
     extracted_text: str
 
 
+ALLOWED_UPLOAD_TEXT_EXTS = (".pdf", ".docx", ".txt", ".md")
+
+
 def extract_text_from_upload(file_bytes: bytes, filename: str) -> str:
-    low = filename.lower()
+    """Mengekstrak teks daripada PDF, DOCX (termasuk semua jadual!), atau TXT secara selamat tanpa HTTP 500."""
+    import zipfile
+
+    if not file_bytes:
+        raise ValueError("Fail yang dimuat naik kosong (0 bait). Sila muat naik fail yang sah.")
+
+    low = (filename or "").strip().lower()
     if low.endswith(".pdf"):
+        if not file_bytes.lstrip().startswith(b"%PDF"):
+            raise ValueError("Fail PDF tidak sah atau rosak. Pastikan fail yang dipilih ialah dokumen PDF tulen.")
         pages: List[str] = []
-        with fitz.open(stream=file_bytes, filetype="pdf") as doc:
-            for idx, page in enumerate(doc, start=1):
-                pages.append(f"--- Muka Surat {idx} ---\n{page.get_text('text')}")
+        try:
+            with fitz.open(stream=file_bytes, filetype="pdf") as doc:
+                if getattr(doc, "is_encrypted", False) and not doc.authenticate(""):
+                    raise ValueError("Fail PDF berkunci kata laluan. Sila buka kunci PDF terlebih dahulu sebelum memuat naik.")
+                for idx, page in enumerate(doc, start=1):
+                    pages.append(f"--- Muka Surat {idx} ---\n{page.get_text('text')}")
+        except ValueError:
+            raise
+        except Exception:
+            raise ValueError("Fail PDF rosak atau tidak dapat dibaca. Sila semak fail dan cuba semula.")
         return "\n".join(pages).strip()
+
     if low.endswith(".docx"):
-        doc = Document(io.BytesIO(file_bytes))
-        return "\n".join(p.text for p in doc.paragraphs if p.text.strip())
-    return file_bytes.decode("utf-8", errors="ignore")
+        if not file_bytes.startswith(b"PK"):
+            raise ValueError("Fail Word (.docx) tidak sah atau menggunakan format lama (.doc). Sila simpan semula sebagai .docx.")
+        try:
+            doc = Document(io.BytesIO(file_bytes))
+        except (zipfile.BadZipFile, Exception):
+            raise ValueError("Fail Word (.docx) rosak atau tidak dapat dibuka. Sila semak fail dan cuba semula.")
+        parts: List[str] = []
+        for p in doc.paragraphs:
+            if p.text and p.text.strip():
+                parts.append(p.text.strip())
+        # Ekstrak SEMUA jadual dalam dokumen Word rasmi KKM (Kulit IP, Minit, DS, Saksi, Eksibit, Sijil 90A, Notis Kompaun)
+        for tbl in doc.tables:
+            for row in tbl.rows:
+                row_vals: List[str] = []
+                seen_cells: set[int] = set()
+                for cell in row.cells:
+                    cid = id(cell._tc)
+                    if cid in seen_cells:
+                        continue
+                    seen_cells.add(cid)
+                    txt = " ".join(ln.strip() for ln in (cell.text or "").splitlines() if ln.strip())
+                    if txt:
+                        row_vals.append(txt)
+                if row_vals:
+                    parts.append(" | ".join(row_vals))
+        return "\n".join(parts).strip()
+
+    if low.endswith((".txt", ".md")) or not low:
+        if file_bytes.startswith((b"\xff\xfe", b"\xfe\xff")):
+            return file_bytes.decode("utf-16", errors="replace").strip()
+        for enc in ("utf-8-sig", "utf-8", "cp1252", "latin-1"):
+            try:
+                return file_bytes.decode(enc).strip()
+            except UnicodeDecodeError:
+                continue
+        return file_bytes.decode("utf-8", errors="replace").strip()
+
+    raise ValueError(
+        "Format fail tidak disokong untuk semakan teks. Sila muat naik fail PDF (.pdf), Word (.docx), atau teks (.txt)."
+    )
 
 
 class IPTechnicalAuditor:
@@ -474,7 +530,7 @@ class IPTechnicalAuditor:
             if code == "C03" and "seksyen 32b" in ln and ("pengarah" in ln or "syarikat" in ln or "liabiliti" in ln):
                 return "KESALAHAN SEKSYEN: Seksyen 32B Akta Makanan 1983 ialah notis hadir mahkamah. Liabiliti pengarah/syarikat ialah Seksyen 33A Akta Makanan 1983!"
             if code == "C14" and ("tifoid" in ln or "typhoid" in ln) and "peraturan 30" in ln and "peraturan 31" not in ln:
-                return "KESALAHAN PERATURAN: Kesalahan tiada suntikan antitifoid ialah di bawah Peraturan 31(1) / 31(2) PPKM 2009 (Peraturan 30 ialah Latihan Pengendali Makanan)."
+                return "KESALAHAN PERATURAN: Kesalahan pengendali makanan tiada suntikan antitifoid ialah di bawah Peraturan 31(1) PPKM 2009 [hukuman Peraturan 31(3)] — pemilik premis pula Peraturan 11(1)(b) (Peraturan 30 ialah Latihan Pengendali Makanan)."
             if code == "C14" and "852" in ln and "16(1)" in ln and not any(ok in ln for ok in ("mewartakan", "bukan 16(1)", "kuasa menteri")):
                 return "KESALAHAN SEKSYEN: Seksyen 16(1) Akta 852 ialah kuasa Menteri mewartakan kawasan larangan merokok. Kesalahan individu merokok ialah Seksyen 16(2) Akta 852!"
             if code == "C14" and "154" in ln and "8(2)" in ln and ("ingkar" in ln or "kesalahan" in ln or "pertuduhan" in ln):
@@ -497,14 +553,25 @@ class IPTechnicalAuditor:
             ):
                 return "UNSUR KESALAHAN TIDAK DIPENUHI: Pemilikan vape semata-mata di dalam beg pelajar tanpa bukti menghisap, mengunyah, menggunakan (S.17(1)) atau membeli (S.13(3)) BUKAN kesalahan di bawah Seksyen 17(1) Akta 852!"
 
-        # Sahkan seksyen yang dipetik terhadap Pustaka Akta Verbatim AGC untuk C14
+        # Sahkan seksyen yang dipetik terhadap Pustaka Akta Verbatim AGC untuk C14 (guna kunci teks sebenar `alasan_keputusan`)
         if code == "C14":
             from backend.rag.legal_engine import get_legal_library, validate_legal_output
 
             lib_snapshot = get_legal_library().to_snapshot_dict()
-            val_res = validate_legal_output({"pertuduhan": low}, lib_snapshot, question_context=low[:400])
+            val_res = validate_legal_output(
+                {"alasan_keputusan": low, "akta_disyorkan": ""},
+                lib_snapshot,
+                question_context=low[:600],
+            )
             if val_res.get("invalid_citations"):
                 return "PETIKAN SEKSYEN TIDAK WUJUD / TIDAK SAH: " + "; ".join(val_res["invalid_citations"][:2])
+            if val_res.get("repealed_hits"):
+                return "UNDANG-UNDANG DIMANSUHKAN / TAMAT TEMPOH: " + "; ".join(
+                    str(r.get("warning_message_bm") or r.get("matched_text") or "")
+                    for r in val_res["repealed_hits"][:2]
+                )
+            if val_res.get("penalty_mismatches"):
+                return "KETIDAKSEPADANAN HUKUMAN / KOMPAUN: " + "; ".join(val_res["penalty_mismatches"][:2])
         return None
 
     @staticmethod
@@ -719,8 +786,25 @@ class IPTechnicalAuditor:
                 if f"tanpa {nk}" in low or f"tiada {nk}" in low or f"bebas {nk}" in low:
                     continue
                 neg_hits.append(nk)
-        pos_hits = [pk for pk in spec["positive_keywords"] if pk in low]
-        if code == "C08" and "(ds)" not in pos_hits and re.search(r"\bds\b", low):
+
+        # Semak kata kunci positif dengan tapisan klausa nafi (elak "Sijil S.90A tidak disediakan" dikira LULUS)
+        _CLAUSE_NEG_RE = re.compile(
+            r"\b(?:belum\s+(?:disediakan|dibuat|dipohon|ditandatangani|dilampirkan|dirakam|diterima)|tidak\s+(?:disediakan|dibuat|dilampirkan|bertandatangan|ada)|tiada\s+(?:sijil|borang|rekod|salinan|gambar|laporan|percakapan|diari)|gagal\s+(?:disediakan|dilampirkan|serah)|masih\s+dalam\s+tindakan|akan\s+disediakan)\b",
+            re.I,
+        )
+        non_negated_clauses: List[str] = []
+        for ln in low.splitlines():
+            for clause in re.split(r"[.;]", ln):
+                c_strip = clause.strip()
+                if not c_strip:
+                    continue
+                if _CLAUSE_NEG_RE.search(c_strip):
+                    continue
+                non_negated_clauses.append(c_strip)
+        pos_searchable = "\n".join(non_negated_clauses)
+
+        pos_hits = [pk for pk in spec["positive_keywords"] if pk in pos_searchable]
+        if code == "C08" and "(ds)" not in pos_hits and re.search(r"\bds\b", pos_searchable):
             pos_hits.append("ds")
 
         if neg_hits:
@@ -748,8 +832,12 @@ class IPTechnicalAuditor:
             boost = min(0.06, 0.02 * (len(pos_hits) - 2))
             score = round(min(0.98, threshold + 0.03 + boost), 2)
             rec_ok = "Lengkap dan patuh prosedur asas IP."
-            if code == "C11" and ("281" in akta_utama or "seksyen 19" in low):
-                rec_ok = "Lengkap. Peringatan Seksyen 19(2) Akta Makanan 1983: pastikan salinan Perakuan Juruanalisis diserahkan kepada OKT sekurang-kurangnya 10 hari genap sebelum tarikh perbicaraan."
+            if code == "C11" and ("281" in akta_utama or "seksyen 19" in low or "seksyen 20" in low):
+                rec_ok = (
+                    "Lengkap. Peringatan Akta Makanan 1983: Perakuan Juruanalisis wajib dikeluarkan dalam 90 hari [S.19(1A)], "
+                    "pendakwaan mesti dimulakan dalam had masa 150 hari [S.19(2)], dan salinan Perakuan wajib diserahkan kepada OKT "
+                    "sekurang-kurangnya 10 hari genap sebelum tarikh perbicaraan [Seksyen 20(ii)]."
+                )
             return {
                 "score": score,
                 "answer": "Yes",

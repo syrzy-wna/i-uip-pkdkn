@@ -1069,14 +1069,14 @@ DEFAULT_MASTER_OFFENCES_MATRIX: List[Dict[str, Any]] = [
     {
         "offence_id": "AKTA_281_S11_2",
         "statute_id": "AKTA_281",
-        "offence_section": "Seksyen 11(2)",
-        "read_together_with": ["Seksyen 11(1) Akta Makanan 1983", "Seksyen 33A Akta Makanan 1983 (jika syarikat)"],
-        "offence_title": "Gagal mematuhi Perintah Penutupan Premis Makanan Tidak Suci di bawah Seksyen 11(1) Akta Makanan 1983",
+        "offence_section": "Seksyen 11",
+        "read_together_with": ["Seksyen 33A Akta Makanan 1983 (jika syarikat)", "Seksyen 32A Akta Makanan 1983 (Izin Mendakwa TPR)"],
+        "offence_title": "Gagal mematuhi Perintah Penutupan Premis Makanan Tidak Suci di bawah Seksyen 11 Akta Makanan 1983 [Akta 281]",
         "target_offender": "TUAN_PUNYA_PREMIS",
         "mandatory_elements": [
             {
                 "element_no": 1,
-                "description": "Perintah Penutupan Premis Makanan Tidak Suci di bawah Seksyen 11(1) Akta Makanan 1983 telah dikeluarkan secara sah dan diserahkan kepada tuan punya/pemunya/penghuni premis.",
+                "description": "Perintah Penutupan Premis Makanan Tidak Suci di bawah Seksyen 11 Akta Makanan 1983 telah dikeluarkan secara sah dan diserahkan kepada tuan punya/pemunya/penghuni premis.",
                 "must_prove": "Salinan asal Perintah Penutupan Seksyen 11 bertandatangan terima & gambar tampalan notis penutupan.",
             },
             {
@@ -1086,10 +1086,11 @@ DEFAULT_MASTER_OFFENCES_MATRIX: List[Dict[str, Any]] = [
             },
         ],
         "explicit_exclusions_and_traps": [
-            "JANGAN tuduh pemilik di bawah Seksyen 11(2) Akta 281 jika pemilik PATUH menutup premis! Seksyen 11(1) ialah perintah pentadbiran menutup premis; kesalahan kebersihan premis itu sendiri didakwa di bawah Peraturan 11(1) atau Peraturan 34(1) PPKM 2009.",
-            "Pemilik/pekerja masuk ke dalam premis semata-mata untuk menjalankan kerja pembersihan tanpa menjual/menyediakan makanan kepada pelanggan BUKAN kesalahan mengingkari perintah tutup S.11(2).",
+            "SEKSYEN 11 TIADA SUBSEKSYEN (1) ATAU (2): Kedua-dua kuasa perintah penutupan (maks 14 hari) dan hukuman keingkaran berada dalam satu seksyen tunggal iaitu Seksyen 11 Akta Makanan 1983 [Akta 281].",
+            "JANGAN tuduh pemilik di bawah Seksyen 11 Akta 281 jika pemilik PATUH menutup premis! Kesalahan kebersihan premis itu sendiri didakwa di bawah Peraturan 11(1)(a) dibaca bersama Peraturan 15/16 PPKM 2009.",
+            "Pemilik/pekerja masuk ke dalam premis semata-mata untuk menjalankan kerja pembersihan tanpa menjual/menyediakan makanan kepada pelanggan BUKAN kesalahan mengingkari perintah tutup Seksyen 11.",
         ],
-        "penalty_section": "Seksyen 11(2) Akta Makanan 1983 [Akta 281]",
+        "penalty_section": "Seksyen 11 Akta Makanan 1983 [Akta 281]",
         "penalty_first_offence": {
             "max_fine_rm": None,
             "max_jail_months": 60,
@@ -1108,7 +1109,7 @@ DEFAULT_MASTER_OFFENCES_MATRIX: List[Dict[str, Any]] = [
         },
         "special_legal_requirements": [
             "Izin Mendakwa Bertulis Pendakwa Raya di bawah Seksyen 32A Akta Makanan 1983",
-            "Bukti serahan sah Perintah Penutupan Seksyen 11(1)",
+            "Bukti serahan sah Perintah Penutupan Seksyen 11 Akta Makanan 1983",
         ],
         "mandatory_exhibits": [
             "Borang Pemeriksaan Premis Makanan (KMM) & Perintah Penutupan Seksyen 11 bertandatangan terima",
@@ -1118,8 +1119,8 @@ DEFAULT_MASTER_OFFENCES_MATRIX: List[Dict[str, Any]] = [
         "charge_sheet_template_bm": (
             "Bahawa kamu, pada [TARIKH], jam lebih kurang [MASA], bertempat di [TEMPAT_KEJADIAN], "
             "di dalam Daerah [DAERAH], di dalam Negeri [NEGERI], telah didapati gagal mematuhi Perintah Penutupan Premis Makanan Tidak Suci "
-            "yang dikeluarkan di bawah Seksyen 11(1) Akta Makanan 1983; dan oleh yang demikian kamu telah melakukan suatu kesalahan "
-            "di bawah Seksyen 11(2) Akta Makanan 1983 [Akta 281] dan boleh dihukum di bawah seksyen yang sama."
+            "yang dikeluarkan di bawah Seksyen 11 Akta Makanan 1983; dan oleh yang demikian kamu telah melakukan suatu kesalahan "
+            "di bawah Seksyen 11 Akta Makanan 1983 [Akta 281] dan boleh dihukum di bawah seksyen yang sama."
         ),
         "source_section_doc_ids": ["AKTA_281__S11", "AKTA_281__S32A"],
         "verified_status": "DRAFT_PENDING_REVIEW",
@@ -1128,7 +1129,7 @@ DEFAULT_MASTER_OFFENCES_MATRIX: List[Dict[str, Any]] = [
         "offence_id": "AKTA_281_S13_1",
         "statute_id": "AKTA_281",
         "offence_section": "Seksyen 13(1)",
-        "read_together_with": ["Seksyen 19 Akta Makanan 1983", "Seksyen 33A Akta Makanan 1983 (jika syarikat)"],
+        "read_together_with": ["Seksyen 19 & Seksyen 20 Akta Makanan 1983", "Seksyen 33A Akta Makanan 1983 (jika syarikat)"],
         "offence_title": "Menyediakan atau menjual makanan yang mengandungi bahan beracun, berbahaya atau memudaratkan kesihatan",
         "target_offender": "PENJUAL_PENGILANG",
         "mandatory_elements": [
@@ -1144,7 +1145,7 @@ DEFAULT_MASTER_OFFENCES_MATRIX: List[Dict[str, Any]] = [
             },
         ],
         "explicit_exclusions_and_traps": [
-            "WAJIB serahkan salinan Perakuan Juruanalisis Makanan (Seksyen 19) kepada OKS sekurang-kurangnya 10 HARI JELAS sebelum tarikh perbicaraan (Seksyen 19(2) Akta 281) — jika gagal, perakuan makmal tidak boleh diterima!",
+            "3 HAD MASA MANDATORI AKTA 281: (1) Perakuan Juruanalisis wajib dikeluarkan dalam 90 hari [Seksyen 19(1A)]; (2) Pendakwaan WAJIB dimulakan dalam had masa 150 hari dari tarikh sampel diambil [Seksyen 19(2)]; (3) Salinan Perakuan Juruanalisis WAJIB diserahkan kepada OKS sekurang-kurangnya 10 HARI GENAP sebelum tarikh perbicaraan [Seksyen 20(ii)]!",
             "Kes Seksyen 13(1) TIDAK BOLEH ditawarkan kompaun.",
         ],
         "penalty_section": "Seksyen 13(1) Akta Makanan 1983 [Akta 281]",
@@ -1165,12 +1166,12 @@ DEFAULT_MASTER_OFFENCES_MATRIX: List[Dict[str, Any]] = [
             "notice_section": None,
         },
         "special_legal_requirements": [
-            "Perakuan Juruanalisis Makanan Seksyen 19 Akta 281 + Serahan 10 hari jelas sebelum bicara [S.19(2)]",
+            "Perakuan Juruanalisis Makanan S.19 (dalam 90 hari S.19(1A)), Had Masa Pendakwaan 150 hari [S.19(2)] & Serahan ≥10 hari genap sebelum bicara [S.20(ii)]",
             "Izin Mendakwa Bertulis Pendakwa Raya di bawah Seksyen 32A Akta 281",
         ],
         "mandatory_exhibits": [
             "Sampel makanan berlak rasmi KKM + rekod rantaian stor",
-            "Perakuan Juruanalisis Makanan Seksyen 19 Akta 281 + bukti serahan 10 hari jelas kepada OKS",
+            "Perakuan Juruanalisis Makanan Seksyen 19 Akta 281 + bukti serahan 10 hari genap S.20(ii) kepada OKS",
             "Resit pembelian, Laporan Pengadu (FIR), laporan perubatan mangsa & Izin Mendakwa TPR S.32A",
         ],
         "charge_sheet_template_bm": (
@@ -1179,15 +1180,15 @@ DEFAULT_MASTER_OFFENCES_MATRIX: List[Dict[str, Any]] = [
             "yang mengandungi bahan yang memudaratkan kesihatan; dan oleh yang demikian kamu telah melakukan suatu kesalahan "
             "di bawah Seksyen 13(1) Akta Makanan 1983 [Akta 281] dan boleh dihukum di bawah seksyen yang sama."
         ),
-        "source_section_doc_ids": ["AKTA_281__S13", "AKTA_281__S19", "AKTA_281__S32A"],
+        "source_section_doc_ids": ["AKTA_281__S13", "AKTA_281__S19", "AKTA_281__S20", "AKTA_281__S32A"],
         "verified_status": "DRAFT_PENDING_REVIEW",
     },
     {
-        "offence_id": "AKTA_281_S13B_1",
+        "offence_id": "AKTA_281_S13A_2",
         "statute_id": "AKTA_281",
-        "offence_section": "Seksyen 13B(1)",
-        "read_together_with": ["Seksyen 13B(2)(d)/(e) Akta Makanan 1983"],
-        "offence_title": "Menyediakan atau menjual makanan yang diaduk (mengandungi benda asing / kotor / busuk / bangkai serangga)",
+        "offence_section": "Seksyen 13A(2) / Seksyen 13A(1)",
+        "read_together_with": ["Seksyen 19 & Seksyen 20 Akta Makanan 1983", "Seksyen 32A Akta Makanan 1983"],
+        "offence_title": "Menyediakan atau menjual makanan yang mengandungi benda/jirim asing (paku, kaca, dawai, bangkai lipas) [S.13A(2)] atau bahan kotor/busuk/reput [S.13A(1)]",
         "target_offender": "PENJUAL_PENGILANG",
         "mandatory_elements": [
             {
@@ -1197,13 +1198,72 @@ DEFAULT_MASTER_OFFENCES_MATRIX: List[Dict[str, Any]] = [
             },
             {
                 "element_no": 2,
-                "description": "Makanan tersebut diaduk mengikut Seksyen 13B(2) (cth. mengandungi benda asing seperti paku, kaca, dawai, bangkai lipas atau bahan kotor/reput).",
-                "must_prove": "Eksibit fizikal makanan berlak KKM + Perakuan Juruanalisis Makanan S.19 + gambar foto + Sijil S.90A(2).",
+                "description": "Makanan mengandungi jirim asing (benda asing seperti paku, kaca, bangkai lipas) atau tidak layak dimakan manusia [S.13A(2)], ATAU mengandungi bahan berpenyakit, kotor, busuk atau reput [S.13A(1)].",
+                "must_prove": "Eksibit fizikal makanan & benda asing berlak KKM + Perakuan Juruanalisis Makanan S.19 + gambar foto + Sijil S.90A(2).",
+            },
+        ],
+        "explicit_exclusions_and_traps": [
+            "BEZAKAN S.13A vs S.13B: Benda asing (paku/kaca/lipas) ialah Seksyen 13A(2) [maks RM30,000 / 5 tahun]; makanan busuk/kotor/reput ialah Seksyen 13A(1) [maks RM50,000 / 8 tahun]; manakala S.13B(1) adalah untuk makanan diaduk / bahan tambah terlarang / tidak ikut piawaian!",
+            "Patuhi had masa 150 hari pendakwaan [S.19(2)] & serahan Perakuan Juruanalisis ≥10 hari genap sebelum bicara [S.20(ii)].",
+        ],
+        "penalty_section": "Seksyen 13A(2) [RM30,000 / 5 tahun] atau Seksyen 13A(1) [RM50,000 / 8 tahun] Akta Makanan 1983 [Akta 281]",
+        "penalty_first_offence": {
+            "max_fine_rm": 30000,
+            "max_jail_months": 60,
+            "other_orders": "Seksyen 13A(1) (kotor/busuk/reput): denda maks RM50,000 atau penjara maks 8 tahun atau kedua-duanya",
+            "verbatim_penalty": "S.13A(2): Denda tidak melebihi RM30,000 atau penjara tidak melebihi 5 tahun atau kedua-duanya | S.13A(1): Denda tidak melebihi RM50,000 atau penjara tidak melebihi 8 tahun atau kedua-duanya.",
+        },
+        "penalty_subsequent_offence": None,
+        "compound_info": {
+            "is_compoundable": False,
+            "compound_authority_section": None,
+            "compound_regulation_ref": None,
+            "compound_amount_or_limit": "TIDAK BOLEH DIKOMPAUN — Wajib Buka IP Terus & Izin Mendakwa TPR Seksyen 32A",
+            "max_compound_rm": None,
+            "payment_days": None,
+            "notice_section": None,
+        },
+        "special_legal_requirements": [
+            "Perakuan Juruanalisis Makanan S.19 (90 hari S.19(1A)), Had Masa 150 hari [S.19(2)] & Serahan ≥10 hari genap sebelum bicara [S.20(ii)]",
+            "Izin Mendakwa Bertulis Pendakwa Raya di bawah Seksyen 32A Akta 281",
+        ],
+        "mandatory_exhibits": [
+            "Eksibit fizikal makanan & benda asing (lipas/paku/kaca) dilak KKM",
+            "Perakuan Juruanalisis Makanan Seksyen 19 Akta 281 + bukti serahan S.20(ii)",
+            "Gambar foto berwarna + Sijil S.90A(2), Resit Pembelian & Rakaman S.112 Pengadu",
+        ],
+        "charge_sheet_template_bm": (
+            "Bahawa kamu, pada [TARIKH], jam lebih kurang [MASA], bertempat di [TEMPAT_KEJADIAN], "
+            "di dalam Daerah [DAERAH], di dalam Negeri [NEGERI], telah didapati menjual/menyediakan makanan iaitu [NAMA_MAKANAN] "
+            "yang mengandungi jirim yang asing dan tidak layak dimakan oleh manusia; dan oleh yang demikian kamu telah melakukan suatu kesalahan "
+            "di bawah Seksyen 13A(2) Akta Makanan 1983 [Akta 281] dan boleh dihukum di bawah seksyen yang sama."
+        ),
+        "source_section_doc_ids": ["AKTA_281__S13A", "AKTA_281__S19", "AKTA_281__S20", "AKTA_281__S32A"],
+        "verified_status": "DRAFT_PENDING_REVIEW",
+    },
+    {
+        "offence_id": "AKTA_281_S13B_1",
+        "statute_id": "AKTA_281",
+        "offence_section": "Seksyen 13B(1)",
+        "read_together_with": ["Seksyen 13B(2)(d)/(e) Akta Makanan 1983", "Seksyen 19 & Seksyen 20 Akta Makanan 1983"],
+        "offence_title": "Menyediakan atau menjual makanan yang diaduk (mengandungi bahan tambah terlarang atau tidak mematuhi piawaian makanan)",
+        "target_offender": "PENJUAL_PENGILANG",
+        "mandatory_elements": [
+            {
+                "element_no": 1,
+                "description": "OKT menyediakan atau menjual apa-apa makanan.",
+                "must_prove": "Sampel makanan, resit pembelian dan rakaman S.112 pengadu/pembeli.",
+            },
+            {
+                "element_no": 2,
+                "description": "Makanan tersebut diaduk mengikut Seksyen 13B(2) (cth. mengandungi bahan tambah makanan tidak dibenarkan [S.13B(2)(d)] atau tidak mematuhi piawaian ditetapkan [S.13B(2)(e)]).",
+                "must_prove": "Sampel makanan berlak KKM + Perakuan Juruanalisis Makanan S.19 + gambar foto + Sijil S.90A(2).",
             },
         ],
         "explicit_exclusions_and_traps": [
             "Kes Seksyen 13B(1) TIDAK BOLEH ditawarkan kompaun — wajib buka IP dan dapatkan Izin Mendakwa TPR Seksyen 32A.",
-            "Wajib patuhi serahan Perakuan Juruanalisis S.19 sekurang-kurangnya 10 hari jelas sebelum bicara.",
+            "Bagi kes benda asing (paku/kaca/lipas) atau makanan busuk/kotor, gunakan Seksyen 13A(2) atau Seksyen 13A(1) (BUKAN S.13B).",
+            "Wajib patuhi had masa 150 hari [S.19(2)] & serahan Perakuan Juruanalisis ≥10 hari genap sebelum bicara [Seksyen 20(ii)].",
         ],
         "penalty_section": "Seksyen 13B(4) Akta Makanan 1983 [Akta 281]",
         "penalty_first_offence": {
@@ -1223,21 +1283,21 @@ DEFAULT_MASTER_OFFENCES_MATRIX: List[Dict[str, Any]] = [
             "notice_section": None,
         },
         "special_legal_requirements": [
-            "Perakuan Juruanalisis Makanan Seksyen 19 Akta 281 + Serahan 10 hari jelas [S.19(2)]",
+            "Perakuan Juruanalisis Makanan S.19 (90 hari S.19(1A)), Had Masa 150 hari [S.19(2)] & Serahan ≥10 hari genap sebelum bicara [S.20(ii)]",
             "Izin Mendakwa Bertulis Pendakwa Raya di bawah Seksyen 32A Akta 281",
         ],
         "mandatory_exhibits": [
-            "Sampel makanan & benda asing yang dilak KKM",
-            "Perakuan Juruanalisis Makanan Seksyen 19 Akta 281 + bukti serahan 10 hari kepada OKS",
+            "Sampel makanan yang dilak KKM",
+            "Perakuan Juruanalisis Makanan Seksyen 19 Akta 281 + bukti serahan 10 hari genap S.20(ii) kepada OKS",
             "Gambar foto berwarna + Sijil S.90A(2), Resit Pembelian & Rakaman S.112 Pengadu",
         ],
         "charge_sheet_template_bm": (
             "Bahawa kamu, pada [TARIKH], jam lebih kurang [MASA], bertempat di [TEMPAT_KEJADIAN], "
             "di dalam Daerah [DAERAH], di dalam Negeri [NEGERI], telah didapati menjual makanan yang diaduk iaitu [NAMA_MAKANAN] "
-            "yang mengandungi benda asing; dan oleh yang demikian kamu telah melakukan suatu kesalahan "
+            "yang tidak mematuhi piawaian ditetapkan; dan oleh yang demikian kamu telah melakukan suatu kesalahan "
             "di bawah Seksyen 13B(1) dibaca bersama Seksyen 13B(2)(e) Akta Makanan 1983 [Akta 281] yang boleh dihukum di bawah Seksyen 13B(4) Akta yang sama."
         ),
-        "source_section_doc_ids": ["AKTA_281__S13B", "AKTA_281__S19", "AKTA_281__S32A"],
+        "source_section_doc_ids": ["AKTA_281__S13B", "AKTA_281__S19", "AKTA_281__S20", "AKTA_281__S32A"],
         "verified_status": "DRAFT_PENDING_REVIEW",
     },
     {
@@ -1297,7 +1357,7 @@ DEFAULT_MASTER_OFFENCES_MATRIX: List[Dict[str, Any]] = [
     {
         "offence_id": "PPKM_2009_P11_1",
         "statute_id": "PPKM_2009",
-        "offence_section": "Peraturan 11(1) / Peraturan 34(1) PPKM 2009",
+        "offence_section": "Peraturan 11(1)(a) dibaca bersama Peraturan 15 / 16 PPKM 2009",
         "read_together_with": ["P.U. (A) 95/2009", "Seksyen 11 Akta Makanan 1983 (Perintah Tutup jika <70% / tidak suci)"],
         "offence_title": "Tuan punya / pemunya / penghuni premis makanan gagal menyelenggara premis makanan dalam keadaan bersih dan bebas makhluk perosak (LILATI / najis tikus / lipas)",
         "target_offender": "TUAN_PUNYA_PREMIS",
@@ -1309,15 +1369,16 @@ DEFAULT_MASTER_OFFENCES_MATRIX: List[Dict[str, Any]] = [
             },
             {
                 "element_no": 2,
-                "description": "Gagal menyelenggara atau mengekalkan premis makanan dalam keadaan bersih, kemas dan bebas daripada makhluk perosak (lipas, lalat, tikus).",
+                "description": "Gagal menyelenggara atau mengekalkan premis makanan dalam keadaan bersih, kemas dan bebas daripada makhluk perosak (lipas, lalat, tikus) mengikut Peraturan 11(1)(a) dibaca bersama Peraturan 15/16 PPKM 2009.",
                 "must_prove": "Gambar foto bukti kekotoran/najis tikus/lipas hidup di kawasan penyediaan/stor makanan + Sijil S.90A(2) + Pelan Lakar.",
             },
         ],
         "explicit_exclusions_and_traps": [
+            "BEZAKAN SASARAN OKT: Peraturan 11(1)(a) dibaca bersama Peraturan 15/16 PPKM 2009 adalah terhadap TUAN PUNYA / PEMUNYA / PENGHUNI premis, manakala Peraturan 34(1) PPKM 2009 adalah kewajipan PENGENDALI MAKANAN — JANGAN campurkan kedua-duanya dalam satu pertuduhan!",
             "JANGAN hantar najis tikus ke makmal MKAK untuk analisis kimia — najis tikus dibuktikan dengan gambar foto berkapsyen + keterangan pemerhatian pegawai pemeriksa!",
             "Bagi kes wabak HFMD di Taska/Tadika (bukan premis makanan), JANGAN guna Seksyen 11 Akta 281 atau Peraturan 11 PPKM 2009 — gunakan Seksyen 18(1)(d) Akta 342!",
         ],
-        "penalty_section": "Peraturan 11(2) / Peraturan 34(2) PPKM 2009 [P.U. (A) 95/2009]",
+        "penalty_section": "Peraturan 11(2) PPKM 2009 [P.U. (A) 95/2009]",
         "penalty_first_offence": {
             "max_fine_rm": 10000,
             "max_jail_months": 24,
@@ -1347,10 +1408,10 @@ DEFAULT_MASTER_OFFENCES_MATRIX: List[Dict[str, Any]] = [
         "charge_sheet_template_bm": (
             "Bahawa kamu, sebagai tuan punya/pemunya/penghuni premis makanan, pada [TARIKH], jam lebih kurang [MASA], bertempat di [TEMPAT_KEJADIAN], "
             "di dalam Daerah [DAERAH], di dalam Negeri [NEGERI], telah didapati gagal mengekalkan premis makanan tersebut dalam keadaan bersih dan bebas daripada makhluk perosak; "
-            "dan oleh yang demikian kamu telah melakukan suatu kesalahan di bawah Peraturan 11(1) [atau Peraturan 34(1)] Peraturan-Peraturan Kebersihan Makanan 2009 [P.U. (A) 95/2009] "
-            "yang boleh dihukum di bawah Peraturan 11(2) [atau Peraturan 34(2)] Peraturan yang sama."
+            "dan oleh yang demikian kamu telah melakukan suatu kesalahan di bawah Peraturan 11(1)(a) dibaca bersama Peraturan 15 Peraturan-Peraturan Kebersihan Makanan 2009 [P.U. (A) 95/2009] "
+            "yang boleh dihukum di bawah Peraturan 11(2) Peraturan yang sama."
         ),
-        "source_section_doc_ids": ["PPKM_2009__P11", "PPKM_2009__P34", "AKTA_281__S11", "AKTA_281__S32B", "AKTA_281__S33"],
+        "source_section_doc_ids": ["PPKM_2009__P11", "PPKM_2009__P15", "PPKM_2009__P16", "AKTA_281__S11", "AKTA_281__S32B", "AKTA_281__S33"],
         "verified_status": "DRAFT_PENDING_REVIEW",
     },
     {
@@ -1374,7 +1435,7 @@ DEFAULT_MASTER_OFFENCES_MATRIX: List[Dict[str, Any]] = [
         ],
         "explicit_exclusions_and_traps": [
             "JANGAN keliru Peraturan 30(1) [Latihan SLPM] dengan Peraturan 31(1) [Suntikan Vaksin Anti-Tifoid]!",
-            "Individu di premis yang tidak terlibat langsung dengan pengendalian makanan atau permukaan sentuhan makanan (cth. pelanggan atau penghantar stok luar yang tidak menyentuh makanan terbuka) bukan pengendali makanan.",
+            "Individu di premis yang tidak terlibat langsung dengan pengendalian makanan atau permukaan sentuhan makanan (cth. juruwang/pelanggan/penghantar stok luar yang tidak menyentuh makanan terbuka) bukan pengendali makanan.",
         ],
         "penalty_section": "Peraturan 30(3) PPKM 2009 [P.U. (A) 95/2009]",
         "penalty_first_offence": {
@@ -1429,7 +1490,7 @@ DEFAULT_MASTER_OFFENCES_MATRIX: List[Dict[str, Any]] = [
         ],
         "explicit_exclusions_and_traps": [
             "PERANGKAP NOMBOR PERATURAN: Kesalahan tiada suntikan anti-tifoid ialah Peraturan 31(1) PPKM 2009, BUKAN Peraturan 30(1) (Peraturan 30 ialah Sijil Latihan Pengendali Makanan SLPM)!",
-            "Jika mahu menuduh majikan/pemunya premis kerana membenarkan pekerja tanpa suntikan tifoid bekerja, gunakan Peraturan 11(1)(b) atau Peraturan 31(2) PPKM 2009.",
+            "Jika mahu menuduh majikan/pemunya premis kerana menggajikan pekerja tanpa suntikan anti-tifoid, gunakan Peraturan 11(1)(b) PPKM 2009 (hukuman Peraturan 11(2)) — BUKAN Peraturan 31(2) (Peraturan 31(2) ialah larangan pekerja berpenyakit berjangkit/luka terbuka bekerja, bukan kesalahan majikan tiada vaksin).",
         ],
         "penalty_section": "Peraturan 31(3) PPKM 2009 [P.U. (A) 95/2009]",
         "penalty_first_offence": {
@@ -1572,24 +1633,25 @@ DEFAULT_MASTER_OFFENCES_MATRIX: List[Dict[str, Any]] = [
     {
         "offence_id": "PPM_1985_P14_9",
         "statute_id": "PPM_1985",
-        "offence_section": "Peraturan 14(9) / Peraturan 14(7) PPM 1985",
-        "read_together_with": ["Seksyen 4(1)(f) Akta Makanan 1983", "Peraturan 397 PPM 1985"],
-        "offence_title": "Menjual atau mendedahkan untuk jualan makanan yang telah tamat tarikh luput (expired) atau mengubah/memadam penandaan tarikh luput",
+        "offence_section": "Peraturan 14(9)(b) [Luput] / Peraturan 14(9)(a) [Ubah Tarikh] / Peraturan 14(7) [Tiada Tarikh] PPM 1985",
+        "read_together_with": ["Seksyen 4(1)(f) Akta Makanan 1983", "Peraturan 397(2) PPM 1985"],
+        "offence_title": "Menjual atau mendedahkan untuk jualan makanan yang telah tamat tarikh luput [P.14(9)(b)], mengubah/memadam tarikh luput [P.14(9)(a)], atau tanpa penandaan tarikh [P.14(7)]",
         "target_offender": "PENJUAL_PENGILANG",
         "mandatory_elements": [
             {
                 "element_no": 1,
-                "description": "OKT menjual, mengimport atau mendedahkan untuk jualan bungkusan makanan berlabel tarikh akhir penggunaan/tarikh luput.",
+                "description": "OKT menjual, mengimport atau mendedahkan untuk jualan bungkusan makanan berlabel penandaan tarikh.",
                 "must_prove": "Bungkusan makanan yang disita di rak jualan melalui Seksyen 4(1)(f) Akta Makanan 1983.",
             },
             {
                 "element_no": 2,
-                "description": "Tarikh akhir penggunaan pada bungkusan makanan telah luput pada tarikh pemeriksaan, atau penandaan tarikh telah diubah/dipadam.",
-                "must_prove": "Gambar jarak dekat cetakan tarikh luput pada bungkusan berbanding tarikh pemeriksaan + Sijil S.90A(2).",
+                "description": "Tarikh akhir penggunaan pada bungkusan makanan telah luput pada tarikh pemeriksaan [P.14(9)(b)], ATAU penandaan tarikh telah diubah/dipadam/dipalsukan [P.14(9)(a)], ATAU bungkusan tiada penandaan tarikh wajib [P.14(7)].",
+                "must_prove": "Gambar jarak dekat cetakan tarikh luput/kesan ubahan pada bungkusan berbanding tarikh pemeriksaan + Sijil S.90A(2).",
             },
         ],
         "explicit_exclusions_and_traps": [
-            "Stok makanan tamat tempoh yang telah diasingkan di dalam stor pelupusan khas berlabel jelas 'UNTUK PELUPUSAN / TIDAK UNTUK DIJUAL' dan tidak didedahkan di ruang jualan perlu disahkan fakta pendedahan untuk jualannya.",
+            "BEZAKAN PERATURAN SUB-PERENGGAN: Menjual makanan luput ialah Peraturan 14(9)(b); mengubah/memadam/mengelirukan tarikh ialah Peraturan 14(9)(a); manakala menjual makanan berjadual tanpa penandaan tarikh ialah Peraturan 14(7) PPM 1985.",
+            "Stok makanan tamat tempoh yang telah diasingkan di dalam stor pelupusan khas berlabel jelas 'UNTUK PELUPUSAN / TIDAK UNTUK DIJUAL' dan tidak didedahkan di ruang jualan tidak memenuhi unsur mendedahkan untuk jualan.",
         ],
         "penalty_section": "Peraturan 397(2) Peraturan-Peraturan Makanan 1985",
         "penalty_first_offence": {
@@ -1603,20 +1665,20 @@ DEFAULT_MASTER_OFFENCES_MATRIX: List[Dict[str, Any]] = [
             "is_compoundable": True,
             "compound_authority_section": "Seksyen 33 Akta Makanan 1983",
             "compound_regulation_ref": "Peraturan-Peraturan Makanan 1985",
-            "compound_amount_or_limit": "Sita stok di bawah S.4(1)(f) Akta 281 + Notis S.32B atau Buka IP",
+            "compound_amount_or_limit": "Sita stok di bawah S.4(1)(f) Akta 281 + Notis S.32B atau Buka IP (kes ubah tarikh P.14(9)(a) digalakkan Buka IP)",
             "max_compound_rm": 5000,
             "payment_days": 14,
             "notice_section": "Seksyen 32B Akta Makanan 1983",
         },
         "special_legal_requirements": ["Senarai Sitaan Seksyen 4(1)(f) Akta Makanan 1983", "Sijil Seksyen 90A(2)"],
         "mandatory_exhibits": [
-            "Bungkusan makanan tamat tarikh luput yang disita & dilak KKM + Borang Sitaan S.4(1)(f)",
+            "Bungkusan makanan tamat tarikh luput / diubah tarikh yang disita & dilak KKM + Borang Sitaan S.4(1)(f)",
             "Gambar foto jarak dekat tarikh luput pada bungkusan + Sijil S.90A(2) & Carian SSM",
         ],
         "charge_sheet_template_bm": (
             "Bahawa kamu, pada [TARIKH], jam lebih kurang [MASA], bertempat di [TEMPAT_KEJADIAN], "
             "di dalam Daerah [DAERAH], di dalam Negeri [NEGERI], telah didapati mendedahkan untuk jualan makanan berbungkus yang telah melampaui tarikh akhir penggunaan; "
-            "dan oleh yang demikian kamu telah melakukan suatu kesalahan di bawah Peraturan 14(9) Peraturan-Peraturan Makanan 1985 "
+            "dan oleh yang demikian kamu telah melakukan suatu kesalahan di bawah Peraturan 14(9)(b) Peraturan-Peraturan Makanan 1985 "
             "yang boleh dihukum di bawah Peraturan 397(2) Peraturan yang sama."
         ),
         "source_section_doc_ids": ["PPM_1985__P14", "PPM_1985__P397", "AKTA_281__S4"],
@@ -1760,7 +1822,7 @@ DEFAULT_MASTER_OFFENCES_MATRIX: List[Dict[str, Any]] = [
         "offence_id": "AKTA_154_S21",
         "statute_id": "AKTA_154",
         "offence_section": "Seksyen 21",
-        "read_together_with": ["Seksyen 23 Akta 154"],
+        "read_together_with": ["Seksyen 5 & Seksyen 22A Akta 154"],
         "offence_title": "Menghalang atau menggertak pegawai diberi kuasa dalam menjalankan pemeriksaan atau semburan kabus (fogging) kawalan vektor",
         "target_offender": "INDIVIDU",
         "mandatory_elements": [
@@ -1777,30 +1839,26 @@ DEFAULT_MASTER_OFFENCES_MATRIX: List[Dict[str, Any]] = [
         ],
         "explicit_exclusions_and_traps": [
             "Premis berkunci tanpa penghuni di dalam rumah pada waktu lawatan BUKAN kesalahan menghalang pegawai di bawah Seksyen 21.",
+            "SEKSYEN 21 MEMPUNYAI HUKUMAN SENDIRI: Jangan rujuk Seksyen 23(a)/(b) bagi kesalahan menghalang di bawah Seksyen 21 Akta 154 — Seksyen 21 memperuntukkan hukumannya sendiri (denda maks RM10,000 atau penjara maks 2 tahun atau kedua-duanya).",
         ],
-        "penalty_section": "Seksyen 21 dibaca bersama Seksyen 23(a) Akta 154",
+        "penalty_section": "Seksyen 21 Akta 154",
         "penalty_first_offence": {
             "max_fine_rm": 10000,
             "max_jail_months": 24,
             "other_orders": None,
             "verbatim_penalty": "Didenda tidak melebihi sepuluh ribu ringgit (RM10,000.00) atau dipenjarakan selama tempoh tidak melebihi dua (2) tahun atau kedua-duanya.",
         },
-        "penalty_subsequent_offence": {
-            "max_fine_rm": 50000,
-            "max_jail_months": 60,
-            "other_orders": None,
-            "verbatim_penalty": "Didenda tidak melebihi lima puluh ribu ringgit (RM50,000.00) atau dipenjarakan selama tempoh tidak melebihi lima (5) tahun atau kedua-duanya.",
-        },
+        "penalty_subsequent_offence": None,
         "compound_info": {
             "is_compoundable": False,
             "compound_authority_section": None,
             "compound_regulation_ref": None,
-            "compound_amount_or_limit": "Kes menghalang penjawat awam — Buka IP Terus & Laporan Polis",
+            "compound_amount_or_limit": "TIDAK BOLEH DIKOMPAUN (Kes menghalang penjawat awam) — Buka IP Terus & Laporan Polis",
             "max_compound_rm": None,
             "payment_days": None,
             "notice_section": None,
         },
-        "special_legal_requirements": ["Laporan Polis", "Rakaman S.112 KTJ saksi pasukan penguat kuasa"],
+        "special_legal_requirements": ["Laporan Polis", "Rakaman S.112 KTJ saksi pasukan penguat kuasa", "Izin Mendakwa Pendakwa Raya Seksyen 22A Akta 154"],
         "mandatory_exhibits": [
             "Laporan Polis & Diari Siasatan pasukan kawalan vektor",
             "Gambar lokasi kejadian + Sijil S.90A(2) & Salinan Kad Kuasa PPKP",
@@ -1810,9 +1868,9 @@ DEFAULT_MASTER_OFFENCES_MATRIX: List[Dict[str, Any]] = [
             "Bahawa kamu, pada [TARIKH], jam lebih kurang [MASA], bertempat di [TEMPAT_KEJADIAN], "
             "di dalam Daerah [DAERAH], di dalam Negeri [NEGERI], telah didapati menghalang seorang pegawai diberi kuasa daripada menjalankan tugasnya "
             "di bawah Akta Pemusnahan Serangga Pembawa Penyakit 1975; dan oleh yang demikian kamu telah melakukan suatu kesalahan "
-            "di bawah Seksyen 21 Akta 154 yang boleh dihukum di bawah Seksyen 23(a) Akta yang sama."
+            "di bawah Seksyen 21 Akta 154 dan boleh dihukum di bawah seksyen yang sama."
         ),
-        "source_section_doc_ids": ["AKTA_154__S21", "AKTA_154__S23"],
+        "source_section_doc_ids": ["AKTA_154__S21"],
         "verified_status": "DRAFT_PENDING_REVIEW",
     },
     # ---------------- AKTA 342 ----------------
@@ -2985,6 +3043,14 @@ _PPKP_SYNONYM_MAP: Dict[str, Tuple[str, ...]] = {
     "tb": ("tuberkulosis", "penyakit", "berjangkit", "rawatan", "perintah"),
     "hfmd": ("penyakit", "berjangkit", "penutupan", "premis", "18(1)"),
     "taska": ("taman", "asuhan", "kanak-kanak", "premis"),
+    "campak": ("measles", "penyakit", "berjangkit", "notifikasi", "e-notifikasi"),
+    "notifikasi": ("notification", "e-notifikasi", "borang", "notis", "10(2)"),
+    "saman": ("summons", "attendance", "magistrate", "111"),
+    "pertuduhan": ("charge", "particulars", "duplicity", "152", "153", "163"),
+    "diari": ("diary", "investigation", "119"),
+    "rakaman": ("statement", "examination", "witness", "112", "113"),
+    "90a": ("computer", "document", "certificate", "admissibility", "90a"),
+    "pembungkusan": ("packaging", "labelling", "amaran", "bergambar", "261/2024", "15(1)"),
 }
 
 _MALAY_PREFIXES: Tuple[str, ...] = ("meng", "meny", "mem", "men", "ter", "ber", "per", "pen", "pem", "di", "me", "pe")
@@ -3027,7 +3093,7 @@ def expand_query_for_grounding(question: str) -> Tuple[set[str], set[str]]:
             for syn in _PPKP_SYNONYM_MAP.get(stem, ()):
                 expanded_tokens.add(syn)
 
-    # Frasa berbilang perkataan lazim PPKP
+    # Frasa berbilang perkataan lazim PPKP (termasuk padanan BM <-> BI bagi Akta 593 KTJ & Akta 56 Keterangan)
     phrase_expansions: Tuple[Tuple[str, Tuple[str, ...]], ...] = (
         ("papan tanda", ("tanda", "amaran", "larangan", "merokok", "mempamerkan", "258/2024")),
         ("no smoking", ("tanda", "amaran", "larangan", "merokok", "258/2024")),
@@ -3042,14 +3108,24 @@ def expand_query_for_grounding(question: str) -> Tuple[set[str], set[str]]:
         ("open car park", ("tempat", "letak", "kereta", "awam", "terbuka")),
         ("open air", ("terbuka", "luar", "bangunan")),
         ("kabinet bertutup", ("pameran", "tertutup", "legap", "260/2024")),
-        ("benda asing", ("diaduk", "tidak", "sesuai", "13b")),
-        ("bangkai lipas", ("benda", "asing", "diaduk", "13b")),
+        ("benda asing", ("jirim", "asing", "tidak", "layak", "13a")),
+        ("bangkai lipas", ("jirim", "asing", "kotor", "tidak", "layak", "13a")),
         ("perintah tutup", ("penutupan", "premis", "ingkar")),
         ("tutup premis", ("penutupan", "premis", "perintah")),
         ("ingkar perintah", ("mematuhi", "perintah", "arahan")),
         ("tidak pakai apron", ("pakaian", "pengendali", "makanan", "32(1)")),
         ("tak pakai apron", ("pakaian", "pengendali", "makanan", "32(1)")),
         ("penutup kepala", ("pakaian", "pengendali", "makanan", "32(1)")),
+        ("rakaman percakapan", ("examination", "witness", "statement", "112", "113", "criminal", "procedure")),
+        ("diari siasatan", ("diary", "proceedings", "investigation", "119")),
+        ("izin mendakwa", ("consent", "public", "prosecutor", "376", "377")),
+        ("sijil 90a", ("document", "produced", "computer", "certificate", "90a")),
+        ("gambar digital", ("document", "produced", "computer", "certificate", "90a")),
+        ("cetakan komputer", ("document", "produced", "computer", "certificate", "90a")),
+        ("media sosial", ("publication", "presumption", "fact", "114a", "computer", "90a")),
+        ("amaran kesihatan bergambar", ("pembungkusan", "pelabelan", "15(1)", "261/2024")),
+        ("e-notifikasi", ("notifikasi", "penyakit", "berjangkit", "10(2)", "borang", "notis")),
+        ("klinik swasta", ("pengamal", "perubatan", "notifikasi", "10(2)", "penyakit", "berjangkit")),
     )
     for phrase, syns in phrase_expansions:
         if phrase in q_low:
@@ -3207,9 +3283,9 @@ def is_passive_vape_possession_question(text: str) -> bool:
 
 
 def infer_domain_statute_ids(question: str, akta_hint: str = "Semua") -> Optional[set[str]]:
-    """Penghala domain Akta berketepatan tinggi (v2):
-    - Mengasingkan isyarat domain kuat daripada kata lokasi umum (restoran/kafe/kantin/universiti) supaya soalan
-      tanda larangan merokok di kafeteria/restoran kekal dalam AKTA_852 tanpa kebocoran ratusan seksyen makanan.
+    """Penghala domain Akta berketepatan tinggi (v3):
+    - Mengasingkan isyarat domain kuat daripada kata lokasi umum (restoran/kafe/kantin/universiti).
+    - Mengarahkan soalan notifikasi/e-Notifikasi penyakit (termasuk denggi/campak di klinik swasta) ke AKTA_342 tanpa kebocoran AKTA_154.
     - Tidak pernah mengunci carian secara eksklusif kepada Akta 611 sahaja apabila tiada akta teras dikesan.
     - Menapis PPM_1985 (438 seksyen) apabila soalan hanya tentang kebersihan premis/tifoid/SLPM/FoSIM.
     """
@@ -3223,11 +3299,11 @@ def infer_domain_statute_ids(question: str, akta_hint: str = "Semua") -> Optiona
     )
     has_evidence_signal = any(
         k in q_low
-        for k in ("90a", "90b", "90c", "114a", "73aa", "akta 56", "akta keterangan", "keterangan digital", "cetakan komputer")
+        for k in ("90a", "90b", "90c", "114a", "73aa", "akta 56", "akta keterangan", "keterangan digital", "cetakan komputer", "gambar digital", "media sosial")
     )
     has_ktj_signal = any(
         k in q_low
-        for k in ("112", "113", "119", "128", "152", "163", "376", "377", "ktj", "akta 593", "kanun tatacara", "diari siasatan", "rakaman percakapan")
+        for k in ("111", "112", "113", "119", "128", "152", "153", "163", "376", "377", "ktj", "akta 593", "kanun tatacara", "diari siasatan", "rakaman percakapan", "izin mendakwa")
     )
 
     akta_852_family = {
@@ -3282,9 +3358,10 @@ def infer_domain_statute_ids(question: str, akta_hint: str = "Semua") -> Optiona
         "vape", "rokok", "e-rokok", "e-cigarette", "pod", "shisha", "tembakau",
         "nikotin", "nicotine", "merokok", "no smoking", "smoking", "hisap", "menghisap",
         "ashtray", "bekas abu", "tanda larangan", "tanda amaran", "papan tanda",
-        "kod qr", "obd", "ppkht", "852",
+        "kod qr", "obd", "ppkht", "852", "amaran kesihatan bergambar", "pembungkusan rokok",
+        "pelabelan rokok", "pembungkusan vape",
         "257/2024", "258/2024", "259/2024", "260/2024", "261/2024", "262/2024", "264/2024",
-    )) or bool(re.search(r"\b(?:17\(1\)|18\(1\)|16\(2\)|10\(1\)|13\(1\))\b", q_low))
+    )) or bool(re.search(r"\b(?:17\(1\)|18\(1\)|16\(2\)|10\(1\)|13\(1\)|15\(1\))\b", q_low))
 
     has_food_strong = _has_any((
         "makanan", "tifoid", "typhoid", "antitifoid", "suntikan", "lpm", "slpm",
@@ -3292,7 +3369,7 @@ def infer_domain_statute_ids(question: str, akta_hint: str = "Semua") -> Optiona
         "lipas", "lalat", "lilati", "apron", "penutup kepala", "benda asing",
         "diaduk", "luput", "expired", "tamat tempoh", "tarikh akhir",
         "ppkm", "ppm", "mja", "pengendali makanan", "perintah tutup", "tutup premis",
-        "13b", "281", "a1702", "mee goreng", "nasi", "kicap", "sardin",
+        "13a", "13b", "281", "a1702", "mee goreng", "nasi", "kicap", "sardin",
     ))
     has_food_venue_only = _has_any((
         "restoran", "kedai makan", "dapur", "gerai", "warung", "kantin",
@@ -3301,21 +3378,26 @@ def infer_domain_statute_ids(question: str, akta_hint: str = "Semua") -> Optiona
     has_ppm_signal = _has_any((
         "ppm", "1985", "luput", "expired", "tamat tempoh", "tarikh akhir",
         "best before", "ketahanan minimum", "label", "pelabelan", "tin", "bungkusan",
-        "bahan tambah", "komposisi", "standard makanan", "14(9)",
+        "bahan tambah", "komposisi", "standard makanan", "14(9)", "14(7)",
     ))
-    has_aedes = _has_any((
-        "aedes", "denggi", "jentik", "jentik-jentik", "larva", "pupa", "nyamuk",
+    has_notification_signal = _has_any((
+        "e-notifikasi", "enotifikasi", "notifikasi", "borang notis", "klinik swasta",
+        "pengamal perubatan", "doktor swasta", "hospital swasta", "lapor kes", "gagal lapor",
+    ))
+    has_vector_field_signal = _has_any((
+        "aedes", "jentik", "jentik-jentik", "larva", "pupa", "nyamuk",
         "takungan", "fogging", "semburan kabus", "entomologi", "vektor",
         "tapak bina", "tapak pembinaan", "154",
     ))
+    has_aedes = has_vector_field_signal or (_has_any(("denggi",)) and not has_notification_signal)
     has_cdc = _has_any((
         "covid", "tibi", "tb", "tuberkulosis", "ptb", "afb", "tbis", "dots",
-        "hfmd", "taska", "tadika", "leptospirosis", "kencing tikus", "measles",
+        "hfmd", "taska", "tadika", "leptospirosis", "kencing tikus", "measles", "campak",
         "wabak", "hso", "kuarantin", "pengasingan", "unit cdc", "penyakit berjangkit",
         "342", "a1742", "139/2025",
-    ))
+    )) or has_notification_signal
 
-    # Jika soalan jelas tentang HFMD/wabak taska (Akta 342) dan turut menyebut "tutup premis" / "Seksyen 11(2) Akta Makanan",
+    # Jika soalan jelas tentang HFMD/wabak taska (Akta 342) dan turut menyebut "tutup premis" / "Seksyen 11 Akta Makanan",
     # sertakan kedua-dua domain jika Akta 281 disebut secara eksplisit; jika hanya "tutup premis" taska HFMD tanpa isyarat makanan, kekal Akta 342.
     has_food = has_food_strong or (has_food_venue_only and not has_tobacco and not has_cdc)
     if has_cdc and not _has_any(("makanan", "restoran", "281", "ppkm", "ppm", "tifoid", "slpm", "lipas", "luput", "expired")):
@@ -3400,6 +3482,39 @@ def evaluate_offence_elements_against_facts(
         )
     )
 
+    # 6. Perangkap Khusus #6: Akta 852 S.10(1) — Kabinet bertutup legap / senarai harga tertutup (Peraturan 6 P.U.(A) 260/2024)
+    is_closed_cabinet_trap = bool(
+        re.search(r"\b(?:kabinet\s+bertutup|kabinet\s+legap|almari\s+bertutup|opaque|senarai\s+harga\s+tertutup)\b", q_low, re.I)
+        and not re.search(r"\b(?:pamer\s+terbuka|dipamer\s+secara\s+terbuka|kaunter\s+terbuka|rak\s+terbuka)\b", q_low, re.I)
+    )
+
+    # 7. Perangkap Khusus #7: Akta 281 S.11 — Masuk premis semata-mata untuk kerja pembersihan semasa tempoh tutup
+    is_s11_cleaning_only_trap = bool(
+        re.search(r"\b(?:perintah\s+tutup|penutupan\s+premis|seksyen\s+11|s\.?\s*11)\b", q_low, re.I)
+        and re.search(r"\b(?:pembersihan|mencuci|cuci\s+dapur|kemas\s+dapur|bersih(?:kan)?\s+premis)\b", q_low, re.I)
+        and re.search(r"\b(?:tanpa\s+(?:menjual|jual|operasi|beroperasi|pelanggan)|tidak\s+(?:menjual|jual|beroperasi|buka\s+kepada\s+pelanggan)|semata-mata\s+untuk\s+(?:pembersihan|mencuci|membersih))\b", q_low, re.I)
+    )
+
+    # 8. Perangkap Khusus #8: PPKM 2009 P.30/P.31 — Juruwang / staf pejabat bukan pengendali makanan
+    is_non_food_handler_trap = bool(
+        re.search(r"\b(?:juruwang|cashier|kerani|akauntan|pengawal\s+keselamatan|penghantar\s+stok\s+luar)\b", q_low, re.I)
+        and re.search(r"\b(?:tidak\s+(?:menyentuh|sentuh|mengendali|kendali|memasak|masak|menghidang)|bukan\s+pengendali\s+makanan|kaunter\s+bayaran\s+sahaja|hanya\s+jaga\s+kaunter)\b", q_low, re.I)
+    )
+
+    # 9. Perangkap Khusus #9: Akta 154 S.21 — Pintu/pagar berkunci tanpa penghuni di dalam rumah
+    is_locked_empty_gate_trap = bool(
+        re.search(r"\b(?:pagar\s+berkunci|pintu\s+berkunci|rumah\s+berkunci|premis\s+berkunci|bermangga)\b", q_low, re.I)
+        and re.search(r"\b(?:tiada\s+penghuni|tiada\s+orang|kosong|tidak\s+berpenghuni|penghuni\s+tiada|keluar\s+bekerja)\b", q_low, re.I)
+        and not re.search(r"\b(?:halau|mengugut|ugut|gertak|enggan\s+buka\s+walaupun\s+ada\s+di\s+dalam|marah\s+pegawai)\b", q_low, re.I)
+    )
+
+    # 10. Perangkap Khusus #10: Akta 342 S.12(4) — Pengecualian keluar untuk rawatan perubatan mengikut arahan
+    is_medical_travel_s12_4_trap = bool(
+        re.search(r"\b(?:rawatan\s+perubatan|ke\s+klinik|ke\s+hospital|mendapatkan\s+rawatan|janji\s+temu\s+doktor)\b", q_low, re.I)
+        and re.search(r"\b(?:seksyen\s+12|12\(1\)|12\(4\)|penyakit\s+berjangkit|tibi|covid|campak|hfmd|positif)\b", q_low, re.I)
+        and not re.search(r"\b(?:bersiar-siar|membeli-belah|kedai\s+makan|restoran|kenduri|berkumpul)\b", q_low, re.I)
+    )
+
     # Semak sama ada kesalahan ini disekat oleh mana-mana perangkap sebelum menilai unsur individu
     if off_id == "AKTA_852_S17_1" and is_passive_possession_trap:
         blocked_action = True
@@ -3412,6 +3527,21 @@ def evaluate_offence_elements_against_facts(
     elif off_id == "AKTA_852_S13_3" and is_passive_possession_trap:
         blocked_action = True
         trap_triggered = "Tiada bukti transaksi pembelian oleh OBD dalam fakta soalan — Seksyen 13(3) tidak boleh dikenakan tanpa bukti pembelian."
+    elif off_id == "AKTA_852_S10_1" and is_closed_cabinet_trap:
+        blocked_action = True
+        trap_triggered = "Penyimpanan produk merokok di dalam kabinet bertutup legap (tanpa pameran terbuka) mematuhi Peraturan 6 P.U. (A) 260/2024 dan BUKAN kesalahan Seksyen 10(1) Akta 852."
+    elif off_id == "AKTA_281_S11_2" and is_s11_cleaning_only_trap:
+        blocked_action = True
+        trap_triggered = "Pemilik/pekerja memasuki premis semata-mata untuk menjalankan kerja pembersihan tanpa menjual atau menyediakan makanan kepada pelanggan BUKAN kesalahan mengingkari Perintah Penutupan Seksyen 11 Akta 281."
+    elif off_id in ("PPKM_2009_P30_1", "PPKM_2009_P31_1") and is_non_food_handler_trap:
+        blocked_action = True
+        trap_triggered = "Individu yang hanya menjaga kaunter bayaran (juruwang) atau tidak menyentuh/mengendalikan makanan atau permukaan sentuhan makanan bukan 'pengendali makanan' di bawah Peraturan 30/31 PPKM 2009."
+    elif off_id == "AKTA_154_S21" and is_locked_empty_gate_trap:
+        blocked_action = True
+        trap_triggered = "Premis/pagar berkunci tanpa penghuni di dalam rumah pada waktu lawatan BUKAN kesalahan menghalang pegawai di bawah Seksyen 21 Akta 154."
+    elif off_id == "AKTA_342_S12_1" and is_medical_travel_s12_4_trap:
+        blocked_action = True
+        trap_triggered = "Pengecualian Seksyen 12(4) Akta 342: Individu yang melalui tempat awam bagi maksud mendapatkan rawatan perubatan mengikut arahan pegawai diberi kuasa BUKAN melakukan kesalahan di bawah Seksyen 12(1)."
     elif off_id == "AKTA_342_S22_B" and is_covid_no_order_trap:
         blocked_action = True
         trap_triggered = "Tiada perintah bertulis S.15(1)/S.14 yang diingkari — kompaun S.22(b) tidak boleh dikeluarkan."
@@ -3511,6 +3641,41 @@ def evaluate_offence_elements_against_facts(
             else:
                 status = "PERLU BUKTI TAMBAHAN"
                 reason = "Gunakan Perintah Pencegahan Seksyen 8(1) Akta 154 jika wujud potensi pembiakan dalam premis atau rujuk PBT jika tanah rizab awam."
+        elif off_id == "AKTA_852_S10_1" and is_closed_cabinet_trap:
+            if el_no == 1 or any(w in desc_low for w in ("pamer", "pameran", "terbuka")):
+                status = "TIDAK TERPENUHI"
+                reason = "Produk disimpan di dalam kabinet bertutup legap (mematuhi Peraturan 6 P.U. (A) 260/2024) — unsur pameran terbuka tidak dipenuhi."
+            else:
+                status = "PERLU BUKTI TAMBAHAN"
+                reason = "Pastikan tiada poster/tanda harga terbuka atau pameran terbuka selain kabinet legap yang dibenarkan."
+        elif off_id == "AKTA_281_S11_2" and is_s11_cleaning_only_trap:
+            if el_no == 2 or any(w in desc_low for w in ("mengingkari", "operasi", "menjual")):
+                status = "TIDAK TERPENUHI"
+                reason = "Premis tidak beroperasi atau menjual makanan kepada pelanggan — kemasukan semata-mata untuk pembersihan BUKAN pelanggaran Perintah Penutupan Seksyen 11."
+            else:
+                status = "PERLU BUKTI TAMBAHAN"
+                reason = "Jalankan pemeriksaan semula kebersihan sebelum membenarkan premis dibuka semula."
+        elif off_id in ("PPKM_2009_P30_1", "PPKM_2009_P31_1") and is_non_food_handler_trap:
+            if el_no == 1 or any(w in desc_low for w in ("pengendali makanan", "menyentuh", "memasak")):
+                status = "TIDAK TERPENUHI"
+                reason = "Juruwang/staf pejabat yang tidak menyentuh atau mengendalikan makanan atau permukaan sentuhan makanan bukan pengendali makanan di bawah PPKM 2009."
+            else:
+                status = "PERLU BUKTI TAMBAHAN"
+                reason = "Sahkan tugas sebenar pekerja di lapangan — hanya pekerja yang mengendalikan makanan wajib mempunyai SLPM dan suntikan anti-tifoid."
+        elif off_id == "AKTA_154_S21" and is_locked_empty_gate_trap:
+            if el_no == 2 or any(w in desc_low for w in ("menghalang", "menggalang", "menggertak")):
+                status = "TIDAK TERPENUHI"
+                reason = "Tiada perbuatan sengaja menghalang atau menggertak pegawai — rumah berkunci kerana tiada penghuni di dalam premis."
+            else:
+                status = "PERLU BUKTI TAMBAHAN"
+                reason = "Rekodkan lawatan dalam Diari Siasatan, tinggalkan notis temujanji / jalankan lawatan ulangan atau guna tatacara kemasukan sah Akta 154."
+        elif off_id == "AKTA_342_S12_1" and is_medical_travel_s12_4_trap:
+            if el_no == 2 or any(w in desc_low for w in ("tempat awam", "mendedahkan", "risiko")):
+                status = "TIDAK TERPENUHI"
+                reason = "Dikecualikan di bawah Seksyen 12(4) Akta 342 kerana melalui tempat awam bagi maksud mendapatkan rawatan perubatan mengikut arahan."
+            else:
+                status = "PERLU BUKTI TAMBAHAN"
+                reason = "Sahkan arahan perubatan/rujukan klinik dan pematuhan langkah kawalan jangkitan."
         # --- PENILAIAN KHUSUS MENGIKUT OFFENCE_ID (ELAK PERTEMBUNGAN SUBSTRING SILANG-KESALAHAN) ---
         elif off_id == "AKTA_852_S18_1":
             if el_no == 1:
@@ -3676,7 +3841,7 @@ def extract_legal_citations_from_text(text: str) -> List[Dict[str, str]]:
 
     # 1. Pasangan eksplisit: "Seksyen X(Y) Akta ZZZ" atau "Peraturan X(Y) PPKM 2009 / PPKHT 2004 / PPM 1985 / P.U. (A) 258/2024"
     paired_re = re.compile(
-        r"\b(Seksyen|Peraturan)\s+(\d+[A-Za-z]?(?:\(\d+\))?(?:\([a-z]\))?)"
+        r"\b(Seksyen|Peraturan)\s+(\d+[A-Za-z]{0,2}(?:\(\d+[A-Za-z]?\))?(?:\([a-z]+\))?)"
         r"(?:\s+(?:dibaca\s+bersama\s+[^,\n.;]{1,40}\s+)?)?"
         r"\s*(Akta\s+A?\d+|Akta\s+Kerja\s*1955|OSHA\s*1994|PPKM\s*2009|PPM\s*1985|PPKHT\s*2004|KTJ|APPPB\s*1988|P\.U\.\s*\(A\)\s*\d+/\d{4})?",
         re.I,
@@ -3706,7 +3871,7 @@ def extract_legal_citations_from_text(text: str) -> List[Dict[str, str]]:
                 {
                     "kind": kind,
                     "number": num,
-                    "base_number": re.findall(r"^\d+[A-Za-z]?", num)[0].upper(),
+                    "base_number": re.findall(r"^\d+[A-Za-z]{0,2}", num)[0].upper(),
                     "act_ref": act_raw,
                     "inferred_from_tail": "1" if inferred_from_tail else "",
                     "raw_citation": m.group(0).strip(),
@@ -3720,48 +3885,69 @@ def _build_valid_sections_index(
     sections_list: List[Dict[str, Any]],
     offences_list: List[Dict[str, Any]],
 ) -> Tuple[Dict[str, set[str]], set[str]]:
-    """Membina indeks nombor seksyen/peraturan sah mengikut Akta Kanonik & statute_id (untuk validasi <2ms)."""
+    """Membina indeks ketat nombor seksyen/peraturan sah mengikut `statute_id` dan Akta Kanonik (tanpa mengutip tahun/teks badan)."""
     valid_sections_by_act: Dict[str, set[str]] = {}
     all_valid_section_nums: set[str] = set()
-    sec_ref_re = re.compile(r"(?:Seksyen|Peraturan|Section|Regulation)\s+(\d+[A-Za-z]?)", re.I)
-    code_num_re = re.compile(r"(?:Peraturan\s+|Seksyen\s+|Section\s+)?(\d+[A-Za-z]?)\b", re.I)
+    code_num_re = re.compile(r"^(?:Peraturan\s+|Seksyen\s+|Section\s+|Regulation\s+)?(\d+[A-Za-z]{0,2})\b", re.I)
+    curated_sec_re = re.compile(r"(?:Seksyen|Peraturan|Section|Regulation|S\.|P\.)\s*(\d+[A-Za-z]{0,2})\b", re.I)
+
+    # Pemetaan akta pindaan kepada akta induknya
+    amendment_parent_map = {
+        "AKTA_342_PINDAAN_2025": "AKTA_342",
+        "AKTA_281_PINDAAN_2024": "AKTA_281",
+    }
 
     for sec in sections_list:
         sid = str(sec.get("statute_id") or "")
-        act_code = canonical_akta_code_for_statute(sid)
-        act_key = act_code.upper()
         sid_key = sid.upper()
+        act_key = canonical_akta_code_for_statute(sid).upper()
         act_set = valid_sections_by_act.setdefault(act_key, set())
         sid_set = valid_sections_by_act.setdefault(sid_key, set())
 
         m2 = code_num_re.match(str(sec.get("section_code") or "").strip())
         if m2:
             num2 = m2.group(1).upper()
-            act_set.add(num2)
             sid_set.add(num2)
+            # Hanya gabungkan seksyen ke indeks Akta Kanonik jika ia akta induk/pindaan (elak 438 peraturan PPM mencemari AKTA_281)
+            if sid_key not in REGULATION_STATUTE_IDS:
+                act_set.add(num2)
+            parent_sid = amendment_parent_map.get(sid_key)
+            if parent_sid:
+                valid_sections_by_act.setdefault(parent_sid, set()).add(num2)
             all_valid_section_nums.add(num2)
-
-        raw_sec_text = f"{sec.get('section_heading', '')} {str(sec.get('verbatim_text_bm', ''))[:2000]}"
-        for m in sec_ref_re.finditer(raw_sec_text):
-            num = m.group(1).upper()
-            act_set.add(num)
-            sid_set.add(num)
-            all_valid_section_nums.add(num)
 
     for off in offences_list:
         sid = str(off.get("statute_id") or "")
+        sid_key = sid.upper()
         act_key = canonical_akta_code_for_statute(sid).upper()
+        sid_set = valid_sections_by_act.setdefault(sid_key, set())
         act_set = valid_sections_by_act.setdefault(act_key, set())
+        # Indeks hanya nombor berawalan Seksyen/Peraturan daripada medan kesalahan & hukuman milik statut itu sendiri
         for field_val in (
             off.get("offence_section", ""),
             off.get("penalty_section", ""),
-            " ".join(off.get("read_together_with") or []),
-            str((off.get("compound_info") or {}).get("compound_authority_section") or ""),
-            str((off.get("compound_info") or {}).get("notice_section") or ""),
         ):
-            for num in re.findall(r"\b(\d+[A-Za-z]?)\b", str(field_val)):
-                act_set.add(num.upper())
-                all_valid_section_nums.add(num.upper())
+            for m_num in curated_sec_re.finditer(str(field_val)):
+                num = m_num.group(1).upper()
+                sid_set.add(num)
+                if sid_key not in REGULATION_STATUTE_IDS:
+                    act_set.add(num)
+                all_valid_section_nums.add(num)
+
+    # Pastikan seksyen teras yang sah mengikut pindaan terkini sentiasa terindeks bagi akta induk
+    for k_act, extras in (
+        ("AKTA_852", {"3", "7", "9", "10", "13", "15", "16", "17", "18", "35", "36", "47", "48", "49", "51"}),
+        ("AKTA_281", {"4", "5", "6", "11", "13", "13A", "13B", "13C", "14", "15", "16", "17", "19", "20", "32A", "32B", "33", "33A"}),
+        ("AKTA_154", {"5", "8", "13", "20", "21", "22", "22A", "23", "25"}),
+        ("AKTA_342", {"10", "11", "12", "14", "14A", "15", "18", "21A", "22", "22A", "23", "24", "25"}),
+        ("AKTA_56", {"73AA", "90A", "90B", "90C", "114A"}),
+        ("AKTA_593", {"111", "112", "113", "119", "128", "152", "153", "154", "163", "376", "377", "399"}),
+        ("AKTA_611", {"11", "15", "83", "91"}),
+    ):
+        valid_sections_by_act.setdefault(k_act, set()).update(extras)
+        canon_k = canonical_akta_code_for_statute(k_act).upper()
+        valid_sections_by_act.setdefault(canon_k, set()).update(extras)
+        all_valid_section_nums.update(extras)
 
     return valid_sections_by_act, all_valid_section_nums
 
@@ -3774,9 +3960,9 @@ def validate_legal_output(
     """FASA 3.3: Pengesah Kod Pasca-Penjanaan Deterministik (`validateLegalOutput`).
 
     Menyemak:
-    1. Setiap petikan Seksyen / Peraturan wujud dalam `statute_sections_verbatim` dan berstatus `BERKUAT_KUASA`.
+    1. Setiap petikan Seksyen / Peraturan wujud dalam `statute_sections_verbatim` pada ketepatan statut/peraturan subsidiari dan berstatus `BERKUAT_KUASA`.
     2. Tiada peruntukan dalam `repealed_and_blocked_provisions` dicadangkan sebagai tindakan aktif.
-    3. Nilai denda / kompaun sepadan dengan `penalty_first_offence` & `compound_info` dalam `master_offences_matrix`.
+    3. Nilai denda / kompaun serta senarai putih (allowlist) kesalahan boleh kompaun Akta 852 / Akta 342 / Akta 281 / Akta 154 sepadan dengan warta rasmi.
     4. Jika unsur mandatori kesalahan berstatus `TIDAK TERPENUHI` berdasarkan `question_context`, sebarang cadangan pertuduhan/kompaun aktif bagi seksyen itu DISEKAT.
     5. Jika akta yang ditanya belum mempunyai sebarang seksyen diindeks (`total_sections_indexed == 0`), pulangkan status `AKTA BELUM DIINDEKS — MUAT NAIK PDF WARTA`.
     """
@@ -3816,7 +4002,7 @@ def validate_legal_output(
     repealed_list: List[Dict[str, Any]] = legal_library.get("repealed_and_blocked_provisions") or []
     lib_version = str(legal_library.get("statute_library_version") or INITIAL_STATUTE_LIBRARY_VERSION)
 
-    # Bina atau guna indeks nombor seksyen sah yang telah dicache mengikut Akta Kanonik & statute_id
+    # Bina atau guna indeks nombor seksyen sah yang telah dicache mengikut statute_id & Akta Kanonik
     cached_idx = legal_library.get("_valid_sections_cache")
     if isinstance(cached_idx, tuple) and len(cached_idx) == 2:
         valid_sections_by_act, all_valid_section_nums = cached_idx
@@ -3850,7 +4036,27 @@ def validate_legal_output(
         "AKTA 127", "AKTA 655", "AKTA 265", "AKTA 514", "AKTA 574", "AKTA 550",
         "AKTA 50", "AKTA 804", "AKTA KERJA 1955", "OSHA 1994",
     }
-    default_act = canonical_akta_code_for_statute(str(resp_dict.get("akta_disyorkan") or "")).upper()
+    akta_disyorkan_up = str(resp_dict.get("akta_disyorkan") or "").upper()
+    default_act = canonical_akta_code_for_statute(akta_disyorkan_up).upper()
+
+    # Sokong respons berbilang Akta (cth: "Akta 281 / PPKM 2009" atau "Akta 852 & Akta 611")
+    default_lookup_keys: List[str] = []
+    for token_pat, key_name in (
+        ("852", "AKTA_852"),
+        ("PPKM", "PPKM_2009"),
+        ("PPM", "PPM_1985"),
+        ("281", "AKTA_281"),
+        ("154", "AKTA_154"),
+        ("342", "AKTA_342"),
+        ("593", "AKTA_593"),
+        ("KTJ", "AKTA_593"),
+        ("56", "AKTA_56"),
+        ("611", "AKTA_611"),
+    ):
+        if token_pat in akta_disyorkan_up and key_name in valid_sections_by_act and key_name not in default_lookup_keys:
+            default_lookup_keys.append(key_name)
+    if default_act in valid_sections_by_act and default_act not in default_lookup_keys:
+        default_lookup_keys.append(default_act)
 
     charges_sec_only_check = " ".join(
         f"{c.get('seksyen_kesalahan', '')} {c.get('seksyen_hukuman', '')}"
@@ -3863,9 +4069,24 @@ def validate_legal_output(
         "128", "152", "153", "154", "163", "376", "377", "399", "15", "83", "91",
     }
 
+    pu_to_sid = (
+        ("257/2024", "AKTA_852_PERINTAH_LARANGAN_2024"),
+        ("258/2024", "AKTA_852_PERATURAN_TANDA_2024"),
+        ("259/2024", "AKTA_852_PERATURAN_KOMPAUN_2024"),
+        ("260/2024", "AKTA_852_PERATURAN_JUALAN_2024"),
+        ("261/2024", "AKTA_852_PERATURAN_PEMBUNGKUSAN_2024"),
+        ("262/2024", "AKTA_852_PERATURAN_PENDAFTARAN_2024"),
+        ("263/2024", "AKTA_852_PERINTAH_MAKMAL_2024"),
+        ("264/2024", "AKTA_852_PERATURAN_NOTIS_S47_2024"),
+        ("139/2025", "AKTA_342_PERATURAN_KOMPAUN_2025"),
+        ("95/2009", "PPKM_2009"),
+        ("437/1985", "PPM_1985"),
+    )
+
     for cit in extracted_citations:
         base_num = cit["base_number"].upper()
         act_ref = cit["act_ref"].upper().strip()
+        kind = cit["kind"].capitalize()
         inferred_tail = bool(cit.get("inferred_from_tail"))
         raw_cit = cit["raw_citation"]
 
@@ -3886,39 +4107,65 @@ def validate_legal_output(
             verified_citations.append(raw_cit)
             continue
 
-        explicit_act_lookup = ""
-        if "852" in act_ref or re.search(r"25[7-9]/2024|26[0-4]/2024", act_ref):
-            explicit_act_lookup = "AKTA 852"
-        elif "281" in act_ref or "A1702" in act_ref or "PPKM" in act_ref or "PPM" in act_ref or "95/2009" in act_ref:
-            explicit_act_lookup = "AKTA 281"
-        elif "154" in act_ref:
-            explicit_act_lookup = "AKTA 154"
-        elif "342" in act_ref or "A1742" in act_ref or "APPPB" in act_ref or "139/2025" in act_ref:
-            explicit_act_lookup = "AKTA 342"
-        elif "593" in act_ref or "KTJ" in act_ref:
-            explicit_act_lookup = "AKTA 593"
-        elif "56" in act_ref:
-            explicit_act_lookup = "AKTA 56"
-        elif "611" in act_ref:
-            explicit_act_lookup = "AKTA 611"
+        # Petakan kepada statute_id tepat (termasuk peraturan subsidiari PPKM_2009 / PPM_1985 / P.U.(A) 2024/2025)
+        explicit_keys: List[str] = []
+        for pu_code, mapped_sid in pu_to_sid:
+            if pu_code in act_ref and mapped_sid in valid_sections_by_act:
+                explicit_keys.append(mapped_sid)
+                break
+        if not explicit_keys:
+            if "PPKM" in act_ref:
+                explicit_keys.append("PPKM_2009")
+            elif "PPM" in act_ref:
+                explicit_keys.append("PPM_1985")
+            elif "852" in act_ref:
+                explicit_keys.append("AKTA_852")
+            elif "281" in act_ref or "A1702" in act_ref:
+                if kind == "Peraturan":
+                    explicit_keys.extend(["PPKM_2009", "PPM_1985"])
+                else:
+                    explicit_keys.append("AKTA_281")
+            elif "154" in act_ref:
+                explicit_keys.append("AKTA_154")
+            elif "342" in act_ref or "A1742" in act_ref or "APPPB" in act_ref:
+                explicit_keys.append("AKTA_342")
+            elif "593" in act_ref or "KTJ" in act_ref:
+                explicit_keys.append("AKTA_593")
+            elif "56" in act_ref:
+                explicit_keys.append("AKTA_56")
+            elif "611" in act_ref:
+                explicit_keys.append("AKTA_611")
 
-        lookup_act = explicit_act_lookup or (default_act if default_act in valid_sections_by_act else "")
+        valid_explicit_keys = [k for k in explicit_keys if k in valid_sections_by_act]
 
-        if explicit_act_lookup and explicit_act_lookup in valid_sections_by_act:
-            # Apabila Akta dinyatakan secara jelas bersebelahan (cth: 'Seksyen 99 Akta 852'), WAJIB wujud dalam indeks Akta itu sahaja;
-            # namun jika Akta hanya dikesan daripada hujung klausa untuk nombor prosedur (cth: S.90A / S.112), benarkan sokongan prosedur.
-            if base_num in valid_sections_by_act[explicit_act_lookup] or (inferred_tail and base_num in procedural_support_nums):
+        if valid_explicit_keys:
+            matched_explicit = any(base_num in valid_sections_by_act[k] for k in valid_explicit_keys)
+            if matched_explicit or (inferred_tail and base_num in procedural_support_nums):
                 verified_citations.append(raw_cit)
             else:
                 invalid_citations.append(
-                    f"{raw_cit} — Seksyen/Peraturan {cit['number']} TIDAK WUJUD dalam indeks {explicit_act_lookup}."
+                    f"{raw_cit} — Seksyen/Peraturan {cit['number']} TIDAK WUJUD dalam indeks {' / '.join(valid_explicit_keys)}."
                 )
-        elif lookup_act and lookup_act in valid_sections_by_act:
-            if base_num in valid_sections_by_act[lookup_act] or base_num in procedural_support_nums:
+        elif default_lookup_keys:
+            if kind == "Peraturan" and ("AKTA_281" in default_lookup_keys):
+                check_keys = list(dict.fromkeys(default_lookup_keys + ["PPKM_2009", "PPM_1985"]))
+            elif kind == "Peraturan" and ("AKTA_852" in default_lookup_keys):
+                check_keys = list(dict.fromkeys(default_lookup_keys + [
+                    "AKTA_852_PERINTAH_LARANGAN_2024",
+                    "AKTA_852_PERATURAN_TANDA_2024",
+                    "AKTA_852_PERATURAN_KOMPAUN_2024",
+                    "AKTA_852_PERATURAN_JUALAN_2024",
+                    "AKTA_852_PERATURAN_PEMBUNGKUSAN_2024",
+                    "AKTA_852_PERATURAN_PENDAFTARAN_2024",
+                    "AKTA_852_PERATURAN_NOTIS_S47_2024",
+                ]))
+            else:
+                check_keys = default_lookup_keys
+            if any(base_num in valid_sections_by_act.get(k, set()) for k in check_keys) or base_num in procedural_support_nums:
                 verified_citations.append(raw_cit)
             else:
                 invalid_citations.append(
-                    f"{raw_cit} — Seksyen/Peraturan {cit['number']} TIDAK WUJUD dalam indeks {lookup_act}."
+                    f"{raw_cit} — Seksyen/Peraturan {cit['number']} TIDAK WUJUD dalam indeks {' / '.join(default_lookup_keys)}."
                 )
         else:
             if base_num in all_valid_section_nums or base_num in procedural_support_nums:
@@ -4010,13 +4257,12 @@ def validate_legal_output(
             except ValueError:
                 pass
 
-    # Semak kesilapan menawarkan kompaun bagi kesalahan TIDAK BOLEH KOMPAUN dalam `cadangan_pertuduhan`
-    non_comp_patterns = (
-        ("852", ("seksyen 3(", "seksyen 7(", "seksyen 9(", "seksyen 10(", "seksyen 13(1)", "s.3(", "s.7(", "s.9(", "s.10(", "s.13(1)"), "Jadual Pertama P.U. (A) 259/2024"),
-        ("281", ("seksyen 13(1)", "seksyen 13b", "seksyen 11(2)", "s.13(1)", "s.13b", "s.11(2)"), "Akta Makanan 1983 (wajib Buka IP)"),
-        ("154", ("seksyen 8(8)", "s.8(8)"), "Akta 154 (wajib Buka IP)"),
-        ("342", ("seksyen 12(", "seksyen 22(a)", "s.12(", "s.22(a)"), "Jadual Pertama P.U. (A) 139/2025"),
-    )
+    # Semak kesilapan menawarkan kompaun bagi kesalahan TIDAK BOLEH KOMPAUN (guna allowlist ketat bagi Akta 852 & Akta 342)
+    ak852_compoundable_re = re.compile(r"\b(?:13\(3\)|16\(2\)|17\(1\)|18\(1\))(?=\W|$)", re.I)
+    ak342_compoundable_re = re.compile(r"\b(?:10\(2\)|11\(5\)|21a\(3\)|22\([bcd]\))(?=\W|$)", re.I)
+    ak281_non_comp_re = re.compile(r"\b(?:seksyen|s\.)\s*(?:11(?:\(\d+\))?|13(?:\(1\))?|13a(?:\(\d+\))?|13b(?:\(\d+\))?|13c(?:\(\d+\))?|14|15|16|17)\b", re.I)
+    ak154_non_comp_re = re.compile(r"\b(?:seksyen|s\.)\s*(?:8\(8\)|20|21)\b", re.I)
+
     for c in resp_dict.get("cadangan_pertuduhan") or []:
         if not isinstance(c, dict):
             continue
@@ -4030,11 +4276,22 @@ def validate_legal_output(
             # Tentukan Akta milik pertuduhan itu sendiri dahulu sebelum jatuh ke default_act
             charge_acts_found = [d for d in ("852", "281", "154", "342") if re.search(rf"\b{d}\b", sec_low)]
             eff_charge_acts = charge_acts_found if charge_acts_found else [d for d in ("852", "281", "154", "342") if d in default_act.lower()]
-            for act_digits, sec_pats, sched_ref in non_comp_patterns:
-                if act_digits in eff_charge_acts and any(p in sec_low for p in sec_pats):
-                    penalty_mismatches.append(
-                        f"Kesalahan {c.get('seksyen_kesalahan')} TIDAK BOLEH DIKOMPAUN di bawah {sched_ref} — wajib Buka IP Terus."
-                    )
+            if "852" in eff_charge_acts and re.search(r"\b(?:seksyen|s\.)\s*\d+", sec_low) and not ak852_compoundable_re.search(sec_low):
+                penalty_mismatches.append(
+                    f"Kesalahan {c.get('seksyen_kesalahan')} TIDAK BOLEH DIKOMPAUN di bawah Jadual Pertama P.U. (A) 259/2024 (hanya S.13(3), S.16(2), S.17(1) & S.18(1) boleh kompaun) — wajib Buka IP Terus."
+                )
+            elif "342" in eff_charge_acts and re.search(r"\b(?:seksyen|s\.)\s*\d+", sec_low) and not ak342_compoundable_re.search(sec_low):
+                penalty_mismatches.append(
+                    f"Kesalahan {c.get('seksyen_kesalahan')} TIDAK BOLEH DIKOMPAUN di bawah Jadual Pertama P.U. (A) 139/2025 (hanya S.10(2), S.11(5), S.21A(3), S.22(b)/(c)/(d) boleh kompaun) — wajib Buka IP Terus."
+                )
+            elif "281" in eff_charge_acts and "peraturan" not in sec_low and ak281_non_comp_re.search(sec_low):
+                penalty_mismatches.append(
+                    f"Kesalahan {c.get('seksyen_kesalahan')} TIDAK BOLEH DIKOMPAUN di bawah Akta Makanan 1983 — wajib Buka IP Terus."
+                )
+            elif "154" in eff_charge_acts and ak154_non_comp_re.search(sec_low):
+                penalty_mismatches.append(
+                    f"Kesalahan {c.get('seksyen_kesalahan')} TIDAK BOLEH DIKOMPAUN di bawah Akta 154 — wajib Buka IP Terus."
+                )
 
     # Semak had denda Seksyen 17(2) Akta 852 (OBD maks RM500)
     if "17(1)" in low_combined or "17(2)" in low_combined:
@@ -4064,6 +4321,12 @@ def validate_legal_output(
     trap_charge_patterns: Dict[str, Tuple[str, str]] = {
         "AKTA_852_S17_1": ("852", r"\b17\(1\)"),
         "AKTA_852_S13_3": ("852", r"\b13\(3\)"),
+        "AKTA_852_S10_1": ("852", r"\b10\(1\)"),
+        "AKTA_281_S11_2": ("281", r"\bseksyen\s+11\b|\bs\.?\s*11\b"),
+        "PPKM_2009_P30_1": ("2009", r"\b30\(1\)"),
+        "PPKM_2009_P31_1": ("2009", r"\b31\(1\)"),
+        "AKTA_154_S21": ("154", r"\b(?:seksyen|s\.)\s*21\b"),
+        "AKTA_342_S12_1": ("342", r"\b12\(1\)"),
         "AKTA_342_S22_B": ("342", r"\b22\(b\)"),
         "PPM_1985_P14_9": ("1985", r"\b14\(9\)"),
         "AKTA_154_S13_1": ("154", r"\b13\(1\)"),
@@ -4078,6 +4341,16 @@ def validate_legal_output(
         ):
             should_eval = True
         elif off_id == "AKTA_852_S13_3" and ("13(3)" in low_combined and is_passive_vape_possession_question(eval_context)):
+            should_eval = True
+        elif off_id == "AKTA_852_S10_1" and any(k in eval_low for k in ("kabinet bertutup", "kabinet legap", "opaque", "senarai harga tertutup")):
+            should_eval = True
+        elif off_id == "AKTA_281_S11_2" and ("pembersihan" in eval_low or "mencuci" in eval_low) and ("tutup" in eval_low or "seksyen 11" in eval_low):
+            should_eval = True
+        elif off_id in ("PPKM_2009_P30_1", "PPKM_2009_P31_1") and any(k in eval_low for k in ("juruwang", "cashier", "bukan pengendali")):
+            should_eval = True
+        elif off_id == "AKTA_154_S21" and any(k in eval_low for k in ("pagar berkunci", "pintu berkunci", "rumah berkunci", "bermangga")):
+            should_eval = True
+        elif off_id == "AKTA_342_S12_1" and any(k in eval_low for k in ("rawatan perubatan", "ke klinik", "ke hospital")):
             should_eval = True
         elif off_id == "AKTA_342_S22_B" and (
             ("covid" in eval_low and "kerja" in eval_low) or "smear negatif" in eval_low
@@ -4220,10 +4493,66 @@ class ClosedBookLegalLibrary:
 
     def _rebuild_runtime_caches(self) -> None:
         """Menyegarkan cache indeks seksyen sah, token penuh (tanpa pemotongan 2400 aksara) & bobot IDF bagi carian tepat."""
-        # Baiki percanggahan entri auto-sweep Peraturan 2 P.U. (A) 258/2024 dalam memori:
-        # P.U. (A) 258/2024 dibaca bersama Seksyen 18(1)(a) Akta 852 yang BOLEH DIKOMPAUN di bawah S.48(2) & P.U. (A) 259/2024.
+        # Selaraskan entri kurasi autoritatif terkini dalam memori supaya snapshot JSON prahurai sentiasa tepat mengikut warta rasmi
+        curated_sync_ids = {
+            "AKTA_281_S11_2",
+            "AKTA_281_S13_1",
+            "AKTA_281_S13A_2",
+            "AKTA_281_S13B_1",
+            "PPKM_2009_P11_1",
+            "PPKM_2009_P31_1",
+            "PPM_1985_P14_9",
+            "AKTA_154_S21",
+        }
+        curated_by_id = {
+            str(item.get("offence_id")): item
+            for item in DEFAULT_MASTER_OFFENCES_MATRIX
+            if str(item.get("offence_id")) in curated_sync_ids
+        }
+        existing_oids: set[str] = set()
         for off in self.master_offences_matrix:
-            if off.get("offence_id") == "AKTA_852_PERATURAN_TANDA_2024_PERATURAN_2":
+            oid = str(off.get("offence_id") or "")
+            existing_oids.add(oid)
+            if oid in curated_by_id:
+                src = curated_by_id[oid]
+                for sync_k in (
+                    "offence_section",
+                    "read_together_with",
+                    "offence_title",
+                    "mandatory_elements",
+                    "explicit_exclusions_and_traps",
+                    "penalty_section",
+                    "penalty_first_offence",
+                    "penalty_subsequent_offence",
+                    "compound_info",
+                    "special_legal_requirements",
+                    "mandatory_exhibits",
+                    "charge_sheet_template_bm",
+                ):
+                    off[sync_k] = json.loads(json.dumps(src[sync_k]))
+            elif oid == "AKTA_281_13A":
+                off["compound_info"] = {
+                    "is_compoundable": False,
+                    "compound_authority_section": None,
+                    "compound_regulation_ref": None,
+                    "compound_amount_or_limit": "TIDAK BOLEH DIKOMPAUN — Wajib Buka IP Terus & Izin Mendakwa TPR Seksyen 32A",
+                    "max_compound_rm": None,
+                    "payment_days": None,
+                    "notice_section": None,
+                }
+            elif oid == "AKTA_342_PINDAAN_2025_21A":
+                off["compound_info"] = {
+                    "is_compoundable": True,
+                    "compound_authority_section": "Seksyen 25 Akta 342 (Pindaan Akta A1742)",
+                    "compound_regulation_ref": "Jadual Pertama P.U. (A) 139/2025",
+                    "compound_amount_or_limit": "Hanya Seksyen 21A(3) boleh dikompaun dengan keizinan bertulis Pendakwa Raya (maks RM5,000 individu / RM50,000 perbadanan — tempoh 14 hari)",
+                    "max_compound_rm": 5000,
+                    "payment_days": 14,
+                    "notice_section": "Seksyen 25 Akta 342 [P.U. (A) 139/2025]",
+                }
+            elif oid == "AKTA_852_PERATURAN_TANDA_2024_PERATURAN_2":
+                # Baiki percanggahan entri auto-sweep Peraturan 2 P.U. (A) 258/2024 dalam memori:
+                # P.U. (A) 258/2024 dibaca bersama Seksyen 18(1)(a) Akta 852 yang BOLEH DIKOMPAUN di bawah S.48(2) & P.U. (A) 259/2024.
                 off["read_together_with"] = [
                     "Seksyen 18(1)(a) & Seksyen 18(2) Akta 852",
                     "Perintah Kawalan Produk Merokok Demi Kesihatan Awam (Pengisytiharan Kawasan atau Tempat Larangan Merokok) 2024 [P.U. (A) 257/2024]",
@@ -4240,7 +4569,7 @@ class ClosedBookLegalLibrary:
                     "payment_days": 30,
                     "notice_section": "Tawaran Kompaun Borang 2 P.U.(A) 259/2024 & Notis Hadir Mahkamah S.47 [P.U.(A) 264/2024]",
                 }
-            elif off.get("offence_id") == "AKTA_852_S18_1":
+            elif oid == "AKTA_852_S18_1":
                 sids_18 = list(off.get("source_section_doc_ids") or [])
                 for extra_18 in (
                     "AKTA_852_PERATURAN_TANDA_2024__JADUAL_PERTAMA",
@@ -4250,6 +4579,9 @@ class ClosedBookLegalLibrary:
                     if extra_18 not in sids_18:
                         sids_18.append(extra_18)
                 off["source_section_doc_ids"] = sids_18
+
+        if "AKTA_281_S13A_2" not in existing_oids and "AKTA_281_S13A_2" in curated_by_id:
+            self.master_offences_matrix.append(json.loads(json.dumps(curated_by_id["AKTA_281_S13A_2"])))
 
         self._valid_sections_cache = _build_valid_sections_index(
             self.statute_sections_verbatim,
@@ -4687,10 +5019,19 @@ class ClosedBookLegalLibrary:
         effective_verified = bool(verified_by_admin) and is_official_pdf
 
         if is_official_pdf:
+            if not raw_bytes or not raw_bytes.lstrip()[:5].startswith(b"%PDF-"):
+                raise ValueError("Fail yang dimuat naik bukan fail PDF Warta yang sah (header %PDF tiada).")
             pages: List[str] = []
-            with fitz.open(stream=raw_bytes, filetype="pdf") as doc:
-                for page in doc:
-                    pages.append(page.get_text("text"))
+            try:
+                with fitz.open(stream=raw_bytes, filetype="pdf") as doc:
+                    if getattr(doc, "needs_pass", False):
+                        raise ValueError("Fail PDF Warta ini dikunci kata laluan dan tidak dapat diindeks.")
+                    for page in doc:
+                        pages.append(page.get_text("text"))
+            except ValueError:
+                raise
+            except Exception as exc:
+                raise ValueError(f"Fail PDF Warta rosak atau tidak dapat dibaca: {exc}") from exc
             raw_text = "\n".join(pages)
         else:
             raw_text = raw_bytes.decode("utf-8", errors="ignore")
@@ -4965,6 +5306,8 @@ class ClosedBookLegalLibrary:
                     "status": "AKTA BELUM DIINDEKS — MUAT NAIK PDF WARTA",
                     "statute_id": sid_up,
                     "unindexed": True,
+                    "statute_library_version": self.statute_library_version,
+                    "total": 0,
                     "message": f"AKTA BELUM DIINDEKS — MUAT NAIK PDF WARTA ({reg.get('official_title_bm', sid_up)})",
                     "sections": [],
                 }
@@ -5219,9 +5562,11 @@ class ClosedBookLegalLibrary:
                     score += 6.0
                 if oid == "PPKM_2009_P32_1" and bool(re.search(r"\b(?:apron|penutup\s+kepala|pakaian\s+pengendali|kasut)\b", q_low)):
                     score += 6.0
-                if oid == "AKTA_281_S13B_1" and bool(re.search(r"\b(?:bangkai\s+lipas|benda\s+asing|diaduk|13b)\b", q_low)):
+                if oid == "AKTA_281_S13A_2" and bool(re.search(r"\b(?:bangkai\s+lipas|benda\s+asing|jirim\s+asing|paku|kaca|dawai|busuk|reput|13a)\b", q_low)):
+                    score += 8.5
+                if oid == "AKTA_281_S13B_1" and bool(re.search(r"\b(?:diaduk|bahan\s+tambah|piawaian\s+makanan|13b)\b", q_low)):
                     score += 7.5
-                if oid == "AKTA_281_S11_2" and bool(re.search(r"\b(?:perintah\s+tutup|penutupan\s+premis|11\(1\)|11\(2\))\b", q_low)) and not bool(
+                if oid == "AKTA_281_S11_2" and bool(re.search(r"\b(?:perintah\s+tutup|penutupan\s+premis|seksyen\s+11|s\.?\s*11|11\(1\)|11\(2\))\b", q_low)) and not bool(
                     re.search(r"\b(?:hfmd|taska|342|18\(1\)\(d\))\b", q_low)
                 ):
                     score += 7.0

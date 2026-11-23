@@ -45,6 +45,8 @@ interface LeftEvidencePaneProps {
   extractLoading: boolean;
   extractedEvidence: EvidenceExtractionResponse | null;
   fileTriggerNonce?: number;
+  onFileTriggerConsumed?: () => void;
+  onFileRejected?: (message: string) => void;
 }
 
 const AKTA_OPTIONS: Array<{ value: string; label: string }> = [
@@ -81,6 +83,8 @@ export default function LeftEvidencePane({
   extractLoading,
   extractedEvidence,
   fileTriggerNonce = 0,
+  onFileTriggerConsumed,
+  onFileRejected,
 }: LeftEvidencePaneProps) {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const cameraInputRef = useRef<HTMLInputElement | null>(null);
@@ -89,10 +93,23 @@ export default function LeftEvidencePane({
   useEffect(() => {
     if (fileTriggerNonce > 0) {
       fileInputRef.current?.click();
+      onFileTriggerConsumed?.();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fileTriggerNonce]);
 
   const handleChooseFile = (file: File | null) => {
+    if (file) {
+      const lowerName = file.name.toLowerCase();
+      if (!/\.(pdf|docx|txt|png|jpe?g|webp)$/.test(lowerName) && !file.type.startsWith("image/")) {
+        onFileRejected?.("Jenis fail tidak disokong. Sila pilih PDF, Word (.docx), teks (.txt) atau foto.");
+        return;
+      }
+      if (file.size > 15 * 1024 * 1024) {
+        onFileRejected?.("Fail terlalu besar. Saiz maksimum ialah 15 MB.");
+        return;
+      }
+    }
     onFileSelected(file);
     if (!file) return;
     const lower = file.name.toLowerCase();
@@ -397,7 +414,15 @@ export default function LeftEvidencePane({
               {caseText.trim().length > 0 && (
                 <button
                   type="button"
-                  onClick={() => onChangeCaseText("")}
+                  onClick={() => {
+                    if (
+                      caseText.trim().length > 20 &&
+                      !window.confirm("Kosongkan semua catatan fakta kes yang telah ditaip?")
+                    ) {
+                      return;
+                    }
+                    onChangeCaseText("");
+                  }}
                   className="font-semibold text-slate-600 hover:text-rose-700 hover:underline"
                 >
                   Kosongkan
@@ -411,7 +436,7 @@ export default function LeftEvidencePane({
             value={caseText}
             onChange={(e) => onChangeCaseText(e.target.value)}
             rows={7}
-            placeholder={`Taip atau tampal fakta kes anda di sini...\nContoh:\nTarikh & Masa: 18 November 2026, jam 10.30 pagi\nPremis & No. SSM: Kedai Runcit Maju (TR0012345-X)\nNama OKT & No. K/P: Ali bin Abu (880102-11-5011)\nKesalahan Ditemui: Pamer produk vape secara terbuka di kaunter...`}
+            placeholder={`Taip atau tampal fakta kes anda di sini...\nContoh:\nTarikh & Masa: 18 November 2026, jam 10.30 pagi\nPremis & No. SSM: Kedai Runcit Maju (202201012345)\nNama OKT & No. K/P: Ali bin Abu (880102-11-5011)\nKesalahan Ditemui: Pamer produk vape secara terbuka di kaunter...`}
             className="min-h-[160px] w-full resize-y rounded-xl border border-slate-300 bg-white p-3.5 text-base leading-relaxed text-slate-900 focus:border-[#0f2744] focus:outline-none focus:ring-2 focus:ring-slate-200 sm:text-sm"
           />
 

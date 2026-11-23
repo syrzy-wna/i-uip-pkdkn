@@ -203,9 +203,25 @@ _DISTINCT_QA_SUBJECTS: tuple[tuple[str, ...], ...] = (
     ("vape", "rokok", "tembakau"),
 )
 
+_POLARITY_KEEP_WORDS: set[str] = {
+    "tidak",
+    "tiada",
+    "belum",
+    "sudah",
+    "telah",
+    "ada",
+    "bukan",
+    "tanpa",
+    "hanya",
+    "kecuali",
+}
+
+
+_NEGATION_BIGRAM_WORDS: set[str] = {"tidak", "tiada", "belum", "bukan"}
+
 
 def _qa_extract_tokens(text: str) -> tuple[str, set[str], set[str]]:
-    """Menormalkan soalan perbualan PPKP dan memisahkan kata umum vs kata isi spesifik."""
+    """Menormalkan soalan perbualan PPKP sambil mengekalkan kata penafian/polariti & bigram penafian."""
     from backend.rag.statutory_store import MALAY_STOPWORDS, _normalize_query_text, _stem_malay_legal
 
     stripped = re.sub(r"\[[A-Z0-9_]+\]", " ", text or "")
@@ -216,19 +232,30 @@ def _qa_extract_tokens(text: str) -> tuple[str, set[str], set[str]]:
 
     raw_words = re.findall(r"[a-zA-Z0-9]+", clean_norm)
     all_tokens: set[str] = set()
+    prev_polarity = ""
     for w in raw_words:
+        if w in _POLARITY_KEEP_WORDS:
+            # "tanpa" setara "tiada" (kedua-duanya menafikan kewujudan) — satukan supaya parafrasa sah masih sepadan
+            w = "tiada" if w == "tanpa" else w
+            all_tokens.add(w)
+            prev_polarity = w if w in _NEGATION_BIGRAM_WORDS else ""
+            continue
         if len(w) < 2 or w in MALAY_STOPWORDS:
+            prev_polarity = ""
             continue
         stemmed = _stem_malay_legal(w)
         tok = stemmed if len(stemmed) >= 2 else w
         all_tokens.add(tok)
+        if prev_polarity:
+            all_tokens.add(f"{prev_polarity}_{tok}")
+            prev_polarity = ""
 
     specific_tokens = all_tokens - _GENERIC_QA_TOKENS
     return clean_norm, all_tokens, specific_tokens
 
 
 def _has_legal_fact_conflict(q_norm: str, cand_norm: str, cand_item: Dict[str, Any]) -> bool:
-    """Mengelak padanan palsu antara kes yang berlawanan fakta kritikal (cth. positif vs negatif)."""
+    """Mengelak padanan palsu antara kes yang berlawanan fakta kritikal (positif vs negatif, ada vs tiada, OBD vs dewasa, ulangan vs pertama)."""
     # 1. Positif vs Negatif (cth. PTB Smear Positif vs Smear Negatif)
     q_has_neg = bool(re.search(r"\bnegatif\b", q_norm))
     q_has_pos = bool(re.search(r"\bpositif\b", q_norm))
@@ -237,6 +264,51 @@ def _has_legal_fact_conflict(q_norm: str, cand_norm: str, cand_item: Dict[str, A
     if (q_has_neg and not q_has_pos and c_has_pos and not c_has_neg) or (
         c_has_neg and not c_has_pos and q_has_pos and not q_has_neg
     ):
+        return True
+
+    # 1b. Polariti penafian (ada vs tiada/tidak/belum/tanpa/bukan) pada istilah kritikal undang-undang
+    neg_words = ("tiada", "tidak", "belum", "tanpa", "bukan")
+    pos_words = ("ada", "sudah", "telah", "jumpa", "ditemui", "dijumpai", "wujud", "sah")
+    critical_polarity_nouns = (
+        "larva", "jentik", "aedes", "suntikan", "tifoid", "slpm", "tanda",
+        "perintah", "notis", "bukti", "penghuni", "lesen", "daftar", "berdaftar",
+        "fosim", "merokok", "hisap", "menghisap", "jual", "menjual", "beli", "membeli",
+    )
+    for noun in critical_polarity_nouns:
+        if re.search(rf"\b{noun}\b", q_norm) and re.search(rf"\b{noun}\b", cand_norm):
+            q_neg_n = bool(re.search(rf"\b(?:{'|'.join(neg_words)})\s+(?:\w+\s+){{0,2}}{noun}\b", q_norm))
+            c_neg_n = bool(re.search(rf"\b(?:{'|'.join(neg_words)})\s+(?:\w+\s+){{0,2}}{noun}\b", cand_norm))
+            if q_neg_n != c_neg_n:
+                return True
+            q_pos_n = bool(re.search(rf"\b(?:{'|'.join(pos_words)})\s+(?:\w+\s+){{0,2}}{noun}\b", q_norm))
+            c_pos_n = bool(re.search(rf"\b(?:{'|'.join(pos_words)})\s+(?:\w+\s+){{0,2}}{noun}\b", cand_norm))
+            if (q_neg_n and c_pos_n) or (c_neg_n and q_pos_n):
+                return True
+
+    # 1c. Polariti keseluruhan (satu soalan mempunyai penafian utama tiada/tidak/belum/tanpa, satu lagi tidak)
+    q_any_neg = bool(re.search(r"\b(?:tiada|tidak|belum|tanpa|bukan)\b", q_norm))
+    c_any_neg = bool(re.search(r"\b(?:tiada|tidak|belum|tanpa|bukan)\b", cand_norm))
+    if q_any_neg != c_any_neg:
+        return True
+
+    # 1d. OBD / Bawah 18 tahun vs Orang Dewasa
+    obd_terms = ("pelajar", "murid", "budak", "obd", "bawah 18", "bawah umur", "sekolah", "remaja", "kanak")
+    adult_terms = ("dewasa", "orang dewasa", "lelaki dewasa", "pekerja dewasa", "pemandu")
+    q_obd = any(re.search(rf"\b{t}", q_norm) for t in obd_terms)
+    c_obd = any(re.search(rf"\b{t}", cand_norm) for t in obd_terms)
+    q_adult = any(t in q_norm for t in adult_terms)
+    c_adult = any(t in cand_norm for t in adult_terms)
+    if (q_obd and c_adult and not c_obd) or (c_obd and q_adult and not q_obd):
+        return True
+
+    # 1e. Kesalahan pertama vs Kesalahan berulang / kedua
+    repeat_terms = ("kedua", "berulang", "ulangan", "kali kedua", "sabit kali kedua")
+    if any(t in q_norm for t in repeat_terms) != any(t in cand_norm for t in repeat_terms):
+        return True
+
+    # 1f. Stok pelupusan (bukan untuk dijual) vs pamer di rak jualan
+    disposal_terms = ("pelupusan", "tidak untuk dijual", "bukan untuk dijual", "stor pelupusan", "best before")
+    if any(t in q_norm for t in disposal_terms) != any(t in cand_norm for t in disposal_terms):
         return True
 
     # 2. Taska/HFMD vs Premis Makanan
@@ -398,13 +470,13 @@ def normalize_sspa_grade(raw_grade: Optional[str], default: str = "U5") -> str:
 
 
 def _utc_now_iso() -> str:
-    return datetime.now(timezone.utc).astimezone().strftime("%Y-%m-%d %H:%M:%S")
+    return datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
 
 
 def _utc_plus_days_iso(days: int = 30) -> str:
     from datetime import timedelta
 
-    return (datetime.now(timezone.utc) + timedelta(days=days)).astimezone().strftime("%Y-%m-%d %H:%M:%S")
+    return (datetime.now(timezone.utc) + timedelta(days=days)).strftime("%Y-%m-%d %H:%M:%S")
 
 
 def _hash_session_token(token: str) -> str:
@@ -466,22 +538,39 @@ class _PgCursorAdapter:
 
 
 class _PgConnAdapter:
-    """Penyesuai sambungan PostgreSQL (psycopg) bagi Cloud Run dengan sintaks `?`."""
+    """Penyesuai sambungan PostgreSQL (psycopg / psycopg_pool) bagi Cloud Run dengan sintaks `?`."""
 
-    def __init__(self, dsn: str) -> None:
-        import psycopg
-        from psycopg.rows import dict_row
+    def __init__(self, dsn: str, pool: Optional[Any] = None) -> None:
+        self._pool = pool
+        self._pool_ctx: Optional[Any] = None
+        self._conn: Any = None
+        if pool is None:
+            import psycopg
+            from psycopg.rows import dict_row
 
-        normalized = dsn.replace("postgres://", "postgresql://", 1) if dsn.startswith("postgres://") else dsn
-        self._conn = psycopg.connect(normalized, row_factory=dict_row, connect_timeout=20)
+            normalized = dsn.replace("postgres://", "postgresql://", 1) if dsn.startswith("postgres://") else dsn
+            self._conn = psycopg.connect(normalized, row_factory=dict_row, connect_timeout=20)
 
     def __enter__(self) -> "_PgConnAdapter":
+        if self._pool is not None:
+            self._pool_ctx = self._pool.connection(timeout=15.0)
+            self._conn = self._pool_ctx.__enter__()
         return self
 
     def __exit__(self, exc_type: Any, exc_val: Any, exc_tb: Any) -> None:
-        if exc_type is not None:
-            self._conn.rollback()
-        self._conn.close()
+        if self._pool_ctx is not None:
+            if exc_type is not None and self._conn is not None:
+                try:
+                    self._conn.rollback()
+                except Exception:
+                    pass
+            self._pool_ctx.__exit__(exc_type, exc_val, exc_tb)
+            self._pool_ctx = None
+            self._conn = None
+        elif self._conn is not None:
+            if exc_type is not None:
+                self._conn.rollback()
+            self._conn.close()
 
     @staticmethod
     def _translate_sql(sql: str) -> str:
@@ -500,7 +589,7 @@ class _PgConnAdapter:
 
 
 class UIPDatabase:
-    """Pengurus stor dwi-mod (SQLite WAL tempatan / PostgreSQL Cloud Run)."""
+    """Pengurus stor dwi-mod (SQLite WAL tempatan / PostgreSQL Pool Cloud Run)."""
 
     def __init__(self, db_path: Optional[Path] = None) -> None:
         self.db_path = Path(db_path or settings.sqlite_db_path)
@@ -508,15 +597,36 @@ class UIPDatabase:
             not db_path
             and settings.database_url.startswith(("postgres://", "postgresql://"))
         )
-        if not self.use_postgres:
+        self._pg_pool: Optional[Any] = None
+        if self.use_postgres:
+            self._init_pg_pool()
+        else:
             self.db_path.parent.mkdir(parents=True, exist_ok=True)
         self._init_schema()
         self.load_runtime_settings_into_config()
         self._seed_initial_cases_if_empty()
 
+    def _init_pg_pool(self) -> None:
+        try:
+            from psycopg.rows import dict_row
+            from psycopg_pool import ConnectionPool
+
+            dsn = settings.database_url
+            normalized = dsn.replace("postgres://", "postgresql://", 1) if dsn.startswith("postgres://") else dsn
+            self._pg_pool = ConnectionPool(
+                conninfo=normalized,
+                min_size=1,
+                max_size=10,
+                max_idle=300,
+                kwargs={"row_factory": dict_row, "connect_timeout": 15},
+                open=True,
+            )
+        except Exception:
+            self._pg_pool = None
+
     def _connect(self) -> Any:
         if self.use_postgres:
-            return _PgConnAdapter(settings.database_url)
+            return _PgConnAdapter(settings.database_url, pool=self._pg_pool)
         return _SqliteConnContext(str(self.db_path))
 
     def _init_schema(self) -> None:
@@ -573,15 +683,15 @@ class UIPDatabase:
                     grade TEXT NOT NULL DEFAULT 'U5',
                     kkm_authority_card_no TEXT NOT NULL DEFAULT '',
                     prosecution_authorization_no TEXT NOT NULL DEFAULT '',
-                    state_jkn TEXT NOT NULL DEFAULT 'Jabatan Kesihatan Negeri Terengganu',
-                    district_pkd TEXT NOT NULL DEFAULT 'Pejabat Kesihatan Daerah Kuala Nerus',
-                    office_address TEXT NOT NULL DEFAULT 'Pejabat Kesihatan Daerah Kuala Nerus, 21300 Kuala Nerus, Terengganu',
+                    state_jkn TEXT NOT NULL DEFAULT '',
+                    district_pkd TEXT NOT NULL DEFAULT '',
+                    office_address TEXT NOT NULL DEFAULT '',
                     unit_assignment TEXT NOT NULL DEFAULT 'Unit Inspektorat dan Perundangan (UIP)',
-                    default_magistrate_court TEXT NOT NULL DEFAULT 'MAHKAMAH MAJISTRET DI KUALA TERENGGANU, TERENGGANU',
+                    default_magistrate_court TEXT NOT NULL DEFAULT '',
                     system_role TEXT NOT NULL DEFAULT 'PEGAWAI_PENYIASAT',
-                    default_computer_desc TEXT NOT NULL DEFAULT 'Komputer Meja Rasmi KKM Dell OptiPlex Pejabat PKD',
-                    default_printer_desc TEXT NOT NULL DEFAULT 'Pencetak Laser Warna Pejabat PKD',
-                    default_camera_desc TEXT NOT NULL DEFAULT 'Kamera Digital Rasmi Pejabat KKM',
+                    default_computer_desc TEXT NOT NULL DEFAULT 'Komputer Meja Rasmi KKM Pejabat Kesihatan',
+                    default_printer_desc TEXT NOT NULL DEFAULT 'Pencetak Laser Warna Pejabat Kesihatan',
+                    default_camera_desc TEXT NOT NULL DEFAULT 'Kamera Digital Rasmi Pejabat Kesihatan',
                     auth_provider TEXT NOT NULL DEFAULT 'email',
                     last_seen_at TEXT NOT NULL DEFAULT '',
                     is_demo INTEGER NOT NULL DEFAULT 0,
@@ -636,7 +746,7 @@ class UIPDatabase:
                     user_id TEXT NOT NULL DEFAULT '',
                     user_email TEXT NOT NULL DEFAULT '',
                     user_name TEXT NOT NULL DEFAULT 'Pegawai Tetamu',
-                    district_pkd TEXT NOT NULL DEFAULT 'PKD Kuala Nerus',
+                    district_pkd TEXT NOT NULL DEFAULT '',
                     action_type TEXT NOT NULL,
                     action_detail TEXT NOT NULL DEFAULT '',
                     model_used TEXT NOT NULL DEFAULT 'local-statutory-engine',
@@ -653,6 +763,29 @@ class UIPDatabase:
             conn.execute(
                 "CREATE INDEX IF NOT EXISTS idx_activity_created_at ON activity_logs(created_at DESC)"
             )
+            conn.execute(
+                "CREATE INDEX IF NOT EXISTS idx_activity_user_id ON activity_logs(user_id)"
+            )
+            conn.execute(
+                "CREATE INDEX IF NOT EXISTS idx_ip_cases_owner_updated ON ip_cases(owner_user_id, updated_at DESC)"
+            )
+            conn.execute(
+                "CREATE INDEX IF NOT EXISTS idx_user_sessions_user_id ON user_sessions(user_id)"
+            )
+            conn.execute(
+                "CREATE INDEX IF NOT EXISTS idx_user_sessions_expires_at ON user_sessions(expires_at)"
+            )
+            # Migrasi token sesi lama yang belum di-hash supaya get_user_by_token tidak memerlukan OR bypass
+            legacy_sessions = conn.execute(
+                "SELECT token FROM user_sessions WHERE token NOT LIKE 'sha256:%'"
+            ).fetchall()
+            for s_row in legacy_sessions:
+                raw_t = str(s_row["token"] or "")
+                if raw_t:
+                    conn.execute(
+                        "UPDATE user_sessions SET token = ? WHERE token = ?",
+                        (_hash_session_token(raw_t), raw_t),
+                    )
             conn.execute(
                 """
                 CREATE TABLE IF NOT EXISTS dev_archive_records (
@@ -904,27 +1037,32 @@ class UIPDatabase:
         is_admin: bool = False,
     ) -> Dict[str, Any]:
         now = _utc_now_iso()
-        case_id = str(data.get("id") or f"kes-{uuid.uuid4().hex[:8]}").strip()
+        case_id = str(data.get("id") or f"ip-{uuid.uuid4().hex[:8]}").strip()
         existing = self.get_case(case_id)
 
         if existing and owner_user_id and not is_admin:
             existing_owner = str(existing.get("owner_user_id") or "").strip()
             if existing_owner and existing_owner != owner_user_id:
                 raise PermissionError("Akses disekat: Kes IP ini milik pegawai lain.")
+            if case_id.startswith("kes-akta-") or not existing_owner:
+                raise PermissionError("Akses disekat: Kes sampel rujukan sistem tidak boleh diubah suai.")
+        elif not existing and owner_user_id and not is_admin and case_id.startswith("kes-akta-"):
+            raise PermissionError("Akses disekat: ID kes sampel rujukan sistem tidak boleh dicipta oleh akaun biasa.")
 
         resolved_owner = (
             str(existing.get("owner_user_id") or "")
             if existing and str(existing.get("owner_user_id") or "")
             else str(owner_user_id if owner_user_id is not None else (data.get("owner_user_id") or ""))
         )
-        # Kekalkan kes sampel sistem sebagai rujukan bersama kecuali diubah suai
+        # Kekalkan kes sampel sistem sebagai rujukan bersama
         if case_id.startswith("kes-akta-") and not (existing and existing.get("owner_user_id")):
             resolved_owner = ""
 
         case_text = str(data.get("case_text") or (existing["case_text"] if existing else ""))
         parsed = self._quick_extract_metadata(case_text)
+        curr_year = datetime.now(timezone.utc).year
 
-        no_ip = str(data.get("no_ip") or parsed.get("no_ip") or (existing["no_ip"] if existing else "PKD/UIP/2026/BARU"))
+        no_ip = str(data.get("no_ip") or parsed.get("no_ip") or (existing["no_ip"] if existing else f"PKD/UIP/{curr_year}/BARU"))
         tajuk_kes = str(data.get("tajuk_kes") or (existing["tajuk_kes"] if existing else f"{no_ip} — {parsed.get('nama_premis') or 'Kes Penguatkuasaan'}"))
         akta_utama = str(data.get("akta_utama") or (existing["akta_utama"] if existing else "Akta 852"))
         workflow = str(data.get("workflow") or (existing["workflow"] if existing else "audit_ip"))
@@ -1037,7 +1175,7 @@ class UIPDatabase:
             existing_owner = str(existing.get("owner_user_id") or "").strip()
             if existing_owner and existing_owner != owner_user_id:
                 raise PermissionError("Akses disekat: Anda tidak dibenarkan memadam kes milik pegawai lain.")
-            if not existing_owner and case_id.startswith("kes-akta-"):
+            if not existing_owner or case_id.startswith("kes-akta-"):
                 raise PermissionError("Akses disekat: Kes sampel rujukan sistem tidak boleh dipadam oleh akaun biasa.")
         with self._connect() as conn:
             cur = conn.execute("DELETE FROM ip_cases WHERE id = ?", (case_id,))
@@ -1051,16 +1189,16 @@ class UIPDatabase:
         password = str(payload.get("password") or "")
         full_name = str(payload.get("full_name") or "").strip()
         if not email or "@" not in email:
-            raise ValueError("Sila masukkan alamat emel rasmi yang sah.")
-        if len(password) < 6:
-            raise ValueError("Kata laluan mestilah sekurang-kurangnya 6 aksara.")
+            raise ValueError("Sila masukkan alamat e-mel rasmi yang sah.")
+        if len(password) < 8 or len(password) > 128:
+            raise ValueError("Kata laluan mestilah antara 8 hingga 128 aksara.")
         if len(full_name) < 3:
             raise ValueError("Sila masukkan nama penuh pegawai mengikut MyKad.")
 
         with self._connect() as conn:
             exists = conn.execute("SELECT id FROM users WHERE email = ?", (email,)).fetchone()
             if exists:
-                raise ValueError("Emel pegawai ini telah didaftarkan. Sila log masuk.")
+                raise ValueError("E-mel pegawai ini telah didaftarkan. Sila log masuk.")
 
             user_id = str(payload.get("id") or f"usr-{uuid.uuid4().hex[:10]}")
             pw_hash, pw_salt = _hash_password(password)
@@ -1088,15 +1226,15 @@ class UIPDatabase:
                     normalize_sspa_grade(payload.get("grade"), "U5"),
                     str(payload.get("kkm_authority_card_no") or "").strip(),
                     str(payload.get("prosecution_authorization_no") or "").strip(),
-                    str(payload.get("state_jkn") or "Jabatan Kesihatan Negeri Terengganu").strip(),
-                    str(payload.get("district_pkd") or "Pejabat Kesihatan Daerah Kuala Nerus").strip(),
-                    str(payload.get("office_address") or "Pejabat Kesihatan Daerah Kuala Nerus, 21300 Kuala Nerus, Terengganu").strip(),
+                    str(payload.get("state_jkn") or "").strip(),
+                    str(payload.get("district_pkd") or "").strip(),
+                    str(payload.get("office_address") or "").strip(),
                     str(payload.get("unit_assignment") or "Unit Inspektorat dan Perundangan (UIP)").strip(),
-                    str(payload.get("default_magistrate_court") or "MAHKAMAH MAJISTRET DI KUALA TERENGGANU, DALAM NEGERI TERENGGANU DARUL IMAN").strip(),
+                    str(payload.get("default_magistrate_court") or "").strip(),
                     str(payload.get("system_role") or "PEGAWAI_PENYIASAT").strip(),
-                    str(payload.get("default_computer_desc") or "Komputer Meja Rasmi KKM Pejabat PKD").strip(),
-                    str(payload.get("default_printer_desc") or "Pencetak Laser Warna Pejabat PKD").strip(),
-                    str(payload.get("default_camera_desc") or "Kamera Digital Rasmi Penguatkuasaan PKD").strip(),
+                    str(payload.get("default_computer_desc") or "Komputer Meja Rasmi KKM Pejabat Kesihatan").strip(),
+                    str(payload.get("default_printer_desc") or "Pencetak Laser Warna Pejabat Kesihatan").strip(),
+                    str(payload.get("default_camera_desc") or "Kamera Digital Rasmi Pejabat Kesihatan").strip(),
                     str(payload.get("auth_provider") or "email").strip(),
                     now,
                     int(payload.get("is_demo") or 0),
@@ -1146,15 +1284,17 @@ class UIPDatabase:
 
             claims = resp.json()
             if str(claims.get("email_verified", "")).lower() != "true":
-                raise ValueError("Emel Akaun Google anda belum disahkan oleh Google.")
-            if settings.google_client_id and claims.get("aud") != settings.google_client_id:
-                raise ValueError(
-                    "Token Google tidak sepadan dengan Google OAuth Client ID aplikasi ini."
-                )
+                raise ValueError("E-mel Akaun Google anda belum disahkan oleh Google.")
+            if settings.google_client_id:
+                aud_id = str(claims.get("aud") or "").strip()
+                if not aud_id or aud_id != settings.google_client_id:
+                    raise ValueError(
+                        "Token Google tidak sepadan dengan Google OAuth Client ID aplikasi ini."
+                    )
             email = str(claims.get("email") or "").strip().lower()
             full_name = str(claims.get("name") or "").strip()
             if not email or "@" not in email:
-                raise ValueError("Maklumat emel daripada token Google tidak lengkap.")
+                raise ValueError("Maklumat e-mel daripada token Google tidak lengkap.")
             return {"email": email, "full_name": full_name}
 
         # Aliran Access Token (OAuth 2.0 Token Client Popup): sahkan audience jika Google Client ID dikonfigurasi
@@ -1173,7 +1313,7 @@ class UIPDatabase:
                 raise ValueError("Token akses Google OAuth tidak sah atau sudah tamat tempoh.")
             ti_claims = ti_resp.json()
             aud_val = str(ti_claims.get("aud") or ti_claims.get("azp") or "").strip()
-            if aud_val and aud_val != settings.google_client_id:
+            if not aud_val or aud_val != settings.google_client_id:
                 raise ValueError(
                     "Token akses Google tidak dikeluarkan untuk Google OAuth Client ID aplikasi ini."
                 )
@@ -1194,11 +1334,11 @@ class UIPDatabase:
 
         claims = resp.json()
         if not claims.get("email_verified"):
-            raise ValueError("Emel Akaun Google anda belum disahkan oleh Google.")
+            raise ValueError("E-mel Akaun Google anda belum disahkan oleh Google.")
         email = str(claims.get("email") or "").strip().lower()
         full_name = str(claims.get("name") or "").strip()
         if not email or "@" not in email:
-            raise ValueError("Maklumat emel daripada Google UserInfo tidak lengkap.")
+            raise ValueError("Maklumat e-mel daripada Google UserInfo tidak lengkap.")
         return {"email": email, "full_name": full_name}
 
     def authenticate_or_register_google_user(self, payload: Dict[str, Any]) -> Dict[str, Any]:
@@ -1218,10 +1358,20 @@ class UIPDatabase:
         with self._connect() as conn:
             existing = conn.execute("SELECT * FROM users WHERE email = ?", (email,)).fetchone()
             if existing:
-                conn.execute(
-                    "UPDATE users SET auth_provider = 'google', updated_at = ? WHERE id = ?",
-                    (_utc_now_iso(), existing["id"]),
-                )
+                # Jika akaun sebelum ini didaftarkan melalui e-mel/kata laluan biasa, putar semula hash kata laluan
+                # dan batalkan sesi lama supaya pendaftaran awal sebelum OAuth tidak mengekalkan akses pintu belakang
+                if str(existing["auth_provider"] or "") != "google":
+                    new_pw_hash, new_pw_salt = _hash_password(secrets.token_urlsafe(24))
+                    conn.execute(
+                        "UPDATE users SET auth_provider = 'google', password_hash = ?, password_salt = ?, updated_at = ? WHERE id = ?",
+                        (new_pw_hash, new_pw_salt, _utc_now_iso(), existing["id"]),
+                    )
+                    conn.execute("DELETE FROM user_sessions WHERE user_id = ?", (existing["id"],))
+                else:
+                    conn.execute(
+                        "UPDATE users SET auth_provider = 'google', updated_at = ? WHERE id = ?",
+                        (_utc_now_iso(), existing["id"]),
+                    )
                 conn.commit()
         if existing:
             token = self.create_session(existing["id"])
@@ -1242,10 +1392,10 @@ class UIPDatabase:
                 "designation": payload.get("designation") or "Penolong Pegawai Kesihatan Persekitaran (PPKP)",
                 "grade": normalize_sspa_grade(payload.get("grade"), "U5"),
                 "kkm_authority_card_no": payload.get("kkm_authority_card_no") or "",
-                "state_jkn": payload.get("state_jkn") or "Jabatan Kesihatan Negeri Terengganu",
-                "district_pkd": payload.get("district_pkd") or "Pejabat Kesihatan Daerah Kuala Nerus",
-                "office_address": payload.get("office_address") or "Pejabat Kesihatan Daerah Kuala Nerus, Lot PT 37820, Seberang Takir, 21300 Kuala Nerus, Terengganu",
-                "default_magistrate_court": payload.get("default_magistrate_court") or "MAHKAMAH MAJISTRET DI KUALA TERENGGANU, DALAM NEGERI TERENGGANU DARUL IMAN",
+                "state_jkn": payload.get("state_jkn") or "",
+                "district_pkd": payload.get("district_pkd") or "",
+                "office_address": payload.get("office_address") or "",
+                "default_magistrate_court": payload.get("default_magistrate_court") or "",
                 "system_role": payload.get("system_role") or "PEGAWAI_PENYIASAT",
                 "auth_provider": "google",
             },
@@ -1280,7 +1430,7 @@ class UIPDatabase:
         return self._safe_user_dict(row) if row else None
 
     def get_user_by_token(self, token: str) -> Optional[Dict[str, Any]]:
-        if not token:
+        if not token or token.startswith("sha256:"):
             return None
         hashed = _hash_session_token(token)
         now = _utc_now_iso()
@@ -1290,9 +1440,9 @@ class UIPDatabase:
                 SELECT u.*, s.token AS _sess_token, s.last_seen_at AS _sess_last_seen, s.expires_at AS _sess_expires
                 FROM users u
                 JOIN user_sessions s ON s.user_id = u.id
-                WHERE s.token = ? OR s.token = ?
+                WHERE s.token = ?
                 """,
-                (hashed, token),
+                (hashed,),
             ).fetchone()
             if not row:
                 return None
@@ -1456,9 +1606,9 @@ class UIPDatabase:
         log_id = f"act-{uuid.uuid4().hex[:10]}"
         now = _utc_now_iso()
         user_id = str((user or {}).get("id") or "")
-        user_email = str((user or {}).get("email") or "tetamu@pkd-kualanerus.local")
+        user_email = str((user or {}).get("email") or "tetamu@kkm.local")
         user_name = str((user or {}).get("full_name") or "Pegawai UIP (Mod Tetamu)")
-        district_pkd = str((user or {}).get("district_pkd") or "Pejabat Kesihatan Daerah Kuala Nerus")
+        district_pkd = str((user or {}).get("district_pkd") or "Pejabat Kesihatan KKM")
         with self._connect() as conn:
             conn.execute(
                 """
@@ -1572,7 +1722,7 @@ class UIPDatabase:
 
         return {
             "developer": "g.dev/syrzy",
-            "host_office": "Pejabat Kesihatan Daerah Kuala Nerus, Terengganu",
+            "host_office": "Kementerian Kesihatan Malaysia (Seluruh Malaysia)",
             "google_client_id_configured": bool(settings.google_client_id),
             "gemini_api_key_configured": settings.has_gemini_key,
             "summary": {
@@ -2083,7 +2233,11 @@ class UIPDatabase:
             "eksibit_wajib": _str_list("eksibit_wajib"),
             "perangkap_kesilapan": _str_list("perangkap_kesilapan"),
             "templat_ringkas": str(analysis.get("templat_ringkas") or ""),
-            "draf_teks_kes_cadangan": str(analysis.get("draf_teks_kes_cadangan") or ""),
+            "draf_teks_kes_cadangan": re.sub(
+                r"(?im)^(Pegawai Penyiasat \(IO\)|Pejabat|DAERAH(?:\s*/\s*KAWASAN\s*/\s*BAHAGIAN)?):\s*.*$",
+                r"\1: [DIISI MENGIKUT PROFIL PEGAWAI]",
+                str(analysis.get("draf_teks_kes_cadangan") or ""),
+            ),
             "engine_used": str(
                 analysis.get("engine_used")
                 or fallback_model
@@ -2397,7 +2551,7 @@ class UIPDatabase:
         question: str,
         *,
         akta_hint: str = "Semua",
-        min_score: float = 0.78,
+        min_score: float = 0.85,
     ) -> Optional[Dict[str, Any]]:
         """Mencari padanan soalan tepat atau hampir sama daripada Koleksi Soalan & Jawapan Pakar (ketat bagi elak jawapan salah)."""
         raw_q = (question or "").strip()
@@ -2685,6 +2839,7 @@ class UIPDatabase:
     @staticmethod
     def _row_to_dict(row: sqlite3.Row) -> Dict[str, Any]:
         d = dict(row)
+        d["is_sample"] = bool(str(d.get("id") or "").startswith("kes-akta-"))
         try:
             d["checklist"] = json.loads(d.get("checklist_json") or "{}")
         except Exception:

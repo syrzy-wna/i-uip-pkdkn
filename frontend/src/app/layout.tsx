@@ -2,9 +2,9 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "i-UIP Nerus | PKD Kuala Nerus, Terengganu",
+  title: "i-UIP Nerus | Unit Inspektorat & Perundangan KKM",
   description:
-    "Satu Hati, Satu Tekad: Memacu Kecemerlangan Kesihatan Kuala Nerus — Sistem Pintar Penguatkuasaan, Kertas Siasatan & Pendakwaan UIP, Pejabat Kesihatan Daerah Kuala Nerus, Terengganu (Dev: g.dev/syrzy).",
+    "Sistem pintar penguatkuasaan, Kertas Siasatan & pendakwaan Unit Inspektorat & Perundangan (UIP) KKM untuk Pegawai Penguat Kuasa Kesihatan Awam seluruh Malaysia (Dev: g.dev/syrzy).",
 };
 
 export const viewport: Viewport = {

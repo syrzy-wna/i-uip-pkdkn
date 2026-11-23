@@ -14,7 +14,9 @@ import hashlib
 import json
 import logging
 import re
+import threading
 from dataclasses import asdict, dataclass, field
+from datetime import datetime
 from typing import Any, Dict, List, Optional
 
 logger = logging.getLogger("uip.model_router")
@@ -24,6 +26,10 @@ import pymupdf as fitz
 from pydantic import BaseModel
 
 from backend.core.config import settings
+from backend.core.malaysia_offices import (
+    infer_state_from_text,
+    normalize_malaysia_health_office,
+)
 from backend.core.redactor import PrivacyRedactor, RedactionResult
 from backend.rag.statutory_store import StatuteChunk, StatutoryRAGStore, get_statutory_store
 
@@ -230,44 +236,57 @@ class UIPModelRouter:
     ) -> None:
         self.redactor = redactor or PrivacyRedactor()
         self.rag_store = rag_store or get_statutory_store()
+        self._client_lock = threading.RLock()
+        self._thread_state = threading.local()
         self._genai_client = None
         self._decision_client = None
         self._decision_cache: Dict[str, tuple[List[Dict[str, Any]], str]] = {}
-        self._last_ai_error: Optional[str] = None
         self.refresh_clients()
 
+    @property
+    def _last_ai_error(self) -> Optional[str]:
+        return getattr(self._thread_state, "last_ai_error", None)
+
+    @_last_ai_error.setter
+    def _last_ai_error(self, val: Optional[str]) -> None:
+        self._thread_state.last_ai_error = val
+
     def refresh_clients(self) -> None:
-        """Membina semula klien Gemini & mengemas kini tetapan Ollama secara masa nyata."""
+        """Membina semula klien Gemini & mengemas kini tetapan Ollama secara atomik dan selamat berbilang utas."""
         self.redactor.ollama_base_url = settings.ollama_base_url.rstrip("/")
         self.redactor.ollama_model = settings.ollama_model
         PrivacyRedactor.invalidate_ollama_cache()
-        self._decision_cache.clear()
-        self._genai_client = None
-        self._decision_client = None
-        self._last_ai_error = None
+
+        new_genai = None
+        new_decision = None
+        init_err: Optional[str] = None
         if GENAI_SDK_AVAILABLE and settings.has_gemini_key:
             try:
-                self._genai_client = genai.Client(
+                new_genai = genai.Client(
                     api_key=settings.gemini_api_key,
                     http_options={
                         "api_version": "v1beta",
-                        "timeout": 45_000,
+                        "timeout": 30_000,
                         "retry_options": {"attempts": 1},
                     },
                 )
-                self._decision_client = genai.Client(
+                new_decision = genai.Client(
                     api_key=settings.gemini_api_key,
                     http_options={
                         "api_version": "v1beta",
-                        "timeout": 35_000,
+                        "timeout": 28_000,
                         "retry_options": {"attempts": 2},
                     },
                 )
             except Exception as exc:
-                self._last_ai_error = "Konfigurasi klien AI tidak dapat dimulakan."
+                init_err = "Konfigurasi klien AI tidak dapat dimulakan."
                 logger.warning("Gagal membina klien Gemini (%s): %s", type(exc).__name__, str(exc)[:180])
-                self._genai_client = None
-                self._decision_client = None
+
+        with self._client_lock:
+            self._decision_cache.clear()
+            self._genai_client = new_genai
+            self._decision_client = new_decision
+            self._last_ai_error = init_err
 
     def get_system_status(self) -> Dict[str, Any]:
         ollama_ok, ollama_models = self.redactor.check_ollama_status()
@@ -404,7 +423,8 @@ class UIPModelRouter:
         low_thinking: bool,
         attempt_errors: List[str],
     ) -> Optional[tuple[Dict[str, Any], str]]:
-        if not model_name or "2.5" in model_name:
+        client = self._genai_client
+        if not client or not model_name or "2.5" in model_name:
             return None
         try:
             inter_kwargs: Dict[str, Any] = {
@@ -421,7 +441,7 @@ class UIPModelRouter:
                 inter_kwargs["generation_config"] = {"thinking_level": "low"}
             elif "3." not in model_name:
                 inter_kwargs["generation_config"] = {"temperature": temperature}
-            interaction = self._genai_client.interactions.create(**inter_kwargs)
+            interaction = client.interactions.create(**inter_kwargs)
             text = (getattr(interaction, "output_text", None) or "").strip()
             if text:
                 return self._parse_json_payload(text), f"{model_name} (Interactions API)"
@@ -442,7 +462,8 @@ class UIPModelRouter:
         max_output_tokens: Optional[int],
         attempt_errors: List[str],
     ) -> Optional[tuple[Dict[str, Any], str]]:
-        if genai_types is None or not model_name:
+        client = self._genai_client
+        if client is None or genai_types is None or not model_name:
             return None
         try:
             cfg = self._build_generate_content_config(
@@ -452,14 +473,35 @@ class UIPModelRouter:
                 prefer_flash=prefer_flash,
                 max_output_tokens=max_output_tokens,
             )
-            resp = self._genai_client.models.generate_content(
+            resp = client.models.generate_content(
                 model=model_name,
                 contents=gc_contents,
                 config=cfg,
             )
             text = (getattr(resp, "text", None) or "").strip()
+            candidates = getattr(resp, "candidates", None) or []
+            finish_reason = str(getattr(candidates[0], "finish_reason", "") or "").upper() if candidates else ""
             if text:
-                return self._parse_json_payload(text), f"{model_name} (Gemini API)"
+                try:
+                    return self._parse_json_payload(text), f"{model_name} (Gemini API)"
+                except ValueError:
+                    if "MAX_TOKENS" in finish_reason and (max_output_tokens or 0) < 4096:
+                        retry_cfg = self._build_generate_content_config(
+                            model_name=model_name,
+                            temperature=temperature,
+                            schema=schema,
+                            prefer_flash=prefer_flash,
+                            max_output_tokens=4096,
+                        )
+                        resp2 = client.models.generate_content(
+                            model=model_name,
+                            contents=gc_contents,
+                            config=retry_cfg,
+                        )
+                        text2 = (getattr(resp2, "text", None) or "").strip()
+                        if text2:
+                            return self._parse_json_payload(text2), f"{model_name} (Gemini API)"
+                    raise
             attempt_errors.append(f"{model_name} (Gemini API): output kosong")
         except Exception as exc:
             msg = f"{model_name} (Gemini API): {type(exc).__name__} - {str(exc)[:140]}"
@@ -477,10 +519,10 @@ class UIPModelRouter:
         prefer_fast_gc: bool = False,
         max_output_tokens: Optional[int] = None,
     ) -> tuple[Optional[Dict[str, Any]], str]:
-        """Menjana JSON berstruktur dengan laluan pantas (~15s) atau Interactions fallback berhad."""
+        """Menjana JSON berstruktur dengan laluan pantas (~15s) atau fallback berhad yang tahan ralat."""
         if not self._genai_client:
             self._last_ai_error = (
-                "Kunci API Gemini belum dikonfigurasi pada pelayan (sila semak Tetapan Sistem)."
+                "Kunci API Gemini belum dikonfigurasi pada pelayan (sila hubungi pentadbir sistem UIP)."
             )
             return None, "enjin-statutori-tempatan"
 
@@ -488,24 +530,29 @@ class UIPModelRouter:
         attempt_errors: List[str] = []
         gc_contents = self._to_generate_content_parts(input_payload) if genai_types is not None else input_payload
 
-        # Mod pantas (~15s): dahulukan generate_content(gemini-3.8-flash, thinking_level="low")
         if prefer_fast_gc or prefer_flash:
-            gc_primary = (
-                settings.standard_fallback_model
-                if settings.standard_fallback_model and "2.5" not in settings.standard_fallback_model
-                else "gemini-3.8-flash"
-            )
-            res = self._try_generate_content_json(
-                model_name=gc_primary,
-                gc_contents=gc_contents,
-                schema=schema,
-                temperature=temperature,
-                prefer_flash=True,
-                max_output_tokens=max_output_tokens,
-                attempt_errors=attempt_errors,
-            )
-            if res:
-                return res
+            gc_list: List[str] = []
+            if not prefer_flash and model_candidates:
+                gc_list.extend(m for m in model_candidates if m)
+            if settings.standard_fallback_model:
+                gc_list.append(settings.standard_fallback_model)
+            if settings.multimodal_model:
+                gc_list.append(settings.multimodal_model)
+            gc_list.append("gemini-2.5-flash")
+
+            gc_unique = list(dict.fromkeys(gc_list))
+            for idx, m_name in enumerate(gc_unique[:2]):
+                res = self._try_generate_content_json(
+                    model_name=m_name,
+                    gc_contents=gc_contents,
+                    schema=schema,
+                    temperature=temperature,
+                    prefer_flash=prefer_flash or idx > 0,
+                    max_output_tokens=max_output_tokens,
+                    attempt_errors=attempt_errors,
+                )
+                if res:
+                    return res
 
             inter_fallback = settings.multimodal_model or "gemini-3.8-flash"
             res = self._try_interactions_json(
@@ -519,14 +566,26 @@ class UIPModelRouter:
             if res:
                 return res
 
+            if "gemini-2.5-flash" not in gc_unique[:2]:
+                res = self._try_generate_content_json(
+                    model_name="gemini-2.5-flash",
+                    gc_contents=gc_contents,
+                    schema=schema,
+                    temperature=temperature,
+                    prefer_flash=True,
+                    max_output_tokens=max_output_tokens,
+                    attempt_errors=attempt_errors,
+                )
+                if res:
+                    return res
+
             self._last_ai_error = self._classify_friendly_ai_error(attempt_errors)
             return None, "enjin-statutori-tempatan"
 
-        # Mod mendalam (had maks 3 cubaan keseluruhan agar tidak menunggu terlalu lama)
         attempts_left = 3
         ordered_candidates = [m for m in model_candidates if m and "2.5" not in m]
-        if "gemini-3.8-flash" not in ordered_candidates:
-            ordered_candidates.append("gemini-3.8-flash")
+        if settings.standard_fallback_model and "2.5" not in settings.standard_fallback_model and settings.standard_fallback_model not in ordered_candidates:
+            ordered_candidates.append(settings.standard_fallback_model)
         for model_name in dict.fromkeys(ordered_candidates):
             if attempts_left <= 0:
                 break
@@ -544,9 +603,9 @@ class UIPModelRouter:
 
         if attempts_left > 0 and genai_types is not None:
             raw_std = [
+                *model_candidates,
                 settings.standard_fallback_model,
-                "gemini-3.8-flash",
-                settings.reasoning_model_alias,
+                "gemini-2.5-flash",
             ]
             for model_name in dict.fromkeys(m for m in raw_std if m):
                 if attempts_left <= 0:
@@ -604,15 +663,22 @@ class UIPModelRouter:
         statutory_context: List[StatuteChunk],
     ) -> tuple[Optional[List[Dict[str, Any]]], str]:
         """Menjalankan gemini-decision-1 melalui Decisions API v1beta apabila API key aktif."""
-        if not self._decision_client:
+        decision_client = self._decision_client
+        if not decision_client:
             return None, "Enjin Semakan Statutori KKM"
 
         cache_sig = hashlib.sha256(
-            f"{settings.decision_model}|{redacted_text[:18000]}|{len(criteria_list)}".encode("utf-8")
+            f"{settings.decision_model}|{redacted_text}|{len(criteria_list)}".encode("utf-8")
         ).hexdigest()
-        if cache_sig in self._decision_cache:
-            cached_items, cached_model = self._decision_cache[cache_sig]
-            return [dict(item) for item in cached_items], f"{cached_model} [Cache]"
+        with self._client_lock:
+            if cache_sig in self._decision_cache:
+                cached_items, cached_model = self._decision_cache[cache_sig]
+                return [dict(item) for item in cached_items], f"{cached_model} [Cache]"
+
+        if len(redacted_text) > 24000:
+            doc_slice = f"{redacted_text[:13000]}\n\n[... bahagian tengah dipendekkan ...]\n\n{redacted_text[-11000:]}"
+        else:
+            doc_slice = redacted_text
 
         rag_brief = "\n\n".join(
             f"[{s.akta_code} - {s.section}]\n{s.text[:500]}" for s in statutory_context[:4]
@@ -621,7 +687,7 @@ class UIPModelRouter:
             "RUJUKAN AKTA SEBENAR:\n"
             f"{rag_brief}\n\n"
             "TEKS KERTAS SIASATAN (DATA PERIBADI TELAH DITUTUP DENGAN TOKEN [SUSPEK_1], [NO_KP_1], [PREMIS_1]):\n"
-            f"{redacted_text[:18000]}"
+            f"{doc_slice}"
         )
         questions = {
             c["code"]: {
@@ -636,7 +702,7 @@ class UIPModelRouter:
         }
 
         try:
-            result = self._decision_client.decisions.create(
+            result = decision_client.decisions.create(
                 model=settings.decision_model,
                 input=decision_input,
                 questions=questions,
@@ -666,12 +732,13 @@ class UIPModelRouter:
                     }
                 )
             if formatted:
-                if len(self._decision_cache) >= 64:
-                    self._decision_cache.clear()
-                self._decision_cache[cache_sig] = ([dict(item) for item in formatted], f"{settings.decision_model} (Decisions API)")
+                with self._client_lock:
+                    if len(self._decision_cache) >= 64:
+                        self._decision_cache.clear()
+                    self._decision_cache[cache_sig] = ([dict(item) for item in formatted], f"{settings.decision_model} (Decisions API)")
                 return formatted, f"{settings.decision_model} (Decisions API)"
-        except Exception:
-            pass
+        except Exception as exc:
+            logger.warning("Decisions API fallback ke enjin tempatan (%s): %s", type(exc).__name__, str(exc)[:140])
 
         return None, "Enjin Semakan Statutori KKM"
 
@@ -692,19 +759,46 @@ class UIPModelRouter:
         mime_type: str,
         doc_hint: str = "bukti_kesalahan",
     ) -> EvidenceExtractionResult:
-        """Mengekstrak teks dan butiran fakta daripada fail PDF atau gambar bukti."""
+        """Mengekstrak teks dan butiran fakta daripada fail PDF, Word (.docx), teks (.txt), atau gambar bukti."""
         warnings: List[str] = []
-        extracted_pdf_text = ""
-        is_pdf = mime_type == "application/pdf" or filename.lower().endswith(".pdf")
+        extracted_local_text = ""
+        low_fname = (filename or "").strip().lower()
+        is_pdf = mime_type == "application/pdf" or low_fname.endswith(".pdf")
+        is_docx = (
+            low_fname.endswith(".docx")
+            or mime_type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        )
+        is_txt = low_fname.endswith((".txt", ".md")) or (mime_type or "").startswith("text/")
+        is_image = (mime_type or "").startswith("image/") or low_fname.endswith(
+            (".jpg", ".jpeg", ".png", ".webp", ".heic", ".heif", ".gif", ".bmp")
+        )
 
-        if is_pdf:
+        if is_docx or is_txt:
+            from backend.services.ip_auditor import extract_text_from_upload
+
+            try:
+                extracted_local_text = extract_text_from_upload(file_bytes, filename or "dokumen.txt")
+            except ValueError as exc:
+                raise exc
+            except Exception:
+                raise ValueError("Fail dokumen tidak dapat dibaca atau rosak. Sila semak fail dan cuba semula.")
+        elif is_pdf:
             try:
                 with fitz.open(stream=file_bytes, filetype="pdf") as doc:
-                    extracted_pdf_text = "\n".join(p.get_text("text") for p in doc).strip()
-            except Exception as exc:
-                warnings.append(f"Ralat baca fail PDF: {exc}")
+                    if getattr(doc, "is_encrypted", False) and not doc.authenticate(""):
+                        raise ValueError("Fail PDF berkunci kata laluan. Sila buka kunci PDF terlebih dahulu.")
+                    extracted_local_text = "\n".join(p.get_text("text") for p in doc).strip()
+            except ValueError:
+                raise
+            except Exception:
+                warnings.append("Fail PDF sukar dihuraikan secara tempatan; cubaan bacaan alternatif sedang dijalankan.")
 
-        if self._genai_client:
+        # Elak menghantar fail .docx/.txt sebagai `type: "image"` ke Gemini; bagi PDF yang sudah kaya teks tempatan, guna teks tempatan terus (lebih cepat & patuh PDPA!)
+        should_call_vision = bool(
+            self._genai_client
+            and (is_image or (is_pdf and len(extracted_local_text) < 120))
+        )
+        if should_call_vision:
             prompt = (
                 "Anda membantu PPKP Kementerian Kesihatan Malaysia mengekstrak bukti penguatkuasaan.\n"
                 f"Jenis dokumen: {doc_hint} (Fail: {filename}).\n"
@@ -736,8 +830,11 @@ class UIPModelRouter:
                 temperature=0.0,
             )
             if data:
-                raw = str(data.get("raw_text") or extracted_pdf_text or "")
-                conf = float(data.get("confidence", 0.88))
+                raw = str(data.get("raw_text") or extracted_local_text or "")
+                try:
+                    conf = float(data.get("confidence") if data.get("confidence") is not None else 0.88)
+                except (TypeError, ValueError):
+                    conf = 0.88
                 summary = (
                     f"Fail '{filename}' berjaya diekstrak ({used_model}). "
                     f"Premis: {data.get('nama_premis_atau_syarikat', 'Tiada')}; "
@@ -752,40 +849,45 @@ class UIPModelRouter:
                     warnings=warnings,
                 )
 
-        if not settings.has_gemini_key:
+        if not settings.has_gemini_key and is_image:
             warnings.append(
-                "Kunci API Gemini belum dimasukkan dalam Tetapan Sistem — menggunakan penghurai teks/PDF tempatan."
+                "Fungsi bacaan imej automatik (OCR) tidak tersedia buat sementara — sila taip butiran penting daripada gambar atau hubungi pentadbir sistem UIP."
             )
 
-        # Penghurai fakta sebenar daripada teks PDF (jika PDF berteks) atau nama fail
-        facts = self.extract_case_facts(extracted_pdf_text) if extracted_pdf_text else {}
+        facts = self.extract_case_facts(extracted_local_text) if extracted_local_text else {}
         inferred_fields = self._parse_evidence_fields(
             filename=filename,
             doc_hint=doc_hint,
-            text=extracted_pdf_text,
+            text=extracted_local_text,
             facts=facts,
             size_bytes=len(file_bytes),
         )
-        raw_text = extracted_pdf_text or (
+        raw_text = extracted_local_text or (
             f"[FAIL BUKTI DIMUAT NAIK: {filename} | Saiz: {len(file_bytes)} bait]\n"
             f"Jenis Dokumen: {inferred_fields['jenis_dokumen']}\n"
             f"Cadangan Seksyen: {inferred_fields['cadangan_akta_seksyen']}\n"
             f"Catatan: {inferred_fields['butiran_kesalahan_atau_eksibit']}"
         )
+        doc_kind_label = "Word (.docx)" if is_docx else ("teks (.txt)" if is_txt else "PDF")
         summary = (
             f"Fail '{filename}' ({doc_hint}) diproses menggunakan penghurai tempatan. "
             + (
-                f"Berjaya mengesan {len(extracted_pdf_text)} aksara teks daripada PDF."
-                if extracted_pdf_text
-                else "Untuk bacaan teks pada gambar foto/scan (OCR Vision), masukkan GEMINI_API_KEY dalam Tetapan AI."
+                f"Berjaya mengesan {len(extracted_local_text)} aksara teks daripada dokumen {doc_kind_label}."
+                if extracted_local_text
+                else "Gambar telah dilampirkan. Jika teks pada imej tidak terbaca automatik, sila taip butiran ringkas di ruangan teks kes."
             )
+        )
+        local_engine_name = (
+            "Penghurai Word (.docx) Tempatan"
+            if is_docx and extracted_local_text
+            else ("Penghurai Teks Tempatan" if is_txt and extracted_local_text else ("Penghurai PyMuPDF Tempatan" if extracted_local_text else "Penghurai Metadata Fail"))
         )
         return EvidenceExtractionResult(
             extracted_fields=inferred_fields,
             structured_summary=summary,
             raw_text=raw_text,
-            confidence=0.88 if extracted_pdf_text else 0.72,
-            model_used="Penghurai PyMuPDF Tempatan" if extracted_pdf_text else "Penghurai Metadata Fail",
+            confidence=0.90 if extracted_local_text else 0.72,
+            model_used=local_engine_name,
             warnings=warnings,
         )
 
@@ -800,7 +902,7 @@ class UIPModelRouter:
         low = (filename + " " + doc_hint + " " + text[:600]).lower()
         if "ssm" in low:
             doc_type = "Cetakan Carian SSM (e-Info / MyData)"
-            akta_sugg = "Pengesahan Pemilik / Pengarah Syarikat (S.51 Akta 852 / S.33A Akta 281)"
+            akta_sugg = "Pengesahan Pemilik / Pengarah Syarikat (S.49 Akta 852 / S.33A Akta 281 / S.22(2) Akta 154)"
             butiran = facts.get("kesalahan") or "Dokumen pendaftaran perniagaan/syarikat untuk pengesahan entiti OKT."
         elif "sitaan" in low or "bongkar" in low:
             doc_type = "Borang Senarai Benda Disita (Seksyen 36 Akta 852 / Seksyen 4 Akta 281)"
@@ -834,7 +936,7 @@ class UIPModelRouter:
 
     @staticmethod
     def extract_case_facts(text: str) -> Dict[str, Any]:
-        """Menghurai fakta sebenar daripada teks/PDF Kertas Siasatan tanpa nilai palsu hardcoded."""
+        """Menghurai fakta sebenar daripada teks/PDF Kertas Siasatan tanpa nilai negeri palsu hardcoded."""
 
         def _find(patterns: List[str], default: str = "") -> str:
             for pat in patterns:
@@ -846,15 +948,17 @@ class UIPModelRouter:
             return default
 
         no_ip = _find([r"(?:no\.?\s*ip|no\.?\s*kertas\s+siasatan)\s*[:\-]\s*([^\n\r]+)"])
-        daerah_raw = _find([r"(?:daerah|pejabat\s+kesihatan\s+daerah)\s*[:\-]\s*([^\n\r]+)"])
+        daerah_raw = _find([
+            r"(?:daerah|pejabat\s+kesihatan\s+(?:daerah|kawasan|bahagian)|pejabat\s+kesihatan)\s*[:\-]\s*([^\n\r]+)"
+        ])
         daerah = daerah_raw.split(",")[0].strip() if daerah_raw else ""
-        negeri = daerah_raw.split(",")[1].strip() if "," in daerah_raw else "Selangor"
+        alamat = _find([r"(?:alamat\s+kejadian|tempat\s+kejadian|alamat\s+premis)\s*[:\-]\s*([^\n\r]+)"])
+        negeri = daerah_raw.split(",")[1].strip() if "," in daerah_raw else infer_state_from_text(alamat)
 
         tarikh = _find([r"tarikh\s+(?:kejadian|pemeriksaan|operasi)\s*[:\-]\s*([^\n\r(]+)"])
         masa = _find([r"masa\s+(?:kejadian|pemeriksaan|operasi)\s*[:\-]\s*([^\n\r]+)"])
         nama_premis = _find([r"(?:nama\s+premis(?:\s+makanan)?|nama\s+syarikat)\s*[:\-]\s*([^\n\r]+)"])
         no_ssm = _find([r"no\.?\s*ssm\s*[:\-]\s*([^\n\r]+)"])
-        alamat = _find([r"(?:alamat\s+kejadian|tempat\s+kejadian|alamat\s+premis)\s*[:\-]\s*([^\n\r]+)"])
         nama_okt = _find([
             r"(?:nama\s+(?:suspek|okt|oks|pemilik|pengurus\s+tapak|tertuduh)(?:\s*\([^)]+\))?)\s*[:\-]\s*([^\n\r]+)"
         ])
@@ -867,11 +971,9 @@ class UIPModelRouter:
         saksi_raw = _find([r"(?:^|\n)[ \t]*saksi(?:\s*\d+)?\s*[:\-]\s*([^\n\r]+)"])
         kesalahan = _find([r"(?:kesalahan|butiran\s+kesalahan|fakta\s+ringkas)\s*[:\-]\s*([^\n\r]+)"])
 
-        # Ekstrak nombor lak/seal sebenar daripada teks jika ada
         seal_m = re.search(r"(?:seal|lak(?:\s+rasmi)?(?:\s+kkm)?(?:\s+siri)?)\s*(?:#|no\.?\s*)?([A-Za-z0-9\-#]+)", text, flags=re.I)
         no_seal = seal_m.group(1).strip() if seal_m else "Belum direkodkan"
 
-        # Ekstrak maklumat saksi dan no. KP jika berada dalam kurungan
         saksi_nama = saksi_raw
         saksi_kp = ""
         saksi_peranan = "Saksi Pendakwaan"
@@ -886,7 +988,6 @@ class UIPModelRouter:
                 if parts:
                     saksi_peranan = ", ".join(parts)
 
-        # Kesan tarikh DS & S.112 jika disebut dalam teks
         s112_date_m = re.search(r"(?:rakaman\s+s\.?112|percakapan\s+saksi)[^.\n]*?(?:pada|bertarikh)\s+([^\n.]+)", text, flags=re.I)
         s112_when = s112_date_m.group(1).strip() if s112_date_m else (tarikh or "Tarikh siasatan")
 
@@ -921,7 +1022,7 @@ class UIPModelRouter:
         officer_profile: Optional[Dict[str, Any]] = None,
         fast_mode: bool = True,
     ) -> DraftGenerationResult:
-        """Menjana pakej dokumen IP lengkap dengan format rasmi Mahkamah Majistret & KKM."""
+        """Menjana pakej dokumen IP lengkap dengan format rasmi Mahkamah Majistret & KKM seluruh Malaysia."""
         redaction: RedactionResult = self.redactor.redact(case_text, use_ollama=use_ollama_redaction)
         citations = self.rag_store.search_statutes(
             query=f"{akta_utama} kesalahan hukuman pertuduhan {redaction.redacted_text[:450]}",
@@ -942,10 +1043,23 @@ class UIPModelRouter:
 
         reasoning_model_used = "Penghurai Fakta & Templat Rasmi UIP KKM (Mod Pantas)"
         generated_json: Optional[Dict[str, Any]] = None
+        prof = officer_profile or {}
 
         if self._genai_client and not fast_mode:
             rag_verbatim = "\n\n".join(
                 f"[{c.akta_title} | {c.section}]\n{c.text}" for c in citations
+            )
+            office_ctx = normalize_malaysia_health_office(
+                district_pkd=str(prof.get("district_pkd") or ""),
+                state_jkn=str(prof.get("state_jkn") or ""),
+            )
+            office_hint_lines = "\n".join(
+                ln for ln in (
+                    f"- Pejabat Kesihatan Pegawai: {office_ctx['pejabat_rasmi']}" if prof.get("district_pkd") else "",
+                    f"- Negeri / JKN: {office_ctx['negeri']}" if office_ctx["negeri"] else "",
+                    f"- Mahkamah Majistret Bidang Kuasa: {prof.get('default_magistrate_court')}" if prof.get("default_magistrate_court") else "",
+                )
+                if ln
             )
             prompt = (
                 "Anda ialah Pegawai Pendakwa Kanan UIP KKM.\n"
@@ -954,11 +1068,12 @@ class UIPModelRouter:
                 "1) Kekalkan semua token penyamaran [SUSPEK_1], [NO_KP_1], [PREMIS_1], [NO_SSM_1] tanpa mengubahnya.\n"
                 "2) Petik HANYA nombor Seksyen & Peraturan yang wujud dalam RUJUKAN AKTA SEBENAR di bawah.\n"
                 "3) Borang 114 wajib memisahkan Seksyen Kesalahan daripada Seksyen Hukuman.\n"
-                "4) Sijil Seksyen 90A wajib mengandungi butiran perkakasan dan klausa 'sepanjang pengetahuan dan kepercayaan saya'.\n\n"
-                f"RUJUKAN AKTA SEBENAR:\n{rag_verbatim}\n\n"
-                f"MAKLUMAT KES (DATA SULIT DITUTUP):\n{redaction.redacted_text[:9000]}"
+                "4) Sijil Seksyen 90A(2) & (3)(a) wajib mengandungi butiran perkakasan dan klausa 'sepanjang pengetahuan dan kepercayaan saya'.\n"
+                + (f"\nKONTEKS PEJABAT PEGAWAI (BUKAN PII):\n{office_hint_lines}\n" if office_hint_lines else "")
+                + f"\nRUJUKAN AKTA SEBENAR:\n{rag_verbatim}\n\n"
+                + f"MAKLUMAT KES (DATA SULIT DITUTUP):\n{redaction.redacted_text[:9000]}"
             )
-            generated_json, used = self._call_gemini_structured_json(
+            ai_json, used = self._call_gemini_structured_json(
                 model_candidates=[
                     settings.standard_fallback_model,
                     settings.multimodal_model,
@@ -969,8 +1084,23 @@ class UIPModelRouter:
                 temperature=0.1,
                 prefer_flash=True,
             )
-            if generated_json:
-                reasoning_model_used = used
+            if isinstance(ai_json, dict) and isinstance(ai_json.get("borang_114"), dict):
+                # Sahkan output AI terhadap Pustaka Akta Verbatim AGC sebelum diterima
+                from backend.rag.legal_engine import get_legal_library, validate_legal_output
+
+                val_draft = validate_legal_output(
+                    {"akta_disyorkan": akta_utama, "borang_114": ai_json.get("borang_114")},
+                    get_legal_library().to_snapshot_dict(),
+                    question_context=redaction.redacted_text[:600],
+                )
+                if val_draft.get("passed", True):
+                    generated_json = ai_json
+                    reasoning_model_used = used
+                else:
+                    logger.warning(
+                        "Draf AI gagal semakan Pustaka Akta (%s) — jatuh semula ke templat fakta tempatan.",
+                        val_draft.get("warning_banner"),
+                    )
 
         if not generated_json:
             generated_json = self._build_structured_draft_from_facts(
@@ -981,48 +1111,85 @@ class UIPModelRouter:
             )
 
         fakta_kes_redacted, style_engine = self._polish_formal_malay_offline(
-            generated_json.get("fakta_kes", "")
+            str(generated_json.get("fakta_kes") or "")
         )
         generated_json["fakta_kes"] = fakta_kes_redacted
 
         rehydrated = self._rehydrate_nested(generated_json, redaction.token_map)
+        if not isinstance(rehydrated, dict):
+            rehydrated = {}
+
+        # Pastikan semua sub-objek adalah dict/list sah dan selaraskan profil pegawai seluruh Malaysia
+        for dict_key in ("borang_114", "borang_143", "saman_111", "izin_mendakwa", "sijil_90a", "notis_kompaun"):
+            if not isinstance(rehydrated.get(dict_key), dict):
+                rehydrated[dict_key] = {}
+        for list_key in ("minit_ip", "kronologi_kes", "diari_siasatan", "senarai_saksi", "senarai_eksibit", "pemberatan_hukuman", "tpr_simulation_notes"):
+            if not isinstance(rehydrated.get(list_key), list):
+                rehydrated[list_key] = []
+
         if officer_profile:
-            s90 = rehydrated.setdefault("sijil_90a", {})
+            office_p = normalize_malaysia_health_office(
+                district_pkd=str(prof.get("district_pkd") or ""),
+                state_jkn=str(prof.get("state_jkn") or ""),
+            )
+            s90 = rehydrated["sijil_90a"]
             if not s90.get("nama_pegawai") or "[" in str(s90.get("nama_pegawai", "")):
-                s90["nama_pegawai"] = officer_profile.get("full_name") or s90.get("nama_pegawai", "")
-            if officer_profile.get("designation"):
-                s90["jawatan"] = f"{officer_profile.get('designation')} ({officer_profile.get('grade', '')})".strip()
-            if officer_profile.get("district_pkd") and (not s90.get("pejabat_pkd") or "[" in str(s90.get("pejabat_pkd", ""))):
-                s90["pejabat_pkd"] = officer_profile["district_pkd"]
-            if officer_profile.get("default_camera_desc"):
-                s90["peranti_kamera"] = officer_profile["default_camera_desc"]
-            if officer_profile.get("default_computer_desc"):
-                s90["perihal_komputer"] = officer_profile["default_computer_desc"]
-            if officer_profile.get("default_printer_desc"):
-                s90["perihal_pencetak"] = officer_profile["default_printer_desc"]
-            b114 = rehydrated.setdefault("borang_114", {})
-            if officer_profile.get("default_magistrate_court") and "[" in str(b114.get("mahkamah", "")):
-                b114["mahkamah"] = officer_profile["default_magistrate_court"]
+                s90["nama_pegawai"] = prof.get("full_name") or s90.get("nama_pegawai", "")
+            if prof.get("designation"):
+                s90["jawatan"] = f"{prof.get('designation')} ({prof.get('grade', '')})".strip()
+            if prof.get("district_pkd") and (not s90.get("pejabat_pkd") or "[" in str(s90.get("pejabat_pkd", ""))):
+                s90["pejabat_pkd"] = office_p["pejabat_rasmi"]
+            if prof.get("default_camera_desc"):
+                s90["peranti_kamera"] = prof["default_camera_desc"]
+            if prof.get("default_computer_desc"):
+                s90["perihal_komputer"] = prof["default_computer_desc"]
+            if prof.get("default_printer_desc"):
+                s90["perihal_pencetak"] = prof["default_printer_desc"]
+
+            b114 = rehydrated["borang_114"]
+            b143 = rehydrated["borang_143"]
+            sam111 = rehydrated["saman_111"]
+            komp = rehydrated["notis_kompaun"]
+            if prof.get("district_pkd") and not b114.get("pejabat_pkd"):
+                b114["pejabat_pkd"] = office_p["pejabat_rasmi"]
+            if prof.get("full_name") and (not b114.get("pegawai_pengadu") or "[" in str(b114.get("pegawai_pengadu", ""))):
+                b114["pegawai_pengadu"] = prof["full_name"]
+            if prof.get("default_magistrate_court"):
+                court_pref = str(prof["default_magistrate_court"]).strip()
+                if not b114.get("mahkamah") or "[" in str(b114.get("mahkamah", "")):
+                    b114["mahkamah"] = court_pref
+                if not b143.get("mahkamah") or "[" in str(b143.get("mahkamah", "")):
+                    b143["mahkamah"] = court_pref
+                if not sam111.get("mahkamah") or "[" in str(sam111.get("mahkamah", "")):
+                    sam111["mahkamah"] = court_pref
+            if prof.get("full_name") and (not komp.get("pegawai_pengeluar") or "[" in str(komp.get("pegawai_pengeluar", ""))):
+                komp["pegawai_pengeluar"] = prof["full_name"]
+            if prof.get("kkm_authority_card_no") and (not komp.get("no_kad_kuasa") or "[" in str(komp.get("no_kad_kuasa", ""))):
+                komp["no_kad_kuasa"] = prof["kkm_authority_card_no"]
+            if prof.get("district_pkd") and not komp.get("pejabat_pkd"):
+                komp["pejabat_pkd"] = office_p["pejabat_rasmi"]
+            if prof.get("state_jkn") and not komp.get("state_jkn"):
+                komp["state_jkn"] = str(prof["state_jkn"])
 
         return DraftGenerationResult(
             workflow=workflow,
             akta_utama=akta_utama,
-            minit_ip=rehydrated.get("minit_ip", []),
-            kronologi_kes=rehydrated.get("kronologi_kes", []),
-            kertas_cadangan_io=rehydrated.get("kertas_cadangan_io", ""),
-            saman_111=rehydrated.get("saman_111", {}),
-            borang_143=rehydrated.get("borang_143", {}),
-            izin_mendakwa=rehydrated.get("izin_mendakwa", {}),
-            borang_114=rehydrated.get("borang_114", {}),
-            diari_siasatan=rehydrated.get("diari_siasatan", []),
-            fakta_kes=rehydrated.get("fakta_kes", ""),
-            rakaman_112=rehydrated.get("rakaman_112", ""),
-            senarai_saksi=rehydrated.get("senarai_saksi", []),
-            senarai_eksibit=rehydrated.get("senarai_eksibit", []),
-            sijil_90a=rehydrated.get("sijil_90a", {}),
-            notis_kompaun=rehydrated.get("notis_kompaun", {}),
-            pemberatan_hukuman=rehydrated.get("pemberatan_hukuman", []),
-            tpr_simulation_notes=rehydrated.get("tpr_simulation_notes", []),
+            minit_ip=rehydrated["minit_ip"],
+            kronologi_kes=rehydrated["kronologi_kes"],
+            kertas_cadangan_io=str(rehydrated.get("kertas_cadangan_io") or ""),
+            saman_111=rehydrated["saman_111"],
+            borang_143=rehydrated["borang_143"],
+            izin_mendakwa=rehydrated["izin_mendakwa"],
+            borang_114=rehydrated["borang_114"],
+            diari_siasatan=rehydrated["diari_siasatan"],
+            fakta_kes=str(rehydrated.get("fakta_kes") or ""),
+            rakaman_112=str(rehydrated.get("rakaman_112") or ""),
+            senarai_saksi=rehydrated["senarai_saksi"],
+            senarai_eksibit=rehydrated["senarai_eksibit"],
+            sijil_90a=rehydrated["sijil_90a"],
+            notis_kompaun=rehydrated["notis_kompaun"],
+            pemberatan_hukuman=rehydrated["pemberatan_hukuman"],
+            tpr_simulation_notes=rehydrated["tpr_simulation_notes"],
             statutory_citations=citations_dict,
             redaction_preview={
                 "engine_used": redaction.engine_used,
@@ -1059,17 +1226,36 @@ class UIPModelRouter:
         citations: List[StatuteChunk],
         officer_profile: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
-        """Membina draf rasmi Kertas Siasatan hanya daripada fakta sebenar teks/PDF."""
+        """Membina draf rasmi Kertas Siasatan hanya daripada fakta sebenar teks/PDF dan profil pejabat seluruh Malaysia."""
         facts = self.extract_case_facts(redacted_text)
         prof = officer_profile or {}
+        current_year = datetime.now().year
 
-        no_ip = facts["no_ip"] or "[Sila isi No. IP PKD]"
-        daerah = facts["daerah"] or (
-            str(prof.get("district_pkd") or "").replace("Pejabat Kesihatan Daerah ", "").strip() or "[Daerah]"
+        office = normalize_malaysia_health_office(
+            district_pkd=str(prof.get("district_pkd") or ""),
+            state_jkn=str(prof.get("state_jkn") or ""),
+            daerah_override=facts["daerah"],
+            negeri_override=facts["negeri"],
         )
-        negeri = facts["negeri"] or (
-            str(prof.get("state_jkn") or "").replace("Jabatan Kesihatan Negeri ", "").strip() or "Selangor"
+
+        no_ip = facts["no_ip"] or f"PKD/UIP/{current_year}/[Sila isi No. Siri]"
+        daerah = office["daerah"] or "[Daerah / Kawasan / Bahagian]"
+        negeri = office["negeri"] or "[Negeri]"
+        pejabat_rasmi = office["pejabat_rasmi"]
+        negeri_mahkamah = office["negeri_mahkamah"]
+
+        # Hormati Mahkamah Majistret lalai pegawai sekiranya kes dalam daerah pegawai sendiri atau daerah tidak dinyatakan
+        prof_daerah = normalize_malaysia_health_office(district_pkd=str(prof.get("district_pkd") or ""))["daerah"]
+        use_prof_court = bool(
+            prof.get("default_magistrate_court")
+            and (not facts["daerah"] or facts["daerah"].lower() == prof_daerah.lower())
         )
+        mahkamah_rasmi = (
+            str(prof["default_magistrate_court"]).strip()
+            if use_prof_court
+            else f"DALAM MAHKAMAH MAJISTRET DI {daerah.upper()}"
+        )
+
         tarikh = facts["tarikh"] or "[Sila isi Tarikh Kejadian]"
         masa = facts["masa"] or "[Sila isi Masa Kejadian]"
         pegawai = facts["pegawai_io"] or prof.get("full_name") or "[Sila isi Nama Pegawai Penyiasat (IO)]"
@@ -1085,28 +1271,48 @@ class UIPModelRouter:
         witness_token = "[SAKSI_1]" if "[SAKSI_1]" in redacted_text else (facts["saksi_nama"] or "[Nama Saksi]")
         witness_ic = "[NO_KP_2]" if "[NO_KP_2]" in redacted_text else (facts["saksi_kp"] or "[No. K/P Saksi]")
 
-        # Penentuan seksyen kesalahan, seksyen hukuman, dan seksyen kompaun yang tepat mengikut Akta
-        seksyen_kesalahan, seksyen_hukuman, hukuman_max, peruntukan_kompaun, tempoh_kompaun = self._resolve_act_provisions(
-            akta_utama=akta_utama,
-            text=redacted_text,
-            citations=citations,
+        seksyen_kesalahan, seksyen_hukuman, hukuman_max, peruntukan_kompaun, tempoh_kompaun, amaun_default = (
+            self._resolve_act_provisions(
+                akta_utama=akta_utama,
+                text=redacted_text,
+                citations=citations,
+            )
         )
 
-        # Bina ayat pertuduhan Borang 114 rasmi (Seksyen 152, 153 & 154 KTJ)
+        # Pemetaan mandatori Izin Mendakwa (Keizinan Bertulis Pendakwa Raya) bagi kesemua 4 Akta KKM
+        low_act = f"{akta_utama} {seksyen_kesalahan}".lower()
+        if "852" in low_act:
+            act_consent = "Seksyen 41 Akta 852"
+        elif "281" in low_act or "makanan" in low_act or "ppkm" in low_act or "ppm" in low_act:
+            act_consent = "Seksyen 32A Akta Makanan 1983 [Akta 281]"
+        elif "154" in low_act:
+            act_consent = "Seksyen 22A Akta Pemusnahan Serangga Pembawa Penyakit 1975 [Akta 154]"
+        elif "342" in low_act:
+            act_consent = "Seksyen 23 Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988 [Akta 342]"
+        else:
+            act_consent = ""
+        peruntukan_izin = (
+            "Perkara 145(3) Perlembagaan Persekutuan, Seksyen 376(3) Kanun Tatacara Jenayah"
+            + (f" & {act_consent}" if act_consent else "")
+            + " (serta Seksyen 377(b) KTJ bagi kuasa menjalankan pendakwaan)"
+        )
+
         tempat_penuh = f"{prem_token}, {alamat}" if prem_token not in alamat else alamat
+        negeri_phrase = (
+            f"di {negeri}" if "wilayah persekutuan" in negeri.lower() else f"di dalam Negeri {negeri}"
+        )
         pertuduhan_text = (
             f"Bahawa kamu, pada {tarikh}, jam lebih kurang {masa}, bertempat di {tempat_penuh}, "
-            f"di dalam Daerah {daerah}, di dalam Negeri {negeri}, telah didapati {kesalahan_ringkas}; "
+            f"di dalam Daerah/Kawasan {daerah}, {negeri_phrase}, telah didapati {kesalahan_ringkas}; "
             f"dan oleh yang demikian kamu telah melakukan suatu kesalahan di bawah {seksyen_kesalahan}, "
             f"yang boleh dihukum di bawah {seksyen_hukuman}."
         )
 
-        # Bina Minit Kertas Siasatan 4 peringkat rasmi UIP KKM
         minit_ip = [
             {
                 "bil": "Minit 1",
                 "tarikh": tarikh,
-                "daripada": "Ketua UIP Daerah",
+                "daripada": "Ketua UIP Daerah / Kawasan / Bahagian",
                 "kepada": pegawai,
                 "kandungan": f"Kesalahan di bawah {seksyen_kesalahan} dilaporkan. Sila buka Kertas Siasatan No. {no_ip} dan lengkapkan siasatan mengikut senarai semak UIP.",
             },
@@ -1114,7 +1320,7 @@ class UIPModelRouter:
                 "bil": "Minit 2",
                 "tarikh": facts["s112_when"] or tarikh,
                 "daripada": pegawai,
-                "kepada": "Ketua UIP Daerah / Pegawai Pendakwa",
+                "kepada": "Ketua UIP / Pegawai Pendakwa",
                 "kandungan": (
                     f"Siasatan bagi IP No. {no_ip} melibatkan OKS {suspect_token} (No. K/P: {ic_token}) di {prem_token} telah dijalankan. "
                     f"Rakaman percakapan S.112 KTJ, gambar bukti, carian SSM ({ssm_token}), dan Diari Siasatan telah disusun. "
@@ -1128,7 +1334,7 @@ class UIPModelRouter:
                 "kepada": "Timbalan Pendakwa Raya (TPR)",
                 "kandungan": (
                     f"Kertas Siasatan {no_ip} telah disemak terhadap 20 kriteria pematuhan Pra-TPR. "
-                    f"Kes memenuhi elemen kesalahan di bawah {seksyen_kesalahan}. Dipohon pertimbangan dan Izin Mendakwa (Sanksi) daripada pihak TPR."
+                    f"Kes memenuhi elemen kesalahan di bawah {seksyen_kesalahan}. Dipohon pertimbangan dan Izin Mendakwa (Keizinan Bertulis Pendakwa Raya) daripada pihak TPR."
                 ),
             },
             {
@@ -1142,13 +1348,13 @@ class UIPModelRouter:
 
         fakta_kes = (
             f"1. Pada {tarikh}, jam lebih kurang {masa}, {pegawai} (No. Kad Kuasa: {kad_kuasa}) bersama sepasukan pegawai penguat kuasa "
-            f"Pejabat Kesihatan Daerah {daerah} telah menjalankan pemeriksaan penguatkuasaan di {tempat_penuh}.\n"
+            f"{pejabat_rasmi} telah menjalankan pemeriksaan penguatkuasaan di {tempat_penuh}.\n"
             f"2. Pemeriksaan dijalankan di hadapan {suspect_token} (No. K/P: {ic_token}) setelah kad kuasa rasmi ditunjukkan.\n"
             f"3. Hasil pemeriksaan mendapati {kesalahan_ringkas}.\n"
             f"4. Pegawai penguat kuasa telah mengambil gambar bukti di tempat kejadian, menyediakan borang pemeriksaan/sitaan yang berkaitan "
             f"(No. Lak Eksibit: {no_seal}) serta menyerahkan satu salinan kepada pihak premis.\n"
             f"5. Siasatan lanjut di bawah {seksyen_kesalahan} telah dilengkapkan termasuk rakaman percakapan di bawah Seksyen 112 KTJ, "
-            f"carian rasmi SSM ({ssm_token}), dan Sijil Seksyen 90A Akta Keterangan 1950 untuk tujuan pendakwaan."
+            f"carian rasmi SSM ({ssm_token}), dan Sijil Seksyen 90A(2) & (3)(a) Akta Keterangan 1950 untuk tujuan pendakwaan."
         )
 
         rakaman_112 = (
@@ -1194,7 +1400,7 @@ class UIPModelRouter:
                 "bil": "4",
                 "tarikh": "Susulan (+2 hari)",
                 "masa": "11.00 pagi",
-                "butiran_tindakan": "Sijil Seksyen 90A(2) Akta Keterangan 1950 bagi gambar digital dan cetakan SSM disiapkan. Draf Borang 114, Borang 143, Fakta Kes dan Minit IP disusun untuk semakan UIP/TPR.",
+                "butiran_tindakan": "Sijil Seksyen 90A(2) & (3)(a) Akta Keterangan 1950 bagi gambar digital dan cetakan SSM disiapkan. Draf Borang 114, Borang 143, Fakta Kes dan Minit IP disusun untuk semakan UIP/TPR.",
                 "pegawai": pegawai,
             },
         ]
@@ -1216,7 +1422,7 @@ class UIPModelRouter:
 
         kertas_cadangan_io = (
             f"Nama Pegawai Penyiasat: {pegawai}\n"
-            f"Pejabat: Pejabat Kesihatan Daerah {daerah}, {negeri}\n\n"
+            f"Pejabat: {pejabat_rasmi}, {negeri}\n\n"
             f"Cadangan:\n"
             f"1. Asas pertuduhan kepada OKT/OKS {suspect_token} (No. K/P: {ic_token}) adalah berdasarkan siasatan "
             f"yang mendapati pelanggaran {seksyen_kesalahan} pada {tarikh} jam {masa} di {tempat_penuh}.\n"
@@ -1231,23 +1437,29 @@ class UIPModelRouter:
             "Pendakwaan memohon hukuman setimpal sebagai pengajaran kepada OKS serta peringatan tegas kepada orang awam dan pengusaha premis lain.",
         ]
 
+        tpr_kepada = (
+            f"Timbalan Pendakwa Raya, {negeri}"
+            if "wilayah persekutuan" in negeri.lower()
+            else f"Timbalan Pendakwa Raya, Negeri {negeri}"
+        )
+
         return {
             "minit_ip": minit_ip,
             "kronologi_kes": kronologi_kes,
             "kertas_cadangan_io": kertas_cadangan_io,
             "saman_111": {
-                "mahkamah": f"Dalam Mahkamah Majistret di {daerah}, {negeri}",
+                "mahkamah": mahkamah_rasmi,
                 "no_saman": no_ip,
                 "nama_oks": suspect_token,
                 "no_kp": ic_token,
                 "alamat": alamat,
-                "tarikh_hadir": "........ haribulan ...................... 2026",
+                "tarikh_hadir": f"........ haribulan ...................... {current_year}",
                 "masa_hadir": "8.30 pagi",
                 "teks_pertuduhan": pertuduhan_text,
                 "hukuman": hukuman_max,
             },
             "borang_143": {
-                "mahkamah": f"DALAM MAHKAMAH MAJISTRET DI {daerah.upper()}",
+                "mahkamah": mahkamah_rasmi,
                 "negeri": negeri.upper(),
                 "pengadu": f"{pegawai} (Pegawai Diberi Kuasa KKM)",
                 "oks_nama": suspect_token,
@@ -1257,14 +1469,15 @@ class UIPModelRouter:
             },
             "izin_mendakwa": {
                 "rujukan_ip": no_ip,
-                "kepada": f"Timbalan Pendakwa Raya, Negeri {negeri}",
-                "peruntukan_izin": "Seksyen 376(3) & 377(b) Kanun Tatacara Jenayah" + (" / Seksyen 32A Akta Makanan 1983" if "281" in akta_utama else ""),
+                "kepada": tpr_kepada,
+                "peruntukan_izin": peruntukan_izin,
                 "nama_okt": f"{suspect_token} (No. K/P: {ic_token})",
                 "seksyen_dipohon": f"{seksyen_kesalahan} dibaca bersama {seksyen_hukuman}",
             },
             "borang_114": {
-                "mahkamah": f"DALAM MAHKAMAH MAJISTRET DI {daerah.upper()}",
-                "negeri": f"DALAM NEGERI {negeri.upper()}, MALAYSIA",
+                "mahkamah": mahkamah_rasmi,
+                "negeri": negeri_mahkamah,
+                "pejabat_pkd": pejabat_rasmi,
                 "no_kes": f"{no_ip} (DRAF SAMAN)",
                 "nama_tertuduh": suspect_token,
                 "no_kp_tertuduh": ic_token,
@@ -1290,7 +1503,7 @@ class UIPModelRouter:
                     "nama": pegawai,
                     "no_kp": kad_kuasa,
                     "jawatan_peranan": "Pegawai Pengadu / Pegawai Penyiasat (IO)",
-                    "alamat_hubungan": f"Pejabat Kesihatan Daerah {daerah}",
+                    "alamat_hubungan": pejabat_rasmi,
                 },
                 {
                     "bil": "SP2",
@@ -1304,7 +1517,7 @@ class UIPModelRouter:
                     "nama": "Pegawai Sains / Juruanalisis Bertauliah (jika ada laporan makmal/entomologi)",
                     "no_kp": "Rekod Jabatan",
                     "jawatan_peranan": "Pengesah Laporan Makmal / Entomologi",
-                    "alamat_hubungan": "Makmal Kesihatan Awam / PKD",
+                    "alamat_hubungan": "Makmal Kesihatan Awam / Pejabat Kesihatan",
                 },
             ],
             "senarai_eksibit": [
@@ -1330,16 +1543,16 @@ class UIPModelRouter:
                     "tanda": "P4",
                     "perihal": "Barang Kes / Sampel Fizikal (jika ada sitaan atau persampelan)",
                     "no_lak_seal": no_seal,
-                    "lokasi_simpanan": f"Stor Eksibit Berkunci PKD {daerah}",
+                    "lokasi_simpanan": f"Stor Eksibit Berkunci {pejabat_rasmi}",
                 },
             ],
             "sijil_90a": {
                 "nama_pegawai": pegawai,
-                "jawatan": "Penolong Pegawai Kesihatan Persekitaran (PPKP)",
-                "pejabat_pkd": f"Pejabat Kesihatan Daerah {daerah}",
-                "peranti_kamera": "Kamera Digital Rasmi / Telefon Pintar Penguatkuasaan PKD (Kad SD Rasmi)",
-                "perihal_komputer": "Komputer Meja Rasmi Pejabat PKD (Windows OS, beroperasi dalam keadaan baik)",
-                "perihal_pencetak": "Pencetak Laser Warna Pejabat PKD",
+                "jawatan": str(prof.get("designation") or "Penolong Pegawai Kesihatan Persekitaran (PPKP)"),
+                "pejabat_pkd": pejabat_rasmi,
+                "peranti_kamera": str(prof.get("default_camera_desc") or "Kamera Digital Rasmi Penguatkuasaan KKM"),
+                "perihal_komputer": str(prof.get("default_computer_desc") or "Komputer Meja Rasmi Pejabat KKM (beroperasi dalam keadaan baik)"),
+                "perihal_pencetak": str(prof.get("default_printer_desc") or "Pencetak Laser Warna Pejabat KKM"),
                 "senarai_dokumen_digital": f"1. Gambar Foto Digital Bukti Pemeriksaan di {prem_token} bertarikh {tarikh} (Eksibit P2)\n2. Cetakan Carian Rasmi e-Info SSM {ssm_token} (Eksibit P3)",
             },
             "notis_kompaun": {
@@ -1353,73 +1566,81 @@ class UIPModelRouter:
                 "kesalahan_ringkas": kesalahan_ringkas,
                 "peruntukan_undang": seksyen_kesalahan,
                 "peruntukan_kompaun": peruntukan_kompaun,
-                "amaun_kompaun_rm": "RM 500.00" if "154" in akta_utama else "RM 250.00 - RM 500.00 (mengikut jadual kompaun)",
+                "amaun_kompaun_rm": amaun_default,
                 "tempoh_bayaran": tempoh_kompaun,
                 "pegawai_pengeluar": pegawai,
                 "no_kad_kuasa": kad_kuasa,
+                "pejabat_pkd": pejabat_rasmi,
+                "state_jkn": str(prof.get("state_jkn") or negeri),
             },
             "pemberatan_hukuman": pemberatan_hukuman,
             "tpr_simulation_notes": [
                 f"Pastikan Borang 114 memisahkan Seksyen Kesalahan ({seksyen_kesalahan}) dan Seksyen Hukuman ({seksyen_hukuman}) tanpa mencampuradukkan dua kesalahan berlainan (S.163 KTJ).",
-                "Pastikan Sijil Seksyen 90A(2) mencatatkan model kamera/komputer/pencetak dan mengandungi klausa 'sepanjang pengetahuan dan kepercayaan saya'.",
-                "Lampirkan Kronologi Kes, Kertas Cadangan IO, Borang Pengaduan Majistret (Borang 143), Saman (Borang 111) dan Surat Permohonan Izin Mendakwa (Sanksi TPR) bersama Kertas Minit (Am 6).",
+                "Pastikan Sijil Seksyen 90A(2) & (3)(a) mencatatkan model kamera/komputer/pencetak serta KEW.PA dan mengandungi klausa 'sepanjang pengetahuan dan kepercayaan saya'.",
+                f"Lampirkan Kronologi Kes, Kertas Cadangan IO, Borang Pengaduan Majistret (Borang 143), Saman (Borang 111) dan Surat Permohonan Izin Mendakwa ({peruntukan_izin}) bersama Kertas Minit (Am 6).",
             ],
         }
 
     @staticmethod
     def _resolve_act_provisions(
         akta_utama: str, text: str, citations: List[StatuteChunk]
-    ) -> tuple[str, str, str, str, str]:
-        """Menentukan Seksyen Kesalahan, Hukuman, Had Hukuman & Kompaun yang sah mengikut Akta."""
+    ) -> tuple[str, str, str, str, str, str]:
+        """Menentukan Seksyen Kesalahan, Hukuman, Had Hukuman, Status Kompaun, Tempoh & Amaun lalai yang sah mengikut Akta."""
         low = (akta_utama + " " + text[:2000]).lower()
         if "852" in akta_utama or "852" in low:
             if "pamer" in low or "kaunter" in low or "peraturan 6" in low:
                 return (
                     "Seksyen 10(1) Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024 [Akta 852] dibaca bersama Peraturan 6 Peraturan-Peraturan Kawalan Produk Merokok Demi Kesihatan Awam (Kawalan Penjualan) 2024 [P.U. (A) 260/2024]",
-                    "Seksyen 10(2) / Seksyen 10(3) Akta 852",
-                    "Individu: Denda <= RM20,000 atau penjara <= 1 tahun (kesalahan pertama). Syarikat: Denda RM20,000 - RM100,000 atau penjara <= 2 tahun.",
-                    "Seksyen 48 Akta 852 & P.U. (A) 259/2024",
-                    "30 hari dari tarikh tawaran kompaun",
+                    "Seksyen 10(2)(a) [Bukan Pertubuhan Perbadanan] atau Seksyen 10(2)(b) [Pertubuhan Perbadanan] Akta 852",
+                    "Individu: Denda <= RM20,000 atau penjara <= 1 tahun (kesalahan pertama). Syarikat: Denda RM20,000 – RM100,000 atau penjara <= 2 tahun.",
+                    "TIDAK BOLEH DIKOMPAUN (tiada dalam Jadual Pertama P.U. (A) 259/2024) — Wajib Sita (S.35/S.36) & Buka IP Terus",
+                    "Tiada tawaran kompaun (Buka IP Terus)",
+                    "Tidak Berkenaan (Buka IP Terus)",
                 )
             if "iklan" in low or "seksyen 7" in low:
                 return (
                     "Seksyen 7(1) Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024 [Akta 852]",
-                    "Seksyen 7(2) / Seksyen 7(3) Akta 852",
-                    "Individu: Denda <= RM20,000 atau penjara <= 1 tahun. Syarikat: Denda RM20,000 - RM100,000.",
-                    "Seksyen 48 Akta 852 & P.U. (A) 259/2024",
-                    "30 hari dari tarikh tawaran kompaun",
+                    "Seksyen 7(2)(a) [Bukan Pertubuhan Perbadanan] atau Seksyen 7(2)(b) [Pertubuhan Perbadanan] Akta 852",
+                    "Individu: Denda <= RM20,000 atau penjara <= 1 tahun. Syarikat: Denda RM20,000 – RM100,000 atau penjara <= 2 tahun.",
+                    "TIDAK BOLEH DIKOMPAUN (tiada dalam Jadual Pertama P.U. (A) 259/2024) — Wajib Buka IP Terus",
+                    "Tiada tawaran kompaun (Buka IP Terus)",
+                    "Tidak Berkenaan (Buka IP Terus)",
                 )
-            if "tanda amaran" in low or "seksyen 18" in low:
+            if "tanda amaran" in low or "tanda larangan" in low or "seksyen 18" in low:
                 return (
-                    "Seksyen 18(1)(a)/(b) Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024 [Akta 852] dibaca bersama P.U. (A) 258/2024",
+                    "Seksyen 18(1)(a) Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024 [Akta 852] dibaca bersama Peraturan 2(1) & 2(2) P.U. (A) 258/2024",
                     "Seksyen 18(2) Akta 852",
                     "Denda tidak melebihi RM5,000.00.",
-                    "Seksyen 48 Akta 852 & P.U. (A) 259/2024",
+                    "Seksyen 48(2) Akta 852 & Jadual Pertama(d) P.U. (A) 259/2024",
                     "30 hari dari tarikh tawaran kompaun",
+                    "RM 250.00",
                 )
             return (
                 "Seksyen 16(2) Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024 [Akta 852] dibaca bersama P.U. (A) 257/2024",
                 "Seksyen 16(3) Akta 852",
                 "Denda tidak melebihi RM5,000.00.",
-                "Seksyen 48 Akta 852 & P.U. (A) 259/2024",
+                "Seksyen 48(2) Akta 852 & Jadual Pertama(b) P.U. (A) 259/2024",
                 "30 hari dari tarikh tawaran kompaun",
+                "RM 250.00",
             )
 
         if "281" in akta_utama or "makanan" in low or "ppkm" in low:
-            if "tifoid" in low or "31" in low:
+            if "tifoid" in low or "31(1)" in low or "peraturan 31" in low:
                 return (
                     "Peraturan 31(1) Peraturan-Peraturan Kebersihan Makanan 2009 [P.U. (A) 95/2009]",
-                    "Peraturan 31(2) Peraturan-Peraturan Kebersihan Makanan 2009",
+                    "Peraturan 31(3) Peraturan-Peraturan Kebersihan Makanan 2009 [P.U. (A) 95/2009]",
                     "Denda tidak melebihi RM10,000.00 atau penjara tidak melebihi 2 tahun.",
                     "Notis Seksyen 32B & Seksyen 33 Akta Makanan 1983 [Jadual Keempat PPKM 2009]",
                     "14 hari dari tarikh penyampaian notis",
+                    "RM 250.00",
                 )
             return (
-                "Peraturan 11(1) Peraturan-Peraturan Kebersihan Makanan 2009 [P.U. (A) 95/2009]",
-                "Peraturan 11(2) Peraturan-Peraturan Kebersihan Makanan 2009",
+                "Peraturan 11(1)(a) Peraturan-Peraturan Kebersihan Makanan 2009 [P.U. (A) 95/2009]",
+                "Peraturan 11(2) Peraturan-Peraturan Kebersihan Makanan 2009 [P.U. (A) 95/2009]",
                 "Denda tidak melebihi RM10,000.00 atau penjara tidak melebihi 2 tahun.",
                 "Notis Seksyen 32B & Seksyen 33 Akta Makanan 1983 [Jadual Keempat PPKM 2009]",
                 "14 hari dari tarikh penyampaian notis",
+                "RM 500.00",
             )
 
         if "154" in akta_utama or "aedes" in low or "larva" in low:
@@ -1429,23 +1650,26 @@ class UIPModelRouter:
                 "Kesalahan pertama: Denda <= RM10,000 atau penjara <= 2 tahun atau kedua-duanya.",
                 "Seksyen 25 Akta 154 (Maksimum RM500.00)",
                 "14 hari dari tarikh notis kompaun",
+                "RM 500.00",
             )
 
         if "342" in akta_utama or "342" in low or "tibi" in low or "tuberkulosis" in low:
             if any(k in low for k in ("smear negatif", "afb negatif", "disaring", "saringan", "enggan mula", "taknak mula")):
                 return (
-                    "Seksyen 15(1) & Seksyen 14 Akta 342 [APPPB 1988] (Perintah Pemerhatian/Pengawasan/Pengasingan; S.22(b) hanya terpakai selepas diagnosis aktif disahkan MO/FMS & notis bertulis diserahkan lalu diingkari)",
-                    "Seksyen 24 Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988 [Akta 342]",
-                    "Individu: Denda tidak melebihi RM10,000.00 atau penjara tidak melebihi 2 tahun atau kedua-duanya (Akta A1742).",
-                    "Tidak digalakkan kompaun / JANGAN terus buka IP S.22(b) selagi pengesahan klinikal MO/FMS (CXR/GeneXpert/Kultur) dan serahan notis bertulis belum lengkap.",
+                    "Seksyen 14A(1) & Seksyen 14 Akta 342 [Pindaan Akta A1742] (Perintah Pengasingan/Pengawasan; S.22(b) hanya terpakai selepas diagnosis aktif disahkan MO/FMS & notis bertulis diserahkan lalu diingkari)",
+                    "Seksyen 24(a) [Individu] / Seksyen 24(b) [Pertubuhan Perbadanan] Akta 342 (Pindaan Akta A1742)",
+                    "Individu: Denda tidak melebihi RM10,000.00 atau penjara tidak melebihi 2 tahun atau kedua-duanya | Syarikat: Denda tidak melebihi RM100,000.00.",
+                    "JANGAN keluarkan kompaun atau buka IP S.22(b) selagi pengesahan klinikal MO/FMS (CXR/GeneXpert/Kultur) dan serahan notis bertulis belum lengkap.",
                     "14 hari (sekiranya notis atau kompaun terpakai selepas pengesahan)",
+                    "Tidak Berkenaan (Sahkan Klinikal Dahulu)",
                 )
             return (
                 "Seksyen 22(b) Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988 [Akta 342]",
-                "Seksyen 24(a) Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988 [Akta 342]",
-                "Penjara tidak melebihi dua (2) tahun atau denda atau kedua-duanya.",
-                "Seksyen 25 Akta 342 (atau pendakwaan terus tanpa tawaran kompaun bagi kes cicir rawatan berisiko awam)",
+                "Seksyen 24(a) [Individu] / Seksyen 24(b) [Pertubuhan Perbadanan] Akta 342 (Pindaan Akta A1742)",
+                "Individu: Denda tidak melebihi RM10,000.00 atau penjara tidak melebihi 2 tahun atau kedua-duanya | Pertubuhan Perbadanan [S.24(b)]: Denda tidak melebihi RM100,000.00.",
+                "Seksyen 25 Akta 342 [P.U. (A) 139/2025] (atau pendakwaan terus tanpa tawaran kompaun bagi kes Tibi cicir rawatan berisiko awam)",
                 "14 hari (jika kompaun ditawarkan)",
+                "RM 1,000.00",
             )
 
         primary = citations[0] if citations else None
@@ -1455,4 +1679,5 @@ class UIPModelRouter:
             "Tertakluk had maksimum penalti di bawah Akta berkaitan.",
             f"Peruntukan kompaun di bawah {akta_utama}",
             "14 hari",
+            "RM 250.00",
         )

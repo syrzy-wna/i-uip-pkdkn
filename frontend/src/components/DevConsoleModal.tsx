@@ -526,7 +526,7 @@ export default function DevConsoleModal({
                   Rumusan Kos Operasi Sebenar (Hibrid Tempatan + Cloud Gemini)
                 </div>
                 <p className="mt-1 text-[11px] leading-relaxed text-emerald-900">
-                  Lebih 85% aliran kerja harian PPKP di PKD Kuala Nerus (Tanya Pakar Mod Pantas, 16 templat dokumen IP, Borang 114, Notis Kompaun, Eksport Word <code>.docx</code>, Carian RAG Akta &amp; Penyamaran PDPA) diproses <strong>100% di dalam pelayan/PC tempatan pada kos RM 0.00</strong>. Caj API Gemini hanya berlaku apabila pegawai menekan Semak IP AI (20 Kriteria), Ekstrak Gambar OCR, atau togol &ldquo;Mod AI Mendalam&rdquo;.
+                  Lebih 85% aliran kerja harian PPKP di pejabat kesihatan seluruh Malaysia (Tanya Pakar Mod Pantas, 16 templat dokumen IP, Borang 114, Notis Kompaun, Eksport Word <code>.docx</code>, Carian RAG Akta &amp; Penyamaran PDPA) diproses <strong>100% di dalam pelayan/PC tempatan pada kos RM 0.00</strong>. Caj API Gemini hanya berlaku apabila pegawai menekan Semak IP AI (20 Kriteria), Ekstrak Gambar OCR, atau togol &ldquo;Mod AI Mendalam&rdquo;.
                 </p>
               </div>
 

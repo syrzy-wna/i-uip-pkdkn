@@ -56,6 +56,7 @@ export interface SampleCase {
 
 export interface IPCaseRecord {
   id: string;
+  is_sample?: boolean;
   no_ip: string;
   tajuk_kes: string;
   akta_utama: string;

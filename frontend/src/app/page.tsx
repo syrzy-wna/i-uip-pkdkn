@@ -39,6 +39,7 @@ import SystemSettingsModal from "@/components/SystemSettingsModal";
 import TopNavbar, { type ActiveAppMode } from "@/components/TopNavbar";
 import UIPAdvisorPanel, { type PakarWorkspaceTab } from "@/components/UIPAdvisorPanel";
 import {
+  ApiError,
   extractEvidence,
   fetchCases,
   fetchCurrentOfficer,
@@ -210,7 +211,7 @@ function buildBlankDraft(
         nama: officer?.full_name || "",
         no_kp: "",
         jawatan_peranan: "Pegawai Pengadu / Penyiasat",
-        alamat_hubungan: officer?.district_pkd || "PKD Kuala Nerus",
+        alamat_hubungan: officer?.district_pkd || "Pejabat Kesihatan",
       },
     ],
     senarai_eksibit: [
@@ -218,16 +219,16 @@ function buildBlankDraft(
         tanda: "P1",
         perihal: "Gambar foto tempat kejadian dan barang bukti digital",
         no_lak_seal: "-",
-        lokasi_simpanan: "Stor Eksibit PKD Kuala Nerus",
+        lokasi_simpanan: (officer?.district_pkd ? `Stor Eksibit ${officer.district_pkd}` : "Stor Eksibit Pejabat Kesihatan"),
       },
     ],
     sijil_90a: {
       nama_pegawai: officer?.full_name || "",
       jawatan: `${officer?.designation || "PPKP"} Gred ${officer?.grade || "U5"}`,
-      pejabat_pkd: officer?.district_pkd || "Pejabat Kesihatan Daerah Kuala Nerus",
+      pejabat_pkd: officer?.district_pkd || "Pejabat Kesihatan",
       peranti_kamera: officer?.default_camera_desc || "Kamera Digital Rasmi Pejabat KKM",
       perihal_komputer:
-        officer?.default_computer_desc || "Komputer Meja Rasmi KKM Pejabat PKD Kuala Nerus",
+        officer?.default_computer_desc || "Komputer Meja Rasmi KKM",
       perihal_pencetak: officer?.default_printer_desc || "Pencetak Laser Warna Pejabat PKD",
       senarai_dokumen_digital: "Gambar foto pemeriksaan premis & cetakan Carian Rasmi SSM",
     },
@@ -502,9 +503,13 @@ export default function UIPCommandPage() {
             setOfficer(me);
             setCases(caseList);
             setActiveTab("home");
-          } catch {
-            if (typeof window !== "undefined") {
+          } catch (err) {
+            if (err instanceof ApiError && err.status === 401 && typeof window !== "undefined") {
               window.localStorage.removeItem("uip_auth_token");
+            } else if (mounted) {
+              setErrorBanner(
+                "Sesi anda tidak dapat disahkan buat masa ini. Sila muat semula halaman atau cuba sebentar lagi."
+              );
             }
           }
         }
@@ -530,6 +535,30 @@ export default function UIPCommandPage() {
       if (previewUrl) URL.revokeObjectURL(previewUrl);
     };
   }, [previewUrl]);
+
+  // Sesi tamat (401) daripada mana-mana panggilan API: kosongkan token & minta log masuk semula.
+  useEffect(() => {
+    const onExpired = () => {
+      window.localStorage.removeItem("uip_auth_token");
+      setAuthToken(null);
+      setOfficer(null);
+      setAuthInitialTab("login");
+      setAuthOpen(true);
+      showToast("Sesi anda telah tamat. Sila log masuk semula.");
+    };
+    window.addEventListener("uip:session-expired", onExpired);
+    return () => window.removeEventListener("uip:session-expired", onExpired);
+  }, [showToast]);
+
+  // Isi automatik maklumat pegawai ke Notis Kompaun apabila profil dimuatkan / dikemas kini.
+  useEffect(() => {
+    if (!officer) return;
+    setCompoundNotice((prev) => ({
+      ...prev,
+      pegawai_pengeluar: prev.pegawai_pengeluar || officer.full_name || "",
+      no_kad_kuasa: prev.no_kad_kuasa || officer.kkm_authority_card_no || "",
+    }));
+  }, [officer]);
 
   const handleFileSelected = useCallback(
     (file: File | null) => {
@@ -607,7 +636,7 @@ export default function UIPCommandPage() {
   const handleLoadSampleCase = async (): Promise<{ text: string; akta: string } | null> => {
     if (!confirmDiscardIfDirty()) return null;
     setErrorBanner(null);
-    const sample = cases.find((c) => c.id.startsWith("kes-")) || cases[0];
+    const sample = cases.find((c) => c.id.startsWith("kes-akta-")) || cases[0];
     if (sample) {
       applyCaseRecord(sample, officer, true);
       showToast(`Contoh kes dimuatkan: ${sample.tajuk_kes}`);
@@ -678,7 +707,10 @@ export default function UIPCommandPage() {
     const usingOverride = typeof overrideText === "string" && overrideText.trim().length > 0;
     const textToAudit = usingOverride ? overrideText.trim() : caseText;
     const aktaToUse = overrideAkta || aktaUtama;
-    const fileToUse = usingOverride ? null : uploadedFile;
+    const fileToUse =
+      usingOverride || (extractedEvidence && textToAudit.trim().length > 0)
+        ? null
+        : uploadedFile;
 
     if (!textToAudit.trim() && !fileToUse) {
       setErrorBanner(
@@ -714,7 +746,7 @@ export default function UIPCommandPage() {
       });
       setActiveFixContext(null);
 
-      const isSavedUserCase = Boolean(activeCaseId && !activeCaseId.startsWith("kes-"));
+      const isSavedUserCase = Boolean(activeCaseId && !activeCaseId.startsWith("kes-akta-"));
       if (isSavedUserCase) {
         saveCaseRecord({
           id: activeCaseId,
@@ -830,7 +862,7 @@ export default function UIPCommandPage() {
         setActiveFixContext(fixContext);
       }
 
-      const isSavedUserCase = Boolean(activeCaseId && !activeCaseId.startsWith("kes-"));
+      const isSavedUserCase = Boolean(activeCaseId && !activeCaseId.startsWith("kes-akta-"));
       if (isSavedUserCase) {
         saveCaseRecord({
           id: activeCaseId,
@@ -1066,11 +1098,11 @@ export default function UIPCommandPage() {
   const handleDemoCompoundLimit = () => {
     if (!confirmDiscardIfDirty()) return;
     setCompoundNotice({
-      no_notis: "KKM/PKDKN/KOM/DEMO-01",
+      no_notis: "KKM/UIP/KOM/DEMO-01",
       nama_penerima: "Ahmad bin Abdullah",
       no_kp: "840512-11-5213",
-      nama_premis: "Kediaman No. 14, Taman Gong Badak",
-      alamat_kejadian: "No. 14, Jalan Gong Badak 2, 21300 Kuala Nerus, Terengganu",
+      nama_premis: "Kediaman No. 14, Taman Sejahtera",
+      alamat_kejadian: "No. 14, Jalan Harmoni 2, Taman Sejahtera, Malaysia",
       no_ssm: "-",
       tarikh_masa: "22/11/2026, 10.30 pagi",
       peruntukan_undang: "Seksyen 13(1) dibaca bersama Seksyen 13(2) Akta 154",
@@ -1079,8 +1111,8 @@ export default function UIPCommandPage() {
         "Membiak serangga pembawa penyakit (larva nyamuk Aedes) dalam bekas takungan air di kawasan rumah.",
       amaun_kompaun_rm: "RM 1,000.00",
       tempoh_bayaran: "14 hari dari tarikh serahan notis",
-      pegawai_pengeluar: officer?.full_name || "PPKP PKD Kuala Nerus",
-      no_kad_kuasa: officer?.kkm_authority_card_no || "KKM-TRG-2024-0812",
+      pegawai_pengeluar: officer?.full_name || "Pegawai PPKP",
+      no_kad_kuasa: officer?.kkm_authority_card_no || "",
       status_serahan: "tandatangan_terima",
       saksi_ppkp: "PPKP Mohd Faizal bin Ismail",
     });
@@ -1098,12 +1130,27 @@ export default function UIPCommandPage() {
     await handleRunAudit(loaded.text, loaded.akta);
   };
 
-  const handleAuthenticatedSuccess = async (user: OfficerProfile, token: string) => {
+  const handleAuthenticatedSuccess = async (
+    user: OfficerProfile,
+    token: string,
+    isNewAccount?: boolean
+  ) => {
     window.localStorage.setItem("uip_auth_token", token);
     setAuthToken(token);
     setOfficer(user);
-    setAuthOpen(false);
     setActiveTab("home");
+    if (isNewAccount || !user.district_pkd || !user.state_jkn) {
+      setAuthInitialTab("profile");
+      setAuthOpen(true);
+      showToast("Sila sahkan Jabatan Kesihatan Negeri (JKN) dan pejabat kesihatan anda.");
+    } else {
+      setAuthOpen(false);
+    }
+    setCompoundNotice((prev) => ({
+      ...prev,
+      pegawai_pengeluar: prev.pegawai_pengeluar || user.full_name || "",
+      no_kad_kuasa: prev.no_kad_kuasa || user.kkm_authority_card_no || "",
+    }));
     try {
       const caseList = await fetchCases();
       setCases(caseList);
@@ -1159,14 +1206,14 @@ export default function UIPCommandPage() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/images/logo-pkdkn.png"
-              alt="Logo PKD Kuala Nerus"
+              alt="Logo i-UIP Nerus"
               className="h-9 w-auto object-contain"
             />
           </div>
           <div className="space-y-1">
             <div className="text-xl font-extrabold tracking-tight text-amber-300">i-UIP Nerus</div>
             <p className="text-xs italic text-amber-100/90">
-              &ldquo;Satu Hati, Satu Tekad: Memacu Kecemerlangan Kesihatan Kuala Nerus&rdquo;
+              &ldquo;Satu Hati, Satu Tekad: Memacu Kecemerlangan Kesihatan&rdquo;
             </p>
             <div className="pt-1 text-xs text-slate-300">Sedang membuka akaun anda...</div>
           </div>
@@ -1239,7 +1286,7 @@ export default function UIPCommandPage() {
   const missingKadKuasa = !officer.kkm_authority_card_no?.trim();
   const hasCaseInput = Boolean(caseText.trim() || uploadedFile);
   const activeCaseObj = cases.find((c) => c.id === activeCaseId);
-  const isSampleCase = Boolean(activeCaseObj?.id?.startsWith("kes-"));
+  const isSampleCase = Boolean(activeCaseObj?.id?.startsWith("kes-akta-"));
   const activeCaseTitle = activeCaseObj
     ? activeCaseObj.tajuk_kes.replace(/^Kes \d+:\s*/, "")
     : uploadedFile?.name;
@@ -1250,7 +1297,7 @@ export default function UIPCommandPage() {
   if (auditReport) mobileBadges.audit = `${auditReport.overall_score}%`;
   if (draft) mobileBadges.draft = "✓";
 
-  const recentCases = cases.filter((c) => !c.id.startsWith("kes-")).slice(0, 3);
+  const recentCases = cases.filter((c) => !c.id.startsWith("kes-akta-")).slice(0, 3);
   const quickResumeList = recentCases.length > 0 ? recentCases : cases.slice(0, 3);
 
   return (
@@ -1285,7 +1332,7 @@ export default function UIPCommandPage() {
 
       {/* Toast & Ralat Terapung */}
       {(toastMsg || errorBanner) && (
-        <div className="pointer-events-none fixed inset-x-0 top-16 z-50 mx-auto max-w-2xl space-y-2 px-3 sm:px-4">
+        <div className="pointer-events-none fixed inset-x-0 top-16 z-[70] mx-auto max-w-2xl space-y-2 px-3 sm:px-4">
           {toastMsg && (
             <div className="pointer-events-auto flex items-center gap-2 rounded-xl border border-emerald-300 bg-emerald-50/95 px-4 py-2.5 text-xs font-bold text-emerald-900 shadow-lg backdrop-blur">
               <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />
@@ -1318,7 +1365,7 @@ export default function UIPCommandPage() {
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
                 <p className="text-xs font-bold text-slate-500">
-                  {officer.district_pkd || "PKD Kuala Nerus"} • Gred {officer.grade}
+                  {officer.district_pkd || "Pejabat Kesihatan"} • Gred {officer.grade}
                 </p>
                 <h2 className="mt-1 text-lg font-extrabold text-slate-900 sm:text-2xl">
                   Selamat bertugas, {officer.full_name}. Nak buat kerja apa hari ini?
@@ -1555,7 +1602,7 @@ export default function UIPCommandPage() {
                     key={c.id}
                     type="button"
                     onClick={() => {
-                      const ok = applyCaseRecord(c, officer, true);
+                      const ok = applyCaseRecord(c, officer, false);
                       if (!ok) return;
                       if (c.draft) {
                         setActiveTab("draft");
@@ -1812,6 +1859,8 @@ export default function UIPCommandPage() {
               extractLoading={extractLoading}
               extractedEvidence={extractedEvidence}
               fileTriggerNonce={fileTriggerNonce}
+              onFileTriggerConsumed={() => setFileTriggerNonce(0)}
+              onFileRejected={(msg) => setErrorBanner(msg)}
             />
           )}
 
@@ -1930,7 +1979,14 @@ export default function UIPCommandPage() {
             window.scrollTo({ top: 0, behavior: "smooth" });
           }
         }}
-        onCasesUpdated={setCases}
+        onCasesUpdated={(next) => {
+          setCases(next);
+          if (activeCaseId && !next.some((c) => c.id === activeCaseId)) {
+            setActiveCaseId("");
+            setHasUnsavedChanges(false);
+            showToast("Kes yang sedang dibuka telah dipadam.");
+          }
+        }}
         initialMode={registryInitialMode}
         officer={officer}
       />
@@ -1983,12 +2039,12 @@ export default function UIPCommandPage() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/images/logo-pkdkn.png"
-              alt="Logo PKD Kuala Nerus"
+              alt="Logo i-UIP Nerus"
               className="h-6 w-auto object-contain"
             />
             <span>
               <strong>i-UIP Nerus</strong> • Unit Inspektorat &amp; Perundangan,{" "}
-              <strong>PKD Kuala Nerus, Terengganu</strong>
+              <strong>KKM &bull; Seluruh Malaysia</strong>
             </span>
           </div>
           <div className="flex items-center gap-4">

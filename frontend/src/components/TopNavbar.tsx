@@ -110,7 +110,7 @@ export default function TopNavbar({
               i-UIP Nerus
             </div>
             <p className="truncate text-xs font-medium text-slate-300">
-              PKD Kuala Nerus
+              {officer?.district_pkd || "Unit Inspektorat & Perundangan KKM"}
             </p>
           </div>
         </button>

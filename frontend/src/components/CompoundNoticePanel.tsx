@@ -163,12 +163,12 @@ export default function CompoundNoticePanel({
   const handleLoadDemoSample = async () => {
     const sampleNotice: NotisKompaunData = {
       ...notice,
-      no_notis: "KKM/KOM/154/2026/018",
+      no_notis: "KKM/UIP/KOM/154/2026/018",
       nama_penerima: "Ahmad Zaki bin Mohamad",
       no_kp: "840615-11-5123",
-      nama_premis: "Kedai Serbaneka Tok Jembal",
+      nama_premis: "Kedai Serbaneka Harmoni",
       no_ssm: "202101034892",
-      alamat_kejadian: "Lot 14, Jalan Tok Jembal, 21300 Kuala Nerus, Terengganu",
+      alamat_kejadian: "Lot 14, Jalan Harmoni 2, Taman Sejahtera, Malaysia",
       tarikh_masa: "18 November 2026, jam 10.15 pagi",
       peruntukan_undang: "Seksyen 13(1) dibaca bersama Seksyen 13(2) Akta 154",
       peruntukan_kompaun: "Seksyen 25 Akta 154 (Maksimum RM500)",
@@ -177,7 +177,7 @@ export default function CompoundNoticePanel({
       amaun_kompaun_rm: "RM 1000.00",
       tempoh_bayaran: "14 hari dari tarikh serahan notis",
       pegawai_pengeluar: notice.pegawai_pengeluar || "PPKP Mohd Amirul bin Hassan",
-      no_kad_kuasa: notice.no_kad_kuasa || "KKM-TRG-2026-088",
+      no_kad_kuasa: notice.no_kad_kuasa || "KKM-UIP-2026-088",
       status_serahan: "tandatangan_terima",
       saksi_ppkp: "",
     };
@@ -241,6 +241,15 @@ export default function CompoundNoticePanel({
 
   const handleFileChosen = async (file: File | null) => {
     if (!file) return;
+    const lowerName = file.name.toLowerCase();
+    if (!/\.(pdf|docx|txt|png|jpe?g|webp)$/.test(lowerName) && !file.type.startsWith("image/")) {
+      setErrorMsg("Jenis fail tidak disokong. Sila pilih foto, PDF, Word (.docx) atau teks (.txt).");
+      return;
+    }
+    if (file.size > 15 * 1024 * 1024) {
+      setErrorMsg("Fail terlalu besar. Saiz maksimum yang dibenarkan ialah 15 MB.");
+      return;
+    }
     setScanningFile(true);
     setErrorMsg(null);
     setDownloadOkMsg(null);
@@ -344,7 +353,7 @@ export default function CompoundNoticePanel({
         </div>
       )}
 
-      {/* Kad Hero Pantas: Snap Foto SSM & Pilihan Kesalahan Lazim */}
+      {/* Kad Hero Pantas: Imbas Foto SSM & Pilihan Kesalahan Lazim */}
       <section className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5 space-y-4">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
@@ -357,13 +366,24 @@ export default function CompoundNoticePanel({
                   Fail aktif: <strong className="text-slate-900">{activeCaseTitle}</strong>
                 </>
               ) : (
-                "Snap foto Sijil SSM atau pilih kesalahan lazim di bawah untuk isi borang dengan pantas."
+                "Ambil atau muat naik foto Sijil SSM, atau pilih kesalahan lazim di bawah untuk mengisi borang dengan pantas."
               )}
             </p>
           </div>
           <button
             type="button"
             onClick={() => {
+              const hasInput = Boolean(
+                (notice.nama_penerima || "").trim() ||
+                  (notice.kesalahan_ringkas || "").trim() ||
+                  (notice.no_kp || "").trim()
+              );
+              if (
+                hasInput &&
+                !window.confirm("Kosongkan semua maklumat pada borang Notis Kompaun ini?")
+              ) {
+                return;
+              }
               onClearNotice();
               setCheckResult(null);
               setDownloadOkMsg(null);

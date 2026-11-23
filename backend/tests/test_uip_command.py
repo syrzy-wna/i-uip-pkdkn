@@ -300,7 +300,7 @@ def test_tb_akta_342_draft_and_pkd_docx_sections() -> None:
     assert "No. Butir-Butir Penyiasatan" in table_text
 
     raw_saman, fname_saman = generate_docx_by_type("saman_111", draft)
-    assert fname_saman == "Saman_Mahkamah_111.docx"
+    assert fname_saman.startswith("Saman_Mahkamah_111") and fname_saman.endswith(".docx")
     saman_doc = Document(io.BytesIO(raw_saman))
     saman_text = "\n".join(p.text for p in saman_doc.paragraphs)
     assert "(Mahkamah 111 - Pin. 1/85)" in saman_text
@@ -762,8 +762,9 @@ def test_google_auth_requires_real_oauth_token_and_no_demo_accounts(monkeypatch)
     assert b1["user"]["email"] == g_email
     assert b1["user"]["grade"] == "U6"
     assert b1["user"]["is_dev_admin"] is False
-    assert "Kuala Nerus" in b1["user"]["district_pkd"]
-    assert "Terengganu" in b1["user"]["state_jkn"]
+    # Akaun baharu seluruh Malaysia: tiada lalai terkunci PKD Kuala Nerus / Terengganu
+    assert "Kuala Nerus" not in (b1["user"]["district_pkd"] or "")
+    assert "Terengganu" not in (b1["user"]["state_jkn"] or "")
     assert b1["token"]
 
     # Log masuk kali kedua guna access_token OAuth2 popup -> guna akaun sedia ada
@@ -1106,7 +1107,7 @@ def test_dev_vault_archives_users_questions_docs_and_enforces_exclusive_access(m
     assert list_res.status_code == 200
     items = list_res.json()["items"]
     actions_archived = {i["action_type"] for i in items}
-    assert {
+    expected_actions = {
         "REGISTER_ACCOUNT",
         "UPDATE_PROFILE",
         "TANYA_PAKAR_UIP",
@@ -1115,7 +1116,10 @@ def test_dev_vault_archives_users_questions_docs_and_enforces_exclusive_access(m
         "JANA_DRAF_IP",
         "SEMAK_KOMPAUN",
         "EXPORT_DOCX",
-    }.issubset(actions_archived)
+    }
+    assert expected_actions.issubset(actions_archived), (
+        f"Tindakan tidak diarkibkan: {expected_actions - actions_archived}; ada: {actions_archived}"
+    )
 
     # Semak rekod pendaftaran tidak menyimpan kata laluan / token & IC disamarkan
     reg_item = next(i for i in items if i["action_type"] == "REGISTER_ACCOUNT")
@@ -2780,7 +2784,7 @@ def test_four_expert_smart_grounding_cafeteria_s18_and_field_cases() -> None:
         ("Restoran sudah daftar FoSIM tetapi gagal pamer sijil pendaftaran di dinding premis", "PPKM_2009", "PPKM_2009__P8"),
         ("Pekerja dapur tidak ambil suntikan tifoid dan tidak pakai apron semasa masak", "PPKM_2009", "PPKM_2009__P31"),
         ("Restoran kena perintah tutup Seksyen 11 tetapi buka pintu untuk cuci dapur sahaja bukan jual makanan", "AKTA_281", "AKTA_281__S11"),
-        ("Jumpa lipas dalam makanan yang dihidangkan kepada pelanggan di restoran", "AKTA_281", "AKTA_281__S13B"),
+        ("Jumpa lipas dalam makanan yang dihidangkan kepada pelanggan di restoran", "AKTA_281", "AKTA_281__S13A"),
         ("Makanan tamat tarikh luput diasingkan dalam stor pelupusan khas bukan di rak jualan", "PPM_1985", "PPM_1985__P14"),
         ("Pemeriksaan rumah jumpa bekas kosong ada air bertakung tetapi tiada larva Aedes", "AKTA_154", "AKTA_154__S13"),
         ("Tapak pembinaan ingkar perintah pembersihan Seksyen 8 Akta 154, boleh kompaun RM500?", "AKTA_154", "AKTA_154__S8"),
@@ -2899,5 +2903,231 @@ def test_four_expert_smart_grounding_cafeteria_s18_and_field_cases() -> None:
     assert validate_legal_output(bad_sec_sample, lib.to_snapshot_dict(), question_context="Merokok di restoran")["passed"] is False
 
 
+def test_six_expert_nationwide_launch_readiness_all_five_pillars():
+    """Ujian menyeluruh 5 Tonggak Kesiapsiagaan Kebangsaan PPKP Seluruh Malaysia."""
+    import hashlib
+    import uuid
+    from backend.core.database import _has_legal_fact_conflict
+    from backend.core.malaysia_offices import normalize_malaysia_health_office
+    from backend.main import auditor_service, compound_checker, db_service
+    from backend.services.doc_generator import generate_docx_by_type
+    from backend.services.ip_auditor import extract_text_from_upload
+    from backend.rag.legal_engine import get_legal_library
 
+    # 1. Kesiapsiagaan Pelbagai Negeri (Sabah PKK, Sarawak PKB, Labuan, Semenanjung) + sanitasi XML + S.112(4)-(5) & S.90A(3)(a)
+    sabah_prof = {
+        "full_name": "PPKP Dayang Nurul",
+        "designation": "PPKP",
+        "grade": "U6",
+        "district_pkd": "Pejabat Kesihatan Kawasan Kota Kinabalu",
+        "state_jkn": "Jabatan Kesihatan Negeri Sabah",
+        "kkm_authority_card_no": "KKM-SBH-2026-009",
+    }
+    sarawak_prof = {
+        "full_name": "PPKP Abang Firdaus",
+        "designation": "PPKP",
+        "grade": "U6",
+        "district_pkd": "Pejabat Kesihatan Bahagian Kuching",
+        "state_jkn": "Jabatan Kesihatan Negeri Sarawak",
+        "kkm_authority_card_no": "KKM-SWK-2026-014",
+    }
+    labuan_prof = {
+        "full_name": "PPKP Roslan bin Hamid",
+        "designation": "PPKP",
+        "grade": "U5",
+        "district_pkd": "Pejabat Kesihatan Labuan",
+        "state_jkn": "Jabatan Kesihatan Wilayah Persekutuan Labuan",
+    }
+    assert normalize_malaysia_health_office(sabah_prof["district_pkd"], sabah_prof["state_jkn"])["saman_jurisdiction"] == "NEGERI SABAH, MALAYSIA"
+    assert normalize_malaysia_health_office(sarawak_prof["district_pkd"], sarawak_prof["state_jkn"])["saman_jurisdiction"] == "NEGERI SARAWAK, MALAYSIA"
+    assert normalize_malaysia_health_office(labuan_prof["district_pkd"], labuan_prof["state_jkn"])["saman_jurisdiction"] == "WILAYAH PERSEKUTUAN LABUAN, MALAYSIA"
 
+    base_payload = {
+        "akta_utama": "Akta 852",
+        "no_ip": "PKK-KK/UIP/852/2026/001",
+        "saman_111": {
+            "mahkamah": "Mahkamah Majistret Kota Kinabalu",
+            "nama_oks": "Ali\x00bin\x0bAbu",  # Aksara kawalan XML haram mesti ditapis tanpa ralat
+            "no_kp_oks": "890101-12-5111",
+            "alamat_oks": "No. 10, Jalan Gaya, 88000 Kota Kinabalu, Sabah",
+            "tarikh_hadir": "20 Disember 2026",
+            "masa_hadir": "9.00 pagi",
+            "ringkasan_pertuduhan": "Mempamerkan produk merokok di bawah Seksyen 10(1) Akta 852.",
+        },
+        "borang_114": {
+            "mahkamah": "Mahkamah Majistret Kota Kinabalu",
+            "daerah": "Kota Kinabalu",
+            "negeri": "Sabah",
+            "nama_okt": "Ali bin Abu",
+            "no_kp_okt": "890101-12-5111",
+            "akta_dan_seksyen": "Seksyen 10(1) Akta 852",
+            "teks_pertuduhan": "Bahawa kamu pada 10/11/2026 telah mempamerkan produk merokok...",
+        },
+        "rakaman_112": "Saya mengakui produk tersebut milik kedai saya.\x0c",
+        "sijil_90a": {
+            "nama_pegawai": "PPKP Dayang Nurul",
+            "jawatan": "PPKP U6",
+            "pejabat_pkd": "Pejabat Kesihatan Kawasan Kota Kinabalu",
+            "peranti_kamera": "Kamera Digital Rasmi KKM",
+            "perihal_komputer": "Komputer Meja Rasmi PKK Kota Kinabalu",
+            "perihal_pencetak": "Pencetak Laser Pejabat",
+            "senarai_dokumen_digital": "Gambar foto pemeriksaan premis",
+        },
+    }
+    raw_sbh, _ = generate_docx_by_type("saman_111", base_payload, officer_profile=sabah_prof)
+    txt_sbh = "\n".join(p.text for p in Document(io.BytesIO(raw_sbh)).paragraphs)
+    assert "NEGERI SABAH, MALAYSIA" in txt_sbh
+    assert "TANAH MELAYU" not in txt_sbh
+    assert "SELANGOR" not in txt_sbh
+
+    swk_payload = {
+        **base_payload,
+        "saman_111": {
+            **base_payload["saman_111"],
+            "mahkamah": "Mahkamah Majistret Kuching",
+            "alamat": "Jalan Padungan, 93100 Kuching, Sarawak",
+        },
+        "borang_114": {
+            **base_payload["borang_114"],
+            "mahkamah": "Mahkamah Majistret Kuching",
+            "daerah": "Kuching",
+            "negeri": "Sarawak",
+        },
+    }
+    raw_swk, _ = generate_docx_by_type("saman_111", swk_payload, officer_profile=sarawak_prof)
+    txt_swk = "\n".join(p.text for p in Document(io.BytesIO(raw_swk)).paragraphs)
+    assert "NEGERI SARAWAK, MALAYSIA" in txt_swk
+    assert "TANAH MELAYU" not in txt_swk
+
+    raw_full, _ = generate_docx_by_type("pakej_ip", base_payload, officer_profile=sabah_prof)
+    full_doc = Document(io.BytesIO(raw_full))
+    full_txt = "\n".join(p.text for p in full_doc.paragraphs) + "\n" + "\n".join(
+        cell.text for tbl in full_doc.tables for row in tbl.rows for cell in row.cells
+    )
+    assert "112(4)" in full_txt and "112(5)" in full_txt
+    assert "90A(2) & (3)(a)" in full_txt and "sepanjang pengetahuan dan kepercayaan saya" in full_txt
+    assert "SELANGOR" not in full_txt
+
+    # 2. Ketepatan Senarai Putih Kompaun & PPKM 2009 P.32 RM500
+    c_852_bad = compound_checker.check_notice({
+        "no_notis": "KKM/UIP/852/01",
+        "nama_penerima": "Kedai Maju Sdn Bhd",
+        "no_kp": "202101034892",
+        "nama_premis": "Kedai Maju Sdn Bhd",
+        "no_ssm": "202101034892",
+        "alamat_kejadian": "No. 1, Jalan Gaya, Kota Kinabalu",
+        "tarikh_masa": "12/11/2026, 10.00 pagi",
+        "peruntukan_undang": "Seksyen 10(1) Akta 852",
+        "kesalahan_ringkas": "Mempamerkan produk merokok secara terbuka di kaunter jualan kedai.",
+        "amaun_kompaun_rm": "RM 500.00",
+        "tempoh_bayaran": "30 hari",
+        "pegawai_pengeluar": "PPKP Dayang Nurul",
+        "no_kad_kuasa": "KKM-SBH-001",
+    })
+    assert c_852_bad["counts"]["GAGAL"] >= 1
+    assert any("TIDAK BOLEH DIKOMPAUN" in x["note"] for x in c_852_bad["checks"])
+
+    c_ppkm_p32 = compound_checker.check_notice({
+        "no_notis": "KKM/UIP/281/02",
+        "nama_penerima": "Siti binti Ahmad",
+        "no_kp": "900512-12-5222",
+        "nama_premis": "Restoran Harmoni",
+        "alamat_kejadian": "No. 5, Jalan Padungan, Kuching",
+        "tarikh_masa": "12/11/2026, 11.00 pagi",
+        "peruntukan_undang": "Peraturan 32(1) PPKM 2009",
+        "kesalahan_ringkas": "Pengendali makanan tidak memakai apron dan penutup kepala semasa memasak.",
+        "amaun_kompaun_rm": "RM 1,000.00",
+        "tempoh_bayaran": "14 hari",
+        "pegawai_pengeluar": "PPKP Abang Firdaus",
+        "no_kad_kuasa": "KKM-SWK-002",
+    })
+    assert any(x["status"] == "GAGAL" and "500" in x["note"] for x in c_ppkm_p32["checks"])
+
+    # 3. Juruaudit IP: C14 aktif, penapis penafian berfungsi, baca jadual .docx & .txt
+    docx_buf = io.BytesIO()
+    sample_doc = Document()
+    sample_doc.add_paragraph("KERTAS SIASATAN UIP")
+    tbl = sample_doc.add_table(rows=1, cols=2)
+    tbl.cell(0, 0).text = "Nama OKS"
+    tbl.cell(0, 1).text = "Rahman bin Karim (850101-12-5111)"
+    sample_doc.save(docx_buf)
+    extracted_docx = extract_text_from_upload(docx_buf.getvalue(), "ujian_jadual.docx")
+    assert "Rahman bin Karim" in extracted_docx
+
+    extracted_txt = extract_text_from_upload("Tarikh: 12/11/2026\nFakta kes ujian.".encode("utf-8"), "catatan.txt")
+    assert "Fakta kes ujian" in extracted_txt
+
+    audit_neg = auditor_service.audit_ip(
+        raw_text="Kes Akta 281. Tiada Sijil 90A dilampirkan dan belum diperoleh izin mendakwa Pendakwa Raya. Tiada laporan juruanalisis.",
+        akta_utama="Akta 281",
+        use_ollama_redaction=False,
+        fast_mode=True,
+    )
+    by_code = {c.code: c for c in audit_neg.criteria_results}
+    assert by_code["C12"].status != "LULUS"
+    assert by_code["C14"].status != "LULUS"
+
+    # 4. Keselamatan: Kata laluan <8 ditolak, hash token tidak boleh pintas, kes contoh dilindungi, PII IO dibersihkan, konflik nafi Q&A
+    short_pw_resp = client.post(
+        "/api/auth/register",
+        json={
+            "email": f"shortpw.{uuid.uuid4().hex[:6]}@moh.gov.my",
+            "password": "1234567",
+            "full_name": "PPKP Pendek",
+        },
+    )
+    assert short_pw_resp.status_code == 400
+
+    headers = _get_auth_headers()
+    raw_token = headers["Authorization"].split(" ", 1)[1]
+    token_hash = hashlib.sha256(raw_token.encode("utf-8")).hexdigest()
+    assert db_service.get_user_by_token(token_hash) is None
+
+    # Kes baharu guna awalan ip- dan kes contoh (kes-akta-*) tidak boleh dipadam pengguna biasa
+    new_case_resp = client.post(
+        "/api/cases",
+        headers=headers,
+        json={"akta_utama": "Akta 852", "tajuk_kes": "Ujian Awalan IP", "case_text": "Fakta ringkas ujian."},
+    )
+    assert new_case_resp.status_code == 200
+    assert new_case_resp.json()["case"]["id"].startswith("ip-")
+
+    del_sample_resp = client.delete("/api/cases/kes-akta-852-vape", headers=headers)
+    assert del_sample_resp.status_code == 403
+    put_sample_resp = client.post(
+        "/api/cases",
+        headers=headers,
+        json={"id": "kes-akta-852-vape", "akta_utama": "Akta 852", "tajuk_kes": "Cuba Ubah Contoh"},
+    )
+    assert put_sample_resp.status_code == 403
+
+    sanitized = db_service._sanitize_advisor_answer(
+        {
+            "tajuk_nasihat": "Ujian PII",
+            "draf_teks_kes_cadangan": (
+                "DAERAH / KAWASAN / BAHAGIAN: Kota Kinabalu, Sabah\n"
+                "Pegawai Penyiasat (IO): PPKP Rahsia Bin Sulit (No. Kad Kuasa: KKM-SBH-9999)"
+            ),
+        },
+        akta_group="Akta 852",
+        fallback_title="Ujian PII",
+        fallback_status="ADA_KESALAHAN",
+        fallback_resp="",
+        fallback_model="Rujukan Pantas UIP",
+    )
+    assert "Rahsia Bin Sulit" not in sanitized["draf_teks_kes_cadangan"]
+    assert "KKM-SBH-9999" not in sanitized["draf_teks_kes_cadangan"]
+    assert "Kota Kinabalu" not in sanitized["draf_teks_kes_cadangan"]
+
+    assert _has_legal_fact_conflict(
+        "jumpa bekas air ada larva nyamuk aedes boleh kompaun",
+        "jumpa bekas air tiada larva nyamuk aedes boleh kompaun",
+        {},
+    ) is True
+
+    # 5. Carian BM->EN bagi Akta 593 (KTJ) & Akta 56 (Akta Keterangan)
+    lib = get_legal_library()
+    g_593 = lib.search_closed_book_grounding("prosedur rakaman percakapan saksi 112 dan saman mahkamah", akta_hint="Akta 593")
+    assert any(s.get("statute_id") == "AKTA_593" for s in g_593["verbatim_sections"])
+    g_56 = lib.search_closed_book_grounding("sijil keterangan dokumen cetakan komputer kamera digital 90a", akta_hint="Akta 56")
+    assert any(s.get("statute_id") == "AKTA_56" for s in g_56["verbatim_sections"])

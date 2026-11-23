@@ -76,6 +76,27 @@ async function fetchWithTimeout(
   }
 }
 
+export class ApiError extends Error {
+  status: number;
+  constructor(message: string, status: number) {
+    super(message);
+    this.name = "ApiError";
+    this.status = status;
+  }
+}
+
+function notifySessionExpiredIfNeeded(status: number, url: string): void {
+  if (
+    status === 401 &&
+    typeof window !== "undefined" &&
+    !url.includes("/api/auth/login") &&
+    !url.includes("/api/auth/register") &&
+    !url.includes("/api/auth/google")
+  ) {
+    window.dispatchEvent(new CustomEvent("uip:session-expired"));
+  }
+}
+
 async function parseJsonOrThrow<T>(res: Response): Promise<T> {
   const rawText = await res.text();
   let parsed: Record<string, unknown> | null = null;
@@ -88,9 +109,25 @@ async function parseJsonOrThrow<T>(res: Response): Promise<T> {
   }
 
   if (!res.ok) {
+    notifySessionExpiredIfNeeded(res.status, res.url || "");
     let msg = `Ralat pelayan (${res.status})`;
-    if (parsed && typeof parsed.detail === "string" && parsed.detail.trim()) {
+    if (res.status === 413) {
+      msg = "Saiz fail melebihi had maksimum 15 MB. Sila mampatkan fail dan cuba semula.";
+    } else if (parsed && typeof parsed.detail === "string" && parsed.detail.trim()) {
       msg = parsed.detail;
+    } else if (parsed && Array.isArray(parsed.detail)) {
+      const items = parsed.detail
+        .map((item) => {
+          if (item && typeof item === "object") {
+            const rec = item as Record<string, unknown>;
+            const loc = Array.isArray(rec.loc) ? rec.loc.slice(1).join(".") : "";
+            const m = typeof rec.msg === "string" ? rec.msg : "";
+            return loc ? `${loc}: ${m}` : m;
+          }
+          return String(item || "");
+        })
+        .filter(Boolean);
+      msg = items.length > 0 ? `Maklumat tidak lengkap atau tidak sah (${items.join("; ")})` : msg;
     } else if (parsed && typeof parsed.message === "string" && parsed.message.trim()) {
       msg = parsed.message;
     } else if (rawText.trim()) {
@@ -99,17 +136,17 @@ async function parseJsonOrThrow<T>(res: Response): Promise<T> {
         msg = stripped.slice(0, 220);
       }
     }
-    throw new Error(msg);
+    throw new ApiError(msg, res.status);
   }
 
   if (parsed !== null) {
     return parsed as T;
   }
-  throw new Error("Respons pelayan bukan format JSON yang sah.");
+  throw new ApiError("Respons pelayan bukan format JSON yang sah.", res.status);
 }
 
 export async function fetchSystemStatus(): Promise<SystemStatus> {
-  const res = await fetchWithTimeout(`${API_BASE}/api/status`, { cache: "no-store" }, 15000);
+  const res = await fetchWithTimeout(`${API_BASE}/api/status`, { cache: "no-store", headers: { ...getAuthHeader() } }, 15000);
   return parseJsonOrThrow<SystemStatus>(res);
 }
 
@@ -316,25 +353,15 @@ export async function downloadDocx(
     45000
   );
   if (!res.ok) {
+    notifySessionExpiredIfNeeded(res.status, res.url || "");
     await throwBlobResponseError(res, "Gagal memuat turun fail Word .docx");
   }
   const blob = await res.blob();
-  const disposition = res.headers.get("Content-Disposition") || "";
-  const match = disposition.match(/filename="([^"]+)"/);
-  const filename = match ? match[1] : `${docType}.docx`;
-
-  const url = window.URL.createObjectURL(blob);
-  try {
-    const anchor = document.createElement("a");
-    anchor.href = url;
-    anchor.download = filename;
-    anchor.rel = "noopener noreferrer";
-    document.body.appendChild(anchor);
-    anchor.click();
-    anchor.remove();
-  } finally {
-    window.setTimeout(() => window.URL.revokeObjectURL(url), 1500);
-  }
+  const filename = extractFilenameFromDisposition(
+    res.headers.get("Content-Disposition"),
+    `${docType}.docx`
+  );
+  triggerBrowserBlobDownload(blob, filename);
   return filename;
 }
 
@@ -389,7 +416,7 @@ export async function googleSignInOfficer(payload: {
 export async function fetchCurrentOfficer(token: string): Promise<OfficerProfile> {
   const res = await fetchWithTimeout(`${API_BASE}/api/auth/me`, {
     cache: "no-store",
-    headers: { Authorization: `Bearer ${token}` },
+    headers: { ...getAuthHeader(token) },
   });
   const data = await parseJsonOrThrow<{ user: OfficerProfile }>(res);
   return data.user;
@@ -403,7 +430,7 @@ export async function updateOfficerProfile(
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
+      ...getAuthHeader(token),
     },
     body: JSON.stringify(payload),
   });
@@ -414,7 +441,7 @@ export async function updateOfficerProfile(
 export async function logoutOfficer(token: string): Promise<void> {
   await fetchWithTimeout(`${API_BASE}/api/auth/logout`, {
     method: "POST",
-    headers: { Authorization: `Bearer ${token}` },
+    headers: { ...getAuthHeader(token) },
   });
 }
 
@@ -835,7 +862,7 @@ export async function ingestGazettePdf(params: {
       headers: { ...getAuthHeader(params.authToken) },
       body: form,
     },
-    65000
+    120000
   );
   return parseJsonOrThrow(res);
 }

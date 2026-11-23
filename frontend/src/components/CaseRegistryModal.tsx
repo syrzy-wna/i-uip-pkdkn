@@ -46,9 +46,9 @@ export default function CaseRegistryModal({
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
 
   const currentYear = new Date().getFullYear();
-  const [noIp, setNoIp] = useState(`PKD-KN/UIP/852/${currentYear}/`);
+  const [noIp, setNoIp] = useState(`PKD/UIP/852/${currentYear}/`);
   const [akta, setAkta] = useState("Akta 852");
-  const [daerah, setDaerah] = useState("Kuala Nerus, Terengganu");
+  const [daerah, setDaerah] = useState("");
   const [tarikh, setTarikh] = useState("");
   const [masa, setMasa] = useState("");
   const [namaPremis, setNamaPremis] = useState("");
@@ -60,6 +60,14 @@ export default function CaseRegistryModal({
   const [kadKuasa, setKadKuasa] = useState("");
   const [kesalahan, setKesalahan] = useState("");
 
+  const deriveOfficePrefix = (off?: OfficerProfile | null): string => {
+    const raw = (off?.district_pkd || "").trim().toUpperCase();
+    if (!raw) return "PKD";
+    if (raw.includes("PKK") || raw.includes("KAWASAN")) return "PKK";
+    if (raw.includes("PKB") || raw.includes("BAHAGIAN")) return "PKB";
+    return "PKD";
+  };
+
   useEffect(() => {
     if (!open) return;
     setMode(initialMode);
@@ -68,21 +76,32 @@ export default function CaseRegistryModal({
     if (officer) {
       setPegawaiIo((prev) => prev || officer.full_name || "");
       setKadKuasa((prev) => prev || officer.kkm_authority_card_no || "");
-      if (officer.district_pkd && officer.district_pkd.includes("Kuala Nerus")) {
-        setDaerah("Kuala Nerus, Terengganu");
+      const officeStr = [officer.district_pkd, officer.state_jkn?.replace(/^Jabatan Kesihatan (?:Negeri|Wilayah Persekutuan)\s*/i, "")]
+        .filter(Boolean)
+        .join(", ");
+      if (officeStr) {
+        setDaerah((prev) => prev || officeStr);
       }
+      const pfx = deriveOfficePrefix(officer);
+      const actNum = akta.replace(/\D/g, "") || "852";
+      setNoIp((prev) =>
+        /^PK[DKB](?:-KN)?\/UIP\/\d+\/\d{4}\/$/.test(prev)
+          ? `${pfx}/UIP/${actNum}/${currentYear}/`
+          : prev
+      );
     }
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [open, initialMode, officer, onClose]);
+  }, [open, initialMode, officer, onClose, akta, currentYear]);
 
   const handleAktaChange = (nextAkta: string) => {
     setAkta(nextAkta);
     const num = nextAkta.replace(/\D/g, "") || "852";
-    setNoIp((prev) => prev.replace(/^PKD-KN\/UIP\/\d+\//, `PKD-KN/UIP/${num}/`));
+    const pfx = deriveOfficePrefix(officer);
+    setNoIp((prev) => prev.replace(/^PK[DKB](?:-KN)?\/UIP\/\d+\//, `${pfx}/UIP/${num}/`));
   };
 
   const filteredCases = useMemo(() => {
@@ -108,7 +127,7 @@ export default function CaseRegistryModal({
     try {
       const formattedText = `KERTAS SIASATAN UNIT INSPEKTORAT DAN PERUNDANGAN (UIP)
 NO. IP: ${noIp}
-DAERAH: ${daerah}
+DAERAH: ${daerah || officer?.district_pkd || "Pejabat Kesihatan"}
 AKTA: ${akta}
 
 1. BUTIRAN PEMERIKSAAN
@@ -126,7 +145,7 @@ Kesalahan: ${kesalahan || "Sila nyatakan butiran kesalahan yang ditemui semasa p
 `;
       const created = await saveCaseRecord({
         no_ip: noIp,
-        tajuk_kes: `${noIp} — ${namaPremis || namaOkt || "Kes Baharu PKD"}`,
+        tajuk_kes: `${noIp} — ${namaPremis || namaOkt || "Kes Baharu UIP"}`,
         akta_utama: akta,
         workflow: "audit_ip" as WorkflowMode,
         badge: "Kes Baharu",
@@ -144,7 +163,8 @@ Kesalahan: ${kesalahan || "Sila nyatakan butiran kesalahan yang ditemui semasa p
       });
       onCasesUpdated([created, ...cases]);
       onSelectCase(created);
-      setNoIp(`PKD-KN/UIP/${akta.replace(/\D/g, "") || "852"}/${currentYear}/`);
+      const pfx = deriveOfficePrefix(officer);
+      setNoIp(`${pfx}/UIP/${akta.replace(/\D/g, "") || "852"}/${currentYear}/`);
       setTarikh("");
       setMasa("");
       setNamaPremis("");
@@ -281,7 +301,7 @@ Kesalahan: ${kesalahan || "Sila nyatakan butiran kesalahan yang ditemui semasa p
                   {filteredCases.map((c) => {
                     const isActive = c.id === activeCaseId;
                     const confirming = confirmDeleteId === c.id;
-                    const isSample = c.id.startsWith("kes-");
+                    const isSample = Boolean(c.is_sample || c.id.startsWith("kes-akta-"));
                     return (
                       <div
                         key={c.id}
@@ -330,14 +350,14 @@ Kesalahan: ${kesalahan || "Sila nyatakan butiran kesalahan yang ditemui semasa p
                                 <button
                                   type="button"
                                   onClick={() => handleDelete(c.id)}
-                                  className="min-h-[34px] rounded bg-rose-600 px-2.5 py-1 text-xs font-bold text-white hover:bg-rose-700"
+                                  className="min-h-[40px] rounded bg-rose-600 px-3 py-1.5 text-xs font-bold text-white hover:bg-rose-700"
                                 >
                                   Padam
                                 </button>
                                 <button
                                   type="button"
                                   onClick={() => setConfirmDeleteId(null)}
-                                  className="min-h-[34px] rounded bg-white px-2.5 py-1 text-xs font-semibold text-slate-700"
+                                  className="min-h-[40px] rounded bg-white px-3 py-1.5 text-xs font-semibold text-slate-700"
                                 >
                                   Batal
                                 </button>

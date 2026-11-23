@@ -37,23 +37,34 @@ NON_PERSON_STOPWORDS = {
 }
 
 MYKAD_RE = re.compile(r"\b(\d{6}-\d{2}-\d{4})\b")
+MYKAD_SPACED_RE = re.compile(r"\b(\d{6}[ \t]+\d{2}[ \t]+\d{4})\b")
 MYKAD_COMPACT_RE = re.compile(
-    r"(?i)(?:no\.?\s*k/?p|kad\s+pengenalan|mykad|ic\s*no\.?)\s*[:\-]?\s*(\d{12})\b"
+    r"(?i)(?:no\.?\s*k/?p|kad\s+pengenalan|mykad|ic\s*no\.?|nric)\s*[:\-]?\s*(\d{12})\b"
 )
+# 12-digit MyKad tanpa sempang (YYMMDD + kod negeri 01-59/82 + 4 digit) — elak tangkap SSM 19xx/20xx + 01..06
+MYKAD_UNLABELED_12_RE = re.compile(r"\b(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])\d{6})\b")
 PASSPORT_RE = re.compile(
-    r"(?i)(?:no\.?\s*pasport|passport\s*no\.?)\s*[:\-]?\s*([A-Z]{1,2}\d{6,8})\b"
+    r"(?i)(?:no\.?\s*pasport|passport\s*(?:no\.?|number)?|dokumen\s+perjalanan)\s*[:\-]?\s*([A-Z]{1,3}[-\s]?\d{5,9}|(?=[A-Z0-9]{6,12}\b)(?=[A-Z0-9]*[A-Z])(?=[A-Z0-9]*\d)[A-Z0-9]{6,12})\b"
 )
 PHONE_RE = re.compile(
-    r"(?<!\d)(?:\+?60|0)(?:1[0-9]|3|4|5|6|7|8[2-9]|9)[-\s]?\d{3,4}[-\s]?\d{4}(?!\d)"
+    r"(?<!\d)(?:\+?60[-\s]?|0)(?:1[0-9]|3|4|5|6|7|8[2-9]|9)[-\s]?\d{3,4}[-\s]?\d{4}(?!\d)"
 )
 EMAIL_RE = re.compile(
     r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b"
 )
-RESIDENTIAL_ADDR_RE = re.compile(
-    r"(?im)^[ \t]*alamat\s+(?:kediaman|pesakit|rumah|terkini\s+pesakit)\s*[:\-]\s*([^\n\r]+)"
+KKM_CARD_RE = re.compile(
+    r"\b(KKM[-/\s]?(?:[A-Z]{2,5}[-/\s]?)?\d{3,8}(?:[-/][A-Z0-9]{1,6})?)\b",
+    re.I,
 )
+RESIDENTIAL_ADDR_RE = re.compile(
+    r"(?im)^[ \t]*alamat\s+(?:kediaman|pesakit|rumah|terkini\s+pesakit|okt|oks|tertuduh|surat[\-\s]?menyurat)\s*[:\-]\s*([^\n\r]+)"
+)
+INCIDENT_ADDR_RE = re.compile(
+    r"(?im)^[ \t]*alamat\s+(?:kejadian|premis)\s*[:\-]\s*([^\n\r]+)"
+)
+SSM_12_RE = re.compile(r"\b((?:19|20)\d{2}0[1-6]\d{6})\b")
 SSM_RE = re.compile(
-    r"\b(?:\d{12}[ \t]*\(\d{6,7}-[A-Za-z]\)|(?:SA|IP|PG|NS|MA|JM|KT|TR|AS|CA|LA|RA|00)\d{6,7}-[A-Za-z]|\d{6,7}-[A-Za-z])\b"
+    r"\b(?:\d{12}[ \t]*\(\d{6,7}-[A-Za-z]\)|(?:19|20)\d{2}0[1-6]\d{6}|LLP\d{7}-[A-Za-z]{3}|(?:SA|IP|PG|NS|MA|JM|KT|TR|AS|CA|LA|RA|KT|JR|PG|00)\d{6,7}-[A-Za-z]|\d{6,7}-[A-Za-z])\b"
 )
 
 # Label Pegawai KKM (Senarai Putih agar tidak disamarkan sebagai Suspek/OKT)
@@ -80,10 +91,22 @@ COMPANY_PHRASE_RE = re.compile(
 RESTORAN_PHRASE_RE = re.compile(
     r"\b((?:Restoran|Kedai[ \t]+Makan|Kedai[ \t]+Serbaneka|Kedai[ \t]+Runcit|Klinik|Gerai|Warung|Kilang|Pusat[ \t]+Snuker|Kafe)[ \t]+[A-Z][A-Za-z0-9'&\.\-]*(?:[ \t]+[A-Z0-9][A-Za-z0-9'&\.\-]*){0,4})\b"
 )
-# Nama Malaysia berpatronymik (bin/binti/a/l/a/p/anak/ak) pada satu baris
+# Nama Malaysia berpatronymik (bin/binti/a/l/a/p/anak/ak) pada satu baris — sokong huruf kecil & besar
 MALAYSIAN_NAME_RE = re.compile(
-    r"\b((?:(?!(?:PPKP|PKP|Pegawai|Encik|Puan|Cik)\b)[A-Z][a-zA-Z'@\.]+)(?:[ \t]+(?:(?!(?:No|Tel|SSM|K/P)\b)[A-Z][a-zA-Z'@\.]+)){0,3}[ \t]+(?:bin|binti|bte|b\.|a/l|a/p|s/o|d/o|anak|ak)[ \t]+[A-Z][a-zA-Z'@\.]+(?:[ \t]+(?:(?!(?:No|Tel|SSM)\b)[A-Z][a-zA-Z'@\.]+)){0,3})\b"
+    r"(?i)\b((?:(?!(?:PPKP|PKP|Pegawai|Encik|Puan|Cik|Tuan|Nama|Suspek|OKT|OKS|Saksi|Pengadu|Pelajar|Pekerja)\b)[A-Za-z][a-zA-Z'@\.]{1,})(?:[ \t]+(?:(?!(?:No|Tel|SSM|K/P|bin|binti|bte|b\.|a/l|a/p|s/o|d/o|anak|ak)\b)[A-Za-z][a-zA-Z'@\.]{1,})){0,3}[ \t]+(?:bin|binti|bte|b\.|a/l|a/p|s/o|d/o|anak|ak)[ \t]+[A-Za-z][a-zA-Z'@\.]{1,}(?:[ \t]+(?:(?!(?:No|Tel|SSM|yang|di|pada|telah|adalah|dan|atau|dari|ke|untuk)\b)[A-Za-z][a-zA-Z'@\.]{1,})){0,3})\b"
 )
+
+
+def _is_valid_unlabeled_mykad_12(val: str) -> bool:
+    if len(val) != 12 or not val.isdigit():
+        return False
+    # Abaikan format SSM 12-digit baharu (19xx/20xx + kod entiti 01..06)
+    if SSM_12_RE.fullmatch(val):
+        return False
+    mm = int(val[2:4])
+    dd = int(val[4:6])
+    pb = int(val[6:8])
+    return 1 <= mm <= 12 and 1 <= dd <= 31 and (1 <= pb <= 59 or pb == 82)
 
 
 @dataclass
@@ -250,7 +273,13 @@ class PrivacyRedactor:
             whitelist.add(self._clean_candidate(m.group(1)))
         return whitelist
 
-    def redact(self, text: str, use_ollama: bool = True) -> RedactionResult:
+    def redact(
+        self,
+        text: str,
+        use_ollama: bool = True,
+        *,
+        redact_moh_emails: bool = False,
+    ) -> RedactionResult:
         if not text:
             return RedactionResult(original_text="", redacted_text="")
 
@@ -271,7 +300,7 @@ class PrivacyRedactor:
         def _register(raw_val: str, category: str, source: str) -> None:
             cleaned = (
                 raw_val.strip()
-                if category in ("NO_KP", "NO_SSM", "NO_TEL", "PASPORT", "EMEL", "ALAMAT")
+                if category in ("NO_KP", "NO_SSM", "NO_TEL", "PASPORT", "EMEL", "ALAMAT", "KAD_KUASA")
                 else self._clean_candidate(raw_val)
             )
             if not cleaned:
@@ -306,27 +335,45 @@ class PrivacyRedactor:
         for m in MYKAD_RE.finditer(text):
             _register(m.group(1), "NO_KP", "regex")
 
+        for m in MYKAD_SPACED_RE.finditer(text):
+            _register(m.group(1), "NO_KP", "regex")
+
         for m in MYKAD_COMPACT_RE.finditer(text):
             _register(m.group(1), "NO_KP", "regex")
 
-        for m in PASSPORT_RE.finditer(text):
-            _register(m.group(1), "PASPORT", "regex")
-
         for m in SSM_RE.finditer(text):
             _register(m.group(0), "NO_SSM", "regex")
+
+        for m in MYKAD_UNLABELED_12_RE.finditer(text):
+            cand12 = m.group(1)
+            if cand12 not in found_items and _is_valid_unlabeled_mykad_12(cand12):
+                _register(cand12, "NO_KP", "regex")
+
+        for m in PASSPORT_RE.finditer(text):
+            _register(m.group(1), "PASPORT", "regex")
 
         for m in PHONE_RE.finditer(text):
             _register(m.group(0), "NO_TEL", "regex")
 
         for m in EMAIL_RE.finditer(text):
             email_val = m.group(0)
-            if not email_val.lower().endswith("@moh.gov.my"):
+            if redact_moh_emails or not email_val.lower().endswith("@moh.gov.my"):
                 _register(email_val, "EMEL", "regex")
+
+        if redact_moh_emails:
+            for m in KKM_CARD_RE.finditer(text):
+                _register(m.group(1), "KAD_KUASA", "regex")
 
         for m in RESIDENTIAL_ADDR_RE.finditer(text):
             addr_val = m.group(1).strip()
-            if len(addr_val) >= 8:
+            if len(addr_val) >= 8 and not (addr_val.startswith("[") and addr_val.endswith("]")):
                 _register(addr_val, "ALAMAT", "regex")
+
+        if redact_moh_emails:
+            for m in INCIDENT_ADDR_RE.finditer(text):
+                addr_val = m.group(1).strip()
+                if len(addr_val) >= 8 and not (addr_val.startswith("[") and addr_val.endswith("]")):
+                    _register(addr_val, "ALAMAT", "regex")
 
         for m in PREMISE_LABEL_RE.finditer(text):
             raw_prem = m.group(1).strip()
@@ -373,6 +420,7 @@ class PrivacyRedactor:
             "NO_TEL": 0,
             "EMEL": 0,
             "ALAMAT": 0,
+            "KAD_KUASA": 0,
         }
         token_map: Dict[str, str] = {}
         entities: List[RedactedEntity] = []

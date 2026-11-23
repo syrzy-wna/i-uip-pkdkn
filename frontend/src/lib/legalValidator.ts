@@ -50,7 +50,7 @@ export function extractLegalCitations(text: string): Array<{
   const seen = new Set<string>();
 
   const pairedRe =
-    /\b(Seksyen|Peraturan)\s+(\d+[A-Za-z]?(?:\(\d+\))?(?:\([a-z]\))?)(?:\s+(?:dibaca\s+bersama\s+[^,\n.;]{1,40}\s+)?)?\s*(Akta\s+A?\d+|Akta\s+Kerja\s*1955|OSHA\s*1994|PPKM\s*2009|PPM\s*1985|PPKHT\s*2004|KTJ|APPPB\s*1988|P\.U\.\s*\(A\)\s*\d+\/\d{4})?/gi;
+    /\b(Seksyen|Peraturan)\s+(\d+[A-Za-z]{0,3}(?:\(\d+\))?(?:\([a-z]\))?)(?:\s+(?:dibaca\s+bersama\s+[^,\n.;]{1,40}\s+)?)?\s*(Akta\s+A?\d+|Akta\s+Kerja\s*1955|OSHA\s*1994|PPKM\s*2009|PPM\s*1985|PPKHT\s*2004|KTJ|APPPB\s*1988|P\.U\.\s*\(A\)\s*\d+\/\d{4})?/gi;
 
   let match: RegExpExecArray | null;
   while ((match = pairedRe.exec(text)) !== null) {
@@ -70,7 +70,7 @@ export function extractLegalCitations(text: string): Array<{
         inferredFromTail = true;
       }
     }
-    const baseMatch = num.match(/^\d+[A-Za-z]?/);
+    const baseMatch = num.match(/^\d+[A-Za-z]{0,3}/);
     const baseNumber = (baseMatch ? baseMatch[0] : num).toUpperCase();
     const key = `${kind.toUpperCase()}:${num.toUpperCase()}:${actRef.toUpperCase()}`;
     if (!seen.has(key)) {
@@ -135,7 +135,7 @@ export function validateLegalOutput(
     ].join(" ");
   }
 
-  // Bina indeks nombor seksyen sah
+  // Bina indeks nombor seksyen sah daripada section_code & section_heading SAHAJA (elak tahun dalam teks badan dianggap seksyen sah)
   const validSectionsByAct = new Map<string, Set<string>>();
   const allValidNums = new Set<string>();
 
@@ -150,14 +150,14 @@ export function validateLegalOutput(
 
   for (const sec of sectionsList) {
     const actKey = canonicalizeAct(sec.statute_id);
-    const raw = `${sec.section_code} ${sec.section_heading} ${sec.verbatim_text_bm}`;
-    const re = /(?:Seksyen|Peraturan|Section|Regulation)\s+(\d+[A-Za-z]?)/gi;
+    const raw = `${sec.section_code} ${sec.section_heading}`;
+    const re = /(?:Seksyen|Peraturan|Section|Regulation)\s+(\d+[A-Za-z]{0,3})/gi;
     let m: RegExpExecArray | null;
     while ((m = re.exec(raw)) !== null) {
       addValid(actKey, m[1]);
       addValid(sec.statute_id.toUpperCase(), m[1]);
     }
-    const leadMatch = sec.section_code.match(/^(?:Peraturan\s+|Seksyen\s+|Section\s+)?(\d+[A-Za-z]?)\b/i);
+    const leadMatch = sec.section_code.match(/^(?:Peraturan\s+|Seksyen\s+|Section\s+)?(\d+[A-Za-z]{0,3})\b/i);
     if (leadMatch) {
       addValid(actKey, leadMatch[1]);
       addValid(sec.statute_id.toUpperCase(), leadMatch[1]);
@@ -173,9 +173,11 @@ export function validateLegalOutput(
       off.compound_info?.compound_authority_section || "",
       off.compound_info?.notice_section || "",
     ].join(" ");
-    const nums = fields.match(/\b\d+[A-Za-z]?\b/g) || [];
-    for (const n of nums) {
-      addValid(actKey, n);
+    const re = /(?:Seksyen|Peraturan|Section|Regulation)\s+(\d+[A-Za-z]{0,3})/gi;
+    let m: RegExpExecArray | null;
+    while ((m = re.exec(fields)) !== null) {
+      addValid(actKey, m[1]);
+      addValid(off.statute_id.toUpperCase(), m[1]);
     }
   }
 
@@ -251,7 +253,7 @@ export function validateLegalOutput(
         );
       }
     } else if (actSet) {
-      if (actSet.has(cit.baseNumber) || proceduralCrossRefs.has(cit.baseNumber)) {
+      if (actSet.has(cit.baseNumber) || allValidNums.has(cit.baseNumber) || proceduralCrossRefs.has(cit.baseNumber)) {
         verifiedCitations.push(cit.rawCitation);
       } else {
         invalidCitations.push(
@@ -378,10 +380,10 @@ export function validateLegalOutput(
     }
   }
   const nonCompRules: Array<[string, RegExp, string]> = [
-    ["852", /\b(?:3\(1\)|7\(1\)|9\(1\)|10\(1\)|13\(1\))\b/i, "Jadual Pertama P.U. (A) 259/2024"],
-    ["281", /\b(?:13\(1\)|13b|11\(2\))\b/i, "Akta Makanan 1983 (wajib Buka IP)"],
-    ["154", /\b8\(8\)\b/i, "Akta 154 (wajib Buka IP)"],
-    ["342", /\b(?:12\(|22\(a\))\b/i, "Jadual Pertama P.U. (A) 139/2025"],
+    ["852", /\b(?:3|7|8|9|10|11|12|13\(1\)|14|15)(?:\b|\()/i, "Jadual Pertama P.U. (A) 259/2024"],
+    ["281", /\b(?:seksyen\s*(?:11|13|13a|13b|13c|14|15|16|17)|13\(1\)|13a|13b|13c|11\(2\))(?:\b|\()/i, "Akta Makanan 1983 (wajib Buka IP)"],
+    ["154", /\b(?:8\(8\)|seksyen\s*20|seksyen\s*21)(?:\b|\()/i, "Akta 154 (wajib Buka IP)"],
+    ["342", /\b(?:12|14|15|18|22\(a\)|22\(e\))(?:\b|\()/i, "Jadual Pertama P.U. (A) 139/2025"],
   ];
   for (const c of chargesArr) {
     const sec = String(c.seksyen_kesalahan || "").toLowerCase();

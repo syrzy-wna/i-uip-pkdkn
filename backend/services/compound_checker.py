@@ -74,7 +74,23 @@ class CompoundNoticeChecker:
         if PASSPORT_RE.match(compact):
             return True, f"No. Pasport sah bagi warga asing ({compact.upper()}). Pastikan salinan pasport dilampirkan.", None
 
-        if SSM_NEW_RE.match(compact) or SSM_OLD_RE.match(compact):
+        # Bezakan 12-digit SSM baharu (bermula 19xx/20xx seperti 202101034892) daripada MyKad 12-digit tanpa tanda sengkang
+        if SSM_NEW_RE.match(compact):
+            if compact.startswith(("19", "20")) and int(compact[4:6]) in (1, 2, 3, 4, 5, 6):
+                return True, f"No. Pendaftaran Syarikat / SSM sah bagi penerima perbadanan ({compact.upper()}).", None
+            # Semak sama ada ia sebenarnya MyKad 12-digit tanpa sengkang
+            yy, month, day = int(compact[0:2]), int(compact[2:4]), int(compact[4:6])
+            state = compact[6:8]
+            if cls._parse_mykad_dob(yy, month, day) and state in VALID_STATE_CODES:
+                formatted_ic = f"{compact[0:6]}-{compact[6:8]}-{compact[8:12]}"
+                return (
+                    False,
+                    f"No. K/P hendaklah ditaip menggunakan format rasmi bertanda sengkang: {formatted_ic} (elak kekeliruan dengan No. SSM 12 digit).",
+                    None,
+                )
+            return True, f"No. Pendaftaran Syarikat / SSM sah bagi penerima perbadanan ({compact.upper()}).", None
+
+        if SSM_OLD_RE.match(compact):
             return True, f"No. Pendaftaran Syarikat / SSM sah bagi penerima perbadanan ({compact.upper()}).", None
 
         return (
@@ -196,19 +212,29 @@ class CompoundNoticeChecker:
         if "852" in low_sec and "seksyen 44" in low_sec:
             sec_errors.append("Seksyen 44 Akta 852 ialah perlindungan pemberi maklumat. Kuasa kompaun Akta 852 ialah Seksyen 48 [P.U. (A) 259/2024].")
         if ("tifoid" in low_err or "typhoid" in low_err or "vaksin" in low_err) and "peraturan 30" in low_sec and "31" not in low_sec:
-            sec_errors.append("Kesalahan tiada suntikan antitifoid ialah di bawah Peraturan 31(1) / 31(2) PPKM 2009 (Peraturan 30 ialah Latihan Pengendali Makanan).")
+            sec_errors.append("Kesalahan pengendali makanan tiada suntikan antitifoid ialah di bawah Peraturan 31(1) PPKM 2009 [hukuman Peraturan 31(3)] — bagi pemilik premis pula Peraturan 11(1)(b) (Peraturan 30 ialah Latihan Pengendali Makanan).")
         if "154" in low_sec and "8(2)" in low_sec:
             sec_errors.append("Kesalahan ingkar perintah Seksyen 8 Akta 154 ialah di bawah Seksyen 8(8) Akta 154 (bukan Seksyen 8(2)).")
 
-        # Sekat kesalahan TIDAK BOLEH KOMPAUN mengikut Jadual Warta AGC
-        if "852" in low_sec:
-            if any(re.search(rf"(?<![0-9a-z]){sec}(?![0-9a-z])", low_sec) for sec in (r"3\(1\)", r"7\(1\)", r"9\(1\)", r"10\(1\)", r"13\(1\)")):
+        # Sekat kesalahan TIDAK BOLEH KOMPAUN mengikut Senarai Putih Jadual Warta AGC
+        if "852" in low_sec or "258/2024" in low_sec or "260/2024" in low_sec:
+            allowed_852 = (r"13\(3\)", r"16\(2\)", r"17\(1\)", r"18\(1\)(?:\([abc]\))?")
+            has_allowed_852 = any(re.search(rf"(?<![0-9a-z]){sec}(?![0-9a-z])", low_sec) for sec in allowed_852)
+            has_explicit_noncomp_852 = any(
+                re.search(rf"(?<![0-9a-z]){sec}(?![0-9a-z])", low_sec)
+                for sec in (r"3\(1\)", r"7\(1\)", r"8\(", r"9\(1\)", r"10\(1\)", r"11\(", r"12\(", r"13\(1\)", r"14\(", r"15\(", r"20\(")
+            )
+            if has_explicit_noncomp_852 or (has_sec_kw and not has_allowed_852):
                 sec_errors.append(
-                    "TIDAK BOLEH DIKOMPAUN: Seksyen 3(1), 7(1), 9(1), 10(1) dan 13(1) Akta 852 tidak tersenarai dalam Jadual Pertama P.U. (A) 259/2024. Wajib sita barang kes dan buka Kertas Siasatan (IP) untuk pendakwaan terus ke Mahkamah."
+                    "TIDAK BOLEH DIKOMPAUN: Di bawah Jadual Pertama P.U. (A) 259/2024, HANYA Seksyen 13(3), 16(2), 17(1) dan 18(1) Akta 852 boleh dikompaun. Peruntukan selain itu (cth: S.3(1), 7(1), 9(1), 10(1), 13(1), 14, 15) wajib disita barang kes dan dibuka Kertas Siasatan (IP) untuk pendakwaan terus ke Mahkamah."
                 )
             # Semakan konsistensi umur OBD (<18 tahun) berdasarkan MyKad
             if recipient_age is not None:
-                if recipient_age < 18 and "16(2)" in low_sec:
+                if recipient_age < 5 and "16(2)" in low_sec:
+                    sec_warnings.append(
+                        f"Sila semak tahun lahir MyKad ({recipient_age} tahun — kemungkinan warga emas lahir abad 19xx). Sahkan umur sebenar OKS sebelum menyerahkan notis."
+                    )
+                elif recipient_age < 18 and "16(2)" in low_sec:
                     sec_errors.append(
                         f"SALAH SEKSYEN UMUR (OBD {recipient_age} tahun): Penerima berumur bawah 18 tahun. Gunakan Seksyen 17(1) Akta 852 (bukan Seksyen 16(2)) serta patuhi perlindungan Akta Kanak-Kanak 2001 [Akta 611]."
                     )
@@ -222,20 +248,30 @@ class CompoundNoticeChecker:
                     )
 
         if ("281" in low_sec or "makanan 1983" in low_sec) and "ppkm" not in low_sec and "ppm" not in low_sec:
-            if any(re.search(rf"(?<![0-9a-z]){sec}(?![0-9a-z])", low_sec) for sec in (r"13\(1\)", r"13b", r"11\(2\)")):
+            if any(
+                re.search(rf"(?<![0-9a-z]){sec}(?![0-9a-z])", low_sec)
+                for sec in (r"11(?:\([12]\))?", r"13(?:\(1\))?", r"13a(?:\([123]\))?", r"13b(?:\(\d+\))?", r"13c", r"14\b", r"15\b", r"16\b", r"17\b")
+            ):
                 sec_errors.append(
-                    "TIDAK BOLEH DIKOMPAUN: Seksyen 13(1), 13B dan 11(2) Akta Makanan 1983 ialah kesalahan serius yang wajib dibuka Kertas Siasatan (IP) untuk pendakwaan terus ke Mahkamah."
+                    "TIDAK BOLEH DIKOMPAUN: Seksyen 11, 13, 13A, 13B, 13C dan 14–17 Akta Makanan 1983 ialah kesalahan serius yang wajib dibuka Kertas Siasatan (IP) untuk pendakwaan terus ke Mahkamah."
                 )
 
-        if "154" in low_sec and re.search(r"(?<![0-9a-z])8\(8\)(?![0-9a-z])", low_sec):
-            sec_errors.append(
-                "TIDAK BOLEH DIKOMPAUN: Seksyen 8(8) Akta 154 (ingkar perintah bertulis S.8) wajib dibawa terus ke Mahkamah melalui Kertas Siasatan (IP)."
-            )
+        if "154" in low_sec:
+            if any(re.search(rf"(?<![0-9a-z]){sec}(?![0-9a-z])", low_sec) for sec in (r"8\(8\)", r"20\b", r"21\b")):
+                sec_errors.append(
+                    "TIDAK BOLEH DIKOMPAUN: Seksyen 8(8) (ingkar perintah bertulis), Seksyen 20 dan Seksyen 21 (menghalang pegawai) Akta 154 wajib dibawa terus ke Mahkamah melalui Kertas Siasatan (IP)."
+                )
 
         if "342" in low_sec:
-            if any(re.search(rf"(?<![0-9a-z]){sec}(?![0-9a-z])", low_sec) for sec in (r"12\(1\)", r"22\(a\)")):
+            allowed_342 = (r"10\(2\)", r"11\(5\)", r"21a\(3\)", r"22\(b\)", r"22\(c\)", r"22\(d\)")
+            has_allowed_342 = any(re.search(rf"(?<![0-9a-z]){sec}(?![0-9a-z])", low_sec) for sec in allowed_342)
+            has_explicit_noncomp_342 = any(
+                re.search(rf"(?<![0-9a-z]){sec}(?![0-9a-z])", low_sec)
+                for sec in (r"12\(", r"22\(a\)", r"14\b", r"14a\b", r"15\(", r"18\(")
+            )
+            if has_explicit_noncomp_342 or (has_sec_kw and not has_allowed_342):
                 sec_errors.append(
-                    "TIDAK BOLEH DIKOMPAUN: Peruntukan ini tidak tersenarai dalam Peraturan 2 P.U. (A) 139/2025. Buka Kertas Siasatan (IP) untuk pendakwaan terus ke Mahkamah."
+                    "TIDAK BOLEH DIKOMPAUN: Di bawah Jadual Pertama P.U. (A) 139/2025, HANYA Seksyen 10(2), 11(5), 21A(3), 22(b), 22(c) dan 22(d) Akta 342 boleh dikompaun. Buka Kertas Siasatan (IP) untuk pendakwaan terus ke Mahkamah."
                 )
             elif "22(b)" in low_sec and any(w in low_err for w in ("tibi", "tuberkulosis", "tbis", "smear")):
                 sec_warnings.append(
@@ -284,9 +320,11 @@ class CompoundNoticeChecker:
         rm_val, is_range = self._extract_rm_amount(amaun_rm)
         k08_status = "LULUS"
         k08_note = f"Amaun: {amaun_rm} ({tempoh_bayaran})"
+        compact_kp = no_kp.replace(" ", "")
+        is_ssm_12 = bool(SSM_NEW_RE.match(compact_kp) and compact_kp.startswith(("19", "20")) and int(compact_kp[4:6]) in (1, 2, 3, 4, 5, 6))
         is_corporate = bool(
-            SSM_NEW_RE.match(no_kp.replace(" ", ""))
-            or SSM_OLD_RE.match(no_kp.replace(" ", ""))
+            is_ssm_12
+            or SSM_OLD_RE.match(compact_kp)
             or any(w in nama_penerima.lower() for w in ("sdn", "bhd", "berhad"))
         )
         low_tempoh = tempoh_bayaran.lower()
@@ -324,12 +362,15 @@ class CompoundNoticeChecker:
             if rm_val > cap_342:
                 k08_status = "GAGAL"
                 k08_note = f"TIDAK SAH (Melebihi Had Undang-Undang): Had kompaun maksimum Seksyen 25 Akta 342 [P.U. (A) 139/2025] ialah RM {cap_342:,.2f}."
-            else:
-                k08_note = f"Amaun RM {rm_val:.2f} mematuhi had Seksyen 25 Akta 342 (maks RM5,000 individu / RM50,000 syarikat dengan keizinan bertulis Pendakwa Raya)."
-        elif "ppkm" in low_sec or "281" in low_sec or "ppm" in low_sec or "makanan" in low_sec:
-            if "32(3)" in low_sec and rm_val > 500.0:
+            elif "14" not in low_tempoh:
                 k08_status = "GAGAL"
-                k08_note = "TIDAK SAH: Had kompaun maksimum Peraturan 32(3) PPKM 2009 ialah 50% daripada denda RM1,000 (RM 500.00)."
+                k08_note = "TIDAK SAH: Tempoh bayaran tawaran kompaun di bawah Seksyen 25 Akta 342 [P.U. (A) 139/2025] ialah 14 hari."
+            else:
+                k08_note = f"Amaun RM {rm_val:.2f} (14 hari) mematuhi had Seksyen 25 Akta 342 (maks RM5,000 individu / RM50,000 syarikat dengan keizinan bertulis Pendakwa Raya)."
+        elif "ppkm" in low_sec or "281" in low_sec or "ppm" in low_sec or "makanan" in low_sec:
+            if re.search(r"(?<![0-9a-z])32(?:\([123]\))?(?![0-9a-z])", low_sec) and "ppkm" in low_sec and rm_val > 500.0:
+                k08_status = "GAGAL"
+                k08_note = "TIDAK SAH: Had kompaun maksimum Peraturan 32 PPKM 2009 ialah 50% daripada denda RM1,000 [Peraturan 32(3)], iaitu RM 500.00."
             elif rm_val > 5000.0:
                 k08_status = "GAGAL"
                 k08_note = "TIDAK SAH (Melebihi Had Undang-Undang): Had kompaun maksimum Seksyen 33 Akta Makanan 1983 (50% daripada denda RM10,000) ialah RM 5,000.00."
@@ -338,7 +379,7 @@ class CompoundNoticeChecker:
                 k08_note = "TIDAK SAH: Tempoh bayaran kompaun Notis S.32B / S.33 Akta Makanan 1983 (PPKM 2009) ialah 14 hari."
         elif not ("14" in low_tempoh or "30" in low_tempoh or "hari" in low_tempoh):
             k08_status = "SEMAK"
-            k08_note = "Nyatakan tempoh bayaran rasmi (14 hari bagi Akta 154/281, 30 hari bagi Akta 852)."
+            k08_note = "Nyatakan tempoh bayaran rasmi (14 hari bagi Akta 154/281/342, 30 hari bagi Akta 852)."
 
         checks.append({
             "code": "K08",
