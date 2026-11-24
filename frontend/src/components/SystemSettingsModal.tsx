@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { CheckCircle2, Eye, EyeOff, Loader2, Settings, X } from "lucide-react";
 import { fetchRuntimeSettings, saveRuntimeSettings } from "@/lib/api";
+import { useLockBodyScroll } from "@/lib/uiHelpers";
 import type { SystemStatus } from "@/lib/types";
 
 interface SystemSettingsModalProps {
@@ -25,34 +26,62 @@ export default function SystemSettingsModal({
   const [ollamaUrl, setOllamaUrl] = useState("http://localhost:11434");
   const [ollamaModel, setOllamaModel] = useState("gemma3:12b");
   const [geminiModel, setGeminiModel] = useState("gemini-3.8-flash");
+  const [loadingSettings, setLoadingSettings] = useState(false);
+  const [loadFailed, setLoadFailed] = useState(false);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
+  useLockBodyScroll(open);
 
   useEffect(() => {
     if (!open) return;
+    let active = true;
     setMessage(null);
     setErrorMsg(null);
+    setLoadingSettings(true);
+    setLoadFailed(false);
     fetchRuntimeSettings()
       .then((s) => {
+        if (!active) return;
         setMaskedKey(s.masked_gemini_api_key || "");
         setGoogleClientId(s.google_client_id || "");
         setOllamaUrl(s.ollama_base_url || "http://localhost:11434");
         setOllamaModel(s.ollama_model || "gemma3:12b");
         setGeminiModel(s.standard_fallback_model || "gemini-3.8-flash");
       })
-      .catch(() => {});
+      .catch((err) => {
+        if (!active) return;
+        setLoadFailed(true);
+        setErrorMsg(
+          err instanceof Error
+            ? `Gagal memuatkan tetapan semasa: ${err.message}`
+            : "Gagal memuatkan tetapan semasa sistem. Sila tutup dan buka semula."
+        );
+      })
+      .finally(() => {
+        if (active) setLoadingSettings(false);
+      });
+    return () => {
+      active = false;
+    };
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") onCloseRef.current();
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [open, onClose]);
+  }, [open]);
 
   if (!open) return null;
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (loadFailed) return;
     setSaving(true);
     setMessage(null);
     setErrorMsg(null);
@@ -86,29 +115,33 @@ export default function SystemSettingsModal({
 
   return (
     <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Tetapan Enjin AI & Privasi Tempatan"
       onClick={onClose}
       className="fixed inset-0 z-50 flex items-end justify-center bg-slate-900/60 p-0 backdrop-blur-sm sm:items-center sm:p-4"
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="flex max-h-[92dvh] w-full max-w-lg flex-col overflow-hidden rounded-t-2xl border border-slate-200 bg-white p-4 shadow-xl sm:rounded-2xl sm:p-5"
+        className="flex max-h-[92dvh] w-full max-w-lg flex-col overflow-hidden rounded-t-2xl border border-slate-200 bg-white p-4 pb-safe shadow-xl sm:rounded-2xl sm:p-5"
       >
         <div className="flex items-center justify-between border-b border-slate-100 pb-3">
           <div className="flex items-center gap-2">
             <Settings className="h-5 w-5 text-[#0f2744]" />
             <div>
               <h2 className="text-sm font-bold text-slate-900">
-                Tetapan Enjin AI &amp; Privasi Tempatan PKD
+                Tetapan Enjin AI &amp; Privasi Tempatan
               </h2>
               <p className="text-[11px] text-slate-500">
-                Konfigurasi kunci API Gemini dan pelayan Ollama PC anda tanpa perlu menyunting fail .env.
+                Tetapkan kunci API Gemini dan pelayan Ollama tanpa perlu menyunting fail .env.
               </p>
             </div>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="inline-flex min-h-[40px] min-w-[40px] items-center justify-center rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700"
+            aria-label="Tutup tetapan sistem"
+            className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg p-1.5 text-slate-500 hover:bg-slate-100 hover:text-slate-800"
           >
             <X className="h-5 w-5" />
           </button>
@@ -127,14 +160,15 @@ export default function SystemSettingsModal({
                 placeholder={
                   maskedKey
                     ? "Biarkan kosong untuk kekalkan kunci sedia ada, atau tampal kunci baharu..."
-                    : "Masukkan kunci AIza... dari Google AI Studio"
+                    : "Masukkan kunci AIza... daripada Google AI Studio"
                 }
-                className="w-full rounded-lg border border-slate-300 px-3 py-2 pr-10 text-xs focus:border-blue-500 focus:outline-none"
+                className="w-full rounded-lg border border-slate-300 px-3 py-2.5 pr-11 text-base focus:border-blue-500 focus:outline-none sm:text-sm"
               />
               <button
                 type="button"
                 onClick={() => setShowKey(!showKey)}
-                className="absolute right-2.5 top-2 text-slate-400 hover:text-slate-700"
+                aria-label={showKey ? "Sembunyikan kunci API" : "Paparkan kunci API"}
+                className="absolute right-0 top-1/2 flex min-h-[44px] min-w-[44px] -translate-y-1/2 items-center justify-center text-slate-500 hover:text-slate-800"
               >
                 {showKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
@@ -143,17 +177,17 @@ export default function SystemSettingsModal({
 
           <div>
             <label className="font-bold text-slate-700">
-              Google OAuth 2.0 Web Client ID (Google Sign-In Connector)
+              Google OAuth 2.0 Web Client ID (Penyambung Log Masuk Google)
             </label>
             <input
               type="text"
               value={googleClientId}
               onChange={(e) => setGoogleClientId(e.target.value)}
-              placeholder="Contoh: 1234567890-xxxx.apps.googleusercontent.com (Pilihan untuk tetingkap Google OAuth rasmi)"
-              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-xs focus:border-blue-500 focus:outline-none"
+              placeholder="Contoh: 1234567890-xxxx.apps.googleusercontent.com"
+              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2.5 text-base focus:border-blue-500 focus:outline-none sm:text-sm"
             />
-            <p className="mt-0.5 text-[10px] text-slate-500">
-              Wajib diisi daripada Google Cloud Console untuk mengaktifkan log masuk Google OAuth 2.0 sebenar (tiada akaun simulasi).
+            <p className="mt-0.5 text-[11px] text-slate-500">
+              Wajib diisi daripada Google Cloud Console untuk mengaktifkan log masuk Google rasmi.
             </p>
           </div>
 
@@ -162,12 +196,12 @@ export default function SystemSettingsModal({
             <select
               value={geminiModel}
               onChange={(e) => setGeminiModel(e.target.value)}
-              className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs"
+              className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-base sm:text-sm"
             >
               <option value="gemini-3.8-flash">gemini-3.8-flash (Pantas, Stabil &amp; Multimodal Terkini)</option>
               <option value="gemini-4-hydrogen">gemini-4-hydrogen (Interactions API — Pantas)</option>
-              <option value="gemini-4-argon">gemini-4-argon (Interactions API — Penaakulan Mendalam)</option>
-              <option value="gemini-3.1-pro-preview">gemini-3.1-pro-preview (Penaakulan Undang-Undang Kompleks)</option>
+              <option value="gemini-4-argon">gemini-4-argon (Interactions API — Analisis Mendalam)</option>
+              <option value="gemini-3.1-pro-preview">gemini-3.1-pro-preview (Analisis Undang-Undang Kompleks)</option>
               <option value="gemini-flash-latest">gemini-flash-latest (Alias Flash Terkini)</option>
             </select>
           </div>
@@ -179,7 +213,7 @@ export default function SystemSettingsModal({
                 type="text"
                 value={ollamaUrl}
                 onChange={(e) => setOllamaUrl(e.target.value)}
-                className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-xs"
+                className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2.5 text-base sm:text-sm"
               />
             </div>
             <div>
@@ -189,7 +223,7 @@ export default function SystemSettingsModal({
                 value={ollamaModel}
                 onChange={(e) => setOllamaModel(e.target.value)}
                 list="ollama-models-list"
-                className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-xs"
+                className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2.5 text-base sm:text-sm"
               />
               <datalist id="ollama-models-list">
                 {(status?.ollama.available_models || []).map((m) => (
@@ -217,14 +251,14 @@ export default function SystemSettingsModal({
             <button
               type="button"
               onClick={onClose}
-              className="rounded-lg border border-slate-300 px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50"
+              className="min-h-[44px] rounded-lg border border-slate-300 px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50"
             >
               Tutup
             </button>
             <button
               type="submit"
-              disabled={saving}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-[#0f2744] px-4 py-2 text-xs font-bold text-white hover:bg-slate-800 disabled:opacity-60"
+              disabled={saving || loadingSettings || loadFailed}
+              className="inline-flex min-h-[44px] items-center gap-1.5 rounded-lg bg-[#0f2744] px-4 py-2 text-xs font-bold text-white hover:bg-slate-800 disabled:opacity-60"
             >
               {saving && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
               Simpan &amp; Uji Sambungan

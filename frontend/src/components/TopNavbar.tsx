@@ -147,7 +147,7 @@ export default function TopNavbar({
             type="button"
             onClick={onOpenCases}
             title="Buka Fail Kes Tersimpan"
-            className="hidden min-h-[38px] items-center gap-1.5 rounded-lg bg-white/10 px-3 py-1.5 text-xs font-bold text-white ring-1 ring-white/15 transition hover:bg-white/20 lg:inline-flex"
+            className="hidden min-h-[44px] items-center gap-1.5 rounded-lg bg-white/10 px-3 py-1.5 text-xs font-bold text-white ring-1 ring-white/15 transition hover:bg-white/20 lg:inline-flex"
           >
             <FolderOpen className="h-4 w-4 shrink-0 text-slate-200" />
             <span>Fail Saya</span>
@@ -161,7 +161,7 @@ export default function TopNavbar({
             onClick={() => onSelectMode("guide")}
             title="SOP Lapangan & Panduan Ringkas"
             aria-label="SOP Lapangan dan Panduan Ringkas"
-            className={`inline-flex min-h-[40px] min-w-[40px] items-center justify-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-bold transition sm:min-h-[38px] ${
+            className={`inline-flex min-h-[44px] min-w-[44px] items-center justify-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-bold transition ${
               activeMode === "guide"
                 ? "bg-white text-[#0f2744] shadow-sm"
                 : "bg-white/10 text-slate-100 ring-1 ring-white/15 hover:bg-white/20"
@@ -175,7 +175,8 @@ export default function TopNavbar({
             type="button"
             onClick={onOpenAccount}
             title={officer ? `Profil: ${officer.full_name}` : "Log Masuk Akaun Pegawai"}
-            className={`inline-flex min-h-[40px] items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition sm:min-h-[38px] ${
+            aria-label={officer ? `Profil ${officer.full_name}` : "Log Masuk Akaun Pegawai"}
+            className={`inline-flex min-h-[44px] min-w-[44px] items-center justify-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition ${
               officer
                 ? "bg-white/15 text-white ring-1 ring-white/25 hover:bg-white/25"
                 : "bg-white text-[#0f2744] hover:bg-slate-100"
@@ -194,7 +195,7 @@ export default function TopNavbar({
                 onClick={onOpenDevConsole}
                 title="Konsol Pembangun"
                 aria-label="Konsol Pembangun"
-                className="inline-flex min-h-[40px] min-w-[40px] items-center justify-center gap-1 rounded-lg bg-white/10 px-2.5 py-1.5 text-xs font-bold text-amber-200 ring-1 ring-white/20 hover:bg-white/20 sm:min-h-[38px]"
+                className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center gap-1 rounded-lg bg-white/10 px-2.5 py-1.5 text-xs font-bold text-amber-200 ring-1 ring-white/20 hover:bg-white/20"
               >
                 <Cpu className="h-4 w-4" />
                 <span className="hidden xl:inline">Pembangun</span>
@@ -205,7 +206,7 @@ export default function TopNavbar({
                 onClick={onOpenSettings}
                 title="Tetapan Sistem AI"
                 aria-label="Tetapan Sistem AI"
-                className="inline-flex min-h-[40px] min-w-[40px] items-center justify-center rounded-lg bg-white/10 text-white ring-1 ring-white/20 hover:bg-white/20 sm:min-h-[38px]"
+                className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg bg-white/10 text-white ring-1 ring-white/20 hover:bg-white/20"
               >
                 <Settings className="h-4 w-4" />
               </button>

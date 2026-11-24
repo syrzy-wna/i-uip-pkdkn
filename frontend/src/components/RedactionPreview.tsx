@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   Check,
   ChevronDown,
@@ -13,6 +13,7 @@ import {
   Lock,
   RefreshCw,
 } from "lucide-react";
+import { copyTextSafe } from "@/lib/uiHelpers";
 import type { RedactResponse } from "@/lib/types";
 
 interface RedactionPreviewProps {
@@ -21,6 +22,26 @@ interface RedactionPreviewProps {
   onRunRedaction: () => void;
   hasCaseInput?: boolean;
   onSwitchToInput?: () => void;
+}
+
+const ENTITY_CATEGORY_BM: Record<string, string> = {
+  NO_KP: "No. Kad Pengenalan",
+  NO_TEL: "No. Telefon",
+  NO_SSM: "No. Daftar SSM",
+  KAD_KUASA: "No. Kad Kuasa",
+  EMEL: "Alamat E-mel",
+  SUSPEK: "Nama Orang Kena Tuduh / Suspek",
+  SAKSI: "Nama Saksi",
+  PREMIS: "Nama Premis",
+  ALAMAT: "Alamat Kediaman",
+  PASPORT: "No. Pasport",
+  NAMA: "Nama Individu",
+  NO_KENDERAAN: "No. Pendaftaran Kenderaan",
+};
+
+function formatEntityCategory(raw: string): string {
+  const key = (raw || "").trim().toUpperCase();
+  return ENTITY_CATEGORY_BM[key] || raw.replace(/_/g, " ");
 }
 
 export default function RedactionPreview({
@@ -34,12 +55,26 @@ export default function RedactionPreview({
   const [textView, setTextView] = useState<"redacted" | "original">("redacted");
   const [highlightedToken, setHighlightedToken] = useState<string | null>(null);
   const [showRuleHint, setShowRuleHint] = useState(false);
+  const entityRowRefs = useRef<Record<string, HTMLElement | null>>({});
 
-  const handleCopy = () => {
+  const handleCopy = async () => {
     if (!redaction?.redacted_text) return;
-    navigator.clipboard?.writeText(redaction.redacted_text);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1800);
+    const ok = await copyTextSafe(redaction.redacted_text);
+    if (ok) {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1800);
+    }
+  };
+
+  const handleSelectToken = (token: string) => {
+    const next = highlightedToken === token ? null : token;
+    setHighlightedToken(next);
+    if (next) {
+      window.setTimeout(() => {
+        const el = entityRowRefs.current[next];
+        el?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }, 40);
+    }
   };
 
   const renderHighlightedTokens = (text: string): React.ReactNode => {
@@ -51,7 +86,7 @@ export default function RedactionPreview({
           <button
             key={i}
             type="button"
-            onClick={() => setHighlightedToken(active ? null : part)}
+            onClick={() => handleSelectToken(part)}
             title="Tekan untuk lihat maklumat sebenar di bawah"
             className={`mx-0.5 inline-block rounded px-1.5 py-0.5 font-mono text-xs font-bold ring-1 transition ${
               active
@@ -76,7 +111,7 @@ export default function RedactionPreview({
           </div>
           <div>
             <div className="text-sm font-extrabold text-slate-900">
-              Perlindungan Data Sulit (OSA 1972 &amp; PDPA)
+              Perlindungan Data Sulit (Akta Rahsia Rasmi 1972 &amp; PDPA)
             </div>
             <p className="mt-0.5 text-xs text-slate-600">
               {redaction
@@ -86,7 +121,7 @@ export default function RedactionPreview({
             <button
               type="button"
               onClick={() => setShowRuleHint((v) => !v)}
-              className="mt-1.5 inline-flex items-center gap-1 text-xs font-bold text-[#0f2744] hover:underline"
+              className="mt-1.5 inline-flex min-h-[36px] items-center gap-1 text-xs font-bold text-[#0f2744] hover:underline"
             >
               Maklumat apa yang disembunyikan?
               {showRuleHint ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
@@ -147,29 +182,29 @@ export default function RedactionPreview({
         <>
           <div className="rounded-xl border border-slate-200 bg-white">
             <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 px-4 py-3">
-              <div className="inline-flex rounded-lg bg-slate-100 p-1">
+              <div className="grid w-full grid-cols-2 rounded-lg bg-slate-100 p-1 sm:inline-flex sm:w-auto">
                 <button
                   type="button"
                   onClick={() => setTextView("redacted")}
-                  className={`inline-flex min-h-[36px] items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-bold transition ${
+                  className={`inline-flex min-h-[40px] items-center justify-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-bold transition ${
                     textView === "redacted"
                       ? "bg-white text-emerald-800 shadow-sm"
                       : "text-slate-600 hover:text-slate-900"
                   }`}
                 >
-                  <EyeOff className="h-3.5 w-3.5" />
+                  <EyeOff className="h-3.5 w-3.5 shrink-0" />
                   Teks Dilindungi ({redaction.entities.length})
                 </button>
                 <button
                   type="button"
                   onClick={() => setTextView("original")}
-                  className={`inline-flex min-h-[36px] items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-bold transition ${
+                  className={`inline-flex min-h-[40px] items-center justify-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-bold transition ${
                     textView === "original"
                       ? "bg-white text-slate-900 shadow-sm"
                       : "text-slate-600 hover:text-slate-900"
                   }`}
                 >
-                  <Eye className="h-3.5 w-3.5" />
+                  <Eye className="h-3.5 w-3.5 shrink-0" />
                   Teks Asal Penuh
                 </button>
               </div>
@@ -177,11 +212,11 @@ export default function RedactionPreview({
               {textView === "redacted" && (
                 <button
                   type="button"
-                  onClick={handleCopy}
-                  className="inline-flex min-h-[38px] items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-bold text-slate-700 hover:bg-slate-50"
+                  onClick={() => void handleCopy()}
+                  className="inline-flex min-h-[44px] items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3.5 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50"
                 >
                   {copied ? <Check className="h-3.5 w-3.5 text-emerald-600" /> : <Copy className="h-3.5 w-3.5" />}
-                  {copied ? "Disalin" : "Salin Teks Selamat"}
+                  {copied ? "Disalin" : "Salin Teks Dilindungi"}
                 </button>
               )}
             </div>
@@ -195,7 +230,7 @@ export default function RedactionPreview({
 
           <div className="rounded-xl border border-slate-200 bg-white p-4">
             <h4 className="mb-3 text-sm font-extrabold text-slate-900">
-              Senarai Maklumat Dilindungi ({redaction.entities.length} Item)
+              Senarai Maklumat Dilindungi ({redaction.entities.length} Butiran)
             </h4>
             {redaction.entities.length === 0 ? (
               <p className="text-sm text-slate-500">
@@ -209,17 +244,26 @@ export default function RedactionPreview({
                     return (
                       <div
                         key={ent.token}
-                        className={`rounded-lg border p-3 text-xs ${
-                          active ? "border-[#0f2744] bg-slate-50" : "border-slate-200 bg-white"
+                        ref={(el) => {
+                          if (typeof window !== "undefined" && window.innerWidth < 640) {
+                            entityRowRefs.current[ent.token] = el;
+                          }
+                        }}
+                        className={`rounded-lg border p-3 text-xs transition ${
+                          active
+                            ? "border-amber-400 bg-amber-50 ring-1 ring-amber-400"
+                            : "border-slate-200 bg-white"
                         }`}
                       >
-                        <div className="flex items-center justify-between gap-2">
+                        <div className="flex flex-wrap items-center justify-between gap-2">
                           <span className="font-mono font-bold text-amber-800">{ent.token}</span>
-                          <span className="rounded bg-slate-100 px-2 py-0.5 text-xs font-semibold text-slate-600">
-                            {ent.category}
+                          <span className="rounded bg-slate-100 px-2 py-0.5 text-xs font-semibold text-slate-700">
+                            {formatEntityCategory(ent.category)}
                           </span>
                         </div>
-                        <div className="mt-1 text-sm font-semibold text-slate-900">{ent.original}</div>
+                        <div className="mt-1 break-words text-sm font-semibold text-slate-900">
+                          {ent.original}
+                        </div>
                       </div>
                     );
                   })}
@@ -231,7 +275,7 @@ export default function RedactionPreview({
                       <tr className="border-b border-slate-200 bg-slate-50 text-xs font-bold text-slate-600">
                         <th className="px-3 py-2.5">Kod Gantian</th>
                         <th className="px-3 py-2.5">Jenis Maklumat</th>
-                        <th className="px-3 py-2.5">Maklumat Sebenar (Masuk ke Fail Word)</th>
+                        <th className="px-3 py-2.5">Maklumat Sebenar (Dipaparkan dalam Fail Word)</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -240,12 +284,21 @@ export default function RedactionPreview({
                         return (
                           <tr
                             key={ent.token}
-                            className={`border-b border-slate-100 ${active ? "bg-slate-50" : ""}`}
+                            ref={(el) => {
+                              if (typeof window === "undefined" || window.innerWidth >= 640) {
+                                entityRowRefs.current[ent.token] = el;
+                              }
+                            }}
+                            className={`border-b border-slate-100 transition ${
+                              active ? "bg-amber-50 ring-1 ring-inset ring-amber-400" : ""
+                            }`}
                           >
                             <td className="px-3 py-2.5 font-mono text-xs font-bold text-amber-800">
                               {ent.token}
                             </td>
-                            <td className="px-3 py-2.5 text-xs text-slate-600">{ent.category}</td>
+                            <td className="px-3 py-2.5 text-xs font-medium text-slate-700">
+                              {formatEntityCategory(ent.category)}
+                            </td>
                             <td className="px-3 py-2.5 font-medium text-slate-900">
                               {ent.original}
                             </td>

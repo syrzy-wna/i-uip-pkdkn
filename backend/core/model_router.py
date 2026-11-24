@@ -344,31 +344,31 @@ class UIPModelRouter:
 
     @staticmethod
     def _classify_friendly_ai_error(attempt_errors: List[str]) -> str:
-        """Menukar ralat teknikal SDK kepada mesej Bahasa Melayu yang jelas untuk PPKP."""
+        """Menukar ralat teknikal kepada mesej Bahasa Melayu yang jelas untuk PPKP."""
         joined = " ".join(attempt_errors).lower()
         if any(tok in joined for tok in ("apitimeouterror", "timeoutexception", "timed out", "504", "deadline_exceeded")):
             return (
                 "Pelayan AI mengambil masa terlalu lama untuk membalas. "
-                "Paparan menggunakan rujukan statutori tempatan — sila klik 'Cuba AI' sebentar lagi."
+                "Jawapan dipaparkan mengikut Panduan Akta Rasmi — sila tekan 'Cuba Semula AI' sebentar lagi."
             )
         if any(tok in joined for tok in ("429", "ratelimit", "resource_exhausted", "quota")):
             return (
-                "Pelayan AI sedang menerima permintaan tinggi buat sementara waktu. "
-                "Paparan menggunakan rujukan statutori tempatan — sila cuba semula dalam 1 minit."
+                "Perkhidmatan AI sedang sibuk buat sementara waktu. "
+                "Jawapan dipaparkan mengikut Panduan Akta Rasmi — sila cuba semula dalam 1 minit."
             )
         if any(tok in joined for tok in ("401", "403", "api_key", "permissiondenied", "authentication")):
             return (
-                "Konfigurasi kunci API AI perlu disemak oleh pentadbir sistem. "
-                "Paparan menggunakan rujukan statutori tempatan."
+                "Tetapan semakan AI perlu disemak oleh pentadbir sistem. "
+                "Buat masa ini, jawapan dipaparkan mengikut Panduan Akta Rasmi."
             )
         if any(tok in joined for tok in ("apiconnectionerror", "connecterror", "network", "dns")):
             return (
-                "Sambungan ke pelayan AI terganggu buat sementara waktu. "
-                "Paparan menggunakan rujukan statutori tempatan."
+                "Sambungan ke perkhidmatan AI terganggu buat sementara waktu. "
+                "Jawapan dipaparkan mengikut Panduan Akta Rasmi."
             )
         return (
-            "Analisa AI tidak dapat dicapai buat sementara waktu. "
-            "Paparan menggunakan rujukan statutori tempatan — anda boleh cuba semula sebentar lagi."
+            "Semakan mendalam AI tidak dapat dicapai buat sementara waktu. "
+            "Jawapan dipaparkan mengikut Panduan Akta Rasmi — anda boleh cuba semula sebentar lagi."
         )
 
     @staticmethod
@@ -522,7 +522,7 @@ class UIPModelRouter:
         """Menjana JSON berstruktur dengan laluan pantas (~15s) atau fallback berhad yang tahan ralat."""
         if not self._genai_client:
             self._last_ai_error = (
-                "Kunci API Gemini belum dikonfigurasi pada pelayan (sila hubungi pentadbir sistem UIP)."
+                "Tetapan semakan mendalam AI belum diaktifkan oleh pentadbir sistem. Buat masa ini, jawapan dipaparkan mengikut Panduan Akta Rasmi."
             )
             return None, "enjin-statutori-tempatan"
 
@@ -836,7 +836,7 @@ class UIPModelRouter:
                 except (TypeError, ValueError):
                     conf = 0.88
                 summary = (
-                    f"Fail '{filename}' berjaya diekstrak ({used_model}). "
+                    f"Fail '{filename}' berjaya dibaca. "
                     f"Premis: {data.get('nama_premis_atau_syarikat', 'Tiada')}; "
                     f"Butiran: {data.get('butiran_kesalahan_atau_eksibit', '-')}."
                 )
@@ -851,7 +851,7 @@ class UIPModelRouter:
 
         if not settings.has_gemini_key and is_image:
             warnings.append(
-                "Fungsi bacaan imej automatik (OCR) tidak tersedia buat sementara — sila taip butiran penting daripada gambar atau hubungi pentadbir sistem UIP."
+                "Fungsi bacaan teks daripada gambar tidak tersedia buat sementara. Sila taip atau salin butiran penting daripada gambar di ruangan bawah."
             )
 
         facts = self.extract_case_facts(extracted_local_text) if extracted_local_text else {}
@@ -862,25 +862,33 @@ class UIPModelRouter:
             facts=facts,
             size_bytes=len(file_bytes),
         )
+        size_kb = max(1, round(len(file_bytes) / 1024))
         raw_text = extracted_local_text or (
-            f"[FAIL BUKTI DIMUAT NAIK: {filename} | Saiz: {len(file_bytes)} bait]\n"
+            f"[FAIL BUKTI DIMUAT NAIK: {filename} | Saiz: {size_kb} KB]\n"
             f"Jenis Dokumen: {inferred_fields['jenis_dokumen']}\n"
             f"Cadangan Seksyen: {inferred_fields['cadangan_akta_seksyen']}\n"
             f"Catatan: {inferred_fields['butiran_kesalahan_atau_eksibit']}"
         )
+        doc_hint_labels = {
+            "kertas_siasatan_pdf": "Kertas Siasatan",
+            "sijil_ssm": "Sijil SSM",
+            "bukti_kesalahan": "Dokumen Bukti",
+            "gambar_premis": "Foto Premis",
+        }
+        hint_label = doc_hint_labels.get((doc_hint or "").lower(), "Dokumen Kes")
         doc_kind_label = "Word (.docx)" if is_docx else ("teks (.txt)" if is_txt else "PDF")
         summary = (
-            f"Fail '{filename}' ({doc_hint}) diproses menggunakan penghurai tempatan. "
+            f"Fail '{filename}' ({hint_label}) berjaya dibaca oleh sistem. "
             + (
-                f"Berjaya mengesan {len(extracted_local_text)} aksara teks daripada dokumen {doc_kind_label}."
+                f"Berjaya membaca {len(extracted_local_text)} aksara teks daripada dokumen {doc_kind_label}."
                 if extracted_local_text
-                else "Gambar telah dilampirkan. Jika teks pada imej tidak terbaca automatik, sila taip butiran ringkas di ruangan teks kes."
+                else "Gambar telah dilampirkan. Jika teks pada gambar tidak terbaca automatik, sila taip butiran ringkas di ruangan catatan kes."
             )
         )
         local_engine_name = (
-            "Penghurai Word (.docx) Tempatan"
+            "Pembaca Dokumen Word (.docx) Sistem"
             if is_docx and extracted_local_text
-            else ("Penghurai Teks Tempatan" if is_txt and extracted_local_text else ("Penghurai PyMuPDF Tempatan" if extracted_local_text else "Penghurai Metadata Fail"))
+            else ("Pembaca Fail Teks Sistem" if is_txt and extracted_local_text else ("Pembaca Dokumen PDF Sistem" if extracted_local_text else "Pembaca Maklumat Fail"))
         )
         return EvidenceExtractionResult(
             extracted_fields=inferred_fields,
@@ -907,7 +915,7 @@ class UIPModelRouter:
         elif "sitaan" in low or "bongkar" in low:
             doc_type = "Borang Senarai Benda Disita (Seksyen 36 Akta 852 / Seksyen 4 Akta 281)"
             akta_sugg = "Seksyen 35 & 36 Akta 852 / Seksyen 4 Akta Makanan 1983"
-            butiran = facts.get("kesalahan") or "Senarai barang kes dirampas beserta kuantiti dan akuan terima."
+            butiran = facts.get("kesalahan") or "Senarai barang kes dirampas berserta kuantiti dan akuan terima."
         elif "vape" in low or "rokok" in low or "852" in low:
             doc_type = "Gambar Bukti Produk Merokok / Vape"
             akta_sugg = "Akta 852 Seksyen 7 / Seksyen 10 & Peraturan 6 P.U. (A) 260/2024"
@@ -1592,7 +1600,7 @@ class UIPModelRouter:
                 return (
                     "Seksyen 10(1) Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024 [Akta 852] dibaca bersama Peraturan 6 Peraturan-Peraturan Kawalan Produk Merokok Demi Kesihatan Awam (Kawalan Penjualan) 2024 [P.U. (A) 260/2024]",
                     "Seksyen 10(2)(a) [Bukan Pertubuhan Perbadanan] atau Seksyen 10(2)(b) [Pertubuhan Perbadanan] Akta 852",
-                    "Individu: Denda <= RM20,000 atau penjara <= 1 tahun (kesalahan pertama). Syarikat: Denda RM20,000 – RM100,000 atau penjara <= 2 tahun.",
+                    "Individu: Denda tidak melebihi RM20,000 atau penjara tidak melebihi 1 tahun (kesalahan pertama). Syarikat: Denda RM20,000 – RM100,000 atau penjara tidak melebihi 2 tahun.",
                     "TIDAK BOLEH DIKOMPAUN (tiada dalam Jadual Pertama P.U. (A) 259/2024) — Wajib Sita (S.35/S.36) & Buka IP Terus",
                     "Tiada tawaran kompaun (Buka IP Terus)",
                     "Tidak Berkenaan (Buka IP Terus)",
@@ -1601,7 +1609,7 @@ class UIPModelRouter:
                 return (
                     "Seksyen 7(1) Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024 [Akta 852]",
                     "Seksyen 7(2)(a) [Bukan Pertubuhan Perbadanan] atau Seksyen 7(2)(b) [Pertubuhan Perbadanan] Akta 852",
-                    "Individu: Denda <= RM20,000 atau penjara <= 1 tahun. Syarikat: Denda RM20,000 – RM100,000 atau penjara <= 2 tahun.",
+                    "Individu: Denda tidak melebihi RM20,000 atau penjara tidak melebihi 1 tahun. Syarikat: Denda RM20,000 – RM100,000 atau penjara tidak melebihi 2 tahun.",
                     "TIDAK BOLEH DIKOMPAUN (tiada dalam Jadual Pertama P.U. (A) 259/2024) — Wajib Buka IP Terus",
                     "Tiada tawaran kompaun (Buka IP Terus)",
                     "Tidak Berkenaan (Buka IP Terus)",
@@ -1647,7 +1655,7 @@ class UIPModelRouter:
             return (
                 "Seksyen 13(1) dibaca bersama Seksyen 13(2) Akta Pemusnahan Serangga Pembawa Penyakit 1975 [Akta 154]",
                 "Seksyen 23(a) Akta Pemusnahan Serangga Pembawa Penyakit 1975 [Akta 154]",
-                "Kesalahan pertama: Denda <= RM10,000 atau penjara <= 2 tahun atau kedua-duanya.",
+                "Kesalahan pertama: Denda tidak melebihi RM10,000 atau penjara tidak melebihi 2 tahun atau kedua-duanya.",
                 "Seksyen 25 Akta 154 (Maksimum RM500.00)",
                 "14 hari dari tarikh notis kompaun",
                 "RM 500.00",

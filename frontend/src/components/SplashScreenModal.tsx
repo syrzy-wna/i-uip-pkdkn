@@ -33,26 +33,32 @@ const PREVIEW_TABS = [
   {
     id: "ssm",
     label: "Foto SSM → Kompaun",
+    shortLabel: "Foto SSM",
     icon: Camera,
     input: "Ambil / muat naik foto Sijil SSM",
     outputTitle: "Notis Kompaun Word (.docx) + 10 Semakan",
-    outputNote: "Auto-isi nama, No. SSM & alamat; amaran terus jika amaun langgar had Akta.",
+    outputNote:
+      "Nama, No. SSM & alamat diisi secara automatik; amaran segera jika amaun melebihi had Akta.",
   },
   {
     id: "audit",
     label: "PDF IP → Semak TPR",
+    shortLabel: "PDF IP",
     icon: Scale,
     input: "Muat naik PDF Kertas Siasatan atau gambar",
     outputTitle: "Skor Pra-TPR + Kesan Ralat Seksyen & S.90A",
-    outputNote: "Kesan awal salah seksyen (S.38/S.44/Akta 514), tarikh bercanggah & kurang Sijil 90A.",
+    outputNote:
+      "Mengesan awal salah seksyen (S.38/S.44/Akta 514), tarikh bercanggah & ketiadaan Sijil 90A.",
   },
   {
     id: "draft",
     label: "Fakta → Borang 114",
+    shortLabel: "Borang 114",
     icon: FileText,
     input: "Taip fakta ringkas kejadian di lokasi",
     outputTitle: "Pakej Fail IP Lengkap (Bahagian A–G)",
-    outputNote: "Siap Borang 114, Saman 111, Diari S.119, Rakaman S.112 & Sijil 90A dalam Word.",
+    outputNote:
+      "Lengkap dengan Borang 114, Saman 111, Diari S.119, Rakaman S.112 & Sijil 90A dalam Word.",
   },
 ] as const;
 
@@ -133,10 +139,8 @@ export default function SplashScreenModal({
             }
           },
         });
-        const btnWidth = Math.max(
-          240,
-          Math.min(340, (gsiBtnRef.current.parentElement?.clientWidth || 320) - 8)
-        );
+        const parentW = gsiBtnRef.current.parentElement?.clientWidth || 300;
+        const btnWidth = Math.min(300, Math.max(200, parentW - 4));
         window.google.accounts.id.renderButton(gsiBtnRef.current, {
           theme: "outline",
           size: "large",
@@ -230,35 +234,35 @@ export default function SplashScreenModal({
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="my-auto relative w-full max-w-4xl overflow-hidden rounded-3xl border border-slate-700/50 bg-white shadow-2xl"
+        className="relative my-auto w-full max-w-4xl overflow-hidden rounded-3xl border border-slate-700/50 bg-white shadow-2xl"
       >
         <div className="grid grid-cols-1 md:grid-cols-12">
           {/* BAHAGIAN KIRI / ATAS: NILAI APLIKASI JELAS DALAM 5 SAAT (DESKTOP & TELEFON) */}
           <div className="flex flex-col justify-between bg-[#0f2744] p-5 text-white md:col-span-6 md:p-7">
             <div className="space-y-4">
-              <div className="flex items-center justify-between gap-3">
-                <div className="flex items-center gap-3">
+              <div className="flex items-center justify-between gap-2.5">
+                <div className="flex min-w-0 flex-1 items-center gap-2.5">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src="/images/logo-iuip-nerus.png"
                     alt="Logo Rasmi i-UIP Nerus"
-                    className="h-12 w-12 shrink-0 rounded-full bg-white p-1 object-contain shadow-md ring-2 ring-white/40"
+                    className="h-11 w-11 shrink-0 rounded-full bg-white p-1 object-contain shadow-md ring-2 ring-white/40 sm:h-12 sm:w-12"
                   />
-                  <div>
-                    <h2 className="text-xl font-extrabold tracking-tight text-white">
+                  <div className="min-w-0">
+                    <h2 className="truncate text-lg font-extrabold tracking-tight text-white sm:text-xl">
                       i-UIP Nerus
                     </h2>
-                    <p className="text-xs font-medium text-slate-300">
+                    <p className="truncate text-xs font-medium text-slate-300">
                       Unit Inspektorat &amp; Perundangan KKM • Seluruh Malaysia
                     </p>
                   </div>
                 </div>
-                <div className="rounded-xl bg-white/95 px-2.5 py-1 shadow-sm">
+                <div className="shrink-0 rounded-xl bg-white/95 px-2 py-1 shadow-sm">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src="/images/logo-pkdkn.png"
                     alt="Logo KKM"
-                    className="h-7 w-auto object-contain"
+                    className="h-6 w-auto object-contain sm:h-7"
                   />
                 </div>
               </div>
@@ -268,14 +272,14 @@ export default function SplashScreenModal({
                   Pembantu Kerja Harian PPKP &amp; Pegawai Penyiasat (IO)
                 </h3>
                 <p className="text-sm leading-relaxed text-slate-200">
-                  Rujuk seksyen di lokasi, ambil foto SSM terus jadi Notis Kompaun (Word), semak 20 perkara Pra-TPR &amp; siapkan Borang 114 dalam beberapa saat.
+                  Rujuk seksyen di lokasi, ambil foto SSM terus menjadi Notis Kompaun (Word), semak 20 perkara Pra-TPR &amp; siapkan Borang 114 dengan pantas.
                 </p>
               </div>
 
               {/* Pratonton Mini 3 Kemampuan (Tunjuk, Bukan Ceramah — Kelihatan di Telefon & Desktop) */}
-              <div className="rounded-2xl bg-white/10 p-3.5 ring-1 ring-white/15 space-y-3">
+              <div className="space-y-3 rounded-2xl bg-white/10 p-3.5 ring-1 ring-white/15">
                 <div className="text-xs font-bold uppercase tracking-wide text-slate-300">
-                  Apa aplikasi ini boleh buat untuk anda?
+                  Bagaimana aplikasi ini membantu tugas anda?
                 </div>
                 <div className="grid grid-cols-3 gap-1.5">
                   {PREVIEW_TABS.map((t, idx) => {
@@ -286,22 +290,23 @@ export default function SplashScreenModal({
                         key={t.id}
                         type="button"
                         onClick={() => setPreviewIdx(idx)}
-                        className={`flex min-h-[40px] flex-col items-center justify-center gap-1 rounded-xl px-2 py-1.5 text-center text-xs font-bold transition ${
+                        className={`flex min-h-[44px] flex-col items-center justify-center gap-1 rounded-xl px-1.5 py-2 text-center text-[11px] font-bold leading-tight transition sm:px-2 sm:text-xs ${
                           active
                             ? "bg-white text-[#0f2744] shadow-sm"
                             : "bg-white/5 text-slate-200 hover:bg-white/15"
                         }`}
                       >
                         <Icon className="h-4 w-4 shrink-0" />
-                        <span className="line-clamp-1">{t.label}</span>
+                        <span className="hidden sm:inline">{t.label}</span>
+                        <span className="sm:hidden">{t.shortLabel}</span>
                       </button>
                     );
                   })}
                 </div>
 
-                <div className="rounded-xl bg-white p-3 text-slate-900 space-y-1.5">
-                  <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-500">
-                    <span>Input:</span>
+                <div className="space-y-1.5 rounded-xl bg-white p-3 text-slate-900">
+                  <div className="flex flex-wrap items-center gap-1.5 text-xs font-semibold text-slate-500">
+                    <span>Bahan:</span>
                     <span className="font-bold text-slate-800">{activePreview.input}</span>
                   </div>
                   <div className="flex items-start gap-1.5 text-sm font-extrabold text-[#0f2744]">
@@ -361,7 +366,7 @@ export default function SplashScreenModal({
                     Log Masuk Pegawai UIP
                   </h3>
                   <p className="mt-1 text-sm leading-relaxed text-slate-600">
-                    Log masuk sekali sahaja — nama, No. Kad Kuasa &amp; PKD anda diisi automatik pada setiap borang.
+                    Log masuk sekali sahaja — nama, No. Kad Kuasa &amp; pejabat kesihatan anda diisi secara automatik pada setiap borang.
                   </p>
                 </div>
 
@@ -383,7 +388,7 @@ export default function SplashScreenModal({
                     </div>
                   ) : (
                     <div className="flex flex-col items-start gap-2.5">
-                      <div ref={gsiBtnRef} className={gsiReady ? "min-h-[44px]" : ""} />
+                      <div ref={gsiBtnRef} className={gsiReady ? "min-h-[44px] w-full" : "w-full"} />
                       {!gsiReady && !gsiFailed && (
                         <button
                           type="button"
@@ -403,9 +408,9 @@ export default function SplashScreenModal({
                         <button
                           type="button"
                           onClick={handlePopupGoogle}
-                          className="text-xs font-semibold text-[#0f2744] hover:underline"
+                          className="inline-flex min-h-[36px] items-center text-xs font-semibold text-[#0f2744] hover:underline"
                         >
-                          Butang Google tidak keluar? Cuba log masuk di sini →
+                          Butang Google tidak dipaparkan? Cuba log masuk di sini →
                         </button>
                       )}
                     </div>
@@ -422,7 +427,7 @@ export default function SplashScreenModal({
                   <button
                     type="button"
                     onClick={() => onOpenEmailAuth("login")}
-                    className="inline-flex min-h-[44px] items-center justify-center gap-2 rounded-xl bg-[#0f2744] px-4 py-2 text-sm font-bold text-white hover:bg-slate-800"
+                    className="inline-flex min-h-[44px] items-center justify-center gap-2 rounded-xl border border-[#0f2744] bg-white px-4 py-2 text-sm font-bold text-[#0f2744] hover:bg-slate-100"
                   >
                     <Mail className="h-4 w-4" />
                     Log Masuk E-mel

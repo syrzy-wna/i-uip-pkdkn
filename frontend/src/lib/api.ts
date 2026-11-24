@@ -65,11 +65,11 @@ async function fetchWithTimeout(
   } catch (err) {
     if (err instanceof DOMException && err.name === "AbortError") {
       throw new Error(
-        "Sambungan ke pelayan melebihi had masa. Sila semak talian internet anda dan cuba semula."
+        "Sambungan ke sistem mengambil masa terlalu lama. Sila semak talian internet anda dan cuba semula."
       );
     }
     throw new Error(
-      "Tidak dapat berhubung dengan pelayan sistem. Sila semak sambungan internet anda dan cuba semula."
+      "Tidak dapat berhubung dengan sistem buat masa ini. Sila semak sambungan internet anda dan cuba semula."
     );
   } finally {
     globalThis.clearTimeout(timer);
@@ -110,29 +110,23 @@ async function parseJsonOrThrow<T>(res: Response): Promise<T> {
 
   if (!res.ok) {
     notifySessionExpiredIfNeeded(res.status, res.url || "");
-    let msg = `Ralat pelayan (${res.status})`;
+    let msg = `Sistem menghadapi gangguan sementara (Kod ${res.status}). Sila cuba sebentar lagi.`;
     if (res.status === 413) {
-      msg = "Saiz fail melebihi had maksimum 15 MB. Sila mampatkan fail dan cuba semula.";
+      msg = "Saiz fail melebihi had maksimum 15 MB. Sila kecilkan saiz fail dan cuba semula.";
+    } else if (res.status >= 500) {
+      msg = "Perkhidmatan sedang sibuk atau diselenggara buat sementara. Sila cuba semula sebentar lagi.";
     } else if (parsed && typeof parsed.detail === "string" && parsed.detail.trim()) {
       msg = parsed.detail;
     } else if (parsed && Array.isArray(parsed.detail)) {
-      const items = parsed.detail
-        .map((item) => {
-          if (item && typeof item === "object") {
-            const rec = item as Record<string, unknown>;
-            const loc = Array.isArray(rec.loc) ? rec.loc.slice(1).join(".") : "";
-            const m = typeof rec.msg === "string" ? rec.msg : "";
-            return loc ? `${loc}: ${m}` : m;
-          }
-          return String(item || "");
-        })
-        .filter(Boolean);
-      msg = items.length > 0 ? `Maklumat tidak lengkap atau tidak sah (${items.join("; ")})` : msg;
+      if (typeof console !== "undefined") {
+        console.warn("Butiran pengesahan borang (422):", parsed.detail);
+      }
+      msg = "Maklumat yang dimasukkan tidak lengkap atau tidak sah. Sila semak semula semua ruangan wajib.";
     } else if (parsed && typeof parsed.message === "string" && parsed.message.trim()) {
       msg = parsed.message;
     } else if (rawText.trim()) {
       const stripped = rawText.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
-      if (stripped) {
+      if (stripped && !/^(502|503|504|bad gateway|service unavailable)/i.test(stripped)) {
         msg = stripped.slice(0, 220);
       }
     }
@@ -142,7 +136,10 @@ async function parseJsonOrThrow<T>(res: Response): Promise<T> {
   if (parsed !== null) {
     return parsed as T;
   }
-  throw new ApiError("Respons pelayan bukan format JSON yang sah.", res.status);
+  throw new ApiError(
+    "Sistem gagal memproses maklum balas daripada pelayan. Sila cuba semula sebentar lagi.",
+    res.status
+  );
 }
 
 export async function fetchSystemStatus(): Promise<SystemStatus> {

@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import DevVaultTab from "@/components/DevVaultTab";
 import { fetchDevOverview, fetchRuntimeSettings, saveRuntimeSettings } from "@/lib/api";
+import { useLockBodyScroll } from "@/lib/uiHelpers";
 import type { DevOverviewResponse } from "@/lib/types";
 
 interface DevConsoleModalProps {
@@ -63,6 +64,8 @@ export default function DevConsoleModal({
   const [savingOauth, setSavingOauth] = useState(false);
   const [oauthMsg, setOauthMsg] = useState<string | null>(null);
 
+  useLockBodyScroll(open);
+
   const loadOverview = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -89,12 +92,16 @@ export default function DevConsoleModal({
   useEffect(() => {
     if (!open) return;
     loadOverview();
+  }, [open, loadOverview]);
+
+  useEffect(() => {
+    if (!open) return;
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [open, loadOverview, onClose]);
+  }, [open, onClose]);
 
   const filteredUsers = useMemo(() => {
     if (!data) return [];
@@ -148,22 +155,25 @@ export default function DevConsoleModal({
 
   return (
     <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Konsol Pembangun dan Audit Penggunaan"
       onClick={onClose}
       className="fixed inset-0 z-50 flex items-end justify-center bg-slate-950/65 p-0 backdrop-blur-sm sm:items-center sm:p-5"
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className={`flex max-h-[94dvh] w-full flex-col overflow-hidden rounded-t-2xl border border-slate-200 bg-white shadow-2xl transition-all sm:rounded-2xl ${
+        className={`pb-safe flex max-h-[94dvh] w-full flex-col overflow-hidden rounded-t-2xl border border-slate-200 bg-white shadow-2xl transition-all sm:rounded-2xl ${
           tab === "vault" ? "max-w-7xl" : "max-w-6xl"
         }`}
       >
         {/* Header Konsol Pembangun */}
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 bg-gradient-to-r from-[#0b1e36] via-[#0f2744] to-[#13355c] px-5 py-3.5 text-white">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-400/20 ring-1 ring-amber-300/40">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 bg-gradient-to-r from-[#0b1e36] via-[#0f2744] to-[#13355c] px-4 py-3.5 text-white sm:px-5">
+          <div className="flex min-w-0 flex-1 items-center gap-3">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-400/20 ring-1 ring-amber-300/40">
               <Cpu className="h-5 w-5 text-amber-300" />
             </div>
-            <div>
+            <div className="min-w-0">
               <div className="flex flex-wrap items-center gap-2">
                 <h2 className="text-sm sm:text-base font-extrabold tracking-tight">
                   Konsol Pembangun &amp; Audit Penggunaan ({data?.developer || "g.dev/syrzy"})
@@ -192,17 +202,17 @@ export default function DevConsoleModal({
                 )}
               </div>
               <p className="text-[11px] text-slate-300">
-                Semak siapa menggunakan i-UIP Nerus, apa aktiviti yang dijalankan, panggilan Gemini API &amp; anggaran kos operasi masa nyata.
+                Semak siapa menggunakan i-UIP Nerus, aktiviti yang dijalankan, panggilan Gemini API &amp; anggaran kos operasi masa nyata.
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5">
             <button
               type="button"
               onClick={loadOverview}
               disabled={loading}
-              className="inline-flex items-center gap-1 rounded-lg bg-white/10 px-3 py-1.5 text-xs font-semibold text-white hover:bg-white/20"
+              className="inline-flex min-h-[44px] items-center gap-1.5 rounded-lg bg-white/10 px-3 py-2 text-xs font-semibold text-white hover:bg-white/20 sm:min-h-[36px] sm:py-1.5"
             >
               <RefreshCw className={`h-3.5 w-3.5 ${loading ? "animate-spin" : ""}`} />
               Muat Semula
@@ -210,7 +220,8 @@ export default function DevConsoleModal({
             <button
               type="button"
               onClick={onClose}
-              className="rounded-lg p-1.5 text-slate-300 hover:bg-white/10 hover:text-white"
+              aria-label="Tutup konsol pembangun"
+              className="flex h-11 w-11 items-center justify-center rounded-lg text-slate-300 hover:bg-white/10 hover:text-white"
             >
               <X className="h-5 w-5" />
             </button>
@@ -224,7 +235,7 @@ export default function DevConsoleModal({
               { id: "users", label: `1. Siapa Guna (${data?.users.length ?? 0})`, icon: Users },
               { id: "activities", label: `2. Apa Dibuat (${data?.activities.length ?? 0})`, icon: Activity },
               { id: "costs", label: "3. Kos Operasi & API (RM/USD)", icon: Coins },
-              { id: "google_oauth", label: "4. Connector Google OAuth", icon: KeyRound },
+              { id: "google_oauth", label: "4. Pautan Google OAuth", icon: KeyRound },
               {
                 id: "vault",
                 label: `5. Arkib & Bucket Dev (${data?.vault_summary?.total_records ?? 0})`,
@@ -238,7 +249,7 @@ export default function DevConsoleModal({
                   key={item.id}
                   type="button"
                   onClick={() => setTab(item.id as typeof tab)}
-                  className={`inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-lg px-3 py-1.5 text-xs font-bold transition ${
+                  className={`inline-flex min-h-[40px] shrink-0 items-center gap-1.5 whitespace-nowrap rounded-lg px-3 py-1.5 text-xs font-bold transition sm:min-h-0 ${
                     active
                       ? "bg-[#0f2744] text-white"
                       : "bg-slate-100 text-slate-700 hover:bg-slate-200"
@@ -254,20 +265,20 @@ export default function DevConsoleModal({
           {(tab === "users" || tab === "activities") && (
             <div className="flex flex-wrap items-center gap-2">
               <div className="relative flex-1 sm:flex-none">
-                <Search className="absolute left-2.5 top-2 h-3.5 w-3.5 text-slate-400" />
+                <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400" />
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Cari nama pegawai, emel atau kes..."
-                  className="w-full rounded-lg border border-slate-300 pl-8 pr-3 py-1.5 text-base focus:border-blue-500 focus:outline-none sm:w-56 sm:text-xs"
+                  placeholder="Cari nama pegawai, e-mel atau kes..."
+                  className="min-h-[44px] w-full rounded-lg border border-slate-300 pl-8 pr-3 py-1.5 text-base focus:border-blue-500 focus:outline-none sm:min-h-[36px] sm:w-56 sm:text-xs"
                 />
               </div>
               {tab === "activities" && data && (
                 <select
                   value={actionFilter}
                   onChange={(e) => setActionFilter(e.target.value)}
-                  className="rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-base font-semibold text-slate-700 sm:text-xs"
+                  className="min-h-[44px] rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-base font-semibold text-slate-700 sm:min-h-[36px] sm:text-xs"
                 >
                   <option value="SEMUA">Semua Aktiviti</option>
                   {data.summary.action_breakdown.map((b) => (
@@ -388,9 +399,9 @@ export default function DevConsoleModal({
               <table className="min-w-full divide-y divide-slate-200 text-left text-xs">
                 <thead className="bg-slate-100 text-[11px] font-bold uppercase text-slate-600">
                   <tr>
-                    <th className="px-3.5 py-2.5">Pegawai &amp; Emel</th>
+                    <th className="px-3.5 py-2.5">Pegawai &amp; E-mel</th>
                     <th className="px-3.5 py-2.5">Kaedah Masuk</th>
-                    <th className="px-3.5 py-2.5">Pejabat PKD / JKN</th>
+                    <th className="px-3.5 py-2.5">Pejabat Kesihatan / JKN</th>
                     <th className="px-3.5 py-2.5">Kad Kuasa / Gred</th>
                     <th className="px-3.5 py-2.5 text-center">Bil. Tindakan</th>
                     <th className="px-3.5 py-2.5">Aktif Terakhir</th>
@@ -411,7 +422,7 @@ export default function DevConsoleModal({
                               : "bg-slate-100 text-slate-700"
                           }`}
                         >
-                          {u.auth_provider === "google" ? "Google OAuth" : "Emel KKM"}
+                          {u.auth_provider === "google" ? "Google OAuth" : "E-mel KKM"}
                         </span>
                       </td>
                       <td className="px-3.5 py-2.5">
@@ -614,14 +625,14 @@ export default function DevConsoleModal({
                     value={googleClientId}
                     onChange={(e) => setGoogleClientId(e.target.value)}
                     placeholder="Contoh: 987654321098-abc123def456.apps.googleusercontent.com"
-                    className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-xs font-mono focus:border-blue-500 focus:outline-none"
+                    className="mt-1 min-h-[44px] w-full rounded-lg border border-slate-300 px-3 py-2 text-base font-mono focus:border-blue-500 focus:outline-none sm:min-h-[38px] sm:text-xs"
                   />
                 </div>
 
                 <div className="rounded-lg border border-blue-200 bg-blue-50/60 p-3 text-[11px] text-blue-950 space-y-1">
                   <div className="font-bold">Langkah Pautan Google Cloud Console (Percuma):</div>
                   <div>1. Buka <code>console.cloud.google.com</code> → <strong>APIs &amp; Services</strong> → <strong>Credentials</strong>.</div>
-                  <div>2. Cipta <strong>OAuth client ID (Web application)</strong> → masukkan <em>Authorized JavaScript origins</em>: <code>http://localhost:3000</code> dan domain rasmi PKD anda.</div>
+                  <div>2. Cipta <strong>OAuth client ID (Web application)</strong> → masukkan <em>Authorized JavaScript origins</em>: <code>http://localhost:3000</code> dan domain rasmi pejabat anda.</div>
                   <div>3. Salin Client ID (<code>...apps.googleusercontent.com</code>) dan simpan di atas.</div>
                 </div>
 
@@ -636,7 +647,7 @@ export default function DevConsoleModal({
                   <button
                     type="submit"
                     disabled={savingOauth}
-                    className="inline-flex items-center gap-1.5 rounded-xl bg-[#0f2744] px-4 py-2 text-xs font-bold text-white hover:bg-slate-800 disabled:opacity-60"
+                    className="inline-flex min-h-[44px] items-center gap-1.5 rounded-xl bg-[#0f2744] px-4 py-2 text-xs font-bold text-white hover:bg-slate-800 disabled:opacity-60"
                   >
                     {savingOauth && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
                     Simpan Google Client ID

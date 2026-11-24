@@ -156,7 +156,7 @@ def _require_authenticated_officer(
     if not user:
         raise HTTPException(
             status_code=401,
-            detail="Akses disekat: Sila daftar atau log masuk akaun pegawai terlebih dahulu.",
+            detail="Sila log masuk ke akaun pegawai anda terlebih dahulu untuk meneruskan.",
         )
     return user
 
@@ -168,7 +168,7 @@ def _require_dev_admin(
     if email not in settings.dev_admin_emails:
         raise HTTPException(
             status_code=403,
-            detail="Akses disekat: Konsol Pembangun, Arkib Bucket dan Tetapan Sistem hanya untuk akaun pembangun rasmi (zero4eleven@gmail.com).",
+            detail="Halaman ini terhad kepada pentadbir sistem sahaja.",
         )
     return current_officer
 

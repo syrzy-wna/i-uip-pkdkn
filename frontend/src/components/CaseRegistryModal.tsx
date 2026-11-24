@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { FolderOpen, Loader2, Plus, Search, Trash2, X } from "lucide-react";
 import { deleteCaseRecord, saveCaseRecord } from "@/lib/api";
+import { formatDateTimeNowMalay, useLockBodyScroll } from "@/lib/uiHelpers";
 import type { IPCaseRecord, OfficerProfile, WorkflowMode } from "@/lib/types";
 
 interface CaseRegistryModalProps {
@@ -10,7 +11,7 @@ interface CaseRegistryModalProps {
   onClose: () => void;
   cases: IPCaseRecord[];
   activeCaseId: string;
-  onSelectCase: (rec: IPCaseRecord) => void;
+  onSelectCase: (rec: IPCaseRecord) => boolean | void;
   onCasesUpdated: (nextCases: IPCaseRecord[]) => void;
   initialMode?: "list" | "new";
   officer?: OfficerProfile | null;
@@ -40,6 +41,7 @@ export default function CaseRegistryModal({
 }: CaseRegistryModalProps) {
   const [mode, setMode] = useState<"list" | "new">(initialMode);
   const [saving, setSaving] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [aktaFilter, setAktaFilter] = useState("SEMUA");
@@ -60,6 +62,10 @@ export default function CaseRegistryModal({
   const [kadKuasa, setKadKuasa] = useState("");
   const [kesalahan, setKesalahan] = useState("");
 
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
+  useLockBodyScroll(open);
+
   const deriveOfficePrefix = (off?: OfficerProfile | null): string => {
     const raw = (off?.district_pkd || "").trim().toUpperCase();
     if (!raw) return "PKD";
@@ -68,6 +74,7 @@ export default function CaseRegistryModal({
     return "PKD";
   };
 
+  // Tetapkan mod awal hanya apabila modal dibuka (elak terkeluar apabila Akta diubah atau parent re-render)
   useEffect(() => {
     if (!open) return;
     setMode(initialMode);
@@ -76,26 +83,33 @@ export default function CaseRegistryModal({
     if (officer) {
       setPegawaiIo((prev) => prev || officer.full_name || "");
       setKadKuasa((prev) => prev || officer.kkm_authority_card_no || "");
-      const officeStr = [officer.district_pkd, officer.state_jkn?.replace(/^Jabatan Kesihatan (?:Negeri|Wilayah Persekutuan)\s*/i, "")]
+      const officeStr = [
+        officer.district_pkd,
+        officer.state_jkn?.replace(/^Jabatan Kesihatan (?:Negeri|Wilayah Persekutuan)\s*/i, ""),
+      ]
         .filter(Boolean)
         .join(", ");
       if (officeStr) {
         setDaerah((prev) => prev || officeStr);
       }
       const pfx = deriveOfficePrefix(officer);
-      const actNum = akta.replace(/\D/g, "") || "852";
       setNoIp((prev) =>
         /^PK[DKB](?:-KN)?\/UIP\/\d+\/\d{4}\/$/.test(prev)
-          ? `${pfx}/UIP/${actNum}/${currentYear}/`
+          ? prev.replace(/^PK[DKB](?:-KN)?/, pfx)
           : prev
       );
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, initialMode]);
+
+  useEffect(() => {
+    if (!open) return;
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") onCloseRef.current();
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [open, initialMode, officer, onClose, akta, currentYear]);
+  }, [open]);
 
   const handleAktaChange = (nextAkta: string) => {
     setAkta(nextAkta);
@@ -184,12 +198,15 @@ Kesalahan: ${kesalahan || "Sila nyatakan butiran kesalahan yang ditemui semasa p
 
   const handleDelete = async (id: string) => {
     setErrorMsg(null);
+    setDeletingId(id);
     try {
       await deleteCaseRecord(id);
       onCasesUpdated(cases.filter((c) => c.id !== id));
       setConfirmDeleteId(null);
     } catch (err) {
       setErrorMsg(err instanceof Error ? err.message : "Gagal memadam kes.");
+    } finally {
+      setDeletingId(null);
     }
   };
 
@@ -203,7 +220,7 @@ Kesalahan: ${kesalahan || "Sila nyatakan butiran kesalahan yang ditemui semasa p
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="flex max-h-[92dvh] w-full max-w-3xl flex-col overflow-hidden rounded-t-2xl border border-slate-200 bg-white p-4 shadow-2xl sm:rounded-2xl sm:p-6"
+        className="flex max-h-[92dvh] w-full max-w-3xl flex-col overflow-hidden rounded-t-2xl border border-slate-200 bg-white p-4 pb-safe shadow-2xl sm:rounded-2xl sm:p-6"
       >
         <div className="flex flex-col gap-3 border-b border-slate-200 pb-3.5 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center justify-between gap-2">
@@ -234,8 +251,17 @@ Kesalahan: ${kesalahan || "Sila nyatakan butiran kesalahan yang ditemui semasa p
               onClick={() => setMode(mode === "list" ? "new" : "list")}
               className="inline-flex min-h-[44px] flex-1 items-center justify-center gap-1.5 rounded-xl bg-[#0f2744] px-4 py-2 text-xs font-bold text-white hover:bg-slate-800 sm:flex-none"
             >
-              <Plus className="h-4 w-4" />
-              {mode === "list" ? "Daftar Kes Baharu" : "Lihat Senarai Fail"}
+              {mode === "list" ? (
+                <>
+                  <Plus className="h-4 w-4" />
+                  Daftar Kes Baharu
+                </>
+              ) : (
+                <>
+                  <FolderOpen className="h-4 w-4" />
+                  Lihat Senarai Fail
+                </>
+              )}
             </button>
             <button
               type="button"
@@ -271,7 +297,7 @@ Kesalahan: ${kesalahan || "Sila nyatakan butiran kesalahan yang ditemui semasa p
                 <select
                   value={aktaFilter}
                   onChange={(e) => setAktaFilter(e.target.value)}
-                  className="min-h-[42px] rounded-xl border border-slate-300 bg-white px-3 py-2 text-base font-semibold text-slate-700 sm:text-sm"
+                  className="min-h-[44px] w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-base font-semibold text-slate-700 sm:w-auto sm:text-sm"
                 >
                   <option value="SEMUA">Semua Akta</option>
                   {AKTA_CHOICES.map((a) => (
@@ -301,6 +327,7 @@ Kesalahan: ${kesalahan || "Sila nyatakan butiran kesalahan yang ditemui semasa p
                   {filteredCases.map((c) => {
                     const isActive = c.id === activeCaseId;
                     const confirming = confirmDeleteId === c.id;
+                    const isDeleting = deletingId === c.id;
                     const isSample = Boolean(c.is_sample || c.id.startsWith("kes-akta-"));
                     return (
                       <div
@@ -312,8 +339,8 @@ Kesalahan: ${kesalahan || "Sila nyatakan butiran kesalahan yang ditemui semasa p
                         <div
                           className="min-w-[200px] flex-1 cursor-pointer"
                           onClick={() => {
-                            onSelectCase(c);
-                            onClose();
+                            const switched = onSelectCase(c);
+                            if (switched !== false) onClose();
                           }}
                         >
                           <div className="flex flex-wrap items-center gap-2">
@@ -321,7 +348,7 @@ Kesalahan: ${kesalahan || "Sila nyatakan butiran kesalahan yang ditemui semasa p
                               {c.akta_utama}
                             </span>
                             <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-semibold text-slate-700">
-                              {c.skor_audit ? `Skor ${c.skor_audit}%` : isSample ? "Contoh Kes" : c.status_kes}
+                              {c.skor_audit ? `Skor ${Math.round(c.skor_audit)}%` : isSample ? "Contoh Kes" : c.status_kes}
                             </span>
                           </div>
                           <div className="mt-1.5 text-sm font-bold text-slate-900">
@@ -336,10 +363,10 @@ Kesalahan: ${kesalahan || "Sila nyatakan butiran kesalahan yang ditemui semasa p
                           <button
                             type="button"
                             onClick={() => {
-                              onSelectCase(c);
-                              onClose();
+                              const switched = onSelectCase(c);
+                              if (switched !== false) onClose();
                             }}
-                            className="min-h-[40px] rounded-lg border border-slate-300 bg-white px-3.5 py-1.5 text-xs font-bold text-[#0f2744] hover:bg-slate-100"
+                            className="min-h-[44px] rounded-lg border border-slate-300 bg-white px-3.5 py-1.5 text-xs font-bold text-[#0f2744] hover:bg-slate-100"
                           >
                             Buka Fail
                           </button>
@@ -349,15 +376,18 @@ Kesalahan: ${kesalahan || "Sila nyatakan butiran kesalahan yang ditemui semasa p
                               <div className="flex items-center gap-1 rounded-lg bg-rose-50 p-1 ring-1 ring-rose-300">
                                 <button
                                   type="button"
+                                  disabled={isDeleting}
                                   onClick={() => handleDelete(c.id)}
-                                  className="min-h-[40px] rounded bg-rose-600 px-3 py-1.5 text-xs font-bold text-white hover:bg-rose-700"
+                                  className="inline-flex min-h-[44px] items-center gap-1 rounded bg-rose-600 px-3 py-1.5 text-xs font-bold text-white hover:bg-rose-700 disabled:opacity-60"
                                 >
-                                  Padam
+                                  {isDeleting && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
+                                  {isDeleting ? "Memadam..." : "Padam"}
                                 </button>
                                 <button
                                   type="button"
+                                  disabled={isDeleting}
                                   onClick={() => setConfirmDeleteId(null)}
-                                  className="min-h-[40px] rounded bg-white px-3 py-1.5 text-xs font-semibold text-slate-700"
+                                  className="min-h-[44px] rounded bg-white px-3 py-1.5 text-xs font-semibold text-slate-700"
                                 >
                                   Batal
                                 </button>
@@ -366,7 +396,7 @@ Kesalahan: ${kesalahan || "Sila nyatakan butiran kesalahan yang ditemui semasa p
                               <button
                                 type="button"
                                 onClick={() => setConfirmDeleteId(c.id)}
-                                className="inline-flex min-h-[40px] min-w-[40px] items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-500 hover:border-rose-200 hover:bg-rose-50 hover:text-rose-600"
+                                className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-500 hover:border-rose-200 hover:bg-rose-50 hover:text-rose-600"
                                 title="Padam fail kes"
                                 aria-label="Padam fail kes"
                               >
@@ -425,10 +455,24 @@ Kesalahan: ${kesalahan || "Sila nyatakan butiran kesalahan yang ditemui semasa p
               </div>
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="text-xs font-semibold text-slate-700">Tarikh Kejadian</label>
+                  <div className="flex items-center justify-between gap-1">
+                    <label className="text-xs font-semibold text-slate-700">Tarikh Kejadian</label>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const full = formatDateTimeNowMalay(true);
+                        const [dPart, tPart] = full.split(", ");
+                        setTarikh(dPart || full);
+                        if (tPart && !masa) setMasa(tPart);
+                      }}
+                      className="text-[11px] font-bold text-[#0f2744] hover:underline"
+                    >
+                      Hari Ini
+                    </button>
+                  </div>
                   <input
                     type="text"
-                    placeholder="cth: 18 Nov 2026"
+                    placeholder="cth: 18 November 2026"
                     value={tarikh}
                     onChange={(e) => setTarikh(e.target.value)}
                     className={INPUT_CLASS}

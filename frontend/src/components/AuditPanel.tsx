@@ -56,21 +56,12 @@ const DEFAULT_FOLDER_INDEX = [
 
 export function mapCriterionToEditorSection(code: string): string {
   const c = (code || "").toUpperCase();
-  if (c === "C14" || c === "C15") return "borang114";
+  if (c === "C01" || c === "C02" || c === "C14" || c === "C15") return "borang114";
   if (c === "C05" || c === "C06" || c === "C07") return "rakaman112";
   if (c === "C08") return "diari";
   if (c === "C09" || c === "C10" || c === "C11" || c === "C18") return "eksibit";
   if (c === "C12" || c === "C13") return "sijil90a";
-  if (
-    c === "C01" ||
-    c === "C02" ||
-    c === "C03" ||
-    c === "C04" ||
-    c === "C16" ||
-    c === "C17" ||
-    c === "C19" ||
-    c === "C20"
-  ) {
+  if (c === "C03" || c === "C04" || c === "C16" || c === "C17" || c === "C19" || c === "C20") {
     return "fakta";
   }
   return "borang114";
@@ -97,9 +88,15 @@ export default function AuditPanel({
   const [expandedCode, setExpandedCode] = useState<string | null>(null);
 
   useEffect(() => {
-    if (initialSubView === "privacy") setView("privacy");
-    else if (initialSubView === "folder") setView("folder");
-  }, [initialSubView]);
+    if (initialSubView === "privacy") {
+      setView("privacy");
+    } else if (initialSubView === "folder") {
+      setView("folder");
+    } else if (initialSubView === "criteria") {
+      const totalIssues = report ? report.counts.GAGAL + report.counts.SEMAK : 0;
+      setView(report && totalIssues === 0 ? "all" : "issues");
+    }
+  }, [initialSubView, report]);
 
   const priorityCodes = useMemo(() => {
     const map = new Map<string, string>();
@@ -139,7 +136,7 @@ export default function AuditPanel({
             <button
               type="button"
               onClick={() => setView("issues")}
-              className="text-xs font-bold text-[#0f2744] hover:underline"
+              className="inline-flex min-h-[44px] items-center text-xs font-bold text-[#0f2744] hover:underline"
             >
               ← Kembali ke 20 Semakan Pra-TPR
             </button>
@@ -224,7 +221,7 @@ export default function AuditPanel({
   return (
     <div className="mx-auto max-w-3xl space-y-4">
       {/* Kad Skor Ringkas + 1 CTA Utama */}
-      <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm space-y-4">
+      <section className="space-y-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <div className="text-xs font-semibold text-slate-500">
@@ -247,7 +244,7 @@ export default function AuditPanel({
             className="inline-flex min-h-[46px] w-full items-center justify-center gap-2 rounded-xl bg-[#0f2744] px-5 py-2.5 text-sm font-extrabold text-white shadow-sm hover:bg-slate-800 disabled:opacity-60 sm:w-auto"
           >
             {draftLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <ArrowRight className="h-4 w-4" />}
-            {draftLoading ? "Menyediakan Draf..." : "Baiki & Edit Fail IP (.docx)"}
+            {draftLoading ? "Menyediakan Draf..." : "Baiki & Sunting Fail IP (.docx)"}
           </button>
         </div>
 
@@ -262,9 +259,9 @@ export default function AuditPanel({
         {/* 1 Bar Sub-Tab Tunggal */}
         <div className="flex gap-1.5 overflow-x-auto border-t border-slate-200 pt-3 no-scrollbar">
           {[
-            { id: "issues" as AuditTabView, label: `Perlu Baiki (${issueCount})`, icon: AlertTriangle },
+            { id: "issues" as AuditTabView, label: `Perlu Dibaiki (${issueCount})`, icon: AlertTriangle },
             { id: "all" as AuditTabView, label: `Semua (${report.criteria_results.length})`, icon: Scale },
-            { id: "folder" as AuditTabView, label: "Fail A–G", icon: ClipboardList },
+            { id: "folder" as AuditTabView, label: "Susunan Fail A–G", icon: ClipboardList },
             {
               id: "privacy" as AuditTabView,
               label: `Perlindungan Data${redaction ? ` (${redaction.entities.length})` : ""}`,
@@ -278,7 +275,7 @@ export default function AuditPanel({
                 key={tab.id}
                 type="button"
                 onClick={() => setView(tab.id)}
-                className={`inline-flex min-h-[40px] shrink-0 items-center gap-1.5 rounded-xl px-3.5 py-1.5 text-xs font-bold transition ${
+                className={`inline-flex min-h-[44px] shrink-0 items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-bold transition ${
                   active
                     ? "bg-[#0f2744] text-white"
                     : "bg-slate-100 text-slate-700 hover:bg-slate-200"
@@ -303,13 +300,13 @@ export default function AuditPanel({
       )}
 
       {view === "folder" && (
-        <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm space-y-3">
+        <section className="space-y-3 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <div>
             <h4 className="text-sm font-extrabold text-slate-900">
-              Susunan Fail Kertas Siasatan PKD (Bahagian A – G)
+              Susunan Fail Kertas Siasatan Pejabat Kesihatan (Bahagian A – G)
             </h4>
             <p className="mt-0.5 text-xs text-slate-600">
-              Semakan automatik kandungan minimum setiap bahagian fail sebelum dihantar ke TPR.
+              Semakan automatik kandungan minimum setiap bahagian fail sebelum dihantar kepada TPR.
             </p>
           </div>
           <div className="divide-y divide-slate-200">
@@ -354,6 +351,7 @@ export default function AuditPanel({
                 const isFail = item.status === "GAGAL";
                 const isExpanded = expandedCode === item.code;
                 const isPriority = priorityCodes.has(item.code);
+                const isPrivacyItem = item.code === "C20";
                 return (
                   <div
                     key={item.code}
@@ -421,24 +419,41 @@ export default function AuditPanel({
                         </div>
                         {!isPass && (
                           <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white p-3">
-                            <div className="text-xs leading-relaxed sm:text-sm">
+                            <div className="min-w-0 flex-1 text-xs leading-relaxed sm:text-sm">
                               <strong className="text-slate-900">Tindakan Perlu Diambil: </strong>
                               {item.recommendation}
                             </div>
-                            <button
-                              type="button"
-                              onClick={() =>
-                                onJumpToEditor(mapCriterionToEditorSection(item.code), {
-                                  sectionId: mapCriterionToEditorSection(item.code),
-                                  code: item.code,
-                                  title: item.title,
-                                  recommendation: item.recommendation,
-                                })
-                              }
-                              className="inline-flex min-h-[40px] shrink-0 items-center gap-1.5 rounded-xl bg-[#0f2744] px-3.5 py-2 text-xs font-bold text-white hover:bg-slate-800"
-                            >
-                              Baiki di Draf <ArrowRight className="h-3.5 w-3.5" />
-                            </button>
+                            {isPrivacyItem ? (
+                              <button
+                                type="button"
+                                onClick={() => setView("privacy")}
+                                className="inline-flex min-h-[44px] shrink-0 items-center gap-1.5 rounded-xl bg-[#0f2744] px-3.5 py-2 text-xs font-bold text-white hover:bg-slate-800"
+                              >
+                                <Lock className="h-3.5 w-3.5" />
+                                Lihat Perlindungan Data
+                              </button>
+                            ) : (
+                              <button
+                                type="button"
+                                disabled={draftLoading}
+                                onClick={() =>
+                                  onJumpToEditor(mapCriterionToEditorSection(item.code), {
+                                    sectionId: mapCriterionToEditorSection(item.code),
+                                    code: item.code,
+                                    title: item.title,
+                                    recommendation: item.recommendation,
+                                  })
+                                }
+                                className="inline-flex min-h-[44px] shrink-0 items-center gap-1.5 rounded-xl bg-[#0f2744] px-3.5 py-2 text-xs font-bold text-white hover:bg-slate-800 disabled:opacity-60"
+                              >
+                                {draftLoading ? (
+                                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                                ) : (
+                                  <ArrowRight className="h-3.5 w-3.5" />
+                                )}
+                                {draftLoading ? "Menyediakan..." : "Baiki pada Draf"}
+                              </button>
+                            )}
                           </div>
                         )}
                       </div>

@@ -33,6 +33,7 @@ import {
   fetchLegalSnapshot,
 } from "@/lib/api";
 import { validateLegalOutput } from "@/lib/legalValidator";
+import { copyTextSafe, extractRecommendedCompoundRm } from "@/lib/uiHelpers";
 import type {
   AdvisorAnsweredItem,
   AdvisorAnsweredListResponse,
@@ -52,6 +53,7 @@ interface UIPAdvisorPanelProps {
   isDevAdmin?: boolean;
   initialQuestion?: string | null;
   initialQuestionNonce?: number;
+  onInitialQuestionConsumed?: () => void;
   initialWorkspaceTab?: PakarWorkspaceTab;
   workspaceTabNonce?: number;
   onApplyToCaseBuilder: (
@@ -147,6 +149,7 @@ export default function UIPAdvisorPanel({
   isDevAdmin = false,
   initialQuestion = null,
   initialQuestionNonce = 0,
+  onInitialQuestionConsumed,
   initialWorkspaceTab = "ask",
   workspaceTabNonce = 0,
   onApplyToCaseBuilder,
@@ -155,6 +158,7 @@ export default function UIPAdvisorPanel({
   const [question, setQuestion] = useState("");
   const [aktaFilter, setAktaFilter] = useState<string>("Semua");
   const [scenarios, setScenarios] = useState<AdvisorScenarioItem[]>([]);
+  const [scenariosError, setScenariosError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [deepLoading, setDeepLoading] = useState(false);
   const [copiedSummary, setCopiedSummary] = useState(false);
@@ -166,6 +170,7 @@ export default function UIPAdvisorPanel({
   const [showNoOffenceStatutes, setShowNoOffenceStatutes] = useState(false);
   const [answeredData, setAnsweredData] = useState<AdvisorAnsweredListResponse | null>(null);
   const [answeredLoading, setAnsweredLoading] = useState(false);
+  const [answeredError, setAnsweredError] = useState<string | null>(null);
   const [answeredActFilter, setAnsweredActFilter] = useState<string>("Semua");
   const [answeredSearch, setAnsweredSearch] = useState("");
   const [selectedAnsweredId, setSelectedAnsweredId] = useState<string | null>(null);
@@ -178,11 +183,20 @@ export default function UIPAdvisorPanel({
     setWorkspaceTab(initialWorkspaceTab);
   }, [initialWorkspaceTab, workspaceTabNonce]);
 
-  useEffect(() => {
-    fetchAdvisorScenarios()
-      .then(setScenarios)
-      .catch(() => setScenarios([]));
+  const loadScenarios = useCallback(async () => {
+    setScenariosError(null);
+    try {
+      const list = await fetchAdvisorScenarios();
+      setScenarios(list);
+    } catch {
+      setScenarios([]);
+      setScenariosError("Senarai contoh situasi gagal dimuatkan buat masa ini.");
+    }
   }, []);
+
+  useEffect(() => {
+    void loadScenarios();
+  }, [loadScenarios]);
 
   useEffect(() => {
     fetchLegalSnapshot(authToken)
@@ -212,11 +226,12 @@ export default function UIPAdvisorPanel({
 
   const loadAnsweredQuestions = useCallback(async () => {
     setAnsweredLoading(true);
+    setAnsweredError(null);
     try {
       const data = await fetchAdvisorAnsweredQuestions({ authToken, limit: 150 });
       setAnsweredData(data);
     } catch {
-      // Abaikan jika senarai soalan dijawab gagal dimuat sementara
+      setAnsweredError("Senarai soalan terdahulu gagal dimuatkan. Sila cuba semula.");
     } finally {
       setAnsweredLoading(false);
     }
@@ -277,9 +292,11 @@ export default function UIPAdvisorPanel({
 
   useEffect(() => {
     if (initialQuestionNonce > 0 && initialQuestion && initialQuestion.trim()) {
-      setQuestion(initialQuestion.trim());
+      const qClean = initialQuestion.trim();
+      setQuestion(qClean);
       setWorkspaceTab("ask");
-      void handleConsult(initialQuestion.trim());
+      onInitialQuestionConsumed?.();
+      void handleConsult(qClean);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialQuestionNonce]);
@@ -304,7 +321,7 @@ export default function UIPAdvisorPanel({
     void handleConsult(item.question);
   };
 
-  const handleCopySummary = () => {
+  const handleCopySummary = async () => {
     if (!result) return;
     const isNoOff =
       result.status_kesalahan === "TIADA_KESALAHAN" ||
@@ -327,9 +344,11 @@ export default function UIPAdvisorPanel({
       ]
         .filter(Boolean)
         .join("\n\n");
-      navigator.clipboard?.writeText(text);
-      setCopiedSummary(true);
-      setTimeout(() => setCopiedSummary(false), 2000);
+      const ok = await copyTextSafe(text);
+      if (ok) {
+        setCopiedSummary(true);
+        setTimeout(() => setCopiedSummary(false), 2000);
+      }
       return;
     }
 
@@ -339,15 +358,17 @@ export default function UIPAdvisorPanel({
       `RUJUKAN UIP KKM: ${result.tajuk_nasihat} (${result.akta_disyorkan})`,
       `SEKSYEN KESALAHAN: ${punca?.seksyen_kesalahan || primary?.seksyen_kesalahan || result.akta_disyorkan}`,
       `HUKUMAN: ${punca?.seksyen_hukuman || primary?.seksyen_hukuman || "-"} (${punca?.had_hukuman || primary?.hukuman_maksimum || "-"})`,
-      `TINDAKAN SEGERA: ${result.ringkasan_keputusan || result.keputusan_tindakan}`,
-      `LANGKAH LAPANGAN:\n${result.sop_lapangan.map((s, i) => `${i + 1}. ${s}`).join("\n")}`,
+      `CADANGAN TINDAKAN: ${result.ringkasan_keputusan || result.keputusan_tindakan}`,
+      `LANGKAH DI LOKASI:\n${result.sop_lapangan.map((s, i) => `${i + 1}. ${s}`).join("\n")}`,
       `BARANG BUKTI WAJIB:\n${result.eksibit_wajib.map((e) => `- ${e}`).join("\n")}`,
     ]
       .filter(Boolean)
       .join("\n\n");
-    navigator.clipboard?.writeText(text);
-    setCopiedSummary(true);
-    setTimeout(() => setCopiedSummary(false), 2000);
+    const ok = await copyTextSafe(text);
+    if (ok) {
+      setCopiedSummary(true);
+      setTimeout(() => setCopiedSummary(false), 2000);
+    }
   };
 
   const filteredScenarios =
@@ -409,11 +430,22 @@ export default function UIPAdvisorPanel({
       {/* BAR 3 TAB BERSIH: GABUNGAN TANYA SITUASI + SENARAI KESALAHAN & AKTA + SOALAN TERDAHULU */}
       <div className="flex gap-1.5 overflow-x-auto rounded-2xl border border-slate-200 bg-white p-1.5 shadow-sm no-scrollbar">
         {[
-          { id: "ask" as PakarWorkspaceTab, label: "Tanya Situasi", icon: MessageSquareQuote },
-          { id: "directory" as PakarWorkspaceTab, label: "Senarai Kesalahan & Teks Akta", icon: Database },
+          {
+            id: "ask" as PakarWorkspaceTab,
+            label: "Tanya Situasi",
+            shortLabel: "Tanya Situasi",
+            icon: MessageSquareQuote,
+          },
+          {
+            id: "directory" as PakarWorkspaceTab,
+            label: "Senarai Kesalahan & Teks Akta",
+            shortLabel: "Rujukan Akta",
+            icon: Database,
+          },
           {
             id: "history" as PakarWorkspaceTab,
             label: `Soalan Terdahulu (${answeredData?.total_questions ?? 0})`,
+            shortLabel: `Terdahulu (${answeredData?.total_questions ?? 0})`,
             icon: History,
           },
         ].map((tab) => {
@@ -424,14 +456,15 @@ export default function UIPAdvisorPanel({
               key={tab.id}
               type="button"
               onClick={() => setWorkspaceTab(tab.id)}
-              className={`inline-flex min-h-[42px] shrink-0 flex-1 items-center justify-center gap-2 rounded-xl px-4 py-2 text-xs font-extrabold transition ${
+              className={`inline-flex min-h-[44px] shrink-0 flex-1 items-center justify-center gap-1.5 rounded-xl px-3 py-2 text-xs font-extrabold transition sm:gap-2 sm:px-4 ${
                 active
                   ? "bg-[#0f2744] text-white shadow-sm"
                   : "text-slate-700 hover:bg-slate-100 hover:text-slate-900"
               }`}
             >
               <Icon className="h-4 w-4 shrink-0" />
-              <span className="whitespace-nowrap">{tab.label}</span>
+              <span className="hidden whitespace-nowrap sm:inline">{tab.label}</span>
+              <span className="whitespace-nowrap sm:hidden">{tab.shortLabel}</span>
             </button>
           );
         })}
@@ -454,10 +487,10 @@ export default function UIPAdvisorPanel({
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div>
             <h2 className="text-base font-extrabold text-slate-900">
-              Tak pasti seksyen atau tindakan di lokasi?
+              Kurang pasti seksyen atau tindakan di lokasi?
             </h2>
             <p className="mt-0.5 text-xs text-slate-600 sm:text-sm">
-              Taip sahaja apa yang anda jumpa untuk semak seksyen tepat, kompaun atau buka IP, dan langkah SOP.
+              Taip sahaja apa yang anda temui untuk menyemak seksyen yang tepat, sama ada kompaun atau buka Fail IP, serta langkah SOP.
             </p>
           </div>
 
@@ -465,7 +498,7 @@ export default function UIPAdvisorPanel({
             aria-label="Tapis Akta KKM"
             value={aktaFilter}
             onChange={(e) => setAktaFilter(e.target.value)}
-            className="min-h-[42px] w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-base font-semibold text-slate-800 sm:w-auto sm:text-sm"
+            className="min-h-[44px] w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-base font-semibold text-slate-800 sm:w-auto sm:text-sm"
           >
             <option value="Semua">Semua Akta KKM</option>
             <option value="Akta 852">Akta 852 (Merokok/Vape)</option>
@@ -501,7 +534,7 @@ export default function UIPAdvisorPanel({
                     setQuestion(chip);
                     handleConsult(chip);
                   }}
-                  className="min-h-[38px] rounded-full border border-slate-200 bg-slate-50 px-3.5 py-1.5 text-xs font-semibold text-slate-700 transition hover:border-[#0f2744] hover:bg-slate-100 hover:text-slate-900"
+                  className="min-h-[44px] rounded-full border border-slate-200 bg-slate-50 px-3.5 py-2 text-xs font-semibold text-slate-700 transition hover:border-[#0f2744] hover:bg-slate-100 hover:text-slate-900 sm:min-h-[38px] sm:py-1.5"
                 >
                   {chip}
                 </button>
@@ -514,7 +547,7 @@ export default function UIPAdvisorPanel({
               <button
                 type="button"
                 onClick={() => setShowLibrary((v) => !v)}
-                className="inline-flex min-h-[42px] items-center justify-center gap-1.5 rounded-xl border border-slate-300 bg-white px-3.5 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50"
+                className="inline-flex min-h-[44px] items-center justify-center gap-1.5 rounded-xl border border-slate-300 bg-white px-3.5 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50"
               >
                 <BookOpen className="h-4 w-4 text-[#0f2744]" />
                 <span>Contoh Situasi ({filteredScenarios.length})</span>
@@ -548,7 +581,7 @@ export default function UIPAdvisorPanel({
                 ) : (
                   <Sparkles className="h-4 w-4 text-amber-600" />
                 )}
-                {deepLoading ? "AI sedang menyemak..." : "Semakan Mendalam dengan AI"}
+                {deepLoading ? "AI sedang membuat semakan mendalam..." : "Semakan Mendalam dengan AI"}
               </button>
             </div>
           </div>
@@ -563,43 +596,59 @@ export default function UIPAdvisorPanel({
         {/* Contoh Situasi Boleh Lipat */}
         {showLibrary && (
           <div className="mt-4 border-t border-slate-200 pt-4">
-            <div className="mb-2.5 text-xs font-bold text-slate-700">
-              Pilih satu situasi untuk terus lihat seksyen &amp; SOP:
-            </div>
-            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
-              {filteredScenarios.map((sc) => {
-                const selected = result?.scenario_id === sc.id;
-                return (
-                  <button
-                    key={sc.id}
-                    type="button"
-                    onClick={() => {
-                      setQuestion(sc.tajuk);
-                      handleConsult(sc.tajuk, sc.id);
-                    }}
-                    className={`flex flex-col items-start rounded-xl border p-3 text-left transition ${
-                      selected
-                        ? "border-indigo-500 bg-indigo-50/70 ring-1 ring-indigo-500"
-                        : "border-slate-200 bg-slate-50/50 hover:border-indigo-300 hover:bg-indigo-50/30"
-                    }`}
-                  >
-                    <div className="flex w-full items-center justify-between gap-2">
-                      <span className="rounded bg-[#0f2744] px-2 py-0.5 text-[11px] font-bold text-white">
-                        {sc.akta_utama}
-                      </span>
-                      <span
-                        className={`text-[11px] font-bold ${
-                          sc.sesuai_buka_ip ? "text-amber-800" : "text-emerald-700"
+            {scenariosError ? (
+              <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-rose-200 bg-rose-50 px-3.5 py-2.5 text-xs text-rose-900">
+                <span>{scenariosError}</span>
+                <button
+                  type="button"
+                  onClick={() => void loadScenarios()}
+                  className="inline-flex min-h-[40px] items-center gap-1 rounded-lg border border-rose-300 bg-white px-3 text-xs font-bold text-rose-900 hover:bg-rose-100"
+                >
+                  <RefreshCw className="h-3.5 w-3.5" />
+                  Cuba Semula
+                </button>
+              </div>
+            ) : (
+              <>
+                <div className="mb-2.5 text-xs font-bold text-slate-700">
+                  Pilih satu situasi untuk terus lihat seksyen &amp; SOP:
+                </div>
+                <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                  {filteredScenarios.map((sc) => {
+                    const selected = result?.scenario_id === sc.id;
+                    return (
+                      <button
+                        key={sc.id}
+                        type="button"
+                        onClick={() => {
+                          setQuestion(sc.tajuk);
+                          handleConsult(sc.tajuk, sc.id);
+                        }}
+                        className={`flex flex-col items-start rounded-xl border p-3 text-left transition ${
+                          selected
+                            ? "border-indigo-500 bg-indigo-50/70 ring-1 ring-indigo-500"
+                            : "border-slate-200 bg-slate-50/50 hover:border-indigo-300 hover:bg-indigo-50/30"
                         }`}
                       >
-                        {sc.sesuai_buka_ip ? "Buka IP" : "Kompaun"}
-                      </span>
-                    </div>
-                    <span className="mt-1.5 text-xs font-bold text-slate-900">{sc.tajuk}</span>
-                  </button>
-                );
-              })}
-            </div>
+                        <div className="flex w-full items-center justify-between gap-2">
+                          <span className="rounded bg-[#0f2744] px-2 py-0.5 text-[11px] font-bold text-white">
+                            {sc.akta_utama}
+                          </span>
+                          <span
+                            className={`text-[11px] font-bold ${
+                              sc.sesuai_buka_ip ? "text-amber-800" : "text-emerald-700"
+                            }`}
+                          >
+                            {sc.sesuai_buka_ip ? "Buka IP" : "Kompaun"}
+                          </span>
+                        </div>
+                        <span className="mt-1.5 text-xs font-bold text-slate-900">{sc.tajuk}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </>
+            )}
           </div>
         )}
       </section>
@@ -611,7 +660,7 @@ export default function UIPAdvisorPanel({
           <div>
             <div className="font-extrabold text-[#0f2744]">
               {deepLoading
-                ? "Sedang menjalankan Semakan Mendalam dengan AI..."
+                ? "AI sedang membuat semakan mendalam..."
                 : "Sedang menyemak seksyen undang-undang & SOP..."}
             </div>
             <p className="mt-0.5 text-slate-600">
@@ -700,10 +749,36 @@ export default function UIPAdvisorPanel({
           return evNums.length === 0 || evNums.some((n) => activeSecNums.has(n));
         });
 
+        const buildCompoundMeta = (): CompoundPrefillMeta => {
+          const sec = punca.seksyen_kesalahan || primaryCharge?.seksyen_kesalahan || "";
+          const recomAmt = extractRecommendedCompoundRm(
+            `${sec} ${result.akta_disyorkan}`,
+            punca.status_kompaun || primaryCharge?.boleh_kompaun || ""
+          );
+          return {
+            seksyen: sec,
+            kuasaKompaun:
+              result.akta_disyorkan === "Akta 852"
+                ? "Seksyen 48 Akta 852 [P.U. (A) 259/2024]"
+                : result.akta_disyorkan === "Akta 154"
+                  ? "Seksyen 25 Akta 154 (Maksimum RM500)"
+                  : result.akta_disyorkan === "Akta 342"
+                    ? "Seksyen 25 Akta 342 [P.U. (A) 139/2025]"
+                    : "Notis Seksyen 32B & Seksyen 33 Akta Makanan 1983",
+            amaun: recomAmt,
+            tempoh:
+              result.akta_disyorkan === "Akta 852"
+                ? "30 hari dari tarikh tawaran kompaun"
+                : "14 hari dari tarikh serahan notis",
+            kesalahanRingkas:
+              primaryCharge?.perihal || result.tajuk_nasihat || question.trim(),
+          };
+        };
+
         return (
           <section
             ref={resultRef}
-            className="space-y-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6"
+            className="scroll-mt-20 space-y-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6"
           >
             {/* Bar Atas: Tag Ringkas + Butang Salin / Tindakan */}
             <div className="flex flex-wrap items-center justify-between gap-2.5 border-b border-slate-200 pb-3">
@@ -740,8 +815,8 @@ export default function UIPAdvisorPanel({
               <div className="flex flex-wrap items-center gap-2">
                 <button
                   type="button"
-                  onClick={handleCopySummary}
-                  className="inline-flex min-h-[40px] items-center gap-1.5 rounded-xl border border-slate-300 bg-white px-3.5 py-1.5 text-xs font-bold text-slate-700 hover:bg-slate-50"
+                  onClick={() => void handleCopySummary()}
+                  className="inline-flex min-h-[44px] items-center gap-1.5 rounded-xl border border-slate-300 bg-white px-3.5 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50"
                 >
                   {copiedSummary ? (
                     <ClipboardCheck className="h-4 w-4 text-emerald-600" />
@@ -752,47 +827,41 @@ export default function UIPAdvisorPanel({
                 </button>
 
                 {!isNoOffence && (!activeValidation || activeValidation.passed) && !result.unindexed_statute && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      const amtMatch = (punca.status_kompaun || "").match(/RM\s*[\d,]+(?:\.\d{2})?/i);
-                      onApplyToCaseBuilder(
-                        result.draf_teks_kes_cadangan,
-                        result.akta_disyorkan,
-                        result.sesuai_buka_ip,
-                        result.sesuai_buka_ip
-                          ? undefined
-                          : {
-                              seksyen: punca.seksyen_kesalahan || primaryCharge?.seksyen_kesalahan || "",
-                              kuasaKompaun:
-                                result.akta_disyorkan === "Akta 852"
-                                  ? "Seksyen 48 Akta 852 [P.U. (A) 259/2024]"
-                                  : result.akta_disyorkan === "Akta 154"
-                                    ? "Seksyen 25 Akta 154"
-                                    : result.akta_disyorkan === "Akta 342"
-                                      ? "Seksyen 25 Akta 342 [P.U. (A) 139/2025]"
-                                      : "Notis Seksyen 32B & Seksyen 33 Akta Makanan 1983",
-                              amaun: amtMatch
-                                ? amtMatch[0].toUpperCase()
-                                : result.akta_disyorkan === "Akta 154"
-                                  ? "RM 500.00"
-                                  : "RM 250.00",
-                              tempoh:
-                                result.akta_disyorkan === "Akta 852"
-                                  ? "30 hari dari tarikh tawaran kompaun"
-                                  : "14 hari dari tarikh serahan notis",
-                              kesalahanRingkas:
-                                primaryCharge?.perihal || result.tajuk_nasihat || question.trim(),
-                            }
-                      );
-                    }}
-                    className="inline-flex min-h-[42px] items-center gap-1.5 rounded-xl bg-[#0f2744] px-4 py-2 text-xs font-extrabold text-white shadow-sm hover:bg-slate-800"
-                  >
-                    <ArrowRightCircle className="h-4 w-4" />
-                    {result.sesuai_buka_ip
-                      ? "Bina Draf Fail IP →"
-                      : "Isi Notis Kompaun →"}
-                  </button>
+                  <>
+                    {!result.sesuai_buka_ip && (
+                      <button
+                        type="button"
+                        onClick={() =>
+                          onApplyToCaseBuilder(
+                            result.draf_teks_kes_cadangan,
+                            result.akta_disyorkan,
+                            true
+                          )
+                        }
+                        className="inline-flex min-h-[44px] items-center gap-1.5 rounded-xl border border-[#0f2744]/30 bg-white px-3.5 py-2 text-xs font-bold text-[#0f2744] hover:bg-slate-50"
+                      >
+                        Buka Fail IP
+                      </button>
+                    )}
+
+                    <button
+                      type="button"
+                      onClick={() =>
+                        onApplyToCaseBuilder(
+                          result.draf_teks_kes_cadangan,
+                          result.akta_disyorkan,
+                          result.sesuai_buka_ip,
+                          result.sesuai_buka_ip ? undefined : buildCompoundMeta()
+                        )
+                      }
+                      className="inline-flex min-h-[44px] items-center gap-1.5 rounded-xl bg-[#0f2744] px-4 py-2 text-xs font-extrabold text-white shadow-sm hover:bg-slate-800"
+                    >
+                      <ArrowRightCircle className="h-4 w-4" />
+                      {result.sesuai_buka_ip
+                        ? "Muat ke Fail IP (Langkah 1) →"
+                        : "Isi Notis Kompaun →"}
+                    </button>
+                  </>
                 )}
               </div>
             </div>
@@ -833,11 +902,18 @@ export default function UIPAdvisorPanel({
                 <button
                   type="button"
                   disabled={loading || deepLoading}
-                  onClick={() => handleConsult(undefined, undefined, true)}
-                  className="inline-flex min-h-[36px] shrink-0 items-center gap-1 rounded-lg border border-teal-300 bg-white px-3 py-1.5 text-xs font-bold text-teal-900 hover:bg-teal-100 disabled:opacity-50"
+                  onClick={() => {
+                    const typed = question.trim();
+                    handleConsult(
+                      typed ? undefined : result.matched_collection_question || result.tajuk_nasihat,
+                      undefined,
+                      true
+                    );
+                  }}
+                  className="inline-flex min-h-[44px] shrink-0 items-center gap-1 rounded-lg border border-teal-300 bg-white px-3 py-1.5 text-xs font-bold text-teal-900 hover:bg-teal-100 disabled:opacity-50"
                 >
                   <Sparkles className="h-3.5 w-3.5 text-[#0f2744]" />
-                  {deepLoading ? "AI sedang menyemak..." : "Semak Baharu Dengan AI"}
+                  {deepLoading ? "AI sedang membuat semakan mendalam..." : "Semak Semula dengan AI"}
                 </button>
               </div>
             )}
@@ -862,10 +938,10 @@ export default function UIPAdvisorPanel({
                       true
                     );
                   }}
-                  className="inline-flex min-h-[36px] shrink-0 items-center gap-1 rounded-lg border border-amber-300 bg-white px-3 py-1.5 text-xs font-bold text-amber-900 hover:bg-amber-100 disabled:opacity-50"
+                  className="inline-flex min-h-[44px] shrink-0 items-center gap-1 rounded-lg border border-amber-300 bg-white px-3 py-1.5 text-xs font-bold text-amber-900 hover:bg-amber-100 disabled:opacity-50"
                 >
                   <Sparkles className="h-3.5 w-3.5" />
-                  {deepLoading ? "AI sedang menyemak..." : "Cuba Semula AI"}
+                  {deepLoading ? "AI sedang membuat semakan mendalam..." : "Cuba Semula AI"}
                 </button>
               </div>
             )}
@@ -905,7 +981,7 @@ export default function UIPAdvisorPanel({
                   {visibleNoOffenceEvals.length > 0 && (
                     <div className="mt-3 space-y-2 border-t border-sky-200/70 pt-3">
                       <div className="text-[11px] font-extrabold uppercase tracking-wide text-slate-700">
-                        Perkara Wajib Dibuktikan (Punca Penolakan)
+                        Perkara Wajib Dibuktikan (Sebab Tiada Kesalahan)
                       </div>
                       {visibleNoOffenceEvals.map((ev) => (
                         <div key={ev.offence_id} className="space-y-1.5 rounded-xl border border-slate-200 bg-white p-3">
@@ -919,7 +995,7 @@ export default function UIPAdvisorPanel({
                               ) : null}
                             </span>
                             <span className="rounded-full bg-amber-100 px-2.5 py-0.5 text-[10px] font-extrabold text-amber-950">
-                              Unsur Tidak Dipenuhi
+                              Syarat Tidak Dipenuhi
                             </span>
                           </div>
                           <ul className="space-y-1.5 text-xs">
@@ -943,10 +1019,10 @@ export default function UIPAdvisorPanel({
                                   }`}
                                 >
                                   {el.status === "TIDAK TERPENUHI"
-                                    ? "TIDAK DIPENUHI"
+                                    ? "Syarat Tidak Dipenuhi"
                                     : el.status === "TERPENUHI"
-                                      ? "FAKTA ASAS"
-                                      : el.status || "PERLU BUKTI TAMBAHAN"}
+                                      ? "Fakta Asas"
+                                      : el.status || "Perlu Bukti Tambahan"}
                                 </span>
                               </li>
                             ))}
@@ -983,16 +1059,16 @@ export default function UIPAdvisorPanel({
                     <button
                       type="button"
                       onClick={() => setShowNoOffenceStatutes((v) => !v)}
-                      className="flex w-full items-center justify-between gap-2 px-4 py-3 text-left text-xs font-extrabold text-slate-900 hover:bg-slate-100/70"
+                      className="flex min-h-[44px] w-full items-center justify-between gap-2 px-4 py-3 text-left text-xs font-extrabold text-slate-900 hover:bg-slate-100/70"
                     >
                       <span className="flex items-center gap-2">
-                        <BookOpen className="h-4 w-4 text-teal-700" />
+                        <BookOpen className="h-4 w-4 shrink-0 text-teal-700" />
                         Rujukan Teks Asal Akta ({result.statutory_citations.length} Seksyen — untuk semakan / rujukan pengadu)
                       </span>
                       {showNoOffenceStatutes ? (
-                        <ChevronUp className="h-4 w-4 text-slate-500" />
+                        <ChevronUp className="h-4 w-4 shrink-0 text-slate-500" />
                       ) : (
-                        <ChevronDown className="h-4 w-4 text-slate-500" />
+                        <ChevronDown className="h-4 w-4 shrink-0 text-slate-500" />
                       )}
                     </button>
 
@@ -1035,7 +1111,7 @@ export default function UIPAdvisorPanel({
                         true
                       );
                     }}
-                    className="inline-flex min-h-[38px] items-center gap-1.5 rounded-xl border border-[#0f2744]/25 bg-slate-50 px-3.5 py-1.5 text-xs font-bold text-[#0f2744] transition hover:bg-slate-100 disabled:opacity-50"
+                    className="inline-flex min-h-[44px] items-center gap-1.5 rounded-xl border border-[#0f2744]/25 bg-slate-50 px-3.5 py-2 text-xs font-bold text-[#0f2744] transition hover:bg-slate-100 disabled:opacity-50"
                   >
                     {deepLoading ? (
                       <Loader2 className="h-3.5 w-3.5 animate-spin text-amber-600" />
@@ -1043,7 +1119,7 @@ export default function UIPAdvisorPanel({
                       <Sparkles className="h-3.5 w-3.5 text-amber-600" />
                     )}
                     {deepLoading
-                      ? "AI sedang menyemak mendalam..."
+                      ? "AI sedang membuat semakan mendalam..."
                       : "Jalankan Semakan Mendalam dengan AI"}
                   </button>
                 </div>
@@ -1110,7 +1186,7 @@ export default function UIPAdvisorPanel({
                   )}
                 </div>
 
-                {/* 2. CADANGAN TINDAKAN SEGERA */}
+                {/* 2. CADANGAN TINDAKAN */}
                 <div
                   className={`rounded-2xl border border-slate-200 border-l-4 p-4 ${
                     result.sesuai_buka_ip
@@ -1119,7 +1195,7 @@ export default function UIPAdvisorPanel({
                   }`}
                 >
                   <div className="text-xs font-extrabold uppercase tracking-wide text-slate-700">
-                    2. Cadangan Tindakan Segera
+                    2. Cadangan Tindakan
                   </div>
                   <div className="mt-1 text-sm font-extrabold text-slate-900">
                     {result.ringkasan_keputusan || result.keputusan_tindakan}
@@ -1129,12 +1205,12 @@ export default function UIPAdvisorPanel({
                   </p>
                 </div>
 
-                {/* 3. LANGKAH PERLU DIAMBIL (SOP LAPANGAN — SENARAI SEMAK INTERAKTIF) */}
+                {/* 3. LANGKAH TINDAKAN DI LOKASI (SENARAI SEMAK INTERAKTIF) */}
                 <div className="rounded-2xl border border-slate-200 bg-white p-4">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <h4 className="flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wide text-slate-900">
                       <ClipboardList className="h-4 w-4 text-emerald-700" />
-                      3. Langkah Perlu Diambil di Lokasi (Boleh Tanda Siap)
+                      3. Langkah Tindakan di Lokasi (Tandakan jika selesai)
                     </h4>
                     <span className="text-xs font-semibold text-slate-500">
                       {Object.values(checkedSop).filter(Boolean).length}/{result.sop_lapangan.length} selesai
@@ -1146,7 +1222,7 @@ export default function UIPAdvisorPanel({
                       return (
                         <li key={i}>
                           <label
-                            className={`flex cursor-pointer items-start gap-3 rounded-xl border p-2.5 transition ${
+                            className={`flex min-h-[44px] cursor-pointer items-start gap-3 rounded-xl border p-3 transition ${
                               done
                                 ? "border-emerald-200 bg-emerald-50/40 text-slate-500 line-through"
                                 : "border-slate-200 bg-slate-50/40 hover:bg-slate-50"
@@ -1193,7 +1269,7 @@ export default function UIPAdvisorPanel({
                           key={t.id}
                           type="button"
                           onClick={() => setResultTab(t.id)}
-                          className={`min-h-[40px] shrink-0 rounded-xl px-3.5 py-2 text-xs font-bold transition ${
+                          className={`min-h-[44px] shrink-0 rounded-xl px-3.5 py-2 text-xs font-bold transition ${
                             resultTab === t.id
                               ? "bg-[#0f2744] text-white"
                               : "bg-slate-100 text-slate-700 hover:bg-slate-200"
@@ -1215,7 +1291,7 @@ export default function UIPAdvisorPanel({
                           true
                         );
                       }}
-                      className="inline-flex min-h-[38px] items-center gap-1.5 rounded-xl border border-[#0f2744]/25 bg-slate-50 px-3 py-1.5 text-xs font-bold text-[#0f2744] transition hover:bg-slate-100 disabled:opacity-50"
+                      className="inline-flex min-h-[44px] items-center gap-1.5 rounded-xl border border-[#0f2744]/25 bg-slate-50 px-3.5 py-2 text-xs font-bold text-[#0f2744] transition hover:bg-slate-100 disabled:opacity-50"
                     >
                       {deepLoading ? (
                         <Loader2 className="h-3.5 w-3.5 animate-spin text-amber-600" />
@@ -1223,7 +1299,7 @@ export default function UIPAdvisorPanel({
                         <Sparkles className="h-3.5 w-3.5 text-amber-600" />
                       )}
                       {deepLoading
-                        ? "AI sedang menyemak mendalam..."
+                        ? "AI sedang membuat semakan mendalam..."
                         : "Semakan Mendalam dengan AI"}
                     </button>
                   </div>
@@ -1247,7 +1323,7 @@ export default function UIPAdvisorPanel({
                         <div className="rounded-xl border border-amber-200 border-l-4 border-l-amber-500 bg-amber-50/40 p-3.5">
                           <h4 className="mb-1.5 flex items-center gap-1.5 text-xs font-extrabold text-amber-950">
                             <AlertTriangle className="h-4 w-4 text-amber-700" />
-                            Elak Kesilapan Biasa PPKP
+                            Elak Kesilapan Lazim PPKP
                           </h4>
                           <ul className="space-y-1.5 text-xs text-amber-950">
                             {result.perangkap_kesilapan.map((trap, i) => (
@@ -1268,7 +1344,7 @@ export default function UIPAdvisorPanel({
                           {visibleOffenceEvals.map((ev) => (
                             <div
                               key={ev.offence_id}
-                              className="overflow-x-auto rounded-xl border border-slate-200"
+                              className="overflow-hidden rounded-xl border border-slate-200"
                             >
                               <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 bg-slate-50 px-3 py-2 text-xs">
                                 <span className="font-extrabold text-slate-900">
@@ -1289,54 +1365,91 @@ export default function UIPAdvisorPanel({
                                   }`}
                                 >
                                   {ev.action_blocked
-                                    ? "Unsur Tidak Dipenuhi"
+                                    ? "Syarat Tidak Dipenuhi"
                                     : ev.all_elements_satisfied
                                       ? "Fakta Asas Dipenuhi"
                                       : "Sahkan Bukti Di Lokasi"}
                                 </span>
                               </div>
-                              <table className="w-full border-collapse text-left text-xs">
-                                <thead>
-                                  <tr className="border-b border-slate-200 bg-white text-[11px] font-extrabold uppercase text-slate-600">
-                                    <th className="p-2.5">Bil</th>
-                                    <th className="p-2.5">Perkara Wajib Dibuktikan</th>
-                                    <th className="p-2.5">Status</th>
-                                    <th className="p-2.5">Catatan Bukti</th>
-                                  </tr>
-                                </thead>
-                                <tbody className="divide-y divide-slate-200">
-                                  {ev.element_evaluations.map((el) => (
-                                    <tr key={el.element_no} className="hover:bg-slate-50/60">
-                                      <td className="p-2.5 font-mono font-bold text-slate-900">
-                                        {el.element_no}
-                                      </td>
-                                      <td className="p-2.5 font-medium text-slate-800">
-                                        {el.description}
-                                      </td>
-                                      <td className="p-2.5">
-                                        <span
-                                          className={`inline-flex rounded-full px-2.5 py-0.5 text-[10px] font-extrabold ${
-                                            el.status === "TERPENUHI"
-                                              ? "bg-emerald-100 text-emerald-900"
-                                              : el.status === "TIDAK TERPENUHI"
-                                                ? "bg-rose-100 text-rose-900"
-                                                : "bg-amber-100 text-amber-900"
-                                          }`}
-                                        >
-                                          {el.status === "TERPENUHI"
-                                            ? "DIPENUHI"
+
+                              {/* Paparan Kad Telefon (<640px) */}
+                              <div className="divide-y divide-slate-200 bg-white sm:hidden">
+                                {ev.element_evaluations.map((el) => (
+                                  <div key={el.element_no} className="space-y-1.5 p-3 text-xs">
+                                    <div className="flex items-start justify-between gap-2">
+                                      <span className="font-bold text-slate-900">
+                                        {el.element_no}. {el.description}
+                                      </span>
+                                      <span
+                                        className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-extrabold ${
+                                          el.status === "TERPENUHI"
+                                            ? "bg-emerald-100 text-emerald-900"
                                             : el.status === "TIDAK TERPENUHI"
-                                              ? "TIDAK DIPENUHI"
-                                              : el.status || "PERLU BUKTI TAMBAHAN"}
-                                        </span>
-                                      </td>
-                                      <td className="p-2.5 text-slate-600">
+                                              ? "bg-rose-100 text-rose-900"
+                                              : "bg-amber-100 text-amber-900"
+                                        }`}
+                                      >
+                                        {el.status === "TERPENUHI"
+                                          ? "Dipenuhi"
+                                          : el.status === "TIDAK TERPENUHI"
+                                            ? "Syarat Tidak Dipenuhi"
+                                            : el.status || "Perlu Bukti Tambahan"}
+                                      </span>
+                                    </div>
+                                    {(el.notes || el.must_prove) && (
+                                      <p className="text-[11px] leading-relaxed text-slate-600">
                                         {el.notes || el.must_prove}
-                                      </td>
+                                      </p>
+                                    )}
+                                  </div>
+                                ))}
+                              </div>
+
+                              {/* Paparan Jadual Desktop (>=640px) */}
+                              <div className="hidden overflow-x-auto sm:block">
+                                <table className="w-full border-collapse text-left text-xs">
+                                  <thead>
+                                    <tr className="border-b border-slate-200 bg-white text-[11px] font-extrabold uppercase text-slate-600">
+                                      <th className="p-2.5">Bil</th>
+                                      <th className="p-2.5">Perkara Wajib Dibuktikan</th>
+                                      <th className="p-2.5">Status</th>
+                                      <th className="p-2.5">Catatan Bukti</th>
                                     </tr>
-                                  ))}
-                                </tbody>
-                              </table>
+                                  </thead>
+                                  <tbody className="divide-y divide-slate-200">
+                                    {ev.element_evaluations.map((el) => (
+                                      <tr key={el.element_no} className="hover:bg-slate-50/60">
+                                        <td className="p-2.5 font-mono font-bold text-slate-900">
+                                          {el.element_no}
+                                        </td>
+                                        <td className="p-2.5 font-medium text-slate-800">
+                                          {el.description}
+                                        </td>
+                                        <td className="p-2.5">
+                                          <span
+                                            className={`inline-flex rounded-full px-2.5 py-0.5 text-[10px] font-extrabold ${
+                                              el.status === "TERPENUHI"
+                                                ? "bg-emerald-100 text-emerald-900"
+                                                : el.status === "TIDAK TERPENUHI"
+                                                  ? "bg-rose-100 text-rose-900"
+                                                  : "bg-amber-100 text-amber-900"
+                                            }`}
+                                          >
+                                            {el.status === "TERPENUHI"
+                                              ? "Dipenuhi"
+                                              : el.status === "TIDAK TERPENUHI"
+                                                ? "Syarat Tidak Dipenuhi"
+                                                : el.status || "Perlu Bukti Tambahan"}
+                                          </span>
+                                        </td>
+                                        <td className="p-2.5 text-slate-600">
+                                          {el.notes || el.must_prove}
+                                        </td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
                             </div>
                           ))}
                         </div>
@@ -1447,7 +1560,7 @@ export default function UIPAdvisorPanel({
               </h3>
               <p className="mt-0.5 flex flex-wrap items-center gap-1.5 text-xs text-slate-600">
                 <span>
-                  Soalan yang pernah ditanya pegawai lain, disusun ikut Akta. Jawapan sedia ada terus dipaparkan jika situasi hampir sama.
+                  Soalan yang pernah ditanya pegawai lain, disusun mengikut Akta. Jawapan sedia ada terus dipaparkan jika situasi hampir sama.
                 </span>
                 <span className="inline-flex items-center gap-1 rounded bg-slate-100 px-2 py-0.5 text-xs font-semibold text-slate-700">
                   <ShieldCheck className="h-3.5 w-3.5 text-emerald-700" /> Data Sulit Dilindungi
@@ -1465,13 +1578,28 @@ export default function UIPAdvisorPanel({
               onClick={() => void loadAnsweredQuestions()}
               disabled={answeredLoading}
               title="Muat semula senarai soalan"
-              className="inline-flex min-h-[38px] min-w-[38px] items-center justify-center rounded-lg border border-slate-300 bg-white px-3 text-xs font-bold text-slate-700 hover:bg-slate-50 disabled:opacity-60"
+              aria-label="Muat semula senarai soalan"
+              className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg border border-slate-300 bg-white px-3 text-xs font-bold text-slate-700 hover:bg-slate-50 disabled:opacity-60"
             >
-              <RefreshCw className={`h-3.5 w-3.5 ${answeredLoading ? "animate-spin" : ""}`} />
+              <RefreshCw className={`h-4 w-4 ${answeredLoading ? "animate-spin" : ""}`} />
               <span className="ml-1.5 hidden sm:inline">Muat Semula</span>
             </button>
           </div>
         </div>
+
+        {answeredError && (
+          <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-rose-200 bg-rose-50 px-3.5 py-2.5 text-xs text-rose-900">
+            <span>{answeredError}</span>
+            <button
+              type="button"
+              onClick={() => void loadAnsweredQuestions()}
+              className="inline-flex min-h-[40px] items-center gap-1 rounded-lg border border-rose-300 bg-white px-3 text-xs font-bold text-rose-900 hover:bg-rose-100"
+            >
+              <RefreshCw className="h-3.5 w-3.5" />
+              Cuba Semula
+            </button>
+          </div>
+        )}
 
         {/* Carian & Tapisan Mengikut Akta */}
         <div className="space-y-3">
@@ -1482,14 +1610,14 @@ export default function UIPAdvisorPanel({
               value={answeredSearch}
               onChange={(e) => setAnsweredSearch(e.target.value)}
               placeholder="Cari soalan terdahulu, seksyen atau keputusan..."
-              className="min-h-[44px] w-full rounded-xl border border-slate-300 bg-slate-50/50 py-2 pl-9 pr-9 text-base text-slate-900 placeholder:text-slate-400 focus:border-[#0f2744] focus:bg-white focus:outline-none sm:text-sm"
+              className="min-h-[44px] w-full rounded-xl border border-slate-300 bg-slate-50/50 py-2 pl-9 pr-11 text-base text-slate-900 placeholder:text-slate-400 focus:border-[#0f2744] focus:bg-white focus:outline-none sm:text-sm"
             />
             {answeredSearch && (
               <button
                 type="button"
                 onClick={() => setAnsweredSearch("")}
                 aria-label="Kosongkan carian"
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 rounded p-1 text-slate-400 hover:bg-slate-200 hover:text-slate-700"
+                className="absolute right-1 top-1/2 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-200 hover:text-slate-700"
               >
                 <X className="h-4 w-4" />
               </button>
@@ -1500,7 +1628,7 @@ export default function UIPAdvisorPanel({
             <button
               type="button"
               onClick={() => setAnsweredActFilter("Semua")}
-              className={`inline-flex min-h-[38px] items-center gap-1.5 rounded-full border px-3.5 py-1 text-xs font-bold transition ${
+              className={`inline-flex min-h-[44px] items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-xs font-bold transition sm:min-h-[38px] sm:py-1 ${
                 answeredActFilter === "Semua"
                   ? "border-[#0f2744] bg-[#0f2744] text-white"
                   : "border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100"
@@ -1527,7 +1655,7 @@ export default function UIPAdvisorPanel({
                   key={code}
                   type="button"
                   onClick={() => setAnsweredActFilter(code)}
-                  className={`inline-flex min-h-[38px] items-center gap-1.5 rounded-full border px-3.5 py-1 text-xs font-bold transition ${
+                  className={`inline-flex min-h-[44px] items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-xs font-bold transition sm:min-h-[38px] sm:py-1 ${
                     active
                       ? st.pillActive
                       : "border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100"
@@ -1559,7 +1687,7 @@ export default function UIPAdvisorPanel({
               Belum ada soalan terdahulu direkodkan setakat ini.
             </p>
             <p className="mt-1 text-xs text-slate-500">
-              Setiap soalan yang disemak di tab Tanya Situasi akan disimpan di sini untuk rujukan pegawai lain.
+              Setiap soalan yang disemak di ruangan Tanya Situasi akan disimpan di sini untuk rujukan pegawai lain.
             </p>
           </div>
         ) : filteredAnsweredGroups.length === 0 ? (
@@ -1573,9 +1701,9 @@ export default function UIPAdvisorPanel({
                 setAnsweredActFilter("Semua");
                 setAnsweredSearch("");
               }}
-              className="min-h-[38px] rounded-xl border border-slate-300 bg-white px-4 py-1.5 text-xs font-bold text-slate-700 hover:bg-slate-100"
+              className="min-h-[44px] rounded-xl border border-slate-300 bg-white px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-100"
             >
-              Tunjuk Semua Semula
+              Papar Semua Semula
             </button>
           </div>
         ) : (
@@ -1590,12 +1718,12 @@ export default function UIPAdvisorPanel({
                   key={group.akta_code}
                   className="overflow-hidden rounded-xl border border-slate-200 bg-white"
                 >
-                  <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 bg-slate-50 px-4 py-2.5">
-                    <div className="flex min-w-0 flex-wrap items-center gap-2">
+                  <div className="flex items-center justify-between gap-2 border-b border-slate-200 bg-slate-50 px-4 py-2.5">
+                    <div className="flex min-w-0 flex-1 items-center gap-2">
                       <span className="shrink-0 rounded-md bg-[#0f2744] px-2.5 py-0.5 text-xs font-extrabold text-white">
                         {group.akta_code}
                       </span>
-                      <span className="truncate text-xs font-bold text-slate-900">
+                      <span className="min-w-0 truncate text-xs font-bold text-slate-900">
                         {group.akta_title}
                       </span>
                     </div>
@@ -1664,7 +1792,7 @@ export default function UIPAdvisorPanel({
                   </div>
 
                   {group.items.length > 6 && (
-                    <div className="border-t border-slate-200 bg-slate-50 px-3.5 py-2.5 text-center">
+                    <div className="border-t border-slate-200 bg-slate-50 px-3.5 py-2 text-center">
                       <button
                         type="button"
                         onClick={() =>
@@ -1673,7 +1801,7 @@ export default function UIPAdvisorPanel({
                             [group.akta_code]: !prev[group.akta_code],
                           }))
                         }
-                        className="inline-flex min-h-[36px] items-center gap-1 text-xs font-bold text-[#0f2744] hover:underline"
+                        className="inline-flex min-h-[44px] items-center gap-1 px-3 text-xs font-bold text-[#0f2744] hover:underline"
                       >
                         {isExpanded ? (
                           <>
@@ -1681,7 +1809,7 @@ export default function UIPAdvisorPanel({
                           </>
                         ) : (
                           <>
-                            Tunjuk {hiddenCount} lagi soalan {group.akta_code}{" "}
+                            Papar {hiddenCount} lagi soalan {group.akta_code}{" "}
                             <ChevronDown className="h-4 w-4" />
                           </>
                         )}

@@ -38,6 +38,7 @@ interface DraftDocxEditorProps {
   hasUnsavedChanges?: boolean;
   savingCase?: boolean;
   initialSection?: string | null;
+  onTargetSectionConsumed?: () => void;
   activeFixContext?: AuditFixContext | null;
   onDismissFixContext?: () => void;
   auditIssueCounts?: Partial<Record<EditorGroupTab, number>>;
@@ -100,6 +101,7 @@ export default function DraftDocxEditor({
   hasUnsavedChanges = false,
   savingCase = false,
   initialSection = null,
+  onTargetSectionConsumed,
   activeFixContext = null,
   onDismissFixContext,
   auditIssueCounts,
@@ -120,18 +122,43 @@ export default function DraftDocxEditor({
   const [showMoreExports, setShowMoreExports] = useState(false);
   const [expandedCitations, setExpandedCitations] = useState<Record<number, boolean>>({});
   const sectionRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const exportMenuRef = useRef<HTMLDivElement | null>(null);
+  const hasDraft = Boolean(draft);
 
+  // Lompat ke bahagian sasaran sekali sahaja apabila initialSection ditetapkan (elak ditendang balik setiap huruf ditaip)
   useEffect(() => {
-    if (initialSection && draft) {
-      setActiveGroup(mapSectionToGroup(initialSection));
-      window.setTimeout(() => {
-        sectionRefs.current[initialSection]?.scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-        });
-      }, 90);
-    }
-  }, [initialSection, draft]);
+    if (!initialSection || !hasDraft) return;
+    setActiveGroup(mapSectionToGroup(initialSection));
+    const targetKey = initialSection;
+    const timer = window.setTimeout(() => {
+      sectionRefs.current[targetKey]?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }, 90);
+    onTargetSectionConsumed?.();
+    return () => window.clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialSection, hasDraft]);
+
+  // Tutup menu Muat Turun Berasingan bila klik di luar atau tekan Escape
+  useEffect(() => {
+    if (!showMoreExports) return;
+    const onMouseDown = (e: MouseEvent) => {
+      if (exportMenuRef.current && !exportMenuRef.current.contains(e.target as Node)) {
+        setShowMoreExports(false);
+      }
+    };
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setShowMoreExports(false);
+    };
+    document.addEventListener("mousedown", onMouseDown);
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", onMouseDown);
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [showMoreExports]);
 
   if (!draft) {
     return (
@@ -141,7 +168,7 @@ export default function DraftDocxEditor({
         </div>
         <div className="space-y-1.5">
           <h3 className="text-base font-extrabold text-slate-900">
-            Sedia &amp; Edit Fail Kertas Siasatan Lengkap (Word)
+            Sedia &amp; Sunting Fail Kertas Siasatan Lengkap (Word)
           </h3>
           <p className="mx-auto max-w-lg text-sm leading-relaxed text-slate-600">
             Daripada satu catatan kes, sistem menyediakan semua dokumen rasmi di bawah untuk anda semak dan muat turun dalam format Microsoft Word:
@@ -226,7 +253,7 @@ export default function DraftDocxEditor({
     try {
       const fname = await downloadDocx(docType, draft as unknown as Record<string, unknown>);
       setDownloadOkMsg(
-        `Fail ${fname} telah dimuat turun — semak folder Muat Turun pada peranti anda.`
+        `Fail ${fname} berjaya dimuat turun — sila semak ruang Muat Turun pada peranti anda.`
       );
       if (onDownloaded) onDownloaded(fname);
     } catch (err) {
@@ -326,7 +353,7 @@ export default function DraftDocxEditor({
           <div className="flex items-center gap-2">
             <UserCheck className="h-4 w-4 shrink-0 text-amber-700" />
             <span>
-              Simpan <strong>No. Kad Kuasa &amp; model komputer pejabat</strong> dalam profil supaya Sijil 90A &amp; Borang 114 terisi automatik.
+              Simpan <strong>No. Kad Kuasa &amp; model komputer pejabat</strong> dalam profil supaya Sijil 90A &amp; Borang 114 diisi secara automatik.
             </span>
           </div>
           <button
@@ -404,14 +431,14 @@ export default function DraftDocxEditor({
               type="button"
               disabled={savingCase}
               onClick={onSaveDraft}
-              className={`inline-flex min-h-[42px] items-center gap-1.5 rounded-xl border px-3.5 py-2 text-xs font-bold transition disabled:opacity-60 ${
+              className={`inline-flex min-h-[44px] items-center gap-1.5 rounded-xl border px-3.5 py-2 text-xs font-bold transition disabled:opacity-60 ${
                 hasUnsavedChanges
                   ? "border-amber-400 bg-amber-50 text-amber-950 hover:bg-amber-100"
                   : "border-slate-300 bg-white text-slate-700 hover:bg-slate-50"
               }`}
             >
               {savingCase ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
-              {hasUnsavedChanges ? "Simpan Kes*" : "Simpan Kes"}
+              {hasUnsavedChanges ? "Simpan Perubahan" : "Simpan Kes"}
             </button>
 
             {onReRunAudit && (
@@ -419,7 +446,7 @@ export default function DraftDocxEditor({
                 type="button"
                 disabled={auditLoading}
                 onClick={onReRunAudit}
-                className="inline-flex min-h-[42px] items-center gap-1.5 rounded-xl border border-slate-300 bg-white px-3.5 py-2 text-xs font-bold text-[#0f2744] hover:bg-slate-50 disabled:opacity-60"
+                className="inline-flex min-h-[44px] items-center gap-1.5 rounded-xl border border-slate-300 bg-white px-3.5 py-2 text-xs font-bold text-[#0f2744] hover:bg-slate-50 disabled:opacity-60"
               >
                 {auditLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
                 Semak Semula Skor
@@ -440,11 +467,12 @@ export default function DraftDocxEditor({
               Muat Turun Pakej IP (.docx)
             </button>
 
-            <div className="relative">
+            <div ref={exportMenuRef} className="relative">
               <button
                 type="button"
+                aria-expanded={showMoreExports}
                 onClick={() => setShowMoreExports((v) => !v)}
-                className="inline-flex min-h-[42px] items-center gap-1 rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50"
+                className="inline-flex min-h-[44px] items-center gap-1 rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50"
               >
                 <Download className="h-3.5 w-3.5 text-[#0f2744]" />
                 Muat Turun Berasingan
@@ -452,7 +480,7 @@ export default function DraftDocxEditor({
               </button>
 
               {showMoreExports && (
-                <div className="absolute right-0 z-20 mt-1.5 w-52 rounded-xl border border-slate-200 bg-white p-1.5 shadow-lg">
+                <div className="absolute left-0 z-30 mt-1.5 w-56 max-w-[calc(100vw-2rem)] rounded-xl border border-slate-200 bg-white p-1.5 shadow-lg sm:left-auto sm:right-0">
                   {[
                     { type: "borang_114" as const, label: "Borang 114 Sahaja" },
                     { type: "saman_111" as const, label: "Saman 111 Sahaja" },
@@ -464,7 +492,7 @@ export default function DraftDocxEditor({
                       type="button"
                       disabled={exporting !== null}
                       onClick={() => handleExport(item.type)}
-                      className="flex min-h-[40px] w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-semibold text-slate-700 hover:bg-slate-100 hover:text-slate-900"
+                      className="flex min-h-[44px] w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-semibold text-slate-700 hover:bg-slate-100 hover:text-slate-900"
                     >
                       <Download className="h-3.5 w-3.5 text-[#0f2744]" />
                       {item.label}
@@ -526,7 +554,7 @@ export default function DraftDocxEditor({
             ref={(el) => {
               sectionRefs.current.borang114 = el;
             }}
-            className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm space-y-3 sm:p-5"
+            className="scroll-mt-20 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm space-y-3 sm:p-5"
           >
             <div className="flex items-center justify-between border-b border-slate-200 pb-2.5">
               <h4 className="text-sm font-extrabold text-slate-900">
@@ -693,7 +721,7 @@ export default function DraftDocxEditor({
             ref={(el) => {
               sectionRefs.current.saman111 = el;
             }}
-            className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm space-y-3 sm:p-5"
+            className="scroll-mt-20 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm space-y-3 sm:p-5"
           >
             <h4 className="border-b border-slate-200 pb-2 text-sm font-extrabold text-slate-900">
               Saman (Mahkamah 111) &amp; Hujahan Pemberatan Hukuman
@@ -792,7 +820,7 @@ export default function DraftDocxEditor({
                         })
                       }
                       className="inline-flex min-h-[38px] min-w-[38px] items-center justify-center rounded-lg bg-rose-50 text-rose-600 hover:bg-rose-100"
-                      title="Padam poin"
+                      title="Padam perkara"
                     >
                       <Trash2 className="h-4 w-4" />
                     </button>
@@ -811,7 +839,7 @@ export default function DraftDocxEditor({
             ref={(el) => {
               sectionRefs.current.fakta = el;
             }}
-            className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm space-y-2 sm:p-5"
+            className="scroll-mt-20 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm space-y-2 sm:p-5"
           >
             <h4 className="text-sm font-extrabold text-slate-900">Fakta Kes Ringkas</h4>
             <textarea
@@ -826,11 +854,30 @@ export default function DraftDocxEditor({
             ref={(el) => {
               sectionRefs.current.minit = el;
             }}
-            className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm space-y-3 sm:p-5"
+            className="scroll-mt-20 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm space-y-3 sm:p-5"
           >
-            <h4 className="border-b border-slate-200 pb-2 text-sm font-extrabold text-slate-900">
-              Kertas Minit Siasatan ({minitList.length} Minit)
-            </h4>
+            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-2">
+              <h4 className="text-sm font-extrabold text-slate-900">
+                Kertas Minit Siasatan ({minitList.length} Minit)
+              </h4>
+              <button
+                type="button"
+                onClick={() => {
+                  const nextBil = String(minitList.length + 1);
+                  const nextEntry: MinitEntry = {
+                    bil: nextBil,
+                    daripada: "Pegawai Penyiasat (IO)",
+                    kepada: "Ketua Unit UIP / TPR",
+                    tarikh: "",
+                    kandungan: "",
+                  };
+                  onChangeDraft({ ...draft, minit_ip: [...minitList, nextEntry] });
+                }}
+                className="inline-flex min-h-[40px] items-center gap-1 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-bold text-[#0f2744] hover:bg-slate-50"
+              >
+                <Plus className="h-3.5 w-3.5" /> Tambah Minit
+              </button>
+            </div>
             <div className="divide-y divide-slate-200">
               {minitList.map((m, idx) => (
                 <div key={idx} className="space-y-2.5 py-3 first:pt-1 last:pb-0">
@@ -910,7 +957,7 @@ export default function DraftDocxEditor({
             ref={(el) => {
               sectionRefs.current.kronologi = el;
             }}
-            className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm space-y-3 sm:p-5"
+            className="scroll-mt-20 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm space-y-3 sm:p-5"
           >
             <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-2">
               <h4 className="text-sm font-extrabold text-slate-900">
@@ -988,7 +1035,7 @@ export default function DraftDocxEditor({
             ref={(el) => {
               sectionRefs.current.cadangan = el;
             }}
-            className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm space-y-2 sm:p-5"
+            className="scroll-mt-20 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm space-y-2 sm:p-5"
           >
             <h4 className="text-sm font-extrabold text-slate-900">
               Kertas Cadangan Pegawai Penyiasat (IO)
@@ -1010,7 +1057,7 @@ export default function DraftDocxEditor({
             ref={(el) => {
               sectionRefs.current.saksi = el;
             }}
-            className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm space-y-3 sm:p-5"
+            className="scroll-mt-20 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm space-y-3 sm:p-5"
           >
             <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-2">
               <h4 className="text-sm font-extrabold text-slate-900">
@@ -1106,11 +1153,11 @@ export default function DraftDocxEditor({
             ref={(el) => {
               sectionRefs.current.eksibit = el;
             }}
-            className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm space-y-3 sm:p-5"
+            className="scroll-mt-20 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm space-y-3 sm:p-5"
           >
             <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-2">
               <h4 className="text-sm font-extrabold text-slate-900">
-                Senarai Barang Kes / Eksibit ({draft.senarai_eksibit.length} Item)
+                Senarai Barang Kes / Eksibit ({draft.senarai_eksibit.length} Barang Kes)
               </h4>
               <button
                 type="button"
@@ -1202,7 +1249,7 @@ export default function DraftDocxEditor({
             ref={(el) => {
               sectionRefs.current.sijil90a = el;
             }}
-            className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm space-y-3 sm:p-5"
+            className="scroll-mt-20 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm space-y-3 sm:p-5"
           >
             <h4 className="border-b border-slate-200 pb-2 text-sm font-extrabold text-slate-900">
               Sijil Seksyen 90A(2) Akta Keterangan 1950
@@ -1251,7 +1298,21 @@ export default function DraftDocxEditor({
                 />
               </div>
               <div>
-                <label className="text-xs font-semibold text-slate-600">Komputer &amp; Pencetak Pejabat</label>
+                <label className="text-xs font-semibold text-slate-600">Pejabat Kesihatan (PKD / PKK / PKB)</label>
+                <input
+                  type="text"
+                  value={draft.sijil_90a.pejabat_pkd || ""}
+                  onChange={(e) =>
+                    onChangeDraft({
+                      ...draft,
+                      sijil_90a: { ...draft.sijil_90a, pejabat_pkd: e.target.value },
+                    })
+                  }
+                  className={INPUT_CLASS}
+                />
+              </div>
+              <div>
+                <label className="text-xs font-semibold text-slate-600">Komputer Pejabat</label>
                 <input
                   type="text"
                   value={draft.sijil_90a.perihal_komputer}
@@ -1259,6 +1320,20 @@ export default function DraftDocxEditor({
                     onChangeDraft({
                       ...draft,
                       sijil_90a: { ...draft.sijil_90a, perihal_komputer: e.target.value },
+                    })
+                  }
+                  className={INPUT_CLASS}
+                />
+              </div>
+              <div className="sm:col-span-2">
+                <label className="text-xs font-semibold text-slate-600">Pencetak Pejabat</label>
+                <input
+                  type="text"
+                  value={draft.sijil_90a.perihal_pencetak || ""}
+                  onChange={(e) =>
+                    onChangeDraft({
+                      ...draft,
+                      sijil_90a: { ...draft.sijil_90a, perihal_pencetak: e.target.value },
                     })
                   }
                   className={INPUT_CLASS}
@@ -1295,7 +1370,7 @@ export default function DraftDocxEditor({
             ref={(el) => {
               sectionRefs.current.rakaman112 = el;
             }}
-            className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm space-y-2 sm:p-5"
+            className="scroll-mt-20 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm space-y-2 sm:p-5"
           >
             <h4 className="text-sm font-extrabold text-slate-900">
               Draf Rakaman Percakapan Seksyen 112 KTJ
@@ -1312,7 +1387,7 @@ export default function DraftDocxEditor({
             ref={(el) => {
               sectionRefs.current.diari = el;
             }}
-            className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm space-y-3 sm:p-5"
+            className="scroll-mt-20 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm space-y-3 sm:p-5"
           >
             <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-2">
               <h4 className="text-sm font-extrabold text-slate-900">
@@ -1323,7 +1398,7 @@ export default function DraftDocxEditor({
                 onClick={addDiariRow}
                 className="inline-flex min-h-[36px] items-center gap-1 rounded-lg bg-blue-50 px-3 py-1.5 text-xs font-bold text-blue-800 hover:bg-blue-100"
               >
-                <Plus className="h-3.5 w-3.5" /> Tambah Baris DS
+                <Plus className="h-3.5 w-3.5" /> Tambah Catatan Diari
               </button>
             </div>
             <div className="divide-y divide-slate-200">
@@ -1454,7 +1529,7 @@ export default function DraftDocxEditor({
                       onClick={() => setExpandedCitations((p) => ({ ...p, [i]: !p[i] }))}
                       className="text-xs font-bold text-teal-700 hover:underline"
                     >
-                      {isExp ? "Ringkas" : "Baca Penuh"}
+                      {isExp ? "Ringkaskan" : "Baca Penuh"}
                     </button>
                   </div>
                   <p className={`mt-1 whitespace-pre-line ${isExp ? "" : "line-clamp-3"}`}>

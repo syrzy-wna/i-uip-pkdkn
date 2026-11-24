@@ -35,6 +35,7 @@ import {
   fetchDevVaultRecords,
   retryDevVaultS3Sync,
 } from "@/lib/api";
+import { copyTextSafe } from "@/lib/uiHelpers";
 import type {
   DevVaultCategory,
   DevVaultExportMode,
@@ -244,10 +245,12 @@ export default function DevVaultTab({
 
   const activeDetail = selectedId ? detailCache[selectedId] || null : null;
 
-  const handleCopyText = (key: string, text: string) => {
-    navigator.clipboard?.writeText(text);
-    setCopiedId(key);
-    window.setTimeout(() => setCopiedId(null), 1600);
+  const handleCopyText = async (key: string, text: string) => {
+    const ok = await copyTextSafe(text);
+    if (ok) {
+      setCopiedId(key);
+      window.setTimeout(() => setCopiedId(null), 1600);
+    }
   };
 
   const handleDownloadAttachment = async (kind: "attachment" | "json") => {
@@ -301,7 +304,7 @@ export default function DevVaultTab({
       setActionMsg(
         mode === "redacted"
           ? "Pakej ZIP Versi PDPA Disamarkan berjaya dieksport."
-          : "Pakej ZIP Bundle Lengkap berjaya dieksport."
+          : "Pakej ZIP Lengkap berjaya dieksport."
       );
     } catch (err) {
       setError(err instanceof Error ? err.message : "Gagal mengeksport pakej dokumentasi.");
@@ -372,14 +375,14 @@ export default function DevVaultTab({
             {health?.is_cloud_bucket ? (
               <span>
                 Bucket Persendirian: <code className="font-mono font-bold">{health.bucket_name}</code>{" "}
-                ({health.bucket_region}) • Semua pengguna didaftar, soalan &amp; dokumen analisa disalin automatik.
+                ({health.bucket_region}) • Semua pengguna didaftar, soalan &amp; dokumen analisis disalin automatik.
               </span>
             ) : (
               <span>
                 Disimpan kekal dalam enjin <strong>{health?.db_engine === "postgresql" ? "PostgreSQL Neon" : "SQLite"}</strong>{" "}
                 {health?.local_vault_path ? (
                   <>
-                    &amp; vault tempatan <code className="font-mono">{health.local_vault_path}</code>
+                    &amp; arkib tempatan <code className="font-mono">{health.local_vault_path}</code>
                   </>
                 ) : null}
                 .{" "}
@@ -396,14 +399,14 @@ export default function DevVaultTab({
               type="button"
               onClick={handleRetryS3Sync}
               disabled={syncingS3}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-blue-300 bg-blue-50 px-3 py-1.5 text-xs font-bold text-blue-900 hover:bg-blue-100 disabled:opacity-60"
+              className="inline-flex min-h-[40px] items-center gap-1.5 rounded-lg border border-blue-300 bg-blue-50 px-3 py-1.5 text-xs font-bold text-blue-900 hover:bg-blue-100 disabled:opacity-60 sm:min-h-0"
             >
               {syncingS3 ? (
                 <Loader2 className="h-3.5 w-3.5 animate-spin" />
               ) : (
                 <RefreshCw className="h-3.5 w-3.5" />
               )}
-              Sync {health.unsynced_count} ke Bucket S3
+              Selaraskan {health.unsynced_count} ke Bucket S3
             </button>
           )}
 
@@ -412,7 +415,7 @@ export default function DevVaultTab({
             onClick={() => handleExport("redacted")}
             disabled={exportingMode !== null}
             title="Selamat untuk dokumentasi & penambahbaikan model (PII disamarkan)"
-            className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-300 bg-emerald-50 px-3 py-1.5 text-xs font-bold text-emerald-900 hover:bg-emerald-100 disabled:opacity-60"
+            className="inline-flex min-h-[40px] items-center gap-1.5 rounded-lg border border-emerald-300 bg-emerald-50 px-3 py-1.5 text-xs font-bold text-emerald-900 hover:bg-emerald-100 disabled:opacity-60 sm:min-h-0"
           >
             {exportingMode === "redacted" ? (
               <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -427,14 +430,14 @@ export default function DevVaultTab({
             onClick={() => handleExport("full")}
             disabled={exportingMode !== null}
             title="Mengandungi profil penuh, teks asal & lampiran fail asal"
-            className="inline-flex items-center gap-1.5 rounded-lg bg-[#0f2744] px-3 py-1.5 text-xs font-bold text-white hover:bg-slate-800 disabled:opacity-60"
+            className="inline-flex min-h-[40px] items-center gap-1.5 rounded-lg bg-[#0f2744] px-3 py-1.5 text-xs font-bold text-white hover:bg-slate-800 disabled:opacity-60 sm:min-h-0"
           >
             {exportingMode === "full" ? (
               <Loader2 className="h-3.5 w-3.5 animate-spin" />
             ) : (
               <FileArchive className="h-3.5 w-3.5" />
             )}
-            Eksport Bundle Lengkap (.zip)
+            Eksport Pakej Lengkap (.zip)
           </button>
         </div>
       </div>
@@ -465,7 +468,7 @@ export default function DevVaultTab({
                   setCategory(item.id);
                   setOffset(0);
                 }}
-                className={`inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-bold transition ${
+                className={`inline-flex min-h-[38px] items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-bold transition sm:min-h-0 ${
                   active
                     ? "bg-[#0f2744] text-white shadow-xs"
                     : "bg-slate-100 text-slate-700 hover:bg-slate-200"
@@ -487,19 +490,20 @@ export default function DevVaultTab({
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="flex flex-wrap items-center gap-2 flex-1">
             <div className="relative flex-1 min-w-[220px] max-w-md">
-              <Search className="absolute left-2.5 top-2 h-3.5 w-3.5 text-slate-400" />
+              <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400" />
               <input
                 type="text"
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
-                placeholder="Cari emel pegawai, soalan, nama fail PDF/OCR atau teks..."
-                className="w-full rounded-lg border border-slate-300 pl-8 pr-7 py-1.5 text-xs focus:border-blue-500 focus:outline-none"
+                placeholder="Cari e-mel pegawai, soalan, nama fail PDF/OCR atau teks..."
+                className="min-h-[44px] w-full rounded-lg border border-slate-300 pl-8 pr-10 py-1.5 text-base focus:border-blue-500 focus:outline-none sm:min-h-[36px] sm:text-xs"
               />
               {searchInput && (
                 <button
                   type="button"
                   onClick={() => setSearchInput("")}
-                  className="absolute right-2 top-2 text-slate-400 hover:text-slate-700"
+                  aria-label="Kosongkan carian"
+                  className="absolute right-1 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-md text-slate-400 hover:bg-slate-100 hover:text-slate-700"
                 >
                   <X className="h-3.5 w-3.5" />
                 </button>
@@ -512,7 +516,7 @@ export default function DevVaultTab({
                 setHasFileOnly((v) => !v);
                 setOffset(0);
               }}
-              className={`inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs font-bold transition ${
+              className={`inline-flex min-h-[44px] items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs font-bold transition sm:min-h-[36px] ${
                 hasFileOnly
                   ? "border-blue-500 bg-blue-50 text-blue-900"
                   : "border-slate-300 bg-white text-slate-700 hover:bg-slate-50"
@@ -532,6 +536,7 @@ export default function DevVaultTab({
                     onClearInitialUserFilter?.();
                     setOffset(0);
                   }}
+                  aria-label="Buang penapis pegawai"
                   className="ml-0.5 rounded-full p-0.5 hover:bg-indigo-200"
                 >
                   <X className="h-3 w-3" />
@@ -544,10 +549,10 @@ export default function DevVaultTab({
             type="button"
             onClick={loadList}
             disabled={loadingList}
-            className="inline-flex items-center gap-1 rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50"
+            className="inline-flex min-h-[44px] items-center gap-1 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 sm:min-h-[36px]"
           >
             <RefreshCw className={`h-3.5 w-3.5 ${loadingList ? "animate-spin" : ""}`} />
-            Segar Semula
+            Muat Semula
           </button>
         </div>
       </div>
@@ -651,7 +656,7 @@ export default function DevVaultTab({
                   type="button"
                   disabled={offset === 0 || loadingList}
                   onClick={() => setOffset(Math.max(0, offset - limit))}
-                  className="rounded border border-slate-300 bg-white px-2 py-0.5 font-semibold hover:bg-slate-100 disabled:opacity-40"
+                  className="min-h-[36px] rounded border border-slate-300 bg-white px-2.5 py-1 font-semibold hover:bg-slate-100 disabled:opacity-40 sm:min-h-0 sm:px-2 sm:py-0.5"
                 >
                   Sebelumnya
                 </button>
@@ -659,7 +664,7 @@ export default function DevVaultTab({
                   type="button"
                   disabled={offset + limit >= listData.total_matching || loadingList}
                   onClick={() => setOffset(offset + limit)}
-                  className="rounded border border-slate-300 bg-white px-2 py-0.5 font-semibold hover:bg-slate-100 disabled:opacity-40"
+                  className="min-h-[36px] rounded border border-slate-300 bg-white px-2.5 py-1 font-semibold hover:bg-slate-100 disabled:opacity-40 sm:min-h-0 sm:px-2 sm:py-0.5"
                 >
                   Seterusnya
                 </button>
@@ -694,9 +699,9 @@ export default function DevVaultTab({
                       <button
                         type="button"
                         onClick={() => setSelectedId(null)}
-                        className="inline-flex items-center gap-1 rounded bg-slate-100 px-2 py-0.5 text-[11px] font-bold text-slate-700 lg:hidden"
+                        className="inline-flex min-h-[38px] items-center gap-1 rounded-md bg-slate-100 px-2.5 py-1 text-xs font-bold text-slate-700 lg:hidden"
                       >
-                        <ArrowLeft className="h-3 w-3" /> Senarai
+                        <ArrowLeft className="h-3.5 w-3.5" /> Senarai
                       </button>
                       <span
                         className={`inline-flex rounded border px-1.5 py-0.5 text-[10px] font-bold ${getCategoryStyle(
@@ -755,7 +760,7 @@ export default function DevVaultTab({
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div className="flex gap-1">
                     {[
-                      { id: "content", label: "Kandungan & Analisa", icon: FileText },
+                      { id: "content", label: "Kandungan & Analisis", icon: FileText },
                       { id: "json", label: "Struktur JSON", icon: FileCode2 },
                       { id: "metadata", label: "Storan & Bucket", icon: Database },
                     ].map((sub) => {
@@ -872,7 +877,7 @@ export default function DevVaultTab({
                             </dd>
                           </div>
                           <div>
-                            <dt className="text-slate-500">Emel Rasmi</dt>
+                            <dt className="text-slate-500">E-mel Rasmi</dt>
                             <dd className="font-bold text-slate-900">
                               {activeDetail.user_snapshot.email || "-"}
                             </dd>
@@ -891,7 +896,7 @@ export default function DevVaultTab({
                             </dd>
                           </div>
                           <div>
-                            <dt className="text-slate-500">Pejabat PKD / JKN</dt>
+                            <dt className="text-slate-500">Pejabat Kesihatan / JKN</dt>
                             <dd className="font-semibold text-slate-800">
                               {activeDetail.user_snapshot.district_pkd || "-"} (
                               {activeDetail.user_snapshot.state_jkn || "-"})
@@ -948,11 +953,11 @@ export default function DevVaultTab({
                       </div>
                     )}
 
-                    {/* Jawapan / Rumusan Analisa */}
+                    {/* Jawapan / Rumusan Analisis */}
                     {(activeDetail.raw_response_text || activeDetail.redacted_response_text) && (
                       <div className="rounded-xl border border-indigo-200 bg-indigo-50/40 p-3">
                         <div className="mb-1.5 text-[11px] font-extrabold uppercase text-indigo-900">
-                          Jawapan AI / Ringkasan Keputusan Analisa
+                          Jawapan AI / Ringkasan Keputusan Analisis
                         </div>
                         <div className="max-h-56 overflow-y-auto whitespace-pre-wrap rounded-lg bg-white p-2.5 text-xs leading-relaxed text-slate-800 ring-1 ring-indigo-100">
                           {showRawPii
@@ -1018,7 +1023,7 @@ export default function DevVaultTab({
                         </strong>
                       </div>
                       <div>
-                        <span className="text-slate-500">Status Sync:</span>{" "}
+                        <span className="text-slate-500">Status Penyelarasan:</span>{" "}
                         <strong className="font-mono text-slate-900">
                           {activeDetail.storage_metadata.sync_status || "-"}
                         </strong>

@@ -10,6 +10,7 @@ import {
   ChevronDown,
   ChevronUp,
   ClipboardCheck,
+  Clock,
   Download,
   FileUp,
   FolderOpen,
@@ -20,6 +21,7 @@ import {
   XCircle,
 } from "lucide-react";
 import { checkCompoundNotice, downloadDocx } from "@/lib/api";
+import { formatDateTimeNowMalay } from "@/lib/uiHelpers";
 import type { CompoundCheckResult, NotisKompaunData } from "@/lib/types";
 
 interface CompoundNoticePanelProps {
@@ -38,6 +40,7 @@ interface CompoundNoticePanelProps {
   onSaveNotice?: () => void;
   onDownloaded?: (filename: string) => void;
   autoCheckNonce?: number;
+  onAutoCheckConsumed?: () => void;
 }
 
 const INPUT_CLASS =
@@ -123,6 +126,7 @@ export default function CompoundNoticePanel({
   onSaveNotice,
   onDownloaded,
   autoCheckNonce = 0,
+  onAutoCheckConsumed,
 }: CompoundNoticePanelProps) {
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [showOptionalPremise, setShowOptionalPremise] = useState(
@@ -161,6 +165,19 @@ export default function CompoundNoticePanel({
   };
 
   const handleLoadDemoSample = async () => {
+    const hasExisting = Boolean(
+      (notice.nama_penerima || "").trim() ||
+        (notice.no_kp || "").trim() ||
+        (notice.kesalahan_ringkas || "").trim()
+    );
+    if (
+      hasExisting &&
+      !window.confirm(
+        "Muatkan contoh notis kompaun ini? Data borang semasa yang belum disimpan akan diganti."
+      )
+    ) {
+      return;
+    }
     const sampleNotice: NotisKompaunData = {
       ...notice,
       no_notis: "KKM/UIP/KOM/154/2026/018",
@@ -199,6 +216,7 @@ export default function CompoundNoticePanel({
 
   useEffect(() => {
     if (autoCheckNonce > 0) {
+      onAutoCheckConsumed?.();
       setStep(3);
       setChecking(true);
       setErrorMsg(null);
@@ -283,7 +301,12 @@ export default function CompoundNoticePanel({
   const handleDownload = async () => {
     if (checkResult && checkResult.counts.GAGAL > 0) {
       const proceed = window.confirm(
-        `Notis ini masih ada ${checkResult.counts.GAGAL} perkara gagal yang boleh membatalkan kompaun. Tetap mahu muat turun fail Word?`
+        `Notis ini masih mempunyai ${checkResult.counts.GAGAL} perkara tidak lulus yang boleh menjejaskan kesahihan kompaun. Teruskan muat turun fail Word?`
+      );
+      if (!proceed) return;
+    } else if (!checkResult && readinessStats.missing.length > 0) {
+      const proceed = window.confirm(
+        `Borang ini belum disemak dan masih mempunyai ${readinessStats.missing.length} ruangan asas belum diisi (${readinessStats.missing.join(", ")}). Teruskan muat turun fail Word?`
       );
       if (!proceed) return;
     }
@@ -293,7 +316,7 @@ export default function CompoundNoticePanel({
     try {
       const fname = await downloadDocx("notis_kompaun", { notis_kompaun: notice });
       setDownloadOkMsg(
-        `Fail ${fname} telah dimuat turun — semak folder Muat Turun pada peranti anda.`
+        `Fail ${fname} telah dimuat turun — semak ruang Muat Turun pada peranti anda.`
       );
       if (onDownloaded) onDownloaded(fname);
     } catch (err) {
@@ -340,13 +363,13 @@ export default function CompoundNoticePanel({
           <div className="flex items-center gap-2">
             <UserCheck className="h-4 w-4 shrink-0 text-amber-700" />
             <span>
-              Simpan <strong>No. Kad Kuasa</strong> sekali sahaja dalam profil supaya setiap Notis Kompaun terisi automatik.
+              Simpan <strong>No. Kad Kuasa</strong> sekali sahaja dalam profil supaya setiap Notis Kompaun diisi secara automatik.
             </span>
           </div>
           <button
             type="button"
             onClick={onOpenProfile}
-            className="font-bold text-[#0f2744] hover:underline"
+            className="inline-flex min-h-[44px] items-center rounded-lg px-2 font-bold text-[#0f2744] hover:bg-amber-100 hover:underline"
           >
             Lengkapkan Profil →
           </button>
@@ -354,7 +377,7 @@ export default function CompoundNoticePanel({
       )}
 
       {/* Kad Hero Pantas: Imbas Foto SSM & Pilihan Kesalahan Lazim */}
-      <section className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5 space-y-4">
+      <section className="space-y-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
             <h2 className="text-base font-extrabold text-slate-900 sm:text-lg">
@@ -389,16 +412,16 @@ export default function CompoundNoticePanel({
               setDownloadOkMsg(null);
               setStep(1);
             }}
-            className="min-h-[36px] rounded-lg px-2.5 text-xs font-semibold text-slate-500 hover:bg-slate-100 hover:text-rose-700"
+            className="inline-flex min-h-[44px] items-center rounded-lg px-3 text-xs font-semibold text-slate-600 hover:bg-slate-100 hover:text-rose-700"
           >
             Kosongkan
           </button>
         </div>
 
         {/* Kad Tindakan Hero: Imbas SSM / Kamera / Contoh */}
-        <div className="rounded-xl border border-slate-200 bg-slate-50 p-3.5 space-y-2.5">
+        <div className="space-y-2.5 rounded-xl border border-slate-200 bg-slate-50 p-3.5">
           <div className="text-xs font-bold text-slate-800">
-            Jimat Masa: Baca Butiran Automatik Daripada Foto SSM atau Kes Sedia Ada
+            Jimat Masa: Baca Butiran Automatik daripada Foto SSM atau Kes Sedia Ada
           </div>
           <div className="flex flex-wrap gap-2">
             <button
@@ -429,7 +452,7 @@ export default function CompoundNoticePanel({
                 className="inline-flex min-h-[44px] items-center gap-1.5 rounded-xl border border-slate-300 bg-white px-3.5 py-2 text-xs font-bold text-slate-800 hover:bg-slate-100 disabled:opacity-60"
               >
                 {autoFillLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4 text-amber-600" />}
-                Isi Automatik Dari Kes
+                Isi Automatik daripada Kes
               </button>
             ) : (
               onOpenCases && (
@@ -446,10 +469,11 @@ export default function CompoundNoticePanel({
 
             <button
               type="button"
-              onClick={handleLoadDemoSample}
-              className="inline-flex min-h-[44px] items-center gap-1.5 rounded-xl border border-slate-300 bg-white px-3.5 py-2 text-xs font-bold text-[#0f2744] hover:bg-slate-100"
+              disabled={checking}
+              onClick={() => void handleLoadDemoSample()}
+              className="inline-flex min-h-[44px] items-center gap-1.5 rounded-xl border border-slate-300 bg-white px-3.5 py-2 text-xs font-bold text-[#0f2744] hover:bg-slate-100 disabled:opacity-60"
             >
-              <Sparkles className="h-4 w-4 text-amber-600" />
+              {checking ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4 text-amber-600" />}
               Cuba Contoh (Lihat Amaran Had RM500)
             </button>
           </div>
@@ -457,13 +481,13 @@ export default function CompoundNoticePanel({
 
         {/* Meter Semakan Pantas Masa Nyata */}
         <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-xs">
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <span className="font-bold text-slate-900">
               Kelengkapan Asas: {readinessStats.completed}/{readinessStats.total}
             </span>
             {readinessStats.missing.length > 0 ? (
               <span className="text-slate-600">
-                • Belum isi: {readinessStats.missing.slice(0, 3).join(", ")}
+                • Belum diisi: {readinessStats.missing.slice(0, 3).join(", ")}
                 {readinessStats.missing.length > 3 ? ` (+${readinessStats.missing.length - 3})` : ""}
               </span>
             ) : (
@@ -481,9 +505,9 @@ export default function CompoundNoticePanel({
         {/* Bar 3 Langkah Stepper (Boleh Klik Terus) */}
         <div className="grid grid-cols-3 gap-2 pt-1">
           {[
-            { num: 1 as const, label: "1. Penerima & Tempat" },
-            { num: 2 as const, label: "2. Kesalahan & Amaun" },
-            { num: 3 as const, label: "3. Semak & Muat Turun" },
+            { num: 1 as const, label: "1. Penerima & Tempat", shortLabel: "1. Penerima" },
+            { num: 2 as const, label: "2. Kesalahan & Amaun", shortLabel: "2. Kesalahan" },
+            { num: 3 as const, label: "3. Semak & Muat Turun", shortLabel: "3. Semak" },
           ].map((s) => {
             const active = step === s.num;
             return (
@@ -497,7 +521,8 @@ export default function CompoundNoticePanel({
                     : "border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100"
                 }`}
               >
-                {s.label}
+                <span className="hidden sm:inline">{s.label}</span>
+                <span className="sm:hidden">{s.shortLabel}</span>
               </button>
             );
           })}
@@ -557,9 +582,19 @@ export default function CompoundNoticePanel({
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-slate-700">
-                  Tarikh &amp; Masa Kesalahan <span className="text-rose-600">*</span>
-                </label>
+                <div className="flex items-center justify-between gap-2">
+                  <label className="text-xs font-semibold text-slate-700">
+                    Tarikh &amp; Masa Kesalahan <span className="text-rose-600">*</span>
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => updateField("tarikh_masa", formatDateTimeNowMalay(true))}
+                    className="inline-flex min-h-[32px] items-center gap-1 rounded-md bg-slate-100 px-2 py-0.5 text-[11px] font-bold text-[#0f2744] hover:bg-slate-200"
+                  >
+                    <Clock className="h-3 w-3" />
+                    Sekarang
+                  </button>
+                </div>
                 <input
                   type="text"
                   value={notice.tarikh_masa || ""}
@@ -587,7 +622,7 @@ export default function CompoundNoticePanel({
               <button
                 type="button"
                 onClick={() => setShowOptionalPremise((v) => !v)}
-                className="inline-flex min-h-[40px] items-center gap-1.5 text-xs font-bold text-[#0f2744] hover:underline"
+                className="inline-flex min-h-[44px] items-center gap-1.5 text-xs font-bold text-[#0f2744] hover:underline"
               >
                 {showOptionalPremise ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
                 <span>Butiran Premis, No. SSM &amp; No. Siri Notis (Pilihan)</span>
@@ -647,20 +682,20 @@ export default function CompoundNoticePanel({
                 Langkah 2: Kesalahan, Amaun &amp; Tempoh Bayaran
               </h3>
               <p className="mt-0.5 text-xs text-slate-600">
-                Pilih satu kesalahan lazim di bawah untuk auto-isi seksyen, amaun &amp; tempoh bayaran, atau taip sendiri.
+                Pilih satu kesalahan lazim di bawah untuk mengisi seksyen, amaun &amp; tempoh bayaran secara automatik, atau taip sendiri.
               </p>
             </div>
 
             {/* Cip 1-Klik Kesalahan Lazim */}
             <div className="space-y-2">
-              <div className="text-xs font-bold text-slate-700">Pilih Pantas Kesalahan Lazim (1 Klik):</div>
+              <div className="text-xs font-bold text-slate-700">Pilihan Pantas Kesalahan Lazim:</div>
               <div className="flex flex-wrap gap-2">
                 {COMMON_OFFENCE_PRESETS.map((preset) => (
                   <button
                     key={preset.label}
                     type="button"
                     onClick={() => applyPresetOffence(preset)}
-                    className="min-h-[40px] rounded-xl border border-slate-300 bg-slate-50 px-3 py-1.5 text-xs font-bold text-slate-800 transition hover:border-[#0f2744] hover:bg-slate-100"
+                    className="min-h-[44px] rounded-xl border border-slate-300 bg-slate-50 px-3 py-2 text-xs font-bold text-slate-800 transition hover:border-[#0f2744] hover:bg-slate-100"
                   >
                     {preset.label}
                   </button>
@@ -760,7 +795,7 @@ export default function CompoundNoticePanel({
                 <button
                   type="button"
                   onClick={() => setShowOptionalAuthority((v) => !v)}
-                  className="inline-flex min-h-[40px] items-center gap-1.5 text-xs font-bold text-slate-600 hover:text-slate-900"
+                  className="inline-flex min-h-[44px] items-center gap-1.5 text-xs font-bold text-slate-600 hover:text-slate-900"
                 >
                   {showOptionalAuthority ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
                   <span>Peruntukan Kuasa Mengkompaun (Diisi Automatik / Pilihan)</span>
@@ -808,7 +843,7 @@ export default function CompoundNoticePanel({
                 Langkah 3: Pegawai Pengeluar, Semakan &amp; Muat Turun Word
               </h3>
               <p className="mt-0.5 text-xs text-slate-600">
-                Pastikan butiran pegawai dan keputusan semakan 10 perkara sah sebelum cetak.
+                Pastikan butiran pegawai dan keputusan semakan 10 perkara adalah sah sebelum dicetak.
               </p>
             </div>
 
@@ -845,7 +880,7 @@ export default function CompoundNoticePanel({
                   className={INPUT_CLASS}
                 >
                   <option value="tandatangan_terima">Penerima (OKS) Tandatangan Terima</option>
-                  <option value="enggan_tandatangan">Penerima Enggan Tandatangan (Perlu Saksi PPKP &amp; Pos AR)</option>
+                  <option value="enggan_tandatangan">Penerima Enggan Tandatangan (Perlu Saksi PPKP &amp; Pos Berdaftar Kad AR)</option>
                 </select>
               </div>
 
@@ -873,7 +908,7 @@ export default function CompoundNoticePanel({
                   onClick={() => setStep(2)}
                   className="inline-flex min-h-[44px] items-center gap-1.5 rounded-xl border border-slate-300 bg-white px-3.5 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50"
                 >
-                  <ArrowLeft className="h-4 w-4" /> Edit Kesalahan
+                  <ArrowLeft className="h-4 w-4" /> Sunting Kesalahan
                 </button>
 
                 <button
@@ -930,7 +965,7 @@ export default function CompoundNoticePanel({
       {checkResult && (
         <section
           ref={resultRef}
-          className="space-y-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
+          className="scroll-mt-20 space-y-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
         >
           <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-3">
             <div>
@@ -939,7 +974,7 @@ export default function CompoundNoticePanel({
                 {checkResult.score_percent}% — {checkResult.readiness_status}
               </div>
             </div>
-            <div className="flex gap-2 text-xs font-bold">
+            <div className="flex flex-wrap gap-2 text-xs font-bold">
               {checkResult.counts.GAGAL > 0 && (
                 <span className="rounded-full bg-rose-100 px-3 py-1 text-rose-800">
                   Gagal: {checkResult.counts.GAGAL}
@@ -969,13 +1004,13 @@ export default function CompoundNoticePanel({
                       item.status === "GAGAL" ? "bg-rose-50/40" : "bg-amber-50/40"
                     }`}
                   >
-                    <div className="flex items-start gap-2.5">
+                    <div className="flex min-w-0 flex-1 items-start gap-2.5">
                       {item.status === "GAGAL" ? (
                         <XCircle className="mt-0.5 h-4 w-4 shrink-0 text-rose-600" />
                       ) : (
                         <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
                       )}
-                      <div>
+                      <div className="min-w-0 flex-1 break-words">
                         <div className="text-sm font-bold text-slate-900">{item.label}</div>
                         <div className="mt-0.5 text-xs leading-relaxed text-slate-700">{item.note}</div>
                       </div>
@@ -983,11 +1018,28 @@ export default function CompoundNoticePanel({
                     <button
                       type="button"
                       onClick={() => {
-                        if (["K01", "K02", "K03", "K04", "K05"].includes(item.code)) setStep(1);
-                        else if (["K06", "K07", "K08"].includes(item.code)) setStep(2);
-                        else setStep(3);
+                        if (item.code === "K03" || item.code === "K04") {
+                          setStep(1);
+                          setShowOptionalPremise(true);
+                        } else if (["K01", "K02", "K05"].includes(item.code)) {
+                          setStep(1);
+                        } else if (["K06", "K07", "K08"].includes(item.code)) {
+                          setStep(2);
+                        } else if (item.code === "K09") {
+                          if ((notice.pegawai_pengeluar || "").trim() && (notice.no_kad_kuasa || "").trim()) {
+                            setStep(1);
+                            setShowOptionalPremise(true);
+                          } else {
+                            setStep(3);
+                          }
+                        } else {
+                          setStep(3);
+                        }
+                        if (typeof window !== "undefined") {
+                          window.scrollTo({ top: 0, behavior: "smooth" });
+                        }
                       }}
-                      className="shrink-0 rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-bold text-[#0f2744] hover:bg-slate-50"
+                      className="inline-flex min-h-[44px] shrink-0 items-center rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-bold text-[#0f2744] hover:bg-slate-50"
                     >
                       Baiki
                     </button>
@@ -1004,22 +1056,19 @@ export default function CompoundNoticePanel({
                 type="button"
                 disabled={notice.kesalahan_ringkas.trim() === checkResult.suggested_offense_text.trim()}
                 onClick={() => {
-                  const current = (notice.kesalahan_ringkas || "").trim();
                   const suggested = (checkResult.suggested_offense_text || "").trim();
-                  if (current.startsWith("Pada ") && current.includes("telah didapati")) {
-                    setErrorMsg("Butiran kesalahan sudah menggunakan format ayat rasmi penuh.");
-                    return;
-                  }
+                  if (!suggested) return;
+                  setErrorMsg(null);
                   updateField("kesalahan_ringkas", suggested);
                 }}
-                className="min-h-[36px] rounded-lg bg-[#0f2744] px-3 py-1.5 text-xs font-bold text-white hover:bg-slate-800 disabled:opacity-50"
+                className="min-h-[44px] rounded-lg bg-[#0f2744] px-3.5 py-2 text-xs font-bold text-white hover:bg-slate-800 disabled:opacity-50"
               >
                 {notice.kesalahan_ringkas.trim() === checkResult.suggested_offense_text.trim()
                   ? "Ayat Sudah Digunakan"
                   : "Guna Ayat Ini"}
               </button>
             </div>
-            <p className="mt-2 text-sm leading-relaxed text-slate-700">
+            <p className="mt-2 break-words text-sm leading-relaxed text-slate-700">
               {checkResult.suggested_offense_text}
             </p>
           </div>
@@ -1029,7 +1078,7 @@ export default function CompoundNoticePanel({
               <button
                 type="button"
                 onClick={() => setShowPassedItems((v) => !v)}
-                className="inline-flex min-h-[38px] items-center gap-1.5 text-xs font-bold text-emerald-800 hover:underline"
+                className="inline-flex min-h-[44px] items-center gap-1.5 text-xs font-bold text-emerald-800 hover:underline"
               >
                 <CheckCircle2 className="h-4 w-4 text-emerald-600" />
                 <span>Lihat {passedChecks.length} perkara yang telah lulus</span>
@@ -1041,7 +1090,7 @@ export default function CompoundNoticePanel({
                   {passedChecks.map((item) => (
                     <div key={item.code} className="flex items-start gap-2.5 p-3 text-xs">
                       <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
-                      <div>
+                      <div className="min-w-0 flex-1 break-words">
                         <div className="font-bold text-slate-900">{item.label}</div>
                         <div className="text-slate-600">{item.note}</div>
                       </div>

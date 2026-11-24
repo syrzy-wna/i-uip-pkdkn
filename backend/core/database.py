@@ -1043,11 +1043,11 @@ class UIPDatabase:
         if existing and owner_user_id and not is_admin:
             existing_owner = str(existing.get("owner_user_id") or "").strip()
             if existing_owner and existing_owner != owner_user_id:
-                raise PermissionError("Akses disekat: Kes IP ini milik pegawai lain.")
+                raise PermissionError("Fail kes ini milik pegawai lain dan tidak boleh diubah suai.")
             if case_id.startswith("kes-akta-") or not existing_owner:
-                raise PermissionError("Akses disekat: Kes sampel rujukan sistem tidak boleh diubah suai.")
+                raise PermissionError("Contoh kes sistem hanya untuk rujukan dan tidak boleh diubah suai. Sila simpan sebagai kes baharu.")
         elif not existing and owner_user_id and not is_admin and case_id.startswith("kes-akta-"):
-            raise PermissionError("Akses disekat: ID kes sampel rujukan sistem tidak boleh dicipta oleh akaun biasa.")
+            raise PermissionError("Contoh kes sistem hanya untuk rujukan dan tidak boleh diubah suai. Sila daftar kes baharu.")
 
         resolved_owner = (
             str(existing.get("owner_user_id") or "")
@@ -1174,9 +1174,9 @@ class UIPDatabase:
         if owner_user_id and not is_admin:
             existing_owner = str(existing.get("owner_user_id") or "").strip()
             if existing_owner and existing_owner != owner_user_id:
-                raise PermissionError("Akses disekat: Anda tidak dibenarkan memadam kes milik pegawai lain.")
+                raise PermissionError("Fail kes ini milik pegawai lain dan tidak boleh dipadam.")
             if not existing_owner or case_id.startswith("kes-akta-"):
-                raise PermissionError("Akses disekat: Kes sampel rujukan sistem tidak boleh dipadam oleh akaun biasa.")
+                raise PermissionError("Contoh kes sistem hanya untuk rujukan dan tidak boleh dipadam.")
         with self._connect() as conn:
             cur = conn.execute("DELETE FROM ip_cases WHERE id = ?", (case_id,))
             conn.commit()
@@ -1264,7 +1264,7 @@ class UIPDatabase:
         """Mengesahkan token Google OAuth 2.0 secara langsung dengan pelayan rasmi Google."""
         if not id_token and not access_token:
             raise ValueError(
-                "Pengesahan Google OAuth 2.0 diperlukan. Sila log masuk melalui butang rasmi Google."
+                "Sila log masuk menggunakan butang rasmi Akaun Google."
             )
 
         if id_token:
@@ -1275,26 +1275,27 @@ class UIPDatabase:
                     timeout=10.0,
                 )
             except Exception as exc:
+                logger.warning("Gagal menghubungi pengesahan Google (id_token): %s", exc)
                 raise ValueError(
-                    f"Gagal menghubungi pelayan pengesahan Google OAuth: {exc}"
+                    "Tidak dapat menghubungi perkhidmatan log masuk Google buat masa ini. Sila cuba semula atau gunakan Log Masuk E-mel."
                 ) from exc
 
             if resp.status_code != 200:
-                raise ValueError("Token ID Google tidak sah atau sudah tamat tempoh.")
+                raise ValueError("Sesi log masuk Google tidak sah atau telah tamat tempoh. Sila tekan butang Google sekali lagi.")
 
             claims = resp.json()
             if str(claims.get("email_verified", "")).lower() != "true":
-                raise ValueError("E-mel Akaun Google anda belum disahkan oleh Google.")
+                raise ValueError("Alamat e-mel Akaun Google anda belum disahkan oleh Google.")
             if settings.google_client_id:
                 aud_id = str(claims.get("aud") or "").strip()
                 if not aud_id or aud_id != settings.google_client_id:
                     raise ValueError(
-                        "Token Google tidak sepadan dengan Google OAuth Client ID aplikasi ini."
+                        "Log masuk Google sedang diselenggara. Sila gunakan Log Masuk E-mel atau hubungi pentadbir sistem."
                     )
             email = str(claims.get("email") or "").strip().lower()
             full_name = str(claims.get("name") or "").strip()
             if not email or "@" not in email:
-                raise ValueError("Maklumat e-mel daripada token Google tidak lengkap.")
+                raise ValueError("Maklumat e-mel daripada Akaun Google tidak lengkap. Sila cuba semula.")
             return {"email": email, "full_name": full_name}
 
         # Aliran Access Token (OAuth 2.0 Token Client Popup): sahkan audience jika Google Client ID dikonfigurasi
@@ -1306,16 +1307,17 @@ class UIPDatabase:
                     timeout=10.0,
                 )
             except Exception as exc:
+                logger.warning("Gagal mengesahkan audience token Google: %s", exc)
                 raise ValueError(
-                    f"Gagal mengesahkan audience token akses Google: {exc}"
+                    "Tidak dapat menghubungi perkhidmatan log masuk Google buat masa ini. Sila cuba semula atau gunakan Log Masuk E-mel."
                 ) from exc
             if ti_resp.status_code != 200:
-                raise ValueError("Token akses Google OAuth tidak sah atau sudah tamat tempoh.")
+                raise ValueError("Sesi log masuk Google tidak sah atau telah tamat tempoh. Sila tekan butang Google sekali lagi.")
             ti_claims = ti_resp.json()
             aud_val = str(ti_claims.get("aud") or ti_claims.get("azp") or "").strip()
             if not aud_val or aud_val != settings.google_client_id:
                 raise ValueError(
-                    "Token akses Google tidak dikeluarkan untuk Google OAuth Client ID aplikasi ini."
+                    "Log masuk Google sedang diselenggara. Sila gunakan Log Masuk E-mel atau hubungi pentadbir sistem."
                 )
 
         try:
@@ -1325,20 +1327,21 @@ class UIPDatabase:
                 timeout=10.0,
             )
         except Exception as exc:
+            logger.warning("Gagal menghubungi Google UserInfo: %s", exc)
             raise ValueError(
-                f"Gagal menghubungi pelayan Google UserInfo: {exc}"
+                "Tidak dapat menghubungi perkhidmatan log masuk Google buat masa ini. Sila cuba semula atau gunakan Log Masuk E-mel."
             ) from exc
 
         if resp.status_code != 200:
-            raise ValueError("Token akses Google OAuth tidak sah atau sudah tamat tempoh.")
+            raise ValueError("Sesi log masuk Google tidak sah atau telah tamat tempoh. Sila tekan butang Google sekali lagi.")
 
         claims = resp.json()
         if not claims.get("email_verified"):
-            raise ValueError("E-mel Akaun Google anda belum disahkan oleh Google.")
+            raise ValueError("Alamat e-mel Akaun Google anda belum disahkan oleh Google.")
         email = str(claims.get("email") or "").strip().lower()
         full_name = str(claims.get("name") or "").strip()
         if not email or "@" not in email:
-            raise ValueError("Maklumat e-mel daripada Google UserInfo tidak lengkap.")
+            raise ValueError("Maklumat e-mel daripada Akaun Google tidak lengkap. Sila cuba semula.")
         return {"email": email, "full_name": full_name}
 
     def authenticate_or_register_google_user(self, payload: Dict[str, Any]) -> Dict[str, Any]:

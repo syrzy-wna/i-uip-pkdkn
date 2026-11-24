@@ -212,7 +212,7 @@ IP_AUDIT_CRITERIA: List[Dict[str, Any]] = [
         "title": "Pelan Lakar Lokasi Kejadian Dilampirkan & Bertandatangan",
         "category": "Dokumen IP",
         "threshold": 0.82,
-        "description": "Pelan lakar premis/tapak menunjukkan kedudukan sebenar barang kes atau tempat pembiakan larva beserta tandatangan IO dan tarikh.",
+        "description": "Pelan lakar premis/tapak menunjukkan kedudukan sebenar barang kes atau tempat pembiakan larva berserta tandatangan IO dan tarikh.",
         "positive_keywords": ["pelan lakar", "rajah kasar", "kedudukan", "ditandatangani oleh io", "bertandatangan io"],
         "negative_keywords": ["tiada pelan lakar", "rajah kasar tidak bertandatangan"],
         "statute_ref": "Standard Penyediaan Kertas Siasatan UIP KKM",
@@ -282,7 +282,7 @@ def extract_text_from_upload(file_bytes: bytes, filename: str) -> str:
     import zipfile
 
     if not file_bytes:
-        raise ValueError("Fail yang dimuat naik kosong (0 bait). Sila muat naik fail yang sah.")
+        raise ValueError("Fail yang dipilih kosong. Sila pilih fail yang mengandungi maklumat kes.")
 
     low = (filename or "").strip().lower()
     if low.endswith(".pdf"):
@@ -571,7 +571,7 @@ class IPTechnicalAuditor:
                     for r in val_res["repealed_hits"][:2]
                 )
             if val_res.get("penalty_mismatches"):
-                return "KETIDAKSEPADANAN HUKUMAN / KOMPAUN: " + "; ".join(val_res["penalty_mismatches"][:2])
+                return "HAD HUKUMAN / KOMPAUN TIDAK TEPAT: " + "; ".join(val_res["penalty_mismatches"][:2])
         return None
 
     @staticmethod
@@ -717,11 +717,12 @@ class IPTechnicalAuditor:
                     "contextual_override": True,
                 }
             return {
-                "score": 0.72,
-                "answer": "No",
-                "status": "SEMAK",
-                "snippet": "Tiada nama atau No. K/P khusus dikesan untuk ditutup.",
-                "recommendation": spec["remedy"],
+                "score": 0.90,
+                "answer": "Yes",
+                "status": "LULUS",
+                "snippet": "Tiada nama atau No. K/P peribadi khusus dikesan dalam teks ini.",
+                "recommendation": "Perlindungan privasi automatik aktif — jika nama atau No. K/P dimasukkan kemudian, sistem akan menutupnya secara automatik sebelum semakan.",
+                "contextual_override": True,
             }
 
         # C11: Peka konteks Akta (Akta 852 iklan/pameran fizikal tidak wajib laporan makmal kecuali sampel cecair dihantar)
@@ -875,13 +876,13 @@ class IPTechnicalAuditor:
             f"Keputusan Semakan ({akta_utama}): {readiness}.",
         ]
         if failed:
-            codes = ", ".join(f"{r.code} ({r.title})" for r in failed[:5])
-            notes.append(f"Wajib baiki sebelum hantar IP ke TPR: {codes}.")
+            failed_titles = ", ".join(r.title for r in failed[:5])
+            notes.append(f"Wajib baiki sebelum hantar IP kepada TPR: {failed_titles}.")
         if review:
-            codes = ", ".join(r.code for r in review[:6])
-            notes.append(f"Sila semak dan sahkan semula dokumen: {codes}.")
+            review_titles = ", ".join(r.title for r in review[:6])
+            notes.append(f"Sila semak dan sahkan semula dokumen: {review_titles}.")
         if not failed and not review:
-            notes.append("Semua 20 perkara asas IP sudah lengkap. Boleh terus hantar untuk permohonan Izin Mendakwa TPR.")
+            notes.append("Semua 20 perkara asas Fail IP sudah lengkap dan sedia dihantar untuk permohonan Izin Mendakwa TPR.")
         return notes
 
     @staticmethod

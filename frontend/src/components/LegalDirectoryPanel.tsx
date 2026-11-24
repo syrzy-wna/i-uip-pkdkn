@@ -36,6 +36,11 @@ import {
   updateMasterOffence,
   verifyGazetteStatuteOrOffence,
 } from "@/lib/api";
+import {
+  copyTextSafe,
+  extractRecommendedCompoundRm,
+  useLockBodyScroll,
+} from "@/lib/uiHelpers";
 import type {
   LegalCoverageReport,
   LegalLibrarySnapshot,
@@ -163,7 +168,7 @@ const CORE_STATUTE_FILE_GUIDE = [
     code: "PPM_1985.pdf",
     statute_id: "PPM_1985",
     akta_code: "Akta 281",
-    title: "Peraturan-Peraturan Makanan 1985 [P.U. (A) 437/1985 — Kemaskini Ogos 2026]",
+    title: "Peraturan-Peraturan Makanan 1985 [P.U. (A) 437/1985 — Kemas Kini Ogos 2026]",
   },
   {
     code: "AKTA_154.pdf",
@@ -237,6 +242,7 @@ export default function LegalDirectoryPanel({
     selectedOffenceIdRef.current = selectedOffenceId;
   }, [selectedOffenceId]);
   const [copiedCharge, setCopiedCharge] = useState<boolean>(false);
+  const [copiedSection, setCopiedSection] = useState<boolean>(false);
   const [showMobileFilters, setShowMobileFilters] = useState<boolean>(false);
   const [mobileOffenceDrawerOpen, setMobileOffenceDrawerOpen] = useState<boolean>(false);
   const [mobileSectionDrawerOpen, setMobileSectionDrawerOpen] = useState<boolean>(false);
@@ -246,6 +252,20 @@ export default function LegalDirectoryPanel({
   const [sectionSearch, setSectionSearch] = useState<string>("");
   const [selectedDocId, setSelectedDocId] = useState<string>("");
 
+  useLockBodyScroll(mobileOffenceDrawerOpen || mobileSectionDrawerOpen);
+
+  useEffect(() => {
+    if (!mobileOffenceDrawerOpen && !mobileSectionDrawerOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setMobileOffenceDrawerOpen(false);
+        setMobileSectionDrawerOpen(false);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [mobileOffenceDrawerOpen, mobileSectionDrawerOpen]);
+
   useEffect(() => {
     if (!isDevAdmin && subTab === "admin") {
       setSubTab("offences");
@@ -254,6 +274,7 @@ export default function LegalDirectoryPanel({
 
   // Borang Admin: Muat Naik Warta PDF & Sunting Pengecualian
   const [uploadFile, setUploadFile] = useState<File | null>(null);
+  const pdfUploadInputRef = useRef<HTMLInputElement | null>(null);
   const [uploadStatuteId, setUploadStatuteId] = useState<string>("AKTA_852");
   const [uploadOfficialTitle, setUploadOfficialTitle] = useState<string>("");
   const [uploadActNumberOrPu, setUploadActNumberOrPu] = useState<string>("");
@@ -464,10 +485,20 @@ export default function LegalDirectoryPanel({
     );
   }, [sectionsForSelectedStatute, selectedDocId]);
 
-  const handleCopyChargeTemplate = (text: string) => {
-    navigator.clipboard?.writeText(text);
-    setCopiedCharge(true);
-    window.setTimeout(() => setCopiedCharge(false), 2000);
+  const handleCopyChargeTemplate = async (text: string) => {
+    const ok = await copyTextSafe(text);
+    if (ok) {
+      setCopiedCharge(true);
+      window.setTimeout(() => setCopiedCharge(false), 2000);
+    }
+  };
+
+  const handleCopySectionText = async (text: string) => {
+    const ok = await copyTextSafe(text);
+    if (ok) {
+      setCopiedSection(true);
+      window.setTimeout(() => setCopiedSection(false), 2000);
+    }
   };
 
   const handleVerifyStatute = async (statuteId: string, verified: boolean) => {
@@ -495,7 +526,7 @@ export default function LegalDirectoryPanel({
         verifiedByAdmin: verified,
         authToken,
       });
-      showToast(`Rekod kesalahan ${offenceId} telah disahkan Warta!`);
+      showToast(`Rekod kesalahan ${offenceId} telah disahkan Warta.`);
       await loadLegalLibrary();
     } catch (err) {
       setErrorMsg(err instanceof Error ? err.message : "Gagal mengesahkan rekod kesalahan.");
@@ -518,7 +549,7 @@ export default function LegalDirectoryPanel({
         authToken
       );
       setEditingOffenceId(null);
-      showToast(`Pengecualian & Perangkap untuk ${offenceId} berjaya disimpan & disahkan!`);
+      showToast(`Pengecualian & Perangkap untuk ${offenceId} berjaya disimpan dan disahkan.`);
       await loadLegalLibrary();
     } catch (err) {
       setErrorMsg(err instanceof Error ? err.message : "Gagal menyimpan suntingan kesalahan.");
@@ -545,6 +576,9 @@ export default function LegalDirectoryPanel({
         authToken,
       });
       setUploadFile(null);
+      if (pdfUploadInputRef.current) {
+        pdfUploadInputRef.current.value = "";
+      }
       const ing = res.legal_library_ingest;
       showToast(
         `Warta ${ing.statute_id} berjaya diindeks (${ing.sections_extracted} seksyen penuh, ${ing.new_offences_swept} kesalahan baharu dikesan, versi ${ing.statute_library_version}).`
@@ -558,13 +592,20 @@ export default function LegalDirectoryPanel({
   };
 
   const handlePurgeQaCache = async () => {
+    if (
+      !window.confirm(
+        "Segarkan semua jawapan terdahulu lama? Soalan seterusnya akan disemak semula berdasarkan pustaka akta terkini."
+      )
+    ) {
+      return;
+    }
     try {
       const res = await purgeAdvisorQaCache(undefined, authToken);
       showToast(
         `${res.stale_records_marked} jawapan terdahulu lama telah disegarkan (Versi Pustaka: ${res.statute_library_version}).`
       );
     } catch (err) {
-      setErrorMsg(err instanceof Error ? err.message : "Gagal membersihkan cache Koleksi Q&A.");
+      setErrorMsg(err instanceof Error ? err.message : "Gagal menyegarkan jawapan terdahulu.");
     }
   };
 
@@ -572,14 +613,6 @@ export default function LegalDirectoryPanel({
     (aktaFilter !== "Semua" ? 1 : 0) +
     (categoryFilter !== "SEMUA" ? 1 : 0) +
     (compoundFilter !== "SEMUA" ? 1 : 0);
-
-  const unverifiedOffencesCount = useMemo(
-    () =>
-      (snapshot?.master_offences_matrix || []).filter(
-        (o) => o.verified_status !== "VERIFIED_AGC"
-      ).length,
-    [snapshot]
-  );
 
   const renderOffenceDetailContent = (off: MasterOffenceRecord) => {
     const isComp = Boolean(off.compound_info?.is_compoundable);
@@ -624,10 +657,14 @@ export default function LegalDirectoryPanel({
                   true
                 );
               }}
-              className="inline-flex min-h-[38px] items-center gap-1.5 rounded-xl bg-blue-600 px-3.5 py-2 text-xs font-extrabold text-white shadow-sm hover:bg-blue-700"
+              className={`inline-flex min-h-[44px] items-center gap-1.5 rounded-xl px-4 py-2 text-xs font-extrabold transition ${
+                isComp
+                  ? "border border-[#0f2744]/30 bg-white text-[#0f2744] hover:bg-slate-50"
+                  : "bg-[#0f2744] text-white shadow-sm hover:bg-slate-800"
+              }`}
             >
               <FileText className="h-4 w-4" />
-              Buka di Editor Fail IP
+              Buka dalam Fail IP
             </button>
 
             {isComp && (
@@ -636,13 +673,16 @@ export default function LegalDirectoryPanel({
                 onClick={() => {
                   if (off.verified_status !== "VERIFIED_AGC") {
                     const proceed = window.confirm(
-                      `Sila semak semula seksyen (${off.offence_section}) dan had kompaun ini dengan Warta rasmi sebelum keluarkan notis.\n\nTeruskan isi ke Borang Notis Kompaun?`
+                      `Sila semak semula seksyen (${off.offence_section}) dan had kompaun ini dengan Warta rasmi sebelum mengeluarkan notis.\n\nTeruskan isi ke Borang Notis Kompaun?`
                     );
                     if (!proceed) return;
                   }
                   const aktaCode = off.canonical_akta_code || "Akta 852";
                   const rawLimit = off.compound_info?.compound_amount_or_limit || "";
-                  const amtMatch = rawLimit.match(/RM\s*[\d,]+(?:\.\d{2})?/i);
+                  const recomAmt = extractRecommendedCompoundRm(
+                    `${off.offence_section} ${aktaCode} ${off.statute_id}`,
+                    rawLimit
+                  );
                   setMobileOffenceDrawerOpen(false);
                   onApplyOffenceToCase(
                     off.charge_sheet_template_bm,
@@ -651,7 +691,7 @@ export default function LegalDirectoryPanel({
                     {
                       seksyen: `${off.offence_section} ${aktaCode}`.trim(),
                       kuasaKompaun: off.compound_info?.compound_authority_section || "",
-                      amaun: amtMatch ? amtMatch[0].toUpperCase() : aktaCode === "Akta 154" ? "RM 500.00" : "RM 250.00",
+                      amaun: recomAmt,
                       tempoh:
                         aktaCode === "Akta 852"
                           ? "30 hari dari tarikh tawaran kompaun"
@@ -660,7 +700,7 @@ export default function LegalDirectoryPanel({
                     }
                   );
                 }}
-                className="inline-flex min-h-[40px] items-center gap-1.5 rounded-xl bg-[#0f2744] px-4 py-2 text-xs font-extrabold text-white shadow-sm hover:bg-slate-800"
+                className="inline-flex min-h-[44px] items-center gap-1.5 rounded-xl bg-[#0f2744] px-4 py-2 text-xs font-extrabold text-white shadow-sm hover:bg-slate-800"
               >
                 <FileCheck2 className="h-4 w-4" />
                 Isi Notis Kompaun
@@ -716,7 +756,22 @@ export default function LegalDirectoryPanel({
             <CheckCircle2 className="h-4 w-4 text-blue-700" />
             Perkara Wajib Dibuktikan
           </h4>
-          <div className="overflow-x-auto">
+          {/* Kad Telefon (<640px) */}
+          <div className="divide-y divide-slate-200/70 sm:hidden">
+            {off.mandatory_elements.map((el) => (
+              <div key={el.element_no} className="space-y-1 py-2.5 text-xs">
+                <div className="font-bold text-slate-900">
+                  <span className="mr-1 font-mono text-blue-900">{el.element_no}.</span>
+                  {el.description}
+                </div>
+                {el.must_prove && (
+                  <p className="text-[11px] leading-relaxed text-slate-600">{el.must_prove}</p>
+                )}
+              </div>
+            ))}
+          </div>
+          {/* Jadual Desktop (>=640px) */}
+          <div className="hidden overflow-x-auto sm:block">
             <table className="w-full border-collapse text-left text-xs">
               <thead>
                 <tr className="border-b border-slate-200 text-[11px] font-extrabold uppercase text-slate-600">
@@ -740,12 +795,12 @@ export default function LegalDirectoryPanel({
           </div>
         </div>
 
-        {/* 3. Elak Kesilapan Biasa PPKP */}
+        {/* 3. Elak Kesilapan Lazim PPKP */}
         <div className="space-y-2 rounded-xl border border-amber-200 border-l-4 border-l-amber-500 bg-amber-50/40 p-4">
           <div className="flex items-center justify-between gap-2">
             <h4 className="flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wide text-amber-950">
               <AlertTriangle className="h-4 w-4 text-amber-700" />
-              Elak Kesilapan Biasa PPKP &amp; Pengecualian
+              Elak Kesilapan Lazim PPKP &amp; Pengecualian
             </h4>
             {isDevAdmin && (
               <button
@@ -754,7 +809,7 @@ export default function LegalDirectoryPanel({
                   setEditingOffenceId(off.offence_id);
                   setEditingExclusionsText(off.explicit_exclusions_and_traps.join("\n"));
                 }}
-                className="inline-flex items-center gap-1 rounded-lg border border-amber-300 bg-white px-2.5 py-1 text-[11px] font-bold text-amber-950 hover:bg-amber-100"
+                className="inline-flex min-h-[36px] items-center gap-1 rounded-lg border border-amber-300 bg-white px-2.5 py-1 text-[11px] font-bold text-amber-950 hover:bg-amber-100"
               >
                 <Edit3 className="h-3 w-3" />
                 Sunting
@@ -768,7 +823,7 @@ export default function LegalDirectoryPanel({
                 rows={4}
                 value={editingExclusionsText}
                 onChange={(e) => setEditingExclusionsText(e.target.value)}
-                className="w-full rounded-xl border border-amber-300 bg-white p-2.5 text-xs text-slate-900"
+                className="w-full rounded-xl border border-amber-300 bg-white p-2.5 text-base text-slate-900 sm:text-xs"
                 placeholder="Satu pengecualian / perangkap setiap baris..."
               />
               <div className="flex items-center gap-2">
@@ -776,7 +831,7 @@ export default function LegalDirectoryPanel({
                   type="button"
                   disabled={savingOffenceEdit}
                   onClick={() => void handleSaveOffenceExclusions(off.offence_id)}
-                  className="inline-flex items-center gap-1.5 rounded-lg bg-amber-700 px-3 py-1.5 text-xs font-extrabold text-white hover:bg-amber-800"
+                  className="inline-flex min-h-[40px] items-center gap-1.5 rounded-lg bg-amber-700 px-3 py-1.5 text-xs font-extrabold text-white hover:bg-amber-800"
                 >
                   <Save className="h-3.5 w-3.5" />
                   {savingOffenceEdit ? "Menyimpan..." : "Simpan & Sahkan Warta"}
@@ -784,7 +839,7 @@ export default function LegalDirectoryPanel({
                 <button
                   type="button"
                   onClick={() => setEditingOffenceId(null)}
-                  className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-bold text-slate-700"
+                  className="min-h-[40px] rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-bold text-slate-700"
                 >
                   Batal
                 </button>
@@ -818,8 +873,8 @@ export default function LegalDirectoryPanel({
               <h4 className="font-extrabold text-slate-900">Draf Pertuduhan (Borang 114)</h4>
               <button
                 type="button"
-                onClick={() => handleCopyChargeTemplate(off.charge_sheet_template_bm)}
-                className="inline-flex items-center gap-1 rounded border border-slate-300 bg-white px-2 py-1 text-[11px] font-bold text-slate-700 hover:bg-slate-100"
+                onClick={() => void handleCopyChargeTemplate(off.charge_sheet_template_bm)}
+                className="inline-flex min-h-[36px] items-center gap-1 rounded-lg border border-slate-300 bg-white px-2.5 py-1 text-xs font-bold text-slate-700 hover:bg-slate-100"
               >
                 {copiedCharge ? (
                   <ClipboardCheck className="h-3.5 w-3.5 text-emerald-600" />
@@ -829,7 +884,7 @@ export default function LegalDirectoryPanel({
                 {copiedCharge ? "Disalin!" : "Salin"}
               </button>
             </div>
-            <p className="mt-2 rounded-lg border border-slate-200 bg-white p-2.5 text-[11px] leading-relaxed text-slate-800">
+            <p className="mt-2 rounded-lg border border-slate-200 bg-white p-2.5 text-xs leading-relaxed text-slate-800">
               {off.charge_sheet_template_bm}
             </p>
           </div>
@@ -917,7 +972,7 @@ export default function LegalDirectoryPanel({
               type="button"
               onClick={() => void loadLegalLibrary()}
               disabled={loading}
-              className="inline-flex min-h-[36px] items-center gap-1.5 rounded-xl border border-slate-300 bg-white px-3 py-1.5 text-xs font-bold text-slate-700 hover:bg-slate-50 disabled:opacity-50"
+              className="inline-flex min-h-[44px] items-center gap-1.5 rounded-xl border border-slate-300 bg-white px-3.5 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 disabled:opacity-50"
             >
               <RefreshCw className={`h-3.5 w-3.5 ${loading ? "animate-spin" : ""}`} />
               Muat Semula
@@ -930,33 +985,33 @@ export default function LegalDirectoryPanel({
           <button
             type="button"
             onClick={() => setSubTab("offences")}
-            className={`inline-flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-extrabold transition ${
+            className={`inline-flex min-h-[44px] items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-extrabold transition ${
               subTab === "offences"
                 ? "bg-[#0f2744] text-white shadow-sm"
                 : "bg-slate-100 text-slate-700 hover:bg-slate-200"
             }`}
           >
-            <Gavel className="h-4 w-4 text-amber-300" />
+            <Gavel className={`h-4 w-4 ${subTab === "offences" ? "text-amber-300" : "text-amber-700"}`} />
             <span>Senarai Kesalahan ({snapshot?.master_offences_matrix.length ?? 0})</span>
           </button>
 
           <button
             type="button"
             onClick={() => setSubTab("statutes")}
-            className={`inline-flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-extrabold transition ${
+            className={`inline-flex min-h-[44px] items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-extrabold transition ${
               subTab === "statutes"
                 ? "bg-[#0f2744] text-white shadow-sm"
                 : "bg-slate-100 text-slate-700 hover:bg-slate-200"
             }`}
           >
-            <BookOpen className="h-4 w-4 text-sky-300" />
+            <BookOpen className={`h-4 w-4 ${subTab === "statutes" ? "text-sky-300" : "text-sky-700"}`} />
             <span>Teks Penuh Akta ({snapshot?.statutes_registry.length ?? 0})</span>
           </button>
 
           <button
             type="button"
             onClick={() => setSubTab("repealed")}
-            className={`inline-flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-extrabold transition ${
+            className={`inline-flex min-h-[44px] items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-extrabold transition ${
               subTab === "repealed"
                 ? "bg-rose-800 text-white shadow-sm"
                 : "bg-rose-50 text-rose-900 hover:bg-rose-100"
@@ -972,7 +1027,7 @@ export default function LegalDirectoryPanel({
             <button
               type="button"
               onClick={() => setSubTab("admin")}
-              className={`inline-flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-extrabold transition ${
+              className={`inline-flex min-h-[44px] items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-extrabold transition ${
                 subTab === "admin"
                   ? "bg-indigo-700 text-white shadow-sm"
                   : "bg-indigo-50 text-indigo-900 hover:bg-indigo-100"
@@ -1001,7 +1056,7 @@ export default function LegalDirectoryPanel({
           <button
             type="button"
             onClick={() => setErrorMsg(null)}
-            className="rounded px-2 py-0.5 text-xs font-extrabold hover:bg-rose-100"
+            className="inline-flex min-h-[40px] items-center rounded-lg px-2.5 text-xs font-extrabold hover:bg-rose-100"
           >
             Tutup
           </button>
@@ -1031,13 +1086,13 @@ export default function LegalDirectoryPanel({
                   value={offenceSearch}
                   onChange={(e) => setOffenceSearch(e.target.value)}
                   placeholder="Cari seksyen, kesalahan atau kata kunci..."
-                  className="w-full rounded-xl border border-slate-300 bg-slate-50/70 py-2.5 pl-9 pr-3 text-sm text-slate-900 focus:border-blue-600 focus:bg-white focus:outline-none"
+                  className="min-h-[44px] w-full rounded-xl border border-slate-300 bg-slate-50/70 py-2.5 pl-9 pr-3 text-base text-slate-900 focus:border-blue-600 focus:bg-white focus:outline-none sm:text-sm"
                 />
               </div>
               <button
                 type="button"
                 onClick={() => setShowMobileFilters((v) => !v)}
-                className={`inline-flex min-h-[42px] shrink-0 items-center gap-1.5 rounded-xl border px-3.5 py-2 text-xs font-extrabold transition ${
+                className={`inline-flex min-h-[44px] shrink-0 items-center gap-1.5 rounded-xl border px-3.5 py-2 text-xs font-extrabold transition ${
                   showMobileFilters || activeFilterCount > 0
                     ? "border-[#0f2744] bg-[#0f2744] text-white"
                     : "border-slate-300 bg-white text-slate-700"
@@ -1067,7 +1122,7 @@ export default function LegalDirectoryPanel({
                   aria-label="Tapis Akta Kesalahan"
                   value={aktaFilter}
                   onChange={(e) => setAktaFilter(e.target.value)}
-                  className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs font-bold text-slate-800"
+                  className="min-h-[44px] w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-base font-bold text-slate-800 sm:text-sm"
                 >
                   <option value="Semua">Semua Akta KKM</option>
                   <option value="Akta 852">Akta 852 (Merokok / Vape)</option>
@@ -1089,7 +1144,7 @@ export default function LegalDirectoryPanel({
                   onChange={(e) =>
                     setCategoryFilter(e.target.value as TargetOffenderCategory | "SEMUA")
                   }
-                  className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs font-bold text-slate-800"
+                  className="min-h-[44px] w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-base font-bold text-slate-800 sm:text-sm"
                 >
                   {Object.entries(OFFENDER_CATEGORY_LABELS).map(([key, label]) => (
                     <option key={key} value={key}>
@@ -1111,7 +1166,7 @@ export default function LegalDirectoryPanel({
                       e.target.value as "SEMUA" | "BOLEH_KOMPAUN" | "TERUS_MAHKAMAH"
                     )
                   }
-                  className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs font-bold text-slate-800"
+                  className="min-h-[44px] w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-base font-bold text-slate-800 sm:text-sm"
                 >
                   <option value="SEMUA">Semua Status</option>
                   <option value="BOLEH_KOMPAUN">Boleh Kompaun</option>
@@ -1124,13 +1179,13 @@ export default function LegalDirectoryPanel({
                   Carian Pantas
                 </label>
                 <div className="relative">
-                  <Search className="pointer-events-none absolute left-3 top-2.5 h-3.5 w-3.5 text-slate-400" />
+                  <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
                   <input
                     type="text"
                     value={offenceSearch}
                     onChange={(e) => setOffenceSearch(e.target.value)}
                     placeholder="Cth: Seksyen 17, tifoid, jentik..."
-                    className="w-full rounded-xl border border-slate-300 bg-slate-50/60 py-2 pl-8 pr-3 text-xs font-medium text-slate-900 focus:border-blue-600 focus:bg-white focus:outline-none"
+                    className="min-h-[44px] w-full rounded-xl border border-slate-300 bg-slate-50/60 py-2 pl-9 pr-3 text-base font-medium text-slate-900 focus:border-blue-600 focus:bg-white focus:outline-none sm:text-sm"
                   />
                 </div>
               </div>
@@ -1167,7 +1222,9 @@ export default function LegalDirectoryPanel({
                         type="button"
                         onClick={() => {
                           setSelectedOffenceId(off.offence_id);
-                          setMobileOffenceDrawerOpen(true);
+                          if (typeof window !== "undefined" && window.innerWidth < 1024) {
+                            setMobileOffenceDrawerOpen(true);
+                          }
                         }}
                         className={`flex w-full flex-col items-start rounded-2xl border p-3.5 text-left transition ${
                           isSelected
@@ -1225,12 +1282,15 @@ export default function LegalDirectoryPanel({
           {/* Modal / Drawer Perincian Kesalahan Untuk Telefon & Tablet (< lg) */}
           {mobileOffenceDrawerOpen && activeOffence && (
             <div
+              role="dialog"
+              aria-modal="true"
+              aria-label="Perincian Kesalahan"
               onClick={(e) => {
                 if (e.target === e.currentTarget) setMobileOffenceDrawerOpen(false);
               }}
               className="fixed inset-0 z-50 flex items-end justify-center bg-slate-900/50 backdrop-blur-[1px] lg:hidden"
             >
-              <div className="flex max-h-[90dvh] w-full flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl">
+              <div className="pb-safe flex max-h-[90dvh] w-full flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl">
                 <div className="flex items-center justify-between border-b border-slate-200 bg-slate-50 px-4 py-3">
                   <div className="min-w-0 pr-2">
                     <div className="text-[11px] font-extrabold uppercase tracking-wide text-blue-900">
@@ -1245,7 +1305,7 @@ export default function LegalDirectoryPanel({
                     type="button"
                     onClick={() => setMobileOffenceDrawerOpen(false)}
                     aria-label="Tutup perincian kesalahan"
-                    className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-slate-300 bg-white text-slate-700 hover:bg-slate-100"
+                    className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-slate-300 bg-white text-slate-700 hover:bg-slate-100"
                   >
                     <X className="h-4 w-4" />
                   </button>
@@ -1349,49 +1409,66 @@ export default function LegalDirectoryPanel({
             <div className="grid grid-cols-1 gap-4 lg:grid-cols-12">
               {/* Lajur Kiri: Senarai Bahagian & Seksyen */}
               <div className="max-h-[680px] space-y-3 overflow-y-auto pr-1 lg:col-span-5">
-                {groupedSectionsByPart.map((grp) => (
-                  <div
-                    key={grp.partKey}
-                    className="rounded-2xl border border-slate-200 bg-white p-3 shadow-xs"
-                  >
-                    <div className="mb-2 border-b border-slate-100 pb-1.5 text-[11px] font-extrabold uppercase tracking-wide text-blue-900">
-                      {grp.partLabel}
-                    </div>
-                    <div className="space-y-1.5">
-                      {grp.sections.map((sec) => {
-                        const isSel = activeSectionDetail?.doc_id === sec.doc_id;
-                        return (
-                          <button
-                            key={sec.doc_id}
-                            type="button"
-                            onClick={() => {
-                              setSelectedDocId(sec.doc_id);
-                              setMobileSectionDrawerOpen(true);
-                            }}
-                            className={`flex w-full flex-col items-start rounded-xl border p-2.5 text-left text-xs transition ${
-                              isSel
-                                ? "border-blue-600 bg-blue-50/70 font-bold text-blue-950"
-                                : "border-slate-100 bg-slate-50/60 text-slate-800 hover:border-blue-200 hover:bg-white"
-                            }`}
-                          >
-                            <div className="flex w-full items-center justify-between gap-2">
-                              <span className="font-extrabold text-slate-900">
-                                {sec.section_code} — {sec.section_heading}
-                              </span>
-                              <span className="shrink-0 rounded bg-white px-1.5 py-0.5 text-[10px] font-bold text-slate-600">
-                                {sec.is_offence_provision
-                                  ? "Kesalahan"
-                                  : sec.is_penalty_provision
-                                    ? "Hukuman"
-                                    : "Prosedur"}
-                              </span>
-                            </div>
-                          </button>
-                        );
-                      })}
-                    </div>
+                {groupedSectionsByPart.length === 0 ? (
+                  <div className="space-y-2.5 rounded-2xl border border-slate-200 bg-white p-6 text-center text-xs text-slate-600">
+                    <p className="font-bold text-slate-800">
+                      Tiada seksyen sepadan dengan carian &ldquo;{sectionSearch}&rdquo;.
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => setSectionSearch("")}
+                      className="min-h-[44px] rounded-xl border border-slate-300 bg-white px-4 py-2 text-xs font-bold text-[#0f2744] hover:bg-slate-50"
+                    >
+                      Kosongkan Carian
+                    </button>
                   </div>
-                ))}
+                ) : (
+                  groupedSectionsByPart.map((grp) => (
+                    <div
+                      key={grp.partKey}
+                      className="rounded-2xl border border-slate-200 bg-white p-3 shadow-xs"
+                    >
+                      <div className="mb-2 border-b border-slate-100 pb-1.5 text-[11px] font-extrabold uppercase tracking-wide text-blue-900">
+                        {grp.partLabel}
+                      </div>
+                      <div className="space-y-1.5">
+                        {grp.sections.map((sec) => {
+                          const isSel = activeSectionDetail?.doc_id === sec.doc_id;
+                          return (
+                            <button
+                              key={sec.doc_id}
+                              type="button"
+                              onClick={() => {
+                                setSelectedDocId(sec.doc_id);
+                                if (typeof window !== "undefined" && window.innerWidth < 1024) {
+                                  setMobileSectionDrawerOpen(true);
+                                }
+                              }}
+                              className={`flex min-h-[44px] w-full flex-col items-start rounded-xl border p-2.5 text-left text-xs transition ${
+                                isSel
+                                  ? "border-blue-600 bg-blue-50/70 font-bold text-blue-950"
+                                  : "border-slate-100 bg-slate-50/60 text-slate-800 hover:border-blue-200 hover:bg-white"
+                              }`}
+                            >
+                              <div className="flex w-full items-center justify-between gap-2">
+                                <span className="font-extrabold text-slate-900">
+                                  {sec.section_code} — {sec.section_heading}
+                                </span>
+                                <span className="shrink-0 rounded bg-white px-1.5 py-0.5 text-[10px] font-bold text-slate-600">
+                                  {sec.is_offence_provision
+                                    ? "Kesalahan"
+                                    : sec.is_penalty_provision
+                                      ? "Hukuman"
+                                      : "Prosedur"}
+                                </span>
+                              </div>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ))
+                )}
               </div>
 
               {/* Lajur Kanan (Desktop sahaja): Paparan Teks Penuh Seksyen */}
@@ -1422,14 +1499,18 @@ export default function LegalDirectoryPanel({
                       <button
                         type="button"
                         onClick={() =>
-                          handleCopyChargeTemplate(
+                          void handleCopySectionText(
                             `${activeStatuteMeta?.act_number_or_pu || activeSectionDetail.statute_id} — Seksyen ${activeSectionDetail.section_code} (${activeSectionDetail.section_heading}):\n${activeSectionDetail.verbatim_text_bm}`
                           )
                         }
-                        className="inline-flex items-center gap-1.5 rounded-xl border border-slate-300 bg-white px-3 py-1.5 text-xs font-bold text-slate-700 hover:bg-slate-50"
+                        className="inline-flex min-h-[40px] items-center gap-1.5 rounded-xl border border-slate-300 bg-white px-3 py-1.5 text-xs font-bold text-slate-700 hover:bg-slate-50"
                       >
-                        <Copy className="h-3.5 w-3.5" />
-                        Salin Teks
+                        {copiedSection ? (
+                          <ClipboardCheck className="h-3.5 w-3.5 text-emerald-600" />
+                        ) : (
+                          <Copy className="h-3.5 w-3.5" />
+                        )}
+                        {copiedSection ? "Disalin!" : "Salin Teks"}
                       </button>
                     </div>
 
@@ -1454,12 +1535,15 @@ export default function LegalDirectoryPanel({
           {/* Modal / Drawer Teks Seksyen Untuk Telefon & Tablet (< lg) */}
           {mobileSectionDrawerOpen && activeSectionDetail && (
             <div
+              role="dialog"
+              aria-modal="true"
+              aria-label="Teks Asal Seksyen"
               onClick={(e) => {
                 if (e.target === e.currentTarget) setMobileSectionDrawerOpen(false);
               }}
               className="fixed inset-0 z-50 flex items-end justify-center bg-slate-900/50 backdrop-blur-[1px] lg:hidden"
             >
-              <div className="flex max-h-[90dvh] w-full flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl">
+              <div className="pb-safe flex max-h-[90dvh] w-full flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl">
                 <div className="flex items-center justify-between border-b border-slate-200 bg-slate-50 px-4 py-3">
                   <div className="min-w-0 pr-2">
                     <div className="text-[11px] font-extrabold text-blue-900">
@@ -1473,7 +1557,7 @@ export default function LegalDirectoryPanel({
                     type="button"
                     onClick={() => setMobileSectionDrawerOpen(false)}
                     aria-label="Tutup teks seksyen"
-                    className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-slate-300 bg-white text-slate-700 hover:bg-slate-100"
+                    className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-slate-300 bg-white text-slate-700 hover:bg-slate-100"
                   >
                     <X className="h-4 w-4" />
                   </button>
@@ -1487,14 +1571,18 @@ export default function LegalDirectoryPanel({
                   <button
                     type="button"
                     onClick={() =>
-                      handleCopyChargeTemplate(
+                      void handleCopySectionText(
                         `${activeStatuteMeta?.act_number_or_pu || activeSectionDetail.statute_id} — Seksyen ${activeSectionDetail.section_code}:\n${activeSectionDetail.verbatim_text_bm}`
                       )
                     }
-                    className="inline-flex w-full items-center justify-center gap-1.5 rounded-xl border border-slate-300 bg-white py-2.5 text-xs font-bold text-slate-800 hover:bg-slate-50"
+                    className="inline-flex min-h-[44px] w-full items-center justify-center gap-1.5 rounded-xl border border-slate-300 bg-white py-2.5 text-xs font-bold text-slate-800 hover:bg-slate-50"
                   >
-                    <Copy className="h-3.5 w-3.5" />
-                    Salin Teks Asal Seksyen
+                    {copiedSection ? (
+                      <ClipboardCheck className="h-4 w-4 text-emerald-600" />
+                    ) : (
+                      <Copy className="h-4 w-4" />
+                    )}
+                    {copiedSection ? "Teks Seksyen Disalin!" : "Salin Teks Asal Seksyen"}
                   </button>
                 </div>
               </div>
@@ -1584,7 +1672,7 @@ export default function LegalDirectoryPanel({
               <button
                 type="button"
                 onClick={() => void handlePurgeQaCache()}
-                className="inline-flex min-h-[40px] items-center gap-1.5 rounded-xl border border-rose-300 bg-rose-50 px-3.5 py-2 text-xs font-extrabold text-rose-900 hover:bg-rose-100"
+                className="inline-flex min-h-[44px] items-center gap-1.5 rounded-xl border border-rose-300 bg-rose-50 px-3.5 py-2 text-xs font-extrabold text-rose-900 hover:bg-rose-100"
               >
                 <Trash2 className="h-3.5 w-3.5 text-rose-700" />
                 Segarkan Jawapan Terdahulu Lama
@@ -1602,7 +1690,7 @@ export default function LegalDirectoryPanel({
             )}
 
             <div className="overflow-x-auto">
-              <table className="w-full border-collapse text-left text-xs">
+              <table className="w-full min-w-[680px] border-collapse text-left text-xs">
                 <thead>
                   <tr className="border-b border-slate-200 bg-slate-50 text-xs font-extrabold uppercase text-slate-600">
                     <th className="p-2.5">Kod Statut</th>
@@ -1670,7 +1758,7 @@ export default function LegalDirectoryPanel({
                             onClick={() =>
                               void handleVerifyStatute(st.statute_id, !st.verified_by_admin)
                             }
-                            className={`min-h-[36px] rounded-lg px-3 py-1 text-xs font-extrabold transition ${
+                            className={`min-h-[40px] rounded-lg px-3 py-1.5 text-xs font-extrabold transition ${
                               st.verified_by_admin
                                 ? "border border-slate-300 bg-white text-slate-700 hover:bg-slate-100"
                                 : "bg-emerald-600 text-white hover:bg-emerald-700"
@@ -1721,7 +1809,7 @@ export default function LegalDirectoryPanel({
                         setUploadActNumberOrPu(matched.akta_code);
                       }
                     }}
-                    className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs font-bold text-slate-900"
+                    className="min-h-[44px] w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-base font-bold text-slate-900 sm:text-xs"
                   >
                     {CORE_STATUTE_FILE_GUIDE.map((g) => (
                       <option key={g.statute_id} value={g.statute_id}>
@@ -1740,7 +1828,7 @@ export default function LegalDirectoryPanel({
                     value={uploadActNumberOrPu}
                     onChange={(e) => setUploadActNumberOrPu(e.target.value)}
                     placeholder="Cth: Akta 852 / P.U. (A) 259/2024"
-                    className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs font-bold text-slate-900"
+                    className="min-h-[44px] w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-base font-bold text-slate-900 sm:text-xs"
                   />
                 </div>
               </div>
@@ -1754,7 +1842,7 @@ export default function LegalDirectoryPanel({
                   value={uploadOfficialTitle}
                   onChange={(e) => setUploadOfficialTitle(e.target.value)}
                   placeholder="Cth: Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024 [Akta 852]"
-                  className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900"
+                  className="min-h-[44px] w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-base text-slate-900 sm:text-xs"
                 />
               </div>
 
@@ -1763,6 +1851,7 @@ export default function LegalDirectoryPanel({
                   Pilih Fail PDF / TXT Warta Kerajaan Persekutuan
                 </label>
                 <input
+                  ref={pdfUploadInputRef}
                   type="file"
                   accept=".pdf,.txt"
                   onChange={(e) => setUploadFile(e.target.files?.[0] || null)}
@@ -1771,7 +1860,7 @@ export default function LegalDirectoryPanel({
               </div>
 
               <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
-                <label className="inline-flex items-center gap-2 text-xs font-bold text-slate-700">
+                <label className="inline-flex min-h-[40px] cursor-pointer items-center gap-2 text-xs font-bold text-slate-700">
                   <input
                     type="checkbox"
                     checked={uploadVerified}
@@ -1784,7 +1873,8 @@ export default function LegalDirectoryPanel({
                 <button
                   type="submit"
                   disabled={uploadingPdf || !uploadFile}
-                  className="inline-flex min-h-[40px] items-center gap-1.5 rounded-xl bg-indigo-700 px-4 py-2 text-xs font-extrabold text-white shadow-sm hover:bg-indigo-800 disabled:opacity-50"
+                  title={!uploadFile ? "Pilih fail PDF atau TXT Warta dahulu" : undefined}
+                  className="inline-flex min-h-[44px] items-center gap-1.5 rounded-xl bg-indigo-700 px-4 py-2 text-xs font-extrabold text-white shadow-sm hover:bg-indigo-800 disabled:opacity-50"
                 >
                   {uploadingPdf ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
@@ -1809,10 +1899,12 @@ export default function LegalDirectoryPanel({
                 {CORE_STATUTE_FILE_GUIDE.map((item) => (
                   <div
                     key={item.code}
-                    className="flex items-start justify-between gap-2 rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1.5"
+                    className="flex flex-col gap-1 rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-2 sm:flex-row sm:items-start sm:justify-between sm:gap-2"
                   >
-                    <span className="font-mono font-extrabold text-indigo-900">{item.code}</span>
-                    <span className="text-right text-[11px] text-slate-600">{item.title}</span>
+                    <span className="break-all font-mono font-extrabold text-indigo-900">
+                      {item.code}
+                    </span>
+                    <span className="text-[11px] text-slate-600 sm:text-right">{item.title}</span>
                   </div>
                 ))}
               </div>
@@ -1825,8 +1917,8 @@ export default function LegalDirectoryPanel({
               <h4 className="text-sm font-extrabold text-slate-900">
                 Senarai Semakan Kesalahan &amp; Pengesahan Warta ({snapshot.master_offences_matrix.length} Kesalahan)
               </h4>
-              <div className="max-h-[360px] overflow-y-auto">
-                <table className="w-full border-collapse text-left text-xs">
+              <div className="max-h-[360px] overflow-x-auto overflow-y-auto">
+                <table className="w-full min-w-[640px] border-collapse text-left text-xs">
                   <thead>
                     <tr className="border-b border-slate-200 bg-slate-50 text-[11px] font-extrabold uppercase text-slate-600">
                       <th className="p-2">ID Kesalahan</th>
@@ -1863,10 +1955,17 @@ export default function LegalDirectoryPanel({
                             <button
                               type="button"
                               onClick={() => {
+                                setAktaFilter("Semua");
+                                setCategoryFilter("SEMUA");
+                                setCompoundFilter("SEMUA");
+                                setOffenceSearch("");
                                 setSelectedOffenceId(off.offence_id);
                                 setSubTab("offences");
+                                if (typeof window !== "undefined" && window.innerWidth < 1024) {
+                                  setMobileOffenceDrawerOpen(true);
+                                }
                               }}
-                              className="rounded border border-slate-300 bg-white px-2 py-1 text-[11px] font-bold text-slate-700 hover:bg-slate-100"
+                              className="min-h-[36px] rounded-lg border border-slate-300 bg-white px-2.5 py-1 text-[11px] font-bold text-slate-700 hover:bg-slate-100"
                             >
                               Lihat
                             </button>
@@ -1874,7 +1973,7 @@ export default function LegalDirectoryPanel({
                               <button
                                 type="button"
                                 onClick={() => void handleVerifyOffence(off.offence_id, true)}
-                                className="inline-flex items-center gap-1 rounded bg-emerald-600 px-2 py-1 text-[11px] font-extrabold text-white hover:bg-emerald-700"
+                                className="inline-flex min-h-[36px] items-center gap-1 rounded-lg bg-emerald-600 px-2.5 py-1 text-[11px] font-extrabold text-white hover:bg-emerald-700"
                               >
                                 <ArrowRightCircle className="h-3 w-3" />
                                 Sahkan Warta

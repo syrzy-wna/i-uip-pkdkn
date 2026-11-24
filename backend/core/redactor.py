@@ -290,10 +290,6 @@ class PrivacyRedactor:
 
         if use_ollama:
             ollama_entities, ollama_available = self._extract_entities_with_ollama(text)
-            if not ollama_available:
-                warnings.append(
-                    "Ollama tempatan (localhost:11434) tidak aktif — menggunakan enjin penyamaran Regex KKM."
-                )
 
         found_items: Dict[str, Tuple[str, str]] = {}
 

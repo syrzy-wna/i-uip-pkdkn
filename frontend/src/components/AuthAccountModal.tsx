@@ -23,6 +23,7 @@ import {
   registerOfficer,
   updateOfficerProfile,
 } from "@/lib/api";
+import { useLockBodyScroll } from "@/lib/uiHelpers";
 import type { OfficerProfile } from "@/lib/types";
 
 const DEFAULT_GOOGLE_CLIENT_ID =
@@ -193,26 +194,34 @@ export default function AuthAccountModal({
 
   // Borang Sunting Profil & Progressive Disclosure Pendaftaran
   const [profileForm, setProfileForm] = useState<Partial<OfficerProfile>>({});
-  const [showOfficeDefaults, setShowOfficeDefaults] = useState(true);
+  const [showOfficeDefaults, setShowOfficeDefaults] = useState(false);
+  const prevOpenRef = useRef(false);
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
+  useLockBodyScroll(open);
 
   useEffect(() => {
     if (!open) return;
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") onCloseRef.current();
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [open, onClose]);
+  }, [open]);
 
   useEffect(() => {
+    const justOpened = open && !prevOpenRef.current;
+    prevOpenRef.current = open;
     if (!open) return;
-    setError(null);
-    setSuccessMsg(null);
-    setShowForgotHelp(false);
+    if (justOpened) {
+      setError(null);
+      setSuccessMsg(null);
+      setShowForgotHelp(false);
+    }
     if (officer) {
       setTab("profile");
       setProfileForm(officer);
-    } else {
+    } else if (justOpened) {
       setTab(initialTab === "profile" ? "google" : initialTab);
       fetchRuntimeSettings()
         .then((s) => {
@@ -251,9 +260,6 @@ export default function AuthAccountModal({
                 id_token: response.credential,
               });
               onAuthenticated(res.user, res.token, res.is_new_account);
-              if (!res.is_new_account && res.user.district_pkd && res.user.state_jkn) {
-                onClose();
-              }
             } catch (err) {
               setError(
                 err instanceof Error
@@ -265,10 +271,8 @@ export default function AuthAccountModal({
             }
           },
         });
-        const btnWidth = Math.max(
-          220,
-          Math.min(320, (gsiBtnRef.current.parentElement?.clientWidth || 300) - 8)
-        );
+        const parentW = gsiBtnRef.current.parentElement?.clientWidth || 256;
+        const btnWidth = Math.min(300, Math.max(200, parentW - 4));
         window.google.accounts.id.renderButton(gsiBtnRef.current, {
           theme: "outline",
           size: "large",
@@ -308,18 +312,18 @@ export default function AuthAccountModal({
       cancelled = true;
       window.clearTimeout(failTimer);
     };
-  }, [open, officer, tab, googleClientId, onAuthenticated, onClose]);
+  }, [open, officer, tab, googleClientId, onAuthenticated]);
 
   if (!open) return null;
 
   const handleRealGooglePopup = () => {
     if (!googleClientId) {
-      setError("Tetapan log masuk Google belum aktif. Sila guna tab Log Masuk E-mel.");
+      setError("Log masuk Google belum diaktifkan. Sila gunakan pilihan Masuk E-mel.");
       return;
     }
     const oauth2 = window.google?.accounts?.oauth2;
     if (!oauth2) {
-      setError("Sistem log masuk Google tidak dapat dimuatkan (mungkin disekat rangkaian pejabat). Sila guna Log Masuk E-mel di tab sebelah.");
+      setError("Log masuk Google tidak dapat dimuatkan (mungkin disekat rangkaian pejabat). Sila gunakan pilihan Masuk E-mel di ruangan sebelah.");
       return;
     }
     setError(null);
@@ -337,9 +341,6 @@ export default function AuthAccountModal({
             access_token: tokenResp.access_token,
           });
           onAuthenticated(res.user, res.token, res.is_new_account);
-          if (!res.is_new_account && res.user.district_pkd && res.user.state_jkn) {
-            onClose();
-          }
         } catch (err) {
           setError(
             err instanceof Error
@@ -361,7 +362,6 @@ export default function AuthAccountModal({
     try {
       const res = await loginOfficer(loginEmail, loginPassword);
       onAuthenticated(res.user, res.token, false);
-      onClose();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Gagal log masuk.");
     } finally {
@@ -386,7 +386,6 @@ export default function AuthAccountModal({
       void _unused;
       const res = await registerOfficer(submitPayload);
       onAuthenticated(res.user, res.token, true);
-      onClose();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Gagal mendaftar akaun.");
     } finally {
@@ -403,7 +402,7 @@ export default function AuthAccountModal({
     try {
       const updated = await updateOfficerProfile(authToken, profileForm);
       onProfileUpdated(updated);
-      setSuccessMsg("Profil pegawai, pejabat PKD/PKK/PKB & tetapan perkakasan S.90A berjaya dikemas kini.");
+      setSuccessMsg("Profil pegawai, pejabat kesihatan dan butiran peranti Sijil 90A berjaya dikemas kini.");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Gagal mengemas kini profil.");
     } finally {
@@ -429,7 +428,7 @@ export default function AuthAccountModal({
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="flex max-h-[94dvh] w-full max-w-3xl flex-col overflow-hidden rounded-t-2xl border border-slate-200 bg-white shadow-2xl sm:rounded-2xl"
+        className="flex max-h-[94dvh] w-full max-w-3xl flex-col overflow-hidden rounded-t-2xl border border-slate-200 bg-white pb-safe shadow-2xl sm:rounded-2xl"
       >
         {/* Header Modal */}
         <div className="flex items-center justify-between gap-2 border-b border-slate-200 bg-[#0f2744] px-4 py-3 text-white sm:px-5 sm:py-3.5">
@@ -440,7 +439,7 @@ export default function AuthAccountModal({
                 Akaun Rasmi Pegawai UIP KKM (Seluruh Malaysia)
               </h2>
               <p className="truncate text-[10px] text-slate-300 sm:text-[11px]">
-                Auto-isi Kad Kuasa, PKD/PKK/PKB, Mahkamah &amp; perkakasan S.90A ke dokumen rasmi.
+                Mengisi No. Kad Kuasa, pejabat kesihatan, mahkamah dan peranti Sijil 90A secara automatik ke dokumen rasmi.
               </p>
             </div>
           </div>
@@ -540,7 +539,7 @@ export default function AuthAccountModal({
                     }`}
                   >
                     {!googleClientId
-                      ? "Belum Dikonfigurasi"
+                      ? "Belum Diaktifkan"
                       : gsiFailed
                         ? "Sekatan Rangkaian / Pelayar"
                         : "Google Aktif"}
@@ -550,7 +549,7 @@ export default function AuthAccountModal({
                 {googleClientId ? (
                   <div className="space-y-3">
                     <p className="text-xs text-slate-600 leading-relaxed">
-                      Klik butang Google rasmi di bawah untuk log masuk pantas dengan akaun Google anda. Selepas masuk kali pertama, anda boleh terus menetapkan PKD/PKK/PKB dan Negeri anda.
+                      Klik butang Google rasmi di bawah untuk log masuk pantas dengan akaun Google anda. Selepas masuk kali pertama, anda boleh terus menetapkan pejabat kesihatan dan Negeri anda.
                     </p>
                     {gsiFailed && (
                       <div className="rounded-lg border border-amber-300 bg-amber-50 p-3 text-[11px] text-amber-950 leading-relaxed space-y-2">
@@ -561,14 +560,14 @@ export default function AuthAccountModal({
                           <button
                             type="button"
                             onClick={() => setTab("login")}
-                            className="inline-flex min-h-[40px] items-center gap-1.5 rounded-lg bg-[#0f2744] px-3 py-1.5 text-[11px] font-bold text-white hover:bg-slate-800"
+                            className="inline-flex min-h-[44px] items-center gap-1.5 rounded-lg bg-[#0f2744] px-3 py-1.5 text-xs font-bold text-white hover:bg-slate-800"
                           >
                             <KeyRound className="h-3.5 w-3.5" /> Masuk E-mel
                           </button>
                           <button
                             type="button"
                             onClick={() => setTab("register")}
-                            className="inline-flex min-h-[40px] items-center gap-1.5 rounded-lg border border-amber-400 bg-white px-3 py-1.5 text-[11px] font-bold text-amber-950 hover:bg-amber-100"
+                            className="inline-flex min-h-[44px] items-center gap-1.5 rounded-lg border border-amber-400 bg-white px-3 py-1.5 text-xs font-bold text-amber-950 hover:bg-amber-100"
                           >
                             <UserPlus className="h-3.5 w-3.5" /> Daftar Akaun E-mel
                           </button>
@@ -576,23 +575,31 @@ export default function AuthAccountModal({
                       </div>
                     )}
                     <div className="flex flex-col items-start gap-2.5 pt-1">
-                      <div ref={gsiBtnRef} className="min-h-[40px]" />
-                      <button
-                        type="button"
-                        disabled={loading || !gsiReady}
-                        onClick={handleRealGooglePopup}
-                        className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-700 hover:underline disabled:opacity-50"
-                      >
-                        {loading && <Loader2 className="h-3.5 w-3.5 animate-spin text-blue-600" />}
-                        <span>Atau buka tetingkap Log Masuk Google secara manual →</span>
-                      </button>
+                      <div className="flex w-full max-w-full justify-start overflow-hidden">
+                        <div ref={gsiBtnRef} className="min-h-[44px]" />
+                      </div>
+                      {!gsiFailed && (
+                        <button
+                          type="button"
+                          disabled={loading || !gsiReady}
+                          onClick={handleRealGooglePopup}
+                          className="inline-flex min-h-[44px] items-center gap-1.5 text-xs font-bold text-blue-700 hover:underline disabled:opacity-50"
+                        >
+                          {(loading || !gsiReady) && <Loader2 className="h-3.5 w-3.5 animate-spin text-blue-600" />}
+                          <span>
+                            {!gsiReady
+                              ? "Sedang memuatkan sambungan Google..."
+                              : "Atau buka tetingkap Log Masuk Google baharu →"}
+                          </span>
+                        </button>
+                      )}
                     </div>
                   </div>
                 ) : (
                   <div className="space-y-3">
                     <div className="rounded-lg border border-amber-300 bg-amber-50 p-3 text-[11px] text-amber-950 leading-relaxed">
-                      <strong>Log Masuk Google belum dikonfigurasi pada pelayan ini.</strong>{" "}
-                      Sila gunakan tab <strong>Daftar E-mel</strong> atau <strong>Masuk E-mel</strong> untuk akses segera.
+                      <strong>Log masuk Google belum diaktifkan buat masa ini.</strong>{" "}
+                      Sila gunakan pilihan <strong>Daftar E-mel</strong> atau <strong>Masuk E-mel</strong> untuk masuk segera.
                     </div>
                     <button
                       type="button"
@@ -901,7 +908,7 @@ export default function AuthAccountModal({
                       />
                     </div>
                     <div>
-                      <label className="text-xs font-semibold text-slate-700">No. Tauliah S.377(b) KTJ (Jika PO)</label>
+                      <label className="text-xs font-semibold text-slate-700">No. Tauliah S.377(b) KTJ (Jika Pegawai Pendakwa)</label>
                       <input
                         type="text"
                         placeholder="Pilihan"
@@ -996,7 +1003,7 @@ export default function AuthAccountModal({
                     type="text"
                     value={profileForm.full_name || ""}
                     onChange={(e) => setProfileForm({ ...profileForm, full_name: e.target.value })}
-                    className="mt-0.5 w-full rounded-lg border border-slate-300 px-2.5 py-2 text-base sm:text-xs"
+                    className="mt-0.5 w-full rounded-lg border border-slate-300 px-2.5 py-2 text-base sm:text-sm"
                   />
                 </div>
                 <div>
@@ -1006,7 +1013,7 @@ export default function AuthAccountModal({
                     placeholder="cth: 890101-10-5511"
                     value={profileForm.ic_number || ""}
                     onChange={(e) => setProfileForm({ ...profileForm, ic_number: e.target.value })}
-                    className="mt-0.5 w-full rounded-lg border border-slate-300 px-2.5 py-2 text-base sm:text-xs"
+                    className="mt-0.5 w-full rounded-lg border border-slate-300 px-2.5 py-2 text-base sm:text-sm"
                   />
                 </div>
                 <div>
@@ -1014,7 +1021,7 @@ export default function AuthAccountModal({
                   <select
                     value={profileForm.designation || "Penolong Pegawai Kesihatan Persekitaran (PPKP)"}
                     onChange={(e) => setProfileForm({ ...profileForm, designation: e.target.value })}
-                    className="mt-0.5 w-full rounded-lg border border-slate-300 bg-white px-2.5 py-2 text-base sm:text-xs"
+                    className="mt-0.5 w-full rounded-lg border border-slate-300 bg-white px-2.5 py-2 text-base sm:text-sm"
                   >
                     <option>Penolong Pegawai Kesihatan Persekitaran (PPKP)</option>
                     <option>Pegawai Kesihatan Persekitaran (PKP)</option>
@@ -1028,7 +1035,7 @@ export default function AuthAccountModal({
                     <select
                       value={profileForm.grade || "U5"}
                       onChange={(e) => setProfileForm({ ...profileForm, grade: e.target.value })}
-                      className="mt-0.5 w-full rounded-lg border border-slate-300 bg-white px-2.5 py-2 text-base sm:text-xs"
+                      className="mt-0.5 w-full rounded-lg border border-slate-300 bg-white px-2.5 py-2 text-base sm:text-sm"
                     >
                       {renderSspaGradeOptions()}
                     </select>
@@ -1038,7 +1045,7 @@ export default function AuthAccountModal({
                     <select
                       value={profileForm.system_role || "PEGAWAI_PENYIASAT"}
                       onChange={(e) => setProfileForm({ ...profileForm, system_role: e.target.value })}
-                      className="mt-0.5 w-full rounded-lg border border-slate-300 bg-white px-2.5 py-2 text-base sm:text-xs"
+                      className="mt-0.5 w-full rounded-lg border border-slate-300 bg-white px-2.5 py-2 text-base sm:text-sm"
                     >
                       <option value="PEGAWAI_PEMERIKSA">Pegawai Pemeriksa</option>
                       <option value="PEGAWAI_PENYIASAT">Pegawai Penyiasat (IO)</option>
@@ -1054,17 +1061,17 @@ export default function AuthAccountModal({
                     placeholder="cth: KKM-SEL-2026-088"
                     value={profileForm.kkm_authority_card_no || ""}
                     onChange={(e) => setProfileForm({ ...profileForm, kkm_authority_card_no: e.target.value })}
-                    className="mt-0.5 w-full rounded-lg border border-slate-300 px-2.5 py-2 text-base sm:text-xs"
+                    className="mt-0.5 w-full rounded-lg border border-slate-300 px-2.5 py-2 text-base sm:text-sm"
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-semibold text-slate-700">No. Tauliah S.377(b) KTJ (Jika PO)</label>
+                  <label className="text-xs font-semibold text-slate-700">No. Tauliah S.377(b) KTJ (Jika Pegawai Pendakwa)</label>
                   <input
                     type="text"
                     placeholder="Pilihan"
                     value={profileForm.prosecution_authorization_no || ""}
                     onChange={(e) => setProfileForm({ ...profileForm, prosecution_authorization_no: e.target.value })}
-                    className="mt-0.5 w-full rounded-lg border border-slate-300 px-2.5 py-2 text-base sm:text-xs"
+                    className="mt-0.5 w-full rounded-lg border border-slate-300 px-2.5 py-2 text-base sm:text-sm"
                   />
                 </div>
                 <div>
@@ -1072,7 +1079,7 @@ export default function AuthAccountModal({
                   <select
                     value={profileForm.state_jkn || ""}
                     onChange={(e) => setProfileForm({ ...profileForm, state_jkn: e.target.value })}
-                    className="mt-0.5 w-full rounded-lg border border-slate-300 bg-white px-2.5 py-2 text-base sm:text-xs"
+                    className="mt-0.5 w-full rounded-lg border border-slate-300 bg-white px-2.5 py-2 text-base sm:text-sm"
                   >
                     {MALAYSIA_JKN_OPTIONS.map((opt) => (
                       <option key={opt.value} value={opt.value}>
@@ -1092,7 +1099,7 @@ export default function AuthAccountModal({
                     placeholder="cth: PKD Petaling / PKK Kota Kinabalu / PKB Kuching"
                     value={profileForm.district_pkd || ""}
                     onChange={(e) => setProfileForm({ ...profileForm, district_pkd: e.target.value })}
-                    className="mt-0.5 w-full rounded-lg border border-slate-300 px-2.5 py-2 text-base sm:text-xs"
+                    className="mt-0.5 w-full rounded-lg border border-slate-300 px-2.5 py-2 text-base sm:text-sm"
                   />
                 </div>
                 <div>
@@ -1102,7 +1109,7 @@ export default function AuthAccountModal({
                     placeholder="Untuk bayaran kaunter Notis Kompaun & Saman"
                     value={profileForm.office_address || ""}
                     onChange={(e) => setProfileForm({ ...profileForm, office_address: e.target.value })}
-                    className="mt-0.5 w-full rounded-lg border border-slate-300 px-2.5 py-2 text-base sm:text-xs"
+                    className="mt-0.5 w-full rounded-lg border border-slate-300 px-2.5 py-2 text-base sm:text-sm"
                   />
                 </div>
                 <div>
@@ -1111,17 +1118,17 @@ export default function AuthAccountModal({
                     type="text"
                     value={profileForm.unit_assignment || ""}
                     onChange={(e) => setProfileForm({ ...profileForm, unit_assignment: e.target.value })}
-                    className="mt-0.5 w-full rounded-lg border border-slate-300 px-2.5 py-2 text-base sm:text-xs"
+                    className="mt-0.5 w-full rounded-lg border border-slate-300 px-2.5 py-2 text-base sm:text-sm"
                   />
                 </div>
                 <div className="sm:col-span-2">
-                  <label className="text-xs font-semibold text-slate-700">Mahkamah Majistret Tetap</label>
+                  <label className="text-xs font-semibold text-slate-700">Mahkamah Majistret Bidang Kuasa</label>
                   <input
                     type="text"
                     placeholder="cth: MAHKAMAH MAJISTRET DI SHAH ALAM, DALAM NEGERI SELANGOR"
                     value={profileForm.default_magistrate_court || ""}
                     onChange={(e) => setProfileForm({ ...profileForm, default_magistrate_court: e.target.value })}
-                    className="mt-0.5 w-full rounded-lg border border-slate-300 px-2.5 py-2 text-base sm:text-xs"
+                    className="mt-0.5 w-full rounded-lg border border-slate-300 px-2.5 py-2 text-base sm:text-sm"
                   />
                 </div>
                 <div>
@@ -1130,7 +1137,7 @@ export default function AuthAccountModal({
                     type="text"
                     value={profileForm.default_camera_desc || ""}
                     onChange={(e) => setProfileForm({ ...profileForm, default_camera_desc: e.target.value })}
-                    className="mt-0.5 w-full rounded-lg border border-slate-300 px-2.5 py-2 text-base sm:text-xs"
+                    className="mt-0.5 w-full rounded-lg border border-slate-300 px-2.5 py-2 text-base sm:text-sm"
                   />
                 </div>
                 <div>
@@ -1139,7 +1146,7 @@ export default function AuthAccountModal({
                     type="text"
                     value={profileForm.default_computer_desc || ""}
                     onChange={(e) => setProfileForm({ ...profileForm, default_computer_desc: e.target.value })}
-                    className="mt-0.5 w-full rounded-lg border border-slate-300 px-2.5 py-2 text-base sm:text-xs"
+                    className="mt-0.5 w-full rounded-lg border border-slate-300 px-2.5 py-2 text-base sm:text-sm"
                   />
                 </div>
                 <div className="sm:col-span-2">
@@ -1148,7 +1155,7 @@ export default function AuthAccountModal({
                     type="text"
                     value={profileForm.default_printer_desc || ""}
                     onChange={(e) => setProfileForm({ ...profileForm, default_printer_desc: e.target.value })}
-                    className="mt-0.5 w-full rounded-lg border border-slate-300 px-2.5 py-2 text-base sm:text-xs"
+                    className="mt-0.5 w-full rounded-lg border border-slate-300 px-2.5 py-2 text-base sm:text-sm"
                   />
                 </div>
               </div>

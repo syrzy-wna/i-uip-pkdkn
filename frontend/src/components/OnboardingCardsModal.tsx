@@ -15,6 +15,7 @@ import {
   X,
 } from "lucide-react";
 import type { ActiveAppMode } from "@/components/TopNavbar";
+import { useLockBodyScroll } from "@/lib/uiHelpers";
 import type { OfficerProfile } from "@/lib/types";
 
 interface OnboardingCardsModalProps {
@@ -78,6 +79,8 @@ export default function OnboardingCardsModal({
 }: OnboardingCardsModalProps) {
   const [step, setStep] = useState(0);
   const touchStartRef = useRef<{ x: number; y: number } | null>(null);
+
+  useLockBodyScroll(open);
 
   useEffect(() => {
     if (open) {
@@ -151,23 +154,14 @@ export default function OnboardingCardsModal({
               </span>
             </div>
 
-            <div className="flex shrink-0 items-center gap-1.5">
-              <button
-                type="button"
-                onClick={onClose}
-                className="min-h-[36px] rounded-lg px-2.5 text-xs font-bold text-slate-600 transition hover:bg-slate-100 hover:text-slate-900"
-              >
-                Tutup
-              </button>
-              <button
-                type="button"
-                onClick={onClose}
-                aria-label="Tutup pengenalan ringkas"
-                className="inline-flex min-h-[38px] min-w-[38px] items-center justify-center rounded-lg text-slate-500 transition hover:bg-slate-100 hover:text-slate-900"
-              >
-                <X className="h-5 w-5" />
-              </button>
-            </div>
+            <button
+              type="button"
+              onClick={onClose}
+              aria-label="Tutup pengenalan ringkas"
+              className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-slate-500 transition hover:bg-slate-100 hover:text-slate-900"
+            >
+              <X className="h-5 w-5" />
+            </button>
           </div>
 
           <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-slate-200">
@@ -217,8 +211,8 @@ export default function OnboardingCardsModal({
                   Pengenalan Ringkas i-UIP Nerus
                 </h2>
                 <p className="mt-2 text-xs leading-relaxed text-slate-200 sm:text-sm">
-                  Pembantu kerja harian PPKP, PKP dan Pegawai Penyiasat (IO) — dari rujukan di
-                  lokasi operasi hingga Fail IP siap untuk semakan Timbalan Pendakwa Raya (TPR).
+                  Pembantu kerja harian PPKP, PKP dan Pegawai Penyiasat (IO) — daripada rujukan di
+                  lokasi operasi hingga Fail IP sedia untuk semakan Timbalan Pendakwa Raya (TPR).
                 </p>
               </div>
 
@@ -273,8 +267,8 @@ export default function OnboardingCardsModal({
                   Pakar &amp; Akta
                 </h2>
                 <p className="mt-1.5 text-xs leading-relaxed text-slate-600 sm:text-sm">
-                  Taip situasi sebenar di lokasi operasi. Sistem akan beritahu secara jelas sama
-                  ada terdapat kesalahan atau tidak, bersama seksyen tepat, langkah SOP dan teks
+                  Taip situasi sebenar di lokasi operasi. Sistem akan memaklumkan secara jelas sama
+                  ada terdapat kesalahan atau tidak, berserta seksyen tepat, langkah SOP dan teks
                   penuh Warta.
                 </p>
 
@@ -299,7 +293,7 @@ export default function OnboardingCardsModal({
                     onClose();
                     onNavigateMode("advisor");
                   }}
-                  className="inline-flex min-h-[42px] items-center gap-2 rounded-xl bg-[#0f2744] px-4 py-2 text-xs font-extrabold text-white shadow-sm hover:bg-slate-800"
+                  className="inline-flex min-h-[44px] items-center gap-2 rounded-xl bg-[#0f2744] px-4 py-2 text-xs font-extrabold text-white shadow-sm hover:bg-slate-800"
                 >
                   Buka Pakar &amp; Akta <ArrowRight className="h-4 w-4" />
                 </button>
@@ -358,7 +352,7 @@ export default function OnboardingCardsModal({
                     onClose();
                     onNavigateMode("compound");
                   }}
-                  className="inline-flex min-h-[42px] items-center gap-2 rounded-xl bg-[#0f2744] px-4 py-2 text-xs font-extrabold text-white shadow-sm hover:bg-slate-800"
+                  className="inline-flex min-h-[44px] items-center gap-2 rounded-xl bg-[#0f2744] px-4 py-2 text-xs font-extrabold text-white shadow-sm hover:bg-slate-800"
                 >
                   Buka Notis Kompaun <ArrowRight className="h-4 w-4" />
                 </button>
@@ -390,11 +384,11 @@ export default function OnboardingCardsModal({
                     dokumen atau tampal catatan kes. Teks dibaca secara automatik.
                   </li>
                   <li className="rounded-xl border border-slate-200 bg-slate-50/70 p-3">
-                    <strong>Langkah 2 — Semak Pra-TPR:</strong> Sistem semak 20 perkara kritikal
+                    <strong>Langkah 2 — Semak Pra-TPR:</strong> Sistem menyemak 20 perkara kritikal
                     (seksyen, tarikh/masa, susunan Fail A–G dan Sijil S.90A).
                   </li>
                   <li className="rounded-xl border border-slate-200 bg-slate-50/70 p-3">
-                    <strong>Langkah 3 — Edit &amp; Muat Turun Word:</strong> Baiki kesilapan terus
+                    <strong>Langkah 3 — Sunting &amp; Muat Turun Word:</strong> Baiki kesilapan terus
                     pada Borang 114, Saman 111, S.112, Diari dan Sijil 90A, semak semula skor dan
                     muat turun fail Word (.docx).
                   </li>
@@ -408,7 +402,7 @@ export default function OnboardingCardsModal({
                     onClose();
                     onNavigateMode("audit");
                   }}
-                  className="inline-flex min-h-[42px] items-center gap-2 rounded-xl bg-[#0f2744] px-4 py-2 text-xs font-extrabold text-white shadow-sm hover:bg-slate-800"
+                  className="inline-flex min-h-[44px] items-center gap-2 rounded-xl bg-[#0f2744] px-4 py-2 text-xs font-extrabold text-white shadow-sm hover:bg-slate-800"
                 >
                   Buka Fail IP <ArrowRight className="h-4 w-4" />
                 </button>
@@ -422,7 +416,7 @@ export default function OnboardingCardsModal({
               <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-0.5 text-[11px] font-bold text-emerald-800">
                   <ShieldCheck className="h-3.5 w-3.5" />
-                  Perlindungan Data Sulit (OSA 1972 &amp; PDPA)
+                  Perlindungan Data Sulit (Akta Rahsia Rasmi 1972 &amp; PDPA)
                 </span>
                 <h2
                   id="onboarding-card-title"
@@ -438,8 +432,8 @@ export default function OnboardingCardsModal({
                 <div className="mt-4 space-y-2.5">
                   <div className="rounded-xl border border-slate-200 bg-slate-50/70 p-3 text-xs text-slate-700">
                     <strong>1. Lengkapkan Profil Pegawai:</strong> Masukkan No. Kad Kuasa dan
-                    butiran peranti Sijil S.90A sekali sahaja supaya diisi automatik dalam setiap
-                    notis dan Fail IP.
+                    butiran peranti Sijil S.90A sekali sahaja supaya diisi secara automatik dalam
+                    setiap notis dan Fail IP.
                   </div>
                   <div className="rounded-xl border border-slate-200 bg-slate-50/70 p-3 text-xs text-slate-700">
                     <strong>2. Cuba Contoh Kes 10 Saat:</strong> Di halaman Utama, klik mana-mana
@@ -460,7 +454,7 @@ export default function OnboardingCardsModal({
                     onClose();
                     onOpenCases();
                   }}
-                  className="inline-flex min-h-[42px] items-center gap-1.5 rounded-xl border border-slate-300 bg-white px-3.5 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50"
+                  className="inline-flex min-h-[44px] items-center gap-1.5 rounded-xl border border-slate-300 bg-white px-3.5 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50"
                 >
                   <FolderOpen className="h-4 w-4 text-slate-500" />
                   Buka Fail Saya
@@ -471,7 +465,7 @@ export default function OnboardingCardsModal({
                     onClose();
                     onOpenProfile();
                   }}
-                  className="inline-flex min-h-[42px] items-center gap-1.5 rounded-xl bg-[#0f2744] px-4 py-2 text-xs font-extrabold text-white shadow-sm hover:bg-slate-800"
+                  className="inline-flex min-h-[44px] items-center gap-1.5 rounded-xl bg-[#0f2744] px-4 py-2 text-xs font-extrabold text-white shadow-sm hover:bg-slate-800"
                 >
                   <UserCheck className="h-4 w-4" />
                   Lengkapkan Profil
@@ -482,8 +476,8 @@ export default function OnboardingCardsModal({
         </div>
 
         {/* Footer Navigasi */}
-        <div className="shrink-0 border-t border-slate-200 bg-white px-4 py-3 sm:px-6">
-          <div className="mb-3 flex items-center justify-center gap-1.5">
+        <div className="pb-safe shrink-0 border-t border-slate-200 bg-white px-4 py-3 sm:px-6">
+          <div className="mb-1 flex items-center justify-center gap-1">
             {STEP_LABELS.map((label, idx) => {
               const active = idx === step;
               return (
@@ -493,23 +487,27 @@ export default function OnboardingCardsModal({
                   onClick={() => setStep(idx)}
                   title={`${idx + 1}. ${label}`}
                   aria-label={`Pergi ke langkah ${idx + 1}: ${label}`}
-                  className={`h-2.5 rounded-full transition-all ${
-                    active ? "w-6 bg-[#0f2744]" : "w-2.5 bg-slate-300 hover:bg-slate-400"
-                  }`}
-                />
+                  className="inline-flex min-h-[44px] min-w-[32px] items-center justify-center px-1"
+                >
+                  <span
+                    className={`block h-2.5 rounded-full transition-all ${
+                      active ? "w-6 bg-[#0f2744]" : "w-2.5 bg-slate-300 hover:bg-slate-400"
+                    }`}
+                  />
+                </button>
               );
             })}
           </div>
 
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <label className="flex cursor-pointer items-center gap-2 text-xs font-medium text-slate-600 select-none">
+            <label className="flex min-h-[40px] cursor-pointer items-center gap-2 text-xs font-medium text-slate-600 select-none">
               <input
                 type="checkbox"
                 checked={dontShowAgain}
                 onChange={(e) => onToggleDontShowAgain(e.target.checked)}
                 className="h-4 w-4 rounded border-slate-300 accent-[#0f2744]"
               />
-              <span>Ingat pilihan saya</span>
+              <span>Jangan paparkan lagi pada masa hadapan</span>
             </label>
 
             <div className="flex items-center justify-end gap-2">
@@ -517,7 +515,7 @@ export default function OnboardingCardsModal({
                 type="button"
                 onClick={goPrev}
                 disabled={step === 0}
-                className="inline-flex min-h-[42px] items-center gap-1.5 rounded-xl border border-slate-300 bg-white px-3.5 py-2 text-xs font-bold text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
+                className="inline-flex min-h-[44px] items-center gap-1.5 rounded-xl border border-slate-300 bg-white px-3.5 py-2 text-xs font-bold text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
               >
                 <ArrowLeft className="h-4 w-4" />
                 Sebelum
@@ -527,7 +525,7 @@ export default function OnboardingCardsModal({
                 <button
                   type="button"
                   onClick={goNext}
-                  className="inline-flex min-h-[42px] items-center gap-1.5 rounded-xl bg-[#0f2744] px-4 py-2 text-xs font-extrabold text-white shadow-sm transition hover:bg-slate-800"
+                  className="inline-flex min-h-[44px] items-center gap-1.5 rounded-xl bg-[#0f2744] px-4 py-2 text-xs font-extrabold text-white shadow-sm transition hover:bg-slate-800"
                 >
                   Seterusnya
                   <ArrowRight className="h-4 w-4" />
@@ -536,7 +534,7 @@ export default function OnboardingCardsModal({
                 <button
                   type="button"
                   onClick={onClose}
-                  className="inline-flex min-h-[42px] items-center gap-1.5 rounded-xl bg-[#0f2744] px-4 py-2 text-xs font-extrabold text-white shadow-sm transition hover:bg-slate-800"
+                  className="inline-flex min-h-[44px] items-center gap-1.5 rounded-xl bg-[#0f2744] px-4 py-2 text-xs font-extrabold text-white shadow-sm transition hover:bg-slate-800"
                 >
                   Mula Guna
                   <Check className="h-4 w-4" />

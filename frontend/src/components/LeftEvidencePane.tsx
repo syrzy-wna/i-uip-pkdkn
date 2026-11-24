@@ -77,6 +77,8 @@ export default function LeftEvidencePane({
   onRunAudit,
   onRunDraft,
   onStartBlankDraft,
+  onBackToResult,
+  hasExistingResult = false,
   onExtractEvidence,
   auditLoading,
   draftLoading,
@@ -138,6 +140,7 @@ export default function LeftEvidencePane({
   const isImage =
     uploadedFile?.type.startsWith("image/") ||
     /\.(png|jpe?g|webp)$/i.test(uploadedFile?.name || "");
+  const anyBusy = auditLoading || draftLoading || extractLoading;
 
   return (
     <section className="mx-auto max-w-3xl rounded-2xl border border-slate-200 bg-white shadow-sm">
@@ -152,11 +155,20 @@ export default function LeftEvidencePane({
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
+          {hasExistingResult && onBackToResult && (
+            <button
+              type="button"
+              onClick={onBackToResult}
+              className="inline-flex min-h-[44px] items-center gap-1.5 rounded-xl border border-[#0f2744]/25 bg-slate-50 px-3.5 py-2 text-xs font-bold text-[#0f2744] hover:bg-slate-100"
+            >
+              ← Kembali ke Keputusan
+            </button>
+          )}
           {!caseText.trim() && !uploadedFile && onLoadSampleCase && (
             <button
               type="button"
               onClick={onLoadSampleCase}
-              className="inline-flex min-h-[40px] items-center gap-1.5 rounded-xl border border-slate-300 bg-slate-50 px-3.5 py-2 text-xs font-bold text-[#0f2744] hover:bg-slate-100"
+              className="inline-flex min-h-[44px] items-center gap-1.5 rounded-xl border border-slate-300 bg-slate-50 px-3.5 py-2 text-xs font-bold text-[#0f2744] hover:bg-slate-100"
             >
               <Sparkles className="h-4 w-4 text-amber-600" />
               Cuba Contoh Kes
@@ -165,10 +177,10 @@ export default function LeftEvidencePane({
           <button
             type="button"
             onClick={onOpenNewCase}
-            className="inline-flex min-h-[40px] items-center gap-1.5 rounded-xl border border-slate-300 bg-white px-3.5 py-2 text-xs font-bold text-slate-800 hover:bg-slate-50"
+            className="inline-flex min-h-[44px] items-center gap-1.5 rounded-xl border border-slate-300 bg-white px-3.5 py-2 text-xs font-bold text-slate-800 hover:bg-slate-50"
           >
             <FolderPlus className="h-4 w-4 text-[#0f2744]" />
-            + Daftar Fail Baharu
+            Daftar Kes Baharu
           </button>
         </div>
       </div>
@@ -192,7 +204,7 @@ export default function LeftEvidencePane({
                   const found = cases.find((c) => c.id === e.target.value);
                   if (found) onSelectCase(found);
                 }}
-                className="mt-1 w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-base font-semibold text-slate-800 focus:border-[#0f2744] focus:outline-none sm:text-sm"
+                className="mt-1 min-h-[44px] w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-base font-semibold text-slate-800 focus:border-[#0f2744] focus:outline-none sm:text-sm"
               >
                 <option value="">-- Kes Baharu / Kosong --</option>
                 {cases.map((c) => (
@@ -211,7 +223,7 @@ export default function LeftEvidencePane({
                 id="akta-select"
                 value={aktaUtama}
                 onChange={(e) => onChangeAkta(e.target.value)}
-                className="mt-1 w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-base font-semibold text-slate-800 focus:border-[#0f2744] focus:outline-none sm:text-sm"
+                className="mt-1 min-h-[44px] w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-base font-semibold text-slate-800 focus:border-[#0f2744] focus:outline-none sm:text-sm"
               >
                 {AKTA_OPTIONS.map((opt) => (
                   <option key={opt.value} value={opt.value}>
@@ -233,7 +245,7 @@ export default function LeftEvidencePane({
         <div className="space-y-3 py-4">
           <div className="text-xs font-semibold text-slate-700">
             Muat Naik PDF IP, Word, Carian SSM atau Gambar Bukti{" "}
-            <span className="font-normal text-slate-500">(Pilihan — teks dibaca automatik)</span>
+            <span className="font-normal text-slate-500">(Pilihan — teks dibaca secara automatik)</span>
           </div>
 
           <input
@@ -352,7 +364,7 @@ export default function LeftEvidencePane({
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="min-h-[38px] rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-bold text-slate-700 hover:bg-slate-50"
+                    className="min-h-[44px] rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-bold text-slate-700 hover:bg-slate-50"
                   >
                     Tukar Fail
                   </button>
@@ -360,7 +372,7 @@ export default function LeftEvidencePane({
                     type="button"
                     onClick={() => handleChooseFile(null)}
                     aria-label="Buang fail"
-                    className="inline-flex min-h-[38px] min-w-[38px] items-center justify-center rounded-lg bg-rose-50 text-rose-600 hover:bg-rose-100"
+                    className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg bg-rose-50 text-rose-600 hover:bg-rose-100"
                     title="Buang fail"
                   >
                     <Trash2 className="h-4 w-4" />
@@ -388,7 +400,7 @@ export default function LeftEvidencePane({
                 href={previewUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex shrink-0 items-center gap-1 rounded-lg bg-white px-3 py-1.5 text-xs font-bold text-[#0f2744] ring-1 ring-slate-300 hover:bg-slate-100"
+                className="inline-flex min-h-[40px] shrink-0 items-center gap-1 rounded-lg bg-white px-3 py-1.5 text-xs font-bold text-[#0f2744] ring-1 ring-slate-300 hover:bg-slate-100"
               >
                 Buka PDF <ExternalLink className="h-3.5 w-3.5" />
               </a>
@@ -423,7 +435,7 @@ export default function LeftEvidencePane({
                     }
                     onChangeCaseText("");
                   }}
-                  className="font-semibold text-slate-600 hover:text-rose-700 hover:underline"
+                  className="inline-flex min-h-[40px] items-center rounded-lg px-2 font-semibold text-slate-600 hover:bg-slate-100 hover:text-rose-700 hover:underline"
                 >
                   Kosongkan
                 </button>
@@ -436,7 +448,7 @@ export default function LeftEvidencePane({
             value={caseText}
             onChange={(e) => onChangeCaseText(e.target.value)}
             rows={7}
-            placeholder={`Taip atau tampal fakta kes anda di sini...\nContoh:\nTarikh & Masa: 18 November 2026, jam 10.30 pagi\nPremis & No. SSM: Kedai Runcit Maju (202201012345)\nNama OKT & No. K/P: Ali bin Abu (880102-11-5011)\nKesalahan Ditemui: Pamer produk vape secara terbuka di kaunter...`}
+            placeholder={`Taip atau tampal fakta kes anda di ruangan ini...\nContoh:\nTarikh & Masa: 18 November 2026, jam 10.30 pagi\nPremis & No. SSM: Kedai Runcit Maju (202201012345)\nNama OKT & No. K/P: Ali bin Abu (880102-11-5011)\nKesalahan Ditemui: Pamer produk vape secara terbuka di kaunter...`}
             className="min-h-[160px] w-full resize-y rounded-xl border border-slate-300 bg-white p-3.5 text-base leading-relaxed text-slate-900 focus:border-[#0f2744] focus:outline-none focus:ring-2 focus:ring-slate-200 sm:text-sm"
           />
 
@@ -448,35 +460,44 @@ export default function LeftEvidencePane({
           <div className="space-y-3 pt-2">
             <button
               type="button"
-              disabled={auditLoading || extractLoading}
+              disabled={anyBusy}
               onClick={onRunAudit}
               className="inline-flex min-h-[48px] w-full items-center justify-center gap-2 rounded-xl bg-[#0f2744] px-5 py-3 text-sm font-extrabold text-white shadow-sm transition hover:bg-slate-800 disabled:opacity-60"
             >
-              {auditLoading ? (
+              {auditLoading || extractLoading ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
               ) : (
                 <FileSearch className="h-4 w-4" />
               )}
-              {auditLoading ? "Sedang menyemak 20 perkara IP..." : "Semak Pra-TPR Sekarang (20 Semakan)"}
-              {!auditLoading && <ArrowRight className="h-4 w-4" />}
+              {extractLoading
+                ? "Menunggu bacaan teks fail..."
+                : auditLoading
+                  ? "Sedang menyemak 20 perkara IP..."
+                  : "Semak Pra-TPR Sekarang (20 Semakan)"}
+              {!auditLoading && !extractLoading && <ArrowRight className="h-4 w-4" />}
             </button>
 
             <div className="flex flex-wrap items-center justify-between gap-2">
               <button
                 type="button"
-                disabled={draftLoading || extractLoading}
+                disabled={anyBusy}
                 onClick={onRunDraft}
-                className="inline-flex min-h-[40px] items-center gap-1.5 text-xs font-bold text-[#0f2744] hover:underline disabled:opacity-60"
+                className="inline-flex min-h-[44px] items-center gap-1.5 text-xs font-bold text-[#0f2744] hover:underline disabled:opacity-60"
               >
                 {draftLoading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <FileText className="h-3.5 w-3.5" />}
-                {draftLoading ? "Sedang menyediakan draf Word..." : "Langkau semakan, terus bina draf Fail IP →"}
+                {extractLoading
+                  ? "Menunggu bacaan teks fail..."
+                  : draftLoading
+                    ? "Sedang menyediakan draf Word..."
+                    : "Langkau semakan, terus bina draf Fail IP →"}
               </button>
 
               {onStartBlankDraft && (
                 <button
                   type="button"
+                  disabled={anyBusy}
                   onClick={onStartBlankDraft}
-                  className="inline-flex min-h-[40px] items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-slate-900 hover:underline"
+                  className="inline-flex min-h-[44px] items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-slate-900 hover:underline disabled:opacity-60"
                 >
                   <Pencil className="h-3.5 w-3.5" />
                   Isi borang IP kosong

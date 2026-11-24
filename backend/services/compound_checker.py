@@ -163,12 +163,38 @@ class CompoundNoticeChecker:
         })
 
         # 3. Nama premis & alamat lengkap tempat kejadian
-        ok_tempat = len(nama_premis) >= 3 and len(alamat_kejadian) >= 10
+        # Bagi kesalahan individu di tempat terbuka (cth: S.16(2)/S.17(1) Akta 852), alamat lengkap (>=10 aksara) sudah memadai.
+        low_penerima = nama_penerima.lower()
+        is_corporate_recipient = (
+            self._is_valid_ssm(no_kp)
+            or bool(no_ssm)
+            or any(w in low_penerima for w in ("sdn", "bhd", "enterprise", "trading", "holdings", "resources"))
+        )
+        is_premise_required = (
+            is_corporate_recipient
+            or any(
+                k in low_sec
+                for k in ("18(1)", "ppkm", "ppm", "281", "154", "makanan")
+            )
+            or any(
+                w in low_premis
+                for w in ("sdn", "bhd", "enterprise", "trading", "restoran", "kedai", "bistro", "mart", "kafe", "kilang", "tapak bina")
+            )
+        )
+        ok_tempat = (len(nama_premis) >= 3 and len(alamat_kejadian) >= 10) if is_premise_required else (len(alamat_kejadian) >= 10)
         checks.append({
             "code": "K03",
-            "label": "Nama Premis & Alamat Lengkap Tempat Kejadian",
+            "label": "Lokasi & Alamat Lengkap Tempat Kejadian",
             "status": "LULUS" if ok_tempat else "GAGAL",
-            "note": "Nama premis dan alamat lengkap telah diisi." if ok_tempat else "Isi nama kedai/premis serta nombor lot/jalan, poskod, dan daerah tempat kesalahan berlaku.",
+            "note": (
+                "Nama premis dan alamat lengkap telah diisi."
+                if len(nama_premis) >= 3 and ok_tempat
+                else (
+                    "Alamat lengkap tempat kejadian telah diisi (kes individu di kawasan terbuka)."
+                    if ok_tempat
+                    else "Isi nama premis (jika berkaitan) serta alamat lengkap termasuk jalan, poskod dan daerah tempat kesalahan berlaku."
+                )
+            ),
         })
 
         # 4. No. SSM jika melibatkan syarikat / perniagaan
@@ -190,7 +216,7 @@ class CompoundNoticeChecker:
             "note": f"Tarikh/Masa: {tarikh_masa}" if ok_tarikh else "Nyatakan tarikh dan waktu tepat kesalahan ditemui (contoh: 14/10/2026, 10.45 pagi).",
         })
 
-        # 6. Ketepatan Seksyen & Peraturan Mengikut Akta + Semakan Boleh Kompaun + Pustaka Akta Verbatim
+        # 6. Ketepatan Seksyen & Peraturan Mengikut Akta + Semakan Boleh Kompaun + Pustaka Akta
         from backend.rag.legal_engine import get_legal_library, validate_legal_output
 
         legal_lib = get_legal_library()
@@ -212,7 +238,7 @@ class CompoundNoticeChecker:
         if "852" in low_sec and "seksyen 44" in low_sec:
             sec_errors.append("Seksyen 44 Akta 852 ialah perlindungan pemberi maklumat. Kuasa kompaun Akta 852 ialah Seksyen 48 [P.U. (A) 259/2024].")
         if ("tifoid" in low_err or "typhoid" in low_err or "vaksin" in low_err) and "peraturan 30" in low_sec and "31" not in low_sec:
-            sec_errors.append("Kesalahan pengendali makanan tiada suntikan antitifoid ialah di bawah Peraturan 31(1) PPKM 2009 [hukuman Peraturan 31(3)] — bagi pemilik premis pula Peraturan 11(1)(b) (Peraturan 30 ialah Latihan Pengendali Makanan).")
+            sec_errors.append("Kesalahan pengendali makanan tiada suntikan antitifoid ialah Peraturan 31(1) PPKM 2009 [hukuman Peraturan 31(3)]. Bagi pemilik premis, gunakan Peraturan 11(1)(b) (Peraturan 30 ialah Latihan Pengendali Makanan).")
         if "154" in low_sec and "8(2)" in low_sec:
             sec_errors.append("Kesalahan ingkar perintah Seksyen 8 Akta 154 ialah di bawah Seksyen 8(8) Akta 154 (bukan Seksyen 8(2)).")
 
@@ -226,13 +252,13 @@ class CompoundNoticeChecker:
             )
             if has_explicit_noncomp_852 or (has_sec_kw and not has_allowed_852):
                 sec_errors.append(
-                    "TIDAK BOLEH DIKOMPAUN: Di bawah Jadual Pertama P.U. (A) 259/2024, HANYA Seksyen 13(3), 16(2), 17(1) dan 18(1) Akta 852 boleh dikompaun. Peruntukan selain itu (cth: S.3(1), 7(1), 9(1), 10(1), 13(1), 14, 15) wajib disita barang kes dan dibuka Kertas Siasatan (IP) untuk pendakwaan terus ke Mahkamah."
+                    "TIDAK BOLEH DIKOMPAUN: Di bawah Jadual Pertama P.U. (A) 259/2024, hanya Seksyen 13(3), 16(2), 17(1) dan 18(1) Akta 852 boleh dikompaun. Peruntukan lain (cth: S.3(1), 7(1), 9(1), 10(1), 13(1), 14, 15) wajib disita barang kes dan dibuka Fail IP terus ke Mahkamah."
                 )
             # Semakan konsistensi umur OBD (<18 tahun) berdasarkan MyKad
             if recipient_age is not None:
                 if recipient_age < 5 and "16(2)" in low_sec:
                     sec_warnings.append(
-                        f"Sila semak tahun lahir MyKad ({recipient_age} tahun — kemungkinan warga emas lahir abad 19xx). Sahkan umur sebenar OKS sebelum menyerahkan notis."
+                        f"Sila semak tahun lahir MyKad ({recipient_age} tahun — kemungkinan warga emas lahir pada tahun 1920-an). Sahkan umur sebenar penerima sebelum menyerahkan notis."
                     )
                 elif recipient_age < 18 and "16(2)" in low_sec:
                     sec_errors.append(
@@ -430,7 +456,7 @@ class CompoundNoticeChecker:
         gagal = sum(1 for c in checks if c["status"] == "GAGAL")
 
         if gagal == 0 and semak == 0:
-            readiness = "SEDIA CETAK & SERAH (SIFAR CACAT)"
+            readiness = "SEDIA CETAK & SERAH (LENGKAP)"
         elif gagal == 0:
             readiness = "PERLU SEMAKAN RINGKAS"
         else:
@@ -446,10 +472,15 @@ class CompoundNoticeChecker:
         else:
             peruntukan_kompaun = "Notis Seksyen 32B & Seksyen 33 Akta Makanan 1983"
 
+        clean_err = (kesalahan_ringkas or "").strip().rstrip(". ,;")
+        if clean_err and len(clean_err) >= 2 and clean_err[0].isupper() and not clean_err[1].isupper():
+            clean_err = clean_err[0].lower() + clean_err[1:]
+        lokasi_part = f"{nama_premis}, {alamat_kejadian}" if (nama_premis and alamat_kejadian) else (nama_premis or alamat_kejadian or "[Lokasi / Alamat Kejadian]")
+
         suggested_offense_text = (
-            f"Pada {tarikh_masa or '[Tarikh & Masa]'}, bertempat di {nama_premis or '[Nama Premis]'}, "
-            f"{alamat_kejadian or '[Alamat Premis]'}, kamu {nama_penerima or '[Nama OKS]'} (No. Pengenalan: {no_kp or '[No. KP/Pasport]'}) "
-            f"telah didapati {kesalahan_ringkas or '[nyatakan perbuatan kesalahan]'}, yang merupakan suatu kesalahan di bawah "
+            f"Pada {tarikh_masa or '[Tarikh & Masa]'}, bertempat di {lokasi_part}, "
+            f"kamu {nama_penerima or '[Nama Penerima]'} (No. Pengenalan: {no_kp or '[No. KP/Pasport]'}) "
+            f"telah didapati {clean_err or '[nyatakan perbuatan kesalahan]'}, yang merupakan suatu kesalahan di bawah "
             f"{akta_seksyen or '[Seksyen Kesalahan]'} dan boleh dikompaun di bawah {peruntukan_kompaun}."
         )
 

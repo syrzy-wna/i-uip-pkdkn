@@ -13,8 +13,8 @@ body {
   font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
 }
 
-/* Elak Safari iOS auto-zoom ketika PPKP mengisi borang pada telefon pintar */
-@media (max-width: 639px) {
+/* Elak Safari iOS / peranti sentuh auto-zoom ketika PPKP mengisi borang */
+@media (max-width: 767px), (pointer: coarse) {
   input:not([type="checkbox"]):not([type="radio"]),
   textarea,
   select {

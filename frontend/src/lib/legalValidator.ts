@@ -249,7 +249,7 @@ export function validateLegalOutput(
         verifiedCitations.push(cit.rawCitation);
       } else {
         invalidCitations.push(
-          `${cit.rawCitation} — Seksyen/Peraturan ${cit.number} TIDAK WUJUD dalam indeks verbatim ${lookupAct}.`
+          `${cit.rawCitation} — Seksyen/Peraturan ${cit.number} tidak ditemui dalam teks rasmi ${lookupAct}.`
         );
       }
     } else if (actSet) {
@@ -257,7 +257,7 @@ export function validateLegalOutput(
         verifiedCitations.push(cit.rawCitation);
       } else {
         invalidCitations.push(
-          `${cit.rawCitation} — Seksyen/Peraturan ${cit.number} TIDAK WUJUD dalam indeks verbatim ${lookupAct}.`
+          `${cit.rawCitation} — Seksyen/Peraturan ${cit.number} tidak ditemui dalam teks rasmi ${lookupAct}.`
         );
       }
     } else if (allValidNums.size > 0) {
@@ -265,7 +265,7 @@ export function validateLegalOutput(
         verifiedCitations.push(cit.rawCitation);
       } else {
         invalidCitations.push(
-          `${cit.rawCitation} — Seksyen/Peraturan ${cit.number} TIDAK WUJUD dalam Pustaka Akta Verbatim.`
+          `${cit.rawCitation} — Seksyen/Peraturan ${cit.number} tidak ditemui dalam rujukan teks asal akta.`
         );
       }
     }
@@ -299,7 +299,7 @@ export function validateLegalOutput(
       status: "DIMANSUHKAN",
       replacement_section: "Akta 852",
       warning_message_bm:
-        "DISEKAT (UNDANG-UNDANG DIMANSUHKAN): PPKHT 2004 telah dimansuhkan sepenuhnya oleh Akta 852.",
+        "Peruntukan Dimansuhkan: PPKHT 2004 telah dimansuhkan sepenuhnya dan digantikan oleh Akta 852.",
     });
   }
   if (
@@ -312,7 +312,7 @@ export function validateLegalOutput(
       status: "TAMAT_TEMPOH",
       replacement_section: "Seksyen 24 & 25 Akta 342 (Pindaan Akta A1742)",
       warning_message_bm:
-        "DISEKAT (ORDINAN TAMAT TEMPOH): Ordinan Darurat 2021 Akta 342 telah dibatalkan dan tamat tempoh.",
+        "Peruntukan Tamat Tempoh: Ordinan Darurat 2021 bagi Akta 342 telah dibatalkan dan tidak lagi berkuat kuasa.",
     });
   }
   for (const rep of repealedList) {
@@ -426,7 +426,7 @@ export function validateLegalOutput(
     !lowCombined.includes("jangan keluarkan")
   ) {
     unfulfilledErrors.push(
-      "UNSUR WAJIB TIDAK DIPENUHI (Seksyen 17(1) Akta 852): Pemilikan vape dalam beg oleh pelajar tanpa bukti menghisap/menggunakan/membeli BUKAN kesalahan di bawah Seksyen 17(1) Akta 852."
+      "Syarat Kesalahan Tidak Dipenuhi (Seksyen 17(1) Akta 852): Sekadar menyimpan vape dalam beg oleh pelajar tanpa bukti menghisap, menggunakan atau membeli bukan kesalahan di bawah Seksyen 17(1) Akta 852."
     );
   }
 
@@ -442,7 +442,7 @@ export function validateLegalOutput(
 
   if (unindexedStatutes.length > 0) {
     status = "AKTA BELUM DIINDEKS — MUAT NAIK PDF WARTA";
-    warningBanner = `AKTA BELUM DIINDEKS — MUAT NAIK PDF WARTA: ${unindexedStatutes.join(", ")}`;
+    warningBanner = `Teks rasmi akta belum dimasukkan ke dalam sistem: ${unindexedStatutes.join(", ")}. Sila rujuk salinan Warta rasmi atau maklumkan kepada pentadbir sistem.`;
   } else if (!passed) {
     status = "GAGAL_VALIDASI_PUSTAKA_AKTA";
     const allReasons = [
@@ -451,7 +451,7 @@ export function validateLegalOutput(
       ...penaltyMismatches,
       ...unfulfilledErrors,
     ];
-    warningBanner = `Amaran Sistem: Cadangan petikan undang-undang gagal semakan Pustaka Akta. ${allReasons.join(" | ")}`;
+    warningBanner = `Perhatian Semakan: Petikan undang-undang yang dicadangkan perlu disemak semula berdasarkan teks rasmi akta. ${allReasons.join(" • ")}`;
   }
 
   return {
