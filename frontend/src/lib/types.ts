@@ -29,6 +29,15 @@ export interface SystemStatus {
       source_file: string;
     }>;
   };
+  sop_brain?: {
+    version: string;
+    active_sops_indexed: number;
+    deprecated_sops_quarantined: number;
+    router_model: string;
+    answer_model: string;
+    temperature: number;
+    context_cache_enabled: boolean;
+  };
 }
 
 export interface RuntimeSettings {
@@ -137,6 +146,43 @@ export interface StatutoryCitation {
   verbatim?: boolean;
 }
 
+export interface SopReferenceItem {
+  sop_id: string;
+  tajuk: string;
+  kategori: string;
+  akta_berkaitan: string[];
+  seksyen_kunci: string[];
+  lampiran_ringkas: string[];
+  rujukan_silang: string[];
+  muka_surat_pdf?: string;
+  toc_id_alias?: string | null;
+}
+
+export interface SopRoutingInfo {
+  akta_terlibat: string[];
+  selected_sop_ids: string[];
+  melibatkan_akta_852: boolean;
+  sebab_pilihan: string;
+  amaran_statut_mansuh?: string | null;
+  mode?: string;
+}
+
+export interface SopAuditFindingItem {
+  kategori: string;
+  status: string;
+  rujukan_sop: string;
+  perincian: string;
+}
+
+export interface SopAuditPraTprReport {
+  mod: string;
+  lampiran_ks_wajib: string;
+  butiran_lampiran_ks: string;
+  sops_dirujuk: SopReferenceItem[];
+  dapatan_sop: SopAuditFindingItem[];
+  ulasan_pra_tpr?: string | null;
+}
+
 export interface IPAuditReport {
   filename: string;
   akta_utama: string;
@@ -163,6 +209,7 @@ export interface IPAuditReport {
   };
   models_used: Record<string, string>;
   extracted_text: string;
+  sop_audit_pra_tpr?: SopAuditPraTprReport | null;
 }
 
 export interface EvidenceExtractionResponse {
@@ -583,6 +630,10 @@ export interface AdvisorConsultResult {
   repealed_warnings?: RepealedProvisionHit[];
   legal_validation?: LegalValidationResult | null;
   statutory_citations: StatutoryCitation[];
+  sop_routing?: SopRoutingInfo | null;
+  sop_references?: SopReferenceItem[];
+  nota_pindaan?: string | null;
+  jawapan_4_lapisan_sop?: string | null;
 }
 
 export interface AdvisorAnsweredItem {

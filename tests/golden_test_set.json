@@ -1,0 +1,338 @@
+[
+  {
+    "id": "T01",
+    "kategori": "PERANGKAP_AKTA_852",
+    "soalan": "Saya tangkap seorang remaja 16 tahun hisap vape di kedai makan. Boleh keluarkan Notis Seksyen 32B Akta Makanan dan Borang 4 PPKHT 2004?",
+    "expected_any_sop_ids": [],
+    "must_flag_akta_852": true,
+    "forbidden_terms": [
+      "UIP-PPKHT-01-16",
+      "UIP-PPKHT-04-23",
+      "Borang 4 [Subperaturan 23(2)",
+      "dikeluarkan di bawah PPKHT 2004"
+    ],
+    "must_mention_any": [
+      "Akta 852",
+      "dimansuhkan",
+      "mansuh",
+      "1 Oktober 2024"
+    ]
+  },
+  {
+    "id": "T02",
+    "kategori": "PERANGKAP_AKTA_852",
+    "soalan": "Kedai runcit jual rokok sebatang-sebatang kepada pelajar sekolah. Apa SOP penguatkuasaan dan seksyen di bawah Peraturan 8 dan 9 PPKHT 2004?",
+    "expected_any_sop_ids": [],
+    "must_flag_akta_852": true,
+    "forbidden_terms": [
+      "UIP-PPKHT-02-16",
+      "UIP-PPKHT-03-16"
+    ],
+    "must_mention_any": [
+      "Akta 852",
+      "mansuh",
+      "digantikan"
+    ]
+  },
+  {
+    "id": "T03",
+    "kategori": "AKTA_154_TAPAK_BINA",
+    "soalan": "Pemeriksaan di tapak binaan jumpa 4 tempat pembiakan jentik-jentik berskala besar yang tak boleh dibersihkan serta-merta. Berapa hari boleh tutup dan borang apa kena tampal?",
+    "expected_any_sop_ids": [
+      "UIP-APSPP-01-24"
+    ],
+    "must_flag_akta_852": false,
+    "forbidden_terms": [
+      "18(1)(d)",
+      "18(1)(f)"
+    ],
+    "must_mention_any": [
+      "8(3)(aa)",
+      "14 hari",
+      "Lampiran A",
+      "Lampiran B",
+      "Lampiran C"
+    ]
+  },
+  {
+    "id": "T04",
+    "kategori": "AKTA_154_TAPAK_BINA_HALANG",
+    "soalan": "Penyelia tapak bina enggan benarkan PPKP masuk buat pemeriksaan Aedes dan menengking tanpa sentuhan fizikal. Apa prosedur dan seksyen pertuduhan?",
+    "expected_any_sop_ids": [
+      "UIP-UMUM-01-24",
+      "UIP-APSPP-01-24"
+    ],
+    "must_flag_akta_852": false,
+    "forbidden_terms": [
+      "UIP-APSPP-03-07 sebagai kod aktif"
+    ],
+    "must_mention_any": [
+      "UIP-UMUM-01-24",
+      "Seksyen 21",
+      "Laporan Polis"
+    ]
+  },
+  {
+    "id": "T05",
+    "kategori": "MENGHALANG_TUGAS_CEDERA",
+    "soalan": "Pemilik restoran tolak PPKP sampai jatuh dan luka di tangan semasa pemeriksaan Akta Makanan. Kita buka K/S bawah Seksyen 4(4) Akta Makanan atau serah polis?",
+    "expected_any_sop_ids": [
+      "UIP-UMUM-01-24"
+    ],
+    "must_flag_akta_852": false,
+    "forbidden_terms": [],
+    "must_mention_any": [
+      "Seksyen 186",
+      "Kanun Keseksaan",
+      "laporan perubatan",
+      "polis"
+    ]
+  },
+  {
+    "id": "T06",
+    "kategori": "AKTA_154_LAPANGAN",
+    "soalan": "Berapa ekor larva hidup perlu dipungut bagi setiap bekas pembiakan semasa pemeriksaan rumah, dan berapa hari tempoh serah Sampul Kecil ke PPKP UIPD?",
+    "expected_any_sop_ids": [
+      "UIP-APSPP-01-07 (PINDAAN 2024)"
+    ],
+    "must_flag_akta_852": false,
+    "forbidden_terms": [],
+    "must_mention_any": [
+      "5 ekor",
+      "3 hari",
+      "UIP-APSPP-01-07"
+    ]
+  },
+  {
+    "id": "T07",
+    "kategori": "AKTA_154_PECAH_MASUK",
+    "soalan": "Rumah kosong berkunci dalam lokaliti wabak denggi tidak terkawal. Apa 4 kriteria wajib sebelum pecah masuk dan berapa hari tempoh pemilik tuntut kunci?",
+    "expected_any_sop_ids": [
+      "UIP-APSPP-01-16 (PINDAAN 2024)"
+    ],
+    "must_flag_akta_852": false,
+    "forbidden_terms": [],
+    "must_mention_any": [
+      "5(5)",
+      "entomologi",
+      "21 hari",
+      "Lampiran F",
+      "periksa beg"
+    ]
+  },
+  {
+    "id": "T08",
+    "kategori": "AKTA_154_KOMPAUN",
+    "soalan": "Selepas TPR beri izin kompaun kes Aedes bawah Akta 154, dalam tempoh berapa hari tawaran kompaun mesti disediakan kepada OKK?",
+    "expected_any_sop_ids": [
+      "UIP-APSPP-02-16 (PINDAAN 2024)"
+    ],
+    "must_flag_akta_852": false,
+    "forbidden_terms": [],
+    "must_mention_any": [
+      "21 hari",
+      "376(3)",
+      "16(1)(b)"
+    ]
+  },
+  {
+    "id": "T09",
+    "kategori": "AKTA_281_GELEDAH_TANPA_WARAN",
+    "soalan": "Kami syak stor belakang kedai simpan makanan melanggar Akta 281 dan kalau tangguh peniaga akan alihkan barang. Boleh geledah tanpa waran? Apa seksyen dan borang?",
+    "expected_any_sop_ids": [
+      "UIP-UMUM-02-24"
+    ],
+    "must_flag_akta_852": false,
+    "forbidden_terms": [
+      "Seksyen 54 KTJ"
+    ],
+    "must_mention_any": [
+      "4(1)(b)",
+      "Seksyen 62",
+      "Seksyen 64",
+      "Lampiran A"
+    ]
+  },
+  {
+    "id": "T10",
+    "kategori": "AKTA_281_GELEDAH_WARAN",
+    "soalan": "Kami ada maklumat risikan kilang makanan haram dan mahu mohon waran geledah. Apa punca kuasa dan langkah selepas selesai geledah?",
+    "expected_any_sop_ids": [
+      "UIP-UMUM-03-24"
+    ],
+    "must_flag_akta_852": false,
+    "forbidden_terms": [],
+    "must_mention_any": [
+      "Seksyen 54",
+      "Majistret",
+      "kemukakan semula waran",
+      "Seksyen 64"
+    ]
+  },
+  {
+    "id": "T11",
+    "kategori": "BWC_KONFLIK_KOD",
+    "soalan": "Bolehkah PPKP pakai Kamera Badan (BWC) untuk kes Seksyen 10 Akta 342, dan bolehkah fail video di-rename supaya senang cari dalam folder?",
+    "expected_any_sop_ids": [
+      "UIP-UMUM-01-22 (PINDAAN 2024)"
+    ],
+    "must_flag_akta_852": false,
+    "forbidden_terms": [],
+    "must_mention_any": [
+      "UIP-UMUM-01-22",
+      "kecuali",
+      "Seksyen 10",
+      "tidak boleh dinamakan semula",
+      "90A(2)"
+    ]
+  },
+  {
+    "id": "T12",
+    "kategori": "GAMBAR_FORENSIK",
+    "soalan": "Apakah 3 teknik fotografi forensik wajib di tempat kejadian dan borang apa diperlukan untuk muat turun gambar digital ke CDR?",
+    "expected_any_sop_ids": [
+      "UIP-UMUM-04-07 (PINDAAN 2024)"
+    ],
+    "must_flag_akta_852": false,
+    "forbidden_terms": [],
+    "must_mention_any": [
+      "Overview",
+      "Fokus",
+      "Zoom",
+      "90A(2)",
+      "Lampiran C"
+    ]
+  },
+  {
+    "id": "T13",
+    "kategori": "SERAHAN_SAMAN",
+    "soalan": "Penyerah saman sudah pergi 3 kali ke alamat betul tetapi OKS tetap tiada. Apa borang afidavit dan langkah penyampaian gantian?",
+    "expected_any_sop_ids": [
+      "UIP-UMUM-03-07 (PINDAAN 2024)"
+    ],
+    "must_flag_akta_852": false,
+    "forbidden_terms": [],
+    "must_mention_any": [
+      "Borang 252",
+      "Seksyen 36",
+      "Seksyen 37",
+      "Lampiran D",
+      "Lampiran E",
+      "tampal"
+    ]
+  },
+  {
+    "id": "T14",
+    "kategori": "PENDAKWAAN_MAHKAMAH",
+    "soalan": "OKS mengaku tidak bersalah di mahkamah. Berapa hari sebelum perbicaraan perlu buat Pra Perbicaraan dan serah sapina saksi, serta tempoh rujuk K/S ke UIPN dan TPR selepas penghakiman?",
+    "expected_any_sop_ids": [
+      "UIP-UMUM-05-07 (PINDAAN 2024)"
+    ],
+    "must_flag_akta_852": false,
+    "forbidden_terms": [],
+    "must_mention_any": [
+      "30 hari",
+      "172A",
+      "51A",
+      "10 hari",
+      "3 hari",
+      "14 hari"
+    ]
+  },
+  {
+    "id": "T15",
+    "kategori": "KERTAS_SIASATAN_MINIT",
+    "soalan": "Siapa sahaja yang dibenarkan meminit Kertas Siasatan dan Lampiran mana yang digunakan untuk senarai semak K/S Akta 342?",
+    "expected_any_sop_ids": [
+      "UIP-UMUM-02-07 (PINDAAN 2024)"
+    ],
+    "must_flag_akta_852": false,
+    "forbidden_terms": [],
+    "must_mention_any": [
+      "Timbalan Pendakwa Raya",
+      "Pegawai Pendakwa",
+      "Pegawai Penyiasat",
+      "Lampiran F"
+    ]
+  },
+  {
+    "id": "T16",
+    "kategori": "AKTA_342_TUTUP_18_1_D",
+    "soalan": "Berlaku wabak keracunan makanan di kantin sekolah dan perlu tutup untuk basmi kuman dan dekontaminasi. Apa subseksyen dan tempoh minimum penutupan?",
+    "expected_any_sop_ids": [
+      "UIP-APPPB-01-07 (PINDAAN 2024)"
+    ],
+    "must_flag_akta_852": false,
+    "forbidden_terms": [],
+    "must_mention_any": [
+      "18(1)(d)",
+      "tidak kurang dari 3 hari",
+      "72 jam",
+      "Lampiran B",
+      "Lampiran C"
+    ]
+  },
+  {
+    "id": "T17",
+    "kategori": "AKTA_342_TUTUP_18_1_F",
+    "soalan": "Apakah kod SOP rasmi untuk penutupan premis di bawah Subseksyen 18(1)(f) Akta 342 bagi mencegah perebakan penyakit berjangkit?",
+    "expected_any_sop_ids": [
+      "UIP-APPPB-06-20 (PINDAAN 2024)"
+    ],
+    "must_flag_akta_852": false,
+    "forbidden_terms": [],
+    "must_mention_any": [
+      "UIP-APPPB-06-20",
+      "18(1)(f)"
+    ]
+  },
+  {
+    "id": "T18",
+    "kategori": "AKTA_342_BASMI_18_1_C",
+    "soalan": "Premis hanya perlu diperintah basmi kuman dan tikus di bawah Perenggan 18(1)(c) Akta 342 tanpa penutupan. Berapa tempoh pelaksanaan arahan kerja?",
+    "expected_any_sop_ids": [
+      "UIP-APPPB-02-07 (PINDAAN 2024)"
+    ],
+    "must_flag_akta_852": false,
+    "forbidden_terms": [],
+    "must_mention_any": [
+      "18(1)(c)",
+      "3 hari",
+      "14 hari"
+    ]
+  },
+  {
+    "id": "T19",
+    "kategori": "AKTA_342_PERINTAH_15_1",
+    "soalan": "Apa beza Perintah Pemerhatian dengan Perintah Pengawasan di bawah Seksyen 15(1) Akta 342, dan jika diberi secara lisan berapa jam perlu keluarkan perintah bertulis?",
+    "expected_any_sop_ids": [
+      "UIP-APPPB-01-16 (PINDAAN 2024)"
+    ],
+    "must_flag_akta_852": false,
+    "forbidden_terms": [
+      "Subseksyen 5(1)"
+    ],
+    "must_mention_any": [
+      "PUI",
+      "kontak",
+      "24 jam",
+      "Lampiran B",
+      "Lampiran C"
+    ]
+  },
+  {
+    "id": "T20",
+    "kategori": "AKTA_342_KOMPAUN",
+    "soalan": "Pengamal perubatan klinik swasta gagal buat notifikasi kes penyakit berjangkit bawah Seksyen 10(2) Akta 342. Apa SOP kompaun yang diguna pakai?",
+    "expected_any_sop_ids": [
+      "UIP-APPPB-01-21 (PINDAAN 2024)"
+    ],
+    "must_flag_akta_852": false,
+    "forbidden_terms": [],
+    "must_mention_any": [
+      "UIP-APPPB-01-21",
+      "Seksyen 25",
+      "10(2)"
+    ]
+  }
+]

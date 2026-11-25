@@ -293,6 +293,12 @@ class AdvisorConsultRequest(BaseModel):
     officer_profile: Optional[Dict[str, Any]] = None
 
 
+class AdvisorSopBrainRequest(BaseModel):
+    question: str
+    akta_hint: str = "Semua"
+    guna_cache: Optional[bool] = None
+
+
 class ExportDocxRequest(BaseModel):
     doc_type: str = Field(
         default="pakej_ip",
@@ -393,6 +399,12 @@ def get_status(
             }
     payload["cloud_run_revision"] = os.getenv("K_REVISION") or "local"
     payload["statute_library_version"] = get_legal_library().statute_library_version
+    try:
+        from backend.services.sop_brain import get_sop_brain
+
+        payload["sop_brain"] = get_sop_brain().get_status_summary()
+    except Exception:
+        payload["sop_brain"] = None
     return payload
 
 
@@ -675,6 +687,7 @@ async def audit_ip_endpoint(
         "redaction_summary": report.redaction_summary,
         "models_used": report.models_used,
         "extracted_text": report.extracted_text,
+        "sop_audit_pra_tpr": report.sop_audit_pra_tpr,
     }
 
     if case_id:
@@ -1504,6 +1517,24 @@ def consult_uip_advisor(
         status_summary=str(res.get("keputusan_tindakan") or ""),
     )
     return res
+
+
+@app.post("/api/advisor/sop-brain")
+def consult_sop_brain_endpoint(
+    req: AdvisorSopBrainRequest,
+    current_officer: Dict[str, Any] = Depends(_require_authenticated_officer),
+) -> Dict[str, Any]:
+    if not (req.question or "").strip():
+        raise HTTPException(
+            status_code=400,
+            detail="Sila taip soalan situasi kes untuk rujukan Otak SOP KKM 2024.",
+        )
+    _check_rate_limit(f"ai:{current_officer.get('id') or 'anon'}", max_requests=25, window_sec=60.0)
+    return advisor_service.consult_sop_brain(
+        question=req.question.strip(),
+        akta_hint=req.akta_hint,
+        guna_cache=req.guna_cache,
+    )
 
 
 # ---------------- Konsol Pembangun & Private Vault Bucket (zero4eleven@gmail.com sahaja) ----------------

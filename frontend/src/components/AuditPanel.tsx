@@ -256,6 +256,72 @@ export default function AuditPanel({
           </ul>
         )}
 
+        {report.sop_audit_pra_tpr && (
+          <div className="space-y-2.5 rounded-xl border border-indigo-200 bg-indigo-50/40 p-3.5 text-xs">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <div className="font-extrabold text-indigo-950">
+                Semakan SOP KKM Pra-TPR ({report.sop_audit_pra_tpr.lampiran_ks_wajib})
+              </div>
+              {report.sop_audit_pra_tpr.sops_dirujuk.length > 0 && (
+                <div className="flex flex-wrap gap-1">
+                  {report.sop_audit_pra_tpr.sops_dirujuk.map((s) => (
+                    <span
+                      key={s.sop_id}
+                      className="rounded-full bg-white px-2 py-0.5 text-[10px] font-bold text-indigo-900 ring-1 ring-indigo-200"
+                    >
+                      {s.sop_id}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {report.sop_audit_pra_tpr.dapatan_sop.length > 0 && (
+              <div className="space-y-1.5">
+                {report.sop_audit_pra_tpr.dapatan_sop.map((d, i) => {
+                  const isCrit = d.status.includes("KRITIKAL");
+                  const isWarn = d.status.includes("AMARAN");
+                  return (
+                    <div
+                      key={i}
+                      className="rounded-lg border border-slate-200/80 bg-white px-3 py-2"
+                    >
+                      <div className="flex flex-wrap items-center justify-between gap-1.5">
+                        <span className="font-bold text-slate-900">
+                          {d.kategori} · <span className="font-semibold text-indigo-900">{d.rujukan_sop}</span>
+                        </span>
+                        <span
+                          className={`rounded-full px-2 py-0.5 text-[10px] font-extrabold ${
+                            isCrit
+                              ? "bg-rose-100 text-rose-900"
+                              : isWarn
+                                ? "bg-amber-100 text-amber-950"
+                                : "bg-emerald-100 text-emerald-900"
+                          }`}
+                        >
+                          {d.status}
+                        </span>
+                      </div>
+                      <p className="mt-1 leading-relaxed text-slate-700">{d.perincian}</p>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+
+            {report.sop_audit_pra_tpr.ulasan_pra_tpr && (
+              <details className="rounded-lg border border-indigo-200 bg-white px-3 py-2">
+                <summary className="cursor-pointer font-extrabold text-indigo-950">
+                  Lihat Ulasan Penuh Juruaudit Pra-TPR (SOP KKM 2024)
+                </summary>
+                <div className="mt-2 whitespace-pre-wrap leading-relaxed text-slate-700">
+                  {report.sop_audit_pra_tpr.ulasan_pra_tpr}
+                </div>
+              </details>
+            )}
+          </div>
+        )}
+
         {/* 1 Bar Sub-Tab Tunggal */}
         <div className="flex gap-1.5 overflow-x-auto border-t border-slate-200 pt-3 no-scrollbar">
           {[

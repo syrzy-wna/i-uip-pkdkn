@@ -3334,3 +3334,147 @@ def test_cross_statute_acts_593_574_344_388_92_grounding_advisor_and_validation(
     assert resp_gudang.status_code == 200
     assert resp_gudang.json()["scenario_id"] == "rag_custom_query"
 
+
+def test_sop_brain_2024_dual_knowledge_store_and_audit_pra_tpr() -> None:
+    """
+    Sahkan integrasi penuh Pakej Otak SOP KKM Pindaan 2024 (Dual Knowledge Store):
+    - Tepat 22 SOP aktif dimuatkan daripada sop_index_active_router.json; 0 SOP PPKHT 2004 mansuh.
+    - Larangan keras: load_full_sops() & RAG menolak sops_arkib_deprecated / UIP-PPKHT-*.
+    - build_statutory_context_for_question() menyuntik teks verbatim Akta sedia ada ke konteks_statut_tambahan.
+    - Kesemua 20 soalan perangkap tests/golden_test_set.json lulus Penghala Peringkat 1 (20/20).
+    - Endpoint /api/status, /api/advisor/consult, /api/advisor/sop-brain & /api/audit-ip berfungsi lengkap.
+    """
+    from pathlib import Path
+    from backend.rag.statutory_store import get_statutory_store
+    from backend.services.sop_brain import (
+        AUDIT_PRA_TPR_SYSTEM_PROMPT,
+        PAKAR_UIP_SYSTEM_PROMPT,
+        ROUTER_SYSTEM_PROMPT,
+        build_statutory_context_for_question,
+        get_sop_brain,
+    )
+
+    brain = get_sop_brain()
+    assert len(brain.active_index) == 22
+    assert all("PPKHT" not in str(r.get("sop_id", "")).upper() for r in brain.active_index)
+    assert all("sops_arkib_deprecated" not in str(r.get("fail_md", "")).lower() for r in brain.active_index)
+
+    # Sekatan keras: percubaan memuatkan SOP mansuh PPKHT wajib ditolak
+    blocked_xml = brain.load_full_sops(["UIP-PPKHT-01-16", "UIP-PPKHT-04-23"])
+    assert "<TIADA_SOP_KHUSUS>" in blocked_xml
+    assert "UIP-PPKHT" not in blocked_xml
+
+    # Muatan penuh SOP aktif (tanpa chunking pecah) termasuk penanda muka surat PDF & alias konflik kod
+    bwc_xml = brain.load_full_sops(["UIP-UMUM-01-23 (PINDAAN 2024)"])
+    assert '<SOP id="UIP-UMUM-01-22 (PINDAAN 2024)">' in bwc_xml
+    assert "[Muka Surat PDF:" in bwc_xml
+
+    # Sahkan RAG aktif tidak mengindeks sops_arkib_deprecated / UIP-PPKHT
+    store = get_statutory_store()
+    rag_acts = store.list_available_acts()
+    assert all("PPKHT" not in str(a.get("source_file", "")).upper() for a in rag_acts)
+    assert all("sops_arkib_deprecated" not in str(a.get("source_file", "")).lower() for a in rag_acts)
+
+    # Guardrails prompt wajib kekal utuh
+    assert "[NOTA PINDAAN]" in PAKAR_UIP_SYSTEM_PROMPT
+    assert "4 LAPISAN BUKTI" in PAKAR_UIP_SYSTEM_PROMPT
+    assert "UIP-UMUM-01-22 (PINDAAN 2024)" in PAKAR_UIP_SYSTEM_PROMPT
+    assert "UIP-APPPB-06-20 (PINDAAN 2024)" in PAKAR_UIP_SYSTEM_PROMPT
+    assert "[KRITIKAL - RISIKO K/S DITOLAK TPR]" in AUDIT_PRA_TPR_SYSTEM_PROMPT
+    assert "melibatkan_akta_852" in ROUTER_SYSTEM_PROMPT
+
+    # Dual Knowledge Store: konteks_statut_tambahan ditarik terus daripada pustaka Akta sedia ada
+    ctx_852 = build_statutory_context_for_question(
+        "Remaja 16 tahun hisap vape di kedai makan, boleh keluar notis 32B dan PPKHT 2004?",
+        akta_hint="Akta 852",
+    )
+    assert "852" in ctx_852 and len(ctx_852) > 200
+
+    # Semua 20 soalan perangkap dalam tests/golden_test_set.json lulus Stage 1 Router
+    root = Path(__file__).resolve().parents[2]
+    golden = json.loads((root / "tests" / "golden_test_set.json").read_text(encoding="utf-8"))
+    assert len(golden) == 20
+    for tc in golden:
+        r = brain.route_question_deterministic(tc["soalan"])
+        assert r.melibatkan_akta_852 == tc["must_flag_akta_852"], f"{tc['id']} flag Akta 852 tidak tepat"
+        if tc["expected_any_sop_ids"]:
+            assert any(s in r.selected_sop_ids for s in tc["expected_any_sop_ids"]), (
+                f"{tc['id']} SOP tidak sepadan: {r.selected_sop_ids}"
+            )
+        assert all("PPKHT" not in s.upper() for s in r.selected_sop_ids)
+
+    # Sahkan /api/status melaporkan sop_brain (22 SOP aktif, temp=0.0)
+    st_resp = client.get("/api/status")
+    assert st_resp.status_code == 200
+    sb_status = st_resp.json().get("sop_brain") or {}
+    assert sb_status.get("active_sops_indexed") == 22
+    assert sb_status.get("temperature") == 0.0
+
+    # Sahkan /api/advisor/consult & /api/advisor/sop-brain menyertakan sop_routing, sop_references & [NOTA PINDAAN]
+    headers = _get_auth_headers()
+    resp_tapak = client.post(
+        "/api/advisor/consult",
+        headers=headers,
+        json={
+            "question": "Pemeriksaan di tapak binaan jumpa 4 tempat pembiakan jentik-jentik besar, berapa hari tutup dan borang apa?",
+            "akta_hint": "Akta 154",
+            "use_ai": False,
+        },
+    )
+    assert resp_tapak.status_code == 200
+    body_tapak = resp_tapak.json()
+    assert "UIP-APSPP-01-24" in (body_tapak.get("sop_routing") or {}).get("selected_sop_ids", [])
+    assert any(ref["sop_id"] == "UIP-APSPP-01-24" for ref in (body_tapak.get("sop_references") or []))
+
+    resp_vape = client.post(
+        "/api/advisor/consult",
+        headers=headers,
+        json={
+            "question": "Remaja 16 tahun hisap vape di restoran, boleh keluar Notis 32B dan Borang 4 PPKHT 2004?",
+            "akta_hint": "Akta 852",
+            "use_ai": False,
+        },
+    )
+    assert resp_vape.status_code == 200
+    body_vape = resp_vape.json()
+    assert (body_vape.get("sop_routing") or {}).get("melibatkan_akta_852") is True
+    assert "[NOTA PINDAAN]" in (body_vape.get("nota_pindaan") or "")
+    assert all("PPKHT" not in s.upper() for s in (body_vape.get("sop_routing") or {}).get("selected_sop_ids", []))
+
+    resp_sb = client.post(
+        "/api/advisor/sop-brain",
+        headers=headers,
+        json={
+            "question": "Pemilik restoran tolak PPKP sampai jatuh dan luka di tangan semasa pemeriksaan Akta Makanan.",
+            "akta_hint": "Akta 281",
+        },
+    )
+    assert resp_sb.status_code == 200
+    body_sb = resp_sb.json()
+    assert "UIP-UMUM-01-24" in body_sb["routing"]["selected_sop_ids"]
+    assert body_sb["statut_disuntik"] is True
+
+    # Sahkan /api/audit-ip menyertakan sop_audit_pra_tpr dan mengesan kesilapan PPKHT 2004 / S.32B bagi kes vape
+    resp_audit = client.post(
+        "/api/audit-ip",
+        headers=headers,
+        data={
+            "text": (
+                "Kertas Siasatan kes remaja 16 tahun hisap vape di restoran pada 10/11/2026. "
+                "Pegawai telah mengeluarkan Notis Seksyen 32B Akta Makanan 1983 dan Borang 4 PPKHT 2004. "
+                "Tiada sijil Seksyen 90A dilampirkan dan fail video BWC telah di-rename untuk rujukan."
+            ),
+            "akta_utama": "Akta 852",
+            "use_ollama": "false",
+            "fast_mode": "true",
+        },
+    )
+    assert resp_audit.status_code == 200
+    sop_audit = resp_audit.json().get("sop_audit_pra_tpr") or {}
+    assert "[NOTA PINDAAN]" in sop_audit.get("lampiran_ks_wajib", "")
+    dapatan_dump = json.dumps(sop_audit.get("dapatan_sop") or [], ensure_ascii=False)
+    assert "[KRITIKAL - RISIKO K/S DITOLAK TPR]" in dapatan_dump
+    assert "UIP-UMUM-01-22" in dapatan_dump
+    assert any(s["sop_id"].startswith("UIP-UMUM-02-07") for s in (sop_audit.get("sops_dirujuk") or []))
+
+

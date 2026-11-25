@@ -1619,6 +1619,8 @@ class _AdvisorLLMSchema(BaseModel):
     eksibit_wajib: List[str] = Field(default_factory=list)
     perangkap_kesilapan: List[str] = Field(default_factory=list)
     templat_ringkas: str = Field(...)
+    nota_pindaan: Optional[str] = None
+    jawapan_4_lapisan_sop: Optional[str] = None
 
 
 class UIPAdvisorService:
@@ -1642,6 +1644,55 @@ class UIPAdvisorService:
     def clear_cache(self) -> None:
         """Mengosongkan cache konsultasi apabila tetapan atau kunci API diubah."""
         self._consult_cache.clear()
+        try:
+            from backend.services.sop_brain import get_sop_brain
+
+            get_sop_brain().refresh_client()
+        except Exception:
+            pass
+
+    def consult_sop_brain(
+        self,
+        question: str,
+        akta_hint: str = "Semua",
+        guna_cache: Optional[bool] = None,
+    ) -> Dict[str, Any]:
+        """Laluan terus Dual Knowledge Store (Otak SOP KKM 2024 + Statut AGC Verbatim, `temperature=0.0`)."""
+        from backend.services.sop_brain import (
+            build_statutory_context_for_question,
+            get_sop_brain,
+        )
+
+        brain = get_sop_brain()
+        redacted = self.router.redactor.redact(question, use_ollama=False)
+        safe_q = redacted.redacted_text
+        konteks_statut = build_statutory_context_for_question(safe_q, akta_hint=akta_hint)
+
+        if not brain.has_api_key:
+            route = brain.route_question_deterministic(safe_q)
+            return {
+                "jawapan": (
+                    "Mod Semakan Mendalam AI (Gemini) belum diaktifkan di persekitaran ini. "
+                    "Rujukan SOP aktif di bawah dipilih secara deterministik daripada indeks 22 SOP KKM Pindaan 2024."
+                ),
+                "routing": route.model_dump(),
+                "sop_references": brain.get_sop_summaries(route.selected_sop_ids),
+                "mod": "deterministic_router_only",
+                "model_used": "penghala-deterministik-sop-2024",
+                "statut_disuntik": bool(konteks_statut),
+            }
+
+        hasil = brain.tanya_pakar_uip(
+            soalan=safe_q,
+            konteks_statut_tambahan=konteks_statut,
+            guna_cache=guna_cache,
+            akta_hint=akta_hint,
+        )
+        hasil["jawapan"] = self.router.redactor.rehydrate(
+            str(hasil.get("jawapan") or ""),
+            redacted.token_map,
+        )
+        return hasil
 
     def list_scenarios(self) -> List[Dict[str, Any]]:
         return [
@@ -2666,6 +2717,22 @@ class UIPAdvisorService:
         ) and len(effective_question) >= 12
         should_call_ai = ai_requested or auto_ai_needed
 
+        # PERINGKAT 1 (OTAK SOP KKM 2024): Kenal pasti Akta & 0-3 SOP aktif daripada sop_index_active_router.json
+        # (Sekatan keras: 5 SOP PPKHT 2004 mansuh TIDAK pernah dimuatkan)
+        sop_brain = None
+        sop_route = None
+        sop_route_mode = "deterministic"
+        try:
+            from backend.services.sop_brain import (
+                PAKAR_UIP_SYSTEM_PROMPT,
+                get_sop_brain,
+            )
+
+            sop_brain = get_sop_brain()
+        except Exception as _sop_exc:
+            PAKAR_UIP_SYSTEM_PROMPT = ""  # type: ignore
+            logger.warning("Otak SOP KKM 2024 tidak dapat dimulakan: %s", _sop_exc)
+
         if should_call_ai and self.router._genai_client is None:
             result["ai_attempted"] = ai_requested
             if ai_requested:
@@ -2691,9 +2758,19 @@ class UIPAdvisorService:
             except Exception:
                 safe_question_for_llm = effective_question
 
+            if sop_brain is not None:
+                try:
+                    sop_route = sop_brain.route_question(safe_question_for_llm, allow_local_fallback=True)
+                    sop_route_mode = "gemini_router_temp_0" if sop_brain.has_api_key else "deterministic"
+                except Exception as _r_exc:
+                    logger.warning("Penghala SOP Peringkat 1 gagal, guna deterministik: %s", _r_exc)
+                    sop_route = sop_brain.route_question_deterministic(safe_question_for_llm)
+                    sop_route_mode = "deterministic"
+
             cache_key = "|".join(
                 [
                     legal_lib.statute_library_version,
+                    "sop-brain-2024-v1",
                     safe_question_for_llm.lower(),
                     akta_hint,
                     scenario_id or "",
@@ -2717,12 +2794,32 @@ class UIPAdvisorService:
                 statutory_context_block = grounding["statutory_context_block"]
                 amendment_directives_list = grounding.get("amendment_directives") or []
                 amendment_rule_str = (
-                    "6) KEUTAMAAN AKTA PINDAAN TERKINI (MANDATORI): "
+                    "6) KEUTAMAAN AKTA PINDAAN TERKINI (MANDATORI — LABEL `[NOTA PINDAAN]`): "
                     + " | ".join(amendment_directives_list)
                     + "\n"
                     if amendment_directives_list
                     else ""
                 )
+
+                # PERINGKAT 2 (DUAL KNOWLEDGE STORE): Suntik teks penuh Markdown SOP aktif (tanpa chunking pecah)
+                # bersama konteks statut verbatim sedia ada (`konteks_statut_tambahan`)
+                full_sops_xml = ""
+                sop_router_header = ""
+                nota_852_guard = ""
+                if sop_brain is not None and sop_route is not None:
+                    full_sops_xml = sop_brain.load_full_sops(sop_route.selected_sop_ids)
+                    sop_router_header = (
+                        f"KEPUTUSAN ROUTER SOP (PERINGKAT 1): Akta={sop_route.akta_terlibat} | "
+                        f"SOP Aktif Dipilih={sop_route.selected_sop_ids} | Sebab={sop_route.sebab_pilihan}\n"
+                    )
+                    if sop_route.amaran_statut_mansuh:
+                        sop_router_header += f"AMARAN STATUT MANSUH: {sop_route.amaran_statut_mansuh}\n"
+                    if sop_route.melibatkan_akta_852:
+                        nota_852_guard = (
+                            "[PERINGATAN SISTEM WAJIB: Kes ini melibatkan produk merokok/vape/OBD. "
+                            "PPKHT 2004 telah MANSUH sejak 1 Oktober 2024. WAJIB guna Akta 852 sahaja dan sertakan [NOTA PINDAAN].]\n"
+                        )
+
                 # Semak sama ada templat padanan selari dengan kesalahan teratas grounding supaya templat tidak memutarbelitkan AI!
                 top_cand_sec = str((grounding.get("candidate_offences") or [{}])[0].get("offence_section") or "").lower()
                 matched_first_sec = str((matched.get("cadangan_pertuduhan") or [{}])[0].get("seksyen_kesalahan") or "").lower()
@@ -2741,27 +2838,26 @@ class UIPAdvisorService:
                     f"Keputusan asas templat: {matched['keputusan_tindakan']}\n"
                     f"Pertuduhan templat:\n{charges_summary}\n\n"
                     if (confident_match and preset_aligns_with_grounding)
-                    else "ANALISIS TERUS DARIPADA SOALAN PPKP, [KATALOG RINGKAS SEMUA KESALAHAN DOMAIN], DAN [TEKS PENUH VERBATIM WARTA] DI BAWAH.\n\n"
+                    else "ANALISIS TERUS DARIPADA SOALAN PPKP, DOKUMEN SOP KKM PENUH YANG DISUNTIK, [KATALOG RINGKAS SEMUA KESALAHAN DOMAIN], DAN [TEKS PENUH VERBATIM WARTA] DI BAWAH.\n\n"
                 )
                 deep_mode_instruction = (
                     "\nMOD SEMAKAN MENDALAM (DIMINTA KHUSUS OLEH PEGAWAI):\n"
                     "- Jawab soalan sebenar yang ditanya oleh pegawai secara TERUS TERANG pada ayat pertama `ringkasan_keputusan` (cth: boleh kompaun atau tidak, alasan pihak premis sah atau ditolak).\n"
-                    "- Nilai setiap fakta, alasan/pembelaan, pengecualian Jadual, dan siapa yang memikul liabiliti statutori (cth. tuan punya vs penghuni, penyewa vs pengurusan bangunan, individu vs syarikat) berdasarkan teks verbatim Warta dalam <STATUTORY_CONTEXT>.\n"
-                    "- Nyatakan strategi pembuktian kukuh, eksibit kritikal, dan potensi hujah pembelaan yang perlu dijangka oleh PPKP/TPR.\n"
+                    "- Nilai setiap fakta, alasan/pembelaan, pengecualian Jadual, dan siapa yang memikul liabiliti statutori (cth. tuan punya vs penghuni, penyewa vs pengurusan bangunan, individu vs syarikat) berdasarkan teks verbatim Warta dalam <STATUT_TERKINI_DISAHKAN> dan SOP penuh yang disuntik.\n"
+                    "- Nyatakan strategi pembuktian kukuh, eksibit kritikal, nombor Lampiran SOP tepat, dan potensi hujah pembelaan yang perlu dijangka oleh PPKP/TPR.\n"
                     if ai_requested
                     else ""
                 )
                 base_closed_book_prompt = (
-                    "Anda ialah Ketua UIP / Pegawai Pendakwa Kanan Kementerian Kesihatan Malaysia (KKM) yang amat teliti dan pintar dalam undang-undang kesihatan awam.\n"
-                    "Jawab SOALAN TEPAT YANG DITANYA OLEH PPKP menggunakan Bahasa Melayu kerja harian PPKP yang jelas, padat, praktikal di lapangan, dan tepat.\n"
-                    "ARAHAN KUNCI TERTUTUP & KETEPATAN PENAAKULAN (STRICT CLOSED-BOOK REASONING):\n"
+                    f"{PAKAR_UIP_SYSTEM_PROMPT}\n\n"
+                    "=== ARAHAN KUNCI TERTUTUP, SKEMA JSON & PENAAKULAN DUA-SUMBER (STATUT > SOP) ===\n"
                     "0) FOKUS 100% PADA SOALAN SEBENAR PEGAWAI: Baca dengan teliti apa yang ditanya (siapa pelaku/pihak terlibat, apa perbuatan atau peninggalan, apa alasan/pengecualian yang disebut). "
                     "JANGAN sesekali menjawab tentang seksyen lain yang tidak ditanya (contohnya: jika soalan tentang tiada tanda larangan merokok oleh peniaga, rujuk Seksyen 18(1)(a) & P.U. (A) 258/2024 — BUKAN Seksyen 16(2) perokok individu!). "
-                    "Semak [KATALOG RINGKAS SEMUA KESALAHAN DOMAIN] dan [TEKS PENUH VERBATIM WARTA] untuk memilih seksyen yang PALING TEPAT.\n"
+                    "Semak [KATALOG RINGKAS SEMUA KESALAHAN DOMAIN], [TEKS PENUH VERBATIM WARTA], dan DOKUMEN SOP KKM PENUH YANG DISUNTIK.\n"
                     "1) WAJIB kelaskan `status_kesalahan` kepada tepat satu daripada 2 nilai: `TIADA_KESALAHAN` atau `ADA_KESALAHAN`, serta tulis `ringkasan_keputusan` 1–2 baris yang tegas dan terus menjawab soalan pegawai.\n"
                     "   - Jika `TIADA_KESALAHAN`: jelaskan dengan tepat mengapa perbuatan/situasi itu tidak menjadi kesalahan atau termasuk dalam pengecualian Jadual dalam `sebab_tidak_menyalahi`, berikan langkah susulan pentadbiran/bukti tambahan dalam `langkah_susulan_ppkp`, dan kosongkan `cadangan_pertuduhan`.\n"
-                    "   - Jika `ADA_KESALAHAN`: letakkan seksyen kesalahan PALING UTAMA bagi soalan pegawai di indeks pertama `cadangan_pertuduhan[0]`, nyatakan hukuman & status kompaun tepat, tindakan segera, SOP lapangan bernombor kronologi, dan eksibit wajib.\n"
-                    "2) Anda DILARANG KERAS memetik mana-mana nombor seksyen, peraturan, denda, atau kompaun yang TIDAK WUJUD dalam blok <STATUTORY_CONTEXT> di bawah, dan DILARANG mencadangkan Seksyen 2 (Tafsiran) sebagai seksyen kesalahan.\n"
+                    "   - Jika `ADA_KESALAHAN`: letakkan seksyen kesalahan PALING UTAMA bagi soalan pegawai di indeks pertama `cadangan_pertuduhan[0]`, nyatakan hukuman & status kompaun tepat, tindakan segera, langkah SOP bernombor kronologi dengan petikan `[Kod SOP, Langkah X, Muka Surat PDF: Y]` (jika SOP disuntik), dan eksibit + nombor Lampiran wajib.\n"
+                    "2) Anda DILARANG KERAS memetik mana-mana nombor seksyen, peraturan, denda, atau kompaun yang TIDAK WUJUD dalam blok <STATUT_TERKINI_DISAHKAN> atau SOP yang disuntik, dan DILARANG mencadangkan Seksyen 2 (Tafsiran) sebagai seksyen kesalahan.\n"
                     "3) WAJIB semak unsur mandatori dan pengecualian/perangkap sebenar dalam teks Warta sebelum memutuskan kesalahan. "
                     "Jika fakta soalan jelas memenuhi pengecualian statutori atau unsur mandatori tidak dipenuhi (cth. pemilikan pasif vape pelajar tanpa menghisap/membeli, merokok di tempat letak kereta awam terbuka R&R Bil. 24, kabinet bertutup legap P.U.(A) 260/2024, pembersihan dapur tanpa menjual semasa perintah tutup S.11, makanan luput diasingkan untuk pelupusan, takungan kosong tiada larva S.13(1) Akta 154, premis berkunci tiada penghuni S.21 Akta 154, atau COVID-19 pasca 15 Julai 2024 tanpa perintah bertulis S.14A(1)/S.15(1)/S.14), WAJIB tetapkan `status_kesalahan = 'TIADA_KESALAHAN'`.\n"
                     "4) DILARANG mencadangkan sebarang akta/peraturan dalam SENARAI HITAM PERUNTUKAN DIMANSUHKAN (seperti PPKHT 2004 atau Ordinan Darurat 2021).\n"
@@ -2769,35 +2865,41 @@ class UIPAdvisorService:
                     f"{amendment_rule_str}"
                     "7) RUJUKAN SILANG AKTA LAIN (LEX SPECIALIS & BATASAN KUASA PPKP vs PDRM): "
                     "Sentiasa semak Akta KKM spesifik dahulu (Akta 852, 281, 154, 342). "
-                    "Apabila kesalahan/prosedur TIADA dalam akta spesifik tersebut, rujuk akta sokongan rasmi yang dibekalkan dalam <STATUTORY_CONTEXT>: "
+                    "Apabila kesalahan/prosedur TIADA dalam akta spesifik tersebut, rujuk akta sokongan rasmi yang dibekalkan dalam <STATUT_TERKINI_DISAHKAN>: "
                     "(a) Kanun Keseksaan [Akta 574] bagi halangan (S.186 — khususnya Akta 852 yang tiada seksyen halangan sendiri), tentangan sitaan (S.183), ugutan (S.189/S.506), serangan (S.353), penyamaran PPKP (S.170), pemalsuan sijil/dokumen (S.465/468/471), maklumat/aduan palsu (S.177/182), penipuan (S.420) — WAJIB nyatakan PPKP TIADA kuasa kompaun/siasat Akta 574 dan WAJIB buat Laporan Polis S.107 KTJ (dan S.108(2) OTI jika Non-Seizable); "
                     "(b) Kanun Tatacara Jenayah [Akta 593] bagi tatacara siasatan, rakaman S.112, diari S.119, waran geledah S.54/56/62, penzahiran S.51A, laporan kimia S.399 & pelupusan barang kes S.407/407A; "
                     "(c) Akta Polis 1967 [Akta 344] bagi permohonan bantuan/iringan polis operasi kebersihan & kuarantin (S.20(3)(c)) — tegaskan S.90 hanya untuk halangan terhadap pegawai polis, bukan PPKP; "
                     "(d) Akta Tafsiran 1948 dan 1967 [Akta 388] (SATU akta bersepadu) bagi kiraan 10 hari bersih & cuti umum (S.54), serahan pos berdaftar (S.12), kesan pemansuhan PPKHT 2004 (S.30), pembatalan awal perintah (S.47), pendekatan tujuan (S.17A) & larangan hukuman berganda (S.59); "
                     "(e) Akta Mahkamah Rendah 1948 [Akta 92] bagi bidang kuasa & had hukuman Mahkamah Majistret (S.85/87/88) vs Mahkamah Sesyen (S.63/64) — nyatakan jurang Akta 281 yang tiada klausa non-obstante berbanding S.43 Akta 852, S.23A Akta 154 & S.24A Akta 342.\n"
+                    "8) WAJIB isi `nota_pindaan` dengan label `[NOTA PINDAAN]` jika teks SOP (15 Feb 2024) bercanggah dengan Akta 852 atau pindaan akta terkini; dan isi `jawapan_4_lapisan_sop` secara padat mengikut 4 Lapisan Bukti (1. Penilaian Awal, 2. Punca Kuasa & Seksyen, 3. Tatacara & Kod SOP + Muka Surat PDF, 4. Borang/Lampiran Wajib & Rujukan Silang).\n"
                     f"{deep_mode_instruction}\n"
+                    f"{sop_router_header}"
+                    f"{nota_852_guard}"
                     f"SOALAN PPKP:\n{safe_question_for_llm}\n\n"
+                    f"DOKUMEN SOP KKM PENUH YANG DISUNTIK:\n{full_sops_xml}\n\n"
                     f"{ref_block}"
-                    f"{statutory_context_block}"
+                    f"<STATUT_TERKINI_DISAHKAN>\n{statutory_context_block}\n</STATUT_TERKINI_DISAHKAN>"
                 )
                 model_candidates = (
                     [
                         settings.reasoning_model,
+                        "gemini-2.5-pro",
                         "gemini-3.8-flash",
                         settings.multimodal_model,
                         settings.standard_fallback_model,
                     ]
                     if ai_requested
-                    else ["gemini-3.8-flash", settings.multimodal_model, settings.standard_fallback_model]
+                    else ["gemini-2.5-flash", "gemini-3.8-flash", settings.multimodal_model, settings.standard_fallback_model]
                 )
+                # Guardrail Wajib: KEKALKAN temperature=0.0 untuk semua panggilan Tanya Pakar UIP
                 ai_json, used_model = self.router._call_gemini_structured_json(
                     model_candidates=model_candidates,
                     input_payload=base_closed_book_prompt,
                     schema=_AdvisorLLMSchema.model_json_schema(),
-                    temperature=0.15 if ai_requested else 0.1,
+                    temperature=0.0,
                     prefer_flash=not ai_requested,
                     prefer_fast_gc=True,
-                    max_output_tokens=3400 if ai_requested else 2800,
+                    max_output_tokens=3600 if ai_requested else 3000,
                 )
 
                 def _clean_ai_text(val: Any, fallback: str = "") -> str:
@@ -2806,7 +2908,7 @@ class UIPAdvisorService:
                         s = fallback
                     # Buang kebocoran jargon sistem/prompt daripada paparan pengguna PPKP
                     s = re.sub(
-                        r"</?STATUTORY_CONTEXT>|Closed-Book\s+Verbatim\s+AGC|validateLegalOutput|master_offences_matrix|statute_sections_verbatim",
+                        r"</?(?:STATUTORY_CONTEXT|STATUT_TERKINI_DISAHKAN|TIADA_SOP_KHUSUS)>|Closed-Book\s+Verbatim\s+AGC|validateLegalOutput|master_offences_matrix|statute_sections_verbatim",
                         "",
                         s,
                         flags=re.I,
@@ -2862,6 +2964,8 @@ class UIPAdvisorService:
                         "eksibit_wajib": _clean_ai_list(raw_ai.get("eksibit_wajib"), result["eksibit_wajib"]),
                         "perangkap_kesilapan": _clean_ai_list(raw_ai.get("perangkap_kesilapan"), result["perangkap_kesilapan"]),
                         "templat_ringkas": _clean_ai_text(raw_ai.get("templat_ringkas"), result["templat_ringkas"]),
+                        "nota_pindaan": _clean_ai_text(raw_ai.get("nota_pindaan"), "") or None,
+                        "jawapan_4_lapisan_sop": str(raw_ai.get("jawapan_4_lapisan_sop") or "").strip() or None,
                     }
                     if raw_status in ("TIADA_KESALAHAN", "ADA_KESALAHAN"):
                         patch["status_kesalahan"] = raw_status
@@ -2887,7 +2991,7 @@ class UIPAdvisorService:
                             temperature=0.0,
                             prefer_flash=True,
                             prefer_fast_gc=True,
-                            max_output_tokens=2800,
+                            max_output_tokens=3000,
                         )
                         if retry_json:
                             candidate_patch = _build_ai_patch(retry_json)
@@ -2954,6 +3058,34 @@ class UIPAdvisorService:
             )
         )
         result["statutory_citations"] = citations_dict
+
+        # Lampirkan metadata Otak SOP KKM 2024 pada SEMUA jawapan (termasuk Mod Pantas / luar talian)
+        if sop_brain is not None:
+            if sop_route is None:
+                sop_route = sop_brain.route_question_deterministic(effective_question)
+                sop_route_mode = "deterministic"
+            sop_refs = sop_brain.get_sop_summaries(sop_route.selected_sop_ids)
+            result["sop_routing"] = {
+                **sop_route.model_dump(),
+                "mode": sop_route_mode,
+            }
+            result["sop_references"] = sop_refs
+            if not result.get("nota_pindaan"):
+                amend_dirs = grounding.get("amendment_directives") or []
+                if sop_route.melibatkan_akta_852:
+                    result["nota_pindaan"] = (
+                        "[NOTA PINDAAN] PPKHT 2004 dan Notis Seksyen 32B Akta Makanan 1983 bagi kes produk merokok/vape "
+                        "telah DIMANSUHKAN mulai 1 Oktober 2024 dan digantikan oleh Akta 852. Tiada SOP khusus Akta 852 "
+                        "dalam koleksi SOP KKM Pindaan 15 Feb 2024; rujuk teks Akta 852 terkini dan SOP UMUM yang terpakai."
+                    )
+                elif amend_dirs:
+                    result["nota_pindaan"] = f"[NOTA PINDAAN] {' | '.join(amend_dirs)}"
+                elif sop_route.amaran_statut_mansuh:
+                    result["nota_pindaan"] = f"[NOTA PINDAAN] {sop_route.amaran_statut_mansuh}"
+        else:
+            result.setdefault("sop_routing", None)
+            result.setdefault("sop_references", [])
+
         if "legal_validation" not in result or result["legal_validation"] is None:
             result["legal_validation"] = validate_legal_output(
                 result, lib_snapshot, question_context=effective_question

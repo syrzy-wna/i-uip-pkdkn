@@ -49,10 +49,13 @@ RUN pip install --upgrade pip \
     && pip install -r /app/backend/requirements.txt \
     && python -c "import pymupdf as fitz; doc = fitz.open(); doc.close(); print('PyMuPDF PDF parser OK:', fitz.__version__)"
 
-# Salin kod backend, data akta, pustaka perundangan 2-lapisan, skrip CLI & skrip deploy
+# Salin kod backend, data akta, pustaka perundangan 2-lapisan, 22 SOP aktif KKM 2024 (TANPA sops_arkib_deprecated), skrip CLI & skrip deploy
 COPY backend/ /app/backend/
 COPY data/akta/ /app/data/akta/
 COPY data/legal_library/ /app/data/legal_library/
+COPY data/sop_kkm_2024/sop_index_active_router.json /app/data/sop_kkm_2024/sop_index_active_router.json
+COPY data/sop_kkm_2024/sop_bundle_aktif_context_cache.txt /app/data/sop_kkm_2024/sop_bundle_aktif_context_cache.txt
+COPY data/sop_kkm_2024/sops_aktif/ /app/data/sop_kkm_2024/sops_aktif/
 COPY scripts/ /app/scripts/
 COPY deploy/ /app/deploy/
 

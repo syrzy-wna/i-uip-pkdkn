@@ -1250,6 +1250,67 @@ export default function UIPAdvisorPanel({
                       );
                     })}
                   </ol>
+
+                  {/* Rujukan SOP KKM Pindaan 2024 & [NOTA PINDAAN] (Otak SOP Dual Knowledge Store) */}
+                  {(result.nota_pindaan ||
+                    (result.sop_references && result.sop_references.length > 0) ||
+                    result.jawapan_4_lapisan_sop) && (
+                    <div className="mt-3.5 space-y-2.5 border-t border-slate-200 pt-3">
+                      {result.nota_pindaan && (
+                        <div className="flex items-start gap-2 rounded-xl border border-amber-300 bg-amber-50 px-3 py-2 text-xs leading-relaxed text-amber-950">
+                          <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-700" />
+                          <span>{result.nota_pindaan}</span>
+                        </div>
+                      )}
+
+                      {result.sop_references && result.sop_references.length > 0 && (
+                        <div className="space-y-1.5">
+                          <div className="text-[11px] font-extrabold uppercase tracking-wide text-slate-600">
+                            Rujukan Rasmi SOP KKM (Pindaan 15 Feb 2024)
+                          </div>
+                          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                            {result.sop_references.map((sop) => (
+                              <div
+                                key={sop.sop_id}
+                                className="rounded-xl border border-indigo-200/80 bg-indigo-50/40 px-3 py-2 text-xs"
+                              >
+                                <div className="flex flex-wrap items-center justify-between gap-1.5">
+                                  <span className="font-extrabold text-indigo-950">
+                                    {sop.sop_id}
+                                  </span>
+                                  {sop.muka_surat_pdf && (
+                                    <span className="rounded-full bg-white px-2 py-0.5 text-[10px] font-bold text-indigo-900 ring-1 ring-indigo-200">
+                                      PDF m.s. {sop.muka_surat_pdf}
+                                    </span>
+                                  )}
+                                </div>
+                                <div className="mt-0.5 font-medium text-slate-700">
+                                  {sop.tajuk}
+                                </div>
+                                {sop.lampiran_ringkas && sop.lampiran_ringkas.length > 0 && (
+                                  <div className="mt-1 text-[11px] text-slate-600">
+                                    <span className="font-bold text-slate-800">Borang/Lampiran:</span>{" "}
+                                    {sop.lampiran_ringkas.join(", ")}
+                                  </div>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {result.jawapan_4_lapisan_sop && (
+                        <details className="rounded-xl border border-slate-200 bg-slate-50/60 px-3.5 py-2.5 text-xs">
+                          <summary className="cursor-pointer font-extrabold text-[#0f2744]">
+                            Lihat Ringkasan Lengkap 4 Lapisan Bukti SOP (Penilaian, Punca Kuasa, Langkah &amp; Lampiran)
+                          </summary>
+                          <div className="mt-2 whitespace-pre-wrap leading-relaxed text-slate-700">
+                            {result.jawapan_4_lapisan_sop}
+                          </div>
+                        </details>
+                      )}
+                    </div>
+                  )}
                 </div>
 
                 {/* 4. TAB TAMBAHAN YANG KEMAS DI BAWAH SOP */}

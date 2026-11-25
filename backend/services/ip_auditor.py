@@ -272,6 +272,7 @@ class IPAuditReport:
     redaction_summary: Dict[str, Any]
     models_used: Dict[str, str]
     extracted_text: str
+    sop_audit_pra_tpr: Optional[Dict[str, Any]] = None
 
 
 ALLOWED_UPLOAD_TEXT_EXTS = (".pdf", ".docx", ".txt", ".md")
@@ -463,6 +464,34 @@ class IPTechnicalAuditor:
         kuiri_tpr = self._build_kuiri_tpr(criteria_results)
         ip_folder_checklist = self._build_ip_folder_checklist(criteria_results)
 
+        # Semakan SOP KKM Pra-TPR (UIP-UMUM-02-07 + UIP-UMUM-04-07 + SOP Akta, AUDIT_PRA_TPR_SYSTEM_PROMPT, temp=0.0)
+        sop_audit_pra_tpr: Optional[Dict[str, Any]] = None
+        try:
+            from backend.services.sop_brain import (
+                build_statutory_context_for_question,
+                get_sop_brain,
+            )
+
+            sop_brain = get_sop_brain()
+            statute_ctx_for_audit = build_statutory_context_for_question(
+                f"{akta_utama} {redaction.redacted_text[:450]}",
+                akta_hint=akta_utama,
+                top_k=3,
+            )
+            sop_audit_pra_tpr = sop_brain.audit_kertas_siasatan_structured(
+                teks_draf_ks_redacted=redaction.redacted_text,
+                akta_kes=akta_utama,
+                konteks_statut_tambahan=statute_ctx_for_audit,
+                use_ai=not fast_mode,
+            )
+            if sop_audit_pra_tpr.get("ulasan_pra_tpr"):
+                sop_audit_pra_tpr["ulasan_pra_tpr"] = self.router.redactor.rehydrate(
+                    str(sop_audit_pra_tpr["ulasan_pra_tpr"]),
+                    redaction.token_map,
+                )
+        except Exception:
+            sop_audit_pra_tpr = None
+
         return IPAuditReport(
             filename=filename,
             akta_utama=akta_utama,
@@ -487,8 +516,10 @@ class IPTechnicalAuditor:
                 "privacy_engine": redaction.engine_used,
                 "decision_engine": decision_model_used,
                 "rag_engine": self.router.rag_store.engine_name,
+                "sop_audit_engine": (sop_audit_pra_tpr or {}).get("mod", "tidak_aktif"),
             },
             extracted_text=raw_text,
+            sop_audit_pra_tpr=sop_audit_pra_tpr,
         )
 
     @staticmethod

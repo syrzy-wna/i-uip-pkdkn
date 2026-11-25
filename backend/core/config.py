@@ -63,8 +63,16 @@ class Settings:
     reasoning_model_alias: str = os.getenv("REASONING_MODEL_ALIAS", "gemini-3.1-pro-preview").strip()
     standard_fallback_model: str = os.getenv("STANDARD_GEMINI_MODEL", "gemini-3.8-flash").strip()
 
-    # Direktori data, ChromaDB & SQLite
+    # Direktori data, ChromaDB, SOP KKM 2024 & SQLite
     akta_dir: Path = _resolve_path(os.getenv("AKTA_DIR", "./data/akta"), "data/akta")
+    sop_kkm_dir: Path = _resolve_path(
+        os.getenv("SOP_KKM_DIR", "./data/sop_kkm_2024"), "data/sop_kkm_2024"
+    )
+    sop_brain_router_model: str = os.getenv("SOP_BRAIN_ROUTER_MODEL", "gemini-2.5-flash").strip()
+    sop_brain_answer_model: str = os.getenv("SOP_BRAIN_ANSWER_MODEL", "gemini-2.5-pro").strip()
+    sop_brain_use_context_cache: bool = (
+        os.getenv("SOP_BRAIN_USE_CONTEXT_CACHE", "false").strip().lower() in ("1", "true", "yes")
+    )
     chroma_persist_dir: Path = _resolve_path(
         os.getenv("CHROMA_PERSIST_DIR", "./data/chroma_db"), "data/chroma_db"
     )
