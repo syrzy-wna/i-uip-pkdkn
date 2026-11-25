@@ -121,24 +121,38 @@ function buildCompoundFromCase(
     peruntukan_undang:
       rec.akta_utama === "Akta 852"
         ? "Seksyen 16(2) Akta 852"
-        : rec.akta_utama === "Akta 154"
-          ? "Seksyen 13(1) dibaca bersama Seksyen 13(2) Akta 154"
-          : rec.akta_utama === "Akta 342"
-            ? "Seksyen 22(b) Akta 342"
-            : "Peraturan 11(1) PPKM 2009 [P.U. (A) 95/2009]",
+        : rec.akta_utama === "Akta 281"
+          ? "Peraturan 11(1) PPKM 2009 [P.U. (A) 95/2009]"
+          : rec.akta_utama === "Akta 154"
+            ? "Seksyen 13(1) dibaca bersama Seksyen 13(2) Akta 154"
+            : rec.akta_utama === "Akta 342"
+              ? "Seksyen 22(b) Akta 342"
+              : "",
     peruntukan_kompaun:
       rec.akta_utama === "Akta 852"
         ? "Seksyen 48 Akta 852 [P.U. (A) 259/2024]"
-        : rec.akta_utama === "Akta 154"
-          ? "Seksyen 25 Akta 154 (Maksimum RM500)"
-          : rec.akta_utama === "Akta 342"
-            ? "Seksyen 25 Akta 342 [P.U. (A) 139/2025]"
-            : "Notis Seksyen 32B & Seksyen 33 Akta Makanan 1983",
-    amaun_kompaun_rm: "RM 500.00",
+        : rec.akta_utama === "Akta 281"
+          ? "Notis Seksyen 32B & Seksyen 33 Akta Makanan 1983"
+          : rec.akta_utama === "Akta 154"
+            ? "Seksyen 25 Akta 154 (Maksimum RM500)"
+            : rec.akta_utama === "Akta 342"
+              ? "Seksyen 25 Akta 342 [P.U. (A) 139/2025]"
+              : "",
+    amaun_kompaun_rm:
+      rec.akta_utama === "Akta 852" ||
+      rec.akta_utama === "Akta 281" ||
+      rec.akta_utama === "Akta 154" ||
+      rec.akta_utama === "Akta 342"
+        ? "RM 500.00"
+        : "",
     tempoh_bayaran:
       rec.akta_utama === "Akta 852"
         ? "30 hari dari tarikh tawaran kompaun"
-        : "14 hari dari tarikh serahan notis",
+        : rec.akta_utama === "Akta 281" ||
+            rec.akta_utama === "Akta 154" ||
+            rec.akta_utama === "Akta 342"
+          ? "14 hari dari tarikh serahan notis"
+          : "",
     pegawai_pengeluar: rec.pegawai_io || officer?.full_name || "",
     no_kad_kuasa: rec.no_kad_kuasa || officer?.kkm_authority_card_no || "",
   };
@@ -1582,7 +1596,7 @@ export default function UIPCommandPage() {
                 <h3 className="mt-4 text-base font-extrabold text-slate-900">Pakar &amp; Akta</h3>
                 <p className="mt-1.5 text-xs leading-relaxed text-slate-600">
                   Tanya situasi di lokasi untuk tahu ada kesalahan atau tidak, semak senarai
-                  kesalahan dan rujuk teks penuh 6 akta KKM.
+                  kesalahan dan rujuk teks penuh 11 akta rasmi (KKM + rujukan silang).
                 </p>
               </div>
               <div className="mt-4 inline-flex items-center gap-1 text-xs font-extrabold text-[#0f2744]">

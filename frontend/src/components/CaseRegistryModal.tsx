@@ -17,14 +17,12 @@ interface CaseRegistryModalProps {
   officer?: OfficerProfile | null;
 }
 
-const AKTA_CHOICES = [
-  { value: "Akta 852", label: "Akta 852 — Produk Merokok & Vape" },
-  { value: "Akta 281", label: "Akta 281 — Makanan 1983 & PPKM 2009" },
-  { value: "Akta 154", label: "Akta 154 — Aedes & Serangga Pembawa Penyakit" },
-  { value: "Akta 342", label: "Akta 342 — Penyakit Berjangkit / Tibi" },
-  { value: "Akta 593", label: "Akta 593 — Kanun Tatacara Jenayah (KTJ)" },
-  { value: "Akta 56", label: "Akta 56 — Akta Keterangan 1950" },
-];
+import { ALL_ACT_OPTIONS } from "@/lib/actMeta";
+
+const AKTA_CHOICES = ALL_ACT_OPTIONS.map((a) => ({
+  value: a.value,
+  label: a.label,
+}));
 
 const INPUT_CLASS =
   "mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-base text-slate-900 focus:border-[#0f2744] focus:outline-none focus:ring-2 focus:ring-slate-200 sm:text-sm";

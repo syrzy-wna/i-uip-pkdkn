@@ -37,6 +37,13 @@ import {
   verifyGazetteStatuteOrOffence,
 } from "@/lib/api";
 import {
+  OFFLINE_LEGAL_CACHE_KEY,
+  canonicalizeActCode,
+  getActBadgeStyle,
+  isCompoundableKkmAct,
+  isPdrmReferralAct,
+} from "@/lib/actMeta";
+import {
   copyTextSafe,
   extractRecommendedCompoundRm,
   useLockBodyScroll,
@@ -51,7 +58,7 @@ import type {
   TargetOffenderCategory,
 } from "@/lib/types";
 
-const OFFLINE_CACHE_KEY = "uip_offline_legal_library_v2";
+const OFFLINE_CACHE_KEY = OFFLINE_LEGAL_CACHE_KEY;
 
 export interface CompoundPrefillMeta {
   seksyen?: string;
@@ -201,10 +208,34 @@ const CORE_STATUTE_FILE_GUIDE = [
     title: "Kanun Tatacara Jenayah [Akta 593]",
   },
   {
+    code: "AKTA_574.pdf",
+    statute_id: "AKTA_574",
+    akta_code: "Akta 574",
+    title: "Kanun Keseksaan [Akta 574] (Penal Code — Rujukan Silang PDRM/TPR)",
+  },
+  {
+    code: "AKTA_344.pdf",
+    statute_id: "AKTA_344",
+    akta_code: "Akta 344",
+    title: "Akta Polis 1967 [Akta 344] (Bantuan/Iringan Polis Operasi KKM)",
+  },
+  {
+    code: "AKTA_388.pdf",
+    statute_id: "AKTA_388",
+    akta_code: "Akta 388",
+    title: "Akta Tafsiran 1948 dan 1967 [Akta 388] (Had Masa, Serahan & Pemansuhan)",
+  },
+  {
+    code: "AKTA_92.pdf",
+    statute_id: "AKTA_92",
+    akta_code: "Akta 92",
+    title: "Akta Mahkamah Rendah 1948 [Akta 92] (Bidang Kuasa Majistret & Sesyen)",
+  },
+  {
     code: "AKTA_56.pdf",
     statute_id: "AKTA_56",
     akta_code: "Akta 56",
-    title: "Akta Keterangan 1950 [Akta 56] (Seksyen 90A–90C)",
+    title: "Akta Keterangan 1950 [Akta 56] (Seksyen 90A–90C & 114A)",
   },
   {
     code: "AKTA_611.pdf",
@@ -349,15 +380,15 @@ export default function LegalDirectoryPanel({
     const list = snapshot?.master_offences_matrix || [];
     const q = offenceSearch.trim().toLowerCase();
     return list.filter((off) => {
-      const canonicalAct = off.canonical_akta_code || off.statute_id.replace("_", " ");
+      const canonicalAct = off.canonical_akta_code || canonicalizeActCode(off.statute_id) || off.statute_id.replace(/_/g, " ");
       if (aktaFilter !== "Semua") {
         if (aktaFilter === "PPKM 2009" && off.statute_id !== "PPKM_2009") return false;
         else if (aktaFilter === "PPM 1985" && off.statute_id !== "PPM_1985") return false;
         else if (
           aktaFilter !== "PPKM 2009" &&
           aktaFilter !== "PPM 1985" &&
-          !canonicalAct.toLowerCase().includes(aktaFilter.toLowerCase()) &&
-          !off.statute_id.toLowerCase().includes(aktaFilter.toLowerCase().replace(" ", "_"))
+          canonicalAct.toLowerCase() !== aktaFilter.toLowerCase() &&
+          canonicalizeActCode(off.statute_id).toLowerCase() !== aktaFilter.toLowerCase()
         ) {
           return false;
         }
@@ -615,24 +646,33 @@ export default function LegalDirectoryPanel({
     (compoundFilter !== "SEMUA" ? 1 : 0);
 
   const renderOffenceDetailContent = (off: MasterOffenceRecord) => {
-    const isComp = Boolean(off.compound_info?.is_compoundable);
+    const actCode = off.canonical_akta_code || canonicalizeActCode(off.statute_id) || off.statute_id;
+    const isPdrmRef = isPdrmReferralAct(actCode);
+    const isComp = Boolean(off.compound_info?.is_compoundable) && isCompoundableKkmAct(actCode);
+    const actStyle = getActBadgeStyle(actCode);
     return (
       <div className="space-y-4">
         {/* Header Kesalahan & Butang Tindakan */}
         <div className="flex flex-wrap items-start justify-between gap-3 border-b border-slate-200 pb-4">
           <div className="space-y-1.5">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="rounded-md bg-[#0f2744] px-2.5 py-0.5 text-xs font-extrabold text-white">
-                {off.canonical_akta_code || off.statute_id}
+              <span className={`rounded-md px-2.5 py-0.5 text-xs font-extrabold ${actStyle.badge}`}>
+                {actCode}
               </span>
               <span
                 className={`rounded-full px-2.5 py-0.5 text-[11px] font-extrabold ${
                   isComp
                     ? "bg-emerald-100 text-emerald-900"
-                    : "bg-amber-100 text-amber-950"
+                    : isPdrmRef
+                      ? "bg-rose-100 text-rose-900"
+                      : "bg-amber-100 text-amber-950"
                 }`}
               >
-                {isComp ? "Boleh Kompaun" : "Terus Mahkamah"}
+                {isComp
+                  ? "Boleh Kompaun"
+                  : isPdrmRef
+                    ? "Rujukan PDRM / TPR"
+                    : "Terus Mahkamah"}
               </span>
               <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-[11px] font-bold text-slate-700">
                 {formatOffenderLabel(off.target_offender)}
@@ -653,7 +693,7 @@ export default function LegalDirectoryPanel({
                 setMobileOffenceDrawerOpen(false);
                 onApplyOffenceToCase(
                   off.charge_sheet_template_bm,
-                  off.canonical_akta_code || "Akta 852",
+                  actCode || "Akta 852",
                   true
                 );
               }}
@@ -664,7 +704,7 @@ export default function LegalDirectoryPanel({
               }`}
             >
               <FileText className="h-4 w-4" />
-              Buka dalam Fail IP
+              {isPdrmRef ? "Catat Rujukan dalam Fail IP" : "Buka dalam Fail IP"}
             </button>
 
             {isComp && (
@@ -677,7 +717,7 @@ export default function LegalDirectoryPanel({
                     );
                     if (!proceed) return;
                   }
-                  const aktaCode = off.canonical_akta_code || "Akta 852";
+                  const aktaCode = actCode || "Akta 852";
                   const rawLimit = off.compound_info?.compound_amount_or_limit || "";
                   const recomAmt = extractRecommendedCompoundRm(
                     `${off.offence_section} ${aktaCode} ${off.statute_id}`,
@@ -709,6 +749,18 @@ export default function LegalDirectoryPanel({
           </div>
         </div>
 
+        {isPdrmRef && (
+          <div className="flex items-start gap-2.5 rounded-xl border border-rose-300 bg-rose-50 px-3.5 py-2.5 text-xs text-rose-950">
+            <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-rose-700" />
+            <div>
+              <span className="font-extrabold">Batasan Bidang Kuasa PPKP ({actCode}):</span>{" "}
+              Kesalahan di bawah {actCode} <strong>TIDAK BOLEH dikompaun</strong> oleh pegawai KKM.
+              PPKP hendaklah membuat <strong>Laporan Polis di bawah Seksyen 107 Kanun Tatacara Jenayah (Akta 593)</strong>{" "}
+              untuk siasatan PDRM dan rujukan Timbalan Pendakwa Raya (TPR), serta melengkapkan IP berasingan bagi kesalahan teras KKM (jika ada).
+            </div>
+          </div>
+        )}
+
         {/* 1. Ringkasan Seksyen, Denda & Kompaun */}
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <div className="rounded-xl border border-blue-200 bg-blue-50/40 p-3.5 text-xs">
@@ -726,12 +778,26 @@ export default function LegalDirectoryPanel({
             </div>
           </div>
 
-          <div className="rounded-xl border border-emerald-200 bg-emerald-50/40 p-3.5 text-xs">
-            <div className="text-[11px] font-extrabold uppercase text-emerald-900">
+          <div
+            className={`rounded-xl border p-3.5 text-xs ${
+              isPdrmRef
+                ? "border-rose-200 bg-rose-50/40"
+                : "border-emerald-200 bg-emerald-50/40"
+            }`}
+          >
+            <div
+              className={`text-[11px] font-extrabold uppercase ${
+                isPdrmRef ? "text-rose-900" : "text-emerald-900"
+              }`}
+            >
               Had Denda &amp; Status Kompaun
             </div>
             <div className="mt-1 font-extrabold text-slate-900">
-              {isComp ? "Boleh Kompaun" : "Terus Mahkamah (Buka IP)"}
+              {isComp
+                ? "Boleh Kompaun"
+                : isPdrmRef
+                  ? "Rujukan PDRM / TPR (Tidak Boleh Kompaun KKM)"
+                  : "Terus Mahkamah (Buka IP)"}
             </div>
             <div className="mt-1 text-slate-700">
               <strong>Punca Kuasa Kompaun:</strong>{" "}
@@ -955,7 +1021,7 @@ export default function LegalDirectoryPanel({
                 )}
               </div>
               <p className="mt-0.5 text-xs text-slate-600">
-                Rujukan pantas senarai kesalahan, had kompaun, perkara wajib dibuktikan dan teks asal akta KKM.
+                Rujukan pantas senarai kesalahan, had kompaun, perkara wajib dibuktikan dan teks asal akta KKM serta rujukan silang.
               </p>
             </div>
           </div>
@@ -1124,13 +1190,19 @@ export default function LegalDirectoryPanel({
                   onChange={(e) => setAktaFilter(e.target.value)}
                   className="min-h-[44px] w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-base font-bold text-slate-800 sm:text-sm"
                 >
-                  <option value="Semua">Semua Akta KKM</option>
-                  <option value="Akta 852">Akta 852 (Merokok / Vape)</option>
-                  <option value="Akta 281">Akta 281 (Makanan)</option>
-                  <option value="PPKM 2009">PPKM 2009 (Kebersihan Makanan)</option>
-                  <option value="PPM 1985">PPM 1985 (Peraturan Makanan)</option>
-                  <option value="Akta 154">Akta 154 (Aedes / Vektor)</option>
-                  <option value="Akta 342">Akta 342 (Penyakit Berjangkit)</option>
+                  <option value="Semua">Semua Akta (KKM &amp; Rujukan Silang)</option>
+                  <optgroup label="Akta Teras KKM">
+                    <option value="Akta 852">Akta 852 (Merokok / Vape)</option>
+                    <option value="Akta 281">Akta 281 (Makanan)</option>
+                    <option value="PPKM 2009">PPKM 2009 (Kebersihan Makanan)</option>
+                    <option value="PPM 1985">PPM 1985 (Peraturan Makanan)</option>
+                    <option value="Akta 154">Akta 154 (Aedes / Vektor)</option>
+                    <option value="Akta 342">Akta 342 (Penyakit Berjangkit)</option>
+                  </optgroup>
+                  <optgroup label="Akta Rujukan Silang (PDRM / Prosedur)">
+                    <option value="Akta 574">Akta 574 (Kanun Keseksaan — Rujukan PDRM)</option>
+                    <option value="Akta 344">Akta 344 (Akta Polis 1967)</option>
+                  </optgroup>
                 </select>
               </div>
 
@@ -1214,8 +1286,15 @@ export default function LegalDirectoryPanel({
                 ) : (
                   filteredOffences.map((off) => {
                     const isSelected = activeOffence?.offence_id === off.offence_id;
-                    const isComp = Boolean(off.compound_info?.is_compoundable);
-                    const actBadge = off.canonical_akta_code || off.statute_id;
+                    const actBadge =
+                      off.canonical_akta_code ||
+                      canonicalizeActCode(off.statute_id) ||
+                      off.statute_id;
+                    const isPdrmRef = isPdrmReferralAct(actBadge);
+                    const isComp =
+                      Boolean(off.compound_info?.is_compoundable) &&
+                      isCompoundableKkmAct(actBadge);
+                    const actStyle = getActBadgeStyle(actBadge);
                     return (
                       <button
                         key={off.offence_id}
@@ -1234,17 +1313,25 @@ export default function LegalDirectoryPanel({
                       >
                         {/* MAKSIMUM 2 LENCANA SAHAJA: Akta & Seksyen di kiri + Status Kompaun di kanan */}
                         <div className="flex w-full items-center justify-between gap-2">
-                          <span className="truncate rounded-md bg-[#0f2744] px-2 py-0.5 text-[11px] font-extrabold text-white">
+                          <span
+                            className={`truncate rounded-md px-2 py-0.5 text-[11px] font-extrabold ${actStyle.badge}`}
+                          >
                             {actBadge} · {off.offence_section}
                           </span>
                           <span
                             className={`shrink-0 rounded-full px-2.5 py-0.5 text-[10px] font-extrabold ${
                               isComp
                                 ? "bg-emerald-100 text-emerald-900"
-                                : "bg-amber-100 text-amber-950"
+                                : isPdrmRef
+                                  ? "bg-rose-100 text-rose-900"
+                                  : "bg-amber-100 text-amber-950"
                             }`}
                           >
-                            {isComp ? "Boleh Kompaun" : "Terus Mahkamah"}
+                            {isComp
+                              ? "Boleh Kompaun"
+                              : isPdrmRef
+                                ? "Rujukan PDRM / TPR"
+                                : "Terus Mahkamah"}
                           </span>
                         </div>
 
@@ -1339,11 +1426,57 @@ export default function LegalDirectoryPanel({
                   }}
                   className="min-h-[44px] w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-base font-semibold text-slate-900 focus:border-[#0f2744] focus:outline-none sm:text-sm"
                 >
-                  {snapshot.statutes_registry.map((st) => (
-                    <option key={st.statute_id} value={st.statute_id}>
-                      {st.act_number_or_pu || st.statute_id} — {st.official_title_bm} ({st.total_sections_indexed} seksyen)
-                    </option>
-                  ))}
+                  {(() => {
+                    const crossStatuteIds = new Set([
+                      "AKTA_593",
+                      "AKTA_574",
+                      "AKTA_344",
+                      "AKTA_388",
+                      "AKTA_92",
+                      "AKTA_56",
+                      "AKTA_611",
+                    ]);
+                    const coreKkm = snapshot.statutes_registry.filter(
+                      (st) => st.status === "BERKUAT_KUASA" && !crossStatuteIds.has(st.statute_id)
+                    );
+                    const crossRef = snapshot.statutes_registry.filter(
+                      (st) => st.status === "BERKUAT_KUASA" && crossStatuteIds.has(st.statute_id)
+                    );
+                    const repealed = snapshot.statutes_registry.filter(
+                      (st) => st.status !== "BERKUAT_KUASA"
+                    );
+                    return (
+                      <>
+                        {coreKkm.length > 0 && (
+                          <optgroup label="Akta Teras KKM &amp; Peraturan">
+                            {coreKkm.map((st) => (
+                              <option key={st.statute_id} value={st.statute_id}>
+                                {st.act_number_or_pu || st.statute_id} — {st.official_title_bm} ({st.total_sections_indexed} seksyen)
+                              </option>
+                            ))}
+                          </optgroup>
+                        )}
+                        {crossRef.length > 0 && (
+                          <optgroup label="Akta Prosedur, Jenayah &amp; Rujukan Silang">
+                            {crossRef.map((st) => (
+                              <option key={st.statute_id} value={st.statute_id}>
+                                {st.act_number_or_pu || st.statute_id} — {st.official_title_bm} ({st.total_sections_indexed} seksyen)
+                              </option>
+                            ))}
+                          </optgroup>
+                        )}
+                        {repealed.length > 0 && (
+                          <optgroup label="Akta Dimansuhkan / Tamat Tempoh">
+                            {repealed.map((st) => (
+                              <option key={st.statute_id} value={st.statute_id}>
+                                {st.act_number_or_pu || st.statute_id} — {st.official_title_bm} ({st.total_sections_indexed} seksyen)
+                              </option>
+                            ))}
+                          </optgroup>
+                        )}
+                      </>
+                    );
+                  })()}
                 </select>
               </div>
 

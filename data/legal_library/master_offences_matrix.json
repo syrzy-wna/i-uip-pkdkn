@@ -571,6 +571,9 @@
     "source_section_doc_ids": [
       "AKTA_852__S18",
       "AKTA_852_PERATURAN_TANDA_2024__P2",
+      "AKTA_852_PERATURAN_TANDA_2024__JADUAL_PERTAMA",
+      "AKTA_852_PERINTAH_LARANGAN_2024__JADUAL_PERTAMA",
+      "AKTA_852_PERINTAH_LARANGAN_2024__P2",
       "AKTA_852__S47",
       "AKTA_852__S48",
       "AKTA_852_PERATURAN_KOMPAUN_2024__P2"
@@ -580,17 +583,17 @@
   {
     "offence_id": "AKTA_281_S11_2",
     "statute_id": "AKTA_281",
-    "offence_section": "Seksyen 11(2)",
+    "offence_section": "Seksyen 11",
     "read_together_with": [
-      "Seksyen 11(1) Akta Makanan 1983",
-      "Seksyen 33A Akta Makanan 1983 (jika syarikat)"
+      "Seksyen 33A Akta Makanan 1983 (jika syarikat)",
+      "Seksyen 32A Akta Makanan 1983 (Izin Mendakwa TPR)"
     ],
-    "offence_title": "Gagal mematuhi Perintah Penutupan Premis Makanan Tidak Suci di bawah Seksyen 11(1) Akta Makanan 1983",
+    "offence_title": "Gagal mematuhi Perintah Penutupan Premis Makanan Tidak Suci di bawah Seksyen 11 Akta Makanan 1983 [Akta 281]",
     "target_offender": "TUAN_PUNYA_PREMIS",
     "mandatory_elements": [
       {
         "element_no": 1,
-        "description": "Perintah Penutupan Premis Makanan Tidak Suci di bawah Seksyen 11(1) Akta Makanan 1983 telah dikeluarkan secara sah dan diserahkan kepada tuan punya/pemunya/penghuni premis.",
+        "description": "Perintah Penutupan Premis Makanan Tidak Suci di bawah Seksyen 11 Akta Makanan 1983 telah dikeluarkan secara sah dan diserahkan kepada tuan punya/pemunya/penghuni premis.",
         "must_prove": "Salinan asal Perintah Penutupan Seksyen 11 bertandatangan terima & gambar tampalan notis penutupan."
       },
       {
@@ -600,10 +603,11 @@
       }
     ],
     "explicit_exclusions_and_traps": [
-      "JANGAN tuduh pemilik di bawah Seksyen 11(2) Akta 281 jika pemilik PATUH menutup premis! Seksyen 11(1) ialah perintah pentadbiran menutup premis; kesalahan kebersihan premis itu sendiri didakwa di bawah Peraturan 11(1) atau Peraturan 34(1) PPKM 2009.",
-      "Pemilik/pekerja masuk ke dalam premis semata-mata untuk menjalankan kerja pembersihan tanpa menjual/menyediakan makanan kepada pelanggan BUKAN kesalahan mengingkari perintah tutup S.11(2)."
+      "SEKSYEN 11 TIADA SUBSEKSYEN (1) ATAU (2): Kedua-dua kuasa perintah penutupan (maks 14 hari) dan hukuman keingkaran berada dalam satu seksyen tunggal iaitu Seksyen 11 Akta Makanan 1983 [Akta 281].",
+      "JANGAN tuduh pemilik di bawah Seksyen 11 Akta 281 jika pemilik PATUH menutup premis! Kesalahan kebersihan premis itu sendiri didakwa di bawah Peraturan 11(1)(a) dibaca bersama Peraturan 15/16 PPKM 2009.",
+      "Pemilik/pekerja masuk ke dalam premis semata-mata untuk menjalankan kerja pembersihan tanpa menjual/menyediakan makanan kepada pelanggan BUKAN kesalahan mengingkari perintah tutup Seksyen 11."
     ],
-    "penalty_section": "Seksyen 11(2) Akta Makanan 1983 [Akta 281]",
+    "penalty_section": "Seksyen 11 Akta Makanan 1983 [Akta 281]",
     "penalty_first_offence": {
       "max_fine_rm": null,
       "max_jail_months": 60,
@@ -622,14 +626,14 @@
     },
     "special_legal_requirements": [
       "Izin Mendakwa Bertulis Pendakwa Raya di bawah Seksyen 32A Akta Makanan 1983",
-      "Bukti serahan sah Perintah Penutupan Seksyen 11(1)"
+      "Bukti serahan sah Perintah Penutupan Seksyen 11 Akta Makanan 1983"
     ],
     "mandatory_exhibits": [
       "Borang Pemeriksaan Premis Makanan (KMM) & Perintah Penutupan Seksyen 11 bertandatangan terima",
       "Gambar foto tampalan Notis Tutup & gambar bukti premis masih beroperasi semasa tempoh tutup + Sijil S.90A(2)",
       "Carian Rasmi SSM + Sijil S.90A & Izin Mendakwa TPR S.32A"
     ],
-    "charge_sheet_template_bm": "Bahawa kamu, pada [TARIKH], jam lebih kurang [MASA], bertempat di [TEMPAT_KEJADIAN], di dalam Daerah [DAERAH], di dalam Negeri [NEGERI], telah didapati gagal mematuhi Perintah Penutupan Premis Makanan Tidak Suci yang dikeluarkan di bawah Seksyen 11(1) Akta Makanan 1983; dan oleh yang demikian kamu telah melakukan suatu kesalahan di bawah Seksyen 11(2) Akta Makanan 1983 [Akta 281] dan boleh dihukum di bawah seksyen yang sama.",
+    "charge_sheet_template_bm": "Bahawa kamu, pada [TARIKH], jam lebih kurang [MASA], bertempat di [TEMPAT_KEJADIAN], di dalam Daerah [DAERAH], di dalam Negeri [NEGERI], telah didapati gagal mematuhi Perintah Penutupan Premis Makanan Tidak Suci yang dikeluarkan di bawah Seksyen 11 Akta Makanan 1983; dan oleh yang demikian kamu telah melakukan suatu kesalahan di bawah Seksyen 11 Akta Makanan 1983 [Akta 281] dan boleh dihukum di bawah seksyen yang sama.",
     "source_section_doc_ids": [
       "AKTA_281__S11",
       "AKTA_281__S32A"
@@ -641,7 +645,7 @@
     "statute_id": "AKTA_281",
     "offence_section": "Seksyen 13(1)",
     "read_together_with": [
-      "Seksyen 19 Akta Makanan 1983",
+      "Seksyen 19 & Seksyen 20 Akta Makanan 1983",
       "Seksyen 33A Akta Makanan 1983 (jika syarikat)"
     ],
     "offence_title": "Menyediakan atau menjual makanan yang mengandungi bahan beracun, berbahaya atau memudaratkan kesihatan",
@@ -659,7 +663,7 @@
       }
     ],
     "explicit_exclusions_and_traps": [
-      "WAJIB serahkan salinan Perakuan Juruanalisis Makanan (Seksyen 19) kepada OKS sekurang-kurangnya 10 HARI JELAS sebelum tarikh perbicaraan (Seksyen 19(2) Akta 281) — jika gagal, perakuan makmal tidak boleh diterima!",
+      "3 HAD MASA MANDATORI AKTA 281: (1) Perakuan Juruanalisis wajib dikeluarkan dalam 90 hari [Seksyen 19(1A)]; (2) Pendakwaan WAJIB dimulakan dalam had masa 150 hari dari tarikh sampel diambil [Seksyen 19(2)]; (3) Salinan Perakuan Juruanalisis WAJIB diserahkan kepada OKS sekurang-kurangnya 10 HARI GENAP sebelum tarikh perbicaraan [Seksyen 20(ii)]!",
       "Kes Seksyen 13(1) TIDAK BOLEH ditawarkan kompaun."
     ],
     "penalty_section": "Seksyen 13(1) Akta Makanan 1983 [Akta 281]",
@@ -680,30 +684,32 @@
       "notice_section": null
     },
     "special_legal_requirements": [
-      "Perakuan Juruanalisis Makanan Seksyen 19 Akta 281 + Serahan 10 hari jelas sebelum bicara [S.19(2)]",
+      "Perakuan Juruanalisis Makanan S.19 (dalam 90 hari S.19(1A)), Had Masa Pendakwaan 150 hari [S.19(2)] & Serahan ≥10 hari genap sebelum bicara [S.20(ii)]",
       "Izin Mendakwa Bertulis Pendakwa Raya di bawah Seksyen 32A Akta 281"
     ],
     "mandatory_exhibits": [
       "Sampel makanan berlak rasmi KKM + rekod rantaian stor",
-      "Perakuan Juruanalisis Makanan Seksyen 19 Akta 281 + bukti serahan 10 hari jelas kepada OKS",
+      "Perakuan Juruanalisis Makanan Seksyen 19 Akta 281 + bukti serahan 10 hari genap S.20(ii) kepada OKS",
       "Resit pembelian, Laporan Pengadu (FIR), laporan perubatan mangsa & Izin Mendakwa TPR S.32A"
     ],
     "charge_sheet_template_bm": "Bahawa kamu, pada [TARIKH], jam lebih kurang [MASA], bertempat di [TEMPAT_KEJADIAN], di dalam Daerah [DAERAH], di dalam Negeri [NEGERI], telah didapati menjual/menyediakan makanan iaitu [NAMA_MAKANAN] yang mengandungi bahan yang memudaratkan kesihatan; dan oleh yang demikian kamu telah melakukan suatu kesalahan di bawah Seksyen 13(1) Akta Makanan 1983 [Akta 281] dan boleh dihukum di bawah seksyen yang sama.",
     "source_section_doc_ids": [
       "AKTA_281__S13",
       "AKTA_281__S19",
+      "AKTA_281__S20",
       "AKTA_281__S32A"
     ],
     "verified_status": "DRAFT_PENDING_REVIEW"
   },
   {
-    "offence_id": "AKTA_281_S13B_1",
+    "offence_id": "AKTA_281_S13A_2",
     "statute_id": "AKTA_281",
-    "offence_section": "Seksyen 13B(1)",
+    "offence_section": "Seksyen 13A(2) / Seksyen 13A(1)",
     "read_together_with": [
-      "Seksyen 13B(2)(d)/(e) Akta Makanan 1983"
+      "Seksyen 19 & Seksyen 20 Akta Makanan 1983",
+      "Seksyen 32A Akta Makanan 1983"
     ],
-    "offence_title": "Menyediakan atau menjual makanan yang diaduk (mengandungi benda asing / kotor / busuk / bangkai serangga)",
+    "offence_title": "Menyediakan atau menjual makanan yang mengandungi benda/jirim asing (paku, kaca, dawai, bangkai lipas) [S.13A(2)] atau bahan kotor/busuk/reput [S.13A(1)]",
     "target_offender": "PENJUAL_PENGILANG",
     "mandatory_elements": [
       {
@@ -713,13 +719,75 @@
       },
       {
         "element_no": 2,
-        "description": "Makanan tersebut diaduk mengikut Seksyen 13B(2) (cth. mengandungi benda asing seperti paku, kaca, dawai, bangkai lipas atau bahan kotor/reput).",
-        "must_prove": "Eksibit fizikal makanan berlak KKM + Perakuan Juruanalisis Makanan S.19 + gambar foto + Sijil S.90A(2)."
+        "description": "Makanan mengandungi jirim asing (benda asing seperti paku, kaca, bangkai lipas) atau tidak layak dimakan manusia [S.13A(2)], ATAU mengandungi bahan berpenyakit, kotor, busuk atau reput [S.13A(1)].",
+        "must_prove": "Eksibit fizikal makanan & benda asing berlak KKM + Perakuan Juruanalisis Makanan S.19 + gambar foto + Sijil S.90A(2)."
+      }
+    ],
+    "explicit_exclusions_and_traps": [
+      "BEZAKAN S.13A vs S.13B: Benda asing (paku/kaca/lipas) ialah Seksyen 13A(2) [maks RM30,000 / 5 tahun]; makanan busuk/kotor/reput ialah Seksyen 13A(1) [maks RM50,000 / 8 tahun]; manakala S.13B(1) adalah untuk makanan diaduk / bahan tambah terlarang / tidak ikut piawaian!",
+      "Patuhi had masa 150 hari pendakwaan [S.19(2)] & serahan Perakuan Juruanalisis ≥10 hari genap sebelum bicara [S.20(ii)]."
+    ],
+    "penalty_section": "Seksyen 13A(2) [RM30,000 / 5 tahun] atau Seksyen 13A(1) [RM50,000 / 8 tahun] Akta Makanan 1983 [Akta 281]",
+    "penalty_first_offence": {
+      "max_fine_rm": 30000,
+      "max_jail_months": 60,
+      "other_orders": "Seksyen 13A(1) (kotor/busuk/reput): denda maks RM50,000 atau penjara maks 8 tahun atau kedua-duanya",
+      "verbatim_penalty": "S.13A(2): Denda tidak melebihi RM30,000 atau penjara tidak melebihi 5 tahun atau kedua-duanya | S.13A(1): Denda tidak melebihi RM50,000 atau penjara tidak melebihi 8 tahun atau kedua-duanya."
+    },
+    "penalty_subsequent_offence": null,
+    "compound_info": {
+      "is_compoundable": false,
+      "compound_authority_section": null,
+      "compound_regulation_ref": null,
+      "compound_amount_or_limit": "TIDAK BOLEH DIKOMPAUN — Wajib Buka IP Terus & Izin Mendakwa TPR Seksyen 32A",
+      "max_compound_rm": null,
+      "payment_days": null,
+      "notice_section": null
+    },
+    "special_legal_requirements": [
+      "Perakuan Juruanalisis Makanan S.19 (90 hari S.19(1A)), Had Masa 150 hari [S.19(2)] & Serahan ≥10 hari genap sebelum bicara [S.20(ii)]",
+      "Izin Mendakwa Bertulis Pendakwa Raya di bawah Seksyen 32A Akta 281"
+    ],
+    "mandatory_exhibits": [
+      "Eksibit fizikal makanan & benda asing (lipas/paku/kaca) dilak KKM",
+      "Perakuan Juruanalisis Makanan Seksyen 19 Akta 281 + bukti serahan S.20(ii)",
+      "Gambar foto berwarna + Sijil S.90A(2), Resit Pembelian & Rakaman S.112 Pengadu"
+    ],
+    "charge_sheet_template_bm": "Bahawa kamu, pada [TARIKH], jam lebih kurang [MASA], bertempat di [TEMPAT_KEJADIAN], di dalam Daerah [DAERAH], di dalam Negeri [NEGERI], telah didapati menjual/menyediakan makanan iaitu [NAMA_MAKANAN] yang mengandungi jirim yang asing dan tidak layak dimakan oleh manusia; dan oleh yang demikian kamu telah melakukan suatu kesalahan di bawah Seksyen 13A(2) Akta Makanan 1983 [Akta 281] dan boleh dihukum di bawah seksyen yang sama.",
+    "source_section_doc_ids": [
+      "AKTA_281__S13A",
+      "AKTA_281__S19",
+      "AKTA_281__S20",
+      "AKTA_281__S32A"
+    ],
+    "verified_status": "DRAFT_PENDING_REVIEW"
+  },
+  {
+    "offence_id": "AKTA_281_S13B_1",
+    "statute_id": "AKTA_281",
+    "offence_section": "Seksyen 13B(1)",
+    "read_together_with": [
+      "Seksyen 13B(2)(d)/(e) Akta Makanan 1983",
+      "Seksyen 19 & Seksyen 20 Akta Makanan 1983"
+    ],
+    "offence_title": "Menyediakan atau menjual makanan yang diaduk (mengandungi bahan tambah terlarang atau tidak mematuhi piawaian makanan)",
+    "target_offender": "PENJUAL_PENGILANG",
+    "mandatory_elements": [
+      {
+        "element_no": 1,
+        "description": "OKT menyediakan atau menjual apa-apa makanan.",
+        "must_prove": "Sampel makanan, resit pembelian dan rakaman S.112 pengadu/pembeli."
+      },
+      {
+        "element_no": 2,
+        "description": "Makanan tersebut diaduk mengikut Seksyen 13B(2) (cth. mengandungi bahan tambah makanan tidak dibenarkan [S.13B(2)(d)] atau tidak mematuhi piawaian ditetapkan [S.13B(2)(e)]).",
+        "must_prove": "Sampel makanan berlak KKM + Perakuan Juruanalisis Makanan S.19 + gambar foto + Sijil S.90A(2)."
       }
     ],
     "explicit_exclusions_and_traps": [
       "Kes Seksyen 13B(1) TIDAK BOLEH ditawarkan kompaun — wajib buka IP dan dapatkan Izin Mendakwa TPR Seksyen 32A.",
-      "Wajib patuhi serahan Perakuan Juruanalisis S.19 sekurang-kurangnya 10 hari jelas sebelum bicara."
+      "Bagi kes benda asing (paku/kaca/lipas) atau makanan busuk/kotor, gunakan Seksyen 13A(2) atau Seksyen 13A(1) (BUKAN S.13B).",
+      "Wajib patuhi had masa 150 hari [S.19(2)] & serahan Perakuan Juruanalisis ≥10 hari genap sebelum bicara [Seksyen 20(ii)]."
     ],
     "penalty_section": "Seksyen 13B(4) Akta Makanan 1983 [Akta 281]",
     "penalty_first_offence": {
@@ -739,18 +807,19 @@
       "notice_section": null
     },
     "special_legal_requirements": [
-      "Perakuan Juruanalisis Makanan Seksyen 19 Akta 281 + Serahan 10 hari jelas [S.19(2)]",
+      "Perakuan Juruanalisis Makanan S.19 (90 hari S.19(1A)), Had Masa 150 hari [S.19(2)] & Serahan ≥10 hari genap sebelum bicara [S.20(ii)]",
       "Izin Mendakwa Bertulis Pendakwa Raya di bawah Seksyen 32A Akta 281"
     ],
     "mandatory_exhibits": [
-      "Sampel makanan & benda asing yang dilak KKM",
-      "Perakuan Juruanalisis Makanan Seksyen 19 Akta 281 + bukti serahan 10 hari kepada OKS",
+      "Sampel makanan yang dilak KKM",
+      "Perakuan Juruanalisis Makanan Seksyen 19 Akta 281 + bukti serahan 10 hari genap S.20(ii) kepada OKS",
       "Gambar foto berwarna + Sijil S.90A(2), Resit Pembelian & Rakaman S.112 Pengadu"
     ],
-    "charge_sheet_template_bm": "Bahawa kamu, pada [TARIKH], jam lebih kurang [MASA], bertempat di [TEMPAT_KEJADIAN], di dalam Daerah [DAERAH], di dalam Negeri [NEGERI], telah didapati menjual makanan yang diaduk iaitu [NAMA_MAKANAN] yang mengandungi benda asing; dan oleh yang demikian kamu telah melakukan suatu kesalahan di bawah Seksyen 13B(1) dibaca bersama Seksyen 13B(2)(e) Akta Makanan 1983 [Akta 281] yang boleh dihukum di bawah Seksyen 13B(4) Akta yang sama.",
+    "charge_sheet_template_bm": "Bahawa kamu, pada [TARIKH], jam lebih kurang [MASA], bertempat di [TEMPAT_KEJADIAN], di dalam Daerah [DAERAH], di dalam Negeri [NEGERI], telah didapati menjual makanan yang diaduk iaitu [NAMA_MAKANAN] yang tidak mematuhi piawaian ditetapkan; dan oleh yang demikian kamu telah melakukan suatu kesalahan di bawah Seksyen 13B(1) dibaca bersama Seksyen 13B(2)(e) Akta Makanan 1983 [Akta 281] yang boleh dihukum di bawah Seksyen 13B(4) Akta yang sama.",
     "source_section_doc_ids": [
       "AKTA_281__S13B",
       "AKTA_281__S19",
+      "AKTA_281__S20",
       "AKTA_281__S32A"
     ],
     "verified_status": "DRAFT_PENDING_REVIEW"
@@ -816,7 +885,7 @@
   {
     "offence_id": "PPKM_2009_P11_1",
     "statute_id": "PPKM_2009",
-    "offence_section": "Peraturan 11(1) / Peraturan 34(1) PPKM 2009",
+    "offence_section": "Peraturan 11(1)(a) dibaca bersama Peraturan 15 / 16 PPKM 2009",
     "read_together_with": [
       "P.U. (A) 95/2009",
       "Seksyen 11 Akta Makanan 1983 (Perintah Tutup jika <70% / tidak suci)"
@@ -831,15 +900,16 @@
       },
       {
         "element_no": 2,
-        "description": "Gagal menyelenggara atau mengekalkan premis makanan dalam keadaan bersih, kemas dan bebas daripada makhluk perosak (lipas, lalat, tikus).",
+        "description": "Gagal menyelenggara atau mengekalkan premis makanan dalam keadaan bersih, kemas dan bebas daripada makhluk perosak (lipas, lalat, tikus) mengikut Peraturan 11(1)(a) dibaca bersama Peraturan 15/16 PPKM 2009.",
         "must_prove": "Gambar foto bukti kekotoran/najis tikus/lipas hidup di kawasan penyediaan/stor makanan + Sijil S.90A(2) + Pelan Lakar."
       }
     ],
     "explicit_exclusions_and_traps": [
+      "BEZAKAN SASARAN OKT: Peraturan 11(1)(a) dibaca bersama Peraturan 15/16 PPKM 2009 adalah terhadap TUAN PUNYA / PEMUNYA / PENGHUNI premis, manakala Peraturan 34(1) PPKM 2009 adalah kewajipan PENGENDALI MAKANAN — JANGAN campurkan kedua-duanya dalam satu pertuduhan!",
       "JANGAN hantar najis tikus ke makmal MKAK untuk analisis kimia — najis tikus dibuktikan dengan gambar foto berkapsyen + keterangan pemerhatian pegawai pemeriksa!",
       "Bagi kes wabak HFMD di Taska/Tadika (bukan premis makanan), JANGAN guna Seksyen 11 Akta 281 atau Peraturan 11 PPKM 2009 — gunakan Seksyen 18(1)(d) Akta 342!"
     ],
-    "penalty_section": "Peraturan 11(2) / Peraturan 34(2) PPKM 2009 [P.U. (A) 95/2009]",
+    "penalty_section": "Peraturan 11(2) PPKM 2009 [P.U. (A) 95/2009]",
     "penalty_first_offence": {
       "max_fine_rm": 10000,
       "max_jail_months": 24,
@@ -866,10 +936,11 @@
       "Salinan Perintah Penutupan Seksyen 11 & Notis Seksyen 32B bertandatangan terima",
       "Gambar foto bukti kekotoran/perosak + Sijil Seksyen 90A(2) & Pelan Lakar dapur"
     ],
-    "charge_sheet_template_bm": "Bahawa kamu, sebagai tuan punya/pemunya/penghuni premis makanan, pada [TARIKH], jam lebih kurang [MASA], bertempat di [TEMPAT_KEJADIAN], di dalam Daerah [DAERAH], di dalam Negeri [NEGERI], telah didapati gagal mengekalkan premis makanan tersebut dalam keadaan bersih dan bebas daripada makhluk perosak; dan oleh yang demikian kamu telah melakukan suatu kesalahan di bawah Peraturan 11(1) [atau Peraturan 34(1)] Peraturan-Peraturan Kebersihan Makanan 2009 [P.U. (A) 95/2009] yang boleh dihukum di bawah Peraturan 11(2) [atau Peraturan 34(2)] Peraturan yang sama.",
+    "charge_sheet_template_bm": "Bahawa kamu, sebagai tuan punya/pemunya/penghuni premis makanan, pada [TARIKH], jam lebih kurang [MASA], bertempat di [TEMPAT_KEJADIAN], di dalam Daerah [DAERAH], di dalam Negeri [NEGERI], telah didapati gagal mengekalkan premis makanan tersebut dalam keadaan bersih dan bebas daripada makhluk perosak; dan oleh yang demikian kamu telah melakukan suatu kesalahan di bawah Peraturan 11(1)(a) dibaca bersama Peraturan 15 Peraturan-Peraturan Kebersihan Makanan 2009 [P.U. (A) 95/2009] yang boleh dihukum di bawah Peraturan 11(2) Peraturan yang sama.",
     "source_section_doc_ids": [
       "PPKM_2009__P11",
-      "PPKM_2009__P34",
+      "PPKM_2009__P15",
+      "PPKM_2009__P16",
       "AKTA_281__S11",
       "AKTA_281__S32B",
       "AKTA_281__S33"
@@ -899,7 +970,7 @@
     ],
     "explicit_exclusions_and_traps": [
       "JANGAN keliru Peraturan 30(1) [Latihan SLPM] dengan Peraturan 31(1) [Suntikan Vaksin Anti-Tifoid]!",
-      "Individu di premis yang tidak terlibat langsung dengan pengendalian makanan atau permukaan sentuhan makanan (cth. pelanggan atau penghantar stok luar yang tidak menyentuh makanan terbuka) bukan pengendali makanan."
+      "Individu di premis yang tidak terlibat langsung dengan pengendalian makanan atau permukaan sentuhan makanan (cth. juruwang/pelanggan/penghantar stok luar yang tidak menyentuh makanan terbuka) bukan pengendali makanan."
     ],
     "penalty_section": "Peraturan 30(3) PPKM 2009 [P.U. (A) 95/2009]",
     "penalty_first_offence": {
@@ -958,7 +1029,7 @@
     ],
     "explicit_exclusions_and_traps": [
       "PERANGKAP NOMBOR PERATURAN: Kesalahan tiada suntikan anti-tifoid ialah Peraturan 31(1) PPKM 2009, BUKAN Peraturan 30(1) (Peraturan 30 ialah Sijil Latihan Pengendali Makanan SLPM)!",
-      "Jika mahu menuduh majikan/pemunya premis kerana membenarkan pekerja tanpa suntikan tifoid bekerja, gunakan Peraturan 11(1)(b) atau Peraturan 31(2) PPKM 2009."
+      "Jika mahu menuduh majikan/pemunya premis kerana menggajikan pekerja tanpa suntikan anti-tifoid, gunakan Peraturan 11(1)(b) PPKM 2009 (hukuman Peraturan 11(2)) — BUKAN Peraturan 31(2) (Peraturan 31(2) ialah larangan pekerja berpenyakit berjangkit/luka terbuka bekerja, bukan kesalahan majikan tiada vaksin)."
     ],
     "penalty_section": "Peraturan 31(3) PPKM 2009 [P.U. (A) 95/2009]",
     "penalty_first_offence": {
@@ -1109,27 +1180,28 @@
   {
     "offence_id": "PPM_1985_P14_9",
     "statute_id": "PPM_1985",
-    "offence_section": "Peraturan 14(9) / Peraturan 14(7) PPM 1985",
+    "offence_section": "Peraturan 14(9)(b) [Luput] / Peraturan 14(9)(a) [Ubah Tarikh] / Peraturan 14(7) [Tiada Tarikh] PPM 1985",
     "read_together_with": [
       "Seksyen 4(1)(f) Akta Makanan 1983",
-      "Peraturan 397 PPM 1985"
+      "Peraturan 397(2) PPM 1985"
     ],
-    "offence_title": "Menjual atau mendedahkan untuk jualan makanan yang telah tamat tarikh luput (expired) atau mengubah/memadam penandaan tarikh luput",
+    "offence_title": "Menjual atau mendedahkan untuk jualan makanan yang telah tamat tarikh luput [P.14(9)(b)], mengubah/memadam tarikh luput [P.14(9)(a)], atau tanpa penandaan tarikh [P.14(7)]",
     "target_offender": "PENJUAL_PENGILANG",
     "mandatory_elements": [
       {
         "element_no": 1,
-        "description": "OKT menjual, mengimport atau mendedahkan untuk jualan bungkusan makanan berlabel tarikh akhir penggunaan/tarikh luput.",
+        "description": "OKT menjual, mengimport atau mendedahkan untuk jualan bungkusan makanan berlabel penandaan tarikh.",
         "must_prove": "Bungkusan makanan yang disita di rak jualan melalui Seksyen 4(1)(f) Akta Makanan 1983."
       },
       {
         "element_no": 2,
-        "description": "Tarikh akhir penggunaan pada bungkusan makanan telah luput pada tarikh pemeriksaan, atau penandaan tarikh telah diubah/dipadam.",
-        "must_prove": "Gambar jarak dekat cetakan tarikh luput pada bungkusan berbanding tarikh pemeriksaan + Sijil S.90A(2)."
+        "description": "Tarikh akhir penggunaan pada bungkusan makanan telah luput pada tarikh pemeriksaan [P.14(9)(b)], ATAU penandaan tarikh telah diubah/dipadam/dipalsukan [P.14(9)(a)], ATAU bungkusan tiada penandaan tarikh wajib [P.14(7)].",
+        "must_prove": "Gambar jarak dekat cetakan tarikh luput/kesan ubahan pada bungkusan berbanding tarikh pemeriksaan + Sijil S.90A(2)."
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Stok makanan tamat tempoh yang telah diasingkan di dalam stor pelupusan khas berlabel jelas 'UNTUK PELUPUSAN / TIDAK UNTUK DIJUAL' dan tidak didedahkan di ruang jualan perlu disahkan fakta pendedahan untuk jualannya."
+      "BEZAKAN PERATURAN SUB-PERENGGAN: Menjual makanan luput ialah Peraturan 14(9)(b); mengubah/memadam/mengelirukan tarikh ialah Peraturan 14(9)(a); manakala menjual makanan berjadual tanpa penandaan tarikh ialah Peraturan 14(7) PPM 1985.",
+      "Stok makanan tamat tempoh yang telah diasingkan di dalam stor pelupusan khas berlabel jelas 'UNTUK PELUPUSAN / TIDAK UNTUK DIJUAL' dan tidak didedahkan di ruang jualan tidak memenuhi unsur mendedahkan untuk jualan."
     ],
     "penalty_section": "Peraturan 397(2) Peraturan-Peraturan Makanan 1985",
     "penalty_first_offence": {
@@ -1143,7 +1215,7 @@
       "is_compoundable": true,
       "compound_authority_section": "Seksyen 33 Akta Makanan 1983",
       "compound_regulation_ref": "Peraturan-Peraturan Makanan 1985",
-      "compound_amount_or_limit": "Sita stok di bawah S.4(1)(f) Akta 281 + Notis S.32B atau Buka IP",
+      "compound_amount_or_limit": "Sita stok di bawah S.4(1)(f) Akta 281 + Notis S.32B atau Buka IP (kes ubah tarikh P.14(9)(a) digalakkan Buka IP)",
       "max_compound_rm": 5000,
       "payment_days": 14,
       "notice_section": "Seksyen 32B Akta Makanan 1983"
@@ -1153,10 +1225,10 @@
       "Sijil Seksyen 90A(2)"
     ],
     "mandatory_exhibits": [
-      "Bungkusan makanan tamat tarikh luput yang disita & dilak KKM + Borang Sitaan S.4(1)(f)",
+      "Bungkusan makanan tamat tarikh luput / diubah tarikh yang disita & dilak KKM + Borang Sitaan S.4(1)(f)",
       "Gambar foto jarak dekat tarikh luput pada bungkusan + Sijil S.90A(2) & Carian SSM"
     ],
-    "charge_sheet_template_bm": "Bahawa kamu, pada [TARIKH], jam lebih kurang [MASA], bertempat di [TEMPAT_KEJADIAN], di dalam Daerah [DAERAH], di dalam Negeri [NEGERI], telah didapati mendedahkan untuk jualan makanan berbungkus yang telah melampaui tarikh akhir penggunaan; dan oleh yang demikian kamu telah melakukan suatu kesalahan di bawah Peraturan 14(9) Peraturan-Peraturan Makanan 1985 yang boleh dihukum di bawah Peraturan 397(2) Peraturan yang sama.",
+    "charge_sheet_template_bm": "Bahawa kamu, pada [TARIKH], jam lebih kurang [MASA], bertempat di [TEMPAT_KEJADIAN], di dalam Daerah [DAERAH], di dalam Negeri [NEGERI], telah didapati mendedahkan untuk jualan makanan berbungkus yang telah melampaui tarikh akhir penggunaan; dan oleh yang demikian kamu telah melakukan suatu kesalahan di bawah Peraturan 14(9)(b) Peraturan-Peraturan Makanan 1985 yang boleh dihukum di bawah Peraturan 397(2) Peraturan yang sama.",
     "source_section_doc_ids": [
       "PPM_1985__P14",
       "PPM_1985__P397",
@@ -1307,7 +1379,7 @@
     "statute_id": "AKTA_154",
     "offence_section": "Seksyen 21",
     "read_together_with": [
-      "Seksyen 23 Akta 154"
+      "Seksyen 5 & Seksyen 22A Akta 154"
     ],
     "offence_title": "Menghalang atau menggertak pegawai diberi kuasa dalam menjalankan pemeriksaan atau semburan kabus (fogging) kawalan vektor",
     "target_offender": "INDIVIDU",
@@ -1324,43 +1396,39 @@
       }
     ],
     "explicit_exclusions_and_traps": [
-      "Premis berkunci tanpa penghuni di dalam rumah pada waktu lawatan BUKAN kesalahan menghalang pegawai di bawah Seksyen 21."
+      "Premis berkunci tanpa penghuni di dalam rumah pada waktu lawatan BUKAN kesalahan menghalang pegawai di bawah Seksyen 21.",
+      "SEKSYEN 21 MEMPUNYAI HUKUMAN SENDIRI: Jangan rujuk Seksyen 23(a)/(b) bagi kesalahan menghalang di bawah Seksyen 21 Akta 154 — Seksyen 21 memperuntukkan hukumannya sendiri (denda maks RM10,000 atau penjara maks 2 tahun atau kedua-duanya)."
     ],
-    "penalty_section": "Seksyen 21 dibaca bersama Seksyen 23(a) Akta 154",
+    "penalty_section": "Seksyen 21 Akta 154",
     "penalty_first_offence": {
       "max_fine_rm": 10000,
       "max_jail_months": 24,
       "other_orders": null,
       "verbatim_penalty": "Didenda tidak melebihi sepuluh ribu ringgit (RM10,000.00) atau dipenjarakan selama tempoh tidak melebihi dua (2) tahun atau kedua-duanya."
     },
-    "penalty_subsequent_offence": {
-      "max_fine_rm": 50000,
-      "max_jail_months": 60,
-      "other_orders": null,
-      "verbatim_penalty": "Didenda tidak melebihi lima puluh ribu ringgit (RM50,000.00) atau dipenjarakan selama tempoh tidak melebihi lima (5) tahun atau kedua-duanya."
-    },
+    "penalty_subsequent_offence": null,
     "compound_info": {
       "is_compoundable": false,
       "compound_authority_section": null,
       "compound_regulation_ref": null,
-      "compound_amount_or_limit": "Kes menghalang penjawat awam — Buka IP Terus & Laporan Polis",
+      "compound_amount_or_limit": "TIDAK BOLEH DIKOMPAUN (Kes menghalang penjawat awam) — Buka IP Terus & Laporan Polis",
       "max_compound_rm": null,
       "payment_days": null,
       "notice_section": null
     },
     "special_legal_requirements": [
       "Laporan Polis",
-      "Rakaman S.112 KTJ saksi pasukan penguat kuasa"
+      "Rakaman S.112 KTJ saksi pasukan penguat kuasa",
+      "Izin Mendakwa Pendakwa Raya Seksyen 22A Akta 154"
     ],
     "mandatory_exhibits": [
       "Laporan Polis & Diari Siasatan pasukan kawalan vektor",
       "Gambar lokasi kejadian + Sijil S.90A(2) & Salinan Kad Kuasa PPKP",
       "Rakaman percakapan S.112 KTJ PPKP & Pembantu Kesihatan Awam"
     ],
-    "charge_sheet_template_bm": "Bahawa kamu, pada [TARIKH], jam lebih kurang [MASA], bertempat di [TEMPAT_KEJADIAN], di dalam Daerah [DAERAH], di dalam Negeri [NEGERI], telah didapati menghalang seorang pegawai diberi kuasa daripada menjalankan tugasnya di bawah Akta Pemusnahan Serangga Pembawa Penyakit 1975; dan oleh yang demikian kamu telah melakukan suatu kesalahan di bawah Seksyen 21 Akta 154 yang boleh dihukum di bawah Seksyen 23(a) Akta yang sama.",
+    "charge_sheet_template_bm": "Bahawa kamu, pada [TARIKH], jam lebih kurang [MASA], bertempat di [TEMPAT_KEJADIAN], di dalam Daerah [DAERAH], di dalam Negeri [NEGERI], telah didapati menghalang seorang pegawai diberi kuasa daripada menjalankan tugasnya di bawah Akta Pemusnahan Serangga Pembawa Penyakit 1975; dan oleh yang demikian kamu telah melakukan suatu kesalahan di bawah Seksyen 21 Akta 154 dan boleh dihukum di bawah seksyen yang sama.",
     "source_section_doc_ids": [
-      "AKTA_154__S21",
-      "AKTA_154__S23"
+      "AKTA_154__S21"
     ],
     "verified_status": "DRAFT_PENDING_REVIEW"
   },
@@ -1606,6 +1674,627 @@
       "AKTA_342__S15",
       "AKTA_342__S18",
       "AKTA_342_PERATURAN_KOMPAUN_2025__P2"
+    ],
+    "verified_status": "DRAFT_PENDING_REVIEW"
+  },
+  {
+    "offence_id": "AKTA_574_S186",
+    "statute_id": "AKTA_574",
+    "offence_section": "Seksyen 186",
+    "read_together_with": [
+      "Seksyen 21 Kanun Keseksaan [Akta 574] (Penjawat Awam)",
+      "Seksyen 24(3) Akta 852 / Seksyen 3 Akta 281 / Seksyen 4 Akta 154 / Seksyen 3(2) Akta 342",
+      "Seksyen 107 Kanun Tatacara Jenayah [Akta 593] (Laporan Polis)"
+    ],
+    "offence_title": "Dengan sengaja menghalang penjawat awam (PPKP) menjalankan fungsi jawatan awam — rujukan silang utama apabila Akta KKM (khususnya Akta 852) tiada seksyen halangan sendiri",
+    "target_offender": "INDIVIDU_AWAM",
+    "mandatory_elements": [
+      {
+        "element_no": 1,
+        "description": "PPKP bertindak sebagai penjawat awam yang sah (disifatkan di bawah S.24(3) Akta 852 / S.3 Akta 281 / S.4 Akta 154 / S.3(2) Akta 342) dengan Kad Kuasa rasmi KKM.",
+        "must_prove": "Salinan Kad Kuasa KKM, surat arahan operasi, dan keterangan bahawa PPKP memperkenalkan diri secara sah."
+      },
+      {
+        "element_no": 2,
+        "description": "Suspek dengan sengaja menghalang secara fizikal/aktif (cth: kunci pintu, rampas semula ekshibit, halang laluan masuk) ketika PPKP menjalankan tugas rasmi.",
+        "must_prove": "Laporan Polis S.107 KTJ oleh PPKP, rakaman video/gambar (disokong Sijil S.90A), dan percakapan saksi pasukan operasi."
+      }
+    ],
+    "explicit_exclusions_and_traps": [
+      "BATASAN BIDANG KUASA PPKP: PPKP TIDAK mempunyai kuasa menyiasat, mengkompaun atau mendakwa di bawah Kanun Keseksaan [Akta 574]. PPKP WAJIB membuat Laporan Polis di bawah Seksyen 107 KTJ supaya PDRM menyiasat dan TPR mendakwa (Kesalahan Boleh Tangkap / Seizable di bawah Jadual Pertama KTJ).",
+      "PRINSIP LEX SPECIALIS: Jika halangan berlaku di bawah Akta 281 (S.4(3)-(4)), Akta 154 (S.21) atau Akta 342 (S.22(a)), PPKP boleh bertindak di bawah seksyen khusus Akta KKM tersebut; namun bagi Akta 852 (tiada seksyen halangan tersendiri) atau halangan agresif, rujuk S.186 Akta 574 melalui PDRM."
+    ],
+    "penalty_section": "Seksyen 186 Kanun Keseksaan [Akta 574]",
+    "penalty_first_offence": {
+      "max_fine_rm": 10000,
+      "max_jail_months": 24,
+      "verbatim_penalty": "Penjara sehingga dua (2) tahun, atau denda sehingga RM10,000.00, atau kedua-duanya (Kesalahan Boleh Tangkap / Seizable; Tidak Boleh Dijamin / Non-Bailable)."
+    },
+    "penalty_subsequent_offence": null,
+    "compound_info": {
+      "is_compoundable": false,
+      "compound_authority_section": null,
+      "compound_regulation_ref": null,
+      "compound_amount_or_limit": "TIDAK BOLEH DIKOMPAUN — Kuasa siasatan PDRM & pendakwaan TPR. PPKP wajib buat Laporan Polis Seksyen 107 KTJ.",
+      "max_compound_rm": null,
+      "payment_days": null,
+      "notice_section": "Laporan Polis Seksyen 107 KTJ [Akta 593]"
+    },
+    "special_legal_requirements": [
+      "Laporan Polis (FIR) segera oleh PPKP di balai polis berhampiran di bawah Seksyen 107 KTJ",
+      "PPKP & anggota pasukan operasi hadir memberi percakapan saksi kepada Pegawai Penyiasat PDRM di bawah Seksyen 112 KTJ",
+      "Serahkan rakaman video/foto (beserta Sijil Seksyen 90A Akta 56) & salinan Kad Kuasa sebagai ekshibit polis"
+    ],
+    "mandatory_exhibits": [
+      "Salinan Laporan Polis (FIR S.107 KTJ) oleh PPKP",
+      "Salinan Kad Kuasa PPKP & Surat Arahan Operasi PKD",
+      "Rakaman Video/Gambar kejadian + Sijil Seksyen 90A Akta Keterangan 1950 [Akta 56]",
+      "Diari Rasmi / Buku Catatan Operasi PPKP & Senarai Saksi Pasukan"
+    ],
+    "charge_sheet_template_bm": "RUJUKAN PDRM / TPR SAHAJA (PPKP TIDAK MENDRAF PERTUDUHAN AKTA 574): Siasatan dan pendakwaan Seksyen 186 Kanun Keseksaan [Akta 574] adalah di bawah bidang kuasa PDRM dan Timbalan Pendakwa Raya (TPR) selepas Laporan Polis Seksyen 107 KTJ dibuat.",
+    "source_section_doc_ids": [
+      "AKTA_574__S186",
+      "AKTA_574__S21",
+      "AKTA_593__S107"
+    ],
+    "verified_status": "DRAFT_PENDING_REVIEW"
+  },
+  {
+    "offence_id": "AKTA_574_S183",
+    "statute_id": "AKTA_574",
+    "offence_section": "Seksyen 183",
+    "read_together_with": [
+      "Seksyen 35 Akta 852 / Seksyen 4(1)(f) Akta 281 (Kuasa Penyitaan)",
+      "Seksyen 107 & Seksyen 108(2) KTJ [Akta 593] (OTI TPR bagi kesalahan tidak boleh tangkap)"
+    ],
+    "offence_title": "Menentang pengambilan harta (rampasan/sitaan ekshibit) oleh penjawat awam yang bertindak di bawah kuasa sah undang-undang",
+    "target_offender": "PENIAGA_PEMILIK",
+    "mandatory_elements": [
+      {
+        "element_no": 1,
+        "description": "PPKP sedang melaksanakan penyitaan sah di bawah Akta KKM (cth: S.35 Akta 852 / S.4(1)(f) Akta 281).",
+        "must_prove": "Borang Senarai Benda Disita, Kad Kuasa, dan bukti asas syak munasabah penyitaan."
+      },
+      {
+        "element_no": 2,
+        "description": "Suspek menentang, merampas balik atau menghalang pengambilan barang kes tersebut.",
+        "must_prove": "Laporan Polis S.107 KTJ, keterangan saksi pasukan dan rakaman kejadian."
+      }
+    ],
+    "explicit_exclusions_and_traps": [
+      "BATASAN BIDANG KUASA: Kesalahan TIDAK BOLEH TANGKAP (Non-Seizable) di bawah Jadual Pertama KTJ — PDRM memerlukan Perintah Untuk Menyiasat (OTI) daripada TPR di bawah Seksyen 108(2) KTJ. PPKP TIDAK boleh kompaun; buat Laporan Polis S.107 KTJ."
+    ],
+    "penalty_section": "Seksyen 183 Kanun Keseksaan [Akta 574]",
+    "penalty_first_offence": {
+      "max_fine_rm": 2000,
+      "max_jail_months": 6,
+      "verbatim_penalty": "Penjara sehingga enam (6) bulan, atau denda sehingga RM2,000.00, atau kedua-duanya (Non-Seizable; PDRM perlukan OTI S.108(2) KTJ)."
+    },
+    "penalty_subsequent_offence": null,
+    "compound_info": {
+      "is_compoundable": false,
+      "compound_authority_section": null,
+      "compound_regulation_ref": null,
+      "compound_amount_or_limit": "TIDAK BOLEH DIKOMPAUN — Rujuk PDRM melalui Laporan Polis S.107 KTJ (OTI S.108(2) KTJ).",
+      "max_compound_rm": null,
+      "payment_days": null,
+      "notice_section": "Laporan Polis Seksyen 107 KTJ [Akta 593]"
+    },
+    "special_legal_requirements": [
+      "Buat Laporan Polis S.107 KTJ; PDRM memohon OTI daripada TPR di bawah S.108(2) KTJ",
+      "Jika suspek turut merempuh/menghalang secara fizikal, polis boleh menyiasat serentak di bawah S.186 atau S.353 Akta 574 (Seizable)"
+    ],
+    "mandatory_exhibits": [
+      "Laporan Polis S.107 KTJ & salinan Borang Senarai Benda Disita",
+      "Rakaman video/gambar kejadian + Sijil S.90A Akta 56"
+    ],
+    "charge_sheet_template_bm": "RUJUKAN PDRM / TPR SAHAJA — Siasatan di bawah Seksyen 183 Kanun Keseksaan [Akta 574] adalah bidang kuasa PDRM (OTI S.108(2) KTJ) & TPR.",
+    "source_section_doc_ids": [
+      "AKTA_574__S183",
+      "AKTA_574__S186",
+      "AKTA_593__S107",
+      "AKTA_593__S108"
+    ],
+    "verified_status": "DRAFT_PENDING_REVIEW"
+  },
+  {
+    "offence_id": "AKTA_574_S189",
+    "statute_id": "AKTA_574",
+    "offence_section": "Seksyen 189",
+    "read_together_with": [
+      "Seksyen 506 Kanun Keseksaan [Akta 574] (Ugutan Jenayah)",
+      "Seksyen 107 & Seksyen 108(2) KTJ [Akta 593]"
+    ],
+    "offence_title": "Ugutan bencana (threat of injury) terhadap penjawat awam (PPKP) bagi mendorong PPKP menangguhkan atau tidak melaksanakan tugas rasmi",
+    "target_offender": "INDIVIDU_AWAM",
+    "mandatory_elements": [
+      {
+        "element_no": 1,
+        "description": "Suspek mengeluarkan ugutan bencana terhadap PPKP atau mana-mana orang yang PPKP mempunyai kepentingan.",
+        "must_prove": "Perkataan tepat ugutan yang direkod segera dalam Diari/Laporan Polis, rakaman audio/video & keterangan saksi."
+      },
+      {
+        "element_no": 2,
+        "description": "Niat untuk mendorong PPKP melakukan, menahan diri atau melengahkan pelaksanaan fungsi awam (cth: supaya tidak keluarkan kompaun/tutup premis).",
+        "must_prove": "Konteks kejadian operasi rasmi yang sedang dijalankan."
+      }
+    ],
+    "explicit_exclusions_and_traps": [
+      "BATASAN BIDANG KUASA: S.189 adalah Non-Seizable (perlukan OTI S.108(2) KTJ), manakala jika terdapat ugutan bunuh/cedera/bakar/kecederaan parah ia jatuh di bawah Seksyen 506 Akta 574 (SEIZABLE — polis boleh tangkap serta-merta tanpa waran). PPKP WAJIB undur ke lokasi selamat & buat Laporan Polis S.107 KTJ!"
+    ],
+    "penalty_section": "Seksyen 189 Kanun Keseksaan [Akta 574]",
+    "penalty_first_offence": {
+      "max_fine_rm": null,
+      "max_jail_months": 24,
+      "verbatim_penalty": "Penjara sehingga dua (2) tahun, atau denda, atau kedua-duanya (S.189 Non-Seizable; jika ugutan jenayah berat rujuk S.506 sehingga 7 tahun, Seizable)."
+    },
+    "penalty_subsequent_offence": null,
+    "compound_info": {
+      "is_compoundable": false,
+      "compound_authority_section": null,
+      "compound_regulation_ref": null,
+      "compound_amount_or_limit": "TIDAK BOLEH DIKOMPAUN — Utamakan keselamatan PPKP dan buat Laporan Polis S.107 KTJ segera.",
+      "max_compound_rm": null,
+      "payment_days": null,
+      "notice_section": "Laporan Polis Seksyen 107 KTJ [Akta 593]"
+    },
+    "special_legal_requirements": [
+      "Utamakan keselamatan diri pasukan — tarik diri dari premis berisiko dan hubungi balai polis (999) / buat Laporan Polis S.107 KTJ",
+      "Catat verbatim kata-kata ugutan suspek secepat mungkin"
+    ],
+    "mandatory_exhibits": [
+      "Laporan Polis S.107 KTJ dengan transkrip tepat kata-kata ugutan",
+      "Rakaman video/audio (Sijil S.90A Akta 56) & saksi pasukan"
+    ],
+    "charge_sheet_template_bm": "RUJUKAN PDRM / TPR SAHAJA — Siasatan & pendakwaan Seksyen 189 / Seksyen 506 Kanun Keseksaan [Akta 574] adalah bidang kuasa PDRM & TPR.",
+    "source_section_doc_ids": [
+      "AKTA_574__S189",
+      "AKTA_574__S506",
+      "AKTA_593__S107"
+    ],
+    "verified_status": "DRAFT_PENDING_REVIEW"
+  },
+  {
+    "offence_id": "AKTA_574_S353",
+    "statute_id": "AKTA_574",
+    "offence_section": "Seksyen 353",
+    "read_together_with": [
+      "Seksyen 186 & Seksyen 506 Kanun Keseksaan [Akta 574]",
+      "Seksyen 107 KTJ [Akta 593]"
+    ],
+    "offence_title": "Menyerang atau menggunakan kekerasan jenayah (menolak, menumbuk, memukul, meludah, mencampak barang) terhadap penjawat awam (PPKP) semasa menjalankan tugas",
+    "target_offender": "INDIVIDU_AWAM",
+    "mandatory_elements": [
+      {
+        "element_no": 1,
+        "description": "PPKP sedang melaksanakan kewajipan rasmi yang sah di sisi undang-undang.",
+        "must_prove": "Kad Kuasa KKM, surat arahan operasi dan saksi pasukan."
+      },
+      {
+        "element_no": 2,
+        "description": "Suspek menyerang atau menggunakan kekerasan jenayah terhadap PPKP bagi menghalang/menakutkan PPKP menjalankan kewajipan.",
+        "must_prove": "Laporan Polis S.107 KTJ, laporan pemeriksaan perubatan (jika cedera), gambar kecederaan/pakaian & rakaman video (Sijil S.90A)."
+      }
+    ],
+    "explicit_exclusions_and_traps": [
+      "BATASAN BIDANG KUASA: Kesalahan BOLEH TANGKAP (Seizable) di bawah bidang kuasa PDRM & TPR. PPKP TIDAK boleh kompaun; segera hubungi polis (999), dapatkan rawatan perubatan rasmi di hospital/klinik kerajaan (rekod kecederaan) dan buat Laporan Polis S.107 KTJ."
+    ],
+    "penalty_section": "Seksyen 353 Kanun Keseksaan [Akta 574]",
+    "penalty_first_offence": {
+      "max_fine_rm": null,
+      "max_jail_months": 24,
+      "verbatim_penalty": "Penjara sehingga dua (2) tahun, atau denda, atau kedua-duanya (Kesalahan Boleh Tangkap / Seizable)."
+    },
+    "penalty_subsequent_offence": null,
+    "compound_info": {
+      "is_compoundable": false,
+      "compound_authority_section": null,
+      "compound_regulation_ref": null,
+      "compound_amount_or_limit": "TIDAK BOLEH DIKOMPAUN — Siasatan jenayah oleh PDRM & pendakwaan oleh TPR.",
+      "max_compound_rm": null,
+      "payment_days": null,
+      "notice_section": "Laporan Polis Seksyen 107 KTJ [Akta 593]"
+    },
+    "special_legal_requirements": [
+      "Dapatkan pemeriksaan doktor kerajaan (rekod kecederaan/Laporan Perubatan) segera selepas kejadian",
+      "Buat Laporan Polis S.107 KTJ & maklumkan Pegawai Kesihatan Daerah (PKD)"
+    ],
+    "mandatory_exhibits": [
+      "Laporan Polis S.107 KTJ & Laporan Perubatan Hospital/Klinik Kerajaan",
+      "Gambar kecederaan/pakaian terkoyak & rakaman video (Sijil S.90A Akta 56)"
+    ],
+    "charge_sheet_template_bm": "RUJUKAN PDRM / TPR SAHAJA — Siasatan & pendakwaan Seksyen 353 Kanun Keseksaan [Akta 574] adalah bidang kuasa PDRM & TPR.",
+    "source_section_doc_ids": [
+      "AKTA_574__S353",
+      "AKTA_574__S186",
+      "AKTA_593__S107"
+    ],
+    "verified_status": "DRAFT_PENDING_REVIEW"
+  },
+  {
+    "offence_id": "AKTA_574_S506",
+    "statute_id": "AKTA_574",
+    "offence_section": "Seksyen 506",
+    "read_together_with": [
+      "Seksyen 503 Kanun Keseksaan [Akta 574] (Takrif Menakutkan Secara Jenayah)",
+      "Seksyen 189 Kanun Keseksaan [Akta 574]"
+    ],
+    "offence_title": "Menakutkan secara jenayah (ugutan bunuh, cedera parah, bakar premis/kenderaan, atau acu senjata terhadap PPKP)",
+    "target_offender": "INDIVIDU_AWAM",
+    "mandatory_elements": [
+      {
+        "element_no": 1,
+        "description": "Suspek mengugut untuk mendatangkan bencana terhadap tubuh badan, nama baik atau harta PPKP (termasuk ugutan bunuh/cedera parah/bakar/senjata).",
+        "must_prove": "Laporan Polis S.107 KTJ, transkrip perkataan ugutan, rakaman video/audio (Sijil S.90A) & keterangan saksi."
+      },
+      {
+        "element_no": 2,
+        "description": "Niat menyebabkan ketakutan (alarm) kepada PPKP atau memaksa PPKP tidak melakukan tindakan penguatkuasaan.",
+        "must_prove": "Keterangan mangsa (PPKP) bahawa ugutan tersebut menimbulkan rasa takut/ancaman keselamatan sebenar."
+      }
+    ],
+    "explicit_exclusions_and_traps": [
+      "BATASAN BIDANG KUASA: Kesalahan BOLEH TANGKAP (Seizable) dan TIDAK BOLEH DIJAMIN (Non-Bailable) jika ugutan menyebabkan kematian/cedera parah/kebakaran. PPKP WAJIB segera keluar ke kawasan selamat, hubungi PDRM (999) dan buat Laporan Polis S.107 KTJ."
+    ],
+    "penalty_section": "Seksyen 506 Kanun Keseksaan [Akta 574]",
+    "penalty_first_offence": {
+      "max_fine_rm": null,
+      "max_jail_months": 84,
+      "verbatim_penalty": "Penjara sehingga dua (2) tahun atau denda atau kedua-duanya; dan jika ugutan menyebabkan kematian/cedera parah/kebakaran: penjara sehingga tujuh (7) tahun, atau denda, atau kedua-duanya (Seizable, Non-Bailable)."
+    },
+    "penalty_subsequent_offence": null,
+    "compound_info": {
+      "is_compoundable": false,
+      "compound_authority_section": null,
+      "compound_regulation_ref": null,
+      "compound_amount_or_limit": "TIDAK BOLEH DIKOMPAUN — Siasatan jenayah berat oleh PDRM & TPR.",
+      "max_compound_rm": null,
+      "payment_days": null,
+      "notice_section": "Laporan Polis Seksyen 107 KTJ [Akta 593]"
+    },
+    "special_legal_requirements": [
+      "Panggilan kecemasan PDRM 999 & Laporan Polis S.107 KTJ serta-merta",
+      "Lindungi rakaman CCTV/video premis atau telefon bimbit untuk diserahkan kepada PDRM beserta Sijil S.90A Akta 56"
+    ],
+    "mandatory_exhibits": [
+      "Laporan Polis S.107 KTJ & rakaman video/audio (Sijil S.90A Akta 56)",
+      "Senarai saksi kejadian dan catatan verbatim kata-kata ugutan"
+    ],
+    "charge_sheet_template_bm": "RUJUKAN PDRM / TPR SAHAJA — Siasatan & pendakwaan Seksyen 506 Kanun Keseksaan [Akta 574] adalah bidang kuasa PDRM & TPR.",
+    "source_section_doc_ids": [
+      "AKTA_574__S506",
+      "AKTA_574__S503",
+      "AKTA_574__S189"
+    ],
+    "verified_status": "DRAFT_PENDING_REVIEW"
+  },
+  {
+    "offence_id": "AKTA_574_S170",
+    "statute_id": "AKTA_574",
+    "offence_section": "Seksyen 170",
+    "read_together_with": [
+      "Seksyen 420 Kanun Keseksaan [Akta 574] (jika turut memeras/menipu wang peniaga)",
+      "Seksyen 107 KTJ [Akta 593]"
+    ],
+    "offence_title": "Menyamar sebagai penjawat awam (individu palsu menyamar sebagai PPKP / Pegawai Kesihatan KKM untuk memeriksa premis atau mengutip bayaran)",
+    "target_offender": "INDIVIDU_AWAM",
+    "mandatory_elements": [
+      {
+        "element_no": 1,
+        "description": "Suspek berpura-pura memegang jawatan awam sebagai PPKP / Pegawai KKM sedangkan beliau bukan pegawai sah.",
+        "must_prove": "Pengesahan rasmi Bahagian Sumber Manusia / PKD bahawa suspek bukan kakitangan KKM, kad kuasa palsu/vest palsu."
+      },
+      {
+        "element_no": 2,
+        "description": "Suspek melakukan atau cuba melakukan tindakan atas sifat jawatan palsu itu (cth: memeriksa premis, mengeluarkan notis/resit palsu).",
+        "must_prove": "Keterangan pengadu/peniaga, CCTV premis, dokumen/notis palsu yang dikeluarkan."
+      }
+    ],
+    "explicit_exclusions_and_traps": [
+      "BATASAN BIDANG KUASA: Kesalahan BOLEH TANGKAP (Seizable) di bawah bidang kuasa PDRM & TPR. PKD/PPKP hendaklah membuat Laporan Polis S.107 KTJ dan mengesahkan status rasmi perjawatan KKM secara bertulis kepada PDRM. Jika melibatkan tipu wang/kompaun palsu, rujuk serentak Seksyen 420 Akta 574."
+    ],
+    "penalty_section": "Seksyen 170 Kanun Keseksaan [Akta 574]",
+    "penalty_first_offence": {
+      "max_fine_rm": null,
+      "max_jail_months": 24,
+      "verbatim_penalty": "Penjara sehingga dua (2) tahun, atau denda, atau kedua-duanya (Seizable; jika menipu wang rujuk S.420 penjara 1–10 tahun + sebatan + denda)."
+    },
+    "penalty_subsequent_offence": null,
+    "compound_info": {
+      "is_compoundable": false,
+      "compound_authority_section": null,
+      "compound_regulation_ref": null,
+      "compound_amount_or_limit": "TIDAK BOLEH DIKOMPAUN — Siasatan jenayah oleh PDRM & pendakwaan TPR.",
+      "max_compound_rm": null,
+      "payment_days": null,
+      "notice_section": "Laporan Polis Seksyen 107 KTJ [Akta 593]"
+    },
+    "special_legal_requirements": [
+      "Laporan Polis S.107 KTJ oleh PKD/PPKP bersama pengadu premis",
+      "Surat pengesahan rasmi PKD/JKN bahawa suspek bukan pegawai KKM & tiada kuasa statutori"
+    ],
+    "mandatory_exhibits": [
+      "Laporan Polis S.107 KTJ & surat pengesahan bukan kakitangan KKM",
+      "Salinan kad kuasa palsu / notis kompaun palsu / rakaman CCTV premis"
+    ],
+    "charge_sheet_template_bm": "RUJUKAN PDRM / TPR SAHAJA — Siasatan & pendakwaan Seksyen 170 / Seksyen 420 Kanun Keseksaan [Akta 574] adalah bidang kuasa PDRM & TPR.",
+    "source_section_doc_ids": [
+      "AKTA_574__S170",
+      "AKTA_574__S420"
+    ],
+    "verified_status": "DRAFT_PENDING_REVIEW"
+  },
+  {
+    "offence_id": "AKTA_574_S177",
+    "statute_id": "AKTA_574",
+    "offence_section": "Seksyen 177",
+    "read_together_with": [
+      "Seksyen 182 Kanun Keseksaan [Akta 574] (Aduan Palsu/Fitnah Premis)",
+      "Seksyen 107 & Seksyen 108(2) KTJ [Akta 593]"
+    ],
+    "offence_title": "Memberi maklumat palsu kepada penjawat awam (butiran identiti/nama/alamat palsu atau maklumat palsu semasa siasatan KKM)",
+    "target_offender": "INDIVIDU_AWAM",
+    "mandatory_elements": [
+      {
+        "element_no": 1,
+        "description": "Suspek terikat di sisi undang-undang untuk memberi maklumat mengenai sesuatu perkara kepada PPKP.",
+        "must_prove": "Punca kuasa menuntut maklumat (cth: S.30/S.31 Akta 852, S.112 KTJ, S.4 Akta 281, S.22(c) Akta 342)."
+      },
+      {
+        "element_no": 2,
+        "description": "Suspek memberi maklumat yang diketahui atau dipercayainya adalah palsu.",
+        "must_prove": "Semakan rasmi JPN/SSM/rekod sebenar yang membuktikan maklumat diberi adalah palsu."
+      }
+    ],
+    "explicit_exclusions_and_traps": [
+      "PRINSIP LEX SPECIALIS: Jika berlaku di bawah Akta 281 (S.4(6)) atau Akta 342 (S.22(c)), gunakan seksyen khusus Akta KKM terlebih dahulu. Jika berlaku di bawah Akta 852 (tiada seksyen maklumat palsu am) atau aduan palsu bagi memudaratkan premis lain (S.182 Akta 574), rujuk PDRM melalui Laporan Polis S.107 KTJ (Non-Seizable, perlukan OTI S.108(2) KTJ)."
+    ],
+    "penalty_section": "Seksyen 177 Kanun Keseksaan [Akta 574]",
+    "penalty_first_offence": {
+      "max_fine_rm": 2000,
+      "max_jail_months": 24,
+      "verbatim_penalty": "Penjara sehingga enam (6) bulan atau denda sehingga RM2,000.00 atau kedua-duanya; atau penjara sehingga dua (2) tahun atau denda atau kedua-duanya jika maklumat palsu berkenaan pelakuan sesuatu kesalahan."
+    },
+    "penalty_subsequent_offence": null,
+    "compound_info": {
+      "is_compoundable": false,
+      "compound_authority_section": null,
+      "compound_regulation_ref": null,
+      "compound_amount_or_limit": "TIDAK BOLEH DIKOMPAUN — Siasatan oleh PDRM (OTI S.108(2) KTJ) & TPR.",
+      "max_compound_rm": null,
+      "payment_days": null,
+      "notice_section": "Laporan Polis Seksyen 107 KTJ [Akta 593]"
+    },
+    "special_legal_requirements": [
+      "Semak dahulu sama ada seksyen khusus Akta KKM terpakai (S.4(6) Akta 281 / S.22(c) Akta 342)",
+      "Bagi rujukan Akta 574 (S.177 / S.182), buat Laporan Polis S.107 KTJ dengan bukti kepalsuan maklumat"
+    ],
+    "mandatory_exhibits": [
+      "Dokumen/borang/percakapan yang mengandungi maklumat palsu",
+      "Rekod pengesahan rasmi (JPN/SSM/rekod PKD) yang membuktikan kepalsuan"
+    ],
+    "charge_sheet_template_bm": "RUJUKAN PDRM / TPR SAHAJA — Siasatan Seksyen 177 / Seksyen 182 Kanun Keseksaan [Akta 574] adalah bidang kuasa PDRM & TPR.",
+    "source_section_doc_ids": [
+      "AKTA_574__S177",
+      "AKTA_574__S182"
+    ],
+    "verified_status": "DRAFT_PENDING_REVIEW"
+  },
+  {
+    "offence_id": "AKTA_574_S465",
+    "statute_id": "AKTA_574",
+    "offence_section": "Seksyen 465 / Seksyen 468 / Seksyen 471",
+    "read_together_with": [
+      "Seksyen 463 & Seksyen 464 Kanun Keseksaan [Akta 574] (Takrif Pemalsuan)",
+      "Peraturan 30 / Peraturan 31 PPKM 2009 (kesalahan KKM berasingan jika tiada sijil SLPM/tifoid sah)"
+    ],
+    "offence_title": "Pemalsuan dokumen / menggunakan dokumen palsu sebagai tulen (cth: Sijil Suntikan Tifoid palsu, Sijil SLPM palsu, Perakuan FoSIM/Halal/Kesihatan palsu)",
+    "target_offender": "PENIAGA_PEMILIK",
+    "mandatory_elements": [
+      {
+        "element_no": 1,
+        "description": "Dokumen yang dikemukakan kepada PPKP (sijil tifoid, sijil SLPM, sijil FoSIM, surat klinik/makmal) adalah dokumen palsu yang dibuat atau diubah secara tidak sah.",
+        "must_prove": "Pengesahan bertulis daripada klinik/hospital/institusi latihan/BKKM bahawa sijil/no. siri tersebut tidak pernah dikeluarkan atau telah dipinda."
+      },
+      {
+        "element_no": 2,
+        "description": "Suspek dengan curang atau dengan niat menipu menggunakan dokumen palsu tersebut seolah-olah tulen (S.471) atau memalsukannya untuk tujuan menipu (S.468).",
+        "must_prove": "Dokumen asal yang dirampas/salinan diperakui, pengesahan kepalsuan daripada pengeluar asal, dan Laporan Polis S.107 KTJ."
+      }
+    ],
+    "explicit_exclusions_and_traps": [
+      "TINDAKAN SERENTAK 2 LANDASAN: (1) PPKP kekal mengambil tindakan KKM di bawah PPKM 2009 (cth: P.31(1) tiada suntikan tifoid sah / P.30(1) tiada latihan SLPM sah / P.3 tiada pendaftaran sah) kerana sijil palsu dianggap tiada sijil sah. (2) Bagi jenayah PEMALSUAN DOKUMEN (S.465 / S.468 / S.471 Akta 574), PPKP TIDAK boleh kompaun — WAJIB buat Laporan Polis S.107 KTJ dan serahkan dokumen palsu bersama surat pengesahan kepalsuan kepada PDRM."
+    ],
+    "penalty_section": "Seksyen 465 / Seksyen 468 / Seksyen 471 Kanun Keseksaan [Akta 574]",
+    "penalty_first_offence": {
+      "max_fine_rm": null,
+      "max_jail_months": 84,
+      "verbatim_penalty": "S.465 (Pemalsuan am): Penjara sehingga 2 tahun atau denda atau kedua-duanya | S.468 (Pemalsuan bagi maksud menipu): Penjara sehingga 7 tahun dan denda (Non-Bailable) | S.471 (Menggunakan dokumen palsu sebagai tulen): Dihukum sama seperti pemalsuan."
+    },
+    "penalty_subsequent_offence": null,
+    "compound_info": {
+      "is_compoundable": false,
+      "compound_authority_section": null,
+      "compound_regulation_ref": null,
+      "compound_amount_or_limit": "TIDAK BOLEH DIKOMPAUN (Akta 574) — Rujuk PDRM melalui Laporan Polis S.107 KTJ (tindakan KKM PPKM 2009 boleh berjalan serentak).",
+      "max_compound_rm": null,
+      "payment_days": null,
+      "notice_section": "Laporan Polis Seksyen 107 KTJ [Akta 593]"
+    },
+    "special_legal_requirements": [
+      "Dapatkan pengesahan bertulis daripada pengeluar asal (klinik/hospital/SLPM/FoSIM) bahawa sijil adalah palsu",
+      "Buat Laporan Polis S.107 KTJ dan serahkan dokumen palsu asal dengan rantaian jagaan (chain of custody) kepada PDRM"
+    ],
+    "mandatory_exhibits": [
+      "Dokumen/Sijil palsu asal (sijil tifoid / SLPM / FoSIM) yang diambil semasa pemeriksaan",
+      "Surat pengesahan rasmi daripada klinik/institusi/BKKM bahawa sijil tidak tulen",
+      "Laporan Polis S.107 KTJ & gambar premis/pengendali"
+    ],
+    "charge_sheet_template_bm": "RUJUKAN PDRM / TPR SAHAJA — Siasatan & pendakwaan Seksyen 465 / 468 / 471 Kanun Keseksaan [Akta 574] adalah bidang kuasa PDRM & TPR.",
+    "source_section_doc_ids": [
+      "AKTA_574__S465",
+      "AKTA_574__S468",
+      "AKTA_574__S471",
+      "AKTA_574__S463"
+    ],
+    "verified_status": "DRAFT_PENDING_REVIEW"
+  },
+  {
+    "offence_id": "AKTA_574_S269",
+    "statute_id": "AKTA_574",
+    "offence_section": "Seksyen 269 / Seksyen 270",
+    "read_together_with": [
+      "Seksyen 12(1) & Seksyen 22(b) Akta 342 [APPPB 1988] (Utamakan Akta 342 dahulu)",
+      "Seksyen 107 KTJ [Akta 593]"
+    ],
+    "offence_title": "Perbuatan cuai (S.269) atau perbuatan jahat/sengaja (S.270) yang mungkin merebakkan jangkitan apa-apa penyakit yang berbahaya kepada nyawa",
+    "target_offender": "INDIVIDU_AWAM",
+    "mandatory_elements": [
+      {
+        "element_no": 1,
+        "description": "Suspek melakukan perbuatan yang menyalahi undang-undang atau cuai (S.269) atau jahat/sengaja (S.270).",
+        "must_prove": "Bukti perbuatan disengajakan/cuai melampau (cth: meludah kepada orang awam dalam keadaan tahu dijangkiti penyakit berbahaya)."
+      },
+      {
+        "element_no": 2,
+        "description": "Suspek tahu atau ada sebab untuk mempercayai perbuatan itu mungkin merebakkan jangkitan penyakit berbahaya kepada nyawa.",
+        "must_prove": "Rekod diagnostik klinikal/makmal yang sah & pengesahan pegawai perubatan."
+      }
+    ],
+    "explicit_exclusions_and_traps": [
+      "PRINSIP LEX SPECIALIS: Bagi kes biasa penyakit berjangkit / ingkar perintah kuarantin atau rawatan Tibi, UTAMAKAN Akta 342 (S.12(1) / S.22(b) / S.24 — denda sehingga RM10,000 / 2 tahun atau korporat RM100,000 di bawah Akta A1742). Rujuk PDRM di bawah S.269/S.270 Akta 574 (Seizable) hanya bagi perbuatan cuai/jahat jenayah berat yang memerlukan tangkapan polis serta-merta."
+    ],
+    "penalty_section": "Seksyen 269 / Seksyen 270 Kanun Keseksaan [Akta 574]",
+    "penalty_first_offence": {
+      "max_fine_rm": null,
+      "max_jail_months": 24,
+      "verbatim_penalty": "S.269 (Cuai): Penjara sehingga 6 bulan atau denda atau kedua-duanya | S.270 (Jahat/Sengaja): Penjara sehingga 2 tahun atau denda atau kedua-duanya (Kedua-duanya Seizable)."
+    },
+    "penalty_subsequent_offence": null,
+    "compound_info": {
+      "is_compoundable": false,
+      "compound_authority_section": null,
+      "compound_regulation_ref": null,
+      "compound_amount_or_limit": "TIDAK BOLEH DIKOMPAUN — Siasatan jenayah oleh PDRM & TPR.",
+      "max_compound_rm": null,
+      "payment_days": null,
+      "notice_section": "Laporan Polis Seksyen 107 KTJ [Akta 593]"
+    },
+    "special_legal_requirements": [
+      "Utamakan tindakan di bawah Akta 342 (S.12(1) / S.22(b)) terlebih dahulu; buat Laporan Polis S.107 KTJ bagi perbuatan jenayah jahat/cuai melampau",
+      "Perhatian Seksyen 59 Akta Tafsiran [Akta 388]: Pesalah tidak boleh dihukum dua kali atas perbuatan sama di bawah dua akta berbeza"
+    ],
+    "mandatory_exhibits": [
+      "Keputusan makmal sah penyakit berjangkit & pengesahan pegawai perubatan",
+      "Laporan Polis S.107 KTJ & bukti perbuatan cuai/jahat"
+    ],
+    "charge_sheet_template_bm": "RUJUKAN PDRM / TPR SAHAJA — Siasatan Seksyen 269 / Seksyen 270 Kanun Keseksaan [Akta 574] adalah bidang kuasa PDRM & TPR.",
+    "source_section_doc_ids": [
+      "AKTA_574__S269",
+      "AKTA_574__S270",
+      "AKTA_388__S59"
+    ],
+    "verified_status": "DRAFT_PENDING_REVIEW"
+  },
+  {
+    "offence_id": "AKTA_574_S272",
+    "statute_id": "AKTA_574",
+    "offence_section": "Seksyen 272 / Seksyen 273",
+    "read_together_with": [
+      "Seksyen 13(1), Seksyen 13A & Seksyen 13B Akta Makanan 1983 [Akta 281] (WAJIB UTAMAKAN AKTA 281)"
+    ],
+    "offence_title": "Mencampuradukkan makanan atau minuman untuk jualan (S.272) atau menjual makanan/minuman mudarat (S.273) — RUJUKAN SILANG SAHAJA (UTAMAKAN AKTA 281)",
+    "target_offender": "PENIAGA_PEMILIK",
+    "mandatory_elements": [
+      {
+        "element_no": 1,
+        "description": "Suspek mencampuradukkan makanan/minuman sehingga menjadi mudarat (S.272) atau menjual makanan/minuman yang diketahui mudarat/tidak layak dimakan (S.273).",
+        "must_prove": "Sijil Juruanalisis dan bukti penjualan/niat jual."
+      }
+    ],
+    "explicit_exclusions_and_traps": [
+      "AMARAN KERAS LEX SPECIALIS: JANGAN sesekali merendahkan kes keselamatan makanan kepada S.272/S.273 Akta 574 (penalti rendah: 6 bulan / RM2,000, Non-Seizable) apabila Akta Makanan 1983 [Akta 281] menyediakan penalti jauh lebih berat dan kuasa penyiasatan penuh PPKP: S.13(1) (denda RM100,000 / 10 tahun), S.13A(1) (RM50,000 / 8 tahun), S.13A(2) (RM30,000 / 5 tahun), S.13B (RM20,000 / 5 tahun)! Rujuk S.272/273 hanya sebagai maklumat perbandingan/rujukan silang."
+    ],
+    "penalty_section": "Seksyen 272 / Seksyen 273 Kanun Keseksaan [Akta 574]",
+    "penalty_first_offence": {
+      "max_fine_rm": 2000,
+      "max_jail_months": 6,
+      "verbatim_penalty": "Penjara sehingga enam (6) bulan, atau denda sehingga RM2,000.00, atau kedua-duanya (Non-Seizable) — jauh lebih rendah daripada Akta 281 S.13(1) RM100,000 / 10 tahun!"
+    },
+    "penalty_subsequent_offence": null,
+    "compound_info": {
+      "is_compoundable": false,
+      "compound_authority_section": null,
+      "compound_regulation_ref": null,
+      "compound_amount_or_limit": "TIDAK BOLEH DIKOMPAUN — Utamakan penyiasatan & pendakwaan PPKP di bawah Akta Makanan 1983 [Akta 281].",
+      "max_compound_rm": null,
+      "payment_days": null,
+      "notice_section": null
+    },
+    "special_legal_requirements": [
+      "Gunakan Akta Makanan 1983 [Akta 281] S.13 / S.13A / S.13B sebagai tindakan utama KKM",
+      "Rujuk S.63 & S.64 Akta Mahkamah Rendah 1948 [Akta 92] (Mahkamah Sesyen) bagi kes S.13(1) Akta 281 yang memohon hukuman melebihi had RM10,000 / 5 tahun Mahkamah Majistret (S.87 Akta 92)"
+    ],
+    "mandatory_exhibits": [
+      "Sampel rasmi makanan & Sijil Juruanalisis (S.20(ii) Akta 281 — serah 10 hari bersih sebelum bicara)"
+    ],
+    "charge_sheet_template_bm": "UTAMAKAN AKTA MAKANAN 1983 [AKTA 281] — Gunakan draf pertuduhan S.13(1) / S.13A / S.13B Akta 281 dan bukan S.272/273 Akta 574.",
+    "source_section_doc_ids": [
+      "AKTA_574__S272",
+      "AKTA_574__S273",
+      "AKTA_281__S13"
+    ],
+    "verified_status": "DRAFT_PENDING_REVIEW"
+  },
+  {
+    "offence_id": "AKTA_344_S90",
+    "statute_id": "AKTA_344",
+    "offence_section": "Seksyen 90",
+    "read_together_with": [
+      "Seksyen 20(3)(c) Akta Polis 1967 [Akta 344] (Kewajipan polis membantu pelaksanaan undang-undang kebersihan & kuarantin)",
+      "Seksyen 186 Kanun Keseksaan [Akta 574] (bagi halangan terhadap PPKP)"
+    ],
+    "offence_title": "Menghalang, menentang atau menyerang pegawai polis yang sedang menjalankan tugas (termasuk semasa mengiringi operasi penguatkuasaan KKM)",
+    "target_offender": "INDIVIDU_AWAM",
+    "mandatory_elements": [
+      {
+        "element_no": 1,
+        "description": "Mangsa halangan/penentangan ialah seorang PEGAWAI POLIS yang sedang menjalankan tugas rasmi (cth: bantuan iringan operasi KKM di bawah S.20(3)(c) Akta 344).",
+        "must_prove": "Pengesahan tugas rasmi pegawai polis yang mengiringi operasi dan laporan polis kejadian."
+      }
+    ],
+    "explicit_exclusions_and_traps": [
+      "AMARAN KRITIKAL: Seksyen 90 Akta Polis 1967 [Akta 344] HANYA terpakai bagi halangan terhadap PEGAWAI POLIS, BUKAN PPKP! Jika mangsa halangan ialah PPKP sendiri, rujuk seksyen halangan khusus Akta KKM (S.4(3) Akta 281 / S.21 Akta 154 / S.22(a) Akta 342) atau Seksyen 186 / S.353 Kanun Keseksaan [Akta 574] melalui Laporan Polis S.107 KTJ. PPKP juga TIDAK mempunyai kuasa polis di bawah Akta 344 — PPKP hanya memohon bantuan/iringan PDRM berpandukan S.20(3)(c) Akta 344."
+    ],
+    "penalty_section": "Seksyen 90 Akta Polis 1967 [Akta 344]",
+    "penalty_first_offence": {
+      "max_fine_rm": 500,
+      "max_jail_months": 6,
+      "verbatim_penalty": "Denda tidak melebihi RM500.00 atau penjara selama tempoh tidak melebihi enam (6) bulan atau kedua-duanya (Bidang kuasa PDRM & TPR sahaja)."
+    },
+    "penalty_subsequent_offence": null,
+    "compound_info": {
+      "is_compoundable": false,
+      "compound_authority_section": null,
+      "compound_regulation_ref": null,
+      "compound_amount_or_limit": "TIDAK BOLEH DIKOMPAUN — Kuasa tindakan sepenuhnya oleh PDRM & TPR.",
+      "max_compound_rm": null,
+      "payment_days": null,
+      "notice_section": "Laporan Polis Seksyen 107 KTJ [Akta 593]"
+    },
+    "special_legal_requirements": [
+      "Hanya terpakai jika halangan dilakukan terhadap pegawai polis; tindakan dan siasatan dijalankan oleh PDRM",
+      "Bagi permohonan iringan polis ke operasi berisiko tinggi KKM (kebersihan/kuarantin/sitaan), rujuk S.20(3)(c) Akta 344 & S.24 Akta 154"
+    ],
+    "mandatory_exhibits": [
+      "Surat permohonan bantuan iringan polis daripada PKD kepada OCPD/KPD",
+      "Laporan Polis S.107 KTJ oleh pegawai polis / PPKP yang terlibat"
+    ],
+    "charge_sheet_template_bm": "RUJUKAN PDRM / TPR SAHAJA — Seksyen 90 Akta Polis 1967 [Akta 344] adalah di bawah bidang kuasa PDRM & TPR.",
+    "source_section_doc_ids": [
+      "AKTA_344__S90",
+      "AKTA_344__S20",
+      "AKTA_574__S186"
     ],
     "verified_status": "DRAFT_PENDING_REVIEW"
   },
@@ -2242,8 +2931,8 @@
     "statute_id": "AKTA_852_PERATURAN_TANDA_2024",
     "offence_section": "Peraturan 2",
     "read_together_with": [
-      "Jadual Pertama",
-      "Jadual Kedua"
+      "Seksyen 18(1)(a) & Seksyen 18(2) Akta 852",
+      "Perintah Kawalan Produk Merokok Demi Kesihatan Awam (Pengisytiharan Kawasan atau Tempat Larangan Merokok) 2024 [P.U. (A) 257/2024]"
     ],
     "offence_title": "Tanggungjawab mempamerkan tanda amaran larangan merokok",
     "target_offender": "TUAN_PUNYA_PREMIS",
@@ -2266,13 +2955,13 @@
     },
     "penalty_subsequent_offence": null,
     "compound_info": {
-      "is_compoundable": false,
-      "compound_authority_section": null,
-      "compound_regulation_ref": null,
-      "compound_amount_or_limit": "TIDAK BOLEH KOMPAUN — Sita (jika berkenaan) & Buka IP Terus",
-      "max_compound_rm": null,
-      "payment_days": null,
-      "notice_section": null
+      "is_compoundable": true,
+      "compound_authority_section": "Seksyen 48(2) Akta 852",
+      "compound_regulation_ref": "Jadual Pertama(d) P.U. (A) 259/2024",
+      "compound_amount_or_limit": "Boleh dikompaun di bawah Seksyen 18(1)(a) & Seksyen 48(2) Akta 852 (RM250.00 – RM2,500.00; tempoh bayaran 30 hari — pertuduhan/kompaun wajib dibuat di bawah Seksyen 18(1)(a) Akta 852 dibaca bersama Peraturan 2 P.U. (A) 258/2024)",
+      "max_compound_rm": 2500,
+      "payment_days": 30,
+      "notice_section": "Tawaran Kompaun Borang 2 P.U.(A) 259/2024 & Notis Hadir Mahkamah S.47 [P.U.(A) 264/2024]"
     },
     "special_legal_requirements": [
       "Sijil Seksyen 90A(2) Akta Keterangan 1950"
@@ -2813,53 +3502,6 @@
     "charge_sheet_template_bm": "Bahawa kamu, pada [TARIKH], jam lebih kurang [MASA], bertempat di [TEMPAT_KEJADIAN], di dalam Daerah [DAERAH], di dalam Negeri [NEGERI], telah didapati melakukan kesalahan di bawah Seksyen 10 [AKTA_281]; dan oleh yang demikian kamu boleh dihukum di bawah peruntukan penalti akta yang sama.",
     "source_section_doc_ids": [
       "AKTA_281__S10"
-    ],
-    "verified_status": "DRAFT_PENDING_REVIEW"
-  },
-  {
-    "offence_id": "AKTA_281_13A",
-    "statute_id": "AKTA_281",
-    "offence_section": "Seksyen 13A",
-    "read_together_with": [],
-    "offence_title": "Makanan yang tidak sesuai untuk dimakan oleh manusia",
-    "target_offender": "INDIVIDU",
-    "mandatory_elements": [
-      {
-        "element_no": 1,
-        "description": "Pematuhan intipati perbuatan di bawah Seksyen 13A (Makanan yang tidak sesuai untuk dimakan oleh manusia).",
-        "must_prove": "Keterangan saksi PPKP, gambar foto bertarikh + Sijil S.90A(2) & barang kes berkaitan."
-      }
-    ],
-    "explicit_exclusions_and_traps": [
-      "Sahkan semua unsur dalam Seksyen 13A dipenuhi sebelum mengeluarkan notis atau membuka IP."
-    ],
-    "penalty_section": "Seksyen 13A",
-    "penalty_first_offence": {
-      "max_fine_rm": 50000,
-      "max_jail_months": 60,
-      "other_orders": null,
-      "verbatim_penalty": "Makanan yang tidak sesuai untuk dimakan oleh manusia\n13A. (1) Mana-mana orang yang menyediakan atau menjual apa-apa\nmakanan yang mengandungi keseluruhannya atau sebahagiannya—\n\n(a) apa-apa bahan binatang atau sayuran yang berpenyakit, kotor,\nreput atau bangar;\n\n(b) apa-apa bahagi"
-    },
-    "penalty_subsequent_offence": null,
-    "compound_info": {
-      "is_compoundable": false,
-      "compound_authority_section": null,
-      "compound_regulation_ref": null,
-      "compound_amount_or_limit": "TIDAK BOLEH KOMPAUN — Sita (jika berkenaan) & Buka IP Terus",
-      "max_compound_rm": null,
-      "payment_days": null,
-      "notice_section": null
-    },
-    "special_legal_requirements": [
-      "Sijil Seksyen 90A(2) Akta Keterangan 1950"
-    ],
-    "mandatory_exhibits": [
-      "Gambar foto lokasi/kejadian berwarna bertarikh + Sijil Seksyen 90A(2)",
-      "Diari Siasatan (S.119 KTJ) & Rakaman Percakapan S.112 KTJ"
-    ],
-    "charge_sheet_template_bm": "Bahawa kamu, pada [TARIKH], jam lebih kurang [MASA], bertempat di [TEMPAT_KEJADIAN], di dalam Daerah [DAERAH], di dalam Negeri [NEGERI], telah didapati melakukan kesalahan di bawah Seksyen 13A [AKTA_281]; dan oleh yang demikian kamu boleh dihukum di bawah peruntukan penalti akta yang sama.",
-    "source_section_doc_ids": [
-      "AKTA_281__S13A"
     ],
     "verified_status": "DRAFT_PENDING_REVIEW"
   },
@@ -4990,10 +5632,10 @@
       "is_compoundable": true,
       "compound_authority_section": "Seksyen 25 Akta 342 (Pindaan Akta A1742)",
       "compound_regulation_ref": "Jadual Pertama P.U. (A) 139/2025",
-      "compound_amount_or_limit": "Boleh dikompaun mengikut jadual kompaun (dengan keizinan bertulis Pendakwa Raya)",
-      "max_compound_rm": null,
+      "compound_amount_or_limit": "Hanya Seksyen 21A(3) boleh dikompaun dengan keizinan bertulis Pendakwa Raya (maks RM5,000 individu / RM50,000 perbadanan — tempoh 14 hari)",
+      "max_compound_rm": 5000,
       "payment_days": 14,
-      "notice_section": null
+      "notice_section": "Seksyen 25 Akta 342 [P.U. (A) 139/2025]"
     },
     "special_legal_requirements": [
       "Sijil Seksyen 90A(2) Akta Keterangan 1950"

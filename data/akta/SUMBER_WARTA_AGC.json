@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-11-22T10:22:21Z",
-  "total_pdfs": 20,
+  "generated_at": "2026-11-25T03:30:00Z",
+  "total_pdfs": 24,
   "documents": [
     {
       "statute_id": "AKTA_852",
@@ -301,6 +301,66 @@
       "size_bytes": 1660354,
       "sha256": "610708e8aa339fac92b6227b47a956604d5ffbed056e8215b0e473183754ddd8",
       "downloaded_at": "2026-11-22T09:43:32Z"
+    },
+    {
+      "statute_id": "AKTA_574",
+      "act_number_or_pu": "Akta 574",
+      "official_title_bm": "Kanun Keseksaan (Penal Code — Teks Kemaskini Rasmi AGC 30 November 2022)",
+      "official_title_en": "Penal Code (Online Updated Text as at 30 November 2022)",
+      "effective_date": "1997-08-07",
+      "language": "BI (Teks Sahih Rasmi AGC)",
+      "source_authority": "Jabatan Peguam Negara (lom.agc.gov.my)",
+      "source_url": "https://lom.agc.gov.my/ilims/upload/portal/akta/outputaktap/1772875_BI/Act%20574%20Project%201%20(Final)%20TO%20UPLOAD%20LOM%20(3).pdf",
+      "filename": "AKTA_574.pdf",
+      "page_count": 325,
+      "size_bytes": 1729890,
+      "sha256": "235679dcb5411daa84d639231212f708e6747b97e5a7484c7c525ce3d34dccb5",
+      "downloaded_at": "2026-11-25T03:24:00Z"
+    },
+    {
+      "statute_id": "AKTA_344",
+      "act_number_or_pu": "Akta 344",
+      "official_title_bm": "Akta Polis 1967 (Teks Rasmi AGC 1 Jun 2016)",
+      "official_title_en": "Police Act 1967 (as at 1 June 2016)",
+      "effective_date": "1967-08-29",
+      "language": "BM",
+      "source_authority": "Jabatan Peguam Negara (lom.agc.gov.my)",
+      "source_url": "https://lom.agc.gov.my/ilims/upload/portal/akta/LOM/MY/Akta%20344.pdf",
+      "filename": "AKTA_344.pdf",
+      "page_count": 69,
+      "size_bytes": 553310,
+      "sha256": "82d0e7600d2ef9382291226bb95b5733bca87d4a448568d7cc05d885d8e9365b",
+      "downloaded_at": "2026-11-25T03:24:00Z"
+    },
+    {
+      "statute_id": "AKTA_388",
+      "act_number_or_pu": "Akta 388",
+      "official_title_bm": "Akta Tafsiran 1948 dan 1967 (Interpretation Acts 1948 and 1967 — Cetakan Semula Rasmi AGC 1 Januari 2006)",
+      "official_title_en": "Interpretation Acts 1948 and 1967 (Reprint as at 1 January 2006)",
+      "effective_date": "1967-05-18",
+      "language": "BI (Teks Sahih Rasmi AGC)",
+      "source_authority": "Jabatan Peguam Negara (lom.agc.gov.my)",
+      "source_url": "https://lom.agc.gov.my/ilims/upload/portal/akta/LOM/EN/Act%20388.pdf",
+      "filename": "AKTA_388.pdf",
+      "page_count": 82,
+      "size_bytes": 151245,
+      "sha256": "bc6153416f07d73e1a75baaf48f297a0ee5dd78935819e5098e5da3b5e6cc544",
+      "downloaded_at": "2026-11-25T03:24:00Z"
+    },
+    {
+      "statute_id": "AKTA_92",
+      "act_number_or_pu": "Akta 92",
+      "official_title_bm": "Akta Mahkamah Rendah 1948 (Subordinate Courts Act 1948 — Teks Kemaskini Rasmi AGC 1 Januari 2023)",
+      "official_title_en": "Subordinate Courts Act 1948 (Online Updated Text as at 1 January 2023)",
+      "effective_date": "1949-01-01",
+      "language": "BI (Teks Sahih Rasmi AGC)",
+      "source_authority": "Jabatan Peguam Negara (lom.agc.gov.my)",
+      "source_url": "https://lom.agc.gov.my/ilims/upload/portal/akta/outputaktap/1753610_BI/Act%2092%20Muktamad%2018.4.2023.pdf",
+      "filename": "AKTA_92.pdf",
+      "page_count": 54,
+      "size_bytes": 757722,
+      "sha256": "2ef3627c4dead5232c5f3a2a305f25261920c5a17bc57f221a412cbec561669d",
+      "downloaded_at": "2026-11-25T03:24:00Z"
     }
   ]
 }

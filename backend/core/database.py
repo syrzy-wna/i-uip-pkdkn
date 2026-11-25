@@ -59,7 +59,12 @@ ADVISOR_ACT_META: tuple[tuple[str, str], ...] = (
     ("Akta 154", "Akta Pemusnahan Serangga Pembawa Penyakit 1975"),
     ("Akta 342", "Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988"),
     ("Akta 593", "Kanun Tatacara Jenayah (KTJ)"),
+    ("Akta 574", "Kanun Keseksaan (Penal Code)"),
+    ("Akta 344", "Akta Polis 1967"),
+    ("Akta 388", "Akta Tafsiran 1948 dan 1967"),
+    ("Akta 92", "Akta Mahkamah Rendah 1948"),
     ("Akta 56", "Akta Keterangan 1950 (Seksyen 90A)"),
+    ("Akta 611", "Akta Kanak-Kanak 2001"),
     ("Akta Lain / Rujukan Silang", "Rujukan Silang Agensi & Akta Berkaitan"),
 )
 
@@ -92,11 +97,40 @@ def _match_canonical_act_from_text(text: str) -> Optional[str]:
     if (
         re.search(r"(?<!\d)(?:akta\s*)?593(?!\d)", low)
         or "kanun tatacara jenayah" in low
-        or re.search(r"\bktj\b", low)
+        or "criminal procedure code" in low
+        or re.search(r"\b(?:ktj|cpc)\b", low)
     ):
         return "Akta 593"
-    if re.search(r"\bakta\s*56\b", low) or "akta keterangan" in low or "keterangan 1950" in low:
+    if (
+        re.search(r"(?<!\d)(?:akta\s*)?574(?!\d)", low)
+        or "kanun keseksaan" in low
+        or "penal code" in low
+    ):
+        return "Akta 574"
+    if (
+        re.search(r"(?<!\d)(?:akta\s*)?344(?!\d)", low)
+        or "akta polis" in low
+        or "police act" in low
+    ):
+        return "Akta 344"
+    if (
+        re.search(r"(?<!\d)(?:akta\s*)?388(?!\d)", low)
+        or "akta tafsiran" in low
+        or "tafsiran 1948" in low
+        or "tafsiran 1967" in low
+        or "interpretation act" in low
+    ):
+        return "Akta 388"
+    if (
+        re.search(r"\b(?:akta|act)\s*92\b", low)
+        or "mahkamah rendah" in low
+        or "subordinate courts" in low
+    ):
+        return "Akta 92"
+    if re.search(r"\b(?:akta|act)\s*56\b", low) or "akta keterangan" in low or "keterangan 1950" in low or "evidence act" in low:
         return "Akta 56"
+    if re.search(r"(?<!\d)(?:akta\s*)?611(?!\d)", low) or "kanak-kanak 2001" in low or "child act" in low:
+        return "Akta 611"
     return None
 
 
@@ -420,7 +454,8 @@ def _is_corrupted_or_fallback_qa(analysis: Dict[str, Any], raw_resp: str = "") -
     if isinstance(legal_val, dict) and legal_val.get("passed") is False:
         return True
     blob = f"{json.dumps(analysis.get('cadangan_pertuduhan') or [], ensure_ascii=False)} {analysis.get('keputusan_tindakan') or ''} {analysis.get('sebab_tidak_menyalahi') or ''} {analysis.get('ringkasan_keputusan') or ''} {raw_resp}".lower()
-    if "tafsiran" in blob and ("seksyen 2" in blob or "sek. 2" in blob):
+    is_akta_388 = "akta 388" in blob or "akta tafsiran" in blob or "interpretation act" in blob
+    if not is_akta_388 and "tafsiran" in blob and ("seksyen 2" in blob or "sek. 2" in blob):
         return True
     if any(
         bad_marker in blob

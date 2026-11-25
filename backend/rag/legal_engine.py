@@ -24,7 +24,7 @@ import pymupdf as fitz
 from backend.core.config import settings
 
 INITIAL_STATUTE_LIBRARY_VERSION = "2.6.0-closed-book-agc-pdf"
-PARSER_VERSION = "3.4-agc-gazette-pdf"
+PARSER_VERSION = "3.5-agc-gazette-pdf"
 
 TOKEN_RE = re.compile(r"[a-zA-Z0-9]+")
 
@@ -466,6 +466,54 @@ DEFAULT_STATUTES_REGISTRY_META: List[Dict[str, Any]] = [
         "repealed_by": None,
         "effective_date": "2002-08-01",
         "source_pdf_filename": "AKTA_611.pdf",
+        "verified_by_admin": False,
+    },
+    {
+        "statute_id": "AKTA_574",
+        "canonical_akta_code": "Akta 574",
+        "official_title_bm": "Kanun Keseksaan (Penal Code — Teks Kemaskini Rasmi AGC 30 November 2022)",
+        "official_title_en": "Penal Code (Online Updated Text as at 30 November 2022)",
+        "act_number_or_pu": "Akta 574",
+        "status": "BERKUAT_KUASA",
+        "repealed_by": None,
+        "effective_date": "1997-08-07",
+        "source_pdf_filename": "AKTA_574.pdf",
+        "verified_by_admin": False,
+    },
+    {
+        "statute_id": "AKTA_344",
+        "canonical_akta_code": "Akta 344",
+        "official_title_bm": "Akta Polis 1967 (Teks Rasmi AGC 1 Jun 2016)",
+        "official_title_en": "Police Act 1967 (as at 1 June 2016)",
+        "act_number_or_pu": "Akta 344",
+        "status": "BERKUAT_KUASA",
+        "repealed_by": None,
+        "effective_date": "1967-08-29",
+        "source_pdf_filename": "AKTA_344.pdf",
+        "verified_by_admin": False,
+    },
+    {
+        "statute_id": "AKTA_388",
+        "canonical_akta_code": "Akta 388",
+        "official_title_bm": "Akta Tafsiran 1948 dan 1967 (Interpretation Acts 1948 and 1967 — Cetakan Semula Rasmi AGC 1 Januari 2006)",
+        "official_title_en": "Interpretation Acts 1948 and 1967 (Reprint as at 1 January 2006)",
+        "act_number_or_pu": "Akta 388",
+        "status": "BERKUAT_KUASA",
+        "repealed_by": None,
+        "effective_date": "1967-05-18",
+        "source_pdf_filename": "AKTA_388.pdf",
+        "verified_by_admin": False,
+    },
+    {
+        "statute_id": "AKTA_92",
+        "canonical_akta_code": "Akta 92",
+        "official_title_bm": "Akta Mahkamah Rendah 1948 (Subordinate Courts Act 1948 — Teks Kemaskini Rasmi AGC 1 Januari 2023)",
+        "official_title_en": "Subordinate Courts Act 1948 (Online Updated Text as at 1 January 2023)",
+        "act_number_or_pu": "Akta 92",
+        "status": "BERKUAT_KUASA",
+        "repealed_by": None,
+        "effective_date": "1949-01-01",
+        "source_pdf_filename": "AKTA_92.pdf",
         "verified_by_admin": False,
     },
     {
@@ -2111,6 +2159,588 @@ DEFAULT_MASTER_OFFENCES_MATRIX: List[Dict[str, Any]] = [
         "source_section_doc_ids": ["AKTA_342__S22", "AKTA_342__S24", "AKTA_342__S25", "AKTA_342__S15", "AKTA_342__S18", "AKTA_342_PERATURAN_KOMPAUN_2025__P2"],
         "verified_status": "DRAFT_PENDING_REVIEW",
     },
+    # ---------------- AKTA 574 (KANUN KESEKSAAN — RUJUKAN SILANG PDRM / TPR) ----------------
+    {
+        "offence_id": "AKTA_574_S186",
+        "statute_id": "AKTA_574",
+        "offence_section": "Seksyen 186",
+        "read_together_with": [
+            "Seksyen 21 Kanun Keseksaan [Akta 574] (Penjawat Awam)",
+            "Seksyen 24(3) Akta 852 / Seksyen 3 Akta 281 / Seksyen 4 Akta 154 / Seksyen 3(2) Akta 342",
+            "Seksyen 107 Kanun Tatacara Jenayah [Akta 593] (Laporan Polis)",
+        ],
+        "offence_title": "Dengan sengaja menghalang penjawat awam (PPKP) menjalankan fungsi jawatan awam — rujukan silang utama apabila Akta KKM (khususnya Akta 852) tiada seksyen halangan sendiri",
+        "target_offender": "INDIVIDU_AWAM",
+        "mandatory_elements": [
+            {
+                "element_no": 1,
+                "description": "PPKP bertindak sebagai penjawat awam yang sah (disifatkan di bawah S.24(3) Akta 852 / S.3 Akta 281 / S.4 Akta 154 / S.3(2) Akta 342) dengan Kad Kuasa rasmi KKM.",
+                "must_prove": "Salinan Kad Kuasa KKM, surat arahan operasi, dan keterangan bahawa PPKP memperkenalkan diri secara sah.",
+            },
+            {
+                "element_no": 2,
+                "description": "Suspek dengan sengaja menghalang secara fizikal/aktif (cth: kunci pintu, rampas semula ekshibit, halang laluan masuk) ketika PPKP menjalankan tugas rasmi.",
+                "must_prove": "Laporan Polis S.107 KTJ oleh PPKP, rakaman video/gambar (disokong Sijil S.90A), dan percakapan saksi pasukan operasi.",
+            },
+        ],
+        "explicit_exclusions_and_traps": [
+            "BATASAN BIDANG KUASA PPKP: PPKP TIDAK mempunyai kuasa menyiasat, mengkompaun atau mendakwa di bawah Kanun Keseksaan [Akta 574]. PPKP WAJIB membuat Laporan Polis di bawah Seksyen 107 KTJ supaya PDRM menyiasat dan TPR mendakwa (Kesalahan Boleh Tangkap / Seizable di bawah Jadual Pertama KTJ).",
+            "PRINSIP LEX SPECIALIS: Jika halangan berlaku di bawah Akta 281 (S.4(3)-(4)), Akta 154 (S.21) atau Akta 342 (S.22(a)), PPKP boleh bertindak di bawah seksyen khusus Akta KKM tersebut; namun bagi Akta 852 (tiada seksyen halangan tersendiri) atau halangan agresif, rujuk S.186 Akta 574 melalui PDRM.",
+        ],
+        "penalty_section": "Seksyen 186 Kanun Keseksaan [Akta 574]",
+        "penalty_first_offence": {
+            "max_fine_rm": 10000,
+            "max_jail_months": 24,
+            "verbatim_penalty": "Penjara sehingga dua (2) tahun, atau denda sehingga RM10,000.00, atau kedua-duanya (Kesalahan Boleh Tangkap / Seizable; Tidak Boleh Dijamin / Non-Bailable).",
+        },
+        "penalty_subsequent_offence": None,
+        "compound_info": {
+            "is_compoundable": False,
+            "compound_authority_section": None,
+            "compound_regulation_ref": None,
+            "compound_amount_or_limit": "TIDAK BOLEH DIKOMPAUN — Kuasa siasatan PDRM & pendakwaan TPR. PPKP wajib buat Laporan Polis Seksyen 107 KTJ.",
+            "max_compound_rm": None,
+            "payment_days": None,
+            "notice_section": "Laporan Polis Seksyen 107 KTJ [Akta 593]",
+        },
+        "special_legal_requirements": [
+            "Laporan Polis (FIR) segera oleh PPKP di balai polis berhampiran di bawah Seksyen 107 KTJ",
+            "PPKP & anggota pasukan operasi hadir memberi percakapan saksi kepada Pegawai Penyiasat PDRM di bawah Seksyen 112 KTJ",
+            "Serahkan rakaman video/foto (beserta Sijil Seksyen 90A Akta 56) & salinan Kad Kuasa sebagai ekshibit polis",
+        ],
+        "mandatory_exhibits": [
+            "Salinan Laporan Polis (FIR S.107 KTJ) oleh PPKP",
+            "Salinan Kad Kuasa PPKP & Surat Arahan Operasi PKD",
+            "Rakaman Video/Gambar kejadian + Sijil Seksyen 90A Akta Keterangan 1950 [Akta 56]",
+            "Diari Rasmi / Buku Catatan Operasi PPKP & Senarai Saksi Pasukan",
+        ],
+        "charge_sheet_template_bm": (
+            "RUJUKAN PDRM / TPR SAHAJA (PPKP TIDAK MENDRAF PERTUDUHAN AKTA 574): "
+            "Siasatan dan pendakwaan Seksyen 186 Kanun Keseksaan [Akta 574] adalah di bawah bidang kuasa PDRM dan Timbalan Pendakwa Raya (TPR) selepas Laporan Polis Seksyen 107 KTJ dibuat."
+        ),
+        "source_section_doc_ids": ["AKTA_574__S186", "AKTA_574__S21", "AKTA_593__S107"],
+        "verified_status": "DRAFT_PENDING_REVIEW",
+    },
+    {
+        "offence_id": "AKTA_574_S183",
+        "statute_id": "AKTA_574",
+        "offence_section": "Seksyen 183",
+        "read_together_with": [
+            "Seksyen 35 Akta 852 / Seksyen 4(1)(f) Akta 281 (Kuasa Penyitaan)",
+            "Seksyen 107 & Seksyen 108(2) KTJ [Akta 593] (OTI TPR bagi kesalahan tidak boleh tangkap)",
+        ],
+        "offence_title": "Menentang pengambilan harta (rampasan/sitaan ekshibit) oleh penjawat awam yang bertindak di bawah kuasa sah undang-undang",
+        "target_offender": "PENIAGA_PEMILIK",
+        "mandatory_elements": [
+            {
+                "element_no": 1,
+                "description": "PPKP sedang melaksanakan penyitaan sah di bawah Akta KKM (cth: S.35 Akta 852 / S.4(1)(f) Akta 281).",
+                "must_prove": "Borang Senarai Benda Disita, Kad Kuasa, dan bukti asas syak munasabah penyitaan.",
+            },
+            {
+                "element_no": 2,
+                "description": "Suspek menentang, merampas balik atau menghalang pengambilan barang kes tersebut.",
+                "must_prove": "Laporan Polis S.107 KTJ, keterangan saksi pasukan dan rakaman kejadian.",
+            },
+        ],
+        "explicit_exclusions_and_traps": [
+            "BATASAN BIDANG KUASA: Kesalahan TIDAK BOLEH TANGKAP (Non-Seizable) di bawah Jadual Pertama KTJ — PDRM memerlukan Perintah Untuk Menyiasat (OTI) daripada TPR di bawah Seksyen 108(2) KTJ. PPKP TIDAK boleh kompaun; buat Laporan Polis S.107 KTJ.",
+        ],
+        "penalty_section": "Seksyen 183 Kanun Keseksaan [Akta 574]",
+        "penalty_first_offence": {
+            "max_fine_rm": 2000,
+            "max_jail_months": 6,
+            "verbatim_penalty": "Penjara sehingga enam (6) bulan, atau denda sehingga RM2,000.00, atau kedua-duanya (Non-Seizable; PDRM perlukan OTI S.108(2) KTJ).",
+        },
+        "penalty_subsequent_offence": None,
+        "compound_info": {
+            "is_compoundable": False,
+            "compound_authority_section": None,
+            "compound_regulation_ref": None,
+            "compound_amount_or_limit": "TIDAK BOLEH DIKOMPAUN — Rujuk PDRM melalui Laporan Polis S.107 KTJ (OTI S.108(2) KTJ).",
+            "max_compound_rm": None,
+            "payment_days": None,
+            "notice_section": "Laporan Polis Seksyen 107 KTJ [Akta 593]",
+        },
+        "special_legal_requirements": [
+            "Buat Laporan Polis S.107 KTJ; PDRM memohon OTI daripada TPR di bawah S.108(2) KTJ",
+            "Jika suspek turut merempuh/menghalang secara fizikal, polis boleh menyiasat serentak di bawah S.186 atau S.353 Akta 574 (Seizable)",
+        ],
+        "mandatory_exhibits": [
+            "Laporan Polis S.107 KTJ & salinan Borang Senarai Benda Disita",
+            "Rakaman video/gambar kejadian + Sijil S.90A Akta 56",
+        ],
+        "charge_sheet_template_bm": "RUJUKAN PDRM / TPR SAHAJA — Siasatan di bawah Seksyen 183 Kanun Keseksaan [Akta 574] adalah bidang kuasa PDRM (OTI S.108(2) KTJ) & TPR.",
+        "source_section_doc_ids": ["AKTA_574__S183", "AKTA_574__S186", "AKTA_593__S107", "AKTA_593__S108"],
+        "verified_status": "DRAFT_PENDING_REVIEW",
+    },
+    {
+        "offence_id": "AKTA_574_S189",
+        "statute_id": "AKTA_574",
+        "offence_section": "Seksyen 189",
+        "read_together_with": [
+            "Seksyen 506 Kanun Keseksaan [Akta 574] (Ugutan Jenayah)",
+            "Seksyen 107 & Seksyen 108(2) KTJ [Akta 593]",
+        ],
+        "offence_title": "Ugutan bencana (threat of injury) terhadap penjawat awam (PPKP) bagi mendorong PPKP menangguhkan atau tidak melaksanakan tugas rasmi",
+        "target_offender": "INDIVIDU_AWAM",
+        "mandatory_elements": [
+            {
+                "element_no": 1,
+                "description": "Suspek mengeluarkan ugutan bencana terhadap PPKP atau mana-mana orang yang PPKP mempunyai kepentingan.",
+                "must_prove": "Perkataan tepat ugutan yang direkod segera dalam Diari/Laporan Polis, rakaman audio/video & keterangan saksi.",
+            },
+            {
+                "element_no": 2,
+                "description": "Niat untuk mendorong PPKP melakukan, menahan diri atau melengahkan pelaksanaan fungsi awam (cth: supaya tidak keluarkan kompaun/tutup premis).",
+                "must_prove": "Konteks kejadian operasi rasmi yang sedang dijalankan.",
+            },
+        ],
+        "explicit_exclusions_and_traps": [
+            "BATASAN BIDANG KUASA: S.189 adalah Non-Seizable (perlukan OTI S.108(2) KTJ), manakala jika terdapat ugutan bunuh/cedera/bakar/kecederaan parah ia jatuh di bawah Seksyen 506 Akta 574 (SEIZABLE — polis boleh tangkap serta-merta tanpa waran). PPKP WAJIB undur ke lokasi selamat & buat Laporan Polis S.107 KTJ!",
+        ],
+        "penalty_section": "Seksyen 189 Kanun Keseksaan [Akta 574]",
+        "penalty_first_offence": {
+            "max_fine_rm": None,
+            "max_jail_months": 24,
+            "verbatim_penalty": "Penjara sehingga dua (2) tahun, atau denda, atau kedua-duanya (S.189 Non-Seizable; jika ugutan jenayah berat rujuk S.506 sehingga 7 tahun, Seizable).",
+        },
+        "penalty_subsequent_offence": None,
+        "compound_info": {
+            "is_compoundable": False,
+            "compound_authority_section": None,
+            "compound_regulation_ref": None,
+            "compound_amount_or_limit": "TIDAK BOLEH DIKOMPAUN — Utamakan keselamatan PPKP dan buat Laporan Polis S.107 KTJ segera.",
+            "max_compound_rm": None,
+            "payment_days": None,
+            "notice_section": "Laporan Polis Seksyen 107 KTJ [Akta 593]",
+        },
+        "special_legal_requirements": [
+            "Utamakan keselamatan diri pasukan — tarik diri dari premis berisiko dan hubungi balai polis (999) / buat Laporan Polis S.107 KTJ",
+            "Catat verbatim kata-kata ugutan suspek secepat mungkin",
+        ],
+        "mandatory_exhibits": [
+            "Laporan Polis S.107 KTJ dengan transkrip tepat kata-kata ugutan",
+            "Rakaman video/audio (Sijil S.90A Akta 56) & saksi pasukan",
+        ],
+        "charge_sheet_template_bm": "RUJUKAN PDRM / TPR SAHAJA — Siasatan & pendakwaan Seksyen 189 / Seksyen 506 Kanun Keseksaan [Akta 574] adalah bidang kuasa PDRM & TPR.",
+        "source_section_doc_ids": ["AKTA_574__S189", "AKTA_574__S506", "AKTA_593__S107"],
+        "verified_status": "DRAFT_PENDING_REVIEW",
+    },
+    {
+        "offence_id": "AKTA_574_S353",
+        "statute_id": "AKTA_574",
+        "offence_section": "Seksyen 353",
+        "read_together_with": [
+            "Seksyen 186 & Seksyen 506 Kanun Keseksaan [Akta 574]",
+            "Seksyen 107 KTJ [Akta 593]",
+        ],
+        "offence_title": "Menyerang atau menggunakan kekerasan jenayah (menolak, menumbuk, memukul, meludah, mencampak barang) terhadap penjawat awam (PPKP) semasa menjalankan tugas",
+        "target_offender": "INDIVIDU_AWAM",
+        "mandatory_elements": [
+            {
+                "element_no": 1,
+                "description": "PPKP sedang melaksanakan kewajipan rasmi yang sah di sisi undang-undang.",
+                "must_prove": "Kad Kuasa KKM, surat arahan operasi dan saksi pasukan.",
+            },
+            {
+                "element_no": 2,
+                "description": "Suspek menyerang atau menggunakan kekerasan jenayah terhadap PPKP bagi menghalang/menakutkan PPKP menjalankan kewajipan.",
+                "must_prove": "Laporan Polis S.107 KTJ, laporan pemeriksaan perubatan (jika cedera), gambar kecederaan/pakaian & rakaman video (Sijil S.90A).",
+            },
+        ],
+        "explicit_exclusions_and_traps": [
+            "BATASAN BIDANG KUASA: Kesalahan BOLEH TANGKAP (Seizable) di bawah bidang kuasa PDRM & TPR. PPKP TIDAK boleh kompaun; segera hubungi polis (999), dapatkan rawatan perubatan rasmi di hospital/klinik kerajaan (rekod kecederaan) dan buat Laporan Polis S.107 KTJ.",
+        ],
+        "penalty_section": "Seksyen 353 Kanun Keseksaan [Akta 574]",
+        "penalty_first_offence": {
+            "max_fine_rm": None,
+            "max_jail_months": 24,
+            "verbatim_penalty": "Penjara sehingga dua (2) tahun, atau denda, atau kedua-duanya (Kesalahan Boleh Tangkap / Seizable).",
+        },
+        "penalty_subsequent_offence": None,
+        "compound_info": {
+            "is_compoundable": False,
+            "compound_authority_section": None,
+            "compound_regulation_ref": None,
+            "compound_amount_or_limit": "TIDAK BOLEH DIKOMPAUN — Siasatan jenayah oleh PDRM & pendakwaan oleh TPR.",
+            "max_compound_rm": None,
+            "payment_days": None,
+            "notice_section": "Laporan Polis Seksyen 107 KTJ [Akta 593]",
+        },
+        "special_legal_requirements": [
+            "Dapatkan pemeriksaan doktor kerajaan (rekod kecederaan/Laporan Perubatan) segera selepas kejadian",
+            "Buat Laporan Polis S.107 KTJ & maklumkan Pegawai Kesihatan Daerah (PKD)",
+        ],
+        "mandatory_exhibits": [
+            "Laporan Polis S.107 KTJ & Laporan Perubatan Hospital/Klinik Kerajaan",
+            "Gambar kecederaan/pakaian terkoyak & rakaman video (Sijil S.90A Akta 56)",
+        ],
+        "charge_sheet_template_bm": "RUJUKAN PDRM / TPR SAHAJA — Siasatan & pendakwaan Seksyen 353 Kanun Keseksaan [Akta 574] adalah bidang kuasa PDRM & TPR.",
+        "source_section_doc_ids": ["AKTA_574__S353", "AKTA_574__S186", "AKTA_593__S107"],
+        "verified_status": "DRAFT_PENDING_REVIEW",
+    },
+    {
+        "offence_id": "AKTA_574_S506",
+        "statute_id": "AKTA_574",
+        "offence_section": "Seksyen 506",
+        "read_together_with": [
+            "Seksyen 503 Kanun Keseksaan [Akta 574] (Takrif Menakutkan Secara Jenayah)",
+            "Seksyen 189 Kanun Keseksaan [Akta 574]",
+        ],
+        "offence_title": "Menakutkan secara jenayah (ugutan bunuh, cedera parah, bakar premis/kenderaan, atau acu senjata terhadap PPKP)",
+        "target_offender": "INDIVIDU_AWAM",
+        "mandatory_elements": [
+            {
+                "element_no": 1,
+                "description": "Suspek mengugut untuk mendatangkan bencana terhadap tubuh badan, nama baik atau harta PPKP (termasuk ugutan bunuh/cedera parah/bakar/senjata).",
+                "must_prove": "Laporan Polis S.107 KTJ, transkrip perkataan ugutan, rakaman video/audio (Sijil S.90A) & keterangan saksi.",
+            },
+            {
+                "element_no": 2,
+                "description": "Niat menyebabkan ketakutan (alarm) kepada PPKP atau memaksa PPKP tidak melakukan tindakan penguatkuasaan.",
+                "must_prove": "Keterangan mangsa (PPKP) bahawa ugutan tersebut menimbulkan rasa takut/ancaman keselamatan sebenar.",
+            },
+        ],
+        "explicit_exclusions_and_traps": [
+            "BATASAN BIDANG KUASA: Kesalahan BOLEH TANGKAP (Seizable) dan TIDAK BOLEH DIJAMIN (Non-Bailable) jika ugutan menyebabkan kematian/cedera parah/kebakaran. PPKP WAJIB segera keluar ke kawasan selamat, hubungi PDRM (999) dan buat Laporan Polis S.107 KTJ.",
+        ],
+        "penalty_section": "Seksyen 506 Kanun Keseksaan [Akta 574]",
+        "penalty_first_offence": {
+            "max_fine_rm": None,
+            "max_jail_months": 84,
+            "verbatim_penalty": "Penjara sehingga dua (2) tahun atau denda atau kedua-duanya; dan jika ugutan menyebabkan kematian/cedera parah/kebakaran: penjara sehingga tujuh (7) tahun, atau denda, atau kedua-duanya (Seizable, Non-Bailable).",
+        },
+        "penalty_subsequent_offence": None,
+        "compound_info": {
+            "is_compoundable": False,
+            "compound_authority_section": None,
+            "compound_regulation_ref": None,
+            "compound_amount_or_limit": "TIDAK BOLEH DIKOMPAUN — Siasatan jenayah berat oleh PDRM & TPR.",
+            "max_compound_rm": None,
+            "payment_days": None,
+            "notice_section": "Laporan Polis Seksyen 107 KTJ [Akta 593]",
+        },
+        "special_legal_requirements": [
+            "Panggilan kecemasan PDRM 999 & Laporan Polis S.107 KTJ serta-merta",
+            "Lindungi rakaman CCTV/video premis atau telefon bimbit untuk diserahkan kepada PDRM beserta Sijil S.90A Akta 56",
+        ],
+        "mandatory_exhibits": [
+            "Laporan Polis S.107 KTJ & rakaman video/audio (Sijil S.90A Akta 56)",
+            "Senarai saksi kejadian dan catatan verbatim kata-kata ugutan",
+        ],
+        "charge_sheet_template_bm": "RUJUKAN PDRM / TPR SAHAJA — Siasatan & pendakwaan Seksyen 506 Kanun Keseksaan [Akta 574] adalah bidang kuasa PDRM & TPR.",
+        "source_section_doc_ids": ["AKTA_574__S506", "AKTA_574__S503", "AKTA_574__S189"],
+        "verified_status": "DRAFT_PENDING_REVIEW",
+    },
+    {
+        "offence_id": "AKTA_574_S170",
+        "statute_id": "AKTA_574",
+        "offence_section": "Seksyen 170",
+        "read_together_with": [
+            "Seksyen 420 Kanun Keseksaan [Akta 574] (jika turut memeras/menipu wang peniaga)",
+            "Seksyen 107 KTJ [Akta 593]",
+        ],
+        "offence_title": "Menyamar sebagai penjawat awam (individu palsu menyamar sebagai PPKP / Pegawai Kesihatan KKM untuk memeriksa premis atau mengutip bayaran)",
+        "target_offender": "INDIVIDU_AWAM",
+        "mandatory_elements": [
+            {
+                "element_no": 1,
+                "description": "Suspek berpura-pura memegang jawatan awam sebagai PPKP / Pegawai KKM sedangkan beliau bukan pegawai sah.",
+                "must_prove": "Pengesahan rasmi Bahagian Sumber Manusia / PKD bahawa suspek bukan kakitangan KKM, kad kuasa palsu/vest palsu.",
+            },
+            {
+                "element_no": 2,
+                "description": "Suspek melakukan atau cuba melakukan tindakan atas sifat jawatan palsu itu (cth: memeriksa premis, mengeluarkan notis/resit palsu).",
+                "must_prove": "Keterangan pengadu/peniaga, CCTV premis, dokumen/notis palsu yang dikeluarkan.",
+            },
+        ],
+        "explicit_exclusions_and_traps": [
+            "BATASAN BIDANG KUASA: Kesalahan BOLEH TANGKAP (Seizable) di bawah bidang kuasa PDRM & TPR. PKD/PPKP hendaklah membuat Laporan Polis S.107 KTJ dan mengesahkan status rasmi perjawatan KKM secara bertulis kepada PDRM. Jika melibatkan tipu wang/kompaun palsu, rujuk serentak Seksyen 420 Akta 574.",
+        ],
+        "penalty_section": "Seksyen 170 Kanun Keseksaan [Akta 574]",
+        "penalty_first_offence": {
+            "max_fine_rm": None,
+            "max_jail_months": 24,
+            "verbatim_penalty": "Penjara sehingga dua (2) tahun, atau denda, atau kedua-duanya (Seizable; jika menipu wang rujuk S.420 penjara 1–10 tahun + sebatan + denda).",
+        },
+        "penalty_subsequent_offence": None,
+        "compound_info": {
+            "is_compoundable": False,
+            "compound_authority_section": None,
+            "compound_regulation_ref": None,
+            "compound_amount_or_limit": "TIDAK BOLEH DIKOMPAUN — Siasatan jenayah oleh PDRM & pendakwaan TPR.",
+            "max_compound_rm": None,
+            "payment_days": None,
+            "notice_section": "Laporan Polis Seksyen 107 KTJ [Akta 593]",
+        },
+        "special_legal_requirements": [
+            "Laporan Polis S.107 KTJ oleh PKD/PPKP bersama pengadu premis",
+            "Surat pengesahan rasmi PKD/JKN bahawa suspek bukan pegawai KKM & tiada kuasa statutori",
+        ],
+        "mandatory_exhibits": [
+            "Laporan Polis S.107 KTJ & surat pengesahan bukan kakitangan KKM",
+            "Salinan kad kuasa palsu / notis kompaun palsu / rakaman CCTV premis",
+        ],
+        "charge_sheet_template_bm": "RUJUKAN PDRM / TPR SAHAJA — Siasatan & pendakwaan Seksyen 170 / Seksyen 420 Kanun Keseksaan [Akta 574] adalah bidang kuasa PDRM & TPR.",
+        "source_section_doc_ids": ["AKTA_574__S170", "AKTA_574__S420"],
+        "verified_status": "DRAFT_PENDING_REVIEW",
+    },
+    {
+        "offence_id": "AKTA_574_S177",
+        "statute_id": "AKTA_574",
+        "offence_section": "Seksyen 177",
+        "read_together_with": [
+            "Seksyen 182 Kanun Keseksaan [Akta 574] (Aduan Palsu/Fitnah Premis)",
+            "Seksyen 107 & Seksyen 108(2) KTJ [Akta 593]",
+        ],
+        "offence_title": "Memberi maklumat palsu kepada penjawat awam (butiran identiti/nama/alamat palsu atau maklumat palsu semasa siasatan KKM)",
+        "target_offender": "INDIVIDU_AWAM",
+        "mandatory_elements": [
+            {
+                "element_no": 1,
+                "description": "Suspek terikat di sisi undang-undang untuk memberi maklumat mengenai sesuatu perkara kepada PPKP.",
+                "must_prove": "Punca kuasa menuntut maklumat (cth: S.30/S.31 Akta 852, S.112 KTJ, S.4 Akta 281, S.22(c) Akta 342).",
+            },
+            {
+                "element_no": 2,
+                "description": "Suspek memberi maklumat yang diketahui atau dipercayainya adalah palsu.",
+                "must_prove": "Semakan rasmi JPN/SSM/rekod sebenar yang membuktikan maklumat diberi adalah palsu.",
+            },
+        ],
+        "explicit_exclusions_and_traps": [
+            "PRINSIP LEX SPECIALIS: Jika berlaku di bawah Akta 281 (S.4(6)) atau Akta 342 (S.22(c)), gunakan seksyen khusus Akta KKM terlebih dahulu. Jika berlaku di bawah Akta 852 (tiada seksyen maklumat palsu am) atau aduan palsu bagi memudaratkan premis lain (S.182 Akta 574), rujuk PDRM melalui Laporan Polis S.107 KTJ (Non-Seizable, perlukan OTI S.108(2) KTJ).",
+        ],
+        "penalty_section": "Seksyen 177 Kanun Keseksaan [Akta 574]",
+        "penalty_first_offence": {
+            "max_fine_rm": 2000,
+            "max_jail_months": 24,
+            "verbatim_penalty": "Penjara sehingga enam (6) bulan atau denda sehingga RM2,000.00 atau kedua-duanya; atau penjara sehingga dua (2) tahun atau denda atau kedua-duanya jika maklumat palsu berkenaan pelakuan sesuatu kesalahan.",
+        },
+        "penalty_subsequent_offence": None,
+        "compound_info": {
+            "is_compoundable": False,
+            "compound_authority_section": None,
+            "compound_regulation_ref": None,
+            "compound_amount_or_limit": "TIDAK BOLEH DIKOMPAUN — Siasatan oleh PDRM (OTI S.108(2) KTJ) & TPR.",
+            "max_compound_rm": None,
+            "payment_days": None,
+            "notice_section": "Laporan Polis Seksyen 107 KTJ [Akta 593]",
+        },
+        "special_legal_requirements": [
+            "Semak dahulu sama ada seksyen khusus Akta KKM terpakai (S.4(6) Akta 281 / S.22(c) Akta 342)",
+            "Bagi rujukan Akta 574 (S.177 / S.182), buat Laporan Polis S.107 KTJ dengan bukti kepalsuan maklumat",
+        ],
+        "mandatory_exhibits": [
+            "Dokumen/borang/percakapan yang mengandungi maklumat palsu",
+            "Rekod pengesahan rasmi (JPN/SSM/rekod PKD) yang membuktikan kepalsuan",
+        ],
+        "charge_sheet_template_bm": "RUJUKAN PDRM / TPR SAHAJA — Siasatan Seksyen 177 / Seksyen 182 Kanun Keseksaan [Akta 574] adalah bidang kuasa PDRM & TPR.",
+        "source_section_doc_ids": ["AKTA_574__S177", "AKTA_574__S182"],
+        "verified_status": "DRAFT_PENDING_REVIEW",
+    },
+    {
+        "offence_id": "AKTA_574_S465",
+        "statute_id": "AKTA_574",
+        "offence_section": "Seksyen 465 / Seksyen 468 / Seksyen 471",
+        "read_together_with": [
+            "Seksyen 463 & Seksyen 464 Kanun Keseksaan [Akta 574] (Takrif Pemalsuan)",
+            "Peraturan 30 / Peraturan 31 PPKM 2009 (kesalahan KKM berasingan jika tiada sijil SLPM/tifoid sah)",
+        ],
+        "offence_title": "Pemalsuan dokumen / menggunakan dokumen palsu sebagai tulen (cth: Sijil Suntikan Tifoid palsu, Sijil SLPM palsu, Perakuan FoSIM/Halal/Kesihatan palsu)",
+        "target_offender": "PENIAGA_PEMILIK",
+        "mandatory_elements": [
+            {
+                "element_no": 1,
+                "description": "Dokumen yang dikemukakan kepada PPKP (sijil tifoid, sijil SLPM, sijil FoSIM, surat klinik/makmal) adalah dokumen palsu yang dibuat atau diubah secara tidak sah.",
+                "must_prove": "Pengesahan bertulis daripada klinik/hospital/institusi latihan/BKKM bahawa sijil/no. siri tersebut tidak pernah dikeluarkan atau telah dipinda.",
+            },
+            {
+                "element_no": 2,
+                "description": "Suspek dengan curang atau dengan niat menipu menggunakan dokumen palsu tersebut seolah-olah tulen (S.471) atau memalsukannya untuk tujuan menipu (S.468).",
+                "must_prove": "Dokumen asal yang dirampas/salinan diperakui, pengesahan kepalsuan daripada pengeluar asal, dan Laporan Polis S.107 KTJ.",
+            },
+        ],
+        "explicit_exclusions_and_traps": [
+            "TINDAKAN SERENTAK 2 LANDASAN: (1) PPKP kekal mengambil tindakan KKM di bawah PPKM 2009 (cth: P.31(1) tiada suntikan tifoid sah / P.30(1) tiada latihan SLPM sah / P.3 tiada pendaftaran sah) kerana sijil palsu dianggap tiada sijil sah. (2) Bagi jenayah PEMALSUAN DOKUMEN (S.465 / S.468 / S.471 Akta 574), PPKP TIDAK boleh kompaun — WAJIB buat Laporan Polis S.107 KTJ dan serahkan dokumen palsu bersama surat pengesahan kepalsuan kepada PDRM.",
+        ],
+        "penalty_section": "Seksyen 465 / Seksyen 468 / Seksyen 471 Kanun Keseksaan [Akta 574]",
+        "penalty_first_offence": {
+            "max_fine_rm": None,
+            "max_jail_months": 84,
+            "verbatim_penalty": "S.465 (Pemalsuan am): Penjara sehingga 2 tahun atau denda atau kedua-duanya | S.468 (Pemalsuan bagi maksud menipu): Penjara sehingga 7 tahun dan denda (Non-Bailable) | S.471 (Menggunakan dokumen palsu sebagai tulen): Dihukum sama seperti pemalsuan.",
+        },
+        "penalty_subsequent_offence": None,
+        "compound_info": {
+            "is_compoundable": False,
+            "compound_authority_section": None,
+            "compound_regulation_ref": None,
+            "compound_amount_or_limit": "TIDAK BOLEH DIKOMPAUN (Akta 574) — Rujuk PDRM melalui Laporan Polis S.107 KTJ (tindakan KKM PPKM 2009 boleh berjalan serentak).",
+            "max_compound_rm": None,
+            "payment_days": None,
+            "notice_section": "Laporan Polis Seksyen 107 KTJ [Akta 593]",
+        },
+        "special_legal_requirements": [
+            "Dapatkan pengesahan bertulis daripada pengeluar asal (klinik/hospital/SLPM/FoSIM) bahawa sijil adalah palsu",
+            "Buat Laporan Polis S.107 KTJ dan serahkan dokumen palsu asal dengan rantaian jagaan (chain of custody) kepada PDRM",
+        ],
+        "mandatory_exhibits": [
+            "Dokumen/Sijil palsu asal (sijil tifoid / SLPM / FoSIM) yang diambil semasa pemeriksaan",
+            "Surat pengesahan rasmi daripada klinik/institusi/BKKM bahawa sijil tidak tulen",
+            "Laporan Polis S.107 KTJ & gambar premis/pengendali",
+        ],
+        "charge_sheet_template_bm": "RUJUKAN PDRM / TPR SAHAJA — Siasatan & pendakwaan Seksyen 465 / 468 / 471 Kanun Keseksaan [Akta 574] adalah bidang kuasa PDRM & TPR.",
+        "source_section_doc_ids": ["AKTA_574__S465", "AKTA_574__S468", "AKTA_574__S471", "AKTA_574__S463"],
+        "verified_status": "DRAFT_PENDING_REVIEW",
+    },
+    {
+        "offence_id": "AKTA_574_S269",
+        "statute_id": "AKTA_574",
+        "offence_section": "Seksyen 269 / Seksyen 270",
+        "read_together_with": [
+            "Seksyen 12(1) & Seksyen 22(b) Akta 342 [APPPB 1988] (Utamakan Akta 342 dahulu)",
+            "Seksyen 107 KTJ [Akta 593]",
+        ],
+        "offence_title": "Perbuatan cuai (S.269) atau perbuatan jahat/sengaja (S.270) yang mungkin merebakkan jangkitan apa-apa penyakit yang berbahaya kepada nyawa",
+        "target_offender": "INDIVIDU_AWAM",
+        "mandatory_elements": [
+            {
+                "element_no": 1,
+                "description": "Suspek melakukan perbuatan yang menyalahi undang-undang atau cuai (S.269) atau jahat/sengaja (S.270).",
+                "must_prove": "Bukti perbuatan disengajakan/cuai melampau (cth: meludah kepada orang awam dalam keadaan tahu dijangkiti penyakit berbahaya).",
+            },
+            {
+                "element_no": 2,
+                "description": "Suspek tahu atau ada sebab untuk mempercayai perbuatan itu mungkin merebakkan jangkitan penyakit berbahaya kepada nyawa.",
+                "must_prove": "Rekod diagnostik klinikal/makmal yang sah & pengesahan pegawai perubatan.",
+            },
+        ],
+        "explicit_exclusions_and_traps": [
+            "PRINSIP LEX SPECIALIS: Bagi kes biasa penyakit berjangkit / ingkar perintah kuarantin atau rawatan Tibi, UTAMAKAN Akta 342 (S.12(1) / S.22(b) / S.24 — denda sehingga RM10,000 / 2 tahun atau korporat RM100,000 di bawah Akta A1742). Rujuk PDRM di bawah S.269/S.270 Akta 574 (Seizable) hanya bagi perbuatan cuai/jahat jenayah berat yang memerlukan tangkapan polis serta-merta.",
+        ],
+        "penalty_section": "Seksyen 269 / Seksyen 270 Kanun Keseksaan [Akta 574]",
+        "penalty_first_offence": {
+            "max_fine_rm": None,
+            "max_jail_months": 24,
+            "verbatim_penalty": "S.269 (Cuai): Penjara sehingga 6 bulan atau denda atau kedua-duanya | S.270 (Jahat/Sengaja): Penjara sehingga 2 tahun atau denda atau kedua-duanya (Kedua-duanya Seizable).",
+        },
+        "penalty_subsequent_offence": None,
+        "compound_info": {
+            "is_compoundable": False,
+            "compound_authority_section": None,
+            "compound_regulation_ref": None,
+            "compound_amount_or_limit": "TIDAK BOLEH DIKOMPAUN — Siasatan jenayah oleh PDRM & TPR.",
+            "max_compound_rm": None,
+            "payment_days": None,
+            "notice_section": "Laporan Polis Seksyen 107 KTJ [Akta 593]",
+        },
+        "special_legal_requirements": [
+            "Utamakan tindakan di bawah Akta 342 (S.12(1) / S.22(b)) terlebih dahulu; buat Laporan Polis S.107 KTJ bagi perbuatan jenayah jahat/cuai melampau",
+            "Perhatian Seksyen 59 Akta Tafsiran [Akta 388]: Pesalah tidak boleh dihukum dua kali atas perbuatan sama di bawah dua akta berbeza",
+        ],
+        "mandatory_exhibits": [
+            "Keputusan makmal sah penyakit berjangkit & pengesahan pegawai perubatan",
+            "Laporan Polis S.107 KTJ & bukti perbuatan cuai/jahat",
+        ],
+        "charge_sheet_template_bm": "RUJUKAN PDRM / TPR SAHAJA — Siasatan Seksyen 269 / Seksyen 270 Kanun Keseksaan [Akta 574] adalah bidang kuasa PDRM & TPR.",
+        "source_section_doc_ids": ["AKTA_574__S269", "AKTA_574__S270", "AKTA_388__S59"],
+        "verified_status": "DRAFT_PENDING_REVIEW",
+    },
+    {
+        "offence_id": "AKTA_574_S272",
+        "statute_id": "AKTA_574",
+        "offence_section": "Seksyen 272 / Seksyen 273",
+        "read_together_with": [
+            "Seksyen 13(1), Seksyen 13A & Seksyen 13B Akta Makanan 1983 [Akta 281] (WAJIB UTAMAKAN AKTA 281)",
+        ],
+        "offence_title": "Mencampuradukkan makanan atau minuman untuk jualan (S.272) atau menjual makanan/minuman mudarat (S.273) — RUJUKAN SILANG SAHAJA (UTAMAKAN AKTA 281)",
+        "target_offender": "PENIAGA_PEMILIK",
+        "mandatory_elements": [
+            {
+                "element_no": 1,
+                "description": "Suspek mencampuradukkan makanan/minuman sehingga menjadi mudarat (S.272) atau menjual makanan/minuman yang diketahui mudarat/tidak layak dimakan (S.273).",
+                "must_prove": "Sijil Juruanalisis dan bukti penjualan/niat jual.",
+            },
+        ],
+        "explicit_exclusions_and_traps": [
+            "AMARAN KERAS LEX SPECIALIS: JANGAN sesekali merendahkan kes keselamatan makanan kepada S.272/S.273 Akta 574 (penalti rendah: 6 bulan / RM2,000, Non-Seizable) apabila Akta Makanan 1983 [Akta 281] menyediakan penalti jauh lebih berat dan kuasa penyiasatan penuh PPKP: S.13(1) (denda RM100,000 / 10 tahun), S.13A(1) (RM50,000 / 8 tahun), S.13A(2) (RM30,000 / 5 tahun), S.13B (RM20,000 / 5 tahun)! Rujuk S.272/273 hanya sebagai maklumat perbandingan/rujukan silang.",
+        ],
+        "penalty_section": "Seksyen 272 / Seksyen 273 Kanun Keseksaan [Akta 574]",
+        "penalty_first_offence": {
+            "max_fine_rm": 2000,
+            "max_jail_months": 6,
+            "verbatim_penalty": "Penjara sehingga enam (6) bulan, atau denda sehingga RM2,000.00, atau kedua-duanya (Non-Seizable) — jauh lebih rendah daripada Akta 281 S.13(1) RM100,000 / 10 tahun!",
+        },
+        "penalty_subsequent_offence": None,
+        "compound_info": {
+            "is_compoundable": False,
+            "compound_authority_section": None,
+            "compound_regulation_ref": None,
+            "compound_amount_or_limit": "TIDAK BOLEH DIKOMPAUN — Utamakan penyiasatan & pendakwaan PPKP di bawah Akta Makanan 1983 [Akta 281].",
+            "max_compound_rm": None,
+            "payment_days": None,
+            "notice_section": None,
+        },
+        "special_legal_requirements": [
+            "Gunakan Akta Makanan 1983 [Akta 281] S.13 / S.13A / S.13B sebagai tindakan utama KKM",
+            "Rujuk S.63 & S.64 Akta Mahkamah Rendah 1948 [Akta 92] (Mahkamah Sesyen) bagi kes S.13(1) Akta 281 yang memohon hukuman melebihi had RM10,000 / 5 tahun Mahkamah Majistret (S.87 Akta 92)",
+        ],
+        "mandatory_exhibits": [
+            "Sampel rasmi makanan & Sijil Juruanalisis (S.20(ii) Akta 281 — serah 10 hari bersih sebelum bicara)",
+        ],
+        "charge_sheet_template_bm": "UTAMAKAN AKTA MAKANAN 1983 [AKTA 281] — Gunakan draf pertuduhan S.13(1) / S.13A / S.13B Akta 281 dan bukan S.272/273 Akta 574.",
+        "source_section_doc_ids": ["AKTA_574__S272", "AKTA_574__S273", "AKTA_281__S13"],
+        "verified_status": "DRAFT_PENDING_REVIEW",
+    },
+    # ---------------- AKTA 344 (AKTA POLIS 1967 — BANTUAN POLIS & HALANGAN POLIS) ----------------
+    {
+        "offence_id": "AKTA_344_S90",
+        "statute_id": "AKTA_344",
+        "offence_section": "Seksyen 90",
+        "read_together_with": [
+            "Seksyen 20(3)(c) Akta Polis 1967 [Akta 344] (Kewajipan polis membantu pelaksanaan undang-undang kebersihan & kuarantin)",
+            "Seksyen 186 Kanun Keseksaan [Akta 574] (bagi halangan terhadap PPKP)",
+        ],
+        "offence_title": "Menghalang, menentang atau menyerang pegawai polis yang sedang menjalankan tugas (termasuk semasa mengiringi operasi penguatkuasaan KKM)",
+        "target_offender": "INDIVIDU_AWAM",
+        "mandatory_elements": [
+            {
+                "element_no": 1,
+                "description": "Mangsa halangan/penentangan ialah seorang PEGAWAI POLIS yang sedang menjalankan tugas rasmi (cth: bantuan iringan operasi KKM di bawah S.20(3)(c) Akta 344).",
+                "must_prove": "Pengesahan tugas rasmi pegawai polis yang mengiringi operasi dan laporan polis kejadian.",
+            },
+        ],
+        "explicit_exclusions_and_traps": [
+            "AMARAN KRITIKAL: Seksyen 90 Akta Polis 1967 [Akta 344] HANYA terpakai bagi halangan terhadap PEGAWAI POLIS, BUKAN PPKP! Jika mangsa halangan ialah PPKP sendiri, rujuk seksyen halangan khusus Akta KKM (S.4(3) Akta 281 / S.21 Akta 154 / S.22(a) Akta 342) atau Seksyen 186 / S.353 Kanun Keseksaan [Akta 574] melalui Laporan Polis S.107 KTJ. PPKP juga TIDAK mempunyai kuasa polis di bawah Akta 344 — PPKP hanya memohon bantuan/iringan PDRM berpandukan S.20(3)(c) Akta 344.",
+        ],
+        "penalty_section": "Seksyen 90 Akta Polis 1967 [Akta 344]",
+        "penalty_first_offence": {
+            "max_fine_rm": 500,
+            "max_jail_months": 6,
+            "verbatim_penalty": "Denda tidak melebihi RM500.00 atau penjara selama tempoh tidak melebihi enam (6) bulan atau kedua-duanya (Bidang kuasa PDRM & TPR sahaja).",
+        },
+        "penalty_subsequent_offence": None,
+        "compound_info": {
+            "is_compoundable": False,
+            "compound_authority_section": None,
+            "compound_regulation_ref": None,
+            "compound_amount_or_limit": "TIDAK BOLEH DIKOMPAUN — Kuasa tindakan sepenuhnya oleh PDRM & TPR.",
+            "max_compound_rm": None,
+            "payment_days": None,
+            "notice_section": "Laporan Polis Seksyen 107 KTJ [Akta 593]",
+        },
+        "special_legal_requirements": [
+            "Hanya terpakai jika halangan dilakukan terhadap pegawai polis; tindakan dan siasatan dijalankan oleh PDRM",
+            "Bagi permohonan iringan polis ke operasi berisiko tinggi KKM (kebersihan/kuarantin/sitaan), rujuk S.20(3)(c) Akta 344 & S.24 Akta 154",
+        ],
+        "mandatory_exhibits": [
+            "Surat permohonan bantuan iringan polis daripada PKD kepada OCPD/KPD",
+            "Laporan Polis S.107 KTJ oleh pegawai polis / PPKP yang terlibat",
+        ],
+        "charge_sheet_template_bm": "RUJUKAN PDRM / TPR SAHAJA — Seksyen 90 Akta Polis 1967 [Akta 344] adalah di bawah bidang kuasa PDRM & TPR.",
+        "source_section_doc_ids": ["AKTA_344__S90", "AKTA_344__S20", "AKTA_574__S186"],
+        "verified_status": "DRAFT_PENDING_REVIEW",
+    },
 ]
 
 
@@ -2180,12 +2810,20 @@ def infer_statute_id_from_filename_or_text(
             return "AKTA_154"
         if raw in ("342", "AKTA342"):
             return "AKTA_342"
-        if raw in ("593", "AKTA593", "KTJ"):
+        if raw in ("593", "AKTA593", "KTJ", "CPC"):
             return "AKTA_593"
         if raw in ("56", "AKTA56"):
             return "AKTA_56"
         if raw in ("611", "AKTA611"):
             return "AKTA_611"
+        if raw in ("574", "AKTA574", "KK", "PENAL_CODE", "KANUN_KESEKSAAN"):
+            return "AKTA_574"
+        if raw in ("344", "AKTA344", "POLIS", "POLICE_ACT"):
+            return "AKTA_344"
+        if raw in ("388", "AKTA388", "TAFSIRAN", "TAFSIRAN_1948", "TAFSIRAN_1967", "INTERPRETATION_ACTS"):
+            return "AKTA_388"
+        if raw in ("92", "AKTA92", "MAHKAMAH_RENDAH", "SUBORDINATE_COURTS"):
+            return "AKTA_92"
         return raw
 
     stem_up = Path(filename).stem.upper()
@@ -2211,6 +2849,10 @@ def infer_statute_id_from_filename_or_text(
         "AKTA_593": "AKTA_593",
         "AKTA_56": "AKTA_56",
         "AKTA_611": "AKTA_611",
+        "AKTA_574": "AKTA_574",
+        "AKTA_344": "AKTA_344",
+        "AKTA_388": "AKTA_388",
+        "AKTA_92": "AKTA_92",
     }
     if stem_up in exact_stem_map:
         return exact_stem_map[stem_up]
@@ -2253,29 +2895,45 @@ def infer_statute_id_from_filename_or_text(
         return "AKTA_342"
     if "593" in low or "tatacara jenayah" in low or "criminal procedure code" in low:
         return "AKTA_593"
-    if "90a" in low or "akta 56" in low or "keterangan 1950" in low or "evidence act 1950" in low:
+    if "90a" in low or re.search(r"\b(?:akta|act)[\s_]*56\b", low) or "keterangan 1950" in low or "evidence act 1950" in low:
         return "AKTA_56"
     if "611" in low or "kanak-kanak 2001" in low or "child act 2001" in low:
         return "AKTA_611"
+    if re.search(r"\b(?:akta|act)[\s_]*574\b", low) or "kanun keseksaan" in low or "penal code" in low:
+        return "AKTA_574"
+    if re.search(r"\b(?:akta|act)[\s_]*344\b", low) or "akta polis" in low or "police act 1967" in low:
+        return "AKTA_344"
+    if re.search(r"\b(?:akta|act)[\s_]*388\b", low) or "akta tafsiran" in low or "interpretation acts" in low:
+        return "AKTA_388"
+    if re.search(r"\b(?:akta|act)[\s_]*92\b", low) or "mahkamah rendah 1948" in low or "subordinate courts act" in low:
+        return "AKTA_92"
     clean_stem = re.sub(r"[^A-Z0-9_]+", "_", Path(filename).stem.upper()).strip("_")
     return clean_stem or "AKTA_UMUM"
 
 
 def canonical_akta_code_for_statute(statute_id: str) -> str:
-    sid = (statute_id or "").upper()
-    if "852" in sid:
+    sid = (statute_id or "").upper().strip()
+    if re.search(r"\b852\b|AKTA_852", sid):
         return "Akta 852"
-    if "281" in sid or "PPKM" in sid or "PPM" in sid:
+    if re.search(r"\b281\b|AKTA_281|PPKM|PPM", sid):
         return "Akta 281"
-    if "154" in sid:
+    if re.search(r"\b154\b|AKTA_154", sid):
         return "Akta 154"
-    if "342" in sid:
+    if re.search(r"\b342\b|AKTA_342|APPPB", sid):
         return "Akta 342"
-    if "593" in sid or "KTJ" in sid:
+    if re.search(r"\b593\b|AKTA_593|\bKTJ\b|\bCPC\b|TATACARA\s+JENAYAH", sid):
         return "Akta 593"
-    if "56" in sid:
+    if re.search(r"\b574\b|AKTA_574|KANUN\s+KESEKSAAN|PENAL\s+CODE", sid):
+        return "Akta 574"
+    if re.search(r"\b344\b|AKTA_344|AKTA\s+POLIS|POLICE\s+ACT", sid):
+        return "Akta 344"
+    if re.search(r"\b388\b|AKTA_388|AKTA\s+TAFSIRAN|TAFSIRAN\s+1948|INTERPRETATION\s+ACT", sid):
+        return "Akta 388"
+    if re.search(r"(?:^|[^0-9])(?:AKTA[\s_]*)?92(?:[^0-9]|$)|MAHKAMAH\s+RENDAH|SUBORDINATE\s+COURTS", sid):
+        return "Akta 92"
+    if re.search(r"(?:^|[^0-9])(?:AKTA[\s_]*)?56(?:[^0-9]|$)|AKTA\s+KETERANGAN|EVIDENCE\s+ACT", sid):
         return "Akta 56"
-    if "611" in sid:
+    if re.search(r"\b611\b|AKTA_611|KANAK-KANAK", sid):
         return "Akta 611"
     return statute_id
 
@@ -2368,7 +3026,9 @@ def _clean_agc_pdf_text(raw_text: str) -> str:
             r"|Pemusnahan\s+Serangga\s+Pembawa\s+Penyakit"
             r"|Pencegahan\s+dan\s+Pengawalan(?:\s+Penyakit\s+Berjangkit(?:\s+\(Pindaan\))?)?"
             r"|Penyakit\s+Berjangkit"
-            r"|Makanan(?:\s+\(Pindaan\))?|Kanak-Kanak|Keterangan|Criminal\s+Procedure\s+Code|Evidence)(?:\s+\d{1,3})?$",
+            r"|Makanan(?:\s+\(Pindaan\))?|Kanak-Kanak|Keterangan|Criminal\s+Procedure\s+Code|Evidence"
+            r"|Penal\s+Code|Kanun\s+Keseksaan|Police|Polis|Interpretation(?:\s+Acts)?|Tafsiran"
+            r"|Subordinate\s+Courts|Mahkamah\s+Rendah)(?:\s+\d{1,3})?$",
             s,
             re.I,
         ):
@@ -2419,8 +3079,8 @@ def parse_statute_verbatim_sections(
     strict_pdf_named_sec_re = re.compile(
         r"^\s*(Seksyen|Peraturan|Section|Regulation)\s+(\d+[A-Za-z]{0,2}(?:\(\d+\))?)\s*(?:[-–—:\.]\s*(.*))?$"
     )
-    num_inline_re = re.compile(r"^\s*(\d+[A-Za-z]{0,2})\s*\.(?:\s+|(?=\())(.+)$")
-    num_alone_re = re.compile(r"^\s*(\d+[A-Za-z]{0,2})\s*\.\s*$")
+    num_inline_re = re.compile(r"^\s*(\*{0,3})\s*(\d+[A-Za-z]{0,2})\s*\.(?:\s+|(?=\())(.+)$")
+    num_alone_re = re.compile(r"^\s*(\*{0,3})\s*(\d+[A-Za-z]{0,2})\s*\.\s*$")
     prev_ref_tail_re = re.compile(
         r"\b(?:seksyen|peraturan|section|regulation|akta|act|no|bahagian|bab|perenggan|subseksyen|subperaturan|jadual|schedule)\s*$",
         re.I,
@@ -2453,6 +3113,7 @@ def parse_statute_verbatim_sections(
     current_part_title = "Peruntukan Statutori & Penguatkuasaan"
     in_schedule = False
     last_sec_int = 0
+    part_just_changed = False
 
     def _pop_marginal_heading() -> List[str]:
         nonlocal pending_heading_lines
@@ -2512,6 +3173,7 @@ def parse_statute_verbatim_sections(
                     inline_title = nxt
             current_part_title = inline_title or current_part_title
             pending_heading_lines = []
+            part_just_changed = True
             continue
 
         # 3. Semak permulaan Seksyen / Peraturan / Item bernombor AGC
@@ -2528,36 +3190,45 @@ def parse_statute_verbatim_sections(
                 m_int = re.match(r"^(\d+)", num_part)
                 if m_int:
                     last_sec_int = int(m_int.group(1))
+                part_just_changed = False
                 cur = [current_part_num, current_part_title, sec_code, sec_head[:160], [stripped]]
                 pending_heading_lines = []
                 continue
 
-            # Format nombor Warta AGC: "17. (1) Tiada..." atau "31.(1)..." atau "17.\n(1)..." atau "5 . Pengarah..."
+            # Format nombor Warta AGC: "17. (1) Tiada...", "*88. ...", "31.(1)...", "17.\n(1)...", atau "5 . Pengarah..."
             m_in = num_inline_re.match(stripped)
             m_al = num_alone_re.match(stripped) if not m_in else None
             matched_num: Optional[str] = None
             rest_text = ""
             if m_in:
-                num_str = m_in.group(1)
-                rest_text = m_in.group(2).strip()
+                stars = m_in.group(1) or ""
+                num_str = m_in.group(2)
+                rest_text = m_in.group(3).strip()
                 base_int = int(re.match(r"^\d+", num_str).group(0))  # type: ignore[union-attr]
-                if 1 <= base_int <= 550 and re.match(r"^(?:\(\d+[A-Za-z]?\)|[A-Z“\"])", rest_text):
+                star_ok = (not stars) or (last_sec_int == 0) or part_just_changed or (base_int >= last_sec_int)
+                if 1 <= base_int <= 550 and star_ok and re.match(r"^(?:\(\d+[A-Za-z]?\)|[A-Z“\"])", rest_text):
                     matched_num = num_str.upper()
                     last_sec_int = base_int
+                    part_just_changed = False
             elif m_al and is_agc_pdf:
-                num_str = m_al.group(1)
+                stars = m_al.group(1) or ""
+                num_str = m_al.group(2)
                 base_int = int(re.match(r"^\d+", num_str).group(0))  # type: ignore[union-attr]
                 nxt = _next_nonempty(idx)
                 prv = _prev_nonempty(idx)
-                jump_ok = (last_sec_int == 0) or (base_int <= last_sec_int + 30)
+                jump_ok = (last_sec_int == 0) or part_just_changed or (base_int <= last_sec_int + 80)
+                star_ok = (not stars) or (last_sec_int == 0) or part_just_changed or (base_int >= last_sec_int)
+                is_marginal_act_heading = bool(re.search(r"\b(?:of|this|the)\s+(?:act|akta)\s*$", prv, re.I))
                 if (
                     1 <= base_int <= 550
                     and jump_ok
-                    and not prev_ref_tail_re.search(prv)
+                    and star_ok
+                    and (not prev_ref_tail_re.search(prv) or is_marginal_act_heading)
                     and re.match(r"^(?:\(\d+[A-Za-z]?\)|[A-Z“\"])", nxt)
                 ):
                     matched_num = num_str.upper()
                     last_sec_int = base_int
+                    part_just_changed = False
 
             if matched_num is not None:
                 heading_lines = _pop_marginal_heading() if is_agc_pdf else []
@@ -3045,10 +3716,49 @@ _PPKP_SYNONYM_MAP: Dict[str, Tuple[str, ...]] = {
     "taska": ("taman", "asuhan", "kanak-kanak", "premis"),
     "campak": ("measles", "penyakit", "berjangkit", "notifikasi", "e-notifikasi"),
     "notifikasi": ("notification", "e-notifikasi", "borang", "notis", "10(2)"),
-    "saman": ("summons", "attendance", "magistrate", "111"),
+    "saman": ("summons", "attendance", "magistrate", "111", "34", "35"),
     "pertuduhan": ("charge", "particulars", "duplicity", "152", "153", "163"),
     "diari": ("diary", "investigation", "119"),
     "rakaman": ("statement", "examination", "witness", "112", "113"),
+    "waran": ("warrant", "search", "arrest", "54", "56", "57", "62"),
+    "geledah": ("search", "warrant", "premises", "54", "56", "62", "63", "64", "65"),
+    "tangkap": ("arrest", "seizable", "15", "23", "24", "28", "28a"),
+    "tangkapan": ("arrest", "seizable", "15", "23", "28", "28a"),
+    "reman": ("remand", "detention", "117", "28"),
+    "jamin": ("bail", "bailable", "bond", "387", "388"),
+    "pelupusan": ("disposal", "forfeiture", "property", "407", "407a", "413"),
+    "ekshibit": ("property", "seized", "disposal", "407", "407a", "413"),
+    "penzahiran": ("delivery", "documents", "disclosure", "51a"),
+    "juruanalisis": ("chemist", "analyst", "report", "certificate", "399"),
+    "oti": ("order", "investigate", "non-seizable", "108"),
+    "fir": ("first", "information", "report", "107"),
+    "halang": ("obstruct", "obstructing", "public", "servant", "186", "90"),
+    "menghalang": ("obstruct", "obstructing", "public", "servant", "186", "90"),
+    "halangan": ("obstruct", "obstructing", "public", "servant", "186", "90"),
+    "ugut": ("threat", "intimidation", "criminal", "injury", "189", "503", "506"),
+    "ugutan": ("threat", "intimidation", "criminal", "injury", "189", "503", "506"),
+    "serang": ("assault", "criminal", "force", "public", "servant", "353"),
+    "pukul": ("assault", "criminal", "force", "hurt", "353"),
+    "kekerasan": ("criminal", "force", "assault", "353"),
+    "menyamar": ("personating", "public", "servant", "170"),
+    "samar": ("personating", "public", "servant", "170"),
+    "palsu": ("forgery", "forged", "false", "information", "document", "465", "468", "471", "177", "182"),
+    "pemalsuan": ("forgery", "forged", "document", "genuine", "463", "464", "465", "468", "471"),
+    "tipu": ("cheating", "dishonestly", "fraud", "415", "420", "468"),
+    "menipu": ("cheating", "dishonestly", "fraud", "415", "420"),
+    "fitnah": ("false", "information", "lawful", "power", "182"),
+    "penentangan": ("resistance", "taking", "property", "lawful", "authority", "183"),
+    "polis": ("police", "duties", "assistance", "sanitary", "quarantine", "20", "24", "90", "344"),
+    "pdrm": ("police", "duties", "assistance", "sanitary", "quarantine", "20", "107", "344"),
+    "iringan": ("police", "assistance", "duties", "sanitary", "quarantine", "20", "344"),
+    "tafsiran": ("interpretation", "construction", "purpose", "computation", "time", "388", "3", "17a", "54"),
+    "pemansuhan": ("repeal", "saving", "accrued", "liability", "30", "388"),
+    "mansuh": ("repeal", "saving", "liability", "30", "388"),
+    "serahan": ("service", "registered", "post", "12", "388", "35"),
+    "kelepasan": ("holiday", "weekly", "public", "computation", "time", "54", "388"),
+    "majistret": ("magistrate", "first", "class", "second", "jurisdiction", "sentence", "85", "87", "88", "92"),
+    "sesyen": ("sessions", "court", "jurisdiction", "sentence", "63", "64", "65", "92"),
+    "mahkamah": ("court", "subordinate", "magistrate", "sessions", "jurisdiction", "92"),
     "90a": ("computer", "document", "certificate", "admissibility", "90a"),
     "pembungkusan": ("packaging", "labelling", "amaran", "bergambar", "261/2024", "15(1)"),
 }
@@ -3093,7 +3803,7 @@ def expand_query_for_grounding(question: str) -> Tuple[set[str], set[str]]:
             for syn in _PPKP_SYNONYM_MAP.get(stem, ()):
                 expanded_tokens.add(syn)
 
-    # Frasa berbilang perkataan lazim PPKP (termasuk padanan BM <-> BI bagi Akta 593 KTJ & Akta 56 Keterangan)
+    # Frasa berbilang perkataan lazim PPKP (termasuk padanan BM <-> BI bagi Akta 593, 574, 344, 388, 92 & 56)
     phrase_expansions: Tuple[Tuple[str, Tuple[str, ...]], ...] = (
         ("papan tanda", ("tanda", "amaran", "larangan", "merokok", "mempamerkan", "258/2024")),
         ("no smoking", ("tanda", "amaran", "larangan", "merokok", "258/2024")),
@@ -3112,13 +3822,42 @@ def expand_query_for_grounding(question: str) -> Tuple[set[str], set[str]]:
         ("bangkai lipas", ("jirim", "asing", "kotor", "tidak", "layak", "13a")),
         ("perintah tutup", ("penutupan", "premis", "ingkar")),
         ("tutup premis", ("penutupan", "premis", "perintah")),
-        ("ingkar perintah", ("mematuhi", "perintah", "arahan")),
+        ("ingkar perintah", ("mematuhi", "perintah", "arahan", "disobedience", "188")),
         ("tidak pakai apron", ("pakaian", "pengendali", "makanan", "32(1)")),
         ("tak pakai apron", ("pakaian", "pengendali", "makanan", "32(1)")),
         ("penutup kepala", ("pakaian", "pengendali", "makanan", "32(1)")),
         ("rakaman percakapan", ("examination", "witness", "statement", "112", "113", "criminal", "procedure")),
         ("diari siasatan", ("diary", "proceedings", "investigation", "119")),
         ("izin mendakwa", ("consent", "public", "prosecutor", "376", "377")),
+        ("laporan polis", ("first", "information", "report", "107", "108", "seizable")),
+        ("waran geledah", ("search", "warrant", "54", "56", "57", "62", "64", "65")),
+        ("tanpa waran", ("without", "warrant", "search", "arrest", "23", "62", "62a")),
+        ("pelupusan barang", ("disposal", "property", "407", "407a", "413")),
+        ("barang kes", ("property", "seized", "disposal", "407", "407a", "413")),
+        ("penzahiran dokumen", ("delivery", "documents", "51a", "prosecution")),
+        ("penjawat awam", ("public", "servant", "21", "186", "189", "353", "170")),
+        ("ugutan jenayah", ("criminal", "intimidation", "threat", "503", "506", "189")),
+        ("dokumen palsu", ("forgery", "forged", "document", "genuine", "465", "468", "471")),
+        ("sijil palsu", ("forgery", "forged", "document", "genuine", "465", "468", "471")),
+        ("maklumat palsu", ("false", "information", "public", "servant", "177", "182")),
+        ("aduan palsu", ("false", "information", "lawful", "power", "182")),
+        ("bantuan polis", ("police", "duties", "assistance", "sanitary", "quarantine", "20", "344")),
+        ("iringan polis", ("police", "duties", "assistance", "sanitary", "quarantine", "20", "344")),
+        ("hari bersih", ("clear", "days", "computation", "time", "exclusive", "holiday", "54")),
+        ("kiraan hari", ("computation", "time", "excluded", "holiday", "days", "54")),
+        ("pengiraan", ("computation", "computing", "time", "days", "54")),
+        ("cuti umum", ("public", "holiday", "weekly", "excluded", "computation", "time", "54")),
+        ("hujung minggu", ("weekly", "holiday", "excluded", "computation", "time", "54")),
+        ("had masa", ("computation", "time", "days", "month", "54")),
+        ("pos berdaftar", ("service", "registered", "post", "prepaying", "letter", "12")),
+        ("serahan pos", ("service", "registered", "post", "document", "12")),
+        ("batal perintah", ("revoke", "vary", "amend", "order", "47")),
+        ("hukuman berganda", ("punished", "twice", "same", "offence", "59")),
+        ("akta tafsiran", ("interpretation", "written", "law", "computation", "service", "purposive", "17a", "30", "54")),
+        ("mahkamah majistret", ("magistrate", "first", "class", "criminal", "jurisdiction", "sentences", "85", "87", "88")),
+        ("mahkamah sesyen", ("sessions", "court", "criminal", "jurisdiction", "sentences", "63", "64")),
+        ("had hukuman", ("jurisdiction", "sentences", "competence", "magistrate", "sessions", "64", "87", "88")),
+        ("bidang kuasa mahkamah", ("criminal", "jurisdiction", "sentences", "magistrate", "sessions", "court", "63", "64", "85", "87")),
         ("sijil 90a", ("document", "produced", "computer", "certificate", "90a")),
         ("gambar digital", ("document", "produced", "computer", "certificate", "90a")),
         ("cetakan komputer", ("document", "produced", "computer", "certificate", "90a")),
@@ -3169,6 +3908,9 @@ _NON_ACTION_SMOKING_PHRASES_RE = re.compile(
 
 def is_non_offence_or_definition_section(sec: Dict[str, Any]) -> bool:
     """Mengenal pasti seksyen tafsiran/tajuk ringkas/bukan kesalahan agar tidak pernah dicalonkan sebagai kesalahan."""
+    # Kecualikan Akta Tafsiran 1948 & 1967 [Akta 388] kerana seksyen pemakaian/tafsiran (S.2, S.3, S.66, S.67) ialah isi substantifnya
+    if str(sec.get("statute_id") or "").upper() == "AKTA_388":
+        return False
     heading_low = str(sec.get("section_heading") or "").strip().lower()
     code_low = str(sec.get("section_code") or "").strip().lower()
     if any(marker in heading_low for marker in _NON_OFFENCE_HEADING_MARKERS):
@@ -3283,28 +4025,65 @@ def is_passive_vape_possession_question(text: str) -> bool:
 
 
 def infer_domain_statute_ids(question: str, akta_hint: str = "Semua") -> Optional[set[str]]:
-    """Penghala domain Akta berketepatan tinggi (v3):
-    - Mengasingkan isyarat domain kuat daripada kata lokasi umum (restoran/kafe/kantin/universiti).
-    - Mengarahkan soalan notifikasi/e-Notifikasi penyakit (termasuk denggi/campak di klinik swasta) ke AKTA_342 tanpa kebocoran AKTA_154.
-    - Tidak pernah mengunci carian secara eksklusif kepada Akta 611 sahaja apabila tiada akta teras dikesan.
-    - Menapis PPM_1985 (438 seksyen) apabila soalan hanya tentang kebersihan premis/tifoid/SLPM/FoSIM.
+    """Penghala domain Akta berketepatan tinggi (v4 — Sokongan Rujukan Silang 3-Lapisan):
+    - Mengutamakan prinsip *lex specialis* (Akta KKM 852/281/154/342) dan menyambung akta sokongan/rujukan silang
+      (Akta 593 KTJ, Akta 574 Kanun Keseksaan, Akta 344 Polis, Akta 388 Tafsiran 1948 & 1967, Akta 92 Mahkamah Rendah,
+      Akta 56 Keterangan, Akta 611 Kanak-Kanak) apabila sesuatu kesalahan/prosedur tiada dalam akta spesifik.
     """
     q_low = (question or "").lower()
     hint = (akta_hint or "").strip()
     hint_low = hint.lower()
 
-    has_minor_signal = any(
-        re.search(rf"(?<!\w){re.escape(k)}(?!\w)", q_low)
-        for k in ("pelajar", "murid", "budak", "sekolah", "obd", "bawah 18", "bawah umur", "kanak-kanak", "remaja")
-    )
-    has_evidence_signal = any(
-        k in q_low
-        for k in ("90a", "90b", "90c", "114a", "73aa", "akta 56", "akta keterangan", "keterangan digital", "cetakan komputer", "gambar digital", "media sosial")
-    )
-    has_ktj_signal = any(
-        k in q_low
-        for k in ("111", "112", "113", "119", "128", "152", "153", "163", "376", "377", "ktj", "akta 593", "kanun tatacara", "diari siasatan", "rakaman percakapan", "izin mendakwa")
-    )
+    def _has_any(terms: Tuple[str, ...]) -> bool:
+        return any(re.search(rf"(?<!\w){re.escape(t)}(?!\w)", q_low) for t in terms)
+
+    has_minor_signal = _has_any((
+        "pelajar", "murid", "budak", "sekolah", "obd", "bawah 18", "bawah umur", "kanak-kanak", "remaja",
+    ))
+    has_evidence_signal = _has_any((
+        "90a", "90b", "90c", "114a", "73aa", "akta 56", "akta keterangan", "evidence act",
+        "keterangan digital", "cetakan komputer", "gambar digital", "media sosial",
+    ))
+    has_ktj_signal = _has_any((
+        "107", "108", "111", "112", "113", "117", "119", "128", "152", "153", "163", "173",
+        "376", "377", "387", "388", "399", "407", "407a", "413", "51a", "28a",
+        "ktj", "cpc", "akta 593", "593", "kanun tatacara", "criminal procedure",
+        "diari siasatan", "rakaman percakapan", "izin mendakwa", "laporan polis",
+        "waran geledah", "tanpa waran", "pelupusan barang", "barang kes", "penzahiran", "reman", "oti", "seizable",
+    ))
+    has_penal_strong_signal = _has_any((
+        "574", "akta 574", "kanun keseksaan", "penal code",
+        "170", "177", "182", "183", "186", "188", "189", "269", "270", "272", "273",
+        "353", "420", "465", "468", "471", "506",
+        "ugut", "mengugut", "ugutan", "serang", "menyerang", "serangan", "pukul", "memukul", "tumbuk",
+        "tolak", "ludah", "meludah", "kekerasan", "senjata", "parang", "pisau",
+        "menyamar", "penyamaran", "ppkp palsu", "pegawai palsu",
+        "palsu", "pemalsuan", "dokumen palsu", "sijil palsu", "maklumat palsu", "aduan palsu",
+        "tipu", "menipu", "penipuan", "fitnah", "rampas balik", "rampas semula", "penjawat awam",
+    ))
+    has_obstruction_generic = _has_any((
+        "halang", "menghalang", "halangan", "dihalang", "halang tugas", "kunci pintu",
+    ))
+    has_police_signal = _has_any((
+        "344", "akta 344", "akta polis", "police act", "bantuan polis", "iringan polis",
+        "polis bantuan", "iringi operasi", "operasi bersama polis", "halang polis", "pegawai polis",
+        "seksyen 20(3)", "20(3)(c)", "seksyen 90", "ocpd", "kpd",
+    )) or (_has_any(("polis", "pdrm")) and _has_any(("bantu", "membantu", "bantuan", "iring", "iringan", "operasi", "kuasa polis", "wajib", "halang")))
+    has_interp_signal = _has_any((
+        "388", "akta 388", "akta tafsiran", "tafsiran 1948", "tafsiran 1967", "interpretation act", "interpretation acts",
+        "17a", "hari bersih", "10 hari bersih", "kiraan hari", "tempoh hari", "hari kelepasan", "cuti umum",
+        "pos berdaftar", "a.r. berdaftar", "ar berdaftar", "serahan pos",
+        "kesan pemansuhan", "pemansuhan akta", "batal perintah", "ubah perintah", "kuasa tersirat",
+        "hukuman berganda", "double punishment", "dihukum dua kali", "pertubuhan perbadanan",
+        "seksyen 54", "seksyen 30", "seksyen 47", "seksyen 59", "seksyen 12",
+    ))
+    has_court_signal = _has_any((
+        "akta 92", "act 92", "mahkamah rendah", "subordinate courts",
+        "mahkamah majistret", "majistret kelas pertama", "majistret kelas kedua",
+        "mahkamah sesyen", "bidang kuasa mahkamah", "had hukuman", "kuasa menjatuhkan hukuman",
+        "seksyen 63", "seksyen 64", "seksyen 85", "seksyen 87", "seksyen 88",
+        "s.63", "s.64", "s.85", "s.87", "s.88",
+    )) or bool(re.search(r"\b(?:akta|act)\s*92\b", q_low))
 
     akta_852_family = {
         "AKTA_852",
@@ -3321,38 +4100,53 @@ def infer_domain_statute_ids(question: str, akta_hint: str = "Semua") -> Optiona
     akta_154_family = {"AKTA_154"}
     akta_342_family = {"AKTA_342", "AKTA_342_PINDAAN_2025", "AKTA_342_PERATURAN_KOMPAUN_2025"}
 
-    def _attach_support_acts(allowed: set[str]) -> set[str]:
+    def _attach_support_acts(allowed: set[str], *, has_kkm_obstruction_act: bool = False) -> set[str]:
         if has_minor_signal:
             allowed.add("AKTA_611")
         if has_evidence_signal:
             allowed.add("AKTA_56")
         if has_ktj_signal:
             allowed.add("AKTA_593")
+        if has_penal_strong_signal or (has_obstruction_generic and not has_kkm_obstruction_act):
+            allowed.add("AKTA_574")
+            allowed.add("AKTA_593")
+        if has_police_signal:
+            allowed.add("AKTA_344")
+        if has_interp_signal:
+            allowed.add("AKTA_388")
+        if has_court_signal:
+            allowed.add("AKTA_92")
         return allowed
 
     if hint and hint_low not in ("semua", "all"):
         if "852" in hint_low:
-            return _attach_support_acts(set(akta_852_family))
+            # Akta 852 tiada seksyen halangan sendiri -> izinkan Akta 574 apabila ada isyarat halang/ugut/serang
+            return _attach_support_acts(set(akta_852_family), has_kkm_obstruction_act=False)
         if "ppkm" in hint_low:
-            return _attach_support_acts({"PPKM_2009", "AKTA_281", "AKTA_281_PINDAAN_2024"})
+            return _attach_support_acts({"PPKM_2009", "AKTA_281", "AKTA_281_PINDAAN_2024"}, has_kkm_obstruction_act=True)
         if "ppm" in hint_low:
-            return _attach_support_acts({"PPM_1985", "AKTA_281", "AKTA_281_PINDAAN_2024"})
+            return _attach_support_acts({"PPM_1985", "AKTA_281", "AKTA_281_PINDAAN_2024"}, has_kkm_obstruction_act=True)
         if "281" in hint_low or "makanan" in hint_low:
-            return _attach_support_acts(set(akta_281_full))
+            return _attach_support_acts(set(akta_281_full), has_kkm_obstruction_act=True)
         if "154" in hint_low:
-            return _attach_support_acts(set(akta_154_family))
+            return _attach_support_acts(set(akta_154_family), has_kkm_obstruction_act=True)
         if "342" in hint_low or "apppb" in hint_low:
-            return _attach_support_acts(set(akta_342_family))
+            return _attach_support_acts(set(akta_342_family), has_kkm_obstruction_act=True)
+        if "574" in hint_low or "kanun keseksaan" in hint_low or "penal" in hint_low:
+            return _attach_support_acts({"AKTA_574"}, has_kkm_obstruction_act=False)
+        if "344" in hint_low or "polis" in hint_low or "police" in hint_low:
+            return _attach_support_acts({"AKTA_344"}, has_kkm_obstruction_act=False)
+        if "388" in hint_low or "tafsiran" in hint_low or "interpretation" in hint_low:
+            return _attach_support_acts({"AKTA_388"}, has_kkm_obstruction_act=False)
+        if re.search(r"\b92\b", hint_low) or "mahkamah rendah" in hint_low or "subordinate" in hint_low:
+            return _attach_support_acts({"AKTA_92"}, has_kkm_obstruction_act=False)
         if "611" in hint_low:
-            return {"AKTA_611"}
-        if "593" in hint_low or "ktj" in hint_low:
-            return {"AKTA_593"}
-        if "56" in hint_low:
-            return {"AKTA_56"}
+            return _attach_support_acts({"AKTA_611"}, has_kkm_obstruction_act=False)
+        if "593" in hint_low or "ktj" in hint_low or "cpc" in hint_low or "tatacara" in hint_low:
+            return _attach_support_acts({"AKTA_593"}, has_kkm_obstruction_act=False)
+        if re.search(r"\b56\b", hint_low) or "keterangan" in hint_low:
+            return _attach_support_acts({"AKTA_56"}, has_kkm_obstruction_act=False)
         return {hint.upper()}
-
-    def _has_any(terms: Tuple[str, ...]) -> bool:
-        return any(re.search(rf"(?<!\w){re.escape(t)}(?!\w)", q_low) for t in terms)
 
     has_tobacco = _has_any((
         "vape", "rokok", "e-rokok", "e-cigarette", "pod", "shisha", "tembakau",
@@ -3414,11 +4208,21 @@ def infer_domain_statute_ids(question: str, akta_hint: str = "Semua") -> Optiona
     if has_cdc:
         locked |= akta_342_family
 
+    has_kkm_obstruction_act = has_food or has_aedes or has_cdc
     if locked:
-        return _attach_support_acts(locked)
-    # Jangan sekali-kali kunci secara eksklusif kepada Akta 611 semata-mata jika tiada akta teras dikesan!
-    if has_evidence_signal or has_ktj_signal or _has_any(("akta 611", "kanak-kanak 2001")):
-        return _attach_support_acts(set())
+        return _attach_support_acts(locked, has_kkm_obstruction_act=has_kkm_obstruction_act)
+    # Jangan sekali-kali kunci secara eksklusif kepada Akta 611 semata-mata jika tiada akta teras/sokongan lain dikesan!
+    if (
+        has_evidence_signal
+        or has_ktj_signal
+        or has_penal_strong_signal
+        or has_obstruction_generic
+        or has_police_signal
+        or has_interp_signal
+        or has_court_signal
+        or _has_any(("akta 611", "kanak-kanak 2001"))
+    ):
+        return _attach_support_acts(set(), has_kkm_obstruction_act=False)
     return None
 
 
@@ -3839,28 +4643,36 @@ def extract_legal_citations_from_text(text: str) -> List[Dict[str, str]]:
     citations: List[Dict[str, str]] = []
     seen: set[str] = set()
 
-    # 1. Pasangan eksplisit: "Seksyen X(Y) Akta ZZZ" atau "Peraturan X(Y) PPKM 2009 / PPKHT 2004 / PPM 1985 / P.U. (A) 258/2024"
+    act_ref_pat = (
+        r"Akta\s+A?\d+|Act\s+A?\d+|Akta\s+Kerja\s*1955|OSHA\s*1994|PPKM\s*2009|PPM\s*1985|PPKHT\s*2004|"
+        r"KTJ|CPC|APPPB\s*1988|Kanun\s+Keseksaan|Penal\s+Code|Kanun\s+Tatacara\s+Jenayah|"
+        r"Akta\s+Polis(?:\s*1967)?|Police\s+Act(?:\s*1967)?|"
+        r"Akta\s+Tafsiran(?:\s*1948(?:\s+dan\s+1967)?)?|Interpretation\s+Acts?(?:\s*1948(?:\s+and\s+1967)?)?|"
+        r"Akta\s+Mahkamah\s+Rendah(?:\s*1948)?|Subordinate\s+Courts\s+Act(?:\s*1948)?|"
+        r"Akta\s+Keterangan(?:\s*1950)?|P\.U\.\s*\(A\)\s*\d+/\d{4}"
+    )
+
+    # 1. Pasangan eksplisit: "Seksyen X(Y) Akta ZZZ" atau "Peraturan X(Y) PPKM 2009 / Kanun Keseksaan / Akta Tafsiran / P.U. (A) 258/2024"
     paired_re = re.compile(
-        r"\b(Seksyen|Peraturan)\s+(\d+[A-Za-z]{0,2}(?:\(\d+[A-Za-z]?\))?(?:\([a-z]+\))?)"
+        r"\b(Seksyen|Peraturan|Section)\s+(\d+[A-Za-z]{0,2}(?:\(\d+[A-Za-z]?\))?(?:\([a-z]+\))?)"
         r"(?:\s+(?:dibaca\s+bersama\s+[^,\n.;]{1,40}\s+)?)?"
-        r"\s*(Akta\s+A?\d+|Akta\s+Kerja\s*1955|OSHA\s*1994|PPKM\s*2009|PPM\s*1985|PPKHT\s*2004|KTJ|APPPB\s*1988|P\.U\.\s*\(A\)\s*\d+/\d{4})?",
+        rf"\s*({act_ref_pat})?",
         re.I,
     )
+    tail_act_re = re.compile(rf"\b({act_ref_pat})\b", re.I)
+
     for m in paired_re.finditer(text):
-        kind = m.group(1).capitalize()
+        raw_kind = m.group(1).capitalize()
+        kind = "Seksyen" if raw_kind == "Section" else raw_kind
         num = m.group(2).strip()
         act_raw = (m.group(3) or "").strip()
         inferred_from_tail = False
         # Cuba kesan Akta dalam klausa yang sama sahaja (berhenti pada tanda baca atau petikan Seksyen/Peraturan baharu)
         if not act_raw:
-            raw_tail = text[m.end() : m.end() + 75]
-            clause_stop = re.search(r"[.;\n]|\b(?:Seksyen|Peraturan)\s+\d+", raw_tail, re.I)
+            raw_tail = text[m.end() : m.end() + 85]
+            clause_stop = re.search(r"[.;\n]|\b(?:Seksyen|Peraturan|Section)\s+\d+", raw_tail, re.I)
             tail = raw_tail[: clause_stop.start()] if clause_stop else raw_tail
-            tail_m = re.search(
-                r"\b(Akta\s+A?\d+|Akta\s+Kerja\s*1955|OSHA\s*1994|PPKM\s*2009|PPM\s*1985|PPKHT\s*2004|KTJ|APPPB\s*1988|P\.U\.\s*\(A\)\s*\d+/\d{4})\b",
-                tail,
-                re.I,
-            )
+            tail_m = tail_act_re.search(tail)
             if tail_m:
                 act_raw = tail_m.group(1).strip()
                 inferred_from_tail = True
@@ -3934,14 +4746,34 @@ def _build_valid_sections_index(
                     act_set.add(num)
                 all_valid_section_nums.add(num)
 
-    # Pastikan seksyen teras yang sah mengikut pindaan terkini sentiasa terindeks bagi akta induk
+    # Pastikan seksyen teras yang sah mengikut pindaan terkini sentiasa terindeks bagi akta induk & rujukan silang
     for k_act, extras in (
-        ("AKTA_852", {"3", "7", "9", "10", "13", "15", "16", "17", "18", "35", "36", "47", "48", "49", "51"}),
-        ("AKTA_281", {"4", "5", "6", "11", "13", "13A", "13B", "13C", "14", "15", "16", "17", "19", "20", "32A", "32B", "33", "33A"}),
-        ("AKTA_154", {"5", "8", "13", "20", "21", "22", "22A", "23", "25"}),
-        ("AKTA_342", {"10", "11", "12", "14", "14A", "15", "18", "21A", "22", "22A", "23", "24", "25"}),
+        ("AKTA_852", {"3", "7", "9", "10", "13", "15", "16", "17", "18", "24", "25", "30", "31", "35", "36", "43", "47", "48", "49", "51"}),
+        ("AKTA_281", {"3", "4", "5", "6", "11", "13", "13A", "13B", "13C", "14", "15", "16", "17", "19", "20", "32A", "32B", "33", "33A"}),
+        ("AKTA_154", {"4", "5", "8", "13", "20", "21", "22", "22A", "23", "23A", "24", "25"}),
+        ("AKTA_342", {"3", "10", "11", "12", "14", "14A", "15", "18", "21A", "22", "22A", "23", "24", "24A", "25"}),
         ("AKTA_56", {"73AA", "90A", "90B", "90C", "114A"}),
-        ("AKTA_593", {"111", "112", "113", "119", "128", "152", "153", "154", "163", "376", "377", "399"}),
+        (
+            "AKTA_593",
+            {
+                "15", "20", "23", "24", "28", "28A", "34", "35", "36", "37",
+                "51", "51A", "54", "56", "57", "62", "62A", "63", "64", "65",
+                "107", "108", "109", "110", "111", "112", "113", "116", "117", "118", "119", "120",
+                "128", "133", "152", "153", "154", "163", "164", "165", "173", "173A", "294",
+                "376", "377", "380", "387", "388", "399", "407", "407A", "413",
+            },
+        ),
+        (
+            "AKTA_574",
+            {
+                "21", "34", "107", "109", "170", "173", "174", "175", "176", "177", "179",
+                "182", "183", "186", "188", "189", "269", "270", "272", "273", "353",
+                "415", "420", "463", "464", "465", "468", "471", "503", "506", "511",
+            },
+        ),
+        ("AKTA_344", {"2", "3", "19", "20", "21", "24", "25", "27", "90", "94"}),
+        ("AKTA_388", {"2", "3", "12", "17A", "18", "20", "23", "24", "30", "31", "40", "47", "54", "59", "65", "66", "67"}),
+        ("AKTA_92", {"2", "3", "59", "63", "64", "65", "76", "78", "82", "85", "87", "88", "89", "90", "92", "93"}),
         ("AKTA_611", {"11", "15", "83", "91"}),
     ):
         valid_sections_by_act.setdefault(k_act, set()).update(extras)
@@ -3962,7 +4794,7 @@ def validate_legal_output(
     Menyemak:
     1. Setiap petikan Seksyen / Peraturan wujud dalam `statute_sections_verbatim` pada ketepatan statut/peraturan subsidiari dan berstatus `BERKUAT_KUASA`.
     2. Tiada peruntukan dalam `repealed_and_blocked_provisions` dicadangkan sebagai tindakan aktif.
-    3. Nilai denda / kompaun serta senarai putih (allowlist) kesalahan boleh kompaun Akta 852 / Akta 342 / Akta 281 / Akta 154 sepadan dengan warta rasmi.
+    3. Nilai denda / kompaun serta senarai putih (allowlist) kesalahan boleh kompaun Akta 852 / Akta 342 / Akta 281 / Akta 154 sepadan dengan warta rasmi, serta menghalang kompaun bagi Akta 574 & Akta 344.
     4. Jika unsur mandatori kesalahan berstatus `TIDAK TERPENUHI` berdasarkan `question_context`, sebarang cadangan pertuduhan/kompaun aktif bagi seksyen itu DISEKAT.
     5. Jika akta yang ditanya belum mempunyai sebarang seksyen diindeks (`total_sections_indexed == 0`), pulangkan status `AKTA BELUM DIINDEKS — MUAT NAIK PDF WARTA`.
     """
@@ -4014,15 +4846,16 @@ def validate_legal_output(
     # Semak sama ada akta yang diminta belum diindeks langsung (total_sections_indexed == 0)
     unindexed_statutes: List[str] = []
     target_act_str = f"{question_context} {resp_dict.get('akta_disyorkan', '')}".strip()
+    target_act_low = target_act_str.lower()
     for s in statutes_reg:
         if s.get("status") == "DIMANSUHKAN":
             continue
         sid = str(s.get("statute_id") or "")
         act_num = str(s.get("act_number_or_pu") or "")
         if int(s.get("total_sections_indexed") or 0) == 0:
-            if (sid and sid.lower() in target_act_str.lower()) or (
-                act_num and act_num.lower() in target_act_str.lower()
-            ):
+            sid_hit = bool(sid and re.search(rf"(?<!\w){re.escape(sid.lower())}(?!\w)", target_act_low))
+            act_hit = bool(act_num and re.search(rf"(?<!\w){re.escape(act_num.lower())}(?!\w)", target_act_low))
+            if sid_hit or act_hit:
                 unindexed_statutes.append(f"{sid} ({s.get('official_title_bm', '')})")
 
     # 1. Semak petikan seksyen/peraturan yang diekstrak
@@ -4030,30 +4863,34 @@ def validate_legal_output(
     verified_citations: List[str] = []
     invalid_citations: List[str] = []
 
-    # Akta rujukan silang luaran yang sah disebut dalam konteks rujukan agensi (jangan semak terhadap indeks Akta KKM)
+    # Akta rujukan silang luaran (tidak diindeks dalam Pustaka Akta) yang sah disebut dalam konteks rujukan agensi.
+    # NOTA: AKTA 574 kini DIINDEKS PENUH dalam Pustaka Akta — ia DISAHKAN ketat dan TIDAK lagi dikecualikan!
     cross_agency_acts = {
         "AKTA 171", "AKTA 366", "AKTA 368", "AKTA 290", "AKTA 586", "AKTA 260",
-        "AKTA 127", "AKTA 655", "AKTA 265", "AKTA 514", "AKTA 574", "AKTA 550",
+        "AKTA 127", "AKTA 655", "AKTA 265", "AKTA 514", "AKTA 550",
         "AKTA 50", "AKTA 804", "AKTA KERJA 1955", "OSHA 1994",
     }
     akta_disyorkan_up = str(resp_dict.get("akta_disyorkan") or "").upper()
     default_act = canonical_akta_code_for_statute(akta_disyorkan_up).upper()
 
-    # Sokong respons berbilang Akta (cth: "Akta 281 / PPKM 2009" atau "Akta 852 & Akta 611")
+    # Sokong respons berbilang Akta (guna sempadan kata bagi elak perlanggaran '92'/'56')
     default_lookup_keys: List[str] = []
-    for token_pat, key_name in (
-        ("852", "AKTA_852"),
-        ("PPKM", "PPKM_2009"),
-        ("PPM", "PPM_1985"),
-        ("281", "AKTA_281"),
-        ("154", "AKTA_154"),
-        ("342", "AKTA_342"),
-        ("593", "AKTA_593"),
-        ("KTJ", "AKTA_593"),
-        ("56", "AKTA_56"),
-        ("611", "AKTA_611"),
+    for token_re_pat, key_name in (
+        (r"\b852\b", "AKTA_852"),
+        (r"\bPPKM\b", "PPKM_2009"),
+        (r"\bPPM\b", "PPM_1985"),
+        (r"\b281\b", "AKTA_281"),
+        (r"\b154\b", "AKTA_154"),
+        (r"\b342\b|\bAPPPB\b", "AKTA_342"),
+        (r"\b593\b|\bKTJ\b|\bCPC\b|TATACARA\s+JENAYAH", "AKTA_593"),
+        (r"\b574\b|KANUN\s+KESEKSAAN|PENAL\s+CODE", "AKTA_574"),
+        (r"\b344\b|AKTA\s+POLIS|POLICE\s+ACT", "AKTA_344"),
+        (r"\b388\b|AKTA\s+TAFSIRAN|TAFSIRAN\s+1948|INTERPRETATION\s+ACT", "AKTA_388"),
+        (r"\b(?:AKTA|ACT)[\s_]*92\b|MAHKAMAH\s+RENDAH|SUBORDINATE\s+COURTS", "AKTA_92"),
+        (r"\b(?:AKTA|ACT)[\s_]*56\b|AKTA\s+KETERANGAN|EVIDENCE\s+ACT", "AKTA_56"),
+        (r"\b611\b|KANAK-KANAK", "AKTA_611"),
     ):
-        if token_pat in akta_disyorkan_up and key_name in valid_sections_by_act and key_name not in default_lookup_keys:
+        if re.search(token_re_pat, akta_disyorkan_up, re.I) and key_name in valid_sections_by_act and key_name not in default_lookup_keys:
             default_lookup_keys.append(key_name)
     if default_act in valid_sections_by_act and default_act not in default_lookup_keys:
         default_lookup_keys.append(default_act)
@@ -4065,8 +4902,10 @@ def validate_legal_output(
     ).lower()
 
     procedural_support_nums = {
-        "90A", "90B", "90C", "114", "114A", "73AA", "111", "112", "113", "119",
-        "128", "152", "153", "154", "163", "376", "377", "399", "15", "83", "91",
+        "90A", "90B", "90C", "114", "114A", "73AA",
+        "107", "108", "111", "112", "113", "117", "119", "128",
+        "152", "153", "154", "163", "173", "376", "377", "399", "407", "407A", "51A",
+        "15", "83", "91",
     }
 
     pu_to_sid = (
@@ -4107,7 +4946,7 @@ def validate_legal_output(
             verified_citations.append(raw_cit)
             continue
 
-        # Petakan kepada statute_id tepat (termasuk peraturan subsidiari PPKM_2009 / PPM_1985 / P.U.(A) 2024/2025)
+        # Petakan kepada statute_id tepat (termasuk peraturan subsidiari & 5 akta rujukan silang)
         explicit_keys: List[str] = []
         for pu_code, mapped_sid in pu_to_sid:
             if pu_code in act_ref and mapped_sid in valid_sections_by_act:
@@ -4118,22 +4957,30 @@ def validate_legal_output(
                 explicit_keys.append("PPKM_2009")
             elif "PPM" in act_ref:
                 explicit_keys.append("PPM_1985")
-            elif "852" in act_ref:
+            elif re.search(r"\b852\b", act_ref):
                 explicit_keys.append("AKTA_852")
-            elif "281" in act_ref or "A1702" in act_ref:
+            elif re.search(r"\b281\b|A1702", act_ref):
                 if kind == "Peraturan":
                     explicit_keys.extend(["PPKM_2009", "PPM_1985"])
                 else:
                     explicit_keys.append("AKTA_281")
-            elif "154" in act_ref:
+            elif re.search(r"\b154\b", act_ref):
                 explicit_keys.append("AKTA_154")
-            elif "342" in act_ref or "A1742" in act_ref or "APPPB" in act_ref:
+            elif re.search(r"\b342\b|A1742|APPPB", act_ref):
                 explicit_keys.append("AKTA_342")
-            elif "593" in act_ref or "KTJ" in act_ref:
+            elif re.search(r"\b593\b|\bKTJ\b|\bCPC\b|TATACARA\s+JENAYAH", act_ref):
                 explicit_keys.append("AKTA_593")
-            elif "56" in act_ref:
+            elif re.search(r"\b574\b|KANUN\s+KESEKSAAN|PENAL\s+CODE", act_ref):
+                explicit_keys.append("AKTA_574")
+            elif re.search(r"\b344\b|AKTA\s+POLIS|POLICE\s+ACT", act_ref):
+                explicit_keys.append("AKTA_344")
+            elif re.search(r"\b388\b|TAFSIRAN|INTERPRETATION", act_ref):
+                explicit_keys.append("AKTA_388")
+            elif re.search(r"\b(?:AKTA|ACT)[\s_]*92\b|MAHKAMAH\s+RENDAH|SUBORDINATE\s+COURTS", act_ref):
+                explicit_keys.append("AKTA_92")
+            elif re.search(r"\b(?:AKTA|ACT)[\s_]*56\b|KETERANGAN|EVIDENCE", act_ref):
                 explicit_keys.append("AKTA_56")
-            elif "611" in act_ref:
+            elif re.search(r"\b611\b", act_ref):
                 explicit_keys.append("AKTA_611")
 
         valid_explicit_keys = [k for k in explicit_keys if k in valid_sections_by_act]
@@ -4257,7 +5104,7 @@ def validate_legal_output(
             except ValueError:
                 pass
 
-    # Semak kesilapan menawarkan kompaun bagi kesalahan TIDAK BOLEH KOMPAUN (guna allowlist ketat bagi Akta 852 & Akta 342)
+    # Semak kesilapan menawarkan kompaun bagi kesalahan TIDAK BOLEH KOMPAUN (termasuk Kanun Keseksaan Akta 574 & Akta Polis 344)
     ak852_compoundable_re = re.compile(r"\b(?:13\(3\)|16\(2\)|17\(1\)|18\(1\))(?=\W|$)", re.I)
     ak342_compoundable_re = re.compile(r"\b(?:10\(2\)|11\(5\)|21a\(3\)|22\([bcd]\))(?=\W|$)", re.I)
     ak281_non_comp_re = re.compile(r"\b(?:seksyen|s\.)\s*(?:11(?:\(\d+\))?|13(?:\(1\))?|13a(?:\(\d+\))?|13b(?:\(\d+\))?|13c(?:\(\d+\))?|14|15|16|17)\b", re.I)
@@ -4270,13 +5117,21 @@ def validate_legal_output(
         comp_low = str(c.get("boleh_kompaun") or "").lower()
         claims_compoundable = (
             ("boleh kompaun" in comp_low or "boleh dikompaun" in comp_low)
-            and not any(neg in comp_low for neg in ("tidak boleh", "tiada kompaun", "buka ip terus"))
+            and not any(neg in comp_low for neg in ("tidak boleh", "tiada kompaun", "buka ip terus", "rujuk pdrm"))
         )
         if claims_compoundable:
             # Tentukan Akta milik pertuduhan itu sendiri dahulu sebelum jatuh ke default_act
-            charge_acts_found = [d for d in ("852", "281", "154", "342") if re.search(rf"\b{d}\b", sec_low)]
-            eff_charge_acts = charge_acts_found if charge_acts_found else [d for d in ("852", "281", "154", "342") if d in default_act.lower()]
-            if "852" in eff_charge_acts and re.search(r"\b(?:seksyen|s\.)\s*\d+", sec_low) and not ak852_compoundable_re.search(sec_low):
+            charge_acts_found = [d for d in ("852", "281", "154", "342", "574", "344") if re.search(rf"\b{d}\b", sec_low)]
+            if not charge_acts_found and ("kanun keseksaan" in sec_low or "penal code" in sec_low):
+                charge_acts_found.append("574")
+            if not charge_acts_found and ("akta polis" in sec_low or "police act" in sec_low):
+                charge_acts_found.append("344")
+            eff_charge_acts = charge_acts_found if charge_acts_found else [d for d in ("852", "281", "154", "342", "574", "344") if d in default_act.lower()]
+            if "574" in eff_charge_acts or "344" in eff_charge_acts:
+                penalty_mismatches.append(
+                    f"Kesalahan {c.get('seksyen_kesalahan')} di bawah Kanun Keseksaan [Akta 574] / Akta Polis [Akta 344] TIDAK BOLEH DIKOMPAUN oleh PPKP — wajib rujuk PDRM melalui Laporan Polis Seksyen 107 KTJ."
+                )
+            elif "852" in eff_charge_acts and re.search(r"\b(?:seksyen|s\.)\s*\d+", sec_low) and not ak852_compoundable_re.search(sec_low):
                 penalty_mismatches.append(
                     f"Kesalahan {c.get('seksyen_kesalahan')} TIDAK BOLEH DIKOMPAUN di bawah Jadual Pertama P.U. (A) 259/2024 (hanya S.13(3), S.16(2), S.17(1) & S.18(1) boleh kompaun) — wajib Buka IP Terus."
                 )
@@ -4292,6 +5147,30 @@ def validate_legal_output(
                 penalty_mismatches.append(
                     f"Kesalahan {c.get('seksyen_kesalahan')} TIDAK BOLEH DIKOMPAUN di bawah Akta 154 — wajib Buka IP Terus."
                 )
+
+    # Semak teks prosa (bukan cadangan_pertuduhan sahaja) jika ada dakwaan mengkompaun Akta 574 atau Akta 344 tanpa kata nafi
+    for act_num, act_name in (("574", "Kanun Keseksaan [Akta 574]"), ("344", "Akta Polis 1967 [Akta 344]")):
+        act_pat = (
+            r"\b(?:akta\s+574|kanun\s+keseksaan|penal\s+code)\b"
+            if act_num == "574"
+            else r"\b(?:akta\s+344|akta\s+polis|police\s+act)\b"
+        )
+        if re.search(act_pat, low_combined):
+            for cm in re.finditer(
+                r"\b(?:boleh\s+(?:di)?kompaun|tawar(?:kan)?\s+kompaun|menawarkan\s+kompaun|keluarkan\s+kompaun|mengkompaun)\b",
+                low_combined,
+            ):
+                ctx_w = low_combined[max(0, cm.start() - 60) : min(len(low_combined), cm.end() + 80)]
+                has_neg = any(
+                    n in ctx_w
+                    for n in ("tidak boleh", "tiada kompaun", "bukan", "jangan", "dilarang", "tiada kuasa", "bukan kesalahan kompaun")
+                )
+                near_act = bool(re.search(act_pat, ctx_w)) or not re.search(r"\bakta\s+(?:852|281|154|342)\b", low_combined)
+                if not has_neg and near_act:
+                    penalty_mismatches.append(
+                        f"Kesalahan di bawah {act_name} TIDAK BOLEH DIKOMPAUN oleh PPKP — wajib rujuk PDRM melalui Laporan Polis Seksyen 107 KTJ."
+                    )
+                    break
 
     # Semak had denda Seksyen 17(2) Akta 852 (OBD maks RM500)
     if "17(1)" in low_combined or "17(2)" in low_combined:
@@ -5320,7 +6199,12 @@ class ClosedBookLegalLibrary:
                     continue
             if akta_code and akta_code.lower() != "semua":
                 c_act = canonical_akta_code_for_statute(sec["statute_id"])
-                if akta_code.lower() not in c_act.lower() and akta_code.lower() not in sec["statute_id"].lower():
+                ac_canon = canonical_akta_code_for_statute(akta_code)
+                if (
+                    akta_code.lower() != c_act.lower()
+                    and ac_canon.lower() != c_act.lower()
+                    and not re.search(rf"(?<!\w){re.escape(akta_code.lower())}(?!\w)", sec["statute_id"].lower())
+                ):
                     continue
             if q_low:
                 hay = f"{sec['statute_id']} {sec['section_code']} {sec['section_heading']} {sec['verbatim_text_bm']}".lower()
@@ -5358,7 +6242,12 @@ class ClosedBookLegalLibrary:
                 if sid.upper() != statute_id.strip().upper():
                     continue
             if akta_code and akta_code.lower() != "semua":
-                if akta_code.lower() not in c_act.lower() and akta_code.lower() not in sid.lower():
+                ac_canon = canonical_akta_code_for_statute(akta_code)
+                if (
+                    akta_code.lower() != c_act.lower()
+                    and ac_canon.lower() != c_act.lower()
+                    and not re.search(rf"(?<!\w){re.escape(akta_code.lower())}(?!\w)", sid.lower())
+                ):
                     continue
             if target_offender and target_offender.upper() != "SEMUA":
                 if str(off.get("target_offender") or "").upper() != target_offender.strip().upper():
@@ -5402,12 +6291,12 @@ class ClosedBookLegalLibrary:
         akta_hint: str = "Semua",
         top_k: int = 4,
     ) -> Dict[str, Any]:
-        """FASA 3.1 (v2): Carian Hibrid IDF + Katalog Penuh Domain Sebelum Menjawab (Mandatory Grounding).
+        """FASA 3.1 (v3): Carian Hibrid IDF + Rujukan Silang Akta + Katalog Penuh Domain Sebelum Menjawab.
 
         Mencari:
         a) Padanan dalam `repealed_and_blocked_provisions`.
         b) 1–4 calon kesalahan utama dalam `master_offences_matrix` (IDF-weighted + perluasan sinonim dwibahasa + sempadan kata tepat).
-        c) Teks penuh verbatim daripada `statute_sections_verbatim` menggunakan 2 slot berasingan (Slot A pautan kesalahan + Slot B carian bebas IDF supaya teks relevan TIDAK PERNAH disekat belanjawan 0).
+        c) Teks penuh verbatim daripada `statute_sections_verbatim` menggunakan 2 slot berasingan (Slot A pautan kesalahan + Slot B carian bebas IDF + bonus padanan nombor seksyen tepat +8.0).
         d) Katalog ringkas 1-baris bagi SEMUA kesalahan dalam domain Akta aktif supaya AI tidak pernah "buta" terhadap seksyen sebenar.
         """
         q_raw = (question or "").strip()
@@ -5415,9 +6304,10 @@ class ClosedBookLegalLibrary:
         exact_tokens, expanded_tokens = expand_query_for_grounding(q_raw)
         q_tokens = exact_tokens | expanded_tokens
         asks_definition = any(
-            k in q_low for k in ("tafsiran", "definisi", "maksud ", "seksyen 2", "sek. 2", "s.2 ")
+            k in q_low for k in ("tafsiran", "definisi", "maksud ", "seksyen 2", "sek. 2", "s.2 ", "akta 388")
         )
         allowed_sids = infer_domain_statute_ids(q_raw, akta_hint)
+        support_sids = {"AKTA_593", "AKTA_574", "AKTA_344", "AKTA_388", "AKTA_92", "AKTA_56", "AKTA_611"}
         is_passive_vape = is_passive_vape_possession_question(q_raw)
         has_minor_signal = any(
             re.search(rf"(?<!\w){re.escape(k)}(?!\w)", q_low)
@@ -5436,8 +6326,8 @@ class ClosedBookLegalLibrary:
                 act_num = str(reg.get("act_number_or_pu") or "")
                 if (
                     (akta_hint and akta_hint.upper() == sid.upper())
-                    or (sid and sid.lower() in q_low)
-                    or (act_num and act_num.lower() in q_low)
+                    or (sid and re.search(rf"(?<!\w){re.escape(sid.lower())}(?!\w)", q_low))
+                    or (act_num and re.search(rf"(?<!\w){re.escape(act_num.lower())}(?!\w)", q_low))
                 ):
                     unindexed_hit = reg
                     break
@@ -5476,10 +6366,13 @@ class ClosedBookLegalLibrary:
                 if allowed_sids is not None and sid not in allowed_sids:
                     continue
                 if akta_hint and akta_hint not in ("", "Semua"):
+                    hint_canon = canonical_akta_code_for_statute(akta_hint)
+                    is_attached_support = allowed_sids is not None and sid in allowed_sids and sid in support_sids
                     if (
-                        akta_hint.lower() not in c_act.lower()
-                        and akta_hint.lower() not in sid.lower()
-                        and not (sid == "AKTA_611" and has_minor_signal)
+                        akta_hint.lower() != c_act.lower()
+                        and hint_canon.lower() != c_act.lower()
+                        and not re.search(rf"(?<!\w){re.escape(akta_hint.lower())}(?!\w)", sid.lower())
+                        and not is_attached_support
                     ):
                         continue
 
@@ -5506,13 +6399,13 @@ class ClosedBookLegalLibrary:
                     # Seksyen 18(1)(a) Akta 852 ialah punca kuasa pertuduhan/kompaun utama, bukan Peraturan 2 secara bersendirian
                     score *= 0.65
 
-                # Bonus padanan nombor seksyen tepat (cth: "18(1)", "16(2)", "13b", "8(8)")
+                # Bonus padanan nombor seksyen tepat (cth: "18(1)", "16(2)", "13b", "8(8)", "186", "465")
                 sec_nums = re.findall(r"\d+[A-Za-z]?(?:\(\d+\))?", str(off.get("offence_section") or ""))
                 if sec_nums and any(
-                    re.search(rf"\b(?:seksyen|peraturan|s\.|p\.)\s*{re.escape(sn)}\b", q_low, re.I)
-                    for sn in sec_nums[:1]
+                    re.search(rf"\b(?:seksyen|peraturan|section|s\.|p\.)\s*{re.escape(sn)}\b", q_low, re.I)
+                    for sn in sec_nums[:3]
                 ):
-                    score += 5.0
+                    score += 6.0
 
                 # Isyarat niat khusus bersempadan kata (word-boundary — TIADA lagi 'merokok di' kena 'merokok dipasang'!)
                 if oid == "AKTA_852_S18_1" and has_signage_duty:
@@ -5573,11 +6466,36 @@ class ClosedBookLegalLibrary:
                 if oid == "AKTA_154_S8_8" and bool(re.search(r"\b(?:ingkar\s+perintah|perintah\s+bertulis\s+seksyen\s+8|s\.?8\(1\)|s\.?8\(8\)|s\.?8\(2\))\b", q_low)):
                     score += 7.0
                 if oid == "AKTA_154_S21" and bool(re.search(r"\b(?:menghalang|halang|fogging|semburan\s+kabus|berkunci|mangga|seksyen\s+21)\b", q_low)):
-                    score += 7.0
+                    score += 8.5
                 if oid == "AKTA_342_S12_1" and bool(re.search(r"\b(?:bersiar-siar|mendedahkan\s+orang\s+awam|seksyen\s+12|12\(1\))\b", q_low)):
                     score += 7.5
                 if oid == "AKTA_342_S22_B" and bool(re.search(r"\b(?:ingkar\s+perintah|perintah\s+tutup|18\(1\)\(d\)|hfmd|cicir\s+rawatan|22\(b\))\b", q_low)):
                     score += 7.0
+                # Isyarat rujukan silang Akta 574 (Kanun Keseksaan) & Akta 344 (Akta Polis)
+                if oid == "AKTA_574_S186" and bool(re.search(r"\b(?:menghalang|halang|halangan|kunci\s+pintu|186)\b", q_low)) and not bool(
+                    re.search(r"\b(?:fogging|aedes|denggi|154)\b", q_low)
+                ):
+                    score += 8.0
+                if oid == "AKTA_574_S183" and bool(re.search(r"\b(?:rampas\s+balik|rampas\s+semula|menentang\s+sitaan|183)\b", q_low)):
+                    score += 8.0
+                if oid == "AKTA_574_S189" and bool(re.search(r"\b(?:ugut|ugutan|mengugut|189)\b", q_low)):
+                    score += 7.5
+                if oid == "AKTA_574_S506" and bool(re.search(r"\b(?:ugut\s+bunuh|ugutan\s+jenayah|parang|pisau|senjata|bakar|506)\b", q_low)):
+                    score += 8.5
+                if oid == "AKTA_574_S353" and bool(re.search(r"\b(?:serang|menyerang|pukul|tumbuk|tolak|ludah|kekerasan|353)\b", q_low)):
+                    score += 8.5
+                if oid == "AKTA_574_S170" and bool(re.search(r"\b(?:menyamar|penyamaran|ppkp\s+palsu|pegawai\s+palsu|170)\b", q_low)):
+                    score += 9.0
+                if oid == "AKTA_574_S177" and bool(re.search(r"\b(?:maklumat\s+palsu|aduan\s+palsu|nama\s+palsu|fitnah|177|182)\b", q_low)):
+                    score += 8.0
+                if oid == "AKTA_574_S465" and bool(re.search(r"\b(?:sijil\s+palsu|dokumen\s+palsu|tifoid\s+palsu|slpm\s+palsu|fosim\s+palsu|pemalsuan|465|468|471)\b", q_low)):
+                    score += 9.0
+                if oid == "AKTA_574_S269" and bool(re.search(r"\b(?:269|270|cuai\s+merebak|jahat\s+merebak|meludah\s+penyakit)\b", q_low)):
+                    score += 7.5
+                if oid == "AKTA_574_S272" and bool(re.search(r"\b(?:272|273|kanun\s+keseksaan.*makanan|penal\s+code.*food)\b", q_low)):
+                    score += 7.0
+                if oid == "AKTA_344_S90" and bool(re.search(r"\b(?:halang\s+polis|menghalang\s+polis|seksyen\s+90\s+akta\s+344|akta\s+344.*90)\b", q_low)):
+                    score += 8.5
 
                 if score >= 1.2:
                     eval_res = evaluate_offence_elements_against_facts(q_raw, off)
@@ -5673,7 +6591,46 @@ class ClosedBookLegalLibrary:
                         }
                     )
 
-        # SLOT B (DIJAMIN SENTIASA AKTIF): Carian bebas berasaskan IDF ke atas seluruh teks penuh `statute_sections_verbatim`
+        # SLOT B (DIJAMIN SENTIASA AKTIF): Carian bebas berasaskan IDF + bonus padanan nombor seksyen tepat (+8.0) + bonus niat rujukan silang
+        explicit_sec_mentions = {
+            m.upper()
+            for m in re.findall(r"\b(?:seksyen|peraturan|section|regulation|s\.|p\.)\s*(\d+[A-Za-z]{0,2})\b", q_raw, re.I)
+        }
+        cross_statute_intent_boosts: Dict[str, float] = {}
+        # Akta 388 (Akta Tafsiran 1948 dan 1967) — pastikan peruntukan substantif mengatasi tajuk/jadual
+        if re.search(r"\b(?:hari\s+bersih|kiraan\s+hari|pengiraan.*hari|kira.*hari|cuti\s+umum|hujung\s+minggu|had\s+masa|tempoh\s+\d+\s+hari|computation\s+of\s+time)\b", q_low):
+            cross_statute_intent_boosts["AKTA_388__S54"] = 9.5
+        if re.search(r"\b(?:pos\s+berdaftar|serahan\s+(?:notis|dokumen|sijil|melalui\s+pos|pos)|registered\s+post|service\s+by\s+post)\b", q_low):
+            cross_statute_intent_boosts["AKTA_388__S12"] = 9.5
+        if re.search(r"\b(?:tafsiran\s+bermaksud|tujuan\s+akta|maksud\s+akta|purposive|17a)\b", q_low):
+            cross_statute_intent_boosts["AKTA_388__S17A"] = 9.0
+        if re.search(r"\b(?:mansuh|dimansuhkan|pemansuhan|repeal|saving|ppkht\s+2004)\b", q_low):
+            cross_statute_intent_boosts["AKTA_388__S30"] = 8.5
+        if re.search(r"\b(?:batal\s+perintah|ubah\s+perintah|pinda\s+perintah|tarik\s+balik\s+perintah|revoke|vary)\b", q_low):
+            cross_statute_intent_boosts["AKTA_388__S47"] = 9.0
+        if re.search(r"\b(?:hukuman\s+berganda|dihukum\s+dua\s+kali|double\s+jeopardy|punished\s+twice)\b", q_low):
+            cross_statute_intent_boosts["AKTA_388__S59"] = 9.0
+        # Akta 92 (Akta Mahkamah Rendah 1948) — pastikan S.63, S.64, S.85, S.87, S.88 mengatasi Jadual/sivil
+        if re.search(r"\b(?:mahkamah\s+majistret|mahkamah\s+sesyen|bidang\s+kuasa\s+mahkamah|had\s+hukuman|had\s+denda|mahkamah\s+mana|sessions\s+court|first\s+class\s+magistrate)\b", q_low):
+            cross_statute_intent_boosts["AKTA_92__S63"] = 9.0
+            cross_statute_intent_boosts["AKTA_92__S64"] = 9.0
+            cross_statute_intent_boosts["AKTA_92__S85"] = 8.5
+            cross_statute_intent_boosts["AKTA_92__S87"] = 9.5
+            if re.search(r"\b(?:kelas\s+kedua|second\s+class|majistret\s+2)\b", q_low):
+                cross_statute_intent_boosts["AKTA_92__S88"] = 9.5
+        # Akta 344 (Akta Polis 1967) — bantuan/iringan operasi kebersihan & kuarantin
+        if re.search(r"\b(?:bantuan\s+polis|iringan\s+polis|bantuan\s+pdrm|iringan\s+pdrm|operasi\s+kuarantin|sanitary\s+law|police\s+assistance)\b", q_low):
+            cross_statute_intent_boosts["AKTA_344__S20"] = 9.5
+        # Akta 593 (KTJ) — seksyen prosedur teras PPKP
+        if re.search(r"\b(?:laporan\s+polis|repot\s+polis|seizable|lazim\s+tangkap|first\s+information)\b", q_low):
+            cross_statute_intent_boosts["AKTA_593__S107"] = 8.5
+            cross_statute_intent_boosts["AKTA_593__S108"] = 8.0
+        if re.search(r"\b(?:pelupusan\s+barang|lupus\s+sitaan|lelong\s+barang|barang\s+kes\s+mudah\s+rosak|407a)\b", q_low):
+            cross_statute_intent_boosts["AKTA_593__S407"] = 8.5
+            cross_statute_intent_boosts["AKTA_593__S407A"] = 9.0
+        if re.search(r"\b(?:penzahiran\s+dokumen|serah.*dokumen.*tertuduh|51a)\b", q_low):
+            cross_statute_intent_boosts["AKTA_593__S51A"] = 9.0
+
         scored_secs: List[Tuple[float, Dict[str, Any]]] = []
         for s_obj in self.statute_sections_verbatim:
             did = s_obj["doc_id"]
@@ -5686,10 +6643,13 @@ class ClosedBookLegalLibrary:
             if allowed_sids is not None and sid not in allowed_sids:
                 continue
             if akta_hint and akta_hint not in ("", "Semua"):
+                hint_canon = canonical_akta_code_for_statute(akta_hint)
+                is_attached_support = allowed_sids is not None and sid in allowed_sids and sid in support_sids
                 if (
-                    akta_hint.lower() not in c_act.lower()
-                    and akta_hint.lower() not in sid.lower()
-                    and not (sid == "AKTA_611" and has_minor_signal)
+                    akta_hint.lower() != c_act.lower()
+                    and hint_canon.lower() != c_act.lower()
+                    and not re.search(rf"(?<!\w){re.escape(akta_hint.lower())}(?!\w)", sid.lower())
+                    and not is_attached_support
                 ):
                     continue
             s_toks = self._section_token_cache.get(did)
@@ -5698,13 +6658,16 @@ class ClosedBookLegalLibrary:
             idf_exact = sum(sec_idf.get(t, 1.0) for t in (exact_tokens & s_toks))
             idf_exp = 0.55 * sum(sec_idf.get(t, 1.0) for t in (expanded_tokens & s_toks))
             offence_bonus = 0.5 if s_obj.get("is_offence_provision") else 0.0
-            combined_sc = idf_exact + idf_exp + offence_bonus
+            sc_code_clean = re.sub(r"^(?:Peraturan|Seksyen|Section|Regulation)\s+", "", str(s_obj.get("section_code") or "").strip(), flags=re.I).upper()
+            sec_exact_boost = 8.0 if (sc_code_clean and sc_code_clean in explicit_sec_mentions) else 0.0
+            intent_boost = cross_statute_intent_boosts.get(did, 0.0)
+            combined_sc = idf_exact + idf_exp + offence_bonus + sec_exact_boost + intent_boost
             if combined_sc >= 1.5:
                 scored_secs.append((combined_sc, s_obj))
 
         scored_secs.sort(key=lambda x: x[0], reverse=True)
-        # Sentiasa tambah sekurang-kurangnya 4 seksyen terbaik daripada carian bebas (tidak lagi 0 apabila Slot A penuh!)
-        min_free_slots = 2 if is_passive_vape else 4
+        # Sentiasa tambah sehingga 6 seksyen terbaik daripada carian bebas supaya soalan rujukan silang mendapat kedua-dua akta KKM & sokongan
+        min_free_slots = 2 if is_passive_vape else 6
         for sc, s_obj in scored_secs[:min_free_slots]:
             seen_doc_ids.add(s_obj["doc_id"])
             verbatim_hits.append(

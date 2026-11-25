@@ -467,9 +467,19 @@ def test_uip_advisor_scenarios_and_consult() -> None:
     resp_list = client.get("/api/advisor/scenarios", headers=headers)
     assert resp_list.status_code == 200
     scenarios = resp_list.json()["scenarios"]
-    assert len(scenarios) == 19
+    assert len(scenarios) == 26
     acts = {s["akta_utama"] for s in scenarios}
-    assert {"Akta 852", "Akta 281", "Akta 154", "Akta 342"}.issubset(acts)
+    assert {
+        "Akta 852",
+        "Akta 281",
+        "Akta 154",
+        "Akta 342",
+        "Akta 574",
+        "Akta 593",
+        "Akta 388",
+        "Akta 92",
+        "Akta 344",
+    }.issubset(acts)
 
     # Uji klik templat terus (pantasklik tapak binaan Akta 154)
     resp_tapak = client.post(
@@ -1977,7 +1987,7 @@ def test_predeploy_audit_draft_only_defaults_pdf_parser_and_legacy_qa_filtering(
 
 def test_official_agc_gazette_pdfs_installed_and_indexed_verbatim() -> None:
     """
-    Sahkan kesemua 20 fail PDF Warta Kerajaan Rasmi (16 teras + 4 pelengkap AGC/KKM)
+    Sahkan kesemua 24 fail PDF Warta Kerajaan Rasmi (16 teras KKM + 8 pelengkap & rujukan silang AGC/KKM)
     wujud dalam data/akta/, sepadan hash SHA-256 dengan SUMBER_WARTA_AGC.json,
     diindeks 100% verbatim tanpa unindexed_statutes, serta mengandungi teks sahih utama.
     """
@@ -1989,13 +1999,13 @@ def test_official_agc_gazette_pdfs_installed_and_indexed_verbatim() -> None:
     akta_dir = root / "data/akta"
     manifest = json.loads((akta_dir / "SUMBER_WARTA_AGC.json").read_text(encoding="utf-8"))
     docs = manifest["documents"]
-    assert len(docs) == 20
+    assert len(docs) == 24
 
     lib = get_legal_library()
     report = lib.get_coverage_audit_report()
     assert report["unindexed_statutes"] == []
-    assert report["active_statutes_count"] >= 20
-    assert report["total_verbatim_sections"] >= 1450
+    assert report["active_statutes_count"] >= 24
+    assert report["total_verbatim_sections"] >= 2200
 
     reg_by_id = {st["statute_id"]: st for st in report["statutes_registry"]}
     for item in docs:
@@ -3131,3 +3141,196 @@ def test_six_expert_nationwide_launch_readiness_all_five_pillars():
     assert any(s.get("statute_id") == "AKTA_593" for s in g_593["verbatim_sections"])
     g_56 = lib.search_closed_book_grounding("sijil keterangan dokumen cetakan komputer kamera digital 90a", akta_hint="Akta 56")
     assert any(s.get("statute_id") == "AKTA_56" for s in g_56["verbatim_sections"])
+
+
+def test_cross_statute_acts_593_574_344_388_92_grounding_advisor_and_validation() -> None:
+    """
+    Sahkan integrasi penuh 5 akta rujukan silang (Akta 593, Akta 574, Akta 344,
+    Akta 388 [Akta Tafsiran 1948 dan 1967], dan Akta 92):
+    - Pendaftaran, pengindeksan verbatim seksyen kritikal & resolusi alias tanpa perlanggaran.
+    - Penghalaan lex specialis KKM dahulu -> rujukan silang (PDRM/TPR/Prosedur/Tafsiran/Mahkamah).
+    - Pengawal ketat larangan kompaun KKM bagi Akta 574 & Akta 344 + penolakan seksyen palsu.
+    - Penapis cache tidak menolak soalan sah Akta 388 ("akta tafsiran" / "10 hari bersih").
+    - Pengekalan lex specialis Akta 154 (fogging) & rag_custom_query (gudang waktu malam).
+    """
+    from backend.core.database import _is_corrupted_or_fallback_qa
+    from backend.rag.legal_engine import (
+        canonical_akta_code_for_statute,
+        get_legal_library,
+        infer_domain_statute_ids,
+        infer_statute_id_from_filename_or_text,
+    )
+
+    lib = get_legal_library()
+    reg_by_id = {st["statute_id"]: st for st in lib.statutes_registry}
+    secs_by_id = {s["doc_id"]: s for s in lib.statute_sections_verbatim}
+
+    # 1. Sahkan kesemua 5 akta berdaftar & seksyen utama wujud verbatim
+    for st_id in ("AKTA_593", "AKTA_574", "AKTA_344", "AKTA_388", "AKTA_92"):
+        assert st_id in reg_by_id, f"Statut {st_id} tiada dalam daftar"
+        assert reg_by_id[st_id]["total_sections_indexed"] >= 50
+
+    critical_doc_ids = [
+        "AKTA_574__S186",
+        "AKTA_574__S353",
+        "AKTA_574__S465",
+        "AKTA_574__S471",
+        "AKTA_574__S506",
+        "AKTA_344__S20",
+        "AKTA_344__S90",
+        "AKTA_388__S17A",
+        "AKTA_388__S30",
+        "AKTA_388__S47",
+        "AKTA_388__S54",
+        "AKTA_388__S59",
+        "AKTA_92__S63",
+        "AKTA_92__S64",
+        "AKTA_92__S87",
+        "AKTA_92__S88",
+        "AKTA_593__S51A",
+        "AKTA_593__S107",
+        "AKTA_593__S108",
+        "AKTA_593__S407A",
+    ]
+    for doc_id in critical_doc_ids:
+        assert doc_id in secs_by_id, f"Seksyen verbatim hilang: {doc_id}"
+        assert len((secs_by_id[doc_id].get("verbatim_text_bm") or "").strip()) >= 20
+
+    # 2. Resolusi alias & sempadan perkataan (elak 1992 bertindih Akta 92)
+    assert infer_statute_id_from_filename_or_text("Akta Tafsiran 1948") == "AKTA_388"
+    assert infer_statute_id_from_filename_or_text("Akta Tafsiran 1967 Akta 388") == "AKTA_388"
+    assert infer_statute_id_from_filename_or_text("CPC Criminal Procedure Code") == "AKTA_593"
+    assert infer_statute_id_from_filename_or_text("Kanun Keseksaan Penal Code") == "AKTA_574"
+    assert infer_statute_id_from_filename_or_text("Akta Mahkamah Rendah 1948") == "AKTA_92"
+    assert infer_statute_id_from_filename_or_text("Akta Polis 1967") == "AKTA_344"
+
+    assert canonical_akta_code_for_statute("AKTA_388") == "Akta 388"
+    assert canonical_akta_code_for_statute("AKTA_92") == "Akta 92"
+    assert canonical_akta_code_for_statute("Peraturan Tahun 1992") != "Akta 92"
+
+    # 3. Carian grounding hibrid rujukan silang
+    g_halang = lib.search_closed_book_grounding(
+        "Pemilik kedai vape halang PPKP, ugut pukul dan tolak pegawai semasa serbuan Akta 852",
+        akta_hint="Akta 852",
+    )
+    halang_doc_ids = {s["doc_id"] for s in g_halang["verbatim_sections"]}
+    assert any(d.startswith("AKTA_574__S186") or d.startswith("AKTA_574__S353") or d.startswith("AKTA_574__S506") for d in halang_doc_ids)
+
+    g_sijil = lib.search_closed_book_grounding(
+        "Pengendali makanan guna sijil suntikan tifoid palsu semasa pemeriksaan premis makanan",
+        akta_hint="Akta 281",
+    )
+    sijil_statutes = {s["statute_id"] for s in g_sijil["verbatim_sections"]}
+    assert "AKTA_574" in sijil_statutes
+    assert "PPKM_2009" in sijil_statutes or "AKTA_281" in sijil_statutes
+
+    g_388 = lib.search_closed_book_grounding(
+        "Bagaimana pengiraan 10 hari bersih dan cuti umum bawah Akta Tafsiran 1948 untuk serahan sijil juruanalisis?",
+        akta_hint="Semua",
+    )
+    assert any(s["doc_id"] == "AKTA_388__S54" for s in g_388["verbatim_sections"])
+
+    g_92 = lib.search_closed_book_grounding(
+        "Kes Seksyen 13(1) Akta 281 denda RM100,000 adakah Mahkamah Majistret ada bidang kuasa atau perlu Mahkamah Sesyen?",
+        akta_hint="Akta 281",
+    )
+    g92_doc_ids = {s["doc_id"] for s in g_92["verbatim_sections"]}
+    assert any(d in g92_doc_ids for d in ("AKTA_92__S63", "AKTA_92__S64", "AKTA_92__S87"))
+
+    g_344 = lib.search_closed_book_grounding(
+        "Perlu bantuan iringan polis PDRM untuk operasi kuarantin berisiko tinggi malam ini",
+        akta_hint="Akta 342",
+    )
+    assert any(s["doc_id"] == "AKTA_344__S20" for s in g_344["verbatim_sections"])
+
+    # 4. Pengawal validator: tolak seksyen palsu & tolak kompaun KKM bagi Akta 574/344
+    from backend.rag.legal_engine import validate_legal_output
+
+    snap = lib.to_snapshot_dict()
+    v_fake = validate_legal_output("Tindakan di bawah Seksyen 999 Akta 574 boleh diambil.", snap)
+    assert v_fake["passed"] is False
+    assert any("999" in str(e) for e in v_fake["invalid_citations"])
+
+    v_comp_574 = validate_legal_output(
+        "PPKP boleh menawarkan kompaun RM500 bagi kesalahan Seksyen 186 Akta 574.",
+        snap,
+    )
+    assert v_comp_574["passed"] is False
+    assert any("574" in str(e) or "kompaun" in str(e).lower() for e in v_comp_574["penalty_mismatches"])
+
+    v_comp_344 = validate_legal_output(
+        {
+            "akta_disyorkan": "Akta 344",
+            "cadangan_pertuduhan": [
+                {
+                    "seksyen_kesalahan": "Seksyen 90 Akta 344",
+                    "boleh_kompaun": "Boleh Kompaun RM500",
+                }
+            ],
+        },
+        snap,
+    )
+    assert v_comp_344["passed"] is False
+    assert any("344" in str(e) for e in v_comp_344["penalty_mismatches"])
+
+    # 5. Penapis cache Q&A TIDAK menolak soalan sah Akta 388 ("tafsiran")
+    assert (
+        _is_corrupted_or_fallback_qa(
+            {
+                "scenario_id": "ak388_tafsiran_had_masa_serahan_pemansuhan",
+                "akta_disyorkan": "Akta 388",
+                "tajuk_nasihat": "Tafsiran Pengiraan Hari Bersih — Seksyen 54 Akta 388",
+                "ringkasan_keputusan": "Rujuk Seksyen 54 Akta Tafsiran 1948 dan 1967 [Akta 388] untuk pengiraan hari bersih.",
+            }
+        )
+        is False
+    )
+
+    # 6. Pengekalan lex specialis: halang fogging kekal Akta 154, gudang waktu malam kekal rag_custom_query
+    fogging_domains = infer_domain_statute_ids("penghuni rumah menghalang pasukan fogging denggi")
+    assert "AKTA_154" in fogging_domains
+    assert "AKTA_574" not in fogging_domains
+
+    headers = _get_auth_headers()
+    resp_halang = client.post(
+        "/api/advisor/consult",
+        headers=headers,
+        json={
+            "question": "Pemilik premis vape halang PPKP masuk dan ugut pukul pegawai semasa operasi Akta 852, tindakan undang-undang apa?",
+            "akta_hint": "Akta 852",
+            "use_ai": False,
+        },
+    )
+    assert resp_halang.status_code == 200
+    halang_body = resp_halang.json()
+    halang_dump = json.dumps(halang_body, ensure_ascii=False)
+    assert halang_body["scenario_id"] == "ak574_halang_ugut_serang_ppkp"
+    assert "186" in halang_dump and "107" in halang_dump
+    assert "PDRM" in halang_dump or "Laporan Polis" in halang_dump
+
+    resp_388 = client.post(
+        "/api/advisor/consult",
+        headers=headers,
+        json={
+            "question": "Cara kira 10 hari bersih dan cuti hujung minggu di bawah Akta Tafsiran 1948",
+            "akta_hint": "Akta 388",
+            "use_ai": False,
+        },
+    )
+    assert resp_388.status_code == 200
+    b388 = resp_388.json()
+    assert b388["akta_disyorkan"] == "Akta 388"
+    assert "54" in json.dumps(b388, ensure_ascii=False)
+
+    resp_gudang = client.post(
+        "/api/advisor/consult",
+        headers=headers,
+        json={
+            "question": "Apakah syarat PPKP untuk memasuki gudang yang berkunci pada waktu malam tanpa waran?",
+            "akta_hint": "Semua",
+            "use_ai": False,
+        },
+    )
+    assert resp_gudang.status_code == 200
+    assert resp_gudang.json()["scenario_id"] == "rag_custom_query"
+

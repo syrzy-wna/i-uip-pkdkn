@@ -17,17 +17,25 @@ import type {
 } from "./types";
 
 function canonicalizeAct(raw: string): string {
-  const up = (raw || "").toUpperCase();
-  if (up.includes("852") || /25[7-9]\/2024|26[0-4]\/2024/.test(up)) return "AKTA 852";
-  if (up.includes("281") || up.includes("A1702") || up.includes("PPKM") || up.includes("PPM") || up.includes("95/2009")) {
+  const up = (raw || "").toUpperCase().trim();
+  if (/\b852\b|AKTA_852|25[7-9]\/2024|26[0-4]\/2024/.test(up)) return "AKTA 852";
+  if (/\b281\b|AKTA_281|A1702|\bPPKM\b|\bPPM\b|95\/2009|437\/1985/.test(up)) {
     return "AKTA 281";
   }
-  if (up.includes("154")) return "AKTA 154";
-  if (up.includes("342") || up.includes("A1742") || up.includes("APPPB") || up.includes("139/2025")) return "AKTA 342";
-  if (up.includes("593") || up.includes("KTJ")) return "AKTA 593";
-  if (up.includes("56")) return "AKTA 56";
-  if (up.includes("611")) return "AKTA 611";
-  return up.trim();
+  if (/\b154\b|AKTA_154/.test(up)) return "AKTA 154";
+  if (/\b342\b|AKTA_342|A1742|\bAPPPB\b|139\/2025/.test(up)) return "AKTA 342";
+  if (/\b593\b|AKTA_593|\bKTJ\b|\bCPC\b|TATACARA\s+JENAYAH/.test(up)) return "AKTA 593";
+  if (/\b574\b|AKTA_574|KANUN\s+KESEKSAAN|PENAL\s+CODE/.test(up)) return "AKTA 574";
+  if (/\b344\b|AKTA_344|AKTA\s+POLIS|POLICE\s+ACT/.test(up)) return "AKTA 344";
+  if (/\b388\b|AKTA_388|TAFSIRAN|INTERPRETATION/.test(up)) return "AKTA 388";
+  if (/(?:^|[^0-9])(?:AKTA[\s_]*)?92(?:[^0-9]|$)|MAHKAMAH\s+RENDAH|SUBORDINATE\s+COURTS/.test(up)) {
+    return "AKTA 92";
+  }
+  if (/(?:^|[^0-9])(?:AKTA[\s_]*)?56(?:[^0-9]|$)|KETERANGAN|EVIDENCE\s+ACT/.test(up)) {
+    return "AKTA 56";
+  }
+  if (/\b611\b|AKTA_611|KANAK-KANAK|CHILD\s+ACT/.test(up)) return "AKTA 611";
+  return up;
 }
 
 export function extractLegalCitations(text: string): Array<{
@@ -49,22 +57,32 @@ export function extractLegalCitations(text: string): Array<{
   }> = [];
   const seen = new Set<string>();
 
-  const pairedRe =
-    /\b(Seksyen|Peraturan)\s+(\d+[A-Za-z]{0,3}(?:\(\d+\))?(?:\([a-z]\))?)(?:\s+(?:dibaca\s+bersama\s+[^,\n.;]{1,40}\s+)?)?\s*(Akta\s+A?\d+|Akta\s+Kerja\s*1955|OSHA\s*1994|PPKM\s*2009|PPM\s*1985|PPKHT\s*2004|KTJ|APPPB\s*1988|P\.U\.\s*\(A\)\s*\d+\/\d{4})?/gi;
+  const actPat =
+    "Akta\\s+A?\\d+|Act\\s+A?\\d+|Akta\\s+Kerja\\s*1955|OSHA\\s*1994|PPKM\\s*2009|PPM\\s*1985|PPKHT\\s*2004|" +
+    "KTJ|CPC|APPPB\\s*1988|Kanun\\s+Keseksaan|Penal\\s+Code|Kanun\\s+Tatacara\\s+Jenayah|" +
+    "Akta\\s+Polis(?:\\s*1967)?|Police\\s+Act(?:\\s*1967)?|" +
+    "Akta\\s+Tafsiran(?:\\s*1948(?:\\s+dan\\s+1967)?)?|Interpretation\\s+Acts?(?:\\s*1948(?:\\s+and\\s+1967)?)?|" +
+    "Akta\\s+Mahkamah\\s+Rendah(?:\\s*1948)?|Subordinate\\s+Courts\\s+Act(?:\\s*1948)?|" +
+    "Akta\\s+Keterangan(?:\\s*1950)?|P\\.U\\.\\s*\\(A\\)\\s*\\d+\\/\\d{4}";
+
+  const pairedRe = new RegExp(
+    `\\b(Seksyen|Peraturan|Section)\\s+(\\d+[A-Za-z]{0,3}(?:\\(\\d+\\))?(?:\\([a-z]\\))?)(?:\\s+(?:dibaca\\s+bersama\\s+[^,\\n.;]{1,40}\\s+)?)?\\s*(${actPat})?`,
+    "gi"
+  );
+  const tailActRe = new RegExp(`\\b(${actPat})\\b`, "i");
 
   let match: RegExpExecArray | null;
   while ((match = pairedRe.exec(text)) !== null) {
-    const kind = match[1];
+    const rawKind = match[1];
+    const kind = rawKind.toLowerCase() === "section" ? "Seksyen" : rawKind;
     const num = match[2].trim();
     let actRef = (match[3] || "").trim();
     let inferredFromTail = false;
     if (!actRef) {
-      const rawTail = text.slice(match.index + match[0].length, match.index + match[0].length + 75);
-      const clauseStop = rawTail.search(/[.;\n]|\b(?:Seksyen|Peraturan)\s+\d+/i);
+      const rawTail = text.slice(match.index + match[0].length, match.index + match[0].length + 85);
+      const clauseStop = rawTail.search(/[.;\n]|\b(?:Seksyen|Peraturan|Section)\s+\d+/i);
       const tail = clauseStop >= 0 ? rawTail.slice(0, clauseStop) : rawTail;
-      const tailMatch = tail.match(
-        /\b(Akta\s+A?\d+|Akta\s+Kerja\s*1955|OSHA\s*1994|PPKM\s*2009|PPM\s*1985|PPKHT\s*2004|KTJ|APPPB\s*1988|P\.U\.\s*\(A\)\s*\d+\/\d{4})\b/i
-      );
+      const tailMatch = tail.match(tailActRe);
       if (tailMatch) {
         actRef = tailMatch[1].trim();
         inferredFromTail = true;
@@ -181,16 +199,20 @@ export function validateLegalOutput(
     }
   }
 
-  // Semak akta belum diindeks
+  // Semak akta belum diindeks (guna sempadan kata supaya Akta 92 / 56 tidak berlanggar dengan tahun)
   const unindexedStatutes: string[] = [];
   const targetActStr = `${questionContext} ${String(respObj.akta_disyorkan || "")}`.toLowerCase();
+  const escapeRe = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   for (const st of statutesReg) {
     if (st.status === "DIMANSUHKAN") continue;
     if ((st.total_sections_indexed || 0) === 0) {
-      if (
-        (st.statute_id && targetActStr.includes(st.statute_id.toLowerCase())) ||
-        (st.act_number_or_pu && targetActStr.includes(st.act_number_or_pu.toLowerCase()))
-      ) {
+      const sidHit =
+        Boolean(st.statute_id) &&
+        new RegExp(`(?<!\\w)${escapeRe(st.statute_id.toLowerCase())}(?!\\w)`).test(targetActStr);
+      const actHit =
+        Boolean(st.act_number_or_pu) &&
+        new RegExp(`(?<!\\w)${escapeRe(st.act_number_or_pu.toLowerCase())}(?!\\w)`).test(targetActStr);
+      if (sidHit || actHit) {
         unindexedStatutes.push(`${st.statute_id} (${st.official_title_bm})`);
       }
     }
@@ -209,14 +231,17 @@ export function validateLegalOutput(
     .join(" ")
     .toLowerCase();
 
+  // AKTA 574 kini DIINDEKS PENUH — disemak secara deterministik, bukan cross-agency bypass
   const crossAgencyActs = new Set([
     "AKTA 171", "AKTA 366", "AKTA 368", "AKTA 290", "AKTA 586",
-    "AKTA 260", "AKTA 127", "AKTA 655", "AKTA 265", "AKTA 514", "AKTA 574",
+    "AKTA 260", "AKTA 127", "AKTA 655", "AKTA 265", "AKTA 514",
     "AKTA 550", "AKTA 50", "AKTA 804", "AKTA KERJA 1955", "OSHA 1994",
   ]);
   const proceduralCrossRefs = new Set([
-    "90A", "90B", "90C", "114", "114A", "73AA", "111", "112", "113", "119",
-    "128", "152", "153", "154", "163", "376", "377", "399", "15", "83", "91",
+    "90A", "90B", "90C", "114", "114A", "73AA",
+    "107", "108", "111", "112", "113", "117", "119", "128",
+    "152", "153", "154", "163", "173", "376", "377", "399", "407", "407A", "51A",
+    "15", "83", "91",
   ]);
 
   for (const cit of extracted) {

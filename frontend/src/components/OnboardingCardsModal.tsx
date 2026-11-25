@@ -63,7 +63,12 @@ const CORE_ACTS = [
   {
     no: "Akta 593 & 56",
     name: "Kanun Tatacara Jenayah & Akta Keterangan 1950",
-    scope: "Rakaman S.112, Diari S.119, Saman 111, Borang 114 dan Sijil S.90A.",
+    scope: "Rakaman S.112, Diari S.119, Penzahiran S.51A, Pelupusan S.407/407A & Sijil S.90A.",
+  },
+  {
+    no: "Akta 574, 344, 388 & 92",
+    name: "Kanun Keseksaan, Akta Polis, Akta Tafsiran & Mahkamah Rendah",
+    scope: "Rujukan silang halang/ugut PPKP (S.186/353/506), sijil palsu (S.465/471), bantuan polis (S.20(3)(c)), 10 hari bersih (S.54) & had mahkamah (S.63/64/87).",
   },
 ];
 
@@ -230,7 +235,7 @@ export default function OnboardingCardsModal({
                     <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
                     <span>
                       <strong>Pakar &amp; Akta:</strong> Tanya situasi di lokasi, semak senarai
-                      kesalahan dan rujuk teks penuh 6 akta KKM.
+                      kesalahan dan rujuk teks penuh 11 akta rasmi (KKM + rujukan silang).
                     </span>
                   </li>
                   <li className="flex items-start gap-2">

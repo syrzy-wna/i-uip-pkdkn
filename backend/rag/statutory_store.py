@@ -1,7 +1,9 @@
 """Pangkalan Data Undang-Undang Tepat (Strict Statutory RAG).
 
 Mengindeks teks verbatim akta dalam `data/akta/` (Akta 852, Akta Makanan 1983,
-Akta 154, Akta 342, Kanun Tatacara Jenayah [Akta 593], dan Akta Keterangan 1950)
+Akta 154, Akta 342, Kanun Tatacara Jenayah [Akta 593], Kanun Keseksaan [Akta 574],
+Akta Polis 1967 [Akta 344], Akta Tafsiran 1948 & 1967 [Akta 388], Akta Mahkamah Rendah 1948 [Akta 92],
+Akta Keterangan 1950 [Akta 56], dan Akta Kanak-Kanak 2001 [Akta 611])
 menggunakan gabungan ChromaDB + Okapi BM25 dengan Stemmer Bahasa Melayu Undang-Undang.
 """
 
@@ -35,7 +37,7 @@ except Exception:
 
 TOKEN_RE = re.compile(r"[a-zA-Z0-9]+")
 
-# Pemetaan kata akar undang-undang Bahasa Melayu (untuk padanan tepat BM25)
+# Pemetaan kata akar undang-undang Bahasa Melayu (untuk padanan tepat BM25 termasuk rujukan silang BM<->BI)
 MALAY_LEGAL_ROOTS = {
     "mempamerkan": "pamer",
     "pameran": "pamer",
@@ -79,6 +81,36 @@ MALAY_LEGAL_ROOTS = {
     "komputer": "komputer",
     "publication": "penerbitan",
     "penerbitan": "penerbitan",
+    "menghalang": "obstruct",
+    "halangan": "obstruct",
+    "halang": "obstruct",
+    "obstructing": "obstruct",
+    "ugutan": "intimidation",
+    "mengugut": "intimidation",
+    "menyerang": "assault",
+    "serangan": "assault",
+    "kekerasan": "assault",
+    "pemalsuan": "forgery",
+    "memalsukan": "forgery",
+    "forged": "forgery",
+    "menyamar": "personating",
+    "penyamaran": "personating",
+    "menipu": "cheating",
+    "penipuan": "cheating",
+    "waran": "warrant",
+    "geledah": "search",
+    "menggeledah": "search",
+    "tangkapan": "arrest",
+    "menangkap": "arrest",
+    "pelupusan": "disposal",
+    "melupuskan": "disposal",
+    "pemansuhan": "repeal",
+    "dimansuhkan": "repeal",
+    "majistret": "magistrate",
+    "sesyen": "sessions",
+    "tafsiran": "interpretation",
+    "kelepasan": "holiday",
+    "polis": "police",
 }
 
 MALAY_STOPWORDS = {
@@ -203,6 +235,14 @@ def _infer_akta_metadata(filename: str, content: str) -> tuple[str, str]:
         return "Akta 852", "Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024 [Akta 852]"
     if "akta_611" in stem or "akta 611" in low or "611" in stem or "kanak-kanak 2001" in low:
         return "Akta 611", "Akta Kanak-Kanak 2001 [Akta 611]"
+    if "akta_574" in stem or re.search(r"\b(?:akta|act)\s*574\b", low) or "kanun keseksaan" in low or "penal code" in low:
+        return "Akta 574", "Kanun Keseksaan [Akta 574]"
+    if "akta_344" in stem or re.search(r"\b(?:akta|act)\s*344\b", low) or "akta polis" in low or "police act 1967" in low:
+        return "Akta 344", "Akta Polis 1967 [Akta 344]"
+    if "akta_388" in stem or re.search(r"\b(?:akta|act)\s*388\b", low) or "akta tafsiran" in low or "interpretation acts" in low:
+        return "Akta 388", "Akta Tafsiran 1948 dan 1967 [Akta 388]"
+    if "akta_92" in stem or re.search(r"\b(?:akta|act)\s*92\b", low) or "mahkamah rendah 1948" in low or "subordinate courts act" in low:
+        return "Akta 92", "Akta Mahkamah Rendah 1948 [Akta 92]"
     if "akta 171" in low or "171" in stem or "kerajaan tempatan" in low:
         return "Akta 171", "Akta Kerajaan Tempatan 1976 [Akta 171]"
     if "akta 366" in low or "366" in stem or "racun" in low or "akta 368" in low:
@@ -225,7 +265,7 @@ def _infer_akta_metadata(filename: str, content: str) -> tuple[str, str]:
         return "Akta 281", "Akta Makanan 1983 [Akta 281] & Peraturan Kebersihan Makanan 2009"
     if "akta_593" in stem or "593" in stem or "tatacara jenayah" in low or "criminal procedure code" in low or "ktj" in low:
         return "Akta 593", "Kanun Tatacara Jenayah [Akta 593]"
-    if "akta_56" in stem or "56" == stem or "90a" in low or "keterangan 1950" in low or "akta 56" in low or "evidence act 1950" in low:
+    if "akta_56" in stem or "56" == stem or "90a" in low or "keterangan 1950" in low or re.search(r"\b(?:akta|act)\s*56\b", low) or "evidence act 1950" in low:
         return "Akta 56", "Akta Keterangan 1950 [Akta 56]"
     return Path(filename).stem, Path(filename).stem.replace("_", " ").title()
 
@@ -323,7 +363,7 @@ class StatutoryRAGStore:
     """Stor RAG Statutori menggunakan ChromaDB + Okapi BM25 Melayu."""
 
     COLLECTION_NAME = "uip_statutory_acts"
-    CACHE_SCHEMA_VERSION = "3.1-agc-pdf"
+    CACHE_SCHEMA_VERSION = "3.2-agc-pdf"
 
     def __init__(
         self,
@@ -601,8 +641,48 @@ class StatutoryRAGStore:
                 ["aedes", "154"],
             ),
             "Akta 593": (
-                ("ktj", "kanun tatacara jenayah", "rakaman percakapan", "diari siasatan", "pertindihan pertuduhan", "s.112", "seksyen 112", "s.119", "seksyen 119", "seksyen 163", "borang 114", "borang 143", "izin mendakwa"),
-                ["593", "examination", "witness", "diary", "charge", "112", "119", "163"],
+                (
+                    "ktj", "cpc", "kanun tatacara jenayah", "criminal procedure", "rakaman percakapan",
+                    "diari siasatan", "pertindihan pertuduhan", "waran geledah", "tanpa waran", "laporan polis",
+                    "pelupusan barang", "penzahiran", "oti", "reman",
+                    "s.107", "seksyen 107", "s.108", "seksyen 108", "s.112", "seksyen 112",
+                    "s.119", "seksyen 119", "seksyen 163", "seksyen 51a", "seksyen 399", "seksyen 407", "seksyen 407a",
+                    "borang 114", "borang 143", "izin mendakwa",
+                ),
+                ["593", "examination", "witness", "diary", "charge", "search", "warrant", "disposal", "107", "112", "119", "163", "407"],
+            ),
+            "Akta 574": (
+                (
+                    "akta 574", "kanun keseksaan", "penal code", "halang tugas", "ugut", "ugutan", "serang",
+                    "kekerasan", "menyamar", "sijil palsu", "dokumen palsu", "maklumat palsu", "aduan palsu",
+                    "pemalsuan", "menipu", "seksyen 170", "seksyen 177", "seksyen 182", "seksyen 183",
+                    "seksyen 186", "seksyen 188", "seksyen 189", "seksyen 269", "seksyen 270",
+                    "seksyen 272", "seksyen 273", "seksyen 353", "seksyen 420", "seksyen 465", "seksyen 468", "seksyen 471", "seksyen 506",
+                ),
+                ["574", "public", "servant", "obstruct", "assault", "intimidation", "forgery", "186", "353", "506", "465", "471"],
+            ),
+            "Akta 344": (
+                (
+                    "akta 344", "akta polis", "police act", "bantuan polis", "iringan polis",
+                    "operasi bersama polis", "halang polis", "seksyen 20(3)", "20(3)(c)", "seksyen 90 akta 344",
+                ),
+                ["344", "polis", "police", "kebersihan", "kuarantin", "membantu", "20", "90"],
+            ),
+            "Akta 388": (
+                (
+                    "akta 388", "akta tafsiran", "tafsiran 1948", "tafsiran 1967", "interpretation act", "interpretation acts",
+                    "10 hari bersih", "hari bersih", "kiraan hari", "hari kelepasan", "pos berdaftar",
+                    "kesan pemansuhan", "batal perintah", "hukuman berganda", "seksyen 17a", "seksyen 54", "seksyen 30", "seksyen 47", "seksyen 59",
+                ),
+                ["388", "interpretation", "computation", "time", "clear", "days", "repeal", "service", "post", "12", "17a", "30", "47", "54", "59"],
+            ),
+            "Akta 92": (
+                (
+                    "akta 92", "akta mahkamah rendah", "subordinate courts", "mahkamah majistret",
+                    "mahkamah sesyen", "majistret kelas pertama", "majistret kelas kedua", "had hukuman",
+                    "bidang kuasa mahkamah", "seksyen 63", "seksyen 64", "seksyen 85", "seksyen 87", "seksyen 88",
+                ),
+                ["92", "magistrate", "sessions", "court", "jurisdiction", "sentence", "63", "64", "85", "87", "88"],
             ),
             "Akta 56": (
                 ("akta keterangan", "sijil 90a", "seksyen 90a", "s.90a", "gambar digital", "cetakan komputer", "seksyen 114a", "73aa"),
@@ -640,39 +720,38 @@ class StatutoryRAGStore:
 
         q_low = (query or "").lower()
         asks_definition = any(
-            k in q_low for k in ("tafsiran", "definisi", "maksud ", "seksyen 2", "sek. 2", "s.2 ")
+            k in q_low for k in ("tafsiran", "definisi", "maksud ", "seksyen 2", "sek. 2", "s.2 ", "akta 388")
         )
         has_minor_signal = any(
             k in q_low for k in ("pelajar", "murid", "budak", "sekolah", "obd", "bawah 18", "bawah umur", "kanak-kanak")
         )
         domain_act, domain_expansions = (None, []) if norm_filter else self._infer_domain_signals(query)
 
-        # Jika isyarat domain tunggal jelas (cth: vape/rokok -> Akta 852), kunci penapisan supaya Akta 171 / Akta 281 tidak bocor,
-        # namun kekalkan laluan Akta 56 (keterangan digital), Akta 593 (KTJ S.112) & Akta 611 (kanak-kanak) jika disebut khusus.
-        locked_acts: Optional[set[str]] = None
-        if domain_act:
-            from backend.rag.legal_engine import canonical_akta_code_for_statute, infer_domain_statute_ids
+        # Kunci penapisan domain sambil menyokong rujukan silang automatik (Akta 593, 574, 344, 388, 92, 56, 611)
+        from backend.rag.legal_engine import canonical_akta_code_for_statute, infer_domain_statute_ids
 
-            dom_sids = infer_domain_statute_ids(query, "Semua")
-            if dom_sids:
-                locked_acts = {canonical_akta_code_for_statute(s) for s in dom_sids}
-                if domain_act == "Akta 852" and has_minor_signal:
-                    locked_acts.add("Akta 611")
+        locked_acts: Optional[set[str]] = None
+        dom_sids = infer_domain_statute_ids(query, akta_filter or "Semua")
+        if dom_sids:
+            locked_acts = {canonical_akta_code_for_statute(s) for s in dom_sids}
+            if domain_act == "Akta 852" and has_minor_signal:
+                locked_acts.add("Akta 611")
 
         chroma_scores: Dict[str, float] = {}
         if self._collection is not None:
             try:
                 where_clause = None
-                if norm_filter:
+                if locked_acts and len(locked_acts) == 1:
+                    where_clause = {"akta_code": next(iter(locked_acts))}
+                elif norm_filter and not locked_acts:
+                    nf_canon = canonical_akta_code_for_statute(norm_filter).lower()
                     matched_codes = {
                         c.akta_code
                         for c in self._chunks
-                        if norm_filter in c.akta_code.lower() or norm_filter in c.akta_title.lower()
+                        if c.akta_code.lower() == norm_filter or c.akta_code.lower() == nf_canon
                     }
                     if len(matched_codes) == 1:
                         where_clause = {"akta_code": next(iter(matched_codes))}
-                elif locked_acts and len(locked_acts) == 1:
-                    where_clause = {"akta_code": next(iter(locked_acts))}
                 res = self._collection.query(
                     query_texts=[_normalize_query_text(query)],
                     n_results=min(max(top_k * 3, 8), len(self._chunks)),
@@ -692,21 +771,33 @@ class StatutoryRAGStore:
         k1 = 1.5
         b = 0.75
 
+        nf_canon = canonical_akta_code_for_statute(norm_filter).lower() if norm_filter else ""
+        alnum_boost_tokens = {
+            "90a", "32b", "112", "17a", "28a", "51a", "407a", "13a", "13b", "22a", "14a", "21a", "23a", "24a",
+        }
+
         raw_bm25: Dict[str, float] = {}
         for chunk in self._chunks:
-            if norm_filter:
+            if locked_acts is not None:
+                if chunk.akta_code not in locked_acts:
+                    continue
+            elif norm_filter:
                 haystack_meta = f"{chunk.akta_code} {chunk.akta_title} {chunk.source_file}".lower()
-                if norm_filter not in haystack_meta and not (
-                    "852" in norm_filter and has_minor_signal and chunk.akta_code == "Akta 611"
+                if (
+                    chunk.akta_code.lower() != norm_filter
+                    and chunk.akta_code.lower() != nf_canon
+                    and not re.search(rf"(?<!\w){re.escape(norm_filter)}(?!\w)", haystack_meta)
                 ):
                     continue
-            elif locked_acts is not None and chunk.akta_code not in locked_acts:
-                continue
 
             sec_low = chunk.section.lower()
-            if not asks_definition and any(
-                m in sec_low
-                for m in ("tafsiran", "tajuk ringkas", "permulaan kuat kuasa", "interpretation", "short title")
+            if (
+                not asks_definition
+                and chunk.akta_code != "Akta 388"
+                and any(
+                    m in sec_low
+                    for m in ("tafsiran", "tajuk ringkas", "permulaan kuat kuasa", "interpretation", "short title")
+                )
             ):
                 continue
 
@@ -731,10 +822,10 @@ class StatutoryRAGStore:
                 denom = tf + k1 * (1.0 - b + b * (doc_len / max(1.0, self._avg_doc_len)))
                 bm25 += 0.45 * idf * ((tf * (k1 + 1.0)) / denom)
 
-            # Bonus padanan nombor seksyen atau Peraturan tepat
+            # Bonus padanan nombor seksyen atau Peraturan tepat (termasuk seksyen alfanumerik 17a, 28a, 51a, 407a, 90a, 32b)
             for qt in unique_q_tokens:
-                if qt in sec_low and (qt.isdigit() or "90a" in qt or "32b" in qt or "112" in qt):
-                    bm25 += 3.0
+                if (qt.isdigit() or qt in alnum_boost_tokens) and re.search(rf"(?<!\w){re.escape(qt)}(?!\w)", sec_low):
+                    bm25 += 3.5
             raw_bm25[chunk.chunk_id] = bm25
 
         max_bm25 = max(raw_bm25.values()) if raw_bm25 else 0.0

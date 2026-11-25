@@ -1,7 +1,7 @@
 {
   "statute_library_version": "2.6.0-closed-book-agc-pdf",
-  "parser_version": "3.4-agc-gazette-pdf",
-  "akta_dir_fingerprint": "5a00aa1c2ef28ba0486a1b1b6999eb5b696fb1d7d72ec29ab4c42d9987fe2a91",
+  "parser_version": "3.5-agc-gazette-pdf",
+  "akta_dir_fingerprint": "7cb9a496917b4e50fc68b08870b1ba3355b6ef5dfb28aae86466f87b08dcb6dc",
   "statutes_registry": [
     {
       "statute_id": "AKTA_852",
@@ -18,7 +18,7 @@
       "total_sections_indexed": 54,
       "total_sections_in_pdf": 54,
       "total_offences_indexed": 16,
-      "last_updated": "2026-11-22 15:42:32"
+      "last_updated": "2026-11-25 12:07:03"
     },
     {
       "statute_id": "AKTA_852_PERINTAH_LARANGAN_2024",
@@ -35,7 +35,7 @@
       "total_sections_indexed": 6,
       "total_sections_in_pdf": 6,
       "total_offences_indexed": 0,
-      "last_updated": "2026-11-22 15:42:32"
+      "last_updated": "2026-11-25 12:07:03"
     },
     {
       "statute_id": "AKTA_852_PERATURAN_TANDA_2024",
@@ -52,7 +52,7 @@
       "total_sections_indexed": 4,
       "total_sections_in_pdf": 4,
       "total_offences_indexed": 1,
-      "last_updated": "2026-11-22 15:42:32"
+      "last_updated": "2026-11-25 12:07:03"
     },
     {
       "statute_id": "AKTA_852_PERATURAN_KOMPAUN_2024",
@@ -69,7 +69,7 @@
       "total_sections_indexed": 8,
       "total_sections_in_pdf": 8,
       "total_offences_indexed": 0,
-      "last_updated": "2026-11-22 15:42:32"
+      "last_updated": "2026-11-25 12:07:03"
     },
     {
       "statute_id": "AKTA_852_PERATURAN_JUALAN_2024",
@@ -86,7 +86,7 @@
       "total_sections_indexed": 10,
       "total_sections_in_pdf": 10,
       "total_offences_indexed": 6,
-      "last_updated": "2026-11-22 15:42:32"
+      "last_updated": "2026-11-25 12:07:03"
     },
     {
       "statute_id": "AKTA_852_PERATURAN_PEMBUNGKUSAN_2024",
@@ -103,7 +103,7 @@
       "total_sections_indexed": 18,
       "total_sections_in_pdf": 18,
       "total_offences_indexed": 9,
-      "last_updated": "2026-11-22 15:42:32"
+      "last_updated": "2026-11-25 12:07:03"
     },
     {
       "statute_id": "AKTA_852_PERATURAN_PENDAFTARAN_2024",
@@ -120,7 +120,7 @@
       "total_sections_indexed": 8,
       "total_sections_in_pdf": 8,
       "total_offences_indexed": 1,
-      "last_updated": "2026-11-22 15:42:32"
+      "last_updated": "2026-11-25 12:07:03"
     },
     {
       "statute_id": "AKTA_852_PERINTAH_MAKMAL_2024",
@@ -137,7 +137,7 @@
       "total_sections_indexed": 2,
       "total_sections_in_pdf": 2,
       "total_offences_indexed": 0,
-      "last_updated": "2026-11-22 15:42:32"
+      "last_updated": "2026-11-25 12:07:03"
     },
     {
       "statute_id": "AKTA_852_PERATURAN_NOTIS_S47_2024",
@@ -154,7 +154,7 @@
       "total_sections_indexed": 3,
       "total_sections_in_pdf": 3,
       "total_offences_indexed": 0,
-      "last_updated": "2026-11-22 15:42:32"
+      "last_updated": "2026-11-25 12:07:03"
     },
     {
       "statute_id": "AKTA_281",
@@ -171,7 +171,7 @@
       "total_sections_indexed": 47,
       "total_sections_in_pdf": 47,
       "total_offences_indexed": 14,
-      "last_updated": "2026-11-22 15:42:32"
+      "last_updated": "2026-11-25 12:07:03"
     },
     {
       "statute_id": "AKTA_281_PINDAAN_2024",
@@ -188,7 +188,7 @@
       "total_sections_indexed": 4,
       "total_sections_in_pdf": 4,
       "total_offences_indexed": 0,
-      "last_updated": "2026-11-22 15:42:32"
+      "last_updated": "2026-11-25 12:07:03"
     },
     {
       "statute_id": "PPKM_2009",
@@ -205,7 +205,7 @@
       "total_sections_indexed": 66,
       "total_sections_in_pdf": 66,
       "total_offences_indexed": 35,
-      "last_updated": "2026-11-22 15:42:32"
+      "last_updated": "2026-11-25 12:07:03"
     },
     {
       "statute_id": "PPM_1985",
@@ -222,7 +222,7 @@
       "total_sections_indexed": 438,
       "total_sections_in_pdf": 438,
       "total_offences_indexed": 1,
-      "last_updated": "2026-11-22 15:42:32"
+      "last_updated": "2026-11-25 12:07:03"
     },
     {
       "statute_id": "AKTA_154",
@@ -239,7 +239,7 @@
       "total_sections_indexed": 30,
       "total_sections_in_pdf": 30,
       "total_offences_indexed": 6,
-      "last_updated": "2026-11-22 15:42:32"
+      "last_updated": "2026-11-25 12:07:03"
     },
     {
       "statute_id": "AKTA_342",
@@ -256,7 +256,7 @@
       "total_sections_indexed": 35,
       "total_sections_in_pdf": 35,
       "total_offences_indexed": 7,
-      "last_updated": "2026-11-22 15:42:32"
+      "last_updated": "2026-11-25 12:07:03"
     },
     {
       "statute_id": "AKTA_342_PINDAAN_2025",
@@ -273,7 +273,7 @@
       "total_sections_indexed": 24,
       "total_sections_in_pdf": 24,
       "total_offences_indexed": 1,
-      "last_updated": "2026-11-22 15:42:32"
+      "last_updated": "2026-11-25 12:07:03"
     },
     {
       "statute_id": "AKTA_342_PERATURAN_KOMPAUN_2025",
@@ -290,7 +290,7 @@
       "total_sections_indexed": 2,
       "total_sections_in_pdf": 2,
       "total_offences_indexed": 0,
-      "last_updated": "2026-11-22 15:42:32"
+      "last_updated": "2026-11-25 12:07:03"
     },
     {
       "statute_id": "AKTA_593",
@@ -307,7 +307,7 @@
       "total_sections_indexed": 400,
       "total_sections_in_pdf": 400,
       "total_offences_indexed": 0,
-      "last_updated": "2026-11-22 15:42:32"
+      "last_updated": "2026-11-25 12:07:03"
     },
     {
       "statute_id": "AKTA_56",
@@ -324,7 +324,7 @@
       "total_sections_indexed": 179,
       "total_sections_in_pdf": 179,
       "total_offences_indexed": 0,
-      "last_updated": "2026-11-22 15:42:32"
+      "last_updated": "2026-11-25 12:07:03"
     },
     {
       "statute_id": "AKTA_611",
@@ -341,7 +341,75 @@
       "total_sections_indexed": 154,
       "total_sections_in_pdf": 154,
       "total_offences_indexed": 0,
-      "last_updated": "2026-11-22 15:42:32"
+      "last_updated": "2026-11-25 12:07:03"
+    },
+    {
+      "statute_id": "AKTA_574",
+      "canonical_akta_code": "Akta 574",
+      "official_title_bm": "Kanun Keseksaan (Penal Code — Teks Kemaskini Rasmi AGC 30 November 2022)",
+      "official_title_en": "Penal Code (Online Updated Text as at 30 November 2022)",
+      "act_number_or_pu": "Akta 574",
+      "status": "BERKUAT_KUASA",
+      "repealed_by": null,
+      "effective_date": "1997-08-07",
+      "source_pdf_filename": "AKTA_574.pdf",
+      "verified_by_admin": false,
+      "source_pdf_hash": "235679dcb5411daa84d639231212f708e6747b97e5a7484c7c525ce3d34dccb5",
+      "total_sections_indexed": 550,
+      "total_sections_in_pdf": 550,
+      "total_offences_indexed": 10,
+      "last_updated": "2026-11-25 12:07:03"
+    },
+    {
+      "statute_id": "AKTA_344",
+      "canonical_akta_code": "Akta 344",
+      "official_title_bm": "Akta Polis 1967 (Teks Rasmi AGC 1 Jun 2016)",
+      "official_title_en": "Police Act 1967 (as at 1 June 2016)",
+      "act_number_or_pu": "Akta 344",
+      "status": "BERKUAT_KUASA",
+      "repealed_by": null,
+      "effective_date": "1967-08-29",
+      "source_pdf_filename": "AKTA_344.pdf",
+      "verified_by_admin": false,
+      "source_pdf_hash": "82d0e7600d2ef9382291226bb95b5733bca87d4a448568d7cc05d885d8e9365b",
+      "total_sections_indexed": 104,
+      "total_sections_in_pdf": 104,
+      "total_offences_indexed": 1,
+      "last_updated": "2026-11-25 12:07:03"
+    },
+    {
+      "statute_id": "AKTA_388",
+      "canonical_akta_code": "Akta 388",
+      "official_title_bm": "Akta Tafsiran 1948 dan 1967 (Interpretation Acts 1948 and 1967 — Cetakan Semula Rasmi AGC 1 Januari 2006)",
+      "official_title_en": "Interpretation Acts 1948 and 1967 (Reprint as at 1 January 2006)",
+      "act_number_or_pu": "Akta 388",
+      "status": "BERKUAT_KUASA",
+      "repealed_by": null,
+      "effective_date": "1967-05-18",
+      "source_pdf_filename": "AKTA_388.pdf",
+      "verified_by_admin": false,
+      "source_pdf_hash": "bc6153416f07d73e1a75baaf48f297a0ee5dd78935819e5098e5da3b5e6cc544",
+      "total_sections_indexed": 130,
+      "total_sections_in_pdf": 130,
+      "total_offences_indexed": 0,
+      "last_updated": "2026-11-25 12:07:03"
+    },
+    {
+      "statute_id": "AKTA_92",
+      "canonical_akta_code": "Akta 92",
+      "official_title_bm": "Akta Mahkamah Rendah 1948 (Subordinate Courts Act 1948 — Teks Kemaskini Rasmi AGC 1 Januari 2023)",
+      "official_title_en": "Subordinate Courts Act 1948 (Online Updated Text as at 1 January 2023)",
+      "act_number_or_pu": "Akta 92",
+      "status": "BERKUAT_KUASA",
+      "repealed_by": null,
+      "effective_date": "1949-01-01",
+      "source_pdf_filename": "AKTA_92.pdf",
+      "verified_by_admin": false,
+      "source_pdf_hash": "2ef3627c4dead5232c5f3a2a305f25261920c5a17bc57f221a412cbec561669d",
+      "total_sections_indexed": 56,
+      "total_sections_in_pdf": 56,
+      "total_offences_indexed": 0,
+      "last_updated": "2026-11-25 12:07:03"
     },
     {
       "statute_id": "PPKHT_2004",
@@ -358,7 +426,7 @@
       "total_sections_indexed": 0,
       "total_sections_in_pdf": 0,
       "total_offences_indexed": 0,
-      "last_updated": "2026-11-22 15:42:32"
+      "last_updated": "2026-11-25 12:07:03"
     },
     {
       "statute_id": "ORDINAN_DARURAT_342_2021",
@@ -375,7 +443,7 @@
       "total_sections_indexed": 0,
       "total_sections_in_pdf": 0,
       "total_offences_indexed": 0,
-      "last_updated": "2026-11-22 15:42:32"
+      "last_updated": "2026-11-25 12:07:03"
     }
   ]
 }

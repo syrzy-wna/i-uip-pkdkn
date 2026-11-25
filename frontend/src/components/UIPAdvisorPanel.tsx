@@ -32,6 +32,16 @@ import {
   fetchAdvisorScenarios,
   fetchLegalSnapshot,
 } from "@/lib/api";
+import {
+  CORE_ACT_CODES,
+  CORE_KKM_ACTS,
+  OFFLINE_LEGAL_CACHE_KEY,
+  SECONDARY_ACT_CODES,
+  SUPPORT_LEGAL_ACTS,
+  getActBadgeStyle,
+  isCompoundableKkmAct,
+  isPdrmReferralAct,
+} from "@/lib/actMeta";
 import { validateLegalOutput } from "@/lib/legalValidator";
 import { copyTextSafe, extractRecommendedCompoundRm } from "@/lib/uiHelpers";
 import type {
@@ -71,53 +81,9 @@ const QUICK_CHIPS = [
   "Pelajar bawa vape dalam beg sekolah",
   "Restoran kotor & pekerja tiada tifoid",
   "Kedai pamer vape terbuka di kaunter",
+  "Pemilik kedai vape halang & ugut PPKP (Akta 574)",
+  "Kiraan 10 hari bersih sijil juruanalisis (Akta 388)",
 ];
-
-const CORE_ACT_CODES = ["Akta 852", "Akta 281", "Akta 154", "Akta 342"] as const;
-const SECONDARY_ACT_CODES = [
-  "Akta 593",
-  "Akta 56",
-  "Akta Lain / Rujukan Silang",
-] as const;
-
-function getActBadgeStyle(aktaCode: string): {
-  badge: string;
-  headerBg: string;
-  pillActive: string;
-} {
-  switch (aktaCode) {
-    case "Akta 852":
-      return {
-        badge: "bg-indigo-700 text-white",
-        headerBg: "border-indigo-200 bg-indigo-50/70",
-        pillActive: "bg-indigo-700 text-white border-indigo-700",
-      };
-    case "Akta 281":
-      return {
-        badge: "bg-amber-700 text-white",
-        headerBg: "border-amber-200 bg-amber-50/70",
-        pillActive: "bg-amber-700 text-white border-amber-700",
-      };
-    case "Akta 154":
-      return {
-        badge: "bg-emerald-700 text-white",
-        headerBg: "border-emerald-200 bg-emerald-50/70",
-        pillActive: "bg-emerald-700 text-white border-emerald-700",
-      };
-    case "Akta 342":
-      return {
-        badge: "bg-rose-700 text-white",
-        headerBg: "border-rose-200 bg-rose-50/70",
-        pillActive: "bg-rose-700 text-white border-rose-700",
-      };
-    default:
-      return {
-        badge: "bg-slate-700 text-white",
-        headerBg: "border-slate-200 bg-slate-100/80",
-        pillActive: "bg-slate-800 text-white border-slate-800",
-      };
-  }
-}
 
 function formatShortTimestamp(raw: string): string {
   const clean = (raw || "").trim();
@@ -204,7 +170,7 @@ export default function UIPAdvisorPanel({
         setLegalSnapshot(snap);
         if (typeof window !== "undefined") {
           try {
-            window.localStorage.setItem("uip_offline_legal_library_v2", JSON.stringify(snap));
+            window.localStorage.setItem(OFFLINE_LEGAL_CACHE_KEY, JSON.stringify(snap));
           } catch {
             // Abaikan jika kuota penuh
           }
@@ -212,7 +178,7 @@ export default function UIPAdvisorPanel({
       })
       .catch(() => {
         if (typeof window !== "undefined") {
-          const raw = window.localStorage.getItem("uip_offline_legal_library_v2");
+          const raw = window.localStorage.getItem(OFFLINE_LEGAL_CACHE_KEY);
           if (raw) {
             try {
               setLegalSnapshot(JSON.parse(raw) as LegalLibrarySnapshot);
@@ -500,11 +466,21 @@ export default function UIPAdvisorPanel({
             onChange={(e) => setAktaFilter(e.target.value)}
             className="min-h-[44px] w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-base font-semibold text-slate-800 sm:w-auto sm:text-sm"
           >
-            <option value="Semua">Semua Akta KKM</option>
-            <option value="Akta 852">Akta 852 (Merokok/Vape)</option>
-            <option value="Akta 281">Akta 281 &amp; PPKM 2009</option>
-            <option value="Akta 154">Akta 154 (Aedes)</option>
-            <option value="Akta 342">Akta 342 (Tibi/Berjangkit)</option>
+            <option value="Semua">Semua Akta (KKM + Rujukan Silang)</option>
+            <optgroup label="Akta Teras KKM">
+              {CORE_KKM_ACTS.map((act) => (
+                <option key={act.value} value={act.value}>
+                  {act.shortLabel}
+                </option>
+              ))}
+            </optgroup>
+            <optgroup label="Akta Prosedur, Jenayah & Rujukan Silang">
+              {SUPPORT_LEGAL_ACTS.map((act) => (
+                <option key={act.value} value={act.value}>
+                  {act.shortLabel}
+                </option>
+              ))}
+            </optgroup>
           </select>
         </div>
 
@@ -518,7 +494,7 @@ export default function UIPAdvisorPanel({
                 handleConsult();
               }
             }}
-            placeholder="Contoh: Ada pelajar hisap vape di tandas sekolah, atau kedai pamer vape terbuka di kaunter..."
+            placeholder="Contoh: Ada pelajar hisap vape di tandas sekolah, pemilik kedai halang PPKP (Akta 574), atau kiraan 10 hari bersih (Akta 388)..."
             className="w-full rounded-xl border border-slate-300 bg-slate-50/40 p-3.5 text-base leading-relaxed text-slate-900 transition focus:border-[#0f2744] focus:bg-white focus:outline-none focus:ring-2 focus:ring-slate-200 sm:text-sm"
           />
 
@@ -616,6 +592,23 @@ export default function UIPAdvisorPanel({
                 <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
                   {filteredScenarios.map((sc) => {
                     const selected = result?.scenario_id === sc.id;
+                    const actStyle = getActBadgeStyle(sc.akta_utama);
+                    const scIsComp = !sc.sesuai_buka_ip && isCompoundableKkmAct(sc.akta_utama);
+                    const scIsPdrm = isPdrmReferralAct(sc.akta_utama);
+                    const actionTag = scIsPdrm
+                      ? "Rujuk PDRM / TPR"
+                      : sc.sesuai_buka_ip
+                        ? "Buka IP / Mahkamah"
+                        : scIsComp
+                          ? "Kompaun"
+                          : "Panduan Akta";
+                    const actionColor = scIsPdrm
+                      ? "text-red-800"
+                      : sc.sesuai_buka_ip
+                        ? "text-amber-800"
+                        : scIsComp
+                          ? "text-emerald-700"
+                          : "text-slate-700";
                     return (
                       <button
                         key={sc.id}
@@ -631,15 +624,11 @@ export default function UIPAdvisorPanel({
                         }`}
                       >
                         <div className="flex w-full items-center justify-between gap-2">
-                          <span className="rounded bg-[#0f2744] px-2 py-0.5 text-[11px] font-bold text-white">
+                          <span className={`rounded px-2 py-0.5 text-[11px] font-bold ${actStyle.badge}`}>
                             {sc.akta_utama}
                           </span>
-                          <span
-                            className={`text-[11px] font-bold ${
-                              sc.sesuai_buka_ip ? "text-amber-800" : "text-emerald-700"
-                            }`}
-                          >
-                            {sc.sesuai_buka_ip ? "Buka IP" : "Kompaun"}
+                          <span className={`text-[11px] font-bold ${actionColor}`}>
+                            {actionTag}
                           </span>
                         </div>
                         <span className="mt-1.5 text-xs font-bold text-slate-900">{sc.tajuk}</span>
@@ -689,6 +678,7 @@ export default function UIPAdvisorPanel({
           !showQaBanner &&
           Boolean(result.ai_attempted && result.ai_succeeded === false && result.fallback_reason);
 
+        const actCanCompound = isCompoundableKkmAct(result.akta_disyorkan);
         const punca = result.punca_kuasa || {
           akta: result.akta_disyorkan,
           seksyen_kesalahan: primaryCharge?.seksyen_kesalahan || result.akta_disyorkan,
@@ -696,11 +686,19 @@ export default function UIPAdvisorPanel({
           had_hukuman: primaryCharge?.hukuman_maksimum || "-",
           status_kompaun:
             primaryCharge?.boleh_kompaun ||
-            (result.sesuai_buka_ip ? "Terus Mahkamah (Buka IP)" : "Boleh Kompaun"),
-          boleh_kompaun_flag: !result.sesuai_buka_ip,
+            (!actCanCompound
+              ? "Tidak Boleh Kompaun (Rujuk PDRM / Panduan Akta)"
+              : result.sesuai_buka_ip
+                ? "Terus Mahkamah (Buka IP)"
+                : "Boleh Kompaun"),
+          boleh_kompaun_flag: actCanCompound && !result.sesuai_buka_ip,
           kuasa_penguatkuasaan: "",
           peringatan_akta_611: null,
         };
+        const canOfferCompoundCta =
+          actCanCompound &&
+          !result.sesuai_buka_ip &&
+          Boolean(punca.boleh_kompaun_flag);
 
         const followUpSteps =
           result.langkah_susulan_ppkp && result.langkah_susulan_ppkp.length > 0
@@ -755,25 +753,32 @@ export default function UIPAdvisorPanel({
             `${sec} ${result.akta_disyorkan}`,
             punca.status_kompaun || primaryCharge?.boleh_kompaun || ""
           );
-          return {
-            seksyen: sec,
-            kuasaKompaun:
-              result.akta_disyorkan === "Akta 852"
-                ? "Seksyen 48 Akta 852 [P.U. (A) 259/2024]"
+          const kuasa =
+            result.akta_disyorkan === "Akta 852"
+              ? "Seksyen 48 Akta 852 [P.U. (A) 259/2024]"
+              : result.akta_disyorkan === "Akta 281"
+                ? "Notis Seksyen 32B & Seksyen 33 Akta Makanan 1983"
                 : result.akta_disyorkan === "Akta 154"
                   ? "Seksyen 25 Akta 154 (Maksimum RM500)"
                   : result.akta_disyorkan === "Akta 342"
                     ? "Seksyen 25 Akta 342 [P.U. (A) 139/2025]"
-                    : "Notis Seksyen 32B & Seksyen 33 Akta Makanan 1983",
-            amaun: recomAmt,
+                    : "";
+          return {
+            seksyen: sec,
+            kuasaKompaun: kuasa,
+            amaun: kuasa ? recomAmt : "",
             tempoh:
               result.akta_disyorkan === "Akta 852"
                 ? "30 hari dari tarikh tawaran kompaun"
-                : "14 hari dari tarikh serahan notis",
+                : kuasa
+                  ? "14 hari dari tarikh serahan notis"
+                  : "",
             kesalahanRingkas:
               primaryCharge?.perihal || result.tajuk_nasihat || question.trim(),
           };
         };
+
+        const resultActBadgeStyle = getActBadgeStyle(result.akta_disyorkan);
 
         return (
           <section
@@ -783,7 +788,7 @@ export default function UIPAdvisorPanel({
             {/* Bar Atas: Tag Ringkas + Butang Salin / Tindakan */}
             <div className="flex flex-wrap items-center justify-between gap-2.5 border-b border-slate-200 pb-3">
               <div className="flex flex-wrap items-center gap-2">
-                <span className="rounded-md bg-[#0f2744] px-2.5 py-0.5 text-xs font-bold text-white">
+                <span className={`rounded-md px-2.5 py-0.5 text-xs font-bold ${resultActBadgeStyle.badge}`}>
                   {result.akta_disyorkan}
                 </span>
                 <span
@@ -828,7 +833,7 @@ export default function UIPAdvisorPanel({
 
                 {!isNoOffence && (!activeValidation || activeValidation.passed) && !result.unindexed_statute && (
                   <>
-                    {!result.sesuai_buka_ip && (
+                    {canOfferCompoundCta && (
                       <button
                         type="button"
                         onClick={() =>
@@ -850,16 +855,16 @@ export default function UIPAdvisorPanel({
                         onApplyToCaseBuilder(
                           result.draf_teks_kes_cadangan,
                           result.akta_disyorkan,
-                          result.sesuai_buka_ip,
-                          result.sesuai_buka_ip ? undefined : buildCompoundMeta()
+                          !canOfferCompoundCta,
+                          canOfferCompoundCta ? buildCompoundMeta() : undefined
                         )
                       }
                       className="inline-flex min-h-[44px] items-center gap-1.5 rounded-xl bg-[#0f2744] px-4 py-2 text-xs font-extrabold text-white shadow-sm hover:bg-slate-800"
                     >
                       <ArrowRightCircle className="h-4 w-4" />
-                      {result.sesuai_buka_ip
-                        ? "Muat ke Fail IP (Langkah 1) →"
-                        : "Isi Notis Kompaun →"}
+                      {canOfferCompoundCta
+                        ? "Isi Notis Kompaun →"
+                        : "Muat ke Fail IP (Langkah 1) →"}
                     </button>
                   </>
                 )}
@@ -1624,11 +1629,11 @@ export default function UIPAdvisorPanel({
             )}
           </div>
 
-          <div className="flex flex-wrap items-center gap-1.5">
+          <div className="no-scrollbar flex flex-nowrap items-center gap-1.5 overflow-x-auto pb-1 sm:flex-wrap sm:overflow-visible sm:pb-0">
             <button
               type="button"
               onClick={() => setAnsweredActFilter("Semua")}
-              className={`inline-flex min-h-[44px] items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-xs font-bold transition sm:min-h-[38px] sm:py-1 ${
+              className={`inline-flex min-h-[44px] shrink-0 items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-xs font-bold transition sm:min-h-[38px] sm:py-1 ${
                 answeredActFilter === "Semua"
                   ? "border-[#0f2744] bg-[#0f2744] text-white"
                   : "border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100"
@@ -1655,7 +1660,7 @@ export default function UIPAdvisorPanel({
                   key={code}
                   type="button"
                   onClick={() => setAnsweredActFilter(code)}
-                  className={`inline-flex min-h-[44px] items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-xs font-bold transition sm:min-h-[38px] sm:py-1 ${
+                  className={`inline-flex min-h-[44px] shrink-0 items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-xs font-bold transition sm:min-h-[38px] sm:py-1 ${
                     active
                       ? st.pillActive
                       : "border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100"

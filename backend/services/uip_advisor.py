@@ -1089,6 +1089,510 @@ UIP_SCENARIO_LIBRARY: List[Dict[str, Any]] = [
             "Unit CDC telah menjalankan penilaian risiko kluster tempat kerja, memberi nasihat kawalan jangkitan dan memaklumkan majikan mengenai pengurusan kehadiran serta cuti sakit di bawah Akta Kerja 1955 & OSHA 1994 [Akta 514]."
         ),
     },
+    # =====================================================================
+    # SENARIO RUJUKAN SILANG PERUNDANGAN (AKTA 574, 593, 344, 388 & 92)
+    # =====================================================================
+    {
+        "id": "ak574_halang_ugut_serang_ppkp",
+        "akta_utama": "Akta 574",
+        "tajuk": "Menghalang, Mengugut atau Menyerang PPKP Semasa Operasi (Rujukan Silang Kanun Keseksaan [Akta 574] & S.107 KTJ)",
+        "keywords": [
+            "menghalang ppkp",
+            "halang ppkp",
+            "ugut ppkp",
+            "mengugut ppkp",
+            "serang ppkp",
+            "menyerang ppkp",
+            "pukul ppkp",
+            "tumbuk ppkp",
+            "tolak ppkp",
+            "rampas balik ekshibit",
+            "rampas semula barang",
+            "ugut bunuh",
+            "parang",
+            "seksyen 186",
+            "seksyen 189",
+            "seksyen 353",
+            "seksyen 506",
+            "seksyen 183",
+            "kanun keseksaan",
+            "penal code",
+            "akta 574",
+            "halang tugas",
+            "menghalang tugas",
+        ],
+        "negative_keywords": ["fogging", "semburan kabus", "aedes", "denggi", "akta 154", "halang polis", "pegawai polis"],
+        "incompatible_with": ["ak154_halang_semburan_kabus"],
+        "keputusan_tindakan": "RUJUK PDRM SEGERA (LAPORAN POLIS S.107 KTJ) — Kesalahan Kanun Keseksaan [Akta 574] (TIDAK BOLEH KOMPAUN OLEH PPKP)",
+        "sesuai_buka_ip": False,
+        "alasan_keputusan": (
+            "PPKP yang bertindak secara sah dengan Kad Kuasa KKM disifatkan sebagai 'pekhidmat awam' (public servant) dalam pengertian Seksyen 21 Kanun Keseksaan [Akta 574] "
+            "(melalui S.24(3) Akta 852, S.3 Akta 281, S.4 Akta 154 dan S.3(2) Akta 342). "
+            "Khusus bagi Akta 852 (2024), TIDAK wujud seksyen halangan tersendiri — justeru halangan fizikal/kunci pintu dirujuk ke Seksyen 186 Akta 574 (Seizable), "
+            "rampas balik barang sitaan ke Seksyen 183 Akta 574 (Non-Seizable, perlukan OTI S.108(2) KTJ), ugutan terhadap PPKP ke Seksyen 189 atau Seksyen 506 (ugutan bunuh/cedera/senjata, Seizable), "
+            "dan serangan/kekerasan fizikal (tolak/pukul/ludah) ke Seksyen 353 Akta 574 (Seizable). "
+            "PENTING: PPKP TIADA kuasa menyiasat, mengkompaun atau mendakwa di bawah Akta 574 — WAJIB buat Laporan Polis di bawah Seksyen 107 KTJ [Akta 593] untuk siasatan PDRM & pendakwaan TPR, "
+            "manakala siasatan kesalahan asal KKM (cth: Akta 852 / Akta 281 / Akta 342) berjalan secara berasingan."
+        ),
+        "cadangan_pertuduhan": [
+            {
+                "perihal": "Dengan sengaja menghalang penjawat awam (PPKP) menjalankan fungsi awam [Rujukan PDRM / TPR]",
+                "seksyen_kesalahan": "Seksyen 186 Kanun Keseksaan [Akta 574] (dibaca bersama S.21 Akta 574 & S.24(3) Akta 852 / S.3 Akta 281)",
+                "seksyen_hukuman": "Seksyen 186 Kanun Keseksaan [Akta 574]",
+                "hukuman_maksimum": "Penjara sehingga 2 tahun, atau denda sehingga RM10,000.00, atau kedua-duanya (Seizable, Non-Bailable)",
+                "boleh_kompaun": "TIDAK BOLEH KOMPAUN — Kuasa siasatan PDRM & pendakwaan TPR (PPKP buat Laporan Polis S.107 KTJ)",
+            },
+            {
+                "perihal": "Menyerang / menggunakan kekerasan jenayah terhadap PPKP (S.353) atau ugutan jenayah berat (S.506) [Rujukan PDRM / TPR]",
+                "seksyen_kesalahan": "Seksyen 353 / Seksyen 506 Kanun Keseksaan [Akta 574]",
+                "seksyen_hukuman": "Seksyen 353 / Seksyen 506 Kanun Keseksaan [Akta 574]",
+                "hukuman_maksimum": "S.353: Penjara maks 2 tahun / denda | S.506 (ugutan bunuh/cedera parah/bakar): Penjara maks 7 tahun / denda (Seizable)",
+                "boleh_kompaun": "TIDAK BOLEH KOMPAUN — PDRM siasat & TPR dakwa selepas Laporan Polis S.107 KTJ",
+            },
+        ],
+        "sop_lapangan": [
+            "Utamakan keselamatan pasukan PPKP — JANGAN bertindak balas secara fizikal; undur ke lokasi selamat dan hubungi PDRM (999) serta-merta jika ada ancaman senjata atau serangan.",
+            "Rakam kejadian menggunakan telefon bimbit/kamera rasmi jika selamat dilakukan, dan catat verbatim perkataan ugutan/tindakan suspek serta nama saksi pasukan dalam Diari Rasmi.",
+            "Jika PPKP mengalami sebarang kecederaan atau sentuhan fizikal, segera dapatkan pemeriksaan perubatan di Hospital/Klinik Kerajaan bagi tujuan Laporan Perubatan rasmi.",
+            "Buat Laporan Polis (FIR) segera di balai polis berhampiran di bawah Seksyen 107 Kanun Tatacara Jenayah [Akta 593] dengan melampirkan salinan Kad Kuasa KKM dan surat arahan operasi.",
+            "Beri kerjasama penuh kepada Pegawai Penyiasat PDRM (rakaman percakapan saksi S.112 KTJ dan penyerahan video/gambar berserta Sijil Seksyen 90A Akta Keterangan 1950 [Akta 56]).",
+            "Maklumkan Pegawai Kesihatan Daerah (PKD) dan teruskan tindakan penguatkuasaan KKM bagi kesalahan asal (Akta 852/281/154/342) secara berasingan dengan iringan polis (S.20(3)(c) Akta 344) jika perlu.",
+        ],
+        "eksibit_wajib": [
+            "Salinan Laporan Polis (FIR Seksyen 107 KTJ) yang dibuat oleh PPKP",
+            "Salinan Kad Kuasa Rasmi KKM & Surat Arahan Operasi PKD (membuktikan status penjawat awam yang sah)",
+            "Rakaman Video/Audio/Gambar kejadian + Sijil Seksyen 90A(2) Akta Keterangan 1950 [Akta 56]",
+            "Laporan Pemeriksaan Perubatan Hospital/Klinik Kerajaan (jika melibatkan serangan S.353)",
+            "Senarai saksi anggota operasi KKM & catatan kronologi kejadian",
+        ],
+        "perangkap_kesilapan": [
+            "BATASAN BIDANG KUASA: PPKP DILARANG mengeluarkan kompaun, menyiasat sendiri atau mendraf pertuduhan Kanun Keseksaan [Akta 574] — semua tindakan Akta 574 adalah bidang kuasa eksklusif PDRM & TPR.",
+            "PERBEZAAN SEIZABLE vs NON-SEIZABLE: S.186, S.353 & S.506 ialah kesalahan Boleh Tangkap (Seizable), manakala S.183 & S.189 ialah Tidak Boleh Tangkap (Non-Seizable — PDRM perlukan OTI daripada TPR di bawah S.108(2) KTJ).",
+            "JANGAN guna Seksyen 90 Akta Polis 1967 [Akta 344] untuk halangan terhadap PPKP — S.90 Akta 344 hanya terpakai bagi halangan terhadap PEGAWAI POLIS.",
+        ],
+        "templat_ringkas": (
+            "Laporan Insiden Halangan/Ugutan/Serangan Terhadap Penjawat Awam (PPKP): Semasa menjalankan operasi penguatkuasaan KKM yang sah, "
+            "suspek telah menghalang/mengugut/menyerang PPKP. Laporan Polis di bawah Seksyen 107 KTJ telah dibuat untuk siasatan PDRM "
+            "di bawah Seksyen 186 / S.189 / S.353 / S.506 Kanun Keseksaan [Akta 574]."
+        ),
+    },
+    {
+        "id": "ak574_dokumen_palsu_maklumat_palsu",
+        "akta_utama": "Akta 574",
+        "tajuk": "Sijil / Dokumen Kesihatan Palsu (Tifoid/SLPM/FoSIM), Maklumat Palsu & Penyamaran PPKP (Akta 574 + PPKM 2009)",
+        "keywords": [
+            "sijil palsu",
+            "dokumen palsu",
+            "tifoid palsu",
+            "sijil tifoid palsu",
+            "slpm palsu",
+            "fosim palsu",
+            "pemalsuan dokumen",
+            "pemalsuan sijil",
+            "maklumat palsu",
+            "aduan palsu",
+            "menyamar ppkp",
+            "ppkp palsu",
+            "pegawai palsu",
+            "menyamar sebagai penjawat awam",
+            "seksyen 465",
+            "seksyen 468",
+            "seksyen 471",
+            "seksyen 170",
+            "seksyen 177",
+            "seksyen 182",
+            "seksyen 420",
+        ],
+        "negative_keywords": [],
+        "incompatible_with": [],
+        "keputusan_tindakan": "TINDAKAN 2 LANDASAN: (1) Laporan Polis S.107 KTJ bagi Pemalsuan/Penyamaran (Akta 574 — PDRM/TPR) & (2) Tindakan KKM Berasingan (PPKM 2009 / Akta 281)",
+        "sesuai_buka_ip": True,
+        "alasan_keputusan": (
+            "Kesalahan pemalsuan dokumen (sijil suntikan tifoid palsu, sijil SLPM palsu, perakuan pendaftaran FoSIM palsu), memberi maklumat/aduan palsu, "
+            "atau menyamar sebagai PPKP/pegawai KKM TIDAK wujud dalam Akta KKM tertentu dan tertakluk kepada Kanun Keseksaan [Akta 574]: "
+            "Seksyen 465 (pemalsuan am), Seksyen 468 (pemalsuan bagi maksud menipu — maks 7 tahun + denda), Seksyen 471 (menggunakan dokumen palsu sebagai tulen), "
+            "Seksyen 170 (menyamar penjawat awam — Seizable), Seksyen 420 (menipu wang/kutipan kompaun palsu — 1–10 tahun + sebatan), "
+            "serta Seksyen 177 / S.182 (maklumat/aduan palsu kepada penjawat awam). "
+            "Pada masa yang sama, bagi premis makanan yang mengemukakan sijil tifoid/SLPM palsu, sijil palsu dianggap TIADA sijil yang sah — maka PPKP tetap boleh mengambil tindakan KKM di bawah P.31(1) / P.30(1) / P.3 PPKM 2009!"
+        ),
+        "cadangan_pertuduhan": [
+            {
+                "perihal": "Menggunakan dokumen/sijil palsu sebagai tulen atau pemalsuan bagi tujuan menipu [Rujukan PDRM / TPR]",
+                "seksyen_kesalahan": "Seksyen 471 dibaca bersama Seksyen 465 / Seksyen 468 Kanun Keseksaan [Akta 574]",
+                "seksyen_hukuman": "Seksyen 465 / Seksyen 468 Kanun Keseksaan [Akta 574]",
+                "hukuman_maksimum": "S.465: Penjara maks 2 tahun / denda | S.468: Penjara maks 7 tahun dan denda (Non-Bailable)",
+                "boleh_kompaun": "TIDAK BOLEH KOMPAUN — Kuasa siasatan PDRM & pendakwaan TPR melalui Laporan Polis S.107 KTJ",
+            },
+            {
+                "perihal": "Menyamar sebagai PPKP / Penjawat Awam (S.170) atau menipu kutipan bayaran (S.420) / Maklumat Palsu (S.177/S.182) [Rujukan PDRM / TPR]",
+                "seksyen_kesalahan": "Seksyen 170 / Seksyen 420 / Seksyen 177 / Seksyen 182 Kanun Keseksaan [Akta 574]",
+                "seksyen_hukuman": "Seksyen 170 / Seksyen 420 / Seksyen 177 / Seksyen 182 Kanun Keseksaan [Akta 574]",
+                "hukuman_maksimum": "S.170: 2 tahun / denda (Seizable) | S.420: 1–10 tahun + sebatan + denda | S.177/182: 6 bulan / RM2,000 (atau 2 tahun)",
+                "boleh_kompaun": "TIDAK BOLEH KOMPAUN — Siasatan PDRM (S.177/182 perlukan OTI S.108(2) KTJ) & pendakwaan TPR",
+            },
+        ],
+        "sop_lapangan": [
+            "Semak ketulenan sijil/dokumen yang meragukan secara rasmi dengan pihak pengeluar asal (klinik/hospital bagi sijil tifoid, BKKM/institusi SLPM bagi sijil latihan, atau sistem FoSIM) dan dapatkan pengesahan BERTULIS bahawa dokumen tersebut palsu.",
+            "Pelihara dokumen palsu asal (atau salinan diperakui jika dalam bentuk digital, disokong Sijil Seksyen 90A Akta 56) dengan rantaian jagaan (chain of custody) yang kemas.",
+            "Buat Laporan Polis di bawah Seksyen 107 KTJ dan serahkan dokumen palsu bersama surat pengesahan kepalsuan kepada PDRM untuk siasatan di bawah S.465/468/471/170/177/182/420 Akta 574.",
+            "Bagi kes sijil tifoid/SLPM/FoSIM palsu di premis makanan: teruskan tindakan KKM berasingan (Notis S.32B / IP PPKM 2009 P.31(1) / P.30(1) / P.3) kerana pengendali dianggap tiada sijil yang sah.",
+            "Bagi kes penyamaran PPKP (S.170): dapatkan surat pengesahan rasmi Bahagian Sumber Manusia PKD/JKN bahawa suspek bukan kakitangan KKM untuk diserahkan kepada PDRM.",
+        ],
+        "eksibit_wajib": [
+            "Dokumen / sijil palsu asal (atau paparan digital + Sijil Seksyen 90A Akta 56)",
+            "Surat pengesahan bertulis daripada pengeluar rasmi (klinik/institusi SLPM/BKKM/PKD) bahawa dokumen palsu atau suspek bukan pegawai KKM",
+            "Salinan Laporan Polis Seksyen 107 KTJ & borang serah terima barang kes kepada PDRM",
+            "Percakapan S.112 saksi pemeriksaan & gambar premis",
+        ],
+        "perangkap_kesilapan": [
+            "JANGAN menuduh sijil palsu tanpa pengesahan bertulis daripada klinik/institusi/BKKM — tuduhan tanpa pengesahan boleh menjejaskan siasatan polis dan reputasi jabatan.",
+            "PPKP TIDAK BOLEH mengkompaun kesalahan pemalsuan/penyamaran Akta 574; hanya kesalahan KKM berasingan (cth: P.31(1) tiada suntikan tifoid sah di bawah PPKM 2009) boleh ditangani PPKP.",
+            "Bagi maklumat palsu di bawah Akta 281 (S.4(6)) atau Akta 342 (S.22(c)), semak dahulu sama ada seksyen khusus Akta KKM sudah memadai sebelum merujuk S.177 Akta 574.",
+        ],
+        "templat_ringkas": (
+            "Laporan Rujukan PDRM (Pemalsuan Dokumen / Maklumat Palsu / Penyamaran): Semasa pemeriksaan KKM, dikesan penggunaan sijil/dokumen disyaki palsu "
+            "(atau penyamaran sebagai pegawai KKM) yang telah disahkan tidak tulen secara bertulis. Laporan Polis S.107 KTJ dibuat bagi siasatan PDRM "
+            "di bawah Seksyen 465/468/471/170/177/182 Akta 574, di samping tindakan KKM berasingan bagi ketiadaan sijil sah."
+        ),
+    },
+    {
+        "id": "ak574_jenayah_kesihatan_awam_s269_273",
+        "akta_utama": "Akta 574",
+        "tajuk": "Kesalahan Kesihatan Awam Kanun Keseksaan (S.269/270 Merebak Penyakit & S.272/273 Makanan Mudarat — Prinsip Lex Specialis)",
+        "keywords": [
+            "seksyen 269",
+            "seksyen 270",
+            "seksyen 272",
+            "seksyen 273",
+            "merebakkan jangkitan",
+            "perbuatan cuai penyakit",
+            "perbuatan jahat penyakit",
+            "mencampuradukkan makanan",
+            "makanan mudarat kanun keseksaan",
+            "penal code food",
+            "kanun keseksaan penyakit",
+        ],
+        "negative_keywords": [],
+        "incompatible_with": [],
+        "keputusan_tindakan": "UTAMAKAN AKTA KKM (AKTA 342 / AKTA 281) DAHULU — Guna S.269/270 Akta 574 hanya jika jenayah berat perlukan tangkapan PDRM; JANGAN turunkan kes S.13 Akta 281 ke S.272/273!",
+        "sesuai_buka_ip": True,
+        "alasan_keputusan": (
+            "Di bawah prinsip undang-undang *lex specialis derogat legi generali* (undang-undang khusus mengatasi undang-undang am), "
+            "PPKP WAJIB mengutamakan Akta KKM terlebih dahulu:\n"
+            "(1) MAKANAN MUDARAT / DIADUK: JANGAN sesekali merujuk kes kepada Seksyen 272/273 Kanun Keseksaan (penalti amat rendah: 6 bulan / RM2,000, Non-Seizable) "
+            "kerana Akta Makanan 1983 [Akta 281] menyediakan penalti jauh lebih berat dan kuasa siasatan penuh PPKP: S.13(1) (RM100,000 / 10 tahun), S.13A(1) (RM50,000 / 8 tahun), S.13A(2) (RM30,000 / 5 tahun), S.13B (RM20,000 / 5 tahun).\n"
+            "(2) MEREBAKKAN PENYAKIT BERJANGKIT: Utamakan Akta 342 (S.12(1) / S.22(b) / S.24 Pindaan Akta A1742 — RM10,000 / 2 tahun individu, RM100,000 korporat). "
+            "Rujuk PDRM di bawah S.269 (cuai — 6 bulan) / S.270 (jahat/sengaja — 2 tahun, kedua-duanya Seizable) HANYA bagi perbuatan jenayah melampau (cth: sengaja meludah pesakit berjangkit ke muka orang awam) yang memerlukan tangkapan polis segera.\n"
+            "(3) LARANGAN HUKUMAN BERGANDA: Ingat Seksyen 59 Akta Tafsiran [Akta 388] — seseorang tidak boleh dihukum dua kali atas perbuatan sama di bawah dua akta berbeza."
+        ),
+        "cadangan_pertuduhan": [
+            {
+                "perihal": "Perbuatan cuai (S.269) atau jahat/sengaja (S.270) yang mungkin merebakkan penyakit berbahaya kepada nyawa [Rujukan PDRM / TPR]",
+                "seksyen_kesalahan": "Seksyen 269 / Seksyen 270 Kanun Keseksaan [Akta 574] (atau utamakan S.12(1)/S.22(b) Akta 342)",
+                "seksyen_hukuman": "Seksyen 269 / Seksyen 270 Kanun Keseksaan [Akta 574]",
+                "hukuman_maksimum": "S.269: Penjara maks 6 bulan / denda | S.270: Penjara maks 2 tahun / denda (Seizable)",
+                "boleh_kompaun": "TIDAK BOLEH KOMPAUN — Rujuk PDRM (S.107 KTJ) hanya jika perlukan tangkapan jenayah segera",
+            },
+        ],
+        "sop_lapangan": [
+            "Semak prinsip *lex specialis*: bagi kes makanan beracun/tercemar, WAJIB buka IP di bawah Akta Makanan 1983 [Akta 281] S.13(1)/13A/13B (bukan S.272/273 Akta 574).",
+            "Bagi kes penyakit berjangkit, utamakan siasatan dan perintah bertulis di bawah Akta 342 (S.12(1)/S.14A(1)/S.15(1)/S.22(b)).",
+            "Jika berlaku perbuatan jahat/cuai melampau yang mengancam nyawa awam serta-merta, buat Laporan Polis S.107 KTJ untuk tangkapan polis di bawah S.269/S.270 Akta 574.",
+            "Selaraskan dengan TPR supaya tidak berlaku pertindihan hukuman berganda di bawah Seksyen 59 Akta Tafsiran 1948 dan 1967 [Akta 388].",
+        ],
+        "eksibit_wajib": [
+            "Keputusan makmal sah (Sijil Juruanalisis S.20 Akta 281 bagi makanan / laporan makmal diagnostik bagi penyakit berjangkit)",
+            "Laporan Polis S.107 KTJ (jika kes dirujuk kepada PDRM di bawah S.269/S.270 Akta 574)",
+        ],
+        "perangkap_kesilapan": [
+            "JANGAN merendahkan kes keselamatan makanan kepada S.272/273 Akta 574 (had RM2,000 / 6 bulan) apabila Akta 281 S.13(1) memperuntukkan RM100,000 / 10 tahun.",
+            "Seksyen 59 Akta 388 melarang penghukuman berganda atas perbuatan sama di bawah dua undang-undang bertulis — rujuk TPR untuk memilih pertuduhan terbaik.",
+        ],
+        "templat_ringkas": (
+            "Penilaian Lex Specialis (Akta KKM vs Kanun Keseksaan Bab XIV): Utamakan tindakan penuh di bawah Akta 281 (S.13/13A/13B) bagi keselamatan makanan "
+            "dan Akta 342 (S.12/22) bagi penyakit berjangkit; rujuk PDRM di bawah S.269/S.270 Akta 574 hanya bagi perbuatan jahat/cuai jenayah yang memerlukan tangkapan segera."
+        ),
+    },
+    {
+        "id": "ak593_kuasa_siasatan_tangkap_geledah_pelupusan",
+        "akta_utama": "Akta 593",
+        "tajuk": "Tatacara Siasatan, Laporan Polis (S.107/108), Rakaman S.112, Diari S.119, Penzahiran S.51A, Laporan Kimia S.399 & Pelupusan Barang Kes S.407/407A KTJ",
+        "keywords": [
+            "kanun tatacara jenayah",
+            "criminal procedure code",
+            "akta 593",
+            "seksyen 107",
+            "seksyen 108",
+            "perintah untuk menyiasat",
+            "oti",
+            "seksyen 112",
+            "rakaman percakapan",
+            "seksyen 119",
+            "diari siasatan",
+            "seksyen 51a",
+            "penzahiran dokumen",
+            "seksyen 399",
+            "seksyen 407",
+            "seksyen 407a",
+            "pelupusan barang kes",
+            "pelupusan eksibit",
+            "seksyen 163",
+            "pertindihan pertuduhan",
+            "waran geledah",
+            "seksyen 54 ktj",
+            "seksyen 56 ktj",
+            "seksyen 376",
+            "seksyen 377",
+        ],
+        "negative_keywords": ["gudang", "waktu malam"],
+        "incompatible_with": [],
+        "keputusan_tindakan": "PATUHI TATACARA KANUN TATACARA JENAYAH [AKTA 593] — Terpakai melalui S.3 KTJ & klausa rujukan dalam Akta 852 (S.25), Akta 281, Akta 154 & Akta 342",
+        "sesuai_buka_ip": True,
+        "alasan_keputusan": (
+            "Seksyen 3 Kanun Tatacara Jenayah [Akta 593] menetapkan bahawa semua kesalahan di bawah mana-mana undang-undang bertulis lain (termasuk Akta KKM) "
+            "hendaklah disiasat dan dibicarakan mengikut KTJ tertakluk kepada peruntukan khusus dalam Akta KKM tersebut (cth: S.25 Akta 852 secara nyata memberi PPKP kuasa penyiasatan KTJ).\n"
+            "Peruntukan teras KTJ untuk PPKP/IO:\n"
+            "• S.107 (Laporan Polis/FIR) & S.108(2) (OTI daripada TPR wajib bagi kesalahan Non-Seizable);\n"
+            "• S.112(2)–(5) (Rakaman percakapan saksi/OYDS: baca balik, peluang betulkan, tandatangan/cap jari & pengesahan IO) — JANGAN petik S.113 lama;\n"
+            "• S.119 (Diari Siasatan harian bertarikh & bermasa);\n"
+            "• S.54, S.56, S.62–65 (Waran geledah & senarai geledah/sitaan S.64);\n"
+            "• S.51A (Penzahiran dokumen pendakwaan kepada OKT sebelum perbicaraan);\n"
+            "• S.152–154 & S.163 (Format pertuduhan tepat & 1 pertuduhan bagi 1 kesalahan berasingan — elak duplicity);\n"
+            "• S.399 (Kebolehterimaan laporan juruanalisis/ahli kimia — serah 10 hari bersih sebelum bicara);\n"
+            "• S.407 & S.407A (Perintah Mahkamah bagi pelupusan/lucuthak barang kes selepas selesai kes atau pelupusan awal barang mudah rosak/berbahaya)."
+        ),
+        "cadangan_pertuduhan": [
+            {
+                "perihal": "Pematuhan Tatacara Siasatan, Pendakwaan & Pelupusan Barang Kes KKM di Mahkamah",
+                "seksyen_kesalahan": "Seksyen 3, 51A, 107, 108, 112, 119, 152–154, 163, 376, 377, 399, 407 & 407A Akta 593",
+                "seksyen_hukuman": "Tatacara Jenayah (bukan seksyen hukuman — kegagalan mematuhi boleh menyebabkan pertuduhan/eksibit ditolak mahkamah)",
+                "hukuman_maksimum": "Kegagalan pematuhan tatacara mandatori boleh menyebabkan kes dibuang (DNAA/DNA) atau ekshibit tidak boleh diterima",
+                "boleh_kompaun": "TIDAK BERKENAAN (Akta Tatacara Jenayah)",
+            },
+        ],
+        "sop_lapangan": [
+            "Siasatan & Diari: Rekod setiap langkah siasatan secara kronologi dalam Diari Siasatan (S.119 KTJ) dan ambil percakapan saksi/OYDS mematuhi kesemua kehendak S.112(2)–(5) KTJ.",
+            "Rujukan PDRM / OTI: Bagi kesalahan Kanun Keseksaan atau halangan agresif, buat Laporan Polis S.107 KTJ (dan maklum bahawa kesalahan Non-Seizable perlukan OTI daripada TPR di bawah S.108(2) KTJ).",
+            "Pertuduhan & Izin Mendakwa: Pastikan setiap kesalahan diasingkan (S.163 KTJ), butiran tarikh/masa/tempat tepat (S.152–154 KTJ), dan dapatkan Izin Mendakwa TPR (S.376/377 KTJ + seksyen khusus Akta KKM).",
+            "Pra-Perbicaraan: Serahkan dokumen S.51A KTJ dan Sijil Juruanalisis/Kimia (S.399 KTJ / S.20(ii) Akta 281) sekurang-kurangnya 10 hari bersih (S.54 Akta 388) sebelum tarikh bicara.",
+            "Pelupusan Barang Kes: Mohon perintah mahkamah di bawah S.407 KTJ selepas selesai kes (atau S.407A KTJ bagi pelupusan awal barang mudah rosak/berbahaya seperti makanan busuk/vape tidak sah).",
+        ],
+        "eksibit_wajib": [
+            "Diari Siasatan (DS) lengkap bertarikh & bermasa (S.119 KTJ)",
+            "Percakapan S.112(2)–(5) KTJ bertandatangan pemberi kenyataan & perakuan dibaca balik oleh IO",
+            "Borang Senarai Benda Disita (S.64 KTJ / S.36 Akta 852) & Rekod Rantaian Jagaan (Chain of Custody)",
+            "Rekod serahan S.51A KTJ & bukti serahan 10 hari bersih Sijil Juruanalisis (S.399 KTJ / S.20(ii) Akta 281)",
+            "Kebenaran / Izin Mendakwa TPR & Perintah Pelupusan Barang Kes (S.407/407A KTJ)",
+        ],
+        "perangkap_kesilapan": [
+            "JANGAN rujuk 'Pernyataan Beramaran Seksyen 113 KTJ' (telah diganti sejak Akta A1274 / 2007) — gunakan Seksyen 112(2)–(5) KTJ.",
+            "JANGAN gabungkan dua kesalahan berbeza dalam satu pertuduhan (pelanggaran S.163 KTJ — pertuduhan cacat/duplicitous).",
+            "JANGAN lupuskan barang kes yang disita sesuka hati tanpa perintah mahkamah S.407 / S.407A KTJ (kecuali diperuntukkan khusus dengan jelas dalam Akta KKM).",
+        ],
+        "templat_ringkas": (
+            "Panduan Pematuhan Kanun Tatacara Jenayah [Akta 593]: Siasatan, rakaman percakapan (S.112), diari siasatan (S.119), penzahiran dokumen (S.51A), "
+            "penggubalan pertuduhan (S.152–154 & S.163), serahan laporan kimia (S.399) dan pelupusan barang kes (S.407/407A) wajib mematuhi KTJ [Akta 593]."
+        ),
+    },
+    {
+        "id": "ak388_tafsiran_had_masa_serahan_pemansuhan",
+        "akta_utama": "Akta 388",
+        "tajuk": "Akta Tafsiran 1948 dan 1967 [Akta 388]: Kiraan 10 Hari Bersih (S.54), Pos Berdaftar (S.12), Kesan Pemansuhan (S.30), Batal Perintah (S.47) & Hukuman Berganda (S.59)",
+        "keywords": [
+            "akta tafsiran",
+            "akta tafsiran 1948",
+            "akta tafsiran 1967",
+            "akta 388",
+            "interpretation acts",
+            "10 hari bersih",
+            "hari bersih",
+            "kiraan hari",
+            "hari kelepasan am",
+            "cuti umum",
+            "seksyen 54 akta 388",
+            "seksyen 12 akta 388",
+            "pos berdaftar",
+            "a.r. berdaftar",
+            "kesan pemansuhan",
+            "seksyen 30 akta 388",
+            "seksyen 17a",
+            "seksyen 47 akta 388",
+            "batal perintah awal",
+            "ubah perintah",
+            "seksyen 59 akta 388",
+            "hukuman berganda",
+            "dihukum dua kali",
+            "pertubuhan perbadanan",
+        ],
+        "negative_keywords": [],
+        "incompatible_with": [],
+        "keputusan_tindakan": "RUJUK AKTA TAFSIRAN 1948 DAN 1967 [AKTA 388] (SATU AKTA BERSEPADU) — Bahagian I (Akta 1967) terpakai kepada semua Akta KKM pasca-1967 (Akta 154, 281, 342, 852, 611)",
+        "sesuai_buka_ip": False,
+        "alasan_keputusan": (
+            "NOTA PENTING PERUNDANGAN: 'Akta Tafsiran 1948' dan 'Akta 388' ialah SATU Akta bersepadu — iaitu Akta Tafsiran 1948 dan 1967 [Akta 388]. "
+            "Bahagian I (S.2–65, teks 1967) terpakai kepada semua Akta Persekutuan yang digubal selepas 18 Mei 1967 (termasuk Akta 154, 281, 342, 852 & 611), manakala Bahagian II (S.66–95, Ordinan 1948) terpakai kepada undang-undang pra-1967.\n"
+            "Peruntukan kritikal untuk PPKP:\n"
+            "• S.54 (Kiraan Masa): Hari kejadian/serahan (Hari 0) TIDAK dikira; jika hari terakhir jatuh pada hari kelepasan mingguan atau cuti umum rasmi, tempoh dilanjutkan ke hari bekerja berikutnya; "
+            "bagi '10 hari bersih' (clear days — S.20(ii) Akta 281 & S.399 KTJ), KEDUA-DUA hari serahan DAN hari perbicaraan dikecualikan (serah sekurang-kurangnya 11–12 hari sebelum bicara!).\n"
+            "• S.12 (Serahan Melalui Pos): Pos berdaftar (A.R. Berdaftar) ke alamat terakhir diketahui disifatkan diterima dalam perjalanan biasa pos kecuali dibuktikan sebaliknya.\n"
+            "• S.30 (Kesan Pemansuhan): Pemansuhan PPKHT 2004 pada 1 Okt 2024 TIDAK menjejaskan siasatan/kompaun/pendakwaan bagi kesalahan yang dilakukan SEBELUM 1 Okt 2024.\n"
+            "• S.47 (Kuasa Membatal/Meminda Perintah): Kuasa mengeluarkan perintah (cth: Perintah Tutup Premis S.11 Akta 281 / S.18(1)(d) Akta 342) secara automatik termasuk kuasa membatalkan atau memendekkan perintah itu lebih awal apabila premis telah bersih/selamat.\n"
+            "• S.17A (Pendekatan Tujuan / Purposive) & S.3 ('person' merangkumi pertubuhan perbadanan/syarikat; 'month' ialah bulan kalendar Gregorian).\n"
+            "• S.59 (Tiada Hukuman Berganda): Jika satu perbuatan menjadi kesalahan di bawah dua akta, pesalah boleh didakwa di bawah salah satu tetapi TIDAK boleh dihukum dua kali bagi perbuatan sama."
+        ),
+        "cadangan_pertuduhan": [
+            {
+                "perihal": "Kaedah Tafsiran Statutori, Kiraan Had Masa, Serahan Pos, Pemansuhan & Larangan Hukuman Berganda",
+                "seksyen_kesalahan": "Seksyen 2, 3, 12, 17A, 30, 40, 47, 54 & 59 Akta Tafsiran 1948 dan 1967 [Akta 388]",
+                "seksyen_hukuman": "Akta Tafsiran (bukan seksyen kesalahan — terpakai merentasi semua Akta KKM)",
+                "hukuman_maksimum": "Kegagalan mematuhi kiraan 10 hari bersih (S.54) atau tarikh luput 150 hari (S.19(2) Akta 281) boleh menyebabkan saman/sijil ditolak mahkamah",
+                "boleh_kompaun": "TIDAK BERKENAAN (Akta Tafsiran Statutori)",
+            },
+        ],
+        "sop_lapangan": [
+            "Kiraan 10 Hari Bersih (S.54 Akta 388): Untuk serahan Sijil Juruanalisis (S.20(ii) Akta 281 / S.399 KTJ), jangan kira hari serahan DAN hari bicara — serah selewat-lewatnya 12 hari kalendar sebelum tarikh bicara sebagai langkah selamat.",
+            "Tempoh Kompaun & Hari Kelepasan (S.54(1)(b)): Jika hari ke-14 atau ke-30 tempoh bayaran kompaun jatuh pada hari Ahad/Jumaat (ikut negeri) atau cuti umum, beri laluan bayaran sehingga hari bekerja berikutnya.",
+            "Serahan Notis Pos Berdaftar (S.12): Jika serahan tangan gagal selepas usaha munasabah, guna Pos A.R. Berdaftar ke alamat berdaftar SSM/MyKad dan simpan resit pengeposan + kad akuan terima (A.R.).",
+            "Buka Semula Premis Lebih Awal (S.47): Apabila premis yang ditutup di bawah S.11 Akta 281 / S.18(1)(d) Akta 342 lulus pemeriksaan semula, keluarkan Notis Pembatalan Perintah Penutupan secara bertulis berdasarkan kuasa S.47 Akta 388.",
+            "Kes Lama Pra-1 Okt 2024 (S.30): Siasatan dan pendakwaan kes PPKHT 2004 yang berlaku sebelum 1 Oktober 2024 kekal sah diteruskan di bawah Seksyen 30 Akta 388.",
+        ],
+        "eksibit_wajib": [
+            "Bukti serahan bertarikh (akuan terima serahan tangan atau resit Pos A.R. Berdaftar S.12 Akta 388)",
+            "Kalendar kiraan tarikh serahan vs tarikh perbicaraan (mematuhi 10 hari bersih S.54 Akta 388 & had 150 hari S.19(2) Akta 281)",
+            "Notis Pembatalan / Pindaan Perintah bertulis (jika membuka semula premis awal di bawah S.47 Akta 388)",
+        ],
+        "perangkap_kesilapan": [
+            "JANGAN anggap Akta Tafsiran 1948 dan Akta 388 sebagai dua akta berasingan — kedua-duanya telah disatukan dalam Akta Tafsiran 1948 dan 1967 [Akta 388].",
+            "JANGAN kira '10 hari bersih' dengan memasukkan hari serahan atau hari bicara — di bawah S.54(1)(a) & prinsip clear days, kedua-duanya dikecualikan.",
+            "JANGAN lupa semak Seksyen 59 Akta 388 apabila mendakwa kesalahan bertindih antara dua akta (cth: Akta 342 vs Akta 574).",
+        ],
+        "templat_ringkas": (
+            "Rujukan Akta Tafsiran 1948 dan 1967 [Akta 388]: Kiraan tempoh masa & 10 hari bersih mematuhi S.54, serahan pos berdaftar mematuhi S.12, "
+            "pembatalan awal perintah mematuhi S.47, kes pra-pemansuhan terpelihara di bawah S.30, dan larangan hukuman berganda tertakluk kepada S.59 Akta 388."
+        ),
+    },
+    {
+        "id": "ak92_bidang_kuasa_mahkamah_majistret_sesyen",
+        "akta_utama": "Akta 92",
+        "tajuk": "Bidang Kuasa & Had Hukuman Mahkamah Majistret (S.85/87/88) vs Mahkamah Sesyen (S.63/64) di bawah Akta Mahkamah Rendah 1948 [Akta 92]",
+        "keywords": [
+            "akta 92",
+            "akta mahkamah rendah",
+            "subordinate courts act",
+            "mahkamah majistret",
+            "mahkamah sesyen",
+            "majistret kelas pertama",
+            "majistret kelas kedua",
+            "had hukuman majistret",
+            "bidang kuasa mahkamah",
+            "seksyen 63",
+            "seksyen 64",
+            "seksyen 85",
+            "seksyen 87",
+            "seksyen 88",
+            "denda melebihi 10000",
+            "denda rm100000 majistret",
+            "sesyen atau majistret",
+        ],
+        "negative_keywords": [],
+        "incompatible_with": [],
+        "keputusan_tindakan": "SEMAK KLAUSA NON-OBSTANTE AKTA KKM vs HAD S.87 AKTA 92 — Akta 852 (S.43), Akta 154 (S.23A) & Akta 342 (S.24A) beri kuasa penuh kepada Majistret Kelas Pertama; TETAPI AKTA 281 TIADA KLAUSA ITU (Rujuk Mahkamah Sesyen S.63/64 bagi kes S.13(1) > RM10,000)!",
+        "sesuai_buka_ip": True,
+        "alasan_keputusan": (
+            "Di bawah Akta Mahkamah Rendah 1948 [Akta 92] (diperluaskan ke Sabah & Sarawak melalui P.U. (A) 357/1980 bagi Mahkamah Persekutuan):\n"
+            "• MAHKAMAH MAJISTRET KELAS PERTAMA (S.85 & S.87(1) Akta 92): Boleh membicarakan kesalahan sehingga 10 tahun penjara, TETAPI had kuasa menjatuhkan hukuman biasa ialah penjara maks 5 tahun, denda maks RM10,000, sebatan maks 12 kali — MELAINKAN Akta khusus memberi kuasa hukuman penuh (*non-obstante clause*).\n"
+            "• PERBANDINGAN KRITIKAL AKTA KKM:\n"
+            "  (1) Akta 852 (S.43), Akta 154 (S.23A) & Akta 342 (S.24A pindaan Akta A1742): MEMPUNYAI klausa *non-obstante* — Mahkamah Majistret Kelas Pertama BOLEH menjatuhkan hukuman penuh melebihi RM10,000 (termasuk denda korporat RM100,000/RM300,000).\n"
+            "  (2) Akta Makanan 1983 [Akta 281]: TIDAK MEMPUNYAI klausa *non-obstante*! Oleh itu, bagi kesalahan berat Akta 281 (S.13(1) RM100k/10thn, S.13A(1) RM50k/8thn, S.13A(2) RM30k/5thn, S.13B(4) RM20k/5thn), jika pendakwaan memohon hukuman melebihi RM10,000 / 5 tahun (atau denda penuh S.13), IP WAJIB dirujuk kepada TPR untuk pendaftaran di MAHKAMAH SESYEN (S.63 & S.64 Akta 92 — boleh jatuhkan apa-apa hukuman sah selain hukuman mati) atau permohonan khas S.87(2) Akta 92!\n"
+            "• MAHKAMAH MAJISTRET KELAS KEDUA (S.88 & S.89): Had amat terhad (penjara maks 6 bulan / denda maks RM1,000 sahaja) — elakkan mendaftar kes penguatkuasaan KKM utama di hadapan Majistret Kelas Kedua."
+        ),
+        "cadangan_pertuduhan": [
+            {
+                "perihal": "Penentuan Forum Mahkamah (Majistret Kelas Pertama vs Mahkamah Sesyen) bagi Kes Pendakwaan KKM",
+                "seksyen_kesalahan": "Seksyen 63, 64 (Mahkamah Sesyen) & Seksyen 85, 87, 88 (Mahkamah Majistret) Akta 92",
+                "seksyen_hukuman": "Bidang Kuasa Mahkamah Rendah (Akta 92 dibaca bersama S.43 Akta 852 / S.23A Akta 154 / S.24A Akta 342)",
+                "hukuman_maksimum": "Majistret Kelas 1 (S.87(1)): 5 tahun / RM10,000 (kecuali ada klausa non-obstante) | Mahkamah Sesyen (S.64): Hukuman penuh statutori selain mati",
+                "boleh_kompaun": "TIDAK BERKENAAN (Akta Bidang Kuasa Mahkamah)",
+            },
+        ],
+        "sop_lapangan": [
+            "Semak penalti maksimum kesalahan dalam draf Borang 114 sebelum memfailkan saman/pertuduhan di mahkamah.",
+            "Bagi kes Akta 852 (S.43), Akta 154 (S.23A) & Akta 342 (S.24A): boleh difailkan di Mahkamah Majistret Kelas Pertama kerana akta memberi kuasa menjatuhkan hukuman penuh.",
+            "Bagi kes berat Akta Makanan 1983 [Akta 281] (S.13(1), S.13A(1)/(2), S.13B(4)): rujuk IP kepada TPR (S.32A Akta 281) dengan syor pendaftaran di Mahkamah Sesyen (S.63 & S.64 Akta 92) supaya mahkamah tidak tersekat had RM10,000 / 5 tahun di bawah S.87(1) Akta 92.",
+            "Bagi Sabah, Sarawak dan W.P. Labuan: pastikan tajuk Saman/Borang 114 menggunakan nama Mahkamah Majistret/Sesyen Persekutuan yang tepat (bukan 'Negeri-Negeri Tanah Melayu' dan bukan Mahkamah Anak Negeri).",
+        ],
+        "eksibit_wajib": [
+            "Kertas Siasatan lengkap & Izin Mendakwa bertulis daripada TPR",
+            "Draf Pertuduhan (Borang 114) & Saman (Borang 143 / S.111 KTJ) dengan nama forum mahkamah yang betul",
+        ],
+        "perangkap_kesilapan": [
+            "JURANG BESAR AKTA 281: Mendaftarkan kes serius S.13(1) Akta 281 (RM100,000/10 tahun) di Mahkamah Majistret tanpa penyelarasan TPR/Mahkamah Sesyen menyebabkan Majistret tersekat pada had RM10,000 / 5 tahun di bawah S.87(1) Akta 92!",
+            "JANGAN daftarkan kes penguatkuasaan KKM di hadapan Majistret Kelas Kedua (S.88/89 Akta 92 — had RM1,000 / 6 bulan sahaja).",
+        ],
+        "templat_ringkas": (
+            "Semakan Bidang Kuasa Mahkamah [Akta 92]: Mahkamah Majistret Kelas Pertama (S.85/87) berkuasa penuh bagi Akta 852 (S.43), Akta 154 (S.23A) & Akta 342 (S.24A); "
+            "manakala kes berat Akta 281 (S.13/13A/13B) yang memohon denda > RM10,000 hendaklah dirujuk kepada TPR untuk pendaftaran di Mahkamah Sesyen (S.63 & S.64 Akta 92)."
+        ),
+    },
+    {
+        "id": "ak344_bantuan_iringan_polis_operasi",
+        "akta_utama": "Akta 344",
+        "tajuk": "Permohonan Bantuan & Iringan Polis dalam Operasi KKM (S.20(3)(c) Akta Polis 1967 [Akta 344]) & Batasan S.90",
+        "keywords": [
+            "akta 344",
+            "akta polis",
+            "police act",
+            "bantuan polis",
+            "iringan polis",
+            "iringi operasi",
+            "operasi bersama polis",
+            "polis wajib bantu",
+            "seksyen 20(3)(c)",
+            "seksyen 20 akta 344",
+            "seksyen 90 akta 344",
+            "halang polis",
+            "kuasa polis",
+        ],
+        "negative_keywords": [],
+        "incompatible_with": [],
+        "keputusan_tindakan": "MOHON BANTUAN IRINGAN PDRM SECARA RASMI (S.20(3)(c) AKTA 344 & S.24 AKTA 154) — PPKP Tiada Kuasa Polis; S.90 Hanya Untuk Halangan Terhadap Pegawai Polis",
+        "sesuai_buka_ip": False,
+        "alasan_keputusan": (
+            "Seksyen 20(3)(c) Akta Polis 1967 [Akta 344] secara nyata menetapkan antara tugas statutori pegawai polis adalah "
+            "'membantu dalam melaksanakan mana-mana undang-undang berhubungan dengan hasil, eksais, KEBERSIHAN (sanitary), KUARANTIN (quarantine), imigresen dan pendaftaran'. "
+            "Peruntukan ini menjadi jambatan undang-undang rasmi bagi PKD/PPKP memohon bantuan dan iringan keselamatan PDRM untuk operasi berisiko tinggi di bawah Akta 852, Akta 281, Akta 342 dan Akta 154 (melengkapi S.24 Akta 154).\n"
+            "BATASAN KRITIKAL: PPKP TIDAK mempunyai kuasa pegawai polis di bawah Akta 344 (seperti kuasa tangkapan am, sekatan jalan raya S.26 atau menahan di bawah Akta Polis). "
+            "Seksyen 90 Akta 344 (denda maks RM500 / 6 bulan) HANYA terpakai bagi perbuatan menghalang PEGAWAI POLIS, bukan PPKP — halangan terhadap PPKP sendiri tetap dirujuk ke seksyen halangan Akta KKM atau S.186/353 Kanun Keseksaan [Akta 574]."
+        ),
+        "cadangan_pertuduhan": [
+            {
+                "perihal": "Punca Kuasa Bantuan Polis dalam Operasi Kesihatan Awam (S.20(3)(c)) & Halangan Terhadap Pegawai Polis (S.90 — PDRM sahaja)",
+                "seksyen_kesalahan": "Seksyen 20(3)(c) & Seksyen 90 Akta Polis 1967 [Akta 344]",
+                "seksyen_hukuman": "Seksyen 90 Akta 344 (khusus halangan terhadap pegawai polis sahaja)",
+                "hukuman_maksimum": "S.90 Akta 344: Denda tidak melebihi RM500.00 atau penjara tidak melebihi 6 bulan atau kedua-duanya (Bidang kuasa PDRM)",
+                "boleh_kompaun": "TIDAK BOLEH KOMPAUN — Kuasa tindakan sepenuhnya oleh PDRM",
+            },
+        ],
+        "sop_lapangan": [
+            "Kenal pasti operasi berisiko tinggi lebih awal (cth: premis ingkar penutupan S.11/S.18, pesakit Tibi MDR agresif, sindiket vape/rokok haram, atau kawasan pernah berlaku halangan/ugutan).",
+            "Keluarkan surat permohonan rasmi daripada Pegawai Kesihatan Daerah (PKD) kepada Ketua Polis Daerah (OCPD/KPD) memohon bantuan iringan anggota PDRM dengan memetik Seksyen 20(3)(c) Akta Polis 1967 [Akta 344] (serta S.24 Akta 154 jika operasi vektor).",
+            "Adakan taklimat operasi bersama (joint briefing) sebelum gerak kerja bagi menyelaras peranan: PPKP mengendalikan pemeriksaan/sitaan/notis KKM, manakala PDRM mengawal keselamatan awam dan melaksanakan tangkapan jenayah jika berlaku kekecohan.",
+            "Jika berlaku halangan semasa operasi bersama: halangan terhadap PPKP dirujuk ke S.186/S.353 Akta 574 (atau seksyen halangan Akta KKM), manakala halangan terhadap anggota polis ditangani PDRM di bawah S.90 Akta 344 / S.186 Akta 574.",
+        ],
+        "eksibit_wajib": [
+            "Surat Permohonan Bantuan Iringan Polis daripada PKD kepada OCPD/KPD (memetik S.20(3)(c) Akta 344)",
+            "Rekod kehadiran / nama & no. badan anggota PDRM yang mengiringi operasi dalam Diari Siasatan PPKP",
+            "Laporan Polis S.107 KTJ (jika berlaku insiden kekecohan atau halangan semasa operasi)",
+        ],
+        "perangkap_kesilapan": [
+            "JANGAN sesekali menyangka PPKP boleh menggunakan kuasa polis di bawah Akta 344 — Akta 344 hanya memberi kuasa kepada pegawai polis yang dilantik di bawahnya.",
+            "JANGAN petik Seksyen 90 Akta 344 jika mangsa halangan ialah PPKP; S.90 hanya melindungi pegawai polis yang sedang bertugas.",
+        ],
+        "templat_ringkas": (
+            "Permohonan Bantuan & Iringan PDRM (S.20(3)(c) Akta Polis 1967 [Akta 344]): PKD memohon bantuan anggota PDRM bagi mengiringi operasi penguatkuasaan "
+            "undang-undang kebersihan/kuarantin/kesihatan awam KKM di lokasi berisiko tinggi selaras kewajipan statutori di bawah Seksyen 20(3)(c) Akta 344."
+        ),
+    },
 ]
 
 
@@ -1206,6 +1710,20 @@ class UIPAdvisorService:
             return "Akta 281"
         if "154" in low or "serangga pembawa penyakit" in low:
             return "Akta 154"
+        if "593" in low or "tatacara jenayah" in low or "criminal procedure" in low or re.search(r"\b(?:ktj|cpc)\b", low):
+            return "Akta 593"
+        if "574" in low or "kanun keseksaan" in low or "penal code" in low:
+            return "Akta 574"
+        if "344" in low or "akta polis" in low or "police act" in low:
+            return "Akta 344"
+        if "388" in low or "akta tafsiran" in low or "tafsiran 1948" in low or "interpretation act" in low:
+            return "Akta 388"
+        if re.search(r"\b(?:akta|act)\s*92\b", low) or "mahkamah rendah" in low or "subordinate courts" in low:
+            return "Akta 92"
+        if re.search(r"\b(?:akta|act)\s*56\b", low) or "akta keterangan" in low or "evidence act" in low:
+            return "Akta 56"
+        if "611" in low or "kanak-kanak" in low or "child act" in low:
+            return "Akta 611"
         m = re.search(r"akta\s+(\d+)", low)
         if m:
             return f"Akta {m.group(1)}"
@@ -1231,6 +1749,20 @@ class UIPAdvisorService:
             return "Kuasa Pemeriksaan S.3/S.5, Perintah Pembersihan/Penutupan S.8(1), Bantuan Polis S.24 & Kompaun S.25 Akta 154"
         if "342" in low or "apppb" in low:
             return "Kuasa Pemeriksaan S.14/S.14A(1)/S.15(1), Pembasmian Kuman & Penutupan S.18(1)(c)&(d), serta Kompaun S.25 (Pindaan Akta A1742)"
+        if "593" in low or "ktj" in low:
+            return "Tatacara Siasatan & Pendakwaan KTJ [Akta 593]: Laporan Polis S.107, OTI S.108(2), Rakaman S.112, Diari S.119, Penzahiran S.51A, Pertuduhan S.152–163, Kimia S.399 & Pelupusan S.407/407A"
+        if "574" in low or "kanun keseksaan" in low:
+            return "BIDANG KUASA PDRM & TPR SAHAJA — PPKP disifatkan penjawat awam (S.21 Akta 574) dan WAJIB buat Laporan Polis S.107 KTJ (TIADA kuasa kompaun/siasatan Akta 574 oleh PPKP)"
+        if "344" in low or "polis" in low:
+            return "Permohonan Bantuan & Iringan Polis Operasi Kesihatan Awam (S.20(3)(c) Akta Polis 1967 [Akta 344]) — Kuasa polis & S.90 adalah bidang kuasa PDRM sahaja"
+        if "388" in low or "tafsiran" in low:
+            return "Kaedah Tafsiran & Pengiraan Masa Statutori (S.3, S.12, S.17A, S.30, S.40, S.47, S.54 & S.59 Akta Tafsiran 1948 dan 1967 [Akta 388])"
+        if re.search(r"\b(?:akta|act)\s*92\b", low) or "mahkamah rendah" in low:
+            return "Bidang Kuasa Mahkamah Majistret (S.85/87/88) & Mahkamah Sesyen (S.63/64) di bawah Akta Mahkamah Rendah 1948 [Akta 92]"
+        if re.search(r"\b(?:akta|act)\s*56\b", low) or "keterangan" in low:
+            return "Kebolehterimaan Keterangan & Dokumen Digital S.90A–90C, S.73AA & S.114A Akta Keterangan 1950 [Akta 56]"
+        if "611" in low or "kanak-kanak" in low:
+            return "Perlindungan Identiti S.15 & Tatacara Mahkamah Bagi Kanak-Kanak S.83 & S.91 Akta Kanak-Kanak 2001 [Akta 611]"
         return f"Kuasa pemeriksaan & penguatkuasaan di bawah {akta_code or 'Akta Kesihatan Awam KKM'}"
 
     @classmethod
@@ -1379,14 +1911,19 @@ class UIPAdvisorService:
         is_procedural_query = any(
             k in q_low
             for k in (
-                "akta 593", "ktj", "112", "113", "119", "152", "163", "376", "377",
+                "akta 593", "ktj", "cpc", "107", "108", "112", "113", "119", "152", "163", "376", "377", "399", "407", "51a",
                 "akta 56", "90a", "114a", "73aa", "akta 611", "kanak-kanak 2001",
-                "rakaman percakapan", "diari siasatan", "sijil 90a", "izin mendakwa",
+                "akta 388", "akta tafsiran", "tafsiran 1948", "hari bersih", "pos berdaftar", "pemansuhan", "hukuman berganda",
+                "akta 92", "mahkamah rendah", "mahkamah majistret", "mahkamah sesyen", "had hukuman",
+                "akta 344", "akta polis", "bantuan polis", "iringan polis",
+                "rakaman percakapan", "diari siasatan", "sijil 90a", "izin mendakwa", "pelupusan barang", "waran",
             )
         )
 
-        # Tapis keluar Seksyen 1 / Seksyen 2 (Tafsiran/Tajuk Ringkas) & seksyen bukan kesalahan daripada dicalonkan sebagai caj
+        # Tapis keluar Seksyen 1 / Seksyen 2 (Tafsiran/Tajuk Ringkas) kecuali bagi Akta Tafsiran [Akta 388]
         def _is_def_chunk(chunk: Any) -> bool:
+            if str(getattr(chunk, "akta_code", "") or "") == "Akta 388":
+                return False
             sec_low = str(getattr(chunk, "section", "") or "").lower()
             if any(m in sec_low for m in ("tafsiran", "tajuk ringkas", "permulaan kuat kuasa", "interpretation", "short title")):
                 return True
@@ -1816,12 +2353,16 @@ class UIPAdvisorService:
 
             if matched_qa and isinstance(matched_qa.get("answer"), dict):
                 ans = dict(matched_qa["answer"])
-                # Tolak cache rosak (fallback / Seksyen 2 Tafsiran)
+                # Tolak cache rosak (fallback / Seksyen 2 Tafsiran), kecuali bagi Akta Tafsiran [Akta 388]
                 ans_dump_low = str(ans.get("cadangan_pertuduhan") or "").lower()
+                is_akta_388_ans = (
+                    "388" in str(ans.get("akta_disyorkan") or "").lower()
+                    or "akta 388" in ans_dump_low
+                    or "akta tafsiran" in ans_dump_low
+                )
                 if (
                     ans.get("scenario_id") not in ("rag_custom_query", "unindexed_statute_guard")
-                    and "seksyen 2" not in ans_dump_low
-                    and "tafsiran" not in ans_dump_low
+                    and (is_akta_388_ans or not ("seksyen 2" in ans_dump_low and "tafsiran" in ans_dump_low))
                 ):
                     self._enrich_two_branch_structure(ans, question, is_fallback=False)
                     # Sahkan jawapan cache menggunakan validate_legal_output sebelum dipetik semula
@@ -1935,10 +2476,10 @@ class UIPAdvisorService:
                 top_k=4,
             )
 
-        # FASA 3.4 & 5.3: Pastikan `statutory_citations` memaparkan `verbatim_text_bm` 100% aksara-demi-aksara tanpa Seksyen 2 Tafsiran
+        # FASA 3.4 & 5.3: Pastikan `statutory_citations` memaparkan `verbatim_text_bm` 100% aksara-demi-aksara tanpa Seksyen 2 Tafsiran (kecuali Akta 388)
         q_low_cit = (question or "").lower()
         asks_def_cit = any(
-            k in q_low_cit for k in ("tafsiran", "definisi", "maksud ", "seksyen 2", "sek. 2", "s.2 ")
+            k in q_low_cit for k in ("tafsiran", "definisi", "maksud ", "seksyen 2", "sek. 2", "s.2 ", "akta 388")
         )
         verbatim_by_text: Dict[str, Dict[str, Any]] = {
             s["verbatim_text_bm"]: s for s in legal_lib.statute_sections_verbatim
@@ -2226,6 +2767,14 @@ class UIPAdvisorService:
                     "4) DILARANG mencadangkan sebarang akta/peraturan dalam SENARAI HITAM PERUNTUKAN DIMANSUHKAN (seperti PPKHT 2004 atau Ordinan Darurat 2021).\n"
                     "5) Bagi setiap cadangan_pertuduhan (jika ADA_KESALAHAN), wajib sertakan 5 kunci tepat: perihal, seksyen_kesalahan, seksyen_hukuman, hukuman_maksimum, boleh_kompaun.\n"
                     f"{amendment_rule_str}"
+                    "7) RUJUKAN SILANG AKTA LAIN (LEX SPECIALIS & BATASAN KUASA PPKP vs PDRM): "
+                    "Sentiasa semak Akta KKM spesifik dahulu (Akta 852, 281, 154, 342). "
+                    "Apabila kesalahan/prosedur TIADA dalam akta spesifik tersebut, rujuk akta sokongan rasmi yang dibekalkan dalam <STATUTORY_CONTEXT>: "
+                    "(a) Kanun Keseksaan [Akta 574] bagi halangan (S.186 — khususnya Akta 852 yang tiada seksyen halangan sendiri), tentangan sitaan (S.183), ugutan (S.189/S.506), serangan (S.353), penyamaran PPKP (S.170), pemalsuan sijil/dokumen (S.465/468/471), maklumat/aduan palsu (S.177/182), penipuan (S.420) — WAJIB nyatakan PPKP TIADA kuasa kompaun/siasat Akta 574 dan WAJIB buat Laporan Polis S.107 KTJ (dan S.108(2) OTI jika Non-Seizable); "
+                    "(b) Kanun Tatacara Jenayah [Akta 593] bagi tatacara siasatan, rakaman S.112, diari S.119, waran geledah S.54/56/62, penzahiran S.51A, laporan kimia S.399 & pelupusan barang kes S.407/407A; "
+                    "(c) Akta Polis 1967 [Akta 344] bagi permohonan bantuan/iringan polis operasi kebersihan & kuarantin (S.20(3)(c)) — tegaskan S.90 hanya untuk halangan terhadap pegawai polis, bukan PPKP; "
+                    "(d) Akta Tafsiran 1948 dan 1967 [Akta 388] (SATU akta bersepadu) bagi kiraan 10 hari bersih & cuti umum (S.54), serahan pos berdaftar (S.12), kesan pemansuhan PPKHT 2004 (S.30), pembatalan awal perintah (S.47), pendekatan tujuan (S.17A) & larangan hukuman berganda (S.59); "
+                    "(e) Akta Mahkamah Rendah 1948 [Akta 92] bagi bidang kuasa & had hukuman Mahkamah Majistret (S.85/87/88) vs Mahkamah Sesyen (S.63/64) — nyatakan jurang Akta 281 yang tiada klausa non-obstante berbanding S.43 Akta 852, S.23A Akta 154 & S.24A Akta 342.\n"
                     f"{deep_mode_instruction}\n"
                     f"SOALAN PPKP:\n{safe_question_for_llm}\n\n"
                     f"{ref_block}"
@@ -2475,9 +3024,19 @@ class UIPAdvisorService:
                 continue
             sec_full = sec_m.group(1).lower()
             sec_base = re.findall(r"^\d+[a-z]?", sec_full)[0]
-            ch_act_digits = re.findall(r"\b(852|281|154|342|593|56|611)\b", ch_sec)
+            ch_act_digits = re.findall(r"\b(852|281|154|342|593|574|344|388|611)\b", ch_sec)
             if not ch_act_digits:
-                ch_act_digits = re.findall(r"\b(852|281|154|342|593|56|611)\b", ans_act)
+                if re.search(r"\b(?:akta|act)\s*92\b|mahkamah\s+rendah", ch_sec, re.I):
+                    ch_act_digits = ["92"]
+                elif re.search(r"\b(?:akta|act)\s*56\b|keterangan", ch_sec, re.I):
+                    ch_act_digits = ["56"]
+            if not ch_act_digits:
+                ch_act_digits = re.findall(r"\b(852|281|154|342|593|574|344|388|611)\b", ans_act)
+                if not ch_act_digits:
+                    if re.search(r"\b(?:akta|act)\s*92\b|mahkamah\s+rendah", ans_act, re.I):
+                        ch_act_digits = ["92"]
+                    elif re.search(r"\b(?:akta|act)\s*56\b|keterangan", ans_act, re.I):
+                        ch_act_digits = ["56"]
             is_ppkm_ch = "ppkm" in ch_sec or "95/2009" in ch_sec
             is_ppm_ch = "ppm" in ch_sec or "1985" in ch_sec
 

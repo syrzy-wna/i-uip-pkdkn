@@ -49,14 +49,11 @@ interface LeftEvidencePaneProps {
   onFileRejected?: (message: string) => void;
 }
 
+import { ALL_ACT_OPTIONS } from "@/lib/actMeta";
+
 const AKTA_OPTIONS: Array<{ value: string; label: string }> = [
-  { value: "Akta 852", label: "Akta 852 — Produk Merokok & Vape" },
-  { value: "Akta 281", label: "Akta 281 — Makanan 1983 & PPKM 2009" },
-  { value: "Akta 154", label: "Akta 154 — Aedes & Pembawa Penyakit" },
-  { value: "Akta 342", label: "Akta 342 — Penyakit Berjangkit / Tibi" },
-  { value: "Akta 593", label: "Akta 593 — Kanun Tatacara Jenayah (KTJ)" },
-  { value: "Akta 56", label: "Akta 56 — Akta Keterangan 1950" },
-  { value: "Semua", label: "Semua Akta KKM" },
+  ...ALL_ACT_OPTIONS.map((a) => ({ value: a.value, label: a.label })),
+  { value: "Semua", label: "Semua Akta (KKM + Rujukan Silang)" },
 ];
 
 export default function LeftEvidencePane({
