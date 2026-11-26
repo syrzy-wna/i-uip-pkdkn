@@ -1,0 +1,633 @@
+{
+  "schema_version": "2.0",
+  "sop_id": "UIP-APPPB-02-16 (PINDAAN 2024)",
+  "file_stem": "UIP-APPPB-02-16",
+  "alias_kod": [],
+  "tajuk": "Prosedur Penguatkuasaan Di Bawah Subseksyen 7(1) Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988: Pemeriksaan Sanitasi Berkaitan Vektor Pada Kenderaan (Pesawat Udara)",
+  "kategori": "APPPB_1988",
+  "akta_utama": "Akta 342",
+  "akta_berkaitan": [
+    "Akta 342",
+    "Akta 56",
+    "Akta 388",
+    "Akta 593",
+    "Akta 574",
+    "IHR 2005"
+  ],
+  "keluaran": "01",
+  "pindaan": "01",
+  "tarikh_kuatkuasa": "15 Feb 2024",
+  "ringkasan_eksekutif": "Prosedur ini menggariskan tatacara penguatkuasaan pemeriksaan sanitasi vektor pada kenderaan (pesawat udara) sebagaimana peruntukan di bawah subseksyen 7(1) Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988 [Akta 342].",
+  "tujuan": "Prosedur ini menggariskan tatacara penguatkuasaan pemeriksaan sanitasi vektor pada kenderaan (pesawat udara) sebagaimana peruntukan di bawah subseksyen 7(1) Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988 [Akta 342].",
+  "panduan_am": [],
+  "punca_kuasa": [
+    "S.7(1) Akta 342",
+    "S.7(2) Akta 342",
+    "S.8(1) Akta 342",
+    "Aircraft General Declaration",
+    "Disinsection pesawat udara"
+  ],
+  "undang_undang_berkaitan": [
+    {
+      "akta": "Subseksyen 7(1) akta 342 menyatakan bahawa;",
+      "akta_kod": "Akta 342",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Subseksyen 8(1) akta 342 pula memperuntukkan bahawa “pemeriksaan di",
+      "akta_kod": "Akta 342",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Pencegahan Dan Pengawalan Penyakit Berjangkit 1988 [Akta 342]",
+      "akta_kod": "Akta 342",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "dan Peraturan-Peraturannya",
+      "akta_kod": null,
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Keterangan 1950 (Disemak 1971) [Akta 56]",
+      "akta_kod": "Akta 56",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Tafsiran 1948 dan 1967(Disemak 1989) [Akta 388]",
+      "akta_kod": "Akta 388",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Kanun Tatacara Jenayah (Disemak 1999) [Akta 593]",
+      "akta_kod": "Akta 593",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Kanun Keseksaan (Disemak 1997) [Akta 574]",
+      "akta_kod": "Akta 574",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "TAFSIRAN BERPANDUKAN AKTA 342",
+      "akta_kod": "Akta 342",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Pencegahan dan Pengawalan Penyakit Berjangkit (Pindaan) 2025 [Akta A1742] & P.U.(A) 139/2025",
+      "akta_kod": "Akta 342",
+      "status": "AKTIF",
+      "nota": "[NOTA PINDAAN] Berkuat kuasa 1 Mei 2025 — mengatasi kadar penalti & kompaun lama cetakan SOP 15 Feb 2024."
+    }
+  ],
+  "anggota_terlibat": [
+    {
+      "kod": "SEMUA PEGAWA",
+      "jawatan": "Semua pegawai yang dilantik sebagai pegawai diberikuasa di bawah seksyen 3,"
+    },
+    {
+      "kod": "AKTA 342.",
+      "jawatan": "Akta 342."
+    },
+    {
+      "kod": "NO RUJUKAN P",
+      "jawatan": "NO RUJUKAN PROSEDUR:UIP-APPPB-02-16(PINDAAN 2024)"
+    },
+    {
+      "kod": "PROSEDUR PEN",
+      "jawatan": "Prosedur Penguatkuasaan Di Bawah Subseksyen 7(1)- Pemeriksaan Sanitasi Vektor Pada Kenderaan (Pesawat"
+    },
+    {
+      "kod": "UDARA)",
+      "jawatan": "Udara)"
+    }
+  ],
+  "singkatan": [
+    {
+      "kod": "Akta 342",
+      "maksud": "Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988 [Akta 342] dan Peraturan-Peraturannya"
+    },
+    {
+      "kod": "IO",
+      "maksud": "Pegawai Siasatan"
+    },
+    {
+      "kod": "KPPKP",
+      "maksud": "Ketua Penolong Pegawai Kesihatan Persekitaran"
+    },
+    {
+      "kod": "K/S",
+      "maksud": "Kertas Siasatan"
+    },
+    {
+      "kod": "OKP",
+      "maksud": "Orang Kena Perintah"
+    },
+    {
+      "kod": "PDK",
+      "maksud": "Pegawai diberikuasa"
+    },
+    {
+      "kod": "PKD",
+      "maksud": "Pegawai Kesihatan Daerah/Kawasan/Bahagian"
+    },
+    {
+      "kod": "PKP",
+      "maksud": "Pegawai Kesihatan Persekitaran"
+    },
+    {
+      "kod": "PPKP",
+      "maksud": "Penolong Pegawai Kesihatan Persekitaran"
+    },
+    {
+      "kod": "PPKPK",
+      "maksud": "Penolong Pegawai Kesihatan Persekitaran Kanan"
+    },
+    {
+      "kod": "UIPD",
+      "maksud": "Unit Inspektorat dan Perundangan Daerah"
+    },
+    {
+      "kod": "UIPN",
+      "maksud": "Unit Inspektorat dan Perundangan Negeri 9. PEMAKAIAN"
+    }
+  ],
+  "nota_pindaan": [
+    {
+      "tahap": "AMARAN",
+      "tajuk": "[NOTA PINDAAN] Pindaan Penalti & Kuasa Akta 342 (Akta A1742 — 1 Mei 2025)",
+      "butiran": "SOP ini berkuat kuasa 15 Feb 2024 sebelum Akta Pencegahan dan Pengawalan Penyakit Berjangkit (Pindaan) 2025 [Akta A1742] dan P.U.(A) 139/2025 (1 Mei 2025). Utamakan had penalti baharu Seksyen 24(a) (individu maks RM10,000 / penjara 2 tahun) dan Seksyen 24(b) (pertubuhan perbadanan maks RM100,000) serta liabiliti korporat S.22A.",
+      "gantian_statut": "Akta A1742 & P.U.(A) 139/2025 (1 Mei 2025)"
+    }
+  ],
+  "tempoh_sla": [],
+  "fasa_kerja": [
+    {
+      "fasa_id": "F1",
+      "tajuk_fasa": "1. Pelaksanaan Proses Kerja",
+      "langkah": [
+        {
+          "no": "1",
+          "tajuk": "Periksa dokumen ’Aircraft General Declaration’ dan tentukan ",
+          "anggota": [
+            "PKD",
+            "PKP",
+            "PPKPK",
+            "PPKP",
+            "PDK"
+          ],
+          "tindakan": [
+            "Periksa dokumen ’Aircraft General Declaration’ dan tentukan . samaadamaklumatbasmiseranggadiperakui ."
+          ],
+          "rujukan": [
+            "LampiranB",
+            "-",
+            "’AircraftGeneral",
+            "Declaration’"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 8
+        },
+        {
+          "no": "2",
+          "tajuk": "Jika tidak berpuas hati (Maklumat disyaki tidak benar) PDK ",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            "Jika tidak berpuas hati (Maklumat disyaki tidak benar) PDK . , maklumkan kepada juruterbang/agen bahawa satu pemeriksaan di pesawat udara akan dijalankan dengan kehadiran juruterbang Jika berpuashati terus ke . tindakan3 ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 2: Jika tidak berpuas hati (Maklumat disyaki tidak benar) PDK . , maklumkan kepada juruterbang/age...",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 8
+        },
+        {
+          "no": "3",
+          "tajuk": "Maklumkan pihak -pihak yang berkaitan di lapangan terbang ",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            "Maklumkan pihak -pihak yang berkaitan di lapangan terbang . tentangaktivitipemeriksaanyangakandijalankan;"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 8
+        },
+        {
+          "no": "4",
+          "tajuk": "Sediakan peralatan pemeriksaan dan jalankan pemeriksaan ",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            "Sediakan peralatan pemeriksaan dan jalankan pemeriksaan . bersamapembantu;"
+          ],
+          "rujukan": [
+            "LampiranA"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 8
+        },
+        {
+          "no": "5",
+          "tajuk": "Jika menemui kesan pembiakan/kehadiran serangga yang ",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            "Jika menemui kesan pembiakan/kehadiran serangga yang . masih aktif keluarkan notis Perintah secara bertulis di , bawah subseksyen 7(2) akta 342 kepada juruterbang/agen . Tempoh masa kerja pembasmian serangga adalah mengikut keperluan semasa yang difikirkan munasabah oleh pegawai diberikuasa (Lampiran C Notis Perintah Menjalankan – AktivitiPembasmianSeranggaPada PesawatUdara);"
+          ],
+          "rujukan": [
+            "LampiranC"
+          ],
+          "rujukan_lampiran": [
+            "Lampiran C"
+          ],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 5: Jika menemui kesan pembiakan/kehadiran serangga yang . masih aktif keluarkan notis Perintah sec...",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 8
+        },
+        {
+          "no": "6",
+          "tajuk": "Ambileksibit buatpenandaandankemaskinidiarisiasatan ",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            "Ambileksibit buatpenandaandankemaskinidiarisiasatan . , ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 8
+        },
+        {
+          "no": "7",
+          "tajuk": "Serahkaneksibitkepadapegawaipenyimpaneksibit ",
+          "anggota": [
+            "PDK",
+            "PPKP"
+          ],
+          "tindakan": [
+            "Serahkaneksibitkepadapegawaipenyimpaneksibit . ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 8
+        },
+        {
+          "no": "8",
+          "tajuk": "Jikaarahandipatuhi BATALnotisyangtelahdikeluarkan ",
+          "anggota": [
+            "PDK",
+            "IO"
+          ],
+          "tindakan": [
+            "Jikaarahandipatuhi BATALnotisyangtelahdikeluarkan . , sebelumini Jikaarahantidakdipatuhi sediakanK/Sbagi . , kesalahandibawahSek 22(b) akta342untuk . , pendakwaan(RujukProsedurPenyediaanKertasSiasatan . dan ProsedurPendakwaanKesDiMahkamah) ."
+          ],
+          "rujukan": [
+            "SOPUIP UMUM",
+            "- -",
+            "02 -07(Pindaan",
+            "2024)",
+            ",",
+            "SOPUIP UMUM"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 8
+        },
+        {
+          "no": "9",
+          "tajuk": "Rekodaktiviti ",
+          "anggota": [
+            "PDK",
+            "UIPD"
+          ],
+          "tindakan": [
+            "Rekodaktiviti . ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 8
+        }
+      ]
+    }
+  ],
+  "carta_alir": {
+    "nodes": [
+      {
+        "id": "N_START",
+        "type": "start",
+        "label": "Mula Operasi / Prosedur",
+        "role": null,
+        "step_ref": null,
+        "sop_ref": null
+      },
+      {
+        "id": "N1",
+        "type": "process",
+        "label": "1. Periksa dokumen ’Aircraft General Declaration’ dan tentukan ",
+        "role": "PKD/PKP",
+        "step_ref": "1",
+        "sop_ref": null
+      },
+      {
+        "id": "N2",
+        "type": "decision",
+        "label": "2. Jika tidak berpuas hati (Maklumat disyaki tidak benar) PDK ",
+        "role": "PDK",
+        "step_ref": "2",
+        "sop_ref": null
+      },
+      {
+        "id": "N3",
+        "type": "process",
+        "label": "3. Maklumkan pihak -pihak yang berkaitan di lapangan terbang ",
+        "role": "PDK",
+        "step_ref": "3",
+        "sop_ref": null
+      },
+      {
+        "id": "N4",
+        "type": "process",
+        "label": "4. Sediakan peralatan pemeriksaan dan jalankan pemeriksaan ",
+        "role": "PDK",
+        "step_ref": "4",
+        "sop_ref": null
+      },
+      {
+        "id": "N5",
+        "type": "decision",
+        "label": "5. Jika menemui kesan pembiakan/kehadiran serangga yang ",
+        "role": "PDK",
+        "step_ref": "5",
+        "sop_ref": null
+      },
+      {
+        "id": "N6",
+        "type": "process",
+        "label": "6. Ambileksibit buatpenandaandankemaskinidiarisiasatan ",
+        "role": "PDK",
+        "step_ref": "6",
+        "sop_ref": null
+      },
+      {
+        "id": "N7",
+        "type": "process",
+        "label": "7. Serahkaneksibitkepadapegawaipenyimpaneksibit ",
+        "role": "PDK/PPKP",
+        "step_ref": "7",
+        "sop_ref": null
+      },
+      {
+        "id": "N8",
+        "type": "process",
+        "label": "8. Jikaarahandipatuhi BATALnotisyangtelahdikeluarkan ",
+        "role": "PDK/IO",
+        "step_ref": "8",
+        "sop_ref": null
+      },
+      {
+        "id": "N9",
+        "type": "process",
+        "label": "9. Rekodaktiviti ",
+        "role": "PDK/UIPD",
+        "step_ref": "9",
+        "sop_ref": null
+      },
+      {
+        "id": "N_END",
+        "type": "end",
+        "label": "Selesai & Rekod Fail UIP",
+        "role": null,
+        "step_ref": null,
+        "sop_ref": null
+      }
+    ],
+    "edges": [
+      {
+        "from": "N_START",
+        "to": "N1",
+        "label": null
+      },
+      {
+        "from": "N1",
+        "to": "N2",
+        "label": null
+      },
+      {
+        "from": "N2",
+        "to": "N3",
+        "label": "Teruskan"
+      },
+      {
+        "from": "N3",
+        "to": "N4",
+        "label": null
+      },
+      {
+        "from": "N4",
+        "to": "N5",
+        "label": null
+      },
+      {
+        "from": "N5",
+        "to": "N6",
+        "label": "Teruskan"
+      },
+      {
+        "from": "N6",
+        "to": "N7",
+        "label": null
+      },
+      {
+        "from": "N7",
+        "to": "N8",
+        "label": null
+      },
+      {
+        "from": "N8",
+        "to": "N9",
+        "label": null
+      },
+      {
+        "from": "N9",
+        "to": "N_END",
+        "label": null
+      }
+    ]
+  },
+  "senarai_semak": [
+    {
+      "id": "CHK-01",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[1] Periksa dokumen ’Aircraft General Declaration’ dan tentukan ",
+      "wajib": true,
+      "rujukan": "LampiranB"
+    },
+    {
+      "id": "CHK-02",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[2] Jika tidak berpuas hati (Maklumat disyaki tidak benar) PDK ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-03",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[3] Maklumkan pihak -pihak yang berkaitan di lapangan terbang ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-04",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[4] Sediakan peralatan pemeriksaan dan jalankan pemeriksaan ",
+      "wajib": true,
+      "rujukan": "LampiranA"
+    },
+    {
+      "id": "CHK-05",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[5] Jika menemui kesan pembiakan/kehadiran serangga yang ",
+      "wajib": true,
+      "rujukan": "Lampiran C"
+    },
+    {
+      "id": "CHK-06",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[6] Ambileksibit buatpenandaandankemaskinidiarisiasatan ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-07",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[7] Serahkaneksibitkepadapegawaipenyimpaneksibit ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-08",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[8] Jikaarahandipatuhi BATALnotisyangtelahdikeluarkan ",
+      "wajib": true,
+      "rujukan": "SOPUIP UMUM"
+    },
+    {
+      "id": "CHK-09",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[9] Rekodaktiviti ",
+      "wajib": true,
+      "rujukan": null
+    }
+  ],
+  "lampiran": [
+    {
+      "kod": "Lampiran A",
+      "tajuk": "Senarai Semak Peralatan / Borang",
+      "jenis": "senarai_semak",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran B",
+      "tajuk": "Aircraft General Declaration",
+      "jenis": "lain",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran C",
+      "tajuk": "Notis Perintah Menjalankan Aktiviti Pembasmian Serangga Dalam Pesawat Udara",
+      "jenis": "borang",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    }
+  ],
+  "pematuhan": [
+    "Prosedur yang dikeluarkan ini hendaklah terus berkuatkuasa dan",
+    "dianggap sah sehingga dipinda atau diganti dengan satu prosedur lain",
+    "atau dibatalkan.",
+    "Keengganan dan kegagalan mematuhi prosedur ini tanpa alasan yang",
+    "munasabah boleh menyebabkan seseorang pegawai dikenakan",
+    "tindakan tatatertib di bawah Peraturan-Peraturan Pegawai Awam",
+    "(Kelakuan dan Tatatertib) 1993.",
+    "Kegagalan mematuhi prosedur ini juga merupakan satu kesalahan di"
+  ],
+  "rujukan_silang_resolved": [
+    {
+      "sop_id": "UIP-APPPB-01-16 (PINDAAN 2024)",
+      "file_stem": "UIP-APPPB-01-16",
+      "tajuk": "Prosedur Penguatkuasaan Perintah Pemerhatian Atau Pengawasan Di Bawah Subseksyen 15(1) Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988"
+    },
+    {
+      "sop_id": "UIP-UMUM-02-07 (PINDAAN 2024)",
+      "file_stem": "UIP-UMUM-02-07",
+      "tajuk": "Prosedur Penyediaan Kertas Siasatan"
+    },
+    {
+      "sop_id": "UIP-UMUM-05-07 (PINDAAN 2024)",
+      "file_stem": "UIP-UMUM-05-07",
+      "tajuk": "Prosedur Pendakwaan Di Mahkamah"
+    }
+  ],
+  "nota_audit_kualiti": []
+}

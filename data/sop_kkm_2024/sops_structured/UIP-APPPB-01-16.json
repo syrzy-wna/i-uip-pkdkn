@@ -1,0 +1,347 @@
+{
+  "schema_version": "2.0",
+  "sop_id": "UIP-APPPB-01-16 (PINDAAN 2024)",
+  "file_stem": "UIP-APPPB-01-16",
+  "alias_kod": [],
+  "tajuk": "Prosedur Penguatkuasaan Perintah Pemerhatian Atau Pengawasan Di Bawah Subseksyen 15(1) Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988",
+  "kategori": "APPPB_1988",
+  "akta_utama": "Akta 342",
+  "akta_berkaitan": [
+    "Akta 342",
+    "Akta 56",
+    "Akta 388",
+    "Akta 593",
+    "Akta 574"
+  ],
+  "keluaran": "01",
+  "pindaan": "01",
+  "tarikh_kuatkuasa": "15 Feb 2024",
+  "ringkasan_eksekutif": "Prosedur ini menggariskan tatacara penguatkuasaan perintah pemerhatian atau pengawasan ke atas mana-mana kontak sebagaimana peruntukan di bawah subseksyen 15(1) Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988 [Akta 342] sehingga boleh dilepaskan tanpa ",
+  "tujuan": "Prosedur ini menggariskan tatacara penguatkuasaan perintah pemerhatian atau pengawasan ke atas mana-mana kontak sebagaimana peruntukan di bawah subseksyen 15(1) Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988 [Akta 342] sehingga boleh dilepaskan tanpa membahayakan orang ramai.",
+  "panduan_am": [],
+  "punca_kuasa": [
+    "S.15(1) Akta 342",
+    "S.15(2) Akta 342",
+    "Perintah Pemerhatian (PUI)",
+    "Perintah Pengawasan (Kontak probable/confirmed)",
+    "Lisan -> bertulis dalam 24 jam",
+    "Bawah 18 tahun melalui ibu bapa/penjaga"
+  ],
+  "undang_undang_berkaitan": [
+    {
+      "akta": "Subseksyen 15(1) akta ibu menyatakan bahawa “Seseorang pegawai",
+      "akta_kod": null,
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Prosedur Penguatkuasaan Perintah Pemerhatian Atau Pengawasan Di Bawah Subseksyen 15(1) Akta 342.",
+      "akta_kod": "Akta 342",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Pencegahan Dan Pengawalan Penyakit Berjangkit 1988 [Akta 342]",
+      "akta_kod": "Akta 342",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "dan Peraturan-Peraturannya",
+      "akta_kod": null,
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Keterangan 1950 (Disemak 1971) [Akta 56]",
+      "akta_kod": "Akta 56",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Tafsiran 1948 dan 1967(Disemak 1989) [Akta 388]",
+      "akta_kod": "Akta 388",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Kanun Tatacara Jenayah (Disemak 1999) [Akta 593]",
+      "akta_kod": "Akta 593",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Kanun Keseksaan (Disemak 1997) [Akta 574]",
+      "akta_kod": "Akta 574",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "TAFSIRAN BERPANDUKAN AKTA 342",
+      "akta_kod": "Akta 342",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Beberapa tafsiran yang terdapat dalam Akta Pencegahan dan Pengawalan",
+      "akta_kod": null,
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Penyakit Berjangkit 1988 [Akta 342] yang disebut sebagai akta ibu selepas ini",
+      "akta_kod": "Akta 342",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Menteri di bawah seksyen 3 akta ibu’;",
+      "akta_kod": null,
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Pencegahan dan Pengawalan Penyakit Berjangkit (Pindaan) 2025 [Akta A1742] & P.U.(A) 139/2025",
+      "akta_kod": "Akta 342",
+      "status": "AKTIF",
+      "nota": "[NOTA PINDAAN] Berkuat kuasa 1 Mei 2025 — mengatasi kadar penalti & kompaun lama cetakan SOP 15 Feb 2024."
+    }
+  ],
+  "anggota_terlibat": [
+    {
+      "kod": "SEMUA PEGAWA",
+      "jawatan": "Semua pegawai yang dilantik sebagai pegawai diberikuasa di bawah seksyen 3,"
+    },
+    {
+      "kod": "AKTA 342.",
+      "jawatan": "Akta 342."
+    }
+  ],
+  "singkatan": [
+    {
+      "kod": "Akta 342",
+      "maksud": "Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988 [Akta 342] dan Peraturan-Peraturannya"
+    },
+    {
+      "kod": "IO",
+      "maksud": "Pegawai Siasatan"
+    },
+    {
+      "kod": "KPPKP",
+      "maksud": "Ketua Penolong Pegawai Kesihatan Persekitaran"
+    },
+    {
+      "kod": "K/S",
+      "maksud": "Kertas Siasatan"
+    },
+    {
+      "kod": "OKP",
+      "maksud": "Orang Kena Perintah"
+    },
+    {
+      "kod": "PDK",
+      "maksud": "Pegawai diberikuasa"
+    },
+    {
+      "kod": "PKD",
+      "maksud": "Pegawai Kesihatan Daerah/Kawasan/Bahagian"
+    },
+    {
+      "kod": "PKP",
+      "maksud": "Pegawai Kesihatan Persekitaran"
+    },
+    {
+      "kod": "PPKP",
+      "maksud": "Penolong Pegawai Kesihatan Persekitaran"
+    },
+    {
+      "kod": "PPKPK",
+      "maksud": "Penolong Pegawai Kesihatan Persekitaran Kanan"
+    },
+    {
+      "kod": "UIPD",
+      "maksud": "Unit Inspektorat dan Perundangan Daerah"
+    },
+    {
+      "kod": "UIPN",
+      "maksud": "Unit Inspektorat dan Perundangan Negeri 9. PEMAKAIAN"
+    },
+    {
+      "kod": "Bagi orang",
+      "maksud": "orang yang tidak diasingkan di hospital tetapi berisiko terdedah kepada jangkitan penyakit berjangkit dan tidak perlu dipantau secara harian oleh anggota kesihatan, suatu perintah pemerhatian boleh dikeluarkan"
+    },
+    {
+      "kod": "Sebaliknya, bagi mana",
+      "maksud": "mana orang yang tidak diasingkan di hospital tetapi berisiko terdedah kepada jangkitan penyakit berjangkit dan perlu diperiksa status kesihatan secara berkala oleh anggota kesihatan, suatu perintah pengawasan boleh dikeluarkan. 10. JENIS PERINTAH DAN KRITERIA PENGELUARAN"
+    }
+  ],
+  "nota_pindaan": [
+    {
+      "tahap": "AMARAN",
+      "tajuk": "[NOTA PINDAAN] Pindaan Penalti & Kuasa Akta 342 (Akta A1742 — 1 Mei 2025)",
+      "butiran": "SOP ini berkuat kuasa 15 Feb 2024 sebelum Akta Pencegahan dan Pengawalan Penyakit Berjangkit (Pindaan) 2025 [Akta A1742] dan P.U.(A) 139/2025 (1 Mei 2025). Utamakan had penalti baharu Seksyen 24(a) (individu maks RM10,000 / penjara 2 tahun) dan Seksyen 24(b) (pertubuhan perbadanan maks RM100,000) serta liabiliti korporat S.22A.",
+      "gantian_statut": "Akta A1742 & P.U.(A) 139/2025 (1 Mei 2025)"
+    },
+    {
+      "tahap": "INFO",
+      "tajuk": "Pembetulan Ralat Cetak Seksyen (Subseksyen 5(1) -> Subseksyen 15(1) Akta 342)",
+      "butiran": "Jadual Kandungan mencetak 'Subseksyen 5(1)' secara salah cetak; peruntukan sah bagi Perintah Pemerhatian/Pengawasan ialah Subseksyen 15(1) Akta 342.",
+      "gantian_statut": "Subseksyen 15(1) Akta 342"
+    }
+  ],
+  "tempoh_sla": [
+    {
+      "label": "Perintah Lisan Kepada Bertulis",
+      "tempoh": "Dalam tempoh 24 jam",
+      "rujukan": "Subseksyen 15(1) Akta 342"
+    }
+  ],
+  "fasa_kerja": [
+    {
+      "fasa_id": "F1",
+      "tajuk_fasa": "1. Ringkasan Tatacara Pelaksanaan",
+      "langkah": [
+        {
+          "no": "1",
+          "tajuk": "Rujuk prosedur penuh SOP pada tab Teks Penuh Asal",
+          "anggota": [
+            "PPKP"
+          ],
+          "tindakan": [
+            "Sila rujuk teks penuh SOP yang disahkan bagi perincian langkah kerja."
+          ],
+          "rujukan": [
+            "UIP-APPPB-01-16"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 1
+        }
+      ]
+    }
+  ],
+  "carta_alir": {
+    "nodes": [
+      {
+        "id": "N_START",
+        "type": "start",
+        "label": "Mula Operasi / Prosedur",
+        "role": null,
+        "step_ref": null,
+        "sop_ref": null
+      },
+      {
+        "id": "N1",
+        "type": "process",
+        "label": "1. Rujuk prosedur penuh SOP pada tab Teks Penuh Asal",
+        "role": "PPKP",
+        "step_ref": "1",
+        "sop_ref": null
+      },
+      {
+        "id": "N_END",
+        "type": "end",
+        "label": "Selesai & Rekod Fail UIP",
+        "role": null,
+        "step_ref": null,
+        "sop_ref": null
+      }
+    ],
+    "edges": [
+      {
+        "from": "N_START",
+        "to": "N1",
+        "label": null
+      },
+      {
+        "from": "N1",
+        "to": "N_END",
+        "label": null
+      }
+    ]
+  },
+  "senarai_semak": [
+    {
+      "id": "CHK-01",
+      "kumpulan": "1. Ringkasan Tatacara Pelaksanaan",
+      "item": "[1] Rujuk prosedur penuh SOP pada tab Teks Penuh Asal",
+      "wajib": true,
+      "rujukan": "UIP-APPPB-01-16"
+    }
+  ],
+  "lampiran": [
+    {
+      "kod": "Lampiran A",
+      "tajuk": "Senarai Semak Peralatan / Borang",
+      "jenis": "senarai_semak",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran B",
+      "tajuk": "Perintah Pemerhatian Subseksyen 15(1) Akta 342",
+      "jenis": "borang",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran C",
+      "tajuk": "Perintah Pengawasan Subseksyen 15(1) Akta 342",
+      "jenis": "borang",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran D",
+      "tajuk": "Pengakuan Penganjur Bagi Orang Yang Dikenakan Perintah Pemerhatian/Pengawasan",
+      "jenis": "borang",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran E",
+      "tajuk": "Pelepasan Dari Perintah Pemerhatian/Pengawasan Di Bawah Subseksyen 15(1)",
+      "jenis": "borang",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    }
+  ],
+  "pematuhan": [
+    "Prosedur yang dikeluarkan ini hendaklah terus berkuatkuasa dan",
+    "dianggap sah sehingga dipinda atau diganti dengan satu prosedur lain",
+    "atau dibatalkan.",
+    "Keengganan dan kegagalan mematuhi prosedur ini tanpa alasan yang",
+    "munasabah boleh menyebabkan seseorang pegawai dikenakan",
+    "tindakan tatatertib di bawah Peraturan-Peraturan Pegawai Awam",
+    "(Kelakuan dan Tatatertib) 1993.",
+    "Kegagalan mematuhi prosedur ini juga merupakan satu kesalahan di"
+  ],
+  "rujukan_silang_resolved": [
+    {
+      "sop_id": "UIP-UMUM-02-07 (PINDAAN 2024)",
+      "file_stem": "UIP-UMUM-02-07",
+      "tajuk": "Prosedur Penyediaan Kertas Siasatan"
+    },
+    {
+      "sop_id": "UIP-UMUM-05-07 (PINDAAN 2024)",
+      "file_stem": "UIP-UMUM-05-07",
+      "tajuk": "Prosedur Pendakwaan Di Mahkamah"
+    }
+  ],
+  "nota_audit_kualiti": [
+    "Ralat cetak dalam Isi Kandungan PDF (ms 261): Lampiran C ditulis 'Subseksyen 5(1)', sedangkan borang sebenar (ms 275) adalah 'Subseksyen 15(1) Akta 342'."
+  ]
+}

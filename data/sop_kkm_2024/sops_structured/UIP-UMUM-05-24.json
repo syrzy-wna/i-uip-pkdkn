@@ -1,0 +1,354 @@
+{
+  "schema_version": "2.0",
+  "sop_id": "UIP-UMUM-05-24",
+  "file_stem": "UIP-UMUM-05-24",
+  "alias_kod": [
+    "UMUM-05-24",
+    "29 SOP UMUM-05-24"
+  ],
+  "tajuk": "Prosedur Pengurusan Barang Kes / Eksibit Di Bawah Perundangan Kesihatan Awam",
+  "kategori": "UMUM",
+  "akta_utama": "SOP Umum / KTJ",
+  "akta_berkaitan": [
+    "Akta 852",
+    "Akta 281",
+    "Akta 154",
+    "Akta 342",
+    "Akta 593",
+    "Akta 56"
+  ],
+  "keluaran": "01",
+  "pindaan": "00",
+  "tarikh_kuatkuasa": "22 Apr 2024",
+  "ringkasan_eksekutif": "Tujuan prosedur ini adalah untuk menggariskan tatacara pengurusan barang kes/eksibit di bawah perundangan kesihatan awam yang perlu dipatuhi oleh pegawai yang mengendalikan eksibit.",
+  "tujuan": "Tujuan prosedur ini adalah untuk menggariskan tatacara pengurusan barang kes/eksibit di bawah perundangan kesihatan awam yang perlu dipatuhi oleh pegawai yang mengendalikan eksibit.",
+  "panduan_am": [],
+  "punca_kuasa": [
+    "Rantaian Jagaan Eksibit (Chain of Custody)",
+    "Stor Barang Kes & Pegawai Penjaga Stor Eksibit",
+    "Pendaftaran, Pelabelan, Lak (Seal) & Pelupusan S.407/407A KTJ",
+    "Lampiran A-C Daftar & Serah Terima Eksibit"
+  ],
+  "undang_undang_berkaitan": [
+    {
+      "akta": "Akta Keterangan 1950 (Disemak 1971) [Akta 56].",
+      "akta_kod": "Akta 56",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Makanan 1983 [Akta 281] dan Peraturan-Peraturan di",
+      "akta_kod": "Akta 281",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Pemusnahan Serangga Pembawa Penyakit 1975 [Akta 154]",
+      "akta_kod": "Akta 154",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "dan Peraturan-Peraturan di bawahnya.",
+      "akta_kod": null,
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988 [Akta",
+      "akta_kod": null,
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "] dan Peraturan-Peraturan di bawahnya.",
+      "akta_kod": null,
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024 [ Akta",
+      "akta_kod": null,
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Mahkamah Rendah 1948 [Akta 92].",
+      "akta_kod": "Akta 92",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Tafsiran 1948 dan 1967 (Disemak 1989) [Akta 388].",
+      "akta_kod": "Akta 388",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Kanun Keseksaan (Disemak 1997) [Akta 574].",
+      "akta_kod": "Akta 574",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Kanun Tatacara Jenayah [Akta 593].",
+      "akta_kod": "Akta 593",
+      "status": "AKTIF",
+      "nota": null
+    }
+  ],
+  "anggota_terlibat": [
+    {
+      "kod": "PEGAWAI KESI",
+      "jawatan": "Pegawai Kesihatan Daerah/Kawasan/Bahagian"
+    },
+    {
+      "kod": "KETUA PENOLO",
+      "jawatan": "Ketua Penolong Pegawai Kesihatan Persekitaran"
+    },
+    {
+      "kod": "PENOLONG PEG",
+      "jawatan": "Penolong Pegawai Kesihatan Persekitaran Kanan"
+    }
+  ],
+  "singkatan": [
+    {
+      "kod": "ID",
+      "maksud": "Diari Siasatan"
+    },
+    {
+      "kod": "IO",
+      "maksud": "Pegawai Penyiasat"
+    },
+    {
+      "kod": "PKD",
+      "maksud": "Pegawai Kesihatan Daerah/Kawasan/Bahagian"
+    },
+    {
+      "kod": "PO",
+      "maksud": "Pegawai Pendakwa"
+    },
+    {
+      "kod": "RO",
+      "maksud": "Pegawai Serbuan"
+    },
+    {
+      "kod": "UIPD",
+      "maksud": "Unit Inspektorat Dan Perundangan Daerah --- 6"
+    }
+  ],
+  "nota_pindaan": [
+    {
+      "tahap": "KRITIKAL",
+      "tajuk": "[NOTA PINDAAN] PPKHT 2004 Dimansuhkan — Digantikan Oleh Akta 852 (1 Okt 2024)",
+      "butiran": "Sebarang rujukan PPKHT 2004 dan Notis Seksyen 32B Akta Makanan 1983 bagi kesalahan produk merokok/vape dalam SOP ini telah DIMANSUHKAN mulai 1 Oktober 2024 dan digantikan sepenuhnya oleh Akta 852 (UIP-AKPMDKA-01-24 hingga 08-24). Langkah 6 yang menyebut 'PPKHT 2004 dan Akta 852' hendaklah dibaca sebagai Akta 852 sahaja bersama UIP-AKPMDKA-06-24 & 08-24.",
+      "gantian_statut": "Akta 852 & UIP-AKPMDKA-01-24..08-24 (1 Okt 2024)"
+    }
+  ],
+  "tempoh_sla": [],
+  "fasa_kerja": [
+    {
+      "fasa_id": "F1",
+      "tajuk_fasa": "1. Pelaksanaan Proses Kerja",
+      "langkah": [
+        {
+          "no": "1",
+          "tajuk": "perolehan/ penyitaan barang semua barang kes yang melalui kaedah yang dinyatakan di bawah setiap Akta/ telah d",
+          "anggota": [
+            "RO",
+            "IO",
+            "UIPD"
+          ],
+          "tindakan": [
+            "perolehan/ penyitaan barang semua barang kes yang melalui kaedah yang dinyatakan di bawah setiap Akta/ telah ditetapkan. kes yang diperolehi perlu dilabelkan dengan sempurna ditetapkan di bawah setiap menyerahkan barang kes yang dengan seberapa segera kepada di bawah Akta 154, barang kes RO kepada IO adalah barang dibuat analisa dan diseal oleh di bawah Akta 281, barang kes oleh RO kepada IO adalah telah melanggar Akta /Peraturan ada untuk simpanan pejabat atau oleh Jabatan Kimia/ Makmal Kebangsaan. di bawah PPKHT 2004 dan Akta yang diserahkan oleh RO kepada barang kes yang disita semasa untuk tujuan analisa oleh IO. memastikan butiran mengenai Lampiran yang diperolehi/ disita adalah sama di dalam Borang Akuan Barang Kes yang disediakan oleh barang kes daripada RO mengisi Borang Akuan Serah /"
+          ],
+          "rujukan": [
+            "A 6"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": "[NOTA PINDAAN] PPKHT 2004 dimansuhkan (1 Okt 2024) — rujuk Akta 852 & UIP-AKPMDKA-01-24..08-24.",
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "2",
+          "tajuk": "kes/eksibit perlu diserah semula penjaga bilik barang kes/eksibit dan tarikh dan masa barang kes bilik barang ",
+          "anggota": [
+            "IO"
+          ],
+          "tindakan": [
+            "kes/eksibit perlu diserah semula penjaga bilik barang kes/eksibit dan tarikh dan masa barang kes bilik barang kes/eksibit perlu memeriksa barang kes yang sama semasa dan dipulangkan melalui rekod barang bilik barang kes/eksibit perlu menyimpan barang kes/eksibit ditempat asal barang mengenalpasti dan mendapatkan mana- kes yang telah selesai tindakan seperti berikut :"
+          ],
+          "rujukan": [
+            "7"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 8
+        },
+        {
+          "no": "3",
+          "tajuk": "kompaun telah dijelaskan",
+          "anggota": [
+            "IO"
+          ],
+          "tindakan": [
+            "kompaun telah dijelaskan; telah selesai dan telah rayuan serta tiada tindakan mana-mana pihak. bilik barang kes/eksibit dalam Buku Rekod Pendaftaran kes/eksibit yang disimpan rosak alam, gangguan makluk perosak bilik barang kes/eksibit kepada pegawai IO serta membuat laporan polis. yang berharga, perlu disimpan d berkunci di dalam bilik barang"
+          ],
+          "rujukan": [
+            "8"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 9
+        }
+      ]
+    }
+  ],
+  "carta_alir": {
+    "nodes": [
+      {
+        "id": "N_START",
+        "type": "start",
+        "label": "Mula Operasi / Prosedur",
+        "role": null,
+        "step_ref": null,
+        "sop_ref": null
+      },
+      {
+        "id": "N1",
+        "type": "process",
+        "label": "1. perolehan/ penyitaan barang semua barang kes yang melalui kaedah yang dinyatakan di bawa",
+        "role": "RO/IO",
+        "step_ref": "1",
+        "sop_ref": null
+      },
+      {
+        "id": "N2",
+        "type": "process",
+        "label": "2. kes/eksibit perlu diserah semula penjaga bilik barang kes/eksibit dan tarikh dan masa ba",
+        "role": "IO",
+        "step_ref": "2",
+        "sop_ref": null
+      },
+      {
+        "id": "N3",
+        "type": "process",
+        "label": "3. kompaun telah dijelaskan",
+        "role": "IO",
+        "step_ref": "3",
+        "sop_ref": null
+      },
+      {
+        "id": "N_END",
+        "type": "end",
+        "label": "Selesai & Rekod Fail UIP",
+        "role": null,
+        "step_ref": null,
+        "sop_ref": null
+      }
+    ],
+    "edges": [
+      {
+        "from": "N_START",
+        "to": "N1",
+        "label": null
+      },
+      {
+        "from": "N1",
+        "to": "N2",
+        "label": null
+      },
+      {
+        "from": "N2",
+        "to": "N3",
+        "label": null
+      },
+      {
+        "from": "N3",
+        "to": "N_END",
+        "label": null
+      }
+    ]
+  },
+  "senarai_semak": [
+    {
+      "id": "CHK-01",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[1] perolehan/ penyitaan barang semua barang kes yang melalui kaedah yang dinyatakan di bawah setiap Akta/ telah d",
+      "wajib": true,
+      "rujukan": "A 6"
+    },
+    {
+      "id": "CHK-02",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[2] kes/eksibit perlu diserah semula penjaga bilik barang kes/eksibit dan tarikh dan masa barang kes bilik barang ",
+      "wajib": true,
+      "rujukan": "7"
+    },
+    {
+      "id": "CHK-03",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[3] kompaun telah dijelaskan",
+      "wajib": true,
+      "rujukan": "8"
+    }
+  ],
+  "lampiran": [
+    {
+      "kod": "Lampiran A",
+      "tajuk": "Dokumen Rasmi Lampiran A",
+      "jenis": "lain",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran B",
+      "tajuk": "Lampiran C",
+      "jenis": "lain",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran C",
+      "tajuk": "Daftar Barang kes/eksibit UIP",
+      "jenis": "buku_daftar",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    }
+  ],
+  "pematuhan": [
+    "Prosedur yang dikeluarkan ini hendaklah terus berkuatkuasa dan",
+    "dianggap sah sehingga dipinda atau diganti dengan satu prosedur lain",
+    "atau dibatalkan.",
+    "Keengganan dan kegagalan mematuhi prosedur ini tanpa alasan yang",
+    "munasabah boleh menyebabkan seseorang pegawai dikenakan",
+    "tindakan tatatertib di bawah Peraturan-Peraturan Pegawai Awam",
+    "(Kelakuan dan Tatatertib) 1993.",
+    "Kegagalan mematuhi prosedur ini juga merupakan satu kesalahan di"
+  ],
+  "rujukan_silang_resolved": [
+    {
+      "sop_id": "UIP-AKPMDKA-06-24",
+      "file_stem": "UIP-AKPMDKA-06-24",
+      "tajuk": "Prosedur Penyitaan Produk Merokok & Barang Kes Di Bawah Seksyen 35, 36 dan 37 Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024 [Akta 852]"
+    }
+  ],
+  "nota_audit_kualiti": [
+    "Langkah 6 PDF asal masih menyebut 'PPKHT 2004 dan Akta 852' — diberi [NOTA PINDAAN] bahawa PPKHT 2004 telah dimansuhkan mulai 1 Okt 2024. Ralat cetak 'Keluaran: 00' dan 'Definasi' dalam PDF asal dinormalkan."
+  ]
+}

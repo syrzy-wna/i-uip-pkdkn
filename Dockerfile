@@ -49,13 +49,15 @@ RUN pip install --upgrade pip \
     && pip install -r /app/backend/requirements.txt \
     && python -c "import pymupdf as fitz; doc = fitz.open(); doc.close(); print('PyMuPDF PDF parser OK:', fitz.__version__)"
 
-# Salin kod backend, data akta, pustaka perundangan 2-lapisan, 22 SOP aktif KKM 2024 (TANPA sops_arkib_deprecated), skrip CLI & skrip deploy
+# Salin kod backend, data akta, pustaka perundangan 2-lapisan, 33 SOP aktif KKM 2024 + struktur v2 (TANPA sops_arkib_deprecated), skrip CLI & skrip deploy
 COPY backend/ /app/backend/
 COPY data/akta/ /app/data/akta/
 COPY data/legal_library/ /app/data/legal_library/
 COPY data/sop_kkm_2024/sop_index_active_router.json /app/data/sop_kkm_2024/sop_index_active_router.json
 COPY data/sop_kkm_2024/sop_bundle_aktif_context_cache.txt /app/data/sop_kkm_2024/sop_bundle_aktif_context_cache.txt
+COPY data/sop_kkm_2024/pekeliling_rujukan.json /app/data/sop_kkm_2024/pekeliling_rujukan.json
 COPY data/sop_kkm_2024/sops_aktif/ /app/data/sop_kkm_2024/sops_aktif/
+COPY data/sop_kkm_2024/sops_structured/ /app/data/sop_kkm_2024/sops_structured/
 COPY scripts/ /app/scripts/
 COPY deploy/ /app/deploy/
 
@@ -64,9 +66,17 @@ COPY --from=frontend-builder /app/frontend/.next/standalone /app/frontend/
 COPY --from=frontend-builder /app/frontend/.next/static /app/frontend/.next/static
 COPY --from=frontend-builder /app/frontend/public /app/frontend/public
 
-# Pastikan skrip start.sh berformat LF (bukan CRLF Windows) dan boleh dilaksanakan
-RUN sed -i 's/\r$//' /app/deploy/start.sh && chmod +x /app/deploy/start.sh
+# Pastikan skrip start.sh berformat LF & sediakan pengguna bukan-root (least privilege)
+RUN sed -i 's/\r$//' /app/deploy/start.sh && chmod +x /app/deploy/start.sh \
+    && useradd -m -u 10001 -s /bin/sh appuser \
+    && mkdir -p /tmp/nginx_body /tmp/nginx_proxy /tmp/nginx_fastcgi /tmp/nginx_uwsgi /tmp/nginx_scgi /var/log/nginx /var/lib/nginx /var/cache/nginx \
+    && chown -R appuser:appuser /app /tmp /var/log/nginx /var/lib/nginx /var/cache/nginx
+
+USER appuser
 
 EXPOSE 8080
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=25s --retries=3 \
+    CMD python -c "import os, urllib.request; urllib.request.urlopen(f'http://127.0.0.1:{os.environ.get(\"PORT\", \"8080\")}/healthz', timeout=3)" || exit 1
 
 CMD ["/app/deploy/start.sh"]

@@ -1,0 +1,527 @@
+{
+  "schema_version": "2.0",
+  "sop_id": "UIP-AKPMDKA-07-24",
+  "file_stem": "UIP-AKPMDKA-07-24",
+  "alias_kod": [
+    "AKPMDKA-07-24",
+    "AKPMDKS-07-24",
+    "07 AKPMDKS 07-24"
+  ],
+  "tajuk": "Prosedur Pemulangan Sementara Barang Disita Di Bawah Seksyen 37 Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024 [Akta 852]",
+  "kategori": "AKTA_852",
+  "akta_utama": "Akta 852",
+  "akta_berkaitan": [
+    "Akta 852",
+    "Akta 56",
+    "Akta 593",
+    "Akta 388"
+  ],
+  "keluaran": "01",
+  "pindaan": "00",
+  "tarikh_kuatkuasa": "01 Okt 2024",
+  "ringkasan_eksekutif": "Prosedur ini menerangkan tatacara pemulangan sementara pengangkut, jentera atau kelengkapan bagi kesalahan di bawah Akta 852.",
+  "tujuan": "Prosedur ini menerangkan tatacara pemulangan sementara pengangkut, jentera atau kelengkapan bagi kesalahan di bawah Akta 852.",
+  "panduan_am": [],
+  "punca_kuasa": [
+    "Seksyen 37 Akta 852 (Pemulangan Sementara)",
+    "Seksyen 35-36 Akta 852",
+    "Bon / Jaminan Pemulangan Sementara",
+    "Kebenaran Bertulis Ketua Pengarah / Pegawai Diberi Kuasa"
+  ],
+  "undang_undang_berkaitan": [
+    {
+      "akta": "Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024 [Akta 852] dan",
+      "akta_kod": "Akta 852",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Kanun Tatacara Jenayah [Akta 593]",
+      "akta_kod": "Akta 593",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Tafsiran 1948 (Disemak 1989) [Akta 388]",
+      "akta_kod": "Akta 388",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Kanun Keseksaan (Disemak 1997) [Akta 574]",
+      "akta_kod": "Akta 574",
+      "status": "AKTIF",
+      "nota": null
+    }
+  ],
+  "anggota_terlibat": [
+    {
+      "kod": "PEGAWAI DIBE",
+      "jawatan": "Pegawai diberi kuasa di bawah Akta Kawalan Produk Merokok Demi Kesihatan Awam"
+    },
+    {
+      "kod": "[AKTA 852] D",
+      "jawatan": "[Akta 852] dan perundangan subsidiari di bawahnya."
+    },
+    {
+      "kod": "PROSEDUR PEM",
+      "jawatan": "Prosedur Pemulangan Sementara Di Bawah Seksyen 37 Akta Kawalan Produk Merokok Demi Kesihatan"
+    },
+    {
+      "kod": "AWAM 2024 [A",
+      "jawatan": "Awam 2024 [Akta 852]."
+    },
+    {
+      "kod": "PUNCA KUASA",
+      "jawatan": "PUNCA KUASA"
+    },
+    {
+      "kod": "SEKSYEN SEK.",
+      "jawatan": "Seksyen Sek. 37 Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024"
+    },
+    {
+      "kod": "[AKTA 852]",
+      "jawatan": "[Akta 852]"
+    }
+  ],
+  "singkatan": [
+    {
+      "kod": "JKN",
+      "maksud": "Jabatan Kesihatan Negeri"
+    },
+    {
+      "kod": "PKD",
+      "maksud": "Pegawai Kesihatan Daerah/ Kawasan/ Bahagian"
+    },
+    {
+      "kod": "PKP",
+      "maksud": "Pegawai Kesihatan Persekitaran"
+    },
+    {
+      "kod": "KPK",
+      "maksud": "Ketua Pengarah Kesihatan"
+    },
+    {
+      "kod": "PPKPK",
+      "maksud": "Penolong Pegawai Kesihatan Persekitaran Kanan"
+    },
+    {
+      "kod": "PDK",
+      "maksud": "Pegawai Diberi Kuasa"
+    },
+    {
+      "kod": "Akta 852",
+      "maksud": "Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024 [Akta 852] dan perundangan subsidiari di bawahnya"
+    },
+    {
+      "kod": "UIPD",
+      "maksud": "Unit Inspektorat dan Perundangan Daerah"
+    },
+    {
+      "kod": "UIPN",
+      "maksud": "Unit Inspektorat dan Perundangan Negeri"
+    },
+    {
+      "kod": "IO",
+      "maksud": "Pegawai Penyiasat"
+    },
+    {
+      "kod": "PO",
+      "maksud": "Pegawai Pendakwa"
+    },
+    {
+      "kod": "TPR",
+      "maksud": "OKS : Timbalan Pendakwa Raya Orang Kena Saman --- 3 Prosedur Pemulangan Sementara Di Bawah Seksyen 37 Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024 [Akta 852]"
+    }
+  ],
+  "nota_pindaan": [],
+  "tempoh_sla": [
+    {
+      "label": "Pemulangan Sementara Barang Disita",
+      "tempoh": "Tertakluk syarat & bon S.37",
+      "rujukan": "Seksyen 37 Akta 852"
+    }
+  ],
+  "fasa_kerja": [
+    {
+      "fasa_id": "F1",
+      "tajuk_fasa": "1. Pelaksanaan Proses Kerja",
+      "langkah": [
+        {
+          "no": "1",
+          "tajuk": "Menerima permohonan bertulis bersama ",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            "Menerima permohonan bertulis bersama . dokumen milikan asal pengangkut jentera atau , kelengkapan yang disita dari OKS bagi pemulangan sementara di bawah Seksyen 37 Akta 852 ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "2",
+          "tajuk": "Membuat semakan dan verifikasi dokumen yang ",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            "Membuat semakan dan verifikasi dokumen yang . dikemukakan dengan agensi berkaitan seperti JPJ bagi hak pemilikan ."
+          ],
+          "rujukan": [
+            "LAMPIRANB"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "3",
+          "tajuk": "Bagi kes melibatkan pengangkut perlu ",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            "Bagi kes melibatkan pengangkut perlu . , mendapatkan penilaian daripada JKR untuk nilai kenderaan yang disita ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "4",
+          "tajuk": "Melengkapkan borang kebenaran pemulangan ",
+          "anggota": [
+            "PO"
+          ],
+          "tindakan": [
+            "Melengkapkan borang kebenaran pemulangan . sementara pengangkut jentera atau , kelengkapan yang disita dan ditahan ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "5",
+          "tajuk": "Mengemukakan permohonan OKS kepada ",
+          "anggota": [
+            "PO"
+          ],
+          "tindakan": [
+            "Mengemukakan permohonan OKS kepada . mahkamah bagi pemulangan sementara pengangkut jentera atau kelengkapan yang , disita dan ditahan dengan cadangan jaminan atau bon dikenakan ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "6",
+          "tajuk": "Menerima arahan mahkamah untuk pemulangan ",
+          "anggota": [
+            "PO"
+          ],
+          "tindakan": [
+            "Menerima arahan mahkamah untuk pemulangan . sementara bersama dengan bon jaminan ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "7",
+          "tajuk": "Menerima dan menyemak bukti pembayaran ",
+          "anggota": [
+            "PO"
+          ],
+          "tindakan": [
+            "Menerima dan menyemak bukti pembayaran . serta surat kebenaran pemulangan sementara pengangkut jentera atau kelengkapan yang , disita ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "8",
+          "tajuk": "OKS boleh bawa pulang pengangkut jentera ",
+          "anggota": [
+            "PO",
+            "PDK"
+          ],
+          "tindakan": [
+            "OKS boleh bawa pulang pengangkut jentera . , atau kelengkapan yang dibenarkan bagi pemulangan sementara namun perlu mengikut syarat -syarat ditetapkan oleh mahkamah ."
+          ],
+          "rujukan": [
+            "LAMPIRANA",
+            "Sek 37"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        }
+      ]
+    }
+  ],
+  "carta_alir": {
+    "nodes": [
+      {
+        "id": "N_START",
+        "type": "start",
+        "label": "Mula Operasi / Prosedur",
+        "role": null,
+        "step_ref": null,
+        "sop_ref": null
+      },
+      {
+        "id": "N1",
+        "type": "process",
+        "label": "1. Menerima permohonan bertulis bersama ",
+        "role": "PDK",
+        "step_ref": "1",
+        "sop_ref": null
+      },
+      {
+        "id": "N2",
+        "type": "process",
+        "label": "2. Membuat semakan dan verifikasi dokumen yang ",
+        "role": "PDK",
+        "step_ref": "2",
+        "sop_ref": null
+      },
+      {
+        "id": "N3",
+        "type": "process",
+        "label": "3. Bagi kes melibatkan pengangkut perlu ",
+        "role": "PDK",
+        "step_ref": "3",
+        "sop_ref": null
+      },
+      {
+        "id": "N4",
+        "type": "process",
+        "label": "4. Melengkapkan borang kebenaran pemulangan ",
+        "role": "PO",
+        "step_ref": "4",
+        "sop_ref": null
+      },
+      {
+        "id": "N5",
+        "type": "process",
+        "label": "5. Mengemukakan permohonan OKS kepada ",
+        "role": "PO",
+        "step_ref": "5",
+        "sop_ref": null
+      },
+      {
+        "id": "N6",
+        "type": "process",
+        "label": "6. Menerima arahan mahkamah untuk pemulangan ",
+        "role": "PO",
+        "step_ref": "6",
+        "sop_ref": null
+      },
+      {
+        "id": "N7",
+        "type": "process",
+        "label": "7. Menerima dan menyemak bukti pembayaran ",
+        "role": "PO",
+        "step_ref": "7",
+        "sop_ref": null
+      },
+      {
+        "id": "N8",
+        "type": "process",
+        "label": "8. OKS boleh bawa pulang pengangkut jentera ",
+        "role": "PO/PDK",
+        "step_ref": "8",
+        "sop_ref": null
+      },
+      {
+        "id": "N_END",
+        "type": "end",
+        "label": "Selesai & Rekod Fail UIP",
+        "role": null,
+        "step_ref": null,
+        "sop_ref": null
+      }
+    ],
+    "edges": [
+      {
+        "from": "N_START",
+        "to": "N1",
+        "label": null
+      },
+      {
+        "from": "N1",
+        "to": "N2",
+        "label": null
+      },
+      {
+        "from": "N2",
+        "to": "N3",
+        "label": null
+      },
+      {
+        "from": "N3",
+        "to": "N4",
+        "label": null
+      },
+      {
+        "from": "N4",
+        "to": "N5",
+        "label": null
+      },
+      {
+        "from": "N5",
+        "to": "N6",
+        "label": null
+      },
+      {
+        "from": "N6",
+        "to": "N7",
+        "label": null
+      },
+      {
+        "from": "N7",
+        "to": "N8",
+        "label": null
+      },
+      {
+        "from": "N8",
+        "to": "N_END",
+        "label": null
+      }
+    ]
+  },
+  "senarai_semak": [
+    {
+      "id": "CHK-01",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[1] Menerima permohonan bertulis bersama ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-02",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[2] Membuat semakan dan verifikasi dokumen yang ",
+      "wajib": true,
+      "rujukan": "LAMPIRANB"
+    },
+    {
+      "id": "CHK-03",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[3] Bagi kes melibatkan pengangkut perlu ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-04",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[4] Melengkapkan borang kebenaran pemulangan ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-05",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[5] Mengemukakan permohonan OKS kepada ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-06",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[6] Menerima arahan mahkamah untuk pemulangan ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-07",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[7] Menerima dan menyemak bukti pembayaran ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-08",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[8] OKS boleh bawa pulang pengangkut jentera ",
+      "wajib": true,
+      "rujukan": "LAMPIRANA"
+    }
+  ],
+  "lampiran": [
+    {
+      "kod": "Lampiran A",
+      "tajuk": "Borang Akuan serah/ Terima",
+      "jenis": "borang",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran B",
+      "tajuk": "Bagi",
+      "jenis": "lain",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Borang Aku",
+      "tajuk": "AN SERAH / TERIMA",
+      "jenis": "lain",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    }
+  ],
+  "pematuhan": [
+    "Prosedur yang dikeluarkan ini hendaklah terus berkuat kuasa dan dianggap",
+    "sah sehingga dipinda atau diganti dengan satu prosedur lain atau",
+    "Keengganan dan kegagalan mematuhi prosedur ini tanpa alasan yang",
+    "munasabah boleh menyebabkan seseorang pegawai dikenakan tindakan",
+    "tatatertib di bawah Peraturan-Peraturan Pegawai Awam (Kelakuan dan",
+    "Tatatertib) 1993.",
+    "Kegagalan mematuhi prosedur ini juga merupakan satu kesalahan di bawah",
+    "Seksyen 24 (1) (f) Akta Suruhanjaya Integriti Agensi Penguatkuasaan 2009"
+  ],
+  "rujukan_silang_resolved": [],
+  "nota_audit_kualiti": [
+    "Nama fail sumber menyebut 'Pelepasan Sementara'; tajuk rasmi dalam dokumen ialah Pemulangan Sementara Di Bawah Seksyen 37 Akta 852. Nombor muka surat Isi Kandungan PDF berbeza +2 dan tajuk Carta Alir bertindih nombor '8.' telah dinormalkan."
+  ]
+}

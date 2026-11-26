@@ -1,0 +1,1704 @@
+{
+  "schema_version": "2.0",
+  "sop_id": "UIP-AKPMDKA-01-24",
+  "file_stem": "UIP-AKPMDKA-01-24",
+  "alias_kod": [
+    "AKPMDKA-01-24",
+    "01 AKPMDKA 01-24"
+  ],
+  "tajuk": "Prosedur Pelaksanaan Notis Memerintahkan Kehadiran Ke Mahkamah Di Bawah Seksyen 47 dan Tawaran Mengkompaun Kesalahan Di Bawah Seksyen 48 Akta 852",
+  "kategori": "AKTA_852",
+  "akta_utama": "Akta 852",
+  "akta_berkaitan": [
+    "Akta 852",
+    "P.U.(A) 257/2024",
+    "P.U.(A) 258/2024",
+    "P.U.(A) 259/2024",
+    "P.U.(A) 264/2024",
+    "Akta 56",
+    "Akta 593",
+    "Akta 92"
+  ],
+  "keluaran": "01",
+  "pindaan": "00",
+  "tarikh_kuatkuasa": "01 Okt 2024",
+  "ringkasan_eksekutif": "Tujuan prosedur ini adalah untuk menggariskan tatacara pelaksanaan Notis Memerintahkan Kehadiran Di Mahkamah Di bawah Seksyen 47 Dan Tawaran Mengkompaun Kesalahan Di Bawah Seksyen 48 Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024.",
+  "tujuan": "Tujuan prosedur ini adalah untuk menggariskan tatacara pelaksanaan Notis Memerintahkan Kehadiran Di Mahkamah Di bawah Seksyen 47 Dan Tawaran Mengkompaun Kesalahan Di Bawah Seksyen 48 Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024.",
+  "panduan_am": [],
+  "punca_kuasa": [
+    "Seksyen 47 Akta 852 (Notis Kehadiran Mahkamah — P.U.(A) 264/2024)",
+    "Seksyen 48 Akta 852 (Tawaran Kompaun — P.U.(A) 259/2024)",
+    "Kesalahan Boleh Kompaun: S.13(3), S.16(2), S.17(1), S.18(1)",
+    "Seksyen 41 Akta 852 (Izin Mendakwa TPR)",
+    "Tempoh Bayaran & Tarikh Hadir Mahkamah (>60 hari)"
+  ],
+  "undang_undang_berkaitan": [
+    {
+      "akta": "Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024 [Akta 852]",
+      "akta_kod": "Akta 852",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Peraturan-Peraturan Kawalan Produk Merokok Demi Kesihatan Awam",
+      "akta_kod": null,
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Keterangan 1950 (Disemak 1971) [Akta 56]",
+      "akta_kod": "Akta 56",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Kanun Tatacara Jenayah [Akta 593]",
+      "akta_kod": "Akta 593",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Mahkamah Rendah 1948 [Akta 92)",
+      "akta_kod": "Akta 92",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Prosedur Pelaksanaan Notis Memerintahkan Kehadiran Ke Mahkamah Di Bawah Peraturan-Peraturan Kawalan Produk",
+      "akta_kod": null,
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Seksyen 48 Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024",
+      "akta_kod": null,
+      "status": "AKTIF",
+      "nota": null
+    }
+  ],
+  "anggota_terlibat": [
+    {
+      "kod": "SEMUA PEGAWA",
+      "jawatan": "Semua pegawai yang dilantik sebagai pegawai diberi kuasa di bawah Seksyen"
+    },
+    {
+      "kod": "AKTA KAWALAN",
+      "jawatan": "Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024."
+    }
+  ],
+  "singkatan": [
+    {
+      "kod": "KPPKP",
+      "maksud": "Ketua Penolong Pegawai Kesihatan Persekitaran"
+    },
+    {
+      "kod": "K/S",
+      "maksud": "Kertas Siasatan"
+    },
+    {
+      "kod": "NFA",
+      "maksud": "No Further Action (Tiada Tindakan Selanjutnya)"
+    },
+    {
+      "kod": "Notis",
+      "maksud": "Notis Memerintahkan Kehadiran Ke Mahkamah Di Bawah Peraturan-Peraturan Kawalan Produk Merokok Demi Kesihatan Awam (Notis Di Bawah Seksyen 47) 2024"
+    },
+    {
+      "kod": "OKK",
+      "maksud": "Orang Kena Kompaun"
+    },
+    {
+      "kod": "OKN",
+      "maksud": "Orang Kena Notis"
+    },
+    {
+      "kod": "OKS",
+      "maksud": "Orang Kena Saman"
+    },
+    {
+      "kod": "PDK",
+      "maksud": "Pegawai Diberi Kuasa"
+    },
+    {
+      "kod": "PKD",
+      "maksud": "Pegawai Kesihatan Daerah/Kawasan/Bahagian"
+    },
+    {
+      "kod": "PKP",
+      "maksud": "Pegawai Kesihatan Persekitaran"
+    },
+    {
+      "kod": "PO",
+      "maksud": "Pegawai Pendakwa"
+    },
+    {
+      "kod": "AKPMDKA",
+      "maksud": "Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024"
+    },
+    {
+      "kod": "PPKP",
+      "maksud": "Penolong Pegawai Kesihatan Persekitaran"
+    },
+    {
+      "kod": "PPKPK",
+      "maksud": "Penolong Pegawai Kesihatan Persekitaran Kanan"
+    },
+    {
+      "kod": "TPR",
+      "maksud": "Timbalan Pendakwa Raya"
+    },
+    {
+      "kod": "UIPD",
+      "maksud": "Unit Inspektorat dan Perundangan Daerah/Kawasan/Bahagian"
+    },
+    {
+      "kod": "UIPN",
+      "maksud": "Unit Inspektorat dan Perundangan Negeri --- Prosedur Pelaksanaan Notis Memerintahkan Kehadiran Ke Mahkamah Di Bawah Peraturan-Peraturan Kawalan Produk Merokok Demi Kesihatan Awam (Notis Di Bawah Seksyen 47) 2024 Dan Tawaran Mengkompaun Kesalahan Di Bawah Seksyen 48 Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024 4"
+    }
+  ],
+  "nota_pindaan": [],
+  "tempoh_sla": [
+    {
+      "label": "Tempoh Tawaran Bayaran Kompaun",
+      "tempoh": "14 hari / 30 hari",
+      "rujukan": "Seksyen 48 Akta 852 & P.U.(A) 259/2024"
+    },
+    {
+      "label": "Tarikh Hadir Mahkamah (Notis S.47)",
+      "tempoh": "Selepas 60 hari dari tarikh notis",
+      "rujukan": "Seksyen 47 Akta 852"
+    }
+  ],
+  "fasa_kerja": [
+    {
+      "fasa_id": "F1",
+      "tajuk_fasa": "1. Pelaksanaan Proses Kerja",
+      "langkah": [
+        {
+          "no": "1",
+          "tajuk": "DI PEJABAT 1 Persediaan awal : ",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            "DI PEJABAT 1 Persediaan awal : .",
+            "a) Pastikan logistik .",
+            "b) Semak peralatan .",
+            "c) Semak borang-borang (Notis dan lain-lain) .",
+            "d) Semak perakuankuasa .",
+            "e) Tetapkantarikh kompaun perlu dibayar (jika berkaitan) ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 1: DI PEJABAT 1 Persediaan awal : . a) Pastikan logistik . b) Semak peralatan . c) Semak borang-bo...",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 12
+        }
+      ]
+    },
+    {
+      "fasa_id": "F2",
+      "tajuk_fasa": "Di Lapangan:",
+      "langkah": [
+        {
+          "no": "2",
+          "tajuk": "Setiap pasukan penguatkuasaan dianggotai sekurang ",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            "Setiap pasukan penguatkuasaan dianggotai sekurang .",
+            "- kurangnya duaorang PDK ."
+          ],
+          "rujukan": [
+            "Kad Perakuan",
+            "Kuasa /",
+            "Pengenalan",
+            "Diri"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 12
+        },
+        {
+          "no": "3",
+          "tajuk": "Buat pemerhatian untuk mengenalpasti kesalahan ",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            "Buat pemerhatian untuk mengenalpasti kesalahan . ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 12
+        },
+        {
+          "no": "4",
+          "tajuk": "Kedua-dua PDK hendaklah menghampiri pesalah ",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            "Kedua-dua PDK hendaklah menghampiri pesalah . berkenaan ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 12
+        },
+        {
+          "no": "5",
+          "tajuk": "Perkenalkan diri nyatakan tujuankedatangandan ",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            "Perkenalkan diri nyatakan tujuankedatangandan . , terangkankesalahan .",
+            "Untuk subseksyen 13(3) 16(2) 17(1) 18(1) AKPMDKA , , , 2024;"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 12
+        },
+        {
+          "no": "6",
+          "tajuk": "Mintaserahkan barang kes (produk merokok) ",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            "Mintaserahkan barang kes (produk merokok) ."
+          ],
+          "rujukan": [
+            "Kad",
+            "Pengenalan/",
+            "Dokumen",
+            "Perjalanan/",
+            "Kad Perakuan",
+            "Kerja/"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 12
+        },
+        {
+          "no": "7",
+          "tajuk": "Mintakad pengenalanserta butiran berkenaanseperti ",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            "Mintakad pengenalanserta butiran berkenaanseperti . berikut (Jika berkenaan):",
+            "a) Namadan alamat tempat perniagaan .",
+            "b) Lesen pendaftaran perniagaan dan lesenPBT .",
+            "c) Maklumat tempat tinggal dan tempat kerja terkini pesalah .",
+            "d) Dapatkan nombor telefon majikan rumah dan , persendirian .",
+            "e) Dapatkan no pasport atau permit kerja dokumen , pengesahan majikan .",
+            "f) Maklumat jenis kenderaan dan nombor pendaftaran ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 7: Mintakad pengenalanserta butiran berkenaanseperti . berikut (Jika berkenaan): a) Namadan alamat...",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 12
+        },
+        {
+          "no": "8",
+          "tajuk": "Untuk subseksyen 13(3) 16(2) 17(1) 18(1) AKPMDKA , , , 2024",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            "Untuk subseksyen 13(3) 16(2) 17(1) 18(1) AKPMDKA , , , 2024; 9 Ambilbarangkesyangberkaitan(termasukpuntungrokok . , vape gambar dan lesen perniagaan (jika berkaitan) buat , ,",
+            "salinan dokumen-dokumen yang berkaitan jika perlu ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 8: Untuk subseksyen 13(3) 16(2) 17(1) 18(1) AKPMDKA , , , 2024; 9 Ambilbarangkesyangberkaitan(term...",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 12
+        },
+        {
+          "no": "10",
+          "tajuk": "Lengkapkan Notis dan sediakan Senarai BarangYang ",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            "Lengkapkan Notis dan sediakan Senarai BarangYang . Disita ."
+          ],
+          "rujukan": [
+            "LampiranA",
+            "LampiranB"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 13
+        },
+        {
+          "no": "11",
+          "tajuk": "MintaOKNtandatangan penerimaanNotis dan Senarai ",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            "MintaOKNtandatangan penerimaanNotis dan Senarai . Barang Yang Disita"
+          ],
+          "rujukan": [
+            "Prosedur UIP",
+            "-",
+            "UMUM 01 24",
+            "- -"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 13
+        },
+        {
+          "no": "111",
+          "tajuk": "JikaOKNenggan tandatangan catitkan”Enggan ",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            "JikaOKNenggan tandatangan catitkan”Enggan . , Tandatangan” dalam ruangan tandatangan dalam Notis ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 111: JikaOKNenggan tandatangan catitkan”Enggan . , Tandatangan” dalam ruangan tandatangan dalam Noti...",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 13
+        },
+        {
+          "no": "112",
+          "tajuk": "JikaOKNenggan terima catitkan”Enggan Terima ",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            "JikaOKNenggan terima catitkan”Enggan Terima . , Notis” di bahagianbelakang Notis asal ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 112: JikaOKNenggan terima catitkan”Enggan Terima . , Notis” di bahagianbelakang Notis asal .",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 13
+        },
+        {
+          "no": "11",
+          "tajuk": "3 JikaOKN enggan bagi kerjasama sila rujukSOP ",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            "3 JikaOKN enggan bagi kerjasama sila rujukSOP . , Menghalang Tugas UIP -"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 11: 3 JikaOKN enggan bagi kerjasama sila rujukSOP . , Menghalang Tugas UIP -",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 13
+        },
+        {
+          "no": "12",
+          "tajuk": "Serahkan salinan pendua Notis dan Senarai Barang ",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            "Serahkan salinan pendua Notis dan Senarai Barang . Yang Disita kepada OKN berkenaan dan terangkan prosedur untuk ditawarkan kompaunatau kemahkamah ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 13
+        }
+      ]
+    },
+    {
+      "fasa_id": "F3",
+      "tajuk_fasa": "Di Pejabat",
+      "langkah": [
+        {
+          "no": "13",
+          "tajuk": "Masukkan maklumat OKN dalam ‘PHEIS’ / mana –mana ",
+          "anggota": [
+            "PDK",
+            "UIPD"
+          ],
+          "tindakan": [
+            "Masukkan maklumat OKN dalam ‘PHEIS’ / mana –mana . sistem yang akan ditentukan pada masa ke masa . SediakanK/Syanglengkapsebagaimanasenaraiberikut kepada UIPD selewat -lewatnya tujuh (7) hari bekerja selepas Notis dikeluarkan : -"
+          ],
+          "rujukan": [
+            "LampiranC",
+            "LampiranB",
+            "LampiranD"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 13
+        },
+        {
+          "no": "13",
+          "tajuk": "1 Dokumen K/S untuk permohonan izin kompaun ",
+          "anggota": [
+            "PDK",
+            "UIPD"
+          ],
+          "tindakan": [
+            "1 Dokumen K/S untuk permohonan izin kompaun . daripada TPR:"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 13
+        },
+        {
+          "no": "13",
+          "tajuk": "1 1Kertas Minit ",
+          "anggota": [
+            "PDK",
+            "UIPD"
+          ],
+          "tindakan": [
+            "1 1Kertas Minit . ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 13
+        },
+        {
+          "no": "13",
+          "tajuk": "1 2 Keteranganringkas ",
+          "anggota": [
+            "PDK",
+            "UIPD"
+          ],
+          "tindakan": [
+            "1 2 Keteranganringkas . . ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 13
+        },
+        {
+          "no": "13",
+          "tajuk": "1 3 Surat Izin Kompaun oleh TPR ",
+          "anggota": [
+            "PDK",
+            "UIPD"
+          ],
+          "tindakan": [
+            "1 3 Surat Izin Kompaun oleh TPR . . ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 13
+        },
+        {
+          "no": "13",
+          "tajuk": "1 4 Salinan asal Notis ",
+          "anggota": [
+            "PDK",
+            "UIPD"
+          ],
+          "tindakan": [
+            "1 4 Salinan asal Notis . . ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 13
+        },
+        {
+          "no": "13",
+          "tajuk": "1 5 Senarai Barangyang Disita ",
+          "anggota": [
+            "PDK",
+            "UIPD"
+          ],
+          "tindakan": [
+            "1 5 Senarai Barangyang Disita . . . ,"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 13
+        },
+        {
+          "no": "13",
+          "tajuk": "1 6 Diari Siasatan ",
+          "anggota": [
+            "PDK",
+            "UIPD"
+          ],
+          "tindakan": [
+            "1 6 Diari Siasatan . . . ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 13
+        },
+        {
+          "no": "13",
+          "tajuk": "1 7 Gambar sekiranya berkaitan ",
+          "anggota": [
+            "PDK",
+            "UIPD"
+          ],
+          "tindakan": [
+            "1 7 Gambar sekiranya berkaitan . . ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 13: 1 7 Gambar sekiranya berkaitan . . .",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 13
+        },
+        {
+          "no": "13",
+          "tajuk": "2 Dokumen K/S permohonan izin dakwa daripada ",
+          "anggota": [
+            "PDK",
+            "UIPD"
+          ],
+          "tindakan": [
+            "2 Dokumen K/S permohonan izin dakwa daripada . TPR:"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 13
+        },
+        {
+          "no": "13",
+          "tajuk": "2 1 Kertas Minit ",
+          "anggota": [
+            "PDK",
+            "UIPD"
+          ],
+          "tindakan": [
+            "2 1 Kertas Minit . . . ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 13
+        },
+        {
+          "no": "13",
+          "tajuk": "2 2 Keteranganringkas ",
+          "anggota": [
+            "PDK",
+            "UIPD"
+          ],
+          "tindakan": [
+            "2 2 Keteranganringkas . . . .."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 13
+        },
+        {
+          "no": "13",
+          "tajuk": "2 3 Kertas CadanganPegawai Penyiasat ",
+          "anggota": [
+            "PDK",
+            "UIPD"
+          ],
+          "tindakan": [
+            "2 3 Kertas CadanganPegawai Penyiasat . . ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 13
+        },
+        {
+          "no": "13",
+          "tajuk": "2 4 Surat Izin Kompaun oleh TPR ",
+          "anggota": [
+            "PDK",
+            "UIPD"
+          ],
+          "tindakan": [
+            "2 4 Surat Izin Kompaun oleh TPR . . . ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 13
+        },
+        {
+          "no": "13",
+          "tajuk": "2 5 Surat Izin Dakwaoleh TPR ",
+          "anggota": [
+            "PDK",
+            "UIPD"
+          ],
+          "tindakan": [
+            "2 5 Surat Izin Dakwaoleh TPR . . . ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 13
+        },
+        {
+          "no": "13",
+          "tajuk": "2 6 Salinan asal Notis ",
+          "anggota": [
+            "PDK",
+            "UIPD"
+          ],
+          "tindakan": [
+            "2 6 Salinan asal Notis . . . ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 13
+        },
+        {
+          "no": "13",
+          "tajuk": "2 7 Senarai BarangYang Disita ",
+          "anggota": [
+            "PDK",
+            "UIPD"
+          ],
+          "tindakan": [
+            "2 7 Senarai BarangYang Disita . . . ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 13
+        },
+        {
+          "no": "13",
+          "tajuk": "2 8 Fakta Kes ",
+          "anggota": [
+            "PDK",
+            "UIPD"
+          ],
+          "tindakan": [
+            "2 8 Fakta Kes . . . ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 13
+        },
+        {
+          "no": "13",
+          "tajuk": "2 9 Kertas Pengaduan ",
+          "anggota": [],
+          "tindakan": [
+            "2 9 Kertas Pengaduan . . . ."
+          ],
+          "rujukan": [
+            "Lampiran M"
+          ],
+          "rujukan_lampiran": [
+            "Lampiran M"
+          ],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 14
+        },
+        {
+          "no": "13",
+          "tajuk": "2 10Kertas Pertuduhan ",
+          "anggota": [],
+          "tindakan": [
+            "2 10Kertas Pertuduhan . . . ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 14
+        },
+        {
+          "no": "13",
+          "tajuk": "2 11Kertas Saman ",
+          "anggota": [],
+          "tindakan": [
+            "2 11Kertas Saman . . ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 14
+        },
+        {
+          "no": "13",
+          "tajuk": "2 12 Senarai Barangkes (Dokumenyang ",
+          "anggota": [],
+          "tindakan": [
+            "2 12 Senarai Barangkes (Dokumenyang . . . berkaitan)"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 14
+        },
+        {
+          "no": "13",
+          "tajuk": "2 13 Diari Siasatan ",
+          "anggota": [],
+          "tindakan": [
+            "2 13 Diari Siasatan . . . ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 14
+        },
+        {
+          "no": "13",
+          "tajuk": "2 14 Gambar sekiranya berkaitan ",
+          "anggota": [],
+          "tindakan": [
+            "2 14 Gambar sekiranya berkaitan . . . Bagi kesalahan-kesalahan di bawah 13(3) 16(2) 17(1) ,18(1) , , AKPMDKA 2024 dokumen-dokumen tambahan berikut , hendaklah disertakan: (a) Gambar (b) Maklumat Daftar Perniagaan dan sijil di bawah seksyen90(A) Akta Keterangan1950 dari SSM (jikamelibatkan syarikat) (c) Lesen dari Pihak Berkuasa Tempatan (d) RakamanPercakapan"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 13: 2 14 Gambar sekiranya berkaitan . . . Bagi kesalahan-kesalahan di bawah 13(3) 16(2) 17(1) ,18(1...",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 14
+        },
+        {
+          "no": "14",
+          "tajuk": "Semak dan daftarkanK/S dan Notis dalam BukuDaftar ",
+          "anggota": [
+            "UIPD"
+          ],
+          "tindakan": [
+            "Semak dan daftarkanK/S dan Notis dalam BukuDaftar . Notis ."
+          ],
+          "rujukan": [
+            "LampiranE"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 14
+        },
+        {
+          "no": "15",
+          "tajuk": "Serahkan K/Syanglengkap kepada ",
+          "anggota": [
+            "UIPD"
+          ],
+          "tindakan": [
+            "Serahkan K/Syanglengkap kepada . PKP/KPPKP/PPKPK daerah untuk semakan ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 14
+        },
+        {
+          "no": "41",
+          "tajuk": "TindakanIzinkompaun 16 Semak minit danrujuk K/S kepada TPR ",
+          "anggota": [
+            "PKP",
+            "PPKPK"
+          ],
+          "tindakan": [
+            "TindakanIzinkompaun 16 Semak minit danrujuk K/S kepada TPR . ,"
+          ],
+          "rujukan": [
+            "LampiranF"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 14
+        },
+        {
+          "no": "17",
+          "tajuk": "Daftarkan K/Syangditerima daripada UIPD dalam Buku ",
+          "anggota": [
+            "UIPN"
+          ],
+          "tindakan": [
+            "Daftarkan K/Syangditerima daripada UIPD dalam Buku . Daftar Negeri(jikakertas siasatandirujuk keUIPJKN) ."
+          ],
+          "rujukan": [
+            "LampiranG"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 14
+        },
+        {
+          "no": "18",
+          "tajuk": "UIPN semak K/S Sekiranya tidak lengkap atau perlu ",
+          "anggota": [
+            "UIPN",
+            "UIPD"
+          ],
+          "tindakan": [
+            "UIPN semak K/S Sekiranya tidak lengkap atau perlu . . pindaan kembalikan kepada UIPD untuk tindakan , pembetulan ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 18: UIPN semak K/S Sekiranya tidak lengkap atau perlu . . pindaan kembalikan kepada UIPD untuk tind...",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 14
+        },
+        {
+          "no": "19",
+          "tajuk": "Minit danrujuk K/Skepada TPR untuk mendapatkan ",
+          "anggota": [
+            "UIPN",
+            "UIPD"
+          ],
+          "tindakan": [
+            "Minit danrujuk K/Skepada TPR untuk mendapatkan . izin mengkompaun ."
+          ],
+          "rujukan": [
+            "LampiranH"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 14
+        },
+        {
+          "no": "20",
+          "tajuk": "Sekiranya izin kompaun diberi oleh TPR simpan K/S ",
+          "anggota": [
+            "UIPD"
+          ],
+          "tindakan": [
+            "Sekiranya izin kompaun diberi oleh TPR simpan K/S . – sehingga OKN datangke pejabat untuk ditawarkan kompaun . * Sekiranya izinkompaun tidak diberi (hanyaizin dakwa diberi) daftarkankesdimahkamah , ."
+          ],
+          "rujukan": [
+            "Prosedur UIP",
+            "-",
+            "UMUM 05 07",
+            "- -",
+            "(Pindaan 2024)"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 20: Sekiranya izin kompaun diberi oleh TPR simpan K/S . – sehingga OKN datangke pejabat untuk ditaw...",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 14
+        },
+        {
+          "no": "21",
+          "tajuk": "PDK keluarkantawarankompaunsekiranyaOKNdatang ",
+          "anggota": [
+            "UIPD"
+          ],
+          "tindakan": [
+            "PDK keluarkantawarankompaunsekiranyaOKNdatang . ke pejabat ."
+          ],
+          "rujukan": [
+            "LampiranJ"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 14
+        },
+        {
+          "no": "22",
+          "tajuk": "OKK bolehmembuat rayuan penurunantawaran ",
+          "anggota": [
+            "PKD",
+            "PKP",
+            "KPPKP",
+            "PP",
+            "KPK"
+          ],
+          "tindakan": [
+            "OKK bolehmembuat rayuan penurunantawaran . kompaun danmelengkapkan borangpenyetujuterimaan tawarankompaun ."
+          ],
+          "rujukan": [
+            "LampiranI"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 14
+        },
+        {
+          "no": "23",
+          "tajuk": "Sekiranyabayarandibuat terhadaptawarankompaun ",
+          "anggota": [
+            "UIPD"
+          ],
+          "tindakan": [
+            "Sekiranyabayarandibuat terhadaptawarankompaun . berkenaan dapatkan salinan resit rasmi untuk , dimasukkan didalam K/S ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 15
+        },
+        {
+          "no": "24",
+          "tajuk": "Rekodkan maklumat (rujuk K/Skepada Penyeliauntuk ",
+          "anggota": [
+            "UIPD"
+          ],
+          "tindakan": [
+            "Rekodkan maklumat (rujuk K/Skepada Penyeliauntuk . . diminitkan) K/Sditutup . ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 15
+        },
+        {
+          "no": "25",
+          "tajuk": "Sekiranya tempoh tawaran kompaun telah tamat tanpa ",
+          "anggota": [
+            "UIPD"
+          ],
+          "tindakan": [
+            "Sekiranya tempoh tawaran kompaun telah tamat tanpa . bayaran dijelaskan sediakan K/S dan serah kepada , PKP/KPPKP/PPKPK daerah untuk permohonan izin mendakwa Timbalan Pendakwa Raya dalam masa 14 hari ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": "14 hari",
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 25: Sekiranya tempoh tawaran kompaun telah tamat tanpa . bayaran dijelaskan sediakan K/S dan serah ...",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 15
+        },
+        {
+          "no": "51",
+          "tajuk": "TindakanIzindakwa 26 Semak minit danrujuk K/Skepada UIPN ",
+          "anggota": [
+            "PKD",
+            "PKP",
+            "KPPKP",
+            "PP",
+            "KPK",
+            "UIPD"
+          ],
+          "tindakan": [
+            "TindakanIzindakwa 26 Semak minit danrujuk K/Skepada UIPN . , ."
+          ],
+          "rujukan": [
+            "LampiranF"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 15
+        },
+        {
+          "no": "27",
+          "tajuk": "Kemaskini daftar K/Syang diterima daripada UIPD ",
+          "anggota": [
+            "UIPN"
+          ],
+          "tindakan": [
+            "Kemaskini daftar K/Syang diterima daripada UIPD . ."
+          ],
+          "rujukan": [
+            "LampiranG"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 15
+        },
+        {
+          "no": "28",
+          "tajuk": "Semak K/S untukmemastikan semua dokumenadalah ",
+          "anggota": [
+            "UIPN"
+          ],
+          "tindakan": [
+            "Semak K/S untukmemastikan semua dokumenadalah . lengkap Sekiranyaperlupindaan kembalikan kepada . , UIPD untuk tindakanpembetulan ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 15
+        },
+        {
+          "no": "29",
+          "tajuk": "Minit danrujuk K/Skepada TPR untuk mendapatkan ",
+          "anggota": [
+            "UIPN",
+            "UIPD"
+          ],
+          "tindakan": [
+            "Minit danrujuk K/Skepada TPR untuk mendapatkan . izin mendakwa ."
+          ],
+          "rujukan": [
+            "LampiranH"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 15
+        },
+        {
+          "no": "30",
+          "tajuk": "Sekiranya izin dakwa diberi oleh TPR teruskan untuk ",
+          "anggota": [
+            "UIPN",
+            "UIPD"
+          ],
+          "tindakan": [
+            "Sekiranya izin dakwa diberi oleh TPR teruskan untuk . – tindakanmahkamah . * Sekiranya izin dakwa tidak diberi rujuk arahan TPR – ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 30: Sekiranya izin dakwa diberi oleh TPR teruskan untuk . – tindakanmahkamah . * Sekiranya izin dak...",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 15
+        }
+      ]
+    }
+  ],
+  "carta_alir": {
+    "nodes": [
+      {
+        "id": "N_START",
+        "type": "start",
+        "label": "Mula Operasi / Prosedur",
+        "role": null,
+        "step_ref": null,
+        "sop_ref": null
+      },
+      {
+        "id": "N1",
+        "type": "decision",
+        "label": "1. DI PEJABAT 1 Persediaan awal : ",
+        "role": "PDK",
+        "step_ref": "1",
+        "sop_ref": null
+      },
+      {
+        "id": "N2",
+        "type": "process",
+        "label": "2. Setiap pasukan penguatkuasaan dianggotai sekurang ",
+        "role": "PDK",
+        "step_ref": "2",
+        "sop_ref": null
+      },
+      {
+        "id": "N3",
+        "type": "process",
+        "label": "3. Buat pemerhatian untuk mengenalpasti kesalahan ",
+        "role": "PDK",
+        "step_ref": "3",
+        "sop_ref": null
+      },
+      {
+        "id": "N4",
+        "type": "process",
+        "label": "4. Kedua-dua PDK hendaklah menghampiri pesalah ",
+        "role": "PDK",
+        "step_ref": "4",
+        "sop_ref": null
+      },
+      {
+        "id": "N5",
+        "type": "process",
+        "label": "5. Perkenalkan diri nyatakan tujuankedatangandan ",
+        "role": "PDK",
+        "step_ref": "5",
+        "sop_ref": null
+      },
+      {
+        "id": "N6",
+        "type": "process",
+        "label": "6. Mintaserahkan barang kes (produk merokok) ",
+        "role": "PDK",
+        "step_ref": "6",
+        "sop_ref": null
+      },
+      {
+        "id": "N7",
+        "type": "decision",
+        "label": "7. Mintakad pengenalanserta butiran berkenaanseperti ",
+        "role": "PDK",
+        "step_ref": "7",
+        "sop_ref": null
+      },
+      {
+        "id": "N8",
+        "type": "decision",
+        "label": "8. Untuk subseksyen 13(3) 16(2) 17(1) 18(1) AKPMDKA , , , 2024",
+        "role": "PDK",
+        "step_ref": "8",
+        "sop_ref": null
+      },
+      {
+        "id": "N9",
+        "type": "process",
+        "label": "10. Lengkapkan Notis dan sediakan Senarai BarangYang ",
+        "role": "PDK",
+        "step_ref": "10",
+        "sop_ref": null
+      },
+      {
+        "id": "N10",
+        "type": "process",
+        "label": "11. MintaOKNtandatangan penerimaanNotis dan Senarai ",
+        "role": "PDK",
+        "step_ref": "11",
+        "sop_ref": null
+      },
+      {
+        "id": "N11",
+        "type": "decision",
+        "label": "111. JikaOKNenggan tandatangan catitkan”Enggan ",
+        "role": "PDK",
+        "step_ref": "111",
+        "sop_ref": null
+      },
+      {
+        "id": "N12",
+        "type": "decision",
+        "label": "112. JikaOKNenggan terima catitkan”Enggan Terima ",
+        "role": "PDK",
+        "step_ref": "112",
+        "sop_ref": null
+      },
+      {
+        "id": "N13",
+        "type": "decision",
+        "label": "11. 3 JikaOKN enggan bagi kerjasama sila rujukSOP ",
+        "role": "PDK",
+        "step_ref": "11",
+        "sop_ref": null
+      },
+      {
+        "id": "N14",
+        "type": "process",
+        "label": "12. Serahkan salinan pendua Notis dan Senarai Barang ",
+        "role": "PDK",
+        "step_ref": "12",
+        "sop_ref": null
+      },
+      {
+        "id": "N_END",
+        "type": "end",
+        "label": "Selesai & Rekod Fail UIP",
+        "role": null,
+        "step_ref": null,
+        "sop_ref": null
+      }
+    ],
+    "edges": [
+      {
+        "from": "N_START",
+        "to": "N1",
+        "label": null
+      },
+      {
+        "from": "N1",
+        "to": "N2",
+        "label": "Teruskan"
+      },
+      {
+        "from": "N2",
+        "to": "N3",
+        "label": null
+      },
+      {
+        "from": "N3",
+        "to": "N4",
+        "label": null
+      },
+      {
+        "from": "N4",
+        "to": "N5",
+        "label": null
+      },
+      {
+        "from": "N5",
+        "to": "N6",
+        "label": null
+      },
+      {
+        "from": "N6",
+        "to": "N7",
+        "label": null
+      },
+      {
+        "from": "N7",
+        "to": "N8",
+        "label": "Teruskan"
+      },
+      {
+        "from": "N8",
+        "to": "N9",
+        "label": "Teruskan"
+      },
+      {
+        "from": "N9",
+        "to": "N10",
+        "label": null
+      },
+      {
+        "from": "N10",
+        "to": "N11",
+        "label": null
+      },
+      {
+        "from": "N11",
+        "to": "N12",
+        "label": "Teruskan"
+      },
+      {
+        "from": "N12",
+        "to": "N13",
+        "label": "Teruskan"
+      },
+      {
+        "from": "N13",
+        "to": "N14",
+        "label": "Teruskan"
+      },
+      {
+        "from": "N14",
+        "to": "N_END",
+        "label": null
+      }
+    ]
+  },
+  "senarai_semak": [
+    {
+      "id": "CHK-01",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[1] DI PEJABAT 1 Persediaan awal : ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-02",
+      "kumpulan": "Di Lapangan:",
+      "item": "[2] Setiap pasukan penguatkuasaan dianggotai sekurang ",
+      "wajib": true,
+      "rujukan": "Kad Perakuan"
+    },
+    {
+      "id": "CHK-03",
+      "kumpulan": "Di Lapangan:",
+      "item": "[3] Buat pemerhatian untuk mengenalpasti kesalahan ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-04",
+      "kumpulan": "Di Lapangan:",
+      "item": "[4] Kedua-dua PDK hendaklah menghampiri pesalah ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-05",
+      "kumpulan": "Di Lapangan:",
+      "item": "[5] Perkenalkan diri nyatakan tujuankedatangandan ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-06",
+      "kumpulan": "Di Lapangan:",
+      "item": "[6] Mintaserahkan barang kes (produk merokok) ",
+      "wajib": true,
+      "rujukan": "Kad"
+    },
+    {
+      "id": "CHK-07",
+      "kumpulan": "Di Lapangan:",
+      "item": "[7] Mintakad pengenalanserta butiran berkenaanseperti ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-08",
+      "kumpulan": "Di Lapangan:",
+      "item": "[8] Untuk subseksyen 13(3) 16(2) 17(1) 18(1) AKPMDKA , , , 2024",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-09",
+      "kumpulan": "Di Lapangan:",
+      "item": "[10] Lengkapkan Notis dan sediakan Senarai BarangYang ",
+      "wajib": true,
+      "rujukan": "LampiranA"
+    },
+    {
+      "id": "CHK-10",
+      "kumpulan": "Di Lapangan:",
+      "item": "[11] MintaOKNtandatangan penerimaanNotis dan Senarai ",
+      "wajib": true,
+      "rujukan": "Prosedur UIP"
+    },
+    {
+      "id": "CHK-11",
+      "kumpulan": "Di Lapangan:",
+      "item": "[111] JikaOKNenggan tandatangan catitkan”Enggan ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-12",
+      "kumpulan": "Di Lapangan:",
+      "item": "[112] JikaOKNenggan terima catitkan”Enggan Terima ",
+      "wajib": true,
+      "rujukan": null
+    }
+  ],
+  "lampiran": [
+    {
+      "kod": "Lampiran A",
+      "tajuk": "Cara Mengisi Borang Notis",
+      "jenis": "panduan",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Borang Dib",
+      "tajuk": "ekalkan.",
+      "jenis": "lain",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran M",
+      "tajuk": "Anggota",
+      "jenis": "lain",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran F",
+      "tajuk": "UIPN",
+      "jenis": "lain",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran B",
+      "tajuk": "KEMENTERIAN KESIHATAN MALAYSIA",
+      "jenis": "lain",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran C",
+      "tajuk": "JADUAL KEDUA",
+      "jenis": "jadual_kompaun",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran D",
+      "tajuk": "AKTA KAWALAN PRODUK MEROKOK DEMI KESIHATAN AWAM 2024",
+      "jenis": "lain",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran E",
+      "tajuk": "NO. BORANG : NMKDM/AKPMDKA-01/2024(D)",
+      "jenis": "borang",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran G",
+      "tajuk": "NO. BORANG : NMKDM/AKPMDKA-01/2024(N)",
+      "jenis": "borang",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran H",
+      "tajuk": "NMKDM/AM-04/2007 (N)",
+      "jenis": "lain",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran I",
+      "tajuk": "BORANG 3",
+      "jenis": "borang",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran J",
+      "tajuk": "BORANG 2",
+      "jenis": "borang",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran K",
+      "tajuk": "NMKDM/AKPMDKA-01/2024 (D)",
+      "jenis": "lain",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran L",
+      "tajuk": "NMKDM/AKPMDKA-01/2024 (D)",
+      "jenis": "lain",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    }
+  ],
+  "pematuhan": [
+    "Prosedur yang dikeluarkan ini hendaklah terus berkuatkuasa dan",
+    "dianggap sah sehingga dipinda atau diganti dengan satu prosedur lain",
+    "atau dibatalkan.",
+    "Keengganan dan kegagalan mematuhi prosedur ini tanpa alasan yang",
+    "munasabah boleh menyebabkan seseorang pegawai dikenakan tindakan",
+    "tatatertib di bawah Peraturan-Peraturan Pegawai Awam (Kelakuan dan",
+    "Tatatertib) 1993.",
+    "Kegagalan mematuhi prosedur ini juga merupakan satu kesalahan di"
+  ],
+  "rujukan_silang_resolved": [
+    {
+      "sop_id": "UIP-UMUM-05-07 (PINDAAN 2024)",
+      "file_stem": "UIP-UMUM-05-07",
+      "tajuk": "Prosedur Pendakwaan Di Mahkamah"
+    }
+  ],
+  "nota_audit_kualiti": [
+    "Ralat cetak PDF asal dinormalkan: duplikasi nombor '22' dalam Isi Kandungan ('22 Pematuhan' & '22 Tarikh Kuatkuasa') dan ejaan 'seksyen 90(A)' -> 'Seksyen 90A'. Menggantikan sepenuhnya UIP-PPKHT-01-16 yang dimansuhkan."
+  ]
+}

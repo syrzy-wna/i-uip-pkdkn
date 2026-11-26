@@ -945,17 +945,25 @@ export async function fetchActiveSops(
   params: {
     q?: string;
     akta?: string;
+    kategori?: string;
+    ada_pindaan?: boolean;
     authToken?: string | null;
   } = {}
 ): Promise<{
   total: number;
+  total_active_corpus?: number;
   quarantined_deprecated_blocked: number;
   sops: ActiveSopSummary[];
+  items?: ActiveSopSummary[];
+  pekeliling_rujukan?: import("./types").PekelilingRujukanItem[];
 }> {
   const search = new URLSearchParams();
   if (params.q?.trim()) search.set("q", params.q.trim());
   if (params.akta && params.akta !== "Semua") search.set("akta", params.akta);
-  const res = await fetchWithTimeout(`${API_BASE}/api/legal/sops?${search.toString()}`, {
+  if (params.kategori && params.kategori !== "Semua") search.set("kategori", params.kategori);
+  if (typeof params.ada_pindaan === "boolean") search.set("ada_pindaan", String(params.ada_pindaan));
+  const qs = search.toString();
+  const res = await fetchWithTimeout(`${API_BASE}/api/legal/sops${qs ? `?${qs}` : ""}`, {
     cache: "no-store",
     headers: { ...getAuthHeader(params.authToken) },
   });

@@ -1,0 +1,673 @@
+{
+  "schema_version": "2.0",
+  "sop_id": "UIP-APSPP-02-16 (PINDAAN 2024)",
+  "file_stem": "UIP-APSPP-02-16",
+  "alias_kod": [],
+  "tajuk": "Prosedur Tawaran Kompaun Di Bawah Akta Pemusnahan Serangga Pembawa Penyakit 1975",
+  "kategori": "APSPP_1975",
+  "akta_utama": "Akta 154",
+  "akta_berkaitan": [
+    "Akta 154",
+    "Akta 388",
+    "Akta 593",
+    "Peraturan APSPP (Mengkompaun Kesalahan) 1975"
+  ],
+  "keluaran": "01",
+  "pindaan": "01",
+  "tarikh_kuatkuasa": "15 Feb 2024",
+  "ringkasan_eksekutif": "Tujuan prosedur ini adalah untuk menggariskan tatacara tawaran kompaun di bawah Akta Pemusnahan Serangga Pembawa Penyakit 1975.",
+  "tujuan": "Tujuan prosedur ini adalah untuk menggariskan tatacara tawaran kompaun di bawah Akta Pemusnahan Serangga Pembawa Penyakit 1975.",
+  "panduan_am": [],
+  "punca_kuasa": [
+    "Izin kompaun TPR (S.376(3) KTJ)",
+    "Tawaran kompaun dalam 21 hari dari izin",
+    "S.16(1)(b) APSPP 1975 (Serahan Tangan/Pos Berdaftar)",
+    "Gagal bayar -> mohon izin dakwa TPR"
+  ],
+  "undang_undang_berkaitan": [
+    {
+      "akta": "Akta Pemusnahan Serangga Pembawa Penyakit 1975 [Akta 154]",
+      "akta_kod": "Akta 154",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Tafsiran 1948 dan 1967(Disemak 1989) [ Akta 388]",
+      "akta_kod": "Akta 388",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Peraturan-Peraturan Pemusnahan Serangga Pembawa Penyakit",
+      "akta_kod": null,
+      "status": "AKTIF",
+      "nota": null
+    }
+  ],
+  "anggota_terlibat": [
+    {
+      "kod": "PEGAWAI KESI",
+      "jawatan": "Pegawai Kesihatan Daerah/Kawasan/Bahagian/Epidemiologi"
+    },
+    {
+      "kod": "KETUA PENOLO",
+      "jawatan": "Ketua Penolong Pegawai Kesihatan Persekitaran"
+    },
+    {
+      "kod": "PENOLONG PEG",
+      "jawatan": "Penolong Pegawai Kesihatan Persekitaran Kanan"
+    },
+    {
+      "kod": "PEMBANTU KES",
+      "jawatan": "Pembantu Kesihatan Awam Kanan"
+    },
+    {
+      "kod": "NO. RUJUKAN ",
+      "jawatan": "NO. RUJUKAN PROSEDUR : UIP-APSPP-02-16 (Pindaan 2024)"
+    },
+    {
+      "kod": "PROSEDUR TAW",
+      "jawatan": "Prosedur Tawaran Kompaun Di Bawah Akta Pemusnahan Serangga Pembawa Penyakit 1975 2"
+    }
+  ],
+  "singkatan": [
+    {
+      "kod": "KPPKP",
+      "maksud": "Ketua Penolong Pegawai Kesihatan Persekitaran"
+    },
+    {
+      "kod": "K/S",
+      "maksud": "Kertas Siasatan"
+    },
+    {
+      "kod": "OKK",
+      "maksud": "Orang Kena Kompaun"
+    },
+    {
+      "kod": "PKA",
+      "maksud": "Pembantu Kesihatan Awam"
+    },
+    {
+      "kod": "PKAK",
+      "maksud": "Pembantu Kesihatan Kanan"
+    },
+    {
+      "kod": "PKD",
+      "maksud": "Pegawai Kesihatan Daerah/ Kawasan/Bahagian"
+    },
+    {
+      "kod": "PKE",
+      "maksud": "Pegawai Kesihatan Epidemiologi"
+    },
+    {
+      "kod": "PKP",
+      "maksud": "Pegawai Kesihatan Persekitaran"
+    },
+    {
+      "kod": "PPKP",
+      "maksud": "Penolong Pegawai Kesihatan Persekitaran"
+    },
+    {
+      "kod": "PPKPK",
+      "maksud": "Penolong Pegawai Kesihatan Persekitaran Kanan"
+    },
+    {
+      "kod": "TPR",
+      "maksud": "Timbalan Pendakwa Raya"
+    },
+    {
+      "kod": "UIPN",
+      "maksud": "Unit Inspektorat dan Perundangan Negeri --- Prosedur Tawaran Kompaun Di Bawah Akta Pemusnahan Serangga Pembawa Penyakit 1975 3"
+    }
+  ],
+  "nota_pindaan": [],
+  "tempoh_sla": [
+    {
+      "label": "ompaun, sediakan tawaran kompaun kepada OKK. (dalam tempoh 21 hari) 6. Dapatkan tanda",
+      "tempoh": "21 hari",
+      "rujukan": "UIP-APSPP-02-16"
+    }
+  ],
+  "fasa_kerja": [
+    {
+      "fasa_id": "F1",
+      "tajuk_fasa": "1. Pelaksanaan Proses Kerja",
+      "langkah": [
+        {
+          "no": "1",
+          "tajuk": "KERJA",
+          "anggota": [
+            "7. PROSES terlibat"
+          ],
+          "tindakan": [
+            "KERJA"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "1",
+          "tajuk": "Sediakan sampul kecil",
+          "anggota": [
+            "PKA",
+            "PKAK"
+          ],
+          "tindakan": [
+            "Sediakan sampul kecil. (Senarai semak / Borang adalah Prosedur seperti Lampiran B) APSPP-01-07 (PINDAAN"
+          ],
+          "rujukan": [
+            "UIP- 2024)"
+          ],
+          "rujukan_lampiran": [
+            "Lampiran B"
+          ],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "2",
+          "tajuk": "Semak dokumen, buka K/S dan cadangkan untuk izin kompaun kepada ketua unit dan catat dalam kertas minit",
+          "anggota": [
+            "PPKP"
+          ],
+          "tindakan": [
+            "Semak dokumen, buka K/S dan cadangkan untuk izin kompaun kepada ketua unit dan catat dalam kertas minit."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "3",
+          "tajuk": "Sokong cadangan permohonan izin kompaun melalui Lampiran minit dalam K/S",
+          "anggota": [
+            "PKP",
+            "KPPKP",
+            "PPKPK"
+          ],
+          "tindakan": [
+            "Sokong cadangan permohonan izin kompaun melalui Lampiran minit dalam K/S."
+          ],
+          "rujukan": [
+            "A"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "4",
+          "tajuk": "K/S dibawa ke UIPN/CIPN atau UIPD untuk dirujuk kepada TPR bagi pengeluaran Izin kompaun",
+          "anggota": [
+            "PKD",
+            "PKP"
+          ],
+          "tindakan": [
+            "K/S dibawa ke UIPN/CIPN atau UIPD untuk dirujuk kepada TPR bagi pengeluaran Izin kompaun."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "5",
+          "tajuk": "Setelah mendapat izin kompaun, sediakan tawaran Borang kompaun kepada OKK",
+          "anggota": [
+            "KPPKP",
+            "PPKPK"
+          ],
+          "tindakan": [
+            "Setelah mendapat izin kompaun, sediakan tawaran Borang kompaun kepada OKK. (dalam tempoh 21 hari)"
+          ],
+          "rujukan": [
+            "kompaun"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": "21 hari",
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "6",
+          "tajuk": "Dapatkan tandatangan mana-mana orang yang di beri kuasa",
+          "anggota": [
+            "PPKP"
+          ],
+          "tindakan": [
+            "Dapatkan tandatangan mana-mana orang yang di beri kuasa"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "7",
+          "tajuk": "Rekodkan kompaun dalam Buku Daftar Kompaun",
+          "anggota": [
+            "PPKP"
+          ],
+          "tindakan": [
+            "Rekodkan kompaun dalam Buku Daftar Kompaun. Buku Kompaun"
+          ],
+          "rujukan": [
+            "Daftar"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "8",
+          "tajuk": "Hantar kompaun kepada OKK secara Serahan Tangan Seksyen16(1)(b) atau Pos Berdaftar atau meninggalkannya di tem",
+          "anggota": [
+            "PKA",
+            "PKAK"
+          ],
+          "tindakan": [
+            "Hantar kompaun kepada OKK secara Serahan Tangan Seksyen16(1)(b) atau Pos Berdaftar atau meninggalkannya di tempat APSPP tinggal atau perniagaannya yang biasa atau terakhir di ketahui dalam sampul yang di alamatkan kepadanya."
+          ],
+          "rujukan": [
+            "1975"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "9",
+          "tajuk": "Sekiranya bayaran dibuat, keluarkan resit rasmi",
+          "anggota": [
+            "PKA",
+            "PKAK"
+          ],
+          "tindakan": [
+            "Sekiranya bayaran dibuat, keluarkan resit rasmi."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 9: Sekiranya bayaran dibuat, keluarkan resit rasmi.",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "10",
+          "tajuk": "Rekod maklumat kompaun dan resit rasmi pembayaran dalam buku daftar dan KS dan KS ditutup",
+          "anggota": [],
+          "tindakan": [
+            "Rekod maklumat kompaun dan resit rasmi pembayaran dalam buku daftar dan KS dan KS ditutup."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "11",
+          "tajuk": "Sekiranya kompaun gagal dibayar dalam tempoh, serahkan KS kepada UIPD untuk memohon izin dakwa daripada TPR",
+          "anggota": [],
+          "tindakan": [
+            "Sekiranya kompaun gagal dibayar dalam tempoh, serahkan KS kepada UIPD untuk memohon izin dakwa daripada TPR. ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 11: Sekiranya kompaun gagal dibayar dalam tempoh, serahkan KS kepada UIPD untuk memohon izin dakwa ...",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        }
+      ]
+    }
+  ],
+  "carta_alir": {
+    "nodes": [
+      {
+        "id": "N_START",
+        "type": "start",
+        "label": "Mula Operasi / Prosedur",
+        "role": null,
+        "step_ref": null,
+        "sop_ref": null
+      },
+      {
+        "id": "N1",
+        "type": "process",
+        "label": "1. KERJA",
+        "role": "7. PROSES terlibat",
+        "step_ref": "1",
+        "sop_ref": null
+      },
+      {
+        "id": "N2",
+        "type": "process",
+        "label": "1. Sediakan sampul kecil",
+        "role": "PKA/PKAK",
+        "step_ref": "1",
+        "sop_ref": null
+      },
+      {
+        "id": "N3",
+        "type": "process",
+        "label": "2. Semak dokumen, buka K/S dan cadangkan untuk izin kompaun kepada ketua unit dan catat dal",
+        "role": "PPKP",
+        "step_ref": "2",
+        "sop_ref": null
+      },
+      {
+        "id": "N4",
+        "type": "process",
+        "label": "3. Sokong cadangan permohonan izin kompaun melalui Lampiran minit dalam K/S",
+        "role": "PKP/KPPKP",
+        "step_ref": "3",
+        "sop_ref": null
+      },
+      {
+        "id": "N5",
+        "type": "process",
+        "label": "4. K/S dibawa ke UIPN/CIPN atau UIPD untuk dirujuk kepada TPR bagi pengeluaran Izin kompaun",
+        "role": "PKD/PKP",
+        "step_ref": "4",
+        "sop_ref": null
+      },
+      {
+        "id": "N6",
+        "type": "process",
+        "label": "5. Setelah mendapat izin kompaun, sediakan tawaran Borang kompaun kepada OKK",
+        "role": "KPPKP/PPKPK",
+        "step_ref": "5",
+        "sop_ref": null
+      },
+      {
+        "id": "N7",
+        "type": "process",
+        "label": "6. Dapatkan tandatangan mana-mana orang yang di beri kuasa",
+        "role": "PPKP",
+        "step_ref": "6",
+        "sop_ref": null
+      },
+      {
+        "id": "N8",
+        "type": "process",
+        "label": "7. Rekodkan kompaun dalam Buku Daftar Kompaun",
+        "role": "PPKP",
+        "step_ref": "7",
+        "sop_ref": null
+      },
+      {
+        "id": "N9",
+        "type": "process",
+        "label": "8. Hantar kompaun kepada OKK secara Serahan Tangan Seksyen16(1)(b) atau Pos Berdaftar atau ",
+        "role": "PKA/PKAK",
+        "step_ref": "8",
+        "sop_ref": null
+      },
+      {
+        "id": "N10",
+        "type": "decision",
+        "label": "9. Sekiranya bayaran dibuat, keluarkan resit rasmi",
+        "role": "PKA/PKAK",
+        "step_ref": "9",
+        "sop_ref": null
+      },
+      {
+        "id": "N11",
+        "type": "process",
+        "label": "10. Rekod maklumat kompaun dan resit rasmi pembayaran dalam buku daftar dan KS dan KS ditutu",
+        "role": null,
+        "step_ref": "10",
+        "sop_ref": null
+      },
+      {
+        "id": "N12",
+        "type": "decision",
+        "label": "11. Sekiranya kompaun gagal dibayar dalam tempoh, serahkan KS kepada UIPD untuk memohon izin",
+        "role": null,
+        "step_ref": "11",
+        "sop_ref": null
+      },
+      {
+        "id": "N_END",
+        "type": "end",
+        "label": "Selesai & Rekod Fail UIP",
+        "role": null,
+        "step_ref": null,
+        "sop_ref": null
+      }
+    ],
+    "edges": [
+      {
+        "from": "N_START",
+        "to": "N1",
+        "label": null
+      },
+      {
+        "from": "N1",
+        "to": "N2",
+        "label": null
+      },
+      {
+        "from": "N2",
+        "to": "N3",
+        "label": null
+      },
+      {
+        "from": "N3",
+        "to": "N4",
+        "label": null
+      },
+      {
+        "from": "N4",
+        "to": "N5",
+        "label": null
+      },
+      {
+        "from": "N5",
+        "to": "N6",
+        "label": null
+      },
+      {
+        "from": "N6",
+        "to": "N7",
+        "label": null
+      },
+      {
+        "from": "N7",
+        "to": "N8",
+        "label": null
+      },
+      {
+        "from": "N8",
+        "to": "N9",
+        "label": null
+      },
+      {
+        "from": "N9",
+        "to": "N10",
+        "label": null
+      },
+      {
+        "from": "N10",
+        "to": "N11",
+        "label": "Teruskan"
+      },
+      {
+        "from": "N11",
+        "to": "N12",
+        "label": null
+      },
+      {
+        "from": "N12",
+        "to": "N_END",
+        "label": null
+      }
+    ]
+  },
+  "senarai_semak": [
+    {
+      "id": "CHK-01",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[1] KERJA",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-02",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[1] Sediakan sampul kecil",
+      "wajib": true,
+      "rujukan": "Lampiran B"
+    },
+    {
+      "id": "CHK-03",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[2] Semak dokumen, buka K/S dan cadangkan untuk izin kompaun kepada ketua unit dan catat dalam kertas minit",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-04",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[3] Sokong cadangan permohonan izin kompaun melalui Lampiran minit dalam K/S",
+      "wajib": true,
+      "rujukan": "A"
+    },
+    {
+      "id": "CHK-05",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[4] K/S dibawa ke UIPN/CIPN atau UIPD untuk dirujuk kepada TPR bagi pengeluaran Izin kompaun",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-06",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[5] Setelah mendapat izin kompaun, sediakan tawaran Borang kompaun kepada OKK",
+      "wajib": true,
+      "rujukan": "kompaun"
+    },
+    {
+      "id": "CHK-07",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[6] Dapatkan tandatangan mana-mana orang yang di beri kuasa",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-08",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[7] Rekodkan kompaun dalam Buku Daftar Kompaun",
+      "wajib": true,
+      "rujukan": "Daftar"
+    },
+    {
+      "id": "CHK-09",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[8] Hantar kompaun kepada OKK secara Serahan Tangan Seksyen16(1)(b) atau Pos Berdaftar atau meninggalkannya di tem",
+      "wajib": true,
+      "rujukan": "1975"
+    },
+    {
+      "id": "CHK-10",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[9] Sekiranya bayaran dibuat, keluarkan resit rasmi",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-11",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[10] Rekod maklumat kompaun dan resit rasmi pembayaran dalam buku daftar dan KS dan KS ditutup",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-12",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[11] Sekiranya kompaun gagal dibayar dalam tempoh, serahkan KS kepada UIPD untuk memohon izin dakwa daripada TPR",
+      "wajib": true,
+      "rujukan": null
+    }
+  ],
+  "lampiran": [
+    {
+      "kod": "Lampiran A",
+      "tajuk": "Keizinan Bertulis Mengkompaun Kesalahan Boleh Dikompaun (S.376(3) KTJ)",
+      "jenis": "lain",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran B",
+      "tajuk": "Senarai Semak Sampul Kecil",
+      "jenis": "senarai_semak",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    }
+  ],
+  "pematuhan": [
+    "Prosedur yang dikeluarkan ini hendaklah terus berkuatkuasa dan dianggap sah",
+    "sehingga dipinda atau diganti dengan satu prosedur lain atau dibatalkan.",
+    "Keengganan dan kegagalan mematuhi Prosedur ini tanpa alasan yang",
+    "munasabah boleh menyebabkan seseorang pegawai dikenakan tindakan",
+    "tatatertib di bawah Peraturan-Peraturan Pegawai Awam (Kelakuan dan",
+    "Tatatertib) 1993.",
+    "Kegagalan mematuhi prosedur ini juga merupakan satu kesalahan di bawah",
+    "Seksyen 24 (1) (f) Akta Suruhanjaya Integriti Agensi Penguatkuasaan 2009 [Akta"
+  ],
+  "rujukan_silang_resolved": [
+    {
+      "sop_id": "UIP-APSPP-01-07 (PINDAAN 2024)",
+      "file_stem": "UIP-APSPP-01-07",
+      "tajuk": "Prosedur Pemeriksaan Serangga Pembawa Penyakit Di Lapangan"
+    }
+  ],
+  "nota_audit_kualiti": []
+}

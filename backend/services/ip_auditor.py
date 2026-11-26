@@ -484,8 +484,16 @@ class IPTechnicalAuditor:
 
         sop_kritikal_items: List[Dict[str, Any]] = []
         if isinstance(sop_audit_pra_tpr, dict):
-            for finding in sop_audit_pra_tpr.get("penemuan_semakan") or []:
-                if isinstance(finding, dict) and "[KRITIKAL" in str(finding.get("tahap") or "").upper():
+            sop_findings = (
+                sop_audit_pra_tpr.get("dapatan_sop")
+                or sop_audit_pra_tpr.get("penemuan_semakan")
+                or []
+            )
+            for finding in sop_findings:
+                if not isinstance(finding, dict):
+                    continue
+                status_val = str(finding.get("status") or finding.get("tahap") or "").upper()
+                if "[KRITIKAL" in status_val or "KRITIKAL" in status_val:
                     sop_kritikal_items.append(finding)
 
         if sop_kritikal_items:
@@ -503,15 +511,20 @@ class IPTechnicalAuditor:
         tpr_notes = self._build_tpr_summary(criteria_results, readiness, akta_utama)
         kuiri_tpr = self._build_kuiri_tpr(criteria_results)
         for idx_k, sk in enumerate(sop_kritikal_items, start=1):
-            kod_sop = str(sk.get("kod_sop") or "SOP KKM 2024")
-            isu_sop = str(sk.get("isu") or "Isu kritikal pematuhan SOP KKM 2024.")
-            tindakan_sop = str(sk.get("tindakan") or "Sila betulkan mengikut SOP KKM Pindaan 2024 sebelum dihantar ke TPR.")
+            kod_sop = str(sk.get("rujukan_sop") or sk.get("kod_sop") or "SOP KKM 2024").strip()
+            kategori_sop = str(sk.get("kategori") or "").strip()
+            isu_sop = str(sk.get("perincian") or sk.get("isu") or "Isu kritikal pematuhan SOP KKM 2024.").strip()
+            tindakan_sop = str(
+                sk.get("tindakan")
+                or f"Wajib betulkan isu {kategori_sop or 'pematuhan SOP'} mengikut {kod_sop} sebelum K/S dihantar ke TPR."
+            ).strip()
+            label_prefix = f"[{kod_sop}]" + (f" {kategori_sop}: " if kategori_sop else " ")
             kuiri_tpr.insert(
                 0,
                 {
                     "code": f"SOP-K{idx_k:02d}",
                     "tahap": "KUIRI WAJIB",
-                    "isu": f"[{kod_sop}] {isu_sop}",
+                    "isu": f"{label_prefix}{isu_sop}",
                     "tindakan_io": tindakan_sop,
                 },
             )

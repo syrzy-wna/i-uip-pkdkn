@@ -1,0 +1,889 @@
+{
+  "schema_version": "2.0",
+  "sop_id": "UIP-AKPMDKA-04-24",
+  "file_stem": "UIP-AKPMDKA-04-24",
+  "alias_kod": [
+    "AKPMDKA-04-24",
+    "AKPMDKS-04-24",
+    "04 AKPMDKS 04-24"
+  ],
+  "tajuk": "Tatacara Pengambilan Sampel Produk Merokok Di Bawah Subseksyen 28(2) Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024 [Akta 852]",
+  "kategori": "AKTA_852",
+  "akta_utama": "Akta 852",
+  "akta_berkaitan": [
+    "Akta 852",
+    "Akta 56",
+    "Akta 593",
+    "Akta 388"
+  ],
+  "keluaran": "01",
+  "pindaan": "00",
+  "tarikh_kuatkuasa": "01 Okt 2024",
+  "ringkasan_eksekutif": "Tujuan prosedur ini adalah untuk menggariskan tatacara pengambilan sampel Di Bawah Seksyen 28(2) Akta Kawalan Produk Merokok Demi Kesihatan Awam (AKPMDKA) 2024 [ Akta 852 ]",
+  "tujuan": "Tujuan prosedur ini adalah untuk menggariskan tatacara pengambilan sampel Di Bawah Seksyen 28(2) Akta Kawalan Produk Merokok Demi Kesihatan Awam (AKPMDKA) 2024 [ Akta 852 ]",
+  "panduan_am": [],
+  "punca_kuasa": [
+    "Subseksyen 28(2) Akta 852 (Kuasa Ambil Sampel)",
+    "Seksyen 29 Akta 852 (Pembayaran & Pembahagian Sampel)",
+    "Borang A & Borang 1-3 Persampelan",
+    "P.U.(A) 263/2024 (Makmal Analisis)"
+  ],
+  "undang_undang_berkaitan": [
+    {
+      "akta": "Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024 [ Akta 852 ]",
+      "akta_kod": "Akta 852",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Keterangan 1950 (Disemak 1971) [Akta 56]",
+      "akta_kod": "Akta 56",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Kanun Tatacara Jenayah [Akta 593]",
+      "akta_kod": "Akta 593",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Mahkamah Rendah 1948 [Akta 92)",
+      "akta_kod": "Akta 92",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Tafsiran 1948 (Disemak 1989) [Akta 388]",
+      "akta_kod": "Akta 388",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Perintah Makmal Yang Diluluskan 2024",
+      "akta_kod": null,
+      "status": "AKTIF",
+      "nota": null
+    }
+  ],
+  "anggota_terlibat": [
+    {
+      "kod": "SEMUA PEGAWA",
+      "jawatan": "Semua pegawai yang dilantik sebagai pegawai diberi kuasa di bawah Seksyen"
+    },
+    {
+      "kod": "AKTA KAWALAN",
+      "jawatan": "Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024 [ Akta 852 ]"
+    },
+    {
+      "kod": "NO. RUJUKAN ",
+      "jawatan": "NO. RUJUKAN PROSEDUR: UIP-AKPMDKA-04-24"
+    },
+    {
+      "kod": "TATACARA PEN",
+      "jawatan": "Tatacara Pengambilan Sampel Di Bawah Akta Kawalan Produk Merokok Demi Kesihatan"
+    },
+    {
+      "kod": "AWAM 2024[ A",
+      "jawatan": "Awam 2024[ Akta 852 ]"
+    }
+  ],
+  "singkatan": [
+    {
+      "kod": "Akta 852",
+      "maksud": "Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024"
+    },
+    {
+      "kod": "KPPKP",
+      "maksud": "Ketua Penolong Pegawai Kesihatan Persekitaran"
+    },
+    {
+      "kod": "K/S",
+      "maksud": "Kertas Siasatan"
+    },
+    {
+      "kod": "PDK",
+      "maksud": "Pegawai Diberi Kuasa"
+    },
+    {
+      "kod": "PKD",
+      "maksud": "Pegawai Kesihatan Daerah/Kawasan/Bahagian"
+    },
+    {
+      "kod": "PKP",
+      "maksud": "Pegawai Kesihatan Persekitaran"
+    },
+    {
+      "kod": "PPKP",
+      "maksud": "Penolong Pegawai Kesihatan Persekitaran"
+    },
+    {
+      "kod": "PPKPK",
+      "maksud": "Penolong Pegawai Kesihatan Persekitaran Kanan"
+    },
+    {
+      "kod": "UIPD",
+      "maksud": "Unit Inspektorat dan Perundangan Daerah"
+    },
+    {
+      "kod": "UIPN",
+      "maksud": "Unit Inspektorat dan Perundangan Negeri 7 PENGAMBILAN SAMPEL"
+    }
+  ],
+  "nota_pindaan": [],
+  "tempoh_sla": [],
+  "fasa_kerja": [
+    {
+      "fasa_id": "F1",
+      "tajuk_fasa": "Di Pejabat",
+      "langkah": [
+        {
+          "no": "1",
+          "tajuk": "Taklimat kepada PDK ",
+          "anggota": [
+            "PKP",
+            "PPKPK",
+            "PDK"
+          ],
+          "tindakan": [
+            "Taklimat kepada PDK ."
+          ],
+          "rujukan": [
+            "Suratarahan",
+            "KKM/Jadual",
+            "perancangan",
+            "tahunan"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "2",
+          "tajuk": "Persediaan awal dengan menyemak peralatan ",
+          "anggota": [
+            "PKP",
+            "PPKPK",
+            "PDK"
+          ],
+          "tindakan": [
+            "Persediaan awal dengan menyemak peralatan . untuk pengambilan sampel"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        }
+      ]
+    },
+    {
+      "fasa_id": "F2",
+      "tajuk_fasa": "Di Lapangan",
+      "langkah": [
+        {
+          "no": "3",
+          "tajuk": "Jumpa pemilik/ pemunya premis/ wakil premis ",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            "Jumpa pemilik/ pemunya premis/ wakil premis . , kenalkan diri bersama pembantu dan tunjukkan kad pengenalan diri serta nyatakan tujuan kedatangan ."
+          ],
+          "rujukan": [
+            "KadPengenalan",
+            "Diri /Kad",
+            "PerakuanKuasa",
+            "BorangA",
+            "Borang1",
+            "UIP UMUM 04 07"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "4",
+          "tajuk": "Pilih jenis sampel yang dikehendaki/ yang ",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            "Pilih jenis sampel yang dikehendaki/ yang . dikenalpasti dengan disaksikan pemilik/ pemunya premis/ wakil premis"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "5",
+          "tajuk": "Bagi Pengambilan sampel boleh dilakukan ",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            "Bagi Pengambilan sampel boleh dilakukan . mengikut seksyen 27(1) 27(2) 32 33 dan 35 Akta , , , ,"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "852",
+          "tajuk": "",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            "."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "6",
+          "tajuk": "Buat bayaran sampel jika diambil di bawah ",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            "Buat bayaran sampel jika diambil di bawah . seksyen 27(1) dan dapatkan resit sebagai bukti pembelian ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 6: Buat bayaran sampel jika diambil di bawah . seksyen 27(1) dan dapatkan resit sebagai bukti pemb...",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "7",
+          "tajuk": "Isi notis pengambilan sampel di bawah seksyen ",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            "Isi notis pengambilan sampel di bawah seksyen . 28(1) dan dapatkan tandatangan pemilik/pemunya/ wakil premis ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "8",
+          "tajuk": "Tanda dan labelkan serta lakkan sampel yang ",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            "Tanda dan labelkan serta lakkan sampel yang . diambil ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "9",
+          "tajuk": "Sediakan dokumen pelan lakar ( lokasi dan lantai) ",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            "Sediakan dokumen pelan lakar ( lokasi dan lantai) . ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "10",
+          "tajuk": "Pengambilan gambar forensik persampelan ",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            "Pengambilan gambar forensik persampelan ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        }
+      ]
+    },
+    {
+      "fasa_id": "F3",
+      "tajuk_fasa": "Di Pejabat",
+      "langkah": [
+        {
+          "no": "11",
+          "tajuk": "Jika sampel tidak dapat dihantar pada hari yang ",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            "Jika sampel tidak dapat dihantar pada hari yang . sama sampel hendaklah disimpan dalam almari , berkunci / bilik eksibit ."
+          ],
+          "rujukan": [
+            "Borang2"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 11: Jika sampel tidak dapat dihantar pada hari yang . sama sampel hendaklah disimpan dalam almari ,...",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "12",
+          "tajuk": "Isi borang permintaan analisis dan lekatkan satu ",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            "Isi borang permintaan analisis dan lekatkan satu . keratan label sampel bersama borang permintaan",
+            "analisis ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "13",
+          "tajuk": "Hantar ke Juruanalisis di Jabatan Kimia Malaysia/ ",
+          "anggota": [
+            "PKP",
+            "KPPKP",
+            "PP",
+            "KPK"
+          ],
+          "tindakan": [
+            "Hantar ke Juruanalisis di Jabatan Kimia Malaysia/ . Makmal Kesihatan Awam Kebangsaan yang diiktiraf untuk tujuan analisis ."
+          ],
+          "rujukan": [
+            "Borang3",
+            "SOPUIP UMUM",
+            "- -",
+            "02 -07(Pindaan",
+            "2024)"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "14",
+          "tajuk": "Dapatkan resit penerimaan sampel daripada ",
+          "anggota": [
+            "PKP",
+            "KPPKP",
+            "PP",
+            "KPK"
+          ],
+          "tindakan": [
+            "Dapatkan resit penerimaan sampel daripada . Juruanalisis ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "15",
+          "tajuk": "Dapatkan Perakuan Juruanalisis setelah keputusan ",
+          "anggota": [
+            "PKP",
+            "KPPKP",
+            "PP",
+            "KPK"
+          ],
+          "tindakan": [
+            "Dapatkan Perakuan Juruanalisis setelah keputusan . analisis keluar ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "16",
+          "tajuk": "Jika keputusan perakuan juruanalisis melanggar ",
+          "anggota": [
+            "PKP",
+            "KPPKP",
+            "PP",
+            "KPK"
+          ],
+          "tindakan": [
+            "Jika keputusan perakuan juruanalisis melanggar . , kemukakan kepada penyelia untuk arahan lanjut membuka kertas siasatan rujuk SOP menyediakan kertas siasatan bagi tujuan pendakwaan di mahkamah ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 16: Jika keputusan perakuan juruanalisis melanggar . , kemukakan kepada penyelia untuk arahan lanju...",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "17",
+          "tajuk": "Dapatkan baki sampel dengan pihak makmal ",
+          "anggota": [
+            "PKP",
+            "KPPKP",
+            "PP",
+            "KPK"
+          ],
+          "tindakan": [
+            "Dapatkan baki sampel dengan pihak makmal . sekiranya keputusan analisis melanggar ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 17: Dapatkan baki sampel dengan pihak makmal . sekiranya keputusan analisis melanggar .",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "18",
+          "tajuk": "Serahkan kepada Pegawai Penyiasat semua ",
+          "anggota": [
+            "PKP",
+            "KPPKP",
+            "PP",
+            "KPK"
+          ],
+          "tindakan": [
+            "Serahkan kepada Pegawai Penyiasat semua . dokumen dan baki sampel bersama Borang Akuan Terima ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        }
+      ]
+    }
+  ],
+  "carta_alir": {
+    "nodes": [
+      {
+        "id": "N_START",
+        "type": "start",
+        "label": "Mula Operasi / Prosedur",
+        "role": null,
+        "step_ref": null,
+        "sop_ref": null
+      },
+      {
+        "id": "N1",
+        "type": "process",
+        "label": "1. Taklimat kepada PDK ",
+        "role": "PKP/PPKPK",
+        "step_ref": "1",
+        "sop_ref": null
+      },
+      {
+        "id": "N2",
+        "type": "process",
+        "label": "2. Persediaan awal dengan menyemak peralatan ",
+        "role": "PKP/PPKPK",
+        "step_ref": "2",
+        "sop_ref": null
+      },
+      {
+        "id": "N3",
+        "type": "process",
+        "label": "3. Jumpa pemilik/ pemunya premis/ wakil premis ",
+        "role": "PDK",
+        "step_ref": "3",
+        "sop_ref": null
+      },
+      {
+        "id": "N4",
+        "type": "process",
+        "label": "4. Pilih jenis sampel yang dikehendaki/ yang ",
+        "role": "PDK",
+        "step_ref": "4",
+        "sop_ref": null
+      },
+      {
+        "id": "N5",
+        "type": "process",
+        "label": "5. Bagi Pengambilan sampel boleh dilakukan ",
+        "role": "PDK",
+        "step_ref": "5",
+        "sop_ref": null
+      },
+      {
+        "id": "N6",
+        "type": "process",
+        "label": "852. ",
+        "role": "PDK",
+        "step_ref": "852",
+        "sop_ref": null
+      },
+      {
+        "id": "N7",
+        "type": "decision",
+        "label": "6. Buat bayaran sampel jika diambil di bawah ",
+        "role": "PDK",
+        "step_ref": "6",
+        "sop_ref": null
+      },
+      {
+        "id": "N8",
+        "type": "process",
+        "label": "7. Isi notis pengambilan sampel di bawah seksyen ",
+        "role": "PDK",
+        "step_ref": "7",
+        "sop_ref": null
+      },
+      {
+        "id": "N9",
+        "type": "process",
+        "label": "8. Tanda dan labelkan serta lakkan sampel yang ",
+        "role": "PDK",
+        "step_ref": "8",
+        "sop_ref": null
+      },
+      {
+        "id": "N10",
+        "type": "process",
+        "label": "9. Sediakan dokumen pelan lakar ( lokasi dan lantai) ",
+        "role": "PDK",
+        "step_ref": "9",
+        "sop_ref": null
+      },
+      {
+        "id": "N11",
+        "type": "process",
+        "label": "10. Pengambilan gambar forensik persampelan ",
+        "role": "PDK",
+        "step_ref": "10",
+        "sop_ref": null
+      },
+      {
+        "id": "N12",
+        "type": "decision",
+        "label": "11. Jika sampel tidak dapat dihantar pada hari yang ",
+        "role": "PDK",
+        "step_ref": "11",
+        "sop_ref": null
+      },
+      {
+        "id": "N13",
+        "type": "process",
+        "label": "12. Isi borang permintaan analisis dan lekatkan satu ",
+        "role": "PDK",
+        "step_ref": "12",
+        "sop_ref": null
+      },
+      {
+        "id": "N14",
+        "type": "process",
+        "label": "13. Hantar ke Juruanalisis di Jabatan Kimia Malaysia/ ",
+        "role": "PKP/KPPKP",
+        "step_ref": "13",
+        "sop_ref": null
+      },
+      {
+        "id": "N_END",
+        "type": "end",
+        "label": "Selesai & Rekod Fail UIP",
+        "role": null,
+        "step_ref": null,
+        "sop_ref": null
+      }
+    ],
+    "edges": [
+      {
+        "from": "N_START",
+        "to": "N1",
+        "label": null
+      },
+      {
+        "from": "N1",
+        "to": "N2",
+        "label": null
+      },
+      {
+        "from": "N2",
+        "to": "N3",
+        "label": null
+      },
+      {
+        "from": "N3",
+        "to": "N4",
+        "label": null
+      },
+      {
+        "from": "N4",
+        "to": "N5",
+        "label": null
+      },
+      {
+        "from": "N5",
+        "to": "N6",
+        "label": null
+      },
+      {
+        "from": "N6",
+        "to": "N7",
+        "label": null
+      },
+      {
+        "from": "N7",
+        "to": "N8",
+        "label": "Teruskan"
+      },
+      {
+        "from": "N8",
+        "to": "N9",
+        "label": null
+      },
+      {
+        "from": "N9",
+        "to": "N10",
+        "label": null
+      },
+      {
+        "from": "N10",
+        "to": "N11",
+        "label": null
+      },
+      {
+        "from": "N11",
+        "to": "N12",
+        "label": null
+      },
+      {
+        "from": "N12",
+        "to": "N13",
+        "label": "Teruskan"
+      },
+      {
+        "from": "N13",
+        "to": "N14",
+        "label": null
+      },
+      {
+        "from": "N14",
+        "to": "N_END",
+        "label": null
+      }
+    ]
+  },
+  "senarai_semak": [
+    {
+      "id": "CHK-01",
+      "kumpulan": "Di Pejabat",
+      "item": "[1] Taklimat kepada PDK ",
+      "wajib": true,
+      "rujukan": "Suratarahan"
+    },
+    {
+      "id": "CHK-02",
+      "kumpulan": "Di Pejabat",
+      "item": "[2] Persediaan awal dengan menyemak peralatan ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-03",
+      "kumpulan": "Di Lapangan",
+      "item": "[3] Jumpa pemilik/ pemunya premis/ wakil premis ",
+      "wajib": true,
+      "rujukan": "KadPengenalan"
+    },
+    {
+      "id": "CHK-04",
+      "kumpulan": "Di Lapangan",
+      "item": "[4] Pilih jenis sampel yang dikehendaki/ yang ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-05",
+      "kumpulan": "Di Lapangan",
+      "item": "[5] Bagi Pengambilan sampel boleh dilakukan ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-06",
+      "kumpulan": "Di Lapangan",
+      "item": "[852] ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-07",
+      "kumpulan": "Di Lapangan",
+      "item": "[6] Buat bayaran sampel jika diambil di bawah ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-08",
+      "kumpulan": "Di Lapangan",
+      "item": "[7] Isi notis pengambilan sampel di bawah seksyen ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-09",
+      "kumpulan": "Di Lapangan",
+      "item": "[8] Tanda dan labelkan serta lakkan sampel yang ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-10",
+      "kumpulan": "Di Lapangan",
+      "item": "[9] Sediakan dokumen pelan lakar ( lokasi dan lantai) ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-11",
+      "kumpulan": "Di Lapangan",
+      "item": "[10] Pengambilan gambar forensik persampelan ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-12",
+      "kumpulan": "Di Pejabat",
+      "item": "[11] Jika sampel tidak dapat dihantar pada hari yang ",
+      "wajib": true,
+      "rujukan": "Borang2"
+    }
+  ],
+  "lampiran": [
+    {
+      "kod": "Borang A",
+      "tajuk": "Borang 1",
+      "jenis": "borang",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Borang 3",
+      "tajuk": "SOP UIP-UMUM",
+      "jenis": "lain",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Borang 1",
+      "tajuk": "LABEL BAGI HASIL TEMBAKAU/ PRODUK PENGGANTI TEMBAKAU/ BAHAN MEROKOK",
+      "jenis": "lain",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Borang 2",
+      "tajuk": "PERMINTAAN BAGI ANALISIS PRODUK MEROKOK",
+      "jenis": "lain",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    }
+  ],
+  "pematuhan": [
+    "Peraturan-Peraturan Pegawai Awam (Kelakuan dan Tatatertib) 1993",
+    "Pemakaian Kad Perakuan Kuasa KKM dan pematuhan rantaian keterangan mahkamah."
+  ],
+  "rujukan_silang_resolved": [
+    {
+      "sop_id": "UIP-UMUM-04-07 (PINDAAN 2024)",
+      "file_stem": "UIP-UMUM-04-07",
+      "tajuk": "Prosedur Mengambil Gambar"
+    },
+    {
+      "sop_id": "UIP-UMUM-02-07 (PINDAAN 2024)",
+      "file_stem": "UIP-UMUM-02-07",
+      "tajuk": "Prosedur Penyediaan Kertas Siasatan"
+    }
+  ],
+  "nota_audit_kualiti": [
+    "Nama fail sumber menggunakan 'AKPMDKS'; kod rasmi ialah UIP-AKPMDKA-04-24."
+  ]
+}

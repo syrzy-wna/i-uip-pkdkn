@@ -1,0 +1,1137 @@
+{
+  "schema_version": "2.0",
+  "sop_id": "UIP-UMUM-06-24",
+  "file_stem": "UIP-UMUM-06-24",
+  "alias_kod": [
+    "UIP-UMUM-06-2024",
+    "UIP-UMUM–06-24"
+  ],
+  "tajuk": "Prosedur Pengurusan Aktiviti Risikan Undang-Undang Kesihatan Awam",
+  "kategori": "UMUM",
+  "akta_utama": "SOP Umum / KTJ",
+  "akta_berkaitan": [
+    "Akta 852",
+    "Akta 281",
+    "Akta 154",
+    "Akta 342",
+    "Akta 593",
+    "Akta 56",
+    "Akta 574"
+  ],
+  "keluaran": "01",
+  "pindaan": "00",
+  "tarikh_kuatkuasa": "Disember 2024",
+  "ringkasan_eksekutif": "Prosedur ini adalah untuk menggariskan tatacara menjalankan aktiviti risikan di peringkat Sektor/Negeri/Daerah yang merangkumi proses dan arahan kerja dalam memantapkan penguatkuasaan undang-undang kesihatan awam di bawah beberapa perundangan termasuk Akta Pem",
+  "tujuan": "Prosedur ini adalah untuk menggariskan tatacara menjalankan aktiviti risikan di peringkat Sektor/Negeri/Daerah yang merangkumi proses dan arahan kerja dalam memantapkan penguatkuasaan undang-undang kesihatan awam di bawah beberapa perundangan termasuk Akta Pemusnahan Serangga Pembawa Penyakit 1975, Akta Makanan 1983 dan peraturan-peraturan di bawahnya, Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988 dan peraturan-peraturan di bawahnya, Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024[Akta 852] dan peraturan-peraturan dibawahnya.",
+  "panduan_am": [],
+  "punca_kuasa": [
+    "Pengumpulan & Penilaian Maklumat Risikan (SULIT)",
+    "Borang Laporan Risikan (Lampiran A — SULIT)",
+    "Senarai Semak Aktiviti Risikan (Lampiran B)",
+    "Keselamatan Anggota & Kerahsiaan Sumber Maklumat"
+  ],
+  "undang_undang_berkaitan": [
+    {
+      "akta": "Akta Keterangan 1950 (Disemak 1971) [Akta 56]",
+      "akta_kod": "Akta 56",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Hidrogen Sianid 1953 [Akta 260]",
+      "akta_kod": "Akta 260",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Makanan 1983 [Akta 281]",
+      "akta_kod": "Akta 281",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Mahkamah Rendah 1948 [Akta 92]",
+      "akta_kod": "Akta 92",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Pemusnahan Serangga Pembawa Penyakit 1975 [Akta 154]",
+      "akta_kod": "Akta 154",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988 [Akta 342]",
+      "akta_kod": "Akta 342",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Tafsiran 1948 dan 1967 (Disemak 1989) [Akta 388]",
+      "akta_kod": "Akta 388",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Kanun Keseksaan (Disemak 1997) [Akta 574]",
+      "akta_kod": "Akta 574",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Kanun Prosedur Jenayah (Disemak 1999) [Akta 593]",
+      "akta_kod": "Akta 593",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Peraturan-Peraturan Kebersihan Makanan 2009",
+      "akta_kod": null,
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Peraturan-Peraturan Kemasukan Orang-orang Ke Dalam",
+      "akta_kod": null,
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Peraturan-Peraturan Makanan 1985",
+      "akta_kod": null,
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Peraturan-Peraturan",
+      "akta_kod": null,
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Peraturan-Peraturan Pencegahan dan Pengawalan Penyakit Berjangkit",
+      "akta_kod": null,
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024[Akta 852].",
+      "akta_kod": "Akta 852",
+      "status": "AKTIF",
+      "nota": null
+    }
+  ],
+  "anggota_terlibat": [
+    {
+      "kod": "PEGAWAI KESI",
+      "jawatan": "Pegawai Kesihatan Daerah/ Kawasan/Bahagian"
+    },
+    {
+      "kod": "KETUA PENOLO",
+      "jawatan": "Ketua Penolong Pegawai Kesihatan Persekitaran"
+    },
+    {
+      "kod": "PENOLONG PEG",
+      "jawatan": "Penolong Pegawai Kesihatan Persekitaran Kanan"
+    },
+    {
+      "kod": "AGENSI LAIN ",
+      "jawatan": "Agensi lain (jika perlu)"
+    },
+    {
+      "kod": "NO. RUJUKAN ",
+      "jawatan": "NO. RUJUKAN PROSEDUR: UIP-UMUM-06-24"
+    },
+    {
+      "kod": "PROSEDUR PEN",
+      "jawatan": "Prosedur Pengurusan Aktiviti Risikan Undang-Undang Kesihatan Awam"
+    }
+  ],
+  "singkatan": [
+    {
+      "kod": "KKM",
+      "maksud": "Kementerian Kesihatan Malaysia"
+    },
+    {
+      "kod": "KPPKP",
+      "maksud": "Ketua Penolong Pegawai Kesihatan Persekitaran"
+    },
+    {
+      "kod": "KUIPD",
+      "maksud": "Ketua Unit Inspektorat dan Perundangan Daerah"
+    },
+    {
+      "kod": "KUIPN",
+      "maksud": "Ketua Unit Inspektorat dan Perundangan Negeri"
+    },
+    {
+      "kod": "KSIP",
+      "maksud": "Ketua Sektor Inspektorat dan Perundangan"
+    },
+    {
+      "kod": "PDK",
+      "maksud": "Pegawai Diberi Kuasa"
+    },
+    {
+      "kod": "PK",
+      "maksud": "Pejabat Kesihatan Daerah/Kawasan/Bahagian"
+    },
+    {
+      "kod": "PKD",
+      "maksud": "Pegawai Kesihatan Daerah/Kawasan/Bahagian"
+    },
+    {
+      "kod": "PKN",
+      "maksud": "Pengarah Kesihatan Negeri"
+    },
+    {
+      "kod": "PKP",
+      "maksud": "Pegawai Kesihatan Persekitaran"
+    },
+    {
+      "kod": "PP",
+      "maksud": "Pegawai Perisik"
+    },
+    {
+      "kod": "PPKP",
+      "maksud": "Penolong Pegawai Kesihatan Persekitaran"
+    },
+    {
+      "kod": "PPKPK",
+      "maksud": "Penolong Pegawai Kesihatan Persekitaran Kanan"
+    },
+    {
+      "kod": "PR",
+      "maksud": "Penyelaras Risikan Daerah/Negeri"
+    },
+    {
+      "kod": "SIP",
+      "maksud": "Sektor Inspektorat dan Perundangan"
+    },
+    {
+      "kod": "TPKN(KA)",
+      "maksud": "Timbalan Pengarah Kesihatan Negeri (Kesihatan Awam)"
+    },
+    {
+      "kod": "UIPD",
+      "maksud": "Unit Inspektorat dan Perundangan Daerah"
+    },
+    {
+      "kod": "UIPN",
+      "maksud": "Unit Inspektorat dan Perundangan Negeri --- 5 Prosedur Pengurusan Aktiviti Risikan Undang-Undang Kesihatan Awam"
+    }
+  ],
+  "nota_pindaan": [],
+  "tempoh_sla": [],
+  "fasa_kerja": [
+    {
+      "fasa_id": "F1",
+      "tajuk_fasa": "1. Pelaksanaan Proses Kerja",
+      "langkah": [
+        {
+          "no": "1",
+          "tajuk": "KERJA",
+          "anggota": [
+            "7. PROSES terlibat"
+          ],
+          "tindakan": [
+            "KERJA"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "1.0",
+          "tajuk": "Perancangan Risikan",
+          "anggota": [
+            "KSIP",
+            "KUIPN",
+            "PR"
+          ],
+          "tindakan": [
+            "Perancangan Risikan"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "1.1",
+          "tajuk": "Merancang, meneliti dan menyemak arahan , garispanduan Garispanduan atau surat arahan Operasi Penguatkuasaan d",
+          "anggota": [
+            "KUIPD",
+            "PP"
+          ],
+          "tindakan": [
+            "Merancang, meneliti dan menyemak arahan , garispanduan Garispanduan atau surat arahan Operasi Penguatkuasaan di peringkat surat KKM, JKN dan daerah. Operasi Penguatkuasaan"
+          ],
+          "rujukan": [
+            "atau arahan"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "1.2",
+          "tajuk": "Perbincangan skop risikan dan modus operandi",
+          "anggota": [
+            "KSIP",
+            "UIPN"
+          ],
+          "tindakan": [
+            "Perbincangan skop risikan dan modus operandi:"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "1.2.1",
+          "tajuk": "Peringkat KKM : PP berbincang dengan KSIP",
+          "anggota": [
+            "UIPD"
+          ],
+          "tindakan": [
+            "Peringkat KKM : PP berbincang dengan KSIP"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "1.2.2",
+          "tajuk": "Peringkat negeri : KUIPN berbincang dengan TPKN(KA)",
+          "anggota": [],
+          "tindakan": [
+            "Peringkat negeri : KUIPN berbincang dengan TPKN(KA)"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "1.2.3",
+          "tajuk": "Peringkat daerah : KUIPD berbincang dengan PKD",
+          "anggota": [],
+          "tindakan": [
+            "Peringkat daerah : KUIPD berbincang dengan PKD"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "1.3",
+          "tajuk": "Menetapkan sasaran pencapaian, tarikh bermula, tarikh Laporan tamat risikan dan juga tempoh penyediaan laporan",
+          "anggota": [
+            "KSIP",
+            "KUIPN",
+            "PR",
+            "KUIPD"
+          ],
+          "tindakan": [
+            "Menetapkan sasaran pencapaian, tarikh bermula, tarikh Laporan tamat risikan dan juga tempoh penyediaan laporan risikan kepada Penyelaras Risikan Negeri"
+          ],
+          "rujukan": [
+            "risikan"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "1.4",
+          "tajuk": "Sediakan surat arahan risikan dan panggilan untuk taklimat Surat skop dan tugas kepada PP yang telah ditetapka",
+          "anggota": [
+            "KUIPN",
+            "PR",
+            "PKD",
+            "KUIPD"
+          ],
+          "tindakan": [
+            "Sediakan surat arahan risikan dan panggilan untuk taklimat Surat skop dan tugas kepada PP yang telah ditetapkan. pentadbiran"
+          ],
+          "rujukan": [
+            "arahan sulit"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "1.4.1",
+          "tajuk": "Peringkat negeri, KUIPN sediakan surat panggilan untuk setiap daerah dan ketua unit yang terlibat",
+          "anggota": [
+            "."
+          ],
+          "tindakan": [
+            "Peringkat negeri, KUIPN sediakan surat panggilan untuk setiap daerah dan ketua unit yang terlibat."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "1.4.2",
+          "tajuk": "Peringkat daerah, KUIPD sediakan surat panggilan",
+          "anggota": [],
+          "tindakan": [
+            "Peringkat daerah, KUIPD sediakan surat panggilan"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "2.0",
+          "tajuk": "Sebelum Risikan",
+          "anggota": [],
+          "tindakan": [
+            "Sebelum Risikan"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "2.1",
+          "tajuk": "Sediakan senarai semak risikan Lampiran",
+          "anggota": [
+            "UIPN",
+            "UIPD",
+            "PR",
+            "PP"
+          ],
+          "tindakan": [
+            "Sediakan senarai semak risikan Lampiran"
+          ],
+          "rujukan": [
+            "B"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "2.2.1",
+          "tajuk": "Modus operandi risikan",
+          "anggota": [],
+          "tindakan": [
+            "Modus operandi risikan"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "2.2.2",
+          "tajuk": "Etika semasa risikan",
+          "anggota": [],
+          "tindakan": [
+            "Etika semasa risikan."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "2.2.3",
+          "tajuk": "Keselamatan dan tindakan yang perlu diambil jika keadaan luar jangka",
+          "anggota": [],
+          "tindakan": [
+            "Keselamatan dan tindakan yang perlu diambil jika keadaan luar jangka."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 2.2.3: Keselamatan dan tindakan yang perlu diambil jika keadaan luar jangka.",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "2.2.4",
+          "tajuk": "Pemakluman kedudukan dan pencapaian semasa",
+          "anggota": [],
+          "tindakan": [
+            "Pemakluman kedudukan dan pencapaian semasa"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "3.0",
+          "tajuk": "Semasa Risikan",
+          "anggota": [
+            "PR",
+            "PP"
+          ],
+          "tindakan": [
+            "Semasa Risikan"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "3.1",
+          "tajuk": "Jalankan risikan seperti dirancang",
+          "anggota": [],
+          "tindakan": [
+            "Jalankan risikan seperti dirancang"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "3.1.1",
+          "tajuk": "Bagi Risikan yang memerlukan Kaedah Open Source Intelligent (OSINT), maklumat boleh terus dikumpul dan direkod",
+          "anggota": [],
+          "tindakan": [
+            "Bagi Risikan yang memerlukan Kaedah Open Source Intelligent (OSINT), maklumat boleh terus dikumpul dan direkodkan di pejabat."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "3.1.2",
+          "tajuk": "Jalankan pemerhatian kepada persekitaran kawasan risikan (Casing)",
+          "anggota": [],
+          "tindakan": [
+            "Jalankan pemerhatian kepada persekitaran kawasan risikan (Casing)."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "3.1.3",
+          "tajuk": "Penilaian risiko situasi semasa risikan bagi mengenalpasti sebarang kemungkinan",
+          "anggota": [],
+          "tindakan": [
+            "Penilaian risiko situasi semasa risikan bagi mengenalpasti sebarang kemungkinan."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "3.1.4",
+          "tajuk": "Mengenalpasti tindakan yang perlu dibuat mengikut situasi apabila berlakunya tindakbalas atau respon negatif d",
+          "anggota": [],
+          "tindakan": [
+            "Mengenalpasti tindakan yang perlu dibuat mengikut situasi apabila berlakunya tindakbalas atau respon negatif dari suspek."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 3.1.4: Mengenalpasti tindakan yang perlu dibuat mengikut situasi apabila berlakunya tindakbalas atau r...",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "3.1.5",
+          "tajuk": "Mulakan proses pengumpulan maklumat melalui Kaedah Human Intelligent (HUMINT)",
+          "anggota": [],
+          "tindakan": [
+            "Mulakan proses pengumpulan maklumat melalui Kaedah Human Intelligent (HUMINT)"
+          ],
+          "rujukan": [
+            "di lapangan"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "3.1.6",
+          "tajuk": "Bagi keselamatan PP, “counter surveillance” dilaksanakan (jika perlu)",
+          "anggota": [],
+          "tindakan": [
+            "Bagi keselamatan PP, “counter surveillance” dilaksanakan (jika perlu)."
+          ],
+          "rujukan": [
+            "boleh"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 3.1.6: Bagi keselamatan PP, “counter surveillance” dilaksanakan (jika perlu).",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "4.0",
+          "tajuk": "Selepas Risikan",
+          "anggota": [
+            "PP"
+          ],
+          "tindakan": [
+            "Selepas Risikan"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "4.1",
+          "tajuk": "PP berkumpul semula untuk Debriefing’",
+          "anggota": [],
+          "tindakan": [
+            "PP berkumpul semula untuk Debriefing’."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "4.2",
+          "tajuk": "Kumpulkan maklumat risikan dan kemaskini pencapaian aktiviti semasa",
+          "anggota": [],
+          "tindakan": [
+            "Kumpulkan maklumat risikan dan kemaskini pencapaian aktiviti semasa."
+          ],
+          "rujukan": [
+            "hasil"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "4.3",
+          "tajuk": "Sediakan Laporan Risikan setelah tamat aktiviti",
+          "anggota": [],
+          "tindakan": [
+            "Sediakan Laporan Risikan setelah tamat aktiviti."
+          ],
+          "rujukan": [
+            "Lampiran A"
+          ],
+          "rujukan_lampiran": [
+            "Lampiran A"
+          ],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "4.4",
+          "tajuk": "Risikan diserahkan kepada PR Daerah/Negeri satu salinan untuk simpanan",
+          "anggota": [],
+          "tindakan": [
+            "Risikan diserahkan kepada PR Daerah/Negeri satu salinan untuk simpanan."
+          ],
+          "rujukan": [
+            "dan"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "4.5",
+          "tajuk": "Laporan Risikan dibentangkan kepada Ketua Serbuan sebelum taklimat serbuan dijalankan",
+          "anggota": [],
+          "tindakan": [
+            "Laporan Risikan dibentangkan kepada Ketua Serbuan sebelum taklimat serbuan dijalankan"
+          ],
+          "rujukan": [
+            "Operasi"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "5.0",
+          "tajuk": "Penilaian semula (Post-mortem) jika perlu",
+          "anggota": [
+            "PR"
+          ],
+          "tindakan": [
+            "Penilaian semula (Post-mortem) jika perlu"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 5.0: Penilaian semula (Post-mortem) jika perlu",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "5.1",
+          "tajuk": "Penilaian semula dan ulasan penambahbaikan dilakukan setelah serbuan dijalankan",
+          "anggota": [
+            "PR"
+          ],
+          "tindakan": [
+            "Penilaian semula dan ulasan penambahbaikan dilakukan setelah serbuan dijalankan."
+          ],
+          "rujukan": [
+            "perlu"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        }
+      ]
+    }
+  ],
+  "carta_alir": {
+    "nodes": [
+      {
+        "id": "N_START",
+        "type": "start",
+        "label": "Mula Operasi / Prosedur",
+        "role": null,
+        "step_ref": null,
+        "sop_ref": null
+      },
+      {
+        "id": "N1",
+        "type": "process",
+        "label": "1. KERJA",
+        "role": "7. PROSES terlibat",
+        "step_ref": "1",
+        "sop_ref": null
+      },
+      {
+        "id": "N2",
+        "type": "process",
+        "label": "1.0. Perancangan Risikan",
+        "role": "KSIP/KUIPN",
+        "step_ref": "1.0",
+        "sop_ref": null
+      },
+      {
+        "id": "N3",
+        "type": "process",
+        "label": "1.1. Merancang, meneliti dan menyemak arahan , garispanduan Garispanduan atau surat arahan Op",
+        "role": "KUIPD/PP",
+        "step_ref": "1.1",
+        "sop_ref": null
+      },
+      {
+        "id": "N4",
+        "type": "process",
+        "label": "1.2. Perbincangan skop risikan dan modus operandi",
+        "role": "KSIP/UIPN",
+        "step_ref": "1.2",
+        "sop_ref": null
+      },
+      {
+        "id": "N5",
+        "type": "process",
+        "label": "1.2.1. Peringkat KKM : PP berbincang dengan KSIP",
+        "role": "UIPD",
+        "step_ref": "1.2.1",
+        "sop_ref": null
+      },
+      {
+        "id": "N6",
+        "type": "process",
+        "label": "1.2.2. Peringkat negeri : KUIPN berbincang dengan TPKN(KA)",
+        "role": null,
+        "step_ref": "1.2.2",
+        "sop_ref": null
+      },
+      {
+        "id": "N7",
+        "type": "process",
+        "label": "1.2.3. Peringkat daerah : KUIPD berbincang dengan PKD",
+        "role": null,
+        "step_ref": "1.2.3",
+        "sop_ref": null
+      },
+      {
+        "id": "N8",
+        "type": "process",
+        "label": "1.3. Menetapkan sasaran pencapaian, tarikh bermula, tarikh Laporan tamat risikan dan juga tem",
+        "role": "KSIP/KUIPN",
+        "step_ref": "1.3",
+        "sop_ref": null
+      },
+      {
+        "id": "N9",
+        "type": "process",
+        "label": "1.4. Sediakan surat arahan risikan dan panggilan untuk taklimat Surat skop dan tugas kepada P",
+        "role": "KUIPN/PR",
+        "step_ref": "1.4",
+        "sop_ref": null
+      },
+      {
+        "id": "N10",
+        "type": "process",
+        "label": "1.4.1. Peringkat negeri, KUIPN sediakan surat panggilan untuk setiap daerah dan ketua unit yang",
+        "role": ".",
+        "step_ref": "1.4.1",
+        "sop_ref": null
+      },
+      {
+        "id": "N11",
+        "type": "process",
+        "label": "1.4.2. Peringkat daerah, KUIPD sediakan surat panggilan",
+        "role": null,
+        "step_ref": "1.4.2",
+        "sop_ref": null
+      },
+      {
+        "id": "N12",
+        "type": "process",
+        "label": "2.0. Sebelum Risikan",
+        "role": null,
+        "step_ref": "2.0",
+        "sop_ref": null
+      },
+      {
+        "id": "N13",
+        "type": "process",
+        "label": "2.1. Sediakan senarai semak risikan Lampiran",
+        "role": "UIPN/UIPD",
+        "step_ref": "2.1",
+        "sop_ref": null
+      },
+      {
+        "id": "N14",
+        "type": "process",
+        "label": "2.2.1. Modus operandi risikan",
+        "role": null,
+        "step_ref": "2.2.1",
+        "sop_ref": null
+      },
+      {
+        "id": "N_END",
+        "type": "end",
+        "label": "Selesai & Rekod Fail UIP",
+        "role": null,
+        "step_ref": null,
+        "sop_ref": null
+      }
+    ],
+    "edges": [
+      {
+        "from": "N_START",
+        "to": "N1",
+        "label": null
+      },
+      {
+        "from": "N1",
+        "to": "N2",
+        "label": null
+      },
+      {
+        "from": "N2",
+        "to": "N3",
+        "label": null
+      },
+      {
+        "from": "N3",
+        "to": "N4",
+        "label": null
+      },
+      {
+        "from": "N4",
+        "to": "N5",
+        "label": null
+      },
+      {
+        "from": "N5",
+        "to": "N6",
+        "label": null
+      },
+      {
+        "from": "N6",
+        "to": "N7",
+        "label": null
+      },
+      {
+        "from": "N7",
+        "to": "N8",
+        "label": null
+      },
+      {
+        "from": "N8",
+        "to": "N9",
+        "label": null
+      },
+      {
+        "from": "N9",
+        "to": "N10",
+        "label": null
+      },
+      {
+        "from": "N10",
+        "to": "N11",
+        "label": null
+      },
+      {
+        "from": "N11",
+        "to": "N12",
+        "label": null
+      },
+      {
+        "from": "N12",
+        "to": "N13",
+        "label": null
+      },
+      {
+        "from": "N13",
+        "to": "N14",
+        "label": null
+      },
+      {
+        "from": "N14",
+        "to": "N_END",
+        "label": null
+      }
+    ]
+  },
+  "senarai_semak": [
+    {
+      "id": "CHK-01",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[1] KERJA",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-02",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[1.0] Perancangan Risikan",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-03",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[1.1] Merancang, meneliti dan menyemak arahan , garispanduan Garispanduan atau surat arahan Operasi Penguatkuasaan d",
+      "wajib": true,
+      "rujukan": "atau arahan"
+    },
+    {
+      "id": "CHK-04",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[1.2] Perbincangan skop risikan dan modus operandi",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-05",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[1.2.1] Peringkat KKM : PP berbincang dengan KSIP",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-06",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[1.2.2] Peringkat negeri : KUIPN berbincang dengan TPKN(KA)",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-07",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[1.2.3] Peringkat daerah : KUIPD berbincang dengan PKD",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-08",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[1.3] Menetapkan sasaran pencapaian, tarikh bermula, tarikh Laporan tamat risikan dan juga tempoh penyediaan laporan",
+      "wajib": true,
+      "rujukan": "risikan"
+    },
+    {
+      "id": "CHK-09",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[1.4] Sediakan surat arahan risikan dan panggilan untuk taklimat Surat skop dan tugas kepada PP yang telah ditetapka",
+      "wajib": true,
+      "rujukan": "arahan sulit"
+    },
+    {
+      "id": "CHK-10",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[1.4.1] Peringkat negeri, KUIPN sediakan surat panggilan untuk setiap daerah dan ketua unit yang terlibat",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-11",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[1.4.2] Peringkat daerah, KUIPD sediakan surat panggilan",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-12",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[2.0] Sebelum Risikan",
+      "wajib": true,
+      "rujukan": null
+    }
+  ],
+  "lampiran": [
+    {
+      "kod": "Lampiran B",
+      "tajuk": "Dokumen Rasmi Lampiran B",
+      "jenis": "lain",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran A",
+      "tajuk": "Dokumen Rasmi Lampiran A",
+      "jenis": "lain",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    }
+  ],
+  "pematuhan": [
+    "Prosedur yang dikeluarkan ini hendaklah terus berkuatkuasa dan dianggap",
+    "sah sehingga dipinda atau diganti dengan satu prosedur lain atau",
+    "Keengganan dan kegagalan mematuhi Prosedur ini tanpa alasan yang",
+    "munasabah boleh menyebabkan seseorang pegawai dikenakan tindakan",
+    "tatatertib di bawah Peraturan-Peraturan Pegawai Awam (Kelakuan dan",
+    "Tatatertib) 1993."
+  ],
+  "rujukan_silang_resolved": [],
+  "nota_audit_kualiti": [
+    "Nama fail sumber menggunakan kod 'UIP-UMUM-06-2024' dan kulit muka menggunakan tanda en-dash; kod rasmi dalam badan SOP ialah UIP-UMUM-06-24. Sudah merujuk Akta 852 tanpa rujukan PPKHT 2004."
+  ]
+}

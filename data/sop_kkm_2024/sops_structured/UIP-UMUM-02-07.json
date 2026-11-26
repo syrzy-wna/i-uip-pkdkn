@@ -1,0 +1,1270 @@
+{
+  "schema_version": "2.0",
+  "sop_id": "UIP-UMUM-02-07 (PINDAAN 2024)",
+  "file_stem": "UIP-UMUM-02-07",
+  "alias_kod": [],
+  "tajuk": "Prosedur Penyediaan Kertas Siasatan",
+  "kategori": "UMUM",
+  "akta_utama": "SOP Umum / KTJ",
+  "akta_berkaitan": [
+    "Akta 56",
+    "Akta 260",
+    "Akta 281",
+    "Akta 92",
+    "Akta 154",
+    "Akta 342",
+    "Akta 388",
+    "Akta 574",
+    "Akta 593",
+    "PPKM 2009",
+    "PPM 1985"
+  ],
+  "keluaran": "01",
+  "pindaan": "01",
+  "tarikh_kuatkuasa": "15 Feb 2024",
+  "ringkasan_eksekutif": "Tujuan prosedur ini adalah untuk menggariskan tatacara menyediakan kertas siasatan terhadap kesalahan-kesalahan di bawah Undang-Undang Kesihatan Awam.",
+  "tujuan": "Tujuan prosedur ini adalah untuk menggariskan tatacara menyediakan kertas siasatan terhadap kesalahan-kesalahan di bawah Undang-Undang Kesihatan Awam.",
+  "panduan_am": [
+    "Kertas Siasatan hanya boleh diminit oleh:",
+    "Timbalan Pendakwa Raya.",
+    "Pegawai Pendakwa.",
+    "Pegawai Penyiasat.",
+    "menggunakan lampiran yang berasingan (contoh: memo dan",
+    "NO. RUJUKAN PROSEDUR : UIP-UMUM-02-07 (PINDAAN 2024)",
+    "Prosedur Penyediaan Kertas Siasatan"
+  ],
+  "punca_kuasa": [
+    "S.119 KTJ",
+    "S.34(2) KTJ",
+    "S.377(b) KTJ",
+    "S.90A Akta Keterangan",
+    "Folio A-D",
+    "M111"
+  ],
+  "undang_undang_berkaitan": [
+    {
+      "akta": "Akta Keterangan 1950 (Disemak 1971) [Akta 56]",
+      "akta_kod": "Akta 56",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Hidrogen Sianid 1953 [Akta 260]",
+      "akta_kod": "Akta 260",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Makanan 1983 [Akta 281]",
+      "akta_kod": "Akta 281",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Mahkamah Rendah 1948 [Akta 92]",
+      "akta_kod": "Akta 92",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Pemusnahan Serangga Pembawa Penyakit 1975 [Akta 154]",
+      "akta_kod": "Akta 154",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988",
+      "akta_kod": null,
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "[Akta 342]",
+      "akta_kod": "Akta 342",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Tafsiran 1948 dan 1967 (Disemak 1989) [Akta 388]",
+      "akta_kod": "Akta 388",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Kanun Keseksaan (Disemak 1997) [Akta 574]",
+      "akta_kod": "Akta 574",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Kanun Tatacara Jenayah [Akta 593]",
+      "akta_kod": "Akta 593",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Peraturan-Peraturan Kawalan Hasil Tembakau 2004",
+      "akta_kod": null,
+      "status": "DIMANSUHKAN",
+      "nota": "[NOTA PINDAAN] Dimansuhkan mulai 1 Okt 2024 dan digantikan oleh Akta 852."
+    },
+    {
+      "akta": "Peraturan-Peraturan Kebersihan Makanan 2009",
+      "akta_kod": null,
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Peraturan-Peraturan Kemasukan Orang-orang Ke Dalam Malaysia",
+      "akta_kod": null,
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Peraturan-Peraturan Makanan 1985",
+      "akta_kod": null,
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Peraturan-Peraturan Pemusnahan Serangga Pembawa Penyakit",
+      "akta_kod": null,
+      "status": "AKTIF",
+      "nota": null
+    }
+  ],
+  "anggota_terlibat": [
+    {
+      "kod": "PEGAWAI KESI",
+      "jawatan": "Pegawai Kesihatan Daerah/Kawasan/Bahagian"
+    },
+    {
+      "kod": "KETUA PENOLO",
+      "jawatan": "Ketua Penolong Pegawai Kesihatan Persekitaran"
+    },
+    {
+      "kod": "PENOLONG PEG",
+      "jawatan": "Penolong Pegawai Kesihatan Persekitaran Kanan"
+    },
+    {
+      "kod": "NO. RUJUKAN ",
+      "jawatan": "NO. RUJUKAN PROSEDUR : UIP-UMUM-02-07 (PINDAAN 2024)"
+    },
+    {
+      "kod": "PROSEDUR PEN",
+      "jawatan": "Prosedur Penyediaan Kertas Siasatan"
+    }
+  ],
+  "singkatan": [
+    {
+      "kod": "AIO",
+      "maksud": "Pembantu Pegawai Penyiasat"
+    },
+    {
+      "kod": "AM",
+      "maksud": "Akta Makanan 1983"
+    },
+    {
+      "kod": "APPPB",
+      "maksud": "Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988"
+    },
+    {
+      "kod": "APSPP",
+      "maksud": "Akta Pemusnahan Serangga Pembawa Penyakit 1975"
+    },
+    {
+      "kod": "ARO",
+      "maksud": "Pembantu Pegawai Serbuan"
+    },
+    {
+      "kod": "ID",
+      "maksud": "Diari Siasatan"
+    },
+    {
+      "kod": "IO",
+      "maksud": "Pegawai Penyiasat"
+    },
+    {
+      "kod": "KPPKP",
+      "maksud": "Ketua Penolong Pegawai KesihatanPersekitaran"
+    },
+    {
+      "kod": "KTJ",
+      "maksud": "Kanun Tatacara Jenayah"
+    },
+    {
+      "kod": "K/S",
+      "maksud": "Kertas Siasatan"
+    },
+    {
+      "kod": "OKS",
+      "maksud": "Orang Kena Saman"
+    },
+    {
+      "kod": "OKT",
+      "maksud": "Orang Kena Tuduh"
+    },
+    {
+      "kod": "PKD",
+      "maksud": "Pegawai Kesihatan Daerah/Kawasan/Bahagian"
+    },
+    {
+      "kod": "PKP",
+      "maksud": "Pegawai Kesihatan Persekitaran"
+    },
+    {
+      "kod": "PO",
+      "maksud": "Pegawai Pendakwa"
+    },
+    {
+      "kod": "PPKHT",
+      "maksud": "Peraturan-Peraturan Kawalan Hasil Tembakau 2004"
+    },
+    {
+      "kod": "PPKM",
+      "maksud": "Peraturan-Peraturan Kebersihan Makanan 2009"
+    },
+    {
+      "kod": "PPM",
+      "maksud": "Peraturan-Peraturan Makanan 1985"
+    },
+    {
+      "kod": "PPKP",
+      "maksud": "Penolong Pegawai Kesihatan Persekitaran"
+    },
+    {
+      "kod": "PPKPK",
+      "maksud": "Penolong Pegawai Kesihatan Persekitaran Kanan"
+    },
+    {
+      "kod": "RO",
+      "maksud": "Pegawai Serbuan"
+    },
+    {
+      "kod": "TPR",
+      "maksud": "Timbalan Pendakwa Raya"
+    },
+    {
+      "kod": "UIPD",
+      "maksud": "Unit Inspektorat Dan Perundangan Daerah"
+    },
+    {
+      "kod": "UIPN",
+      "maksud": "Unit Inspektorat Dan Perundangan Negeri --- Prosedur Penyediaan Kertas Siasatan 4"
+    }
+  ],
+  "nota_pindaan": [
+    {
+      "tahap": "KRITIKAL",
+      "tajuk": "[NOTA PINDAAN] PPKHT 2004 Dimansuhkan — Digantikan Oleh Akta 852 (1 Okt 2024)",
+      "butiran": "Sebarang rujukan PPKHT 2004 dan Notis Seksyen 32B Akta Makanan 1983 bagi kesalahan produk merokok/vape dalam SOP ini telah DIMANSUHKAN mulai 1 Oktober 2024 dan digantikan sepenuhnya oleh Akta 852 (UIP-AKPMDKA-01-24 hingga 08-24). Lampiran C (Senarai Semak K/S PPKHT 2004 / Notis 32B) adalah MANSUH — guna UIP-AKPMDKA-01-24 / UIP-AKPMDKA-05-24 bersama Notis S.47 & Izin Dakwa S.41 Akta 852.",
+      "gantian_statut": "Akta 852 & UIP-AKPMDKA-01-24..08-24 (1 Okt 2024)"
+    }
+  ],
+  "tempoh_sla": [],
+  "fasa_kerja": [
+    {
+      "fasa_id": "F1",
+      "tajuk_fasa": "1. Pelaksanaan Proses Kerja",
+      "langkah": [
+        {
+          "no": "1",
+          "tajuk": "Kenalpasti kesalahan melalui aktiviti -aktiviti ",
+          "anggota": [
+            "RO",
+            "IO",
+            "PPKP",
+            "UIPD"
+          ],
+          "tindakan": [
+            "Kenalpasti kesalahan melalui aktiviti -aktiviti . penguatkuasaan undang-undang kesihatan awam yang telahdijalankan:-"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "1",
+          "tajuk": ".1 Akta Makanan 1983 dan Peraturan-Peraturan di ",
+          "anggota": [
+            "RO",
+            "IO",
+            "PPKP",
+            "UIPD"
+          ],
+          "tindakan": [
+            ".1 Akta Makanan 1983 dan Peraturan-Peraturan di . bawahnya ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "12",
+          "tajuk": "AktaPemusnahanSeranggaPembawaPenyakit ",
+          "anggota": [
+            "RO",
+            "IO",
+            "PPKP",
+            "UIPD"
+          ],
+          "tindakan": [
+            "AktaPemusnahanSeranggaPembawaPenyakit . ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "1975",
+          "tajuk": "dan Peraturan-Peraturan di bawahnya ",
+          "anggota": [
+            "RO",
+            "IO",
+            "PPKP",
+            "UIPD"
+          ],
+          "tindakan": [
+            "dan Peraturan-Peraturan di bawahnya ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "13",
+          "tajuk": "AktaPencegahandanPengawalanPenyakit ",
+          "anggota": [
+            "RO",
+            "IO",
+            "PPKP",
+            "UIPD"
+          ],
+          "tindakan": [
+            "AktaPencegahandanPengawalanPenyakit . . Berjangkit1988danPeraturan-Peraturandi bawahnya ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "1",
+          "tajuk": ".4 Peraturan-Peraturan Kawalan Hasil Tembakau ",
+          "anggota": [
+            "RO",
+            "IO",
+            "PPKP",
+            "UIPD"
+          ],
+          "tindakan": [
+            ".4 Peraturan-Peraturan Kawalan Hasil Tembakau ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "2004",
+          "tajuk": "(DaftarkesdalamBukuPendaftaranK/S)",
+          "anggota": [
+            "RO",
+            "IO",
+            "PPKP",
+            "UIPD"
+          ],
+          "tindakan": [
+            "(DaftarkesdalamBukuPendaftaranK/S)"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "2",
+          "tajuk": "Sediakan kertas minit untuk dilampirkan di muka ",
+          "anggota": [
+            "RO",
+            "IO"
+          ],
+          "tindakan": [
+            "Sediakan kertas minit untuk dilampirkan di muka . hadapan K/S bersama bahan-bahan bukti berbentuk dokumen dan lain-lain bahan bukti yang relevan bersama cadangan IO untuk dirujuk kepada KPPKP/PPKPK ."
+          ],
+          "rujukan": [
+            "Seksyen119KPJ"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "3",
+          "tajuk": "Semak K/S Keluarkan surat senarai rujukan kes untuk ",
+          "anggota": [
+            "KPPKP",
+            "PPKPK"
+          ],
+          "tindakan": [
+            "Semak K/S Keluarkan surat senarai rujukan kes untuk . . ditandatanganolehPKD/Ketua UIPDaerah ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "4",
+          "tajuk": "MelantikIOuntukmenjalankansiasatan ",
+          "anggota": [
+            "KPPKP",
+            "PPKPK"
+          ],
+          "tindakan": [
+            "MelantikIOuntukmenjalankansiasatan . ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "5",
+          "tajuk": "IO akan merekodkan No Rujukan Fail mencatatkan ",
+          "anggota": [
+            "IO"
+          ],
+          "tindakan": [
+            "IO akan merekodkan No Rujukan Fail mencatatkan . . , SULIT dan menulis serta melengkapkan semua butiran , sepanjang tempoh siasatan dijalankan seperti butiran di bawah ."
+          ],
+          "rujukan": [
+            "FailSiasatan"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "51",
+          "tajuk": "Butiran1(Mukahadapan): ",
+          "anggota": [
+            "IO"
+          ],
+          "tindakan": [
+            "Butiran1(Mukahadapan): . . Nama Pegawai Penyiasat",
+            "- . Negeri dan Daerah",
+            "- . No Rujukan K/S",
+            "- . . No Rujukan TPR (Diisi setelah K/S dirujuk",
+            "- . kepadaTPR) . Rujukan aduan haribulan jam aduan tempat",
+            "- , , , kejadian jeniskesalahandandendamaksima , . Nama dan alamat pengadu",
+            "- . No Rujukan Kes (Diisi setelah kes didaftar di",
+            "- . mahkamah) .",
+            "- Senarai Saksi yang akan dipanggil . - Senarai saksi yang akan di tawarkan kepada pihakpembela ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "56",
+          "tajuk": "Butiran5(FolioA): ",
+          "anggota": [
+            "IO"
+          ],
+          "tindakan": [
+            "Butiran5(FolioA): . . Nama Saksi -saksi",
+            "- . A Laporan (1) (Contoh Laporan Polis)",
+            "-",
+            "- . AA Laporan ( 2 )",
+            "-",
+            "- . AAA Laporan (3)",
+            "-",
+            "- . A1 Pegawai Serbuan (Pengadu)",
+            "- – . A2 (Pembantu)",
+            "-",
+            "- . A3 Penyimpan Eksibit",
+            "-",
+            "- . A4 Juruanalisis (Jika ada)",
+            "- – A5 PKD atau Saksi pakar (jika perlu)",
+            "-",
+            "- .",
+            "- A6",
+            "- Saksi -saksi lain yang berkaitan (jika perlu) ."
+          ],
+          "rujukan": [
+            "LampiranA",
+            "LampiranB",
+            "Lampiran C"
+          ],
+          "rujukan_lampiran": [
+            "Lampiran C"
+          ],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 56: Butiran5(FolioA): . . Nama Saksi -saksi - . A Laporan (1) (Contoh Laporan Polis) - - . AA Lapor...",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 8
+        },
+        {
+          "no": "57",
+          "tajuk": "Butiran6(FolioC): ",
+          "anggota": [
+            "IO"
+          ],
+          "tindakan": [
+            "Butiran6(FolioC): . . IDuntukIO (C1)",
+            "- IDuntukAIO(C2)",
+            "- IDpenyerahsamanC3 -"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 8
+        },
+        {
+          "no": "58",
+          "tajuk": "Butiran7(FolioD): ",
+          "anggota": [
+            "IO"
+          ],
+          "tindakan": [
+            "Butiran7(FolioD): . . Salinan pertuduhan (M114)",
+            "- . Salinan pengaduan (M143)",
+            "- .",
+            "- Salinan saman (M111) . Salinan Izin mendakwa",
+            "- .",
+            "- Salinan penyempurnaan saman Seksyen 34(2) KPJ ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 8
+        },
+        {
+          "no": "5",
+          "tajuk": ".9 Surat dan lain-lain: ",
+          "anggota": [
+            "IO"
+          ],
+          "tindakan": [
+            ".9 Surat dan lain-lain: ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 8
+        },
+        {
+          "no": "591",
+          "tajuk": "Bagi kesalahan di bawah Akta Makanan ",
+          "anggota": [
+            "IO"
+          ],
+          "tindakan": [
+            "Bagi kesalahan di bawah Akta Makanan . . ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 8
+        },
+        {
+          "no": "1983",
+          "tajuk": "silasemakLampiranA , ",
+          "anggota": [
+            "IO"
+          ],
+          "tindakan": [
+            "silasemakLampiranA , ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 8
+        },
+        {
+          "no": "592",
+          "tajuk": "Bagi kesalahan di bawah Akta ",
+          "anggota": [
+            "IO"
+          ],
+          "tindakan": [
+            "Bagi kesalahan di bawah Akta . . . Pemusnahan Serangga Pembawa Penyakit"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 8
+        },
+        {
+          "no": "1975",
+          "tajuk": "silasemakLampiranB , ",
+          "anggota": [
+            "IO"
+          ],
+          "tindakan": [
+            "silasemakLampiranB , ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 8
+        },
+        {
+          "no": "5",
+          "tajuk": ".9 .3 Bagi kesalahan di bawah Peraturan- ",
+          "anggota": [
+            "IO"
+          ],
+          "tindakan": [
+            ".9 .3 Bagi kesalahan di bawah Peraturan- . Peraturan Kawalan Hasil Tembakau 2004 ,",
+            "silasemakLampiranC ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 8
+        },
+        {
+          "no": "5",
+          "tajuk": ".9 .4 Bagi kesalahan di bawah Peraturan- ",
+          "anggota": [
+            "PO"
+          ],
+          "tindakan": [
+            ".9 .4 Bagi kesalahan di bawah Peraturan- . peraturan Kebersihan Makanan 2009 sila , semakLampiranD ."
+          ],
+          "rujukan": [
+            "LampiranD",
+            "LampiranE",
+            "LampiranF"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 9
+        },
+        {
+          "no": "5",
+          "tajuk": ".9 .5 Bagi kesalahan di bawah Peraturan- ",
+          "anggota": [
+            "PO"
+          ],
+          "tindakan": [
+            ".9 .5 Bagi kesalahan di bawah Peraturan- . peraturan Makanan 1985 sila semak , LampiranE ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 9
+        },
+        {
+          "no": "596",
+          "tajuk": "Bagi kesalahan di bawah Akta Pencegahan ",
+          "anggota": [
+            "PO"
+          ],
+          "tindakan": [
+            "Bagi kesalahan di bawah Akta Pencegahan . . . dan Pengawalan Penyakit Berjangkit 1988 , silasemakLampiranF ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 9
+        },
+        {
+          "no": "410",
+          "tajuk": "Butiran7(BarangKes): ",
+          "anggota": [
+            "PO"
+          ],
+          "tindakan": [
+            "Butiran7(BarangKes): . Senarai barang kes",
+            "- . Tanda Jabatan",
+            "- . Tanda Mahkamah",
+            "- . Rujukan barang-barang kes",
+            "- . (Kumpulkanbarang-barangkesdanperlu dicatatkansemasadanselepaskessebutan ataubicara) ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 9
+        },
+        {
+          "no": "411",
+          "tajuk": "KeputusanKes: ",
+          "anggota": [
+            "PO"
+          ],
+          "tindakan": [
+            "KeputusanKes: . Perludicatatkandalamruangan:- Tarikh",
+            "- . Mahkamah",
+            "- . Nama Majistret/Hakim",
+            "- . Nama PO",
+            "- . Nama Pembela",
+            "- . Dihukumdibawahundang-undangdan",
+            "- hukuman . Tanda tangan PO",
+            "- ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 9
+        },
+        {
+          "no": "412",
+          "tajuk": "Waran: ",
+          "anggota": [
+            "PO"
+          ],
+          "tindakan": [
+            "Waran: .",
+            "- Tarikh waran dikeluarkan .",
+            "- Tarikh waran dipulangkan ke mahkamah ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 9
+        },
+        {
+          "no": "413",
+          "tajuk": "UlangPerbicaraan: ",
+          "anggota": [],
+          "tindakan": [
+            "UlangPerbicaraan: . CatatandaripadaTPR:- Rujukan",
+            "- . Mahkamah",
+            "- . Nama Majistret/Hakim",
+            "- . Nama TPR",
+            "- . Nama Pembela",
+            "- . Tarikh",
+            "- . Keputusan -"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 10
+        },
+        {
+          "no": "5",
+          "tajuk": "K/S yang lengkap dirujuk kepada PO untuk semakan :- ",
+          "anggota": [
+            "PO",
+            "PPKP",
+            "UIPD"
+          ],
+          "tindakan": [
+            "K/S yang lengkap dirujuk kepada PO untuk semakan :- ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 10
+        },
+        {
+          "no": "51",
+          "tajuk": "K/Syang tidaklengkapdikembalikansemula ",
+          "anggota": [
+            "PO",
+            "PPKP",
+            "UIPD"
+          ],
+          "tindakan": [
+            "K/Syang tidaklengkapdikembalikansemula . kepadaIOuntuk dilengkapkan ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 10
+        },
+        {
+          "no": "52",
+          "tajuk": "HantarK/SyanglengkapkeUIPN ",
+          "anggota": [
+            "PO",
+            "PPKP",
+            "UIPD"
+          ],
+          "tindakan": [
+            "HantarK/SyanglengkapkeUIPN . ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 10
+        }
+      ]
+    }
+  ],
+  "carta_alir": {
+    "nodes": [
+      {
+        "id": "N_START",
+        "type": "start",
+        "label": "Mula Operasi / Prosedur",
+        "role": null,
+        "step_ref": null,
+        "sop_ref": null
+      },
+      {
+        "id": "N1",
+        "type": "process",
+        "label": "1. Kenalpasti kesalahan melalui aktiviti -aktiviti ",
+        "role": "RO/IO",
+        "step_ref": "1",
+        "sop_ref": null
+      },
+      {
+        "id": "N2",
+        "type": "process",
+        "label": "1. .1 Akta Makanan 1983 dan Peraturan-Peraturan di ",
+        "role": "RO/IO",
+        "step_ref": "1",
+        "sop_ref": null
+      },
+      {
+        "id": "N3",
+        "type": "process",
+        "label": "12. AktaPemusnahanSeranggaPembawaPenyakit ",
+        "role": "RO/IO",
+        "step_ref": "12",
+        "sop_ref": null
+      },
+      {
+        "id": "N4",
+        "type": "process",
+        "label": "1975. dan Peraturan-Peraturan di bawahnya ",
+        "role": "RO/IO",
+        "step_ref": "1975",
+        "sop_ref": null
+      },
+      {
+        "id": "N5",
+        "type": "process",
+        "label": "13. AktaPencegahandanPengawalanPenyakit ",
+        "role": "RO/IO",
+        "step_ref": "13",
+        "sop_ref": null
+      },
+      {
+        "id": "N6",
+        "type": "process",
+        "label": "1. .4 Peraturan-Peraturan Kawalan Hasil Tembakau ",
+        "role": "RO/IO",
+        "step_ref": "1",
+        "sop_ref": null
+      },
+      {
+        "id": "N7",
+        "type": "process",
+        "label": "2004. (DaftarkesdalamBukuPendaftaranK/S)",
+        "role": "RO/IO",
+        "step_ref": "2004",
+        "sop_ref": null
+      },
+      {
+        "id": "N8",
+        "type": "process",
+        "label": "2. Sediakan kertas minit untuk dilampirkan di muka ",
+        "role": "RO/IO",
+        "step_ref": "2",
+        "sop_ref": null
+      },
+      {
+        "id": "N9",
+        "type": "process",
+        "label": "3. Semak K/S Keluarkan surat senarai rujukan kes untuk ",
+        "role": "KPPKP/PPKPK",
+        "step_ref": "3",
+        "sop_ref": null
+      },
+      {
+        "id": "N10",
+        "type": "process",
+        "label": "4. MelantikIOuntukmenjalankansiasatan ",
+        "role": "KPPKP/PPKPK",
+        "step_ref": "4",
+        "sop_ref": null
+      },
+      {
+        "id": "N11",
+        "type": "process",
+        "label": "5. IO akan merekodkan No Rujukan Fail mencatatkan ",
+        "role": "IO",
+        "step_ref": "5",
+        "sop_ref": null
+      },
+      {
+        "id": "N12",
+        "type": "process",
+        "label": "51. Butiran1(Mukahadapan): ",
+        "role": "IO",
+        "step_ref": "51",
+        "sop_ref": null
+      },
+      {
+        "id": "N13",
+        "type": "decision",
+        "label": "56. Butiran5(FolioA): ",
+        "role": "IO",
+        "step_ref": "56",
+        "sop_ref": null
+      },
+      {
+        "id": "N14",
+        "type": "process",
+        "label": "57. Butiran6(FolioC): ",
+        "role": "IO",
+        "step_ref": "57",
+        "sop_ref": null
+      },
+      {
+        "id": "N_END",
+        "type": "end",
+        "label": "Selesai & Rekod Fail UIP",
+        "role": null,
+        "step_ref": null,
+        "sop_ref": null
+      }
+    ],
+    "edges": [
+      {
+        "from": "N_START",
+        "to": "N1",
+        "label": null
+      },
+      {
+        "from": "N1",
+        "to": "N2",
+        "label": null
+      },
+      {
+        "from": "N2",
+        "to": "N3",
+        "label": null
+      },
+      {
+        "from": "N3",
+        "to": "N4",
+        "label": null
+      },
+      {
+        "from": "N4",
+        "to": "N5",
+        "label": null
+      },
+      {
+        "from": "N5",
+        "to": "N6",
+        "label": null
+      },
+      {
+        "from": "N6",
+        "to": "N7",
+        "label": null
+      },
+      {
+        "from": "N7",
+        "to": "N8",
+        "label": null
+      },
+      {
+        "from": "N8",
+        "to": "N9",
+        "label": null
+      },
+      {
+        "from": "N9",
+        "to": "N10",
+        "label": null
+      },
+      {
+        "from": "N10",
+        "to": "N11",
+        "label": null
+      },
+      {
+        "from": "N11",
+        "to": "N12",
+        "label": null
+      },
+      {
+        "from": "N12",
+        "to": "N13",
+        "label": null
+      },
+      {
+        "from": "N13",
+        "to": "N14",
+        "label": "Teruskan"
+      },
+      {
+        "from": "N14",
+        "to": "N_END",
+        "label": null
+      }
+    ]
+  },
+  "senarai_semak": [
+    {
+      "id": "CHK-01",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[1] Kenalpasti kesalahan melalui aktiviti -aktiviti ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-02",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[1] .1 Akta Makanan 1983 dan Peraturan-Peraturan di ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-03",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[12] AktaPemusnahanSeranggaPembawaPenyakit ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-04",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[1975] dan Peraturan-Peraturan di bawahnya ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-05",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[13] AktaPencegahandanPengawalanPenyakit ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-06",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[1] .4 Peraturan-Peraturan Kawalan Hasil Tembakau ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-07",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[2004] (DaftarkesdalamBukuPendaftaranK/S)",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-08",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[2] Sediakan kertas minit untuk dilampirkan di muka ",
+      "wajib": true,
+      "rujukan": "Seksyen119KPJ"
+    },
+    {
+      "id": "CHK-09",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[3] Semak K/S Keluarkan surat senarai rujukan kes untuk ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-10",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[4] MelantikIOuntukmenjalankansiasatan ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-11",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[5] IO akan merekodkan No Rujukan Fail mencatatkan ",
+      "wajib": true,
+      "rujukan": "FailSiasatan"
+    },
+    {
+      "id": "CHK-12",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[51] Butiran1(Mukahadapan): ",
+      "wajib": true,
+      "rujukan": null
+    }
+  ],
+  "lampiran": [
+    {
+      "kod": "Lampiran A",
+      "tajuk": "Senarai Semak Kertas Siasatan Bagi Akta Makanan 1983",
+      "jenis": "senarai_semak",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran B",
+      "tajuk": "Senarai Semak Kertas Siasatan Bagi Akta Pemusnahan Serangga Pembawa Penyakit 1975",
+      "jenis": "senarai_semak",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran C",
+      "tajuk": "[DEPRECATED - PPKHT 2004] Senarai Semak Kertas Siasatan Bagi PPKHT 2004 (Ganti rujukan statut dengan Akta 852)",
+      "jenis": "senarai_semak",
+      "muka_surat_pdf": null,
+      "status": "DEPRECATED_PPKHT_2004",
+      "status_ekstrak": "teks_penuh",
+      "nota": "[NOTA PINDAAN] Dimansuhkan — guna Akta 852 / UIP-AKPMDKA-01-24."
+    },
+    {
+      "kod": "Lampiran D",
+      "tajuk": "Senarai Semak Kertas Siasatan Bagi Peraturan-Peraturan Kebersihan Makanan 2009",
+      "jenis": "senarai_semak",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran E",
+      "tajuk": "Senarai Semak Kertas Siasatan Bagi Peraturan-Peraturan Makanan 1985 (Tercicir dari Isi Kandungan PDF tetapi wujud di ms 32)",
+      "jenis": "senarai_semak",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran F",
+      "tajuk": "Senarai Semak Kertas Siasatan Bagi Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988 (Tercicir dari Isi Kandungan PDF tetapi wujud di ms 33)",
+      "jenis": "senarai_semak",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    }
+  ],
+  "pematuhan": [
+    "Prosedur yang dikeluarkan ini hendaklah terus berkuatkuasa dan",
+    "dianggap sah sehingga dipinda atau diganti dengan satu prosedur",
+    "lain atau dibatalkan.",
+    "Keengganan dan kegagalan mematuhi prosedur ini tanpa alasan",
+    "yang munasabah boleh menyebabkan seseorang pegawai dikenakan",
+    "tindakan tatatertib di bawah Peraturan-Peraturan Pegawai Awam",
+    "(Kelakuan dan Tatatertib) 1993.",
+    "Kegagalan mematuhi prosedur ini juga merupakan satu kesalahan di"
+  ],
+  "rujukan_silang_resolved": [
+    {
+      "sop_id": "UIP-AKPMDKA-01-24",
+      "file_stem": "UIP-AKPMDKA-01-24",
+      "tajuk": "Prosedur Pelaksanaan Notis Memerintahkan Kehadiran Ke Mahkamah Di Bawah Seksyen 47 dan Tawaran Mengkompaun Kesalahan Di Bawah Seksyen 48 Akta 852"
+    }
+  ],
+  "nota_audit_kualiti": [
+    "Langkah 1.4 dan Lampiran C merujuk PPKHT 2004 dan Notis S.32B Akta Makanan 1983 yang telah dimansuhkan/digantikan oleh Akta 852 mulai 1 Oktober 2024.",
+    "Isi Kandungan asal PDF hanya menyenaraikan Lampiran A-D, tetapi Lampiran E (PPM 1985) dan Lampiran F (Akta 342) wujud pada halaman 32-33."
+  ]
+}

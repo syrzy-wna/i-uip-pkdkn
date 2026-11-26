@@ -379,6 +379,18 @@ class CompoundNoticeChecker:
                     "Dasar UIP KKM: Kes pesakit Tibi cicir rawatan (S.22(b) Akta 342) lazimnya dibawa terus untuk Izin Mendakwa Mahkamah demi keselamatan awam."
                 )
 
+        # Sekat penggunaan Notis S.32B Akta Makanan 1983 bagi kesalahan produk merokok/vape (mansuh oleh Akta A1702 & Akta 852),
+        # tetapi KEKALKAN sah 100% bagi kesalahan keselamatan makanan (PPM 1985 / PPKM 2009 / UIP-UMUM-04-24).
+        is_tobacco_context = bool(
+            re.search(r"\b(?:rokok|merokok|vape|e-rokok|shisha|tembakau|produk\s+merokok|ppkht)\b", f"{low_sec} {low_err}")
+        )
+        if is_tobacco_context and re.search(r"(?:seksyen|s\.?)\s*32b\b", low_sec):
+            sec_errors.append(
+                "TIDAK SAH BAGI KES PRODUK MEROKOK: Notis Seksyen 32B Akta Makanan 1983 bagi rokok/vape telah mansuh mulai 1 Okt 2024 (Akta A1702). "
+                "Gunakan Notis Seksyen 47 & Kompaun Seksyen 48 Akta 852 [P.U.(A) 259/2024] mengikut UIP-AKPMDKA-01-24. "
+                "(Nota: S.32B Akta 281 kekal sah bagi kesalahan keselamatan makanan PPKM 2009 / PPM 1985 sahaja.)"
+            )
+
         # Semak seksyen rekaan, peruntukan dimansuhkan, penalti/kompaun tidak sah, atau unsur tidak dipenuhi melalui validate_legal_output
         val_res = validate_legal_output(
             {
@@ -391,15 +403,23 @@ class CompoundNoticeChecker:
         )
         for err_key in ("invalid_citations", "repealed_hits", "penalty_mismatches", "unfulfilled_element_errors"):
             for item_err in val_res.get(err_key) or []:
-                if item_err not in sec_errors:
-                    sec_errors.append(item_err)
+                if isinstance(item_err, dict):
+                    term = str(item_err.get("term") or item_err.get("code") or item_err.get("citation") or "").strip()
+                    note = str(item_err.get("note") or item_err.get("reason") or item_err.get("message") or "").strip()
+                    repl = str(item_err.get("replacement") or "").strip()
+                    parts = [p for p in (term, note, f"Gantian sah: {repl}" if repl else "") if p]
+                    err_text = " — ".join(parts) if parts else str(item_err)
+                else:
+                    err_text = str(item_err or "").strip()
+                if err_text and err_text not in sec_errors:
+                    sec_errors.append(err_text)
 
         ok_seksyen = len(sec_errors) == 0
         k06_status = "GAGAL" if not ok_seksyen else ("SEMAK" if sec_warnings else "LULUS")
         k06_note = (
-            " ".join(sec_errors)
+            " ".join(str(x) for x in sec_errors)
             if not ok_seksyen
-            else (" ".join(sec_warnings) if sec_warnings else f"Peruntukan sah dan boleh dikompaun: {akta_seksyen}")
+            else (" ".join(str(x) for x in sec_warnings) if sec_warnings else f"Peruntukan sah dan boleh dikompaun: {akta_seksyen}")
         )
         checks.append({
             "code": "K06",

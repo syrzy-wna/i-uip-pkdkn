@@ -12,6 +12,11 @@ http {
     sendfile on;
     keepalive_timeout 65;
     client_max_body_size 25M;
+    client_body_temp_path /tmp/nginx_body;
+    proxy_temp_path /tmp/nginx_proxy;
+    fastcgi_temp_path /tmp/nginx_fastcgi;
+    uwsgi_temp_path /tmp/nginx_uwsgi;
+    scgi_temp_path /tmp/nginx_scgi;
     gzip on;
     gzip_vary on;
     gzip_proxied any;
@@ -27,7 +32,7 @@ http {
         application/xml;
     map $http_x_forwarded_for $client_real_ip {
         default $binary_remote_addr;
-        "~^([^,\s]+)" $1;
+        "~([^,\s]+)\s*$" $1;
     }
     limit_req_zone $client_real_ip zone=api_limit:10m rate=20r/s;
     limit_req_zone $client_real_ip zone=auth_limit:10m rate=5r/s;
@@ -45,6 +50,12 @@ http {
         add_header X-Frame-Options "DENY" always;
         add_header Referrer-Policy "strict-origin-when-cross-origin" always;
         add_header Permissions-Policy "geolocation=(), microphone=(), camera=(self)" always;
+        add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://accounts.google.com https://apis.google.com; style-src 'self' 'unsafe-inline' https://accounts.google.com https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https://*.googleusercontent.com; connect-src 'self' https://accounts.google.com https://oauth2.googleapis.com; frame-src 'self' https://accounts.google.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'" always;
+
+        # Sekat laluan dokumentasi API awam di produksi
+        location ~ ^/(docs|openapi\.json|redoc) {
+            return 404;
+        }
 
         # Had kadar khusus bagi laluan log masuk / daftar akaun
         location ~ ^/api/auth/(login|register|google) {
@@ -60,7 +71,7 @@ http {
         }
 
         # Laluan Backend FastAPI
-        location ~ ^/(api|docs|openapi\.json|redoc|healthz) {
+        location ~ ^/(api|healthz) {
             limit_req zone=api_limit burst=40 nodelay;
             proxy_pass http://127.0.0.1:8000;
             proxy_http_version 1.1;

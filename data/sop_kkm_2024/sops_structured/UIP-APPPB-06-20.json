@@ -1,0 +1,742 @@
+{
+  "schema_version": "2.0",
+  "sop_id": "UIP-APPPB-06-20 (PINDAAN 2024)",
+  "file_stem": "UIP-APPPB-06-20",
+  "alias_kod": [
+    "UIP-APPPB-01-20 (PINDAAN 2024)"
+  ],
+  "tajuk": "Prosedur Penutupan Premis Di Bawah Subseksyen 18(1)(f) Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988",
+  "kategori": "APPPB_1988",
+  "akta_utama": "Akta 342",
+  "akta_berkaitan": [
+    "Akta 342",
+    "Akta 56",
+    "Akta 388",
+    "Akta 593",
+    "Akta 574",
+    "IHR 2005"
+  ],
+  "keluaran": "01",
+  "pindaan": "01",
+  "tarikh_kuatkuasa": "15 Feb 2024",
+  "ringkasan_eksekutif": "Prosedur ini menggariskan tatacara penutupan premis di bawah Subseksyen 18(1)(f) Akta Pencegahan Dan Pengawalan Penyakit Berjangkit 1988 [Akta 342] yang mewujudkan keadaan yang mungkin menyebabkan bermulanya atau merebaknya apa-apa penyakit berjangkit di sesua",
+  "tujuan": "Prosedur ini menggariskan tatacara penutupan premis di bawah Subseksyen 18(1)(f) Akta Pencegahan Dan Pengawalan Penyakit Berjangkit 1988 [Akta 342] yang mewujudkan keadaan yang mungkin menyebabkan bermulanya atau merebaknya apa-apa penyakit berjangkit di sesuatu premis .",
+  "panduan_am": [],
+  "punca_kuasa": [
+    "S.18(1)(f) Akta 342 (Tutup bagi mencegah bermulanya/merebaknya penyakit berjangkit)"
+  ],
+  "undang_undang_berkaitan": [
+    {
+      "akta": "(1)(f) Akta Pencegahan Dan Pengawalan Penyakit Berjangkit 1988 [Akta 342]",
+      "akta_kod": "Akta 342",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Pencegahan Dan Pengawalan Penyakit Berjangkit 1988 [Akta 342]",
+      "akta_kod": "Akta 342",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "dan Peraturan-Peraturannya.",
+      "akta_kod": null,
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Keterangan 1950 (Disemak 1971) [Akta 56].",
+      "akta_kod": "Akta 56",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Tafsiran 1948 dan 1967(Disemak 1989) [Akta 388].",
+      "akta_kod": "Akta 388",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Kanun Tatacara Jenayah (Disemak 1999) [Akta 593].",
+      "akta_kod": "Akta 593",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Kanun Keseksaan (Disemak 1997) Akta [574].",
+      "akta_kod": null,
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Pencegahan dan Pengawalan Penyakit Berjangkit (Pindaan) 2025 [Akta A1742] & P.U.(A) 139/2025",
+      "akta_kod": "Akta 342",
+      "status": "AKTIF",
+      "nota": "[NOTA PINDAAN] Berkuat kuasa 1 Mei 2025 — mengatasi kadar penalti & kompaun lama cetakan SOP 15 Feb 2024."
+    }
+  ],
+  "anggota_terlibat": [
+    {
+      "kod": "PEGAWAI KESI",
+      "jawatan": "Pegawai Kesihatan Daerah/Kawasan/Bahagian"
+    },
+    {
+      "kod": "KETUA PENOLO",
+      "jawatan": "Ketua Penolong Pegawai Kesihatan Persekitaran"
+    },
+    {
+      "kod": "PENOLONG PEG",
+      "jawatan": "Penolong Pegawai Kesihatan Persekitaran Kanan"
+    }
+  ],
+  "singkatan": [
+    {
+      "kod": "Akta 342",
+      "maksud": "Akta Pencegahan Dan Pengawalan Penyakit Berjangkit 1988 [Akta 342] dan Peraturan- Peraturannya"
+    },
+    {
+      "kod": "KPPKP",
+      "maksud": "Ketua Penolong Pegawai Kesihatan Persekitaran"
+    },
+    {
+      "kod": "K/S",
+      "maksud": "Kertas Siasatan"
+    },
+    {
+      "kod": "PKD",
+      "maksud": "Pegawai Kesihatan Daerah/Kawasan/Bahagian"
+    },
+    {
+      "kod": "PKP",
+      "maksud": "Pegawai Kesihatan Persekitaran"
+    },
+    {
+      "kod": "PPKP",
+      "maksud": "Penolong Pegawai Kesihatan Persekitaran"
+    },
+    {
+      "kod": "PPKPK",
+      "maksud": "Penolong Pegawai Kesihatan Persekitaran Kanan"
+    },
+    {
+      "kod": "PDK",
+      "maksud": "Pegawai Diberi Kuasa"
+    },
+    {
+      "kod": "UIPD",
+      "maksud": "Unit Inspektorat dan Perundangan Daerah"
+    },
+    {
+      "kod": "UIPN",
+      "maksud": "Unit Inspektorat dan Perundangan Negeri --- RUJUKAN PROSEDUR : UIP-APPPB-06-20 (PINDAAN 2024) Prosedur Penutupan Premis Di Bawah Subseksyen 18(1)(f) 4"
+    }
+  ],
+  "nota_pindaan": [
+    {
+      "tahap": "AMARAN",
+      "tajuk": "[NOTA PINDAAN] Pindaan Penalti & Kuasa Akta 342 (Akta A1742 — 1 Mei 2025)",
+      "butiran": "SOP ini berkuat kuasa 15 Feb 2024 sebelum Akta Pencegahan dan Pengawalan Penyakit Berjangkit (Pindaan) 2025 [Akta A1742] dan P.U.(A) 139/2025 (1 Mei 2025). Utamakan had penalti baharu Seksyen 24(a) (individu maks RM10,000 / penjara 2 tahun) dan Seksyen 24(b) (pertubuhan perbadanan maks RM100,000) serta liabiliti korporat S.22A.",
+      "gantian_statut": "Akta A1742 & P.U.(A) 139/2025 (1 Mei 2025)"
+    },
+    {
+      "tahap": "INFO",
+      "tajuk": "Pembetulan Konflik Kod Cetakan (UIP-APPPB-01-20 -> UIP-APPPB-06-20)",
+      "butiran": "Jadual Kandungan buku SOP mencetak kod 'UIP-APPPB-01-20', namun kod rasmi dalam badan prosedur ialah UIP-APPPB-06-20 (PINDAAN 2024).",
+      "gantian_statut": null
+    }
+  ],
+  "tempoh_sla": [],
+  "fasa_kerja": [
+    {
+      "fasa_id": "F1",
+      "tajuk_fasa": "1. Pelaksanaan Proses Kerja",
+      "langkah": [
+        {
+          "no": "1",
+          "tajuk": "Tindakan",
+          "anggota": [],
+          "tindakan": [
+            "Tindakan"
+          ],
+          "rujukan": [
+            "Rujukan"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "112",
+          "tajuk": "Jangkamasapenutupan premis adalah selama tujuh ",
+          "anggota": [],
+          "tindakan": [
+            "Jangkamasapenutupan premis adalah selama tujuh . (7) hari Rasional tempoh ini adalah bagi membolehkan . pematuhankepadasemuaarahankerjayangtelahdikeluarkan ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "113",
+          "tajuk": "Walau apapun jika suatu arahan kerja telah dilakukan dalam ",
+          "anggota": [],
+          "tindakan": [
+            "Walau apapun jika suatu arahan kerja telah dilakukan dalam . , tempoh yang kurang daripada tempoh masa ditetapkan suatu , permohonan boleh dibuat oleh pemilik premis kepada Pegawai DiberiKuasauntuk menjalankanpemeriksaansemula ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 113: Walau apapun jika suatu arahan kerja telah dilakukan dalam . , tempoh yang kurang daripada temp...",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "4",
+          "tajuk": "SelepasPenutupan 12 Jalankanpemantauan keataspremisyangterlibat dengan ",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            "SelepasPenutupan 12 Jalankanpemantauan keataspremisyangterlibat dengan . penutupan ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "13",
+          "tajuk": "Sekiranya tuan punya/pemilik ingkar Perintah Penutupan Premis ",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            "Sekiranya tuan punya/pemilik ingkar Perintah Penutupan Premis . , tindakan undang-undang perlu diambil Sila rujuk prosedur UIP .",
+            "- UMUM -02 -07 (PINDAAN 2024) Buka dan lengkapkan kertas . siasatan dan rujuk ke UIPD Sila rujuk prosedur pendakwaan UIP .",
+            "- UMUM 05 07(PINDAAN2024)",
+            "-",
+            "- ."
+          ],
+          "rujukan": [
+            "UIP UMUM",
+            "- -",
+            "02 -07(Pindaan",
+            "2024)dan05",
+            "-",
+            "07(Pindaan"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 13: Sekiranya tuan punya/pemilik ingkar Perintah Penutupan Premis . , tindakan undang-undang perlu ...",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "14",
+          "tajuk": "Terima permohonan untuk membuka semula premis dari ",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            "Terima permohonan untuk membuka semula premis dari . tuanpunyapremis/wakilnya ."
+          ],
+          "rujukan": [
+            "LampiranE"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "15",
+          "tajuk": "Jalankan pemeriksaan semula premis berpandukan notis ",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            "Jalankan pemeriksaan semula premis berpandukan notis . ArahanKerja ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "16",
+          "tajuk": "Sekiranya Arahan Kerja telah dipatuhi sepenuhnya dan PDK ",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            "Sekiranya Arahan Kerja telah dipatuhi sepenuhnya dan PDK . berpuashati keluarkansuratkebenaranmembukasemulapremis , ."
+          ],
+          "rujukan": [
+            "LampiranF"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 16: Sekiranya Arahan Kerja telah dipatuhi sepenuhnya dan PDK . berpuashati keluarkansuratkebenaranm...",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "17",
+          "tajuk": "Sekiranya masih terdapat Arahan Kerja yang gagal dipatuhi ",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            "Sekiranya masih terdapat Arahan Kerja yang gagal dipatuhi . , sambungtempohpenutupan ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 17: Sekiranya masih terdapat Arahan Kerja yang gagal dipatuhi . , sambungtempohpenutupan .",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "18",
+          "tajuk": "Premisyangdisambungtempohpenutupan perlumemohonsemula ",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            "Premisyangdisambungtempohpenutupan perlumemohonsemula . , untukpemeriksaansemulaolehPDK ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "19",
+          "tajuk": "Rekodkan aktiviti dan sediakan laporan untuk semakandan ",
+          "anggota": [
+            "PPKPK",
+            "PPKP",
+            "UIPD"
+          ],
+          "tindakan": [
+            "Rekodkan aktiviti dan sediakan laporan untuk semakandan . pengesahanPKD/PKP/KPPKP ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "20",
+          "tajuk": "Semak sahkandanmajukanlaporankeUIPN ",
+          "anggota": [
+            "PKD",
+            "PKP",
+            "KPPKP"
+          ],
+          "tindakan": [
+            "Semak sahkandanmajukanlaporankeUIPN . , ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        }
+      ]
+    }
+  ],
+  "carta_alir": {
+    "nodes": [
+      {
+        "id": "N_START",
+        "type": "start",
+        "label": "Mula Operasi / Prosedur",
+        "role": null,
+        "step_ref": null,
+        "sop_ref": null
+      },
+      {
+        "id": "N1",
+        "type": "process",
+        "label": "1. Tindakan",
+        "role": null,
+        "step_ref": "1",
+        "sop_ref": null
+      },
+      {
+        "id": "N2",
+        "type": "process",
+        "label": "112. Jangkamasapenutupan premis adalah selama tujuh ",
+        "role": null,
+        "step_ref": "112",
+        "sop_ref": null
+      },
+      {
+        "id": "N3",
+        "type": "decision",
+        "label": "113. Walau apapun jika suatu arahan kerja telah dilakukan dalam ",
+        "role": null,
+        "step_ref": "113",
+        "sop_ref": null
+      },
+      {
+        "id": "N4",
+        "type": "process",
+        "label": "4. SelepasPenutupan 12 Jalankanpemantauan keataspremisyangterlibat dengan ",
+        "role": "PDK",
+        "step_ref": "4",
+        "sop_ref": null
+      },
+      {
+        "id": "N5",
+        "type": "decision",
+        "label": "13. Sekiranya tuan punya/pemilik ingkar Perintah Penutupan Premis ",
+        "role": "PDK",
+        "step_ref": "13",
+        "sop_ref": null
+      },
+      {
+        "id": "N6",
+        "type": "process",
+        "label": "14. Terima permohonan untuk membuka semula premis dari ",
+        "role": "PDK",
+        "step_ref": "14",
+        "sop_ref": null
+      },
+      {
+        "id": "N7",
+        "type": "process",
+        "label": "15. Jalankan pemeriksaan semula premis berpandukan notis ",
+        "role": "PDK",
+        "step_ref": "15",
+        "sop_ref": null
+      },
+      {
+        "id": "N8",
+        "type": "decision",
+        "label": "16. Sekiranya Arahan Kerja telah dipatuhi sepenuhnya dan PDK ",
+        "role": "PDK",
+        "step_ref": "16",
+        "sop_ref": null
+      },
+      {
+        "id": "N9",
+        "type": "decision",
+        "label": "17. Sekiranya masih terdapat Arahan Kerja yang gagal dipatuhi ",
+        "role": "PDK",
+        "step_ref": "17",
+        "sop_ref": null
+      },
+      {
+        "id": "N10",
+        "type": "process",
+        "label": "18. Premisyangdisambungtempohpenutupan perlumemohonsemula ",
+        "role": "PDK",
+        "step_ref": "18",
+        "sop_ref": null
+      },
+      {
+        "id": "N11",
+        "type": "process",
+        "label": "19. Rekodkan aktiviti dan sediakan laporan untuk semakandan ",
+        "role": "PPKPK/PPKP",
+        "step_ref": "19",
+        "sop_ref": null
+      },
+      {
+        "id": "N12",
+        "type": "process",
+        "label": "20. Semak sahkandanmajukanlaporankeUIPN ",
+        "role": "PKD/PKP",
+        "step_ref": "20",
+        "sop_ref": null
+      },
+      {
+        "id": "N_END",
+        "type": "end",
+        "label": "Selesai & Rekod Fail UIP",
+        "role": null,
+        "step_ref": null,
+        "sop_ref": null
+      }
+    ],
+    "edges": [
+      {
+        "from": "N_START",
+        "to": "N1",
+        "label": null
+      },
+      {
+        "from": "N1",
+        "to": "N2",
+        "label": null
+      },
+      {
+        "from": "N2",
+        "to": "N3",
+        "label": null
+      },
+      {
+        "from": "N3",
+        "to": "N4",
+        "label": "Teruskan"
+      },
+      {
+        "from": "N4",
+        "to": "N5",
+        "label": null
+      },
+      {
+        "from": "N5",
+        "to": "N6",
+        "label": "Teruskan"
+      },
+      {
+        "from": "N6",
+        "to": "N7",
+        "label": null
+      },
+      {
+        "from": "N7",
+        "to": "N8",
+        "label": null
+      },
+      {
+        "from": "N8",
+        "to": "N9",
+        "label": "Teruskan"
+      },
+      {
+        "from": "N9",
+        "to": "N10",
+        "label": "Teruskan"
+      },
+      {
+        "from": "N10",
+        "to": "N11",
+        "label": null
+      },
+      {
+        "from": "N11",
+        "to": "N12",
+        "label": null
+      },
+      {
+        "from": "N12",
+        "to": "N_END",
+        "label": null
+      }
+    ]
+  },
+  "senarai_semak": [
+    {
+      "id": "CHK-01",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[1] Tindakan",
+      "wajib": true,
+      "rujukan": "Rujukan"
+    },
+    {
+      "id": "CHK-02",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[112] Jangkamasapenutupan premis adalah selama tujuh ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-03",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[113] Walau apapun jika suatu arahan kerja telah dilakukan dalam ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-04",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[4] SelepasPenutupan 12 Jalankanpemantauan keataspremisyangterlibat dengan ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-05",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[13] Sekiranya tuan punya/pemilik ingkar Perintah Penutupan Premis ",
+      "wajib": true,
+      "rujukan": "UIP UMUM"
+    },
+    {
+      "id": "CHK-06",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[14] Terima permohonan untuk membuka semula premis dari ",
+      "wajib": true,
+      "rujukan": "LampiranE"
+    },
+    {
+      "id": "CHK-07",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[15] Jalankan pemeriksaan semula premis berpandukan notis ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-08",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[16] Sekiranya Arahan Kerja telah dipatuhi sepenuhnya dan PDK ",
+      "wajib": true,
+      "rujukan": "LampiranF"
+    },
+    {
+      "id": "CHK-09",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[17] Sekiranya masih terdapat Arahan Kerja yang gagal dipatuhi ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-10",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[18] Premisyangdisambungtempohpenutupan perlumemohonsemula ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-11",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[19] Rekodkan aktiviti dan sediakan laporan untuk semakandan ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-12",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[20] Semak sahkandanmajukanlaporankeUIPN ",
+      "wajib": true,
+      "rujukan": null
+    }
+  ],
+  "lampiran": [
+    {
+      "kod": "Lampiran A",
+      "tajuk": "Senarai Semak Penutupan Premis S.18(1)(f)",
+      "jenis": "senarai_semak",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran B",
+      "tajuk": "Perintah Penutupan Premis Bagi Kawalan Perebakan Penyakit Berjangkit",
+      "jenis": "borang",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran C",
+      "tajuk": "Arahan Kerja",
+      "jenis": "lain",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran D",
+      "tajuk": "Notis Perintah Tutup Premis",
+      "jenis": "borang",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran E",
+      "tajuk": "Borang Permohonan Untuk Membuka Semula Premis",
+      "jenis": "borang",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran F",
+      "tajuk": "Kebenaran Membuka Semula Premis",
+      "jenis": "lain",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    }
+  ],
+  "pematuhan": [
+    "Prosedur yang dikeluarkan ini hendaklah terus berkuatkuasa dan dianggap",
+    "sah sehingga dipinda atau diganti dengan satu prosedur lain atau",
+    "Keengganan dan kegagalan mematuhi prosedur ini tanpa alasan yang",
+    "munasabah boleh menyebabkan seseorang pegawai dikenakan tindakan",
+    "tatatertib di bawah Peraturan-Peraturan Pegawai Awam (Kelakuan dan",
+    "Tatatertib) 1993",
+    "Kegagalan mematuhi prosedur ini juga merupakan satu kesalahan di",
+    "bawah Seksyen 24 (1) (f) Akta Suruhanjaya Integriti Agensi"
+  ],
+  "rujukan_silang_resolved": [
+    {
+      "sop_id": "UIP-UMUM-02-07 (PINDAAN 2024)",
+      "file_stem": "UIP-UMUM-02-07",
+      "tajuk": "Prosedur Penyediaan Kertas Siasatan"
+    },
+    {
+      "sop_id": "UIP-UMUM-05-07 (PINDAAN 2024)",
+      "file_stem": "UIP-UMUM-05-07",
+      "tajuk": "Prosedur Pendakwaan Di Mahkamah"
+    }
+  ],
+  "nota_audit_kualiti": [
+    "KONFLIK KOD: Halaman Kandungan C menyenaraikan SOP ini sebagai UIP-APPPB-01-20 (PINDAAN 2024), tetapi kod rasmi dalam dokumen adalah UIP-APPPB-06-20 (PINDAAN 2024)."
+  ]
+}

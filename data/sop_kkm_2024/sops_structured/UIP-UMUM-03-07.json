@@ -1,0 +1,1200 @@
+{
+  "schema_version": "2.0",
+  "sop_id": "UIP-UMUM-03-07 (PINDAAN 2024)",
+  "file_stem": "UIP-UMUM-03-07",
+  "alias_kod": [],
+  "tajuk": "Prosedur Penyerahan Saman",
+  "kategori": "UMUM",
+  "akta_utama": "SOP Umum / KTJ",
+  "akta_berkaitan": [
+    "Akta 593",
+    "Akta 56",
+    "Akta 281",
+    "Akta 154",
+    "Akta 342",
+    "Akta 92",
+    "Akta 574"
+  ],
+  "keluaran": "01",
+  "pindaan": "01",
+  "tarikh_kuatkuasa": "15 Feb 2024",
+  "ringkasan_eksekutif": "Tujuan prosedur ini adalah untuk menggariskan tatacara penyerahan saman bagi kesalahan-kesalahan di bawah Undang-Undang Kesihatan Awam.",
+  "tujuan": "Tujuan prosedur ini adalah untuk menggariskan tatacara penyerahan saman bagi kesalahan-kesalahan di bawah Undang-Undang Kesihatan Awam.",
+  "panduan_am": [],
+  "punca_kuasa": [
+    "S.34(2) KTJ",
+    "S.35(1) KTJ",
+    "S.35(4) KTJ",
+    "S.36 KTJ (Penyampaian Gantian)",
+    "S.37 KTJ (Afidavit)",
+    "Borang 252 Pin. 1/78"
+  ],
+  "undang_undang_berkaitan": [
+    {
+      "akta": "Akta Keterangan 1950 (Disemak 1971) [Akta 56]",
+      "akta_kod": "Akta 56",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Hidrogen Sianid 1953[Akta 260]",
+      "akta_kod": "Akta 260",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Makanan 1983 [Akta 281]",
+      "akta_kod": "Akta 281",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Mahkamah Rendah 1955 [Akta 92]",
+      "akta_kod": "Akta 92",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Pemusnahan Serangga Pembawa Penyakit 1975 [Akta 154]",
+      "akta_kod": "Akta 154",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988 [Akta 342]",
+      "akta_kod": "Akta 342",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Tafsiran 1948 dan 1967(Disemak 1989) [Akta 388]",
+      "akta_kod": "Akta 388",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Kanun Keseksaan (Disemak 1997) [Akta 574]",
+      "akta_kod": "Akta 574",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Kanun Tatacara Jenayah (Disemak 1999) [Akta 593]",
+      "akta_kod": "Akta 593",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Peraturan-Peraturan Kawalan Hasil Tembakau 2004",
+      "akta_kod": null,
+      "status": "DIMANSUHKAN",
+      "nota": "[NOTA PINDAAN] Dimansuhkan mulai 1 Okt 2024 dan digantikan oleh Akta 852."
+    },
+    {
+      "akta": "Peraturan-Peraturan Kebersihan Makanan 2009",
+      "akta_kod": null,
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Peraturan-Peraturan Kemasukan Orang-orang Ke Dalam Malaysia",
+      "akta_kod": null,
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Peraturan-Peraturan Makanan 1985",
+      "akta_kod": null,
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Peraturan-Peraturan",
+      "akta_kod": null,
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Peraturan-Peraturan Pencegahan dan Pengawalan Penyakit Berjangkit",
+      "akta_kod": null,
+      "status": "AKTIF",
+      "nota": null
+    }
+  ],
+  "anggota_terlibat": [
+    {
+      "kod": "PEGAWAI KESI",
+      "jawatan": "Pegawai Kesihatan Daerah/Kawasan/Bahagian"
+    },
+    {
+      "kod": "KETUA PENOLO",
+      "jawatan": "Ketua Penolong Pegawai Kesihatan Persekitaran"
+    },
+    {
+      "kod": "PENOLONG PEG",
+      "jawatan": "Penolong Pegawai Kesihatan Persekitaran Kanan"
+    },
+    {
+      "kod": "NO. RUJUKAN ",
+      "jawatan": "NO. RUJUKAN PROSEDUR : UIP-UMUM-03-07 (PINDAAN 2024)"
+    },
+    {
+      "kod": "PROSEDUR PEN",
+      "jawatan": "Prosedur Penyerahan Saman"
+    }
+  ],
+  "singkatan": [
+    {
+      "kod": "A&D",
+      "maksud": "‘Acquittal and Discharge’ (Dilepaskan dan Dibebaskan)"
+    },
+    {
+      "kod": "DNAA",
+      "maksud": "‘Discharge Not Amounting To Acquittal’ (Dilepaskan Tanpa Dibebaskan)"
+    },
+    {
+      "kod": "ID",
+      "maksud": "Diari Penyiasatan"
+    },
+    {
+      "kod": "KTJ",
+      "maksud": "Kanun Tatacara Jenayah"
+    },
+    {
+      "kod": "KPPKP",
+      "maksud": "Ketua Penolong Pegawai Kesihatan Persekitaran"
+    },
+    {
+      "kod": "K/S",
+      "maksud": "Kertas Siasatan"
+    },
+    {
+      "kod": "OKS",
+      "maksud": "Orang Kena Saman"
+    },
+    {
+      "kod": "PKD",
+      "maksud": "Pegawai Kesihatan Daerah/Kawasan/Bahagian"
+    },
+    {
+      "kod": "PKP",
+      "maksud": "Pegawai Kesihatan Persekitaran"
+    },
+    {
+      "kod": "PO",
+      "maksud": "Pegawai Pendakwa"
+    },
+    {
+      "kod": "PPKP",
+      "maksud": "Penolong Pegawai Kesihatan Persekitaran"
+    },
+    {
+      "kod": "PPKPK",
+      "maksud": "Penolong Pegawai Kesihatan Persekitaran Kanan"
+    },
+    {
+      "kod": "PS",
+      "maksud": "Penyerah Saman --- Prosedur Penyerahan Saman 4"
+    }
+  ],
+  "nota_pindaan": [
+    {
+      "tahap": "AMARAN",
+      "tajuk": "[NOTA PINDAAN] PPKHT 2004 Dimansuhkan — Digantikan Oleh Akta 852 (1 Okt 2024)",
+      "butiran": "Sebarang rujukan PPKHT 2004 dan Notis Seksyen 32B Akta Makanan 1983 bagi kesalahan produk merokok/vape dalam SOP ini telah DIMANSUHKAN mulai 1 Oktober 2024 dan digantikan sepenuhnya oleh Akta 852 (UIP-AKPMDKA-01-24 hingga 08-24).",
+      "gantian_statut": "Akta 852 & UIP-AKPMDKA-01-24..08-24 (1 Okt 2024)"
+    }
+  ],
+  "tempoh_sla": [],
+  "fasa_kerja": [
+    {
+      "fasa_id": "F1",
+      "tajuk_fasa": "1. Pelaksanaan Proses Kerja",
+      "langkah": [
+        {
+          "no": "1",
+          "tajuk": "Terima saman (semak samada saman dalam atau ",
+          "anggota": [
+            "KPPKP",
+            "PPKPK",
+            "PPKP"
+          ],
+          "tindakan": [
+            "Terima saman (semak samada saman dalam atau . luar daerah) Bagi saman yang diterima dari luar . daerah rekodkanpenerimaan , ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "2",
+          "tajuk": "ArahkanPSuntukserahkansaman ",
+          "anggota": [
+            "PPKP"
+          ],
+          "tindakan": [
+            "ArahkanPSuntukserahkansaman . ."
+          ],
+          "rujukan": [
+            "Surat Kebenaran",
+            "Penyerahan",
+            "Saman",
+            "(LampiranB)"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "3",
+          "tajuk": "PergikealamatOKSseperti padaKertasSaman ",
+          "anggota": [
+            "PS"
+          ],
+          "tindakan": [
+            "PergikealamatOKSseperti padaKertasSaman . ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "4",
+          "tajuk": "OKSDitemui 4 BerjumpadenganOKS ",
+          "anggota": [
+            "PS"
+          ],
+          "tindakan": [
+            "OKSDitemui 4 BerjumpadenganOKS . ."
+          ],
+          "rujukan": [
+            "Seksyen 35(1)",
+            "KTJ"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "5",
+          "tajuk": "Terangkantujuankedatangan ",
+          "anggota": [
+            "PS"
+          ],
+          "tindakan": [
+            "Terangkantujuankedatangan . ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "6",
+          "tajuk": "Serahkan saman dan dapatkan akuan penerimaan ",
+          "anggota": [
+            "PS"
+          ],
+          "tindakan": [
+            "Serahkan saman dan dapatkan akuan penerimaan . , mengikuttatacarapenyerahansaman Sediakan ID . ."
+          ],
+          "rujukan": [
+            "AkuanTerima",
+            "Saman",
+            "(LampiranC)"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "7",
+          "tajuk": "SekiranyaOKStiada dapatkanmaklumattarikhserta ",
+          "anggota": [
+            "PS"
+          ],
+          "tindakan": [
+            "SekiranyaOKStiada dapatkanmaklumattarikhserta . , masasesuaiuntukhantarsemulasamandanbalikke pejabat(Ulangtindakan4) . ."
+          ],
+          "rujukan": [
+            "Seksyen35(4)",
+            "KTJ"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "71",
+          "tajuk": "Saman boleh disampaikan dengan ",
+          "anggota": [
+            "PS"
+          ],
+          "tindakan": [
+            "Saman boleh disampaikan dengan . . meninggalkan Salinan kepada mana-mana orang dewasa ahli keluarganya atau kepada , orang gajinya yang tinggal Bersama-samanya ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "8",
+          "tajuk": "JikaOKSada terusketindakan9 JikaOKS masih ",
+          "anggota": [
+            "PS"
+          ],
+          "tindakan": [
+            "JikaOKSada terusketindakan9 JikaOKS masih . , . tiada terusketindakan17 , ."
+          ],
+          "rujukan": [
+            "Seksyen35(4)",
+            "KTJ"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "10",
+          "tajuk": "Sekiranya masih enggan buat laporan polis Buat ",
+          "anggota": [
+            "PS"
+          ],
+          "tindakan": [
+            "Sekiranya masih enggan buat laporan polis Buat . , . afidavitpenyampaiansamangagaldiserahkan ."
+          ],
+          "rujukan": [
+            "Seksyen37KTJ"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 10: Sekiranya masih enggan buat laporan polis Buat . , . afidavitpenyampaiansamangagaldiserahkan .",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "11",
+          "tajuk": "Sediakan ID dan serahkan kepada ",
+          "anggota": [
+            "PS"
+          ],
+          "tindakan": [
+            "Sediakan ID dan serahkan kepada . KPPKP/PPKPK/PPKP ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "12",
+          "tajuk": "KemaskiniK/S ",
+          "anggota": [
+            "KPPKP",
+            "PPKPK",
+            "PPKP"
+          ],
+          "tindakan": [
+            "KemaskiniK/S ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "13",
+          "tajuk": "OKSTidakDitemui(AlamatBetul) 13 Sekiranya OKS tidak ditemui (3 kali lawatan) ",
+          "anggota": [
+            "PS"
+          ],
+          "tindakan": [
+            "OKSTidakDitemui(AlamatBetul) 13 Sekiranya OKS tidak ditemui (3 kali lawatan) . , lengkapkan Borang Affidavit Tidak Sampai Penyampaian(Borang252Pin1/78) . . ."
+          ],
+          "rujukan": [
+            "Lampiran D"
+          ],
+          "rujukan_lampiran": [
+            "Lampiran D"
+          ],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 13: OKSTidakDitemui(AlamatBetul) 13 Sekiranya OKS tidak ditemui (3 kali lawatan) . , lengkapkan Bor...",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "14",
+          "tajuk": "BuatAkuanBersumpahdiMahkamahMajistret ",
+          "anggota": [
+            "PS"
+          ],
+          "tindakan": [
+            "BuatAkuanBersumpahdiMahkamahMajistret ."
+          ],
+          "rujukan": [
+            "Seksyen 37KTJ",
+            "."
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "15",
+          "tajuk": "KemukakankepadaKPPKP/PPKPK/PPKP ",
+          "anggota": [
+            "PS"
+          ],
+          "tindakan": [
+            "KemukakankepadaKPPKP/PPKPK/PPKP ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "16",
+          "tajuk": "Bagi saman dari luar daerah kembalikan diari , siasatan Borang Affidavit Tidak Sampai , Penyampaian (Borang 25",
+          "anggota": [
+            "KPPKP",
+            "PPKPK",
+            "PPKP"
+          ],
+          "tindakan": [
+            "Bagi saman dari luar daerah kembalikan diari , siasatan Borang Affidavit Tidak Sampai , Penyampaian (Borang 252Pin1/78) dan Akuan . . Bersumpah kepada pejabat kesihatan yang berkenaan ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "17",
+          "tajuk": "Mohon kebenaran untuk penyampaian gantian ",
+          "anggota": [
+            "KPPKP",
+            "PPKPK",
+            "PPKP"
+          ],
+          "tindakan": [
+            "Mohon kebenaran untuk penyampaian gantian . daripada Majistret Bagi saman luar daerah . , permohonan dibuat oleh pejabat kesihatan berkenaan ."
+          ],
+          "rujukan": [
+            "Lampiran E"
+          ],
+          "rujukan_lampiran": [
+            "Lampiran E"
+          ],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "18",
+          "tajuk": "Jika kebenaran tidak diberi oleh Mahkamah mohon ",
+          "anggota": [
+            "KPPKP",
+            "PPKPK",
+            "PPKP"
+          ],
+          "tindakan": [
+            "Jika kebenaran tidak diberi oleh Mahkamah mohon . , arahan untuk kes di DNAA dan K/S dirujuk kepada TPRuntukarahanlanjut ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 18: Jika kebenaran tidak diberi oleh Mahkamah mohon . , arahan untuk kes di DNAA dan K/S dirujuk ke...",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "19",
+          "tajuk": "Sekiranya diizinkan arahkan PS untuk menampal ",
+          "anggota": [
+            "KPPKP",
+            "PPKPK",
+            "PPKP"
+          ],
+          "tindakan": [
+            "Sekiranya diizinkan arahkan PS untuk menampal . , saman pada tempat yang mudah dilihat dan ambil gambarsebagaibuktipenyampaian ."
+          ],
+          "rujukan": [
+            "Seksyen36 KTJ",
+            ",",
+            "SOPUIP -Umum-",
+            "04 -07(Pindaan",
+            "2024)"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 19: Sekiranya diizinkan arahkan PS untuk menampal . , saman pada tempat yang mudah dilihat dan ambi...",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "20",
+          "tajuk": "PergikelokasiOKS ",
+          "anggota": [
+            "PS"
+          ],
+          "tindakan": [
+            "PergikelokasiOKS . ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "21",
+          "tajuk": "Tampalkansalinan asalsaman ditempatyangmudah ",
+          "anggota": [
+            "PS"
+          ],
+          "tindakan": [
+            "Tampalkansalinan asalsaman ditempatyangmudah . dilihat ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "22",
+          "tajuk": "Lengkapkan Borang Affidavit Penyampaian (Borang ",
+          "anggota": [
+            "PS"
+          ],
+          "tindakan": [
+            "Lengkapkan Borang Affidavit Penyampaian (Borang . 252Pin1/78)(Lampiran3) . . ."
+          ],
+          "rujukan": [
+            "Lampiran F"
+          ],
+          "rujukan_lampiran": [
+            "Lampiran F"
+          ],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "23",
+          "tajuk": "BuatAkuanBersumpahdiMahkamahMajistret ",
+          "anggota": [
+            "PS"
+          ],
+          "tindakan": [
+            "BuatAkuanBersumpahdiMahkamahMajistret . ."
+          ],
+          "rujukan": [
+            "Seksyen37 KTJ",
+            ","
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "24",
+          "tajuk": "LaporkankepadaKPPKP/PPKPK/PPKP ",
+          "anggota": [
+            "PS"
+          ],
+          "tindakan": [
+            "LaporkankepadaKPPKP/PPKPK/PPKP . ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "25",
+          "tajuk": "Hantarkan Borang Affidavit Penyampaian (Borang ",
+          "anggota": [
+            "KPPKP",
+            "PPKPK",
+            "PPKP"
+          ],
+          "tindakan": [
+            "Hantarkan Borang Affidavit Penyampaian (Borang ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "252",
+          "tajuk": "Pin 1/78) kepada daerah berkenaan (jika ",
+          "anggota": [
+            "KPPKP",
+            "PPKPK",
+            "PPKP"
+          ],
+          "tindakan": [
+            "Pin 1/78) kepada daerah berkenaan (jika . berkaitan) ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 252: Pin 1/78) kepada daerah berkenaan (jika . berkaitan) .",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "27",
+          "tajuk": "OKSTidakDitemui/AlamatOKSTidakLengkap 26 BuatSemakanataucariandenganagensiberkaitan ",
+          "anggota": [
+            "PS"
+          ],
+          "tindakan": [
+            "OKSTidakDitemui/AlamatOKSTidakLengkap 26 BuatSemakanataucariandenganagensiberkaitan . ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 8
+        },
+        {
+          "no": "27",
+          "tajuk": "LengkapkanID ",
+          "anggota": [
+            "PS"
+          ],
+          "tindakan": [
+            "LengkapkanID . ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 8
+        },
+        {
+          "no": "28",
+          "tajuk": "Jika kes di DNAA K/S dirujuk kepada TPR untuk ",
+          "anggota": [
+            "PO"
+          ],
+          "tindakan": [
+            "Jika kes di DNAA K/S dirujuk kepada TPR untuk . , arahanlanjut ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 28: Jika kes di DNAA K/S dirujuk kepada TPR untuk . , arahanlanjut .",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 8
+        },
+        {
+          "no": "29",
+          "tajuk": "KemaskiniK/S ",
+          "anggota": [
+            "PPKP"
+          ],
+          "tindakan": [
+            "KemaskiniK/S . ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 8
+        },
+        {
+          "no": "30",
+          "tajuk": "KemaskinidaftarK/S ",
+          "anggota": [
+            "PPKP"
+          ],
+          "tindakan": [
+            "KemaskinidaftarK/S . ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 8
+        }
+      ]
+    }
+  ],
+  "carta_alir": {
+    "nodes": [
+      {
+        "id": "N_START",
+        "type": "start",
+        "label": "Mula Operasi / Prosedur",
+        "role": null,
+        "step_ref": null,
+        "sop_ref": null
+      },
+      {
+        "id": "N1",
+        "type": "process",
+        "label": "1. Terima saman (semak samada saman dalam atau ",
+        "role": "KPPKP/PPKPK",
+        "step_ref": "1",
+        "sop_ref": null
+      },
+      {
+        "id": "N2",
+        "type": "process",
+        "label": "2. ArahkanPSuntukserahkansaman ",
+        "role": "PPKP",
+        "step_ref": "2",
+        "sop_ref": null
+      },
+      {
+        "id": "N3",
+        "type": "process",
+        "label": "3. PergikealamatOKSseperti padaKertasSaman ",
+        "role": "PS",
+        "step_ref": "3",
+        "sop_ref": null
+      },
+      {
+        "id": "N4",
+        "type": "process",
+        "label": "4. OKSDitemui 4 BerjumpadenganOKS ",
+        "role": "PS",
+        "step_ref": "4",
+        "sop_ref": null
+      },
+      {
+        "id": "N5",
+        "type": "process",
+        "label": "5. Terangkantujuankedatangan ",
+        "role": "PS",
+        "step_ref": "5",
+        "sop_ref": null
+      },
+      {
+        "id": "N6",
+        "type": "process",
+        "label": "6. Serahkan saman dan dapatkan akuan penerimaan ",
+        "role": "PS",
+        "step_ref": "6",
+        "sop_ref": null
+      },
+      {
+        "id": "N7",
+        "type": "process",
+        "label": "7. SekiranyaOKStiada dapatkanmaklumattarikhserta ",
+        "role": "PS",
+        "step_ref": "7",
+        "sop_ref": null
+      },
+      {
+        "id": "N8",
+        "type": "process",
+        "label": "71. Saman boleh disampaikan dengan ",
+        "role": "PS",
+        "step_ref": "71",
+        "sop_ref": null
+      },
+      {
+        "id": "N9",
+        "type": "process",
+        "label": "8. JikaOKSada terusketindakan9 JikaOKS masih ",
+        "role": "PS",
+        "step_ref": "8",
+        "sop_ref": null
+      },
+      {
+        "id": "N10",
+        "type": "decision",
+        "label": "10. Sekiranya masih enggan buat laporan polis Buat ",
+        "role": "PS",
+        "step_ref": "10",
+        "sop_ref": null
+      },
+      {
+        "id": "N11",
+        "type": "process",
+        "label": "11. Sediakan ID dan serahkan kepada ",
+        "role": "PS",
+        "step_ref": "11",
+        "sop_ref": null
+      },
+      {
+        "id": "N12",
+        "type": "process",
+        "label": "12. KemaskiniK/S ",
+        "role": "KPPKP/PPKPK",
+        "step_ref": "12",
+        "sop_ref": null
+      },
+      {
+        "id": "N13",
+        "type": "decision",
+        "label": "13. OKSTidakDitemui(AlamatBetul) 13 Sekiranya OKS tidak ditemui (3 kali lawatan) ",
+        "role": "PS",
+        "step_ref": "13",
+        "sop_ref": null
+      },
+      {
+        "id": "N14",
+        "type": "process",
+        "label": "14. BuatAkuanBersumpahdiMahkamahMajistret ",
+        "role": "PS",
+        "step_ref": "14",
+        "sop_ref": null
+      },
+      {
+        "id": "N_END",
+        "type": "end",
+        "label": "Selesai & Rekod Fail UIP",
+        "role": null,
+        "step_ref": null,
+        "sop_ref": null
+      }
+    ],
+    "edges": [
+      {
+        "from": "N_START",
+        "to": "N1",
+        "label": null
+      },
+      {
+        "from": "N1",
+        "to": "N2",
+        "label": null
+      },
+      {
+        "from": "N2",
+        "to": "N3",
+        "label": null
+      },
+      {
+        "from": "N3",
+        "to": "N4",
+        "label": null
+      },
+      {
+        "from": "N4",
+        "to": "N5",
+        "label": null
+      },
+      {
+        "from": "N5",
+        "to": "N6",
+        "label": null
+      },
+      {
+        "from": "N6",
+        "to": "N7",
+        "label": null
+      },
+      {
+        "from": "N7",
+        "to": "N8",
+        "label": null
+      },
+      {
+        "from": "N8",
+        "to": "N9",
+        "label": null
+      },
+      {
+        "from": "N9",
+        "to": "N10",
+        "label": null
+      },
+      {
+        "from": "N10",
+        "to": "N11",
+        "label": "Teruskan"
+      },
+      {
+        "from": "N11",
+        "to": "N12",
+        "label": null
+      },
+      {
+        "from": "N12",
+        "to": "N13",
+        "label": null
+      },
+      {
+        "from": "N13",
+        "to": "N14",
+        "label": "Teruskan"
+      },
+      {
+        "from": "N14",
+        "to": "N_END",
+        "label": null
+      }
+    ]
+  },
+  "senarai_semak": [
+    {
+      "id": "CHK-01",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[1] Terima saman (semak samada saman dalam atau ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-02",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[2] ArahkanPSuntukserahkansaman ",
+      "wajib": true,
+      "rujukan": "Surat Kebenaran"
+    },
+    {
+      "id": "CHK-03",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[3] PergikealamatOKSseperti padaKertasSaman ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-04",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[4] OKSDitemui 4 BerjumpadenganOKS ",
+      "wajib": true,
+      "rujukan": "Seksyen 35(1)"
+    },
+    {
+      "id": "CHK-05",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[5] Terangkantujuankedatangan ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-06",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[6] Serahkan saman dan dapatkan akuan penerimaan ",
+      "wajib": true,
+      "rujukan": "AkuanTerima"
+    },
+    {
+      "id": "CHK-07",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[7] SekiranyaOKStiada dapatkanmaklumattarikhserta ",
+      "wajib": true,
+      "rujukan": "Seksyen35(4)"
+    },
+    {
+      "id": "CHK-08",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[71] Saman boleh disampaikan dengan ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-09",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[8] JikaOKSada terusketindakan9 JikaOKS masih ",
+      "wajib": true,
+      "rujukan": "Seksyen35(4)"
+    },
+    {
+      "id": "CHK-10",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[10] Sekiranya masih enggan buat laporan polis Buat ",
+      "wajib": true,
+      "rujukan": "Seksyen37KTJ"
+    },
+    {
+      "id": "CHK-11",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[11] Sediakan ID dan serahkan kepada ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-12",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[12] KemaskiniK/S ",
+      "wajib": true,
+      "rujukan": null
+    }
+  ],
+  "lampiran": [
+    {
+      "kod": "Lampiran A",
+      "tajuk": "Senarai Semak Prosedur Penyerahan Saman",
+      "jenis": "senarai_semak",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran B",
+      "tajuk": "Surat Arahan Menyampaikan Saman Di Bawah Seksyen 34(2) KTJ",
+      "jenis": "surat_contoh",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran C",
+      "tajuk": "Akuan Terima Saman / Perakuan Penyerahan Saman",
+      "jenis": "borang",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran D",
+      "tajuk": "Contoh Borang 11A (Mahkamah 252 Pin. 1/78) Affidavit Tidak Sampai Penyampaian",
+      "jenis": "surat_contoh",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran E",
+      "tajuk": "Contoh Permohonan Bagi Penyampaian Ganti Mengikut Seksyen 36 KPJ",
+      "jenis": "surat_contoh",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran F",
+      "tajuk": "Contoh Borang 11A (Mahkamah 252 Pin. 1/78) Affidavit Penyampaian",
+      "jenis": "surat_contoh",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    }
+  ],
+  "pematuhan": [
+    "Prosedur yang dikeluarkan ini hendaklah terus berkuatkuasa dan",
+    "dianggap sah sehingga dipinda atau diganti dengan satu prosedur lain",
+    "atau dibatalkan.",
+    "Keengganan dan kegagalan mematuhi prosedur ini tanpa alasan yang",
+    "munasabah boleh menyebabkan seseorang pegawai dikenakan",
+    "tindakan tatatertib di bawah Peraturan-Peraturan Pegawai Awam",
+    "(Kelakuan dan Tatatertib) 1993.",
+    "Kegagalan mematuhi prosedur ini juga merupakan satu kesalahan di"
+  ],
+  "rujukan_silang_resolved": [
+    {
+      "sop_id": "UIP-UMUM-04-07 (PINDAAN 2024)",
+      "file_stem": "UIP-UMUM-04-07",
+      "tajuk": "Prosedur Mengambil Gambar"
+    }
+  ],
+  "nota_audit_kualiti": [
+    "Isi Kandungan PDF hanya menyenaraikan Lampiran A-D dengan penomboran bercampur, tetapi dokumen sebenar mempunyai 6 lampiran lengkap (Lampiran A hingga F).",
+    "Proses kerja Langkah 22 menyebut '(Lampiran 3)' merujuk Borang 252 Pin. 1/78 yang sebenarnya adalah Lampiran F dalam dokumen ini."
+  ]
+}

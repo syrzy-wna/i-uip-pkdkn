@@ -17,6 +17,8 @@ import {
   XCircle,
 } from "lucide-react";
 import RedactionPreview from "@/components/RedactionPreview";
+import RichLegalText from "@/components/RichLegalText";
+import SopQuickModal from "@/components/sop/SopQuickModal";
 import type { IPAuditReport, RedactResponse } from "@/lib/types";
 
 export interface AuditFixContext {
@@ -40,6 +42,7 @@ interface AuditPanelProps {
   onLoadSampleCase: () => void;
   onJumpToEditor: (sectionId?: string, fixContext?: AuditFixContext) => void;
   initialSubView?: "criteria" | "folder" | "privacy";
+  authToken?: string | null;
 }
 
 type AuditTabView = "issues" | "all" | "folder" | "privacy";
@@ -81,11 +84,13 @@ export default function AuditPanel({
   onLoadSampleCase,
   onJumpToEditor,
   initialSubView = "criteria",
+  authToken,
 }: AuditPanelProps) {
   const [view, setView] = useState<AuditTabView>(
     initialSubView === "privacy" ? "privacy" : initialSubView === "folder" ? "folder" : "issues"
   );
   const [expandedCode, setExpandedCode] = useState<string | null>(null);
+  const [modalSopCode, setModalSopCode] = useState<string | null>(null);
 
   useEffect(() => {
     if (initialSubView === "privacy") {
@@ -261,12 +266,14 @@ export default function AuditPanel({
               {report.sop_audit_pra_tpr.sops_dirujuk.length > 0 && (
                 <div className="flex flex-wrap gap-1">
                   {report.sop_audit_pra_tpr.sops_dirujuk.map((s) => (
-                    <span
+                    <button
                       key={s.sop_id}
-                      className="rounded-full bg-white px-2 py-0.5 text-[10px] font-bold text-indigo-900 ring-1 ring-indigo-200"
+                      type="button"
+                      onClick={() => setModalSopCode(s.file_stem || s.sop_id)}
+                      className="rounded-full bg-white px-2.5 py-0.5 text-[10px] font-bold text-indigo-800 ring-1 ring-indigo-300 transition hover:bg-indigo-100"
                     >
-                      {s.sop_id}
-                    </span>
+                      {s.sop_id} ↗
+                    </button>
                   ))}
                 </div>
               )}
@@ -317,8 +324,12 @@ export default function AuditPanel({
                 <summary className="cursor-pointer font-extrabold text-indigo-950">
                   Lihat Ulasan Penuh Juruaudit Pra-TPR (SOP KKM 2024)
                 </summary>
-                <div className="mt-2 whitespace-pre-wrap leading-relaxed text-slate-700">
-                  {report.sop_audit_pra_tpr.ulasan_pra_tpr}
+                <div className="mt-2">
+                  <RichLegalText
+                    text={report.sop_audit_pra_tpr.ulasan_pra_tpr}
+                    className="text-xs"
+                    onOpenSop={(code) => setModalSopCode(code)}
+                  />
                 </div>
               </details>
             )}
@@ -560,6 +571,12 @@ export default function AuditPanel({
           )}
         </section>
       )}
+
+      <SopQuickModal
+        sopCode={modalSopCode}
+        authToken={authToken}
+        onClose={() => setModalSopCode(null)}
+      />
     </div>
   );
 }

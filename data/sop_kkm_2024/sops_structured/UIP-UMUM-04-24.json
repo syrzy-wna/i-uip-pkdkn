@@ -1,0 +1,1284 @@
+{
+  "schema_version": "2.0",
+  "sop_id": "UIP-UMUM-04-24",
+  "file_stem": "UIP-UMUM-04-24",
+  "alias_kod": [
+    "UMUM-04-24",
+    "28 SOP UMUM-04-24"
+  ],
+  "tajuk": "Prosedur Pengeluaran Kompaun Di Bawah Akta Makanan 1983 [Akta 281]",
+  "kategori": "AKTA_281",
+  "akta_utama": "Akta 281",
+  "akta_berkaitan": [
+    "Akta 281",
+    "PPKM 2009",
+    "PPM 1985",
+    "Akta 593",
+    "Akta 56",
+    "Akta 388"
+  ],
+  "keluaran": "01",
+  "pindaan": "00",
+  "tarikh_kuatkuasa": "22 Apr 2024",
+  "ringkasan_eksekutif": "Tujuan prosedur ini adalah untuk menggariskan tatacara pengkompaunan di bawah Akta Makanan 1983 dan peraturan-peraturan di bawahnya.",
+  "tujuan": "Tujuan prosedur ini adalah untuk menggariskan tatacara pengkompaunan di bawah Akta Makanan 1983 dan peraturan-peraturan di bawahnya.",
+  "panduan_am": [],
+  "punca_kuasa": [
+    "Seksyen 32B Akta Makanan 1983 (Notis Memerintahkan Kehadiran Ke Mahkamah — AKTIF bagi keselamatan makanan)",
+    "Seksyen 33 Akta Makanan 1983 (Kuasa Mengkompaun)",
+    "Peraturan-Peraturan Makanan (Pengkompaunan Kesalahan) 2017",
+    "Jadual Kadar Kompaun Kategori Premis I-IV (PPM 1985 & PPKM 2009)",
+    "14 Lampiran (A-N)"
+  ],
+  "undang_undang_berkaitan": [
+    {
+      "akta": "Akta Keterangan 1950 (Disemak 1971) [Akta 56]",
+      "akta_kod": "Akta 56",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Makanan 1983 [Akta 281]",
+      "akta_kod": "Akta 281",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Mahkamah Rendah 1948 [Akta 92]",
+      "akta_kod": "Akta 92",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Tafsiran 1948 dan 1967 (Disemak 1989) [Akta 388]",
+      "akta_kod": "Akta 388",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Kanun Keseksaan (Disemak 1997) [Akta 574]",
+      "akta_kod": "Akta 574",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Kanun Tatacara Jenayah [Akta 593]",
+      "akta_kod": "Akta 593",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Peraturan-Peraturan Kebersihan Makanan 2009",
+      "akta_kod": null,
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Peraturan-Peraturan Makanan 1985",
+      "akta_kod": null,
+      "status": "AKTIF",
+      "nota": null
+    }
+  ],
+  "anggota_terlibat": [
+    {
+      "kod": "PEGAWAI KESI",
+      "jawatan": "Pegawai Kesihatan Daerah/Kawasan/Bahagian"
+    },
+    {
+      "kod": "KETUA PENOLO",
+      "jawatan": "Ketua Penolong Pegawai Kesihatan Persekitaran"
+    },
+    {
+      "kod": "PENOLONG PEG",
+      "jawatan": "Penolong Pegawai Kesihatan Persekitaran Kanan"
+    }
+  ],
+  "singkatan": [
+    {
+      "kod": "AIO",
+      "maksud": "Pembantu Pegawai Penyiasat"
+    },
+    {
+      "kod": "AM",
+      "maksud": "Akta Makanan 1983"
+    },
+    {
+      "kod": "ARO",
+      "maksud": "Pembantu Pegawai Serbuan"
+    },
+    {
+      "kod": "ID",
+      "maksud": "Diari Siasatan"
+    },
+    {
+      "kod": "IO",
+      "maksud": "Pegawai Penyiasat"
+    },
+    {
+      "kod": "KPPKP",
+      "maksud": "Ketua Penolong Pegawai Kesihatan Persekitaran"
+    },
+    {
+      "kod": "KTJ",
+      "maksud": "Kanun Tatacara Jenayah"
+    },
+    {
+      "kod": "K/S",
+      "maksud": "Kertas Siasatan"
+    },
+    {
+      "kod": "OKN",
+      "maksud": "Orang Kena Notis"
+    },
+    {
+      "kod": "PKD",
+      "maksud": "Pegawai Kesihatan Daerah/Kawasan/Bahagian"
+    },
+    {
+      "kod": "PKP",
+      "maksud": "Pegawai Kesihatan Persekitaran"
+    },
+    {
+      "kod": "PO",
+      "maksud": "Pegawai Pendakwa"
+    },
+    {
+      "kod": "PPKM",
+      "maksud": "Peraturan-Peraturan Kebersihan Makanan 2009"
+    },
+    {
+      "kod": "PPM",
+      "maksud": "Peraturan-Peraturan Makanan 1985"
+    },
+    {
+      "kod": "PPKP",
+      "maksud": "Penolong Pegawai Kesihatan Persekitaran"
+    },
+    {
+      "kod": "PPKPK",
+      "maksud": "Penolong Pegawai Kesihatan Persekitaran Kanan"
+    },
+    {
+      "kod": "RO",
+      "maksud": "Pegawai Serbuan"
+    },
+    {
+      "kod": "TPR",
+      "maksud": "Timbalan Pendakwa Raya"
+    },
+    {
+      "kod": "UIPD",
+      "maksud": "Unit Inspektorat Dan Perundangan Daerah"
+    },
+    {
+      "kod": "UIPN",
+      "maksud": "Unit Inspektorat Dan Perundangan Negeri --- 3"
+    }
+  ],
+  "nota_pindaan": [
+    {
+      "tahap": "INFO",
+      "tajuk": "[NOTA PINDAAN] Skop Akta A1702: Notis S.32B KEKAL SAH Bagi Keselamatan Makanan Sahaja",
+      "butiran": "Notis Seksyen 32B & Seksyen 33 Akta Makanan 1983 (PPM 1985 & PPKM 2009) KEKAL 100% SAH DAN BERKUAT KUASA bagi kesalahan makanan. Akta A1702 (1 Okt 2024) hanya memindahkan produk merokok/tembakau/vape ke Akta 852 (guna UIP-AKPMDKA-01-24 & Notis S.47/S.48).",
+      "gantian_statut": "Akta Makanan (Pindaan) 2024 [Akta A1702]"
+    }
+  ],
+  "tempoh_sla": [
+    {
+      "label": "Tempoh Bayaran Kompaun Akta Makanan 1983",
+      "tempoh": "14 hari dari tarikh serahan notis S.32B",
+      "rujukan": "Seksyen 32B & 33 Akta 281"
+    }
+  ],
+  "fasa_kerja": [
+    {
+      "fasa_id": "F1",
+      "tajuk_fasa": "1. Pelaksanaan Proses Kerja",
+      "langkah": [
+        {
+          "no": "1",
+          "tajuk": "Lengkapkan kertas sampul siasatan ( flow paper) yang ",
+          "anggota": [
+            "RO"
+          ],
+          "tindakan": [
+            "Lengkapkan kertas sampul siasatan ( flow paper) yang . mengandungi semua dokumen berkaitan dengan notis kesalahan yang telah dikeluarkan di lapangan untuk diserahkan kepada PKP/KPPKP/PPKPK di UIPD dalam tempohtidakmelebihi3hari:-"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": "3hari",
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "11",
+          "tajuk": "NotiskesalahanSeksyen32B ",
+          "anggota": [
+            "RO"
+          ],
+          "tindakan": [
+            "NotiskesalahanSeksyen32B ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "12",
+          "tajuk": "Gambartempatkejadian ",
+          "anggota": [
+            "RO"
+          ],
+          "tindakan": [
+            "Gambartempatkejadian ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "13",
+          "tajuk": "Planlokasi ",
+          "anggota": [
+            "RO"
+          ],
+          "tindakan": [
+            "Planlokasi ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "14",
+          "tajuk": "Planlantai ",
+          "anggota": [
+            "RO"
+          ],
+          "tindakan": [
+            "Planlantai ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "15",
+          "tajuk": "Borangpemeriksaan/sita(jikaberkaitan) ",
+          "anggota": [
+            "RO"
+          ],
+          "tindakan": [
+            "Borangpemeriksaan/sita(jikaberkaitan) ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "16",
+          "tajuk": "Dokumenyangdisita(jikaberkaitan) ",
+          "anggota": [
+            "RO"
+          ],
+          "tindakan": [
+            "Dokumenyangdisita(jikaberkaitan) ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "1",
+          "tajuk": ".7 Lain-lain dokumen berkaitan kesalahan (DaftarkesdalamBukurekodpendaftarannotiskesalahan)",
+          "anggota": [
+            "RO"
+          ],
+          "tindakan": [
+            ".7 Lain-lain dokumen berkaitan kesalahan (DaftarkesdalamBukurekodpendaftarannotiskesalahan)"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "2",
+          "tajuk": "Serahkan kepada PKP/KPPKP/PPKPK di UIPD ",
+          "anggota": [
+            "RO"
+          ],
+          "tindakan": [
+            "Serahkan kepada PKP/KPPKP/PPKPK di UIPD . bersama akuan serahan/ terima ( Lampiran A ) flow paperdandokumenberkaitan ."
+          ],
+          "rujukan": [
+            "LampiranA"
+          ],
+          "rujukan_lampiran": [
+            "Lampiran A"
+          ],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "3",
+          "tajuk": "Sediakankertasminituntukdilampirkan ",
+          "anggota": [
+            "RO"
+          ],
+          "tindakan": [
+            "Sediakankertasminituntukdilampirkan . ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "4",
+          "tajuk": "Semak flow paper siasatan dan minitkan kepadaIO/ AIO ",
+          "anggota": [
+            "PKP",
+            "PPKP"
+          ],
+          "tindakan": [
+            "Semak flow paper siasatan dan minitkan kepadaIO/ AIO . untukmelengkakanK/S ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "5",
+          "tajuk": "Melantik IO/ AIO untuk menjalankan siasatan dan ",
+          "anggota": [
+            "PKP",
+            "PPKP"
+          ],
+          "tindakan": [
+            "Melantik IO/ AIO untuk menjalankan siasatan dan . lengkapkankertassiasatan ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "6",
+          "tajuk": "IO melengkapkan kertas siasatan untuk mendapatkan ",
+          "anggota": [
+            "IO"
+          ],
+          "tindakan": [
+            "IO melengkapkan kertas siasatan untuk mendapatkan . izinmengkompaundaripadaTPR"
+          ],
+          "rujukan": [
+            "FailSiasatan",
+            "RujukSOPUIP",
+            "-",
+            "UMUM 02 07",
+            "- -",
+            "(Pindaan2024)"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "7",
+          "tajuk": "Rujuk kertas siasatan yang lengkap semula ke ",
+          "anggota": [
+            "IO"
+          ],
+          "tindakan": [
+            "Rujuk kertas siasatan yang lengkap semula ke . PKP/KPPKP/PPKPK untuk merujuk kertas siasatan kepadaTPR . IzinmengkompaunbagiPPM -LampiranB IzinmengkompaunbagiPPKM -LampiranC"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "8",
+          "tajuk": "Kertas siasatan boleh dirujuk kepada TPR melalui UIPD ",
+          "anggota": [
+            "IO"
+          ],
+          "tindakan": [
+            "Kertas siasatan boleh dirujuk kepada TPR melalui UIPD . atau UIPN tertakluk kepada prosedur ditetapkan oleh , UIPN ."
+          ],
+          "rujukan": [
+            "LAMPIRAND",
+            "LAMPIRANE",
+            "LAMPIRANF",
+            "LAMPIRANG",
+            "LAMPIRANH"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "9",
+          "tajuk": "Sekiranya izin untuk mengkompaun daripada TPR ",
+          "anggota": [
+            "IO"
+          ],
+          "tindakan": [
+            "Sekiranya izin untuk mengkompaun daripada TPR . diperolehi IO/AIO menyediakan notis tawaran untuk , mengkompaun kesalahan dan hendaklah memaklumkan kepada OKN untuk menghadirkan diri di Pejabat Kesihatan Daerah / Bahagian / Kawasan seperti tarikh yangdinyatakanbagimenjelaskankompaun ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 9: Sekiranya izin untuk mengkompaun daripada TPR . diperolehi IO/AIO menyediakan notis tawaran unt...",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "10",
+          "tajuk": "Borang tawaran untuk mengkompaun di bawah PPM ",
+          "anggota": [
+            "IO"
+          ],
+          "tindakan": [
+            "Borang tawaran untuk mengkompaun di bawah PPM . 1985adalahsebagaimana LampiranD ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "11",
+          "tajuk": "Borang tawaran untuk mengkompaun di bawah PPKM ",
+          "anggota": [
+            "IO"
+          ],
+          "tindakan": [
+            "Borang tawaran untuk mengkompaun di bawah PPKM . 2009adalahsebagimanaLampiranE"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "12",
+          "tajuk": "Tawarankompaunadalahsepertimana: ",
+          "anggota": [
+            "IO"
+          ],
+          "tindakan": [
+            "Tawarankompaunadalahsepertimana: . Lampiran F kesalahan di bawah Peraturan-Peraturan – Makanan 1985 (Prosedur Operasi Piawai Pengeluaran Kompaun Kesalahan Di Bawah Peraturan-Peraturan Makanan (Pengkompaunan Kesalahan) 2017 SOP",
+            "- PKKM PD 09)",
+            "-",
+            "- Lampiran G Peraturan-Peraturan Kebersihan Makanan –"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [
+            "Lampiran F",
+            "Lampiran G"
+          ],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "2009",
+          "tajuk": "(Prosedur Operasi Piawai Pengeluaran Kompaun Kesalahan Di Bawah Peraturan-Peraturan Kebersihan Makanan2009SOP ",
+          "anggota": [
+            "IO"
+          ],
+          "tindakan": [
+            "(Prosedur Operasi Piawai Pengeluaran Kompaun Kesalahan Di Bawah Peraturan-Peraturan Kebersihan Makanan2009SOP -PKKP -PD -04)"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "13",
+          "tajuk": "PengarahKesihatanNegeri/PegawaiKesihatanDaerah ",
+          "anggota": [
+            "IO"
+          ],
+          "tindakan": [
+            "PengarahKesihatanNegeri/PegawaiKesihatanDaerah . / Bahagian / Kawasan atau Pegawai Kesihatan Persekitaran atau Ketua Penolong Pegawai Kesihatan Persekitaran / Penolong Pegawai Kesihatan Persekitaran Kanan di Pejabat Kesihatan Daerah / Bahagian / Kawasan boleh mempertimbangkan rayuan bertulis melalui Borang Permohonan Pengurangan",
+            "Kompaun (Lampiran H) daripada OKN untuk mengurangkannilaikompaunyangditawarkan ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "14",
+          "tajuk": "Nilai pengurangan kompaun bergantung kepada ",
+          "anggota": [
+            "IO"
+          ],
+          "tindakan": [
+            "Nilai pengurangan kompaun bergantung kepada . penilaian pegawai yang mempertimbangkan rayuan berkenaan tetapi tidak melebihi 25% daripada nilai kompaun yang ditawarkan Sekiranya terdapat rayuan . untuk pengurangan kompaun melebihi 25% daripada nilai kompaun yang ditawarkan hanya Pengarah , Kesihatan Negeri masing-masing berhak untuk mempertimbangkanrayuantersebut ."
+          ],
+          "rujukan": [
+            "LAMPIRANI",
+            "LAMPIRANJ",
+            "LAMPIRANK"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 14: Nilai pengurangan kompaun bergantung kepada . penilaian pegawai yang mempertimbangkan rayuan be...",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 8
+        },
+        {
+          "no": "15",
+          "tajuk": "Walau bagaimanapun pengurangan nilai kompaun ",
+          "anggota": [
+            "IO"
+          ],
+          "tindakan": [
+            "Walau bagaimanapun pengurangan nilai kompaun . , TIDAKDIBENARKANuntuk:",
+            "a) Pelanggaran ke atas subperaturan-subperaturan seperti yang disenaraikan di Lampiran I dan LampiranJ .",
+            "b) Premis makanan yang terlibat dengan kejadian keracunanmakanan;",
+            "c) Premis Makanan yang diarah tutup di bawah Seksyen"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [
+            "Lampiran I"
+          ],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 8
+        },
+        {
+          "no": "11",
+          "tajuk": "AktaMakanan1983;dan , d)Kesalahanyangberulang PEMBAYARANKOMPAUAN",
+          "anggota": [
+            "IO"
+          ],
+          "tindakan": [
+            "AktaMakanan1983;dan ,",
+            "d)Kesalahanyangberulang PEMBAYARANKOMPAUAN"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 8
+        },
+        {
+          "no": "16",
+          "tajuk": "Kompaun boleh dibayar di Pejabat Kesihatan Daerah / ",
+          "anggota": [
+            "IO"
+          ],
+          "tindakan": [
+            "Kompaun boleh dibayar di Pejabat Kesihatan Daerah / . Bahagian / Kawasan yang mengeluarkan kompaun sebelum tamat tempoh yang telah ditetapkan di dalam notis tawarankompaun ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 8
+        },
+        {
+          "no": "17",
+          "tajuk": "Bagi kesalahan di bawah PPM 1983 OKN perlu mengisi ",
+          "anggota": [
+            "IO"
+          ],
+          "tindakan": [
+            "Bagi kesalahan di bawah PPM 1983 OKN perlu mengisi . , borang Penerimaan Tawaran Untuk Mengkompaun Kesalahan di bawah Subperaturan 59 (2) (Jadual Keenam) PPKM2009 jikamenerimatawarankompaun , ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 8
+        },
+        {
+          "no": "18",
+          "tajuk": "Bagi kesalahan di bawah PPKM 2009 OKN perlu mengisi ",
+          "anggota": [
+            "IO"
+          ],
+          "tindakan": [
+            "Bagi kesalahan di bawah PPKM 2009 OKN perlu mengisi . ,",
+            "borang Penyetujuterimaan Tawaran Untuk Mengkompaun Kesalahan di bawah Subperaturan 3(2) (Borang 3) di bawah Peraturan-Peraturan Makanan ( Pengkompaunan Kesalahan(2017) jikamenerimatawarankompaun , 19Semua bayaran kompaun hendaklah diterima oleh . pembantu tadbir atau pegawai yang diberi kuasa untuk memungut wang hasil kerajaan berpandukan kepada kompaun dan wang bayaranyangdiserahkan oleh pesalah , pembantu tadbir yang menerima bayaran hendaklah mengeluarkansaturesitrasmi(Kew 38)kepadapesalah . ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 8
+        },
+        {
+          "no": "20",
+          "tajuk": "Selepas resit dikeluarkan pegawai berkenaan hendaklah ",
+          "anggota": [
+            "IO"
+          ],
+          "tindakan": [
+            "Selepas resit dikeluarkan pegawai berkenaan hendaklah . , mencatitkan nombor resit dan tarikh bayaran diterima pada borangkompauntersebut ."
+          ],
+          "rujukan": [
+            "LAMPIRANL",
+            "UIP UMUM 05 07",
+            "- - -",
+            "(Pindaan2024)",
+            "UIP -03 -07(Pindaan",
+            "2024)"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 9
+        },
+        {
+          "no": "21",
+          "tajuk": "Pada akhir hari bekerja kompaun-kompaun yang telah ",
+          "anggota": [
+            "IO"
+          ],
+          "tindakan": [
+            "Pada akhir hari bekerja kompaun-kompaun yang telah . , dijelaskan bayaran hendaklah diserahkan oleh pembantu tadbirkepadaPKP/KPPKP/PPKPKdiUIPD ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 9
+        },
+        {
+          "no": "22",
+          "tajuk": "UIPDmerekodkankompaunyangtelahdijelaskan ",
+          "anggota": [
+            "IO"
+          ],
+          "tindakan": [
+            "UIPDmerekodkankompaunyangtelahdijelaskan . . PEMBATALANKOMPAUN"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 9
+        },
+        {
+          "no": "23",
+          "tajuk": "Notis atau Kompaun yang dikeluarkan kepada pesalah ",
+          "anggota": [
+            "IO"
+          ],
+          "tindakan": [
+            "Notis atau Kompaun yang dikeluarkan kepada pesalah . tidak boleh DIBATALKAN tanpa dirujuk dan mendapat izin daripada TPR Setiap pembatalan hendaklah mempunyai . izin bertulis daripada TPR melalui UIPD/UIPN dan izin berkenaan hendaklah difailkan dalam IP bagi kes berkenaan . PENDAKWAAN"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 9
+        },
+        {
+          "no": "24",
+          "tajuk": "Sekiranyaterdapat tawarankompaunyang tidak dijelaskan ",
+          "anggota": [
+            "IO"
+          ],
+          "tindakan": [
+            "Sekiranyaterdapat tawarankompaunyang tidak dijelaskan . dalam tempoh ditetapkan kertas siasatan perlu dirujuk , semula kepada TPR untuk izin mendakwa sama ada menerusi UIPD atau UIPN mengikut prosedur yang",
+            "ditetapkanolehUIPN .",
+            "Keizinan untuk mendakwa PPM Lampiran M –",
+            "Keizinan untuk mendakwa PPKM Lampiran N –"
+          ],
+          "rujukan": [
+            "LAMPIRANM",
+            "LAMPIRANN"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 9
+        },
+        {
+          "no": "25",
+          "tajuk": "Setelah izin untuk mendakwa diperolehi rujuk prosedur ",
+          "anggota": [
+            "PO"
+          ],
+          "tindakan": [
+            "Setelah izin untuk mendakwa diperolehi rujuk prosedur . ,",
+            "pendakwaan UIP -UMUM -05 -07(Pindaan 2024)",
+            "prosedur penyerahan saman UIP -03 -07(Pindaan 2024) jika",
+            "berkaitan ."
+          ],
+          "rujukan": [
+            "dan"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 10
+        },
+        {
+          "no": "26",
+          "tajuk": "Serahkan kertas siasatan kepada PO untuk tujuan ",
+          "anggota": [],
+          "tindakan": [
+            "Serahkan kertas siasatan kepada PO untuk tujuan ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 10
+        }
+      ]
+    }
+  ],
+  "carta_alir": {
+    "nodes": [
+      {
+        "id": "N_START",
+        "type": "start",
+        "label": "Mula Operasi / Prosedur",
+        "role": null,
+        "step_ref": null,
+        "sop_ref": null
+      },
+      {
+        "id": "N1",
+        "type": "process",
+        "label": "1. Lengkapkan kertas sampul siasatan ( flow paper) yang ",
+        "role": "RO",
+        "step_ref": "1",
+        "sop_ref": null
+      },
+      {
+        "id": "N2",
+        "type": "process",
+        "label": "11. NotiskesalahanSeksyen32B ",
+        "role": "RO",
+        "step_ref": "11",
+        "sop_ref": null
+      },
+      {
+        "id": "N3",
+        "type": "process",
+        "label": "12. Gambartempatkejadian ",
+        "role": "RO",
+        "step_ref": "12",
+        "sop_ref": null
+      },
+      {
+        "id": "N4",
+        "type": "process",
+        "label": "13. Planlokasi ",
+        "role": "RO",
+        "step_ref": "13",
+        "sop_ref": null
+      },
+      {
+        "id": "N5",
+        "type": "process",
+        "label": "14. Planlantai ",
+        "role": "RO",
+        "step_ref": "14",
+        "sop_ref": null
+      },
+      {
+        "id": "N6",
+        "type": "process",
+        "label": "15. Borangpemeriksaan/sita(jikaberkaitan) ",
+        "role": "RO",
+        "step_ref": "15",
+        "sop_ref": null
+      },
+      {
+        "id": "N7",
+        "type": "process",
+        "label": "16. Dokumenyangdisita(jikaberkaitan) ",
+        "role": "RO",
+        "step_ref": "16",
+        "sop_ref": null
+      },
+      {
+        "id": "N8",
+        "type": "process",
+        "label": "1. .7 Lain-lain dokumen berkaitan kesalahan (DaftarkesdalamBukurekodpendaftarannotiskesalah",
+        "role": "RO",
+        "step_ref": "1",
+        "sop_ref": null
+      },
+      {
+        "id": "N9",
+        "type": "process",
+        "label": "2. Serahkan kepada PKP/KPPKP/PPKPK di UIPD ",
+        "role": "RO",
+        "step_ref": "2",
+        "sop_ref": null
+      },
+      {
+        "id": "N10",
+        "type": "process",
+        "label": "3. Sediakankertasminituntukdilampirkan ",
+        "role": "RO",
+        "step_ref": "3",
+        "sop_ref": null
+      },
+      {
+        "id": "N11",
+        "type": "process",
+        "label": "4. Semak flow paper siasatan dan minitkan kepadaIO/ AIO ",
+        "role": "PKP/PPKP",
+        "step_ref": "4",
+        "sop_ref": null
+      },
+      {
+        "id": "N12",
+        "type": "process",
+        "label": "5. Melantik IO/ AIO untuk menjalankan siasatan dan ",
+        "role": "PKP/PPKP",
+        "step_ref": "5",
+        "sop_ref": null
+      },
+      {
+        "id": "N13",
+        "type": "process",
+        "label": "6. IO melengkapkan kertas siasatan untuk mendapatkan ",
+        "role": "IO",
+        "step_ref": "6",
+        "sop_ref": null
+      },
+      {
+        "id": "N14",
+        "type": "process",
+        "label": "7. Rujuk kertas siasatan yang lengkap semula ke ",
+        "role": "IO",
+        "step_ref": "7",
+        "sop_ref": null
+      },
+      {
+        "id": "N_END",
+        "type": "end",
+        "label": "Selesai & Rekod Fail UIP",
+        "role": null,
+        "step_ref": null,
+        "sop_ref": null
+      }
+    ],
+    "edges": [
+      {
+        "from": "N_START",
+        "to": "N1",
+        "label": null
+      },
+      {
+        "from": "N1",
+        "to": "N2",
+        "label": null
+      },
+      {
+        "from": "N2",
+        "to": "N3",
+        "label": null
+      },
+      {
+        "from": "N3",
+        "to": "N4",
+        "label": null
+      },
+      {
+        "from": "N4",
+        "to": "N5",
+        "label": null
+      },
+      {
+        "from": "N5",
+        "to": "N6",
+        "label": null
+      },
+      {
+        "from": "N6",
+        "to": "N7",
+        "label": null
+      },
+      {
+        "from": "N7",
+        "to": "N8",
+        "label": null
+      },
+      {
+        "from": "N8",
+        "to": "N9",
+        "label": null
+      },
+      {
+        "from": "N9",
+        "to": "N10",
+        "label": null
+      },
+      {
+        "from": "N10",
+        "to": "N11",
+        "label": null
+      },
+      {
+        "from": "N11",
+        "to": "N12",
+        "label": null
+      },
+      {
+        "from": "N12",
+        "to": "N13",
+        "label": null
+      },
+      {
+        "from": "N13",
+        "to": "N14",
+        "label": null
+      },
+      {
+        "from": "N14",
+        "to": "N_END",
+        "label": null
+      }
+    ]
+  },
+  "senarai_semak": [
+    {
+      "id": "CHK-01",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[1] Lengkapkan kertas sampul siasatan ( flow paper) yang ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-02",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[11] NotiskesalahanSeksyen32B ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-03",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[12] Gambartempatkejadian ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-04",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[13] Planlokasi ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-05",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[14] Planlantai ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-06",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[15] Borangpemeriksaan/sita(jikaberkaitan) ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-07",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[16] Dokumenyangdisita(jikaberkaitan) ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-08",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[1] .7 Lain-lain dokumen berkaitan kesalahan (DaftarkesdalamBukurekodpendaftarannotiskesalahan)",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-09",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[2] Serahkan kepada PKP/KPPKP/PPKPK di UIPD ",
+      "wajib": true,
+      "rujukan": "Lampiran A"
+    },
+    {
+      "id": "CHK-10",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[3] Sediakankertasminituntukdilampirkan ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-11",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[4] Semak flow paper siasatan dan minitkan kepadaIO/ AIO ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-12",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[5] Melantik IO/ AIO untuk menjalankan siasatan dan ",
+      "wajib": true,
+      "rujukan": null
+    }
+  ],
+  "lampiran": [
+    {
+      "kod": "Lampiran A",
+      "tajuk": "Notis Memerintahkan Kehadiran Di Mahkamah (Seksyen 32B Akta Makanan 1983)",
+      "jenis": "borang",
+      "muka_surat_pdf": "13",
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran B",
+      "tajuk": "Tawaran Mengkompaun Kesalahan (Seksyen 33 Akta Makanan 1983)",
+      "jenis": "lain",
+      "muka_surat_pdf": "14",
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran C",
+      "tajuk": "Resit Rasmi Bayaran Kompaun & Perakuan Penerimaan",
+      "jenis": "borang",
+      "muka_surat_pdf": "15",
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran D",
+      "tajuk": "Borang Permohonan Pengurangan Kompaun (Imbasan)",
+      "jenis": "borang",
+      "muka_surat_pdf": "16-17",
+      "status": "AKTIF",
+      "status_ekstrak": "imej_imbasan_perlu_ocr",
+      "nota": "Halaman imbasan asal PDF."
+    },
+    {
+      "kod": "Lampiran E",
+      "tajuk": "Surat Keputusan Pengurangan Kompaun (Imbasan)",
+      "jenis": "surat_contoh",
+      "muka_surat_pdf": "18-19",
+      "status": "AKTIF",
+      "status_ekstrak": "imej_imbasan_perlu_ocr",
+      "nota": "Halaman imbasan asal PDF."
+    },
+    {
+      "kod": "Lampiran F",
+      "tajuk": "Jadual Kadar Kompaun Peraturan-Peraturan Makanan 1985 mengikut Kategori Premis I–IV (SOP-PKKM-PD-09)",
+      "jenis": "jadual_kompaun",
+      "muka_surat_pdf": "20-25",
+      "status": "AKTIF",
+      "status_ekstrak": "imej_imbasan_perlu_ocr",
+      "nota": "Jadual melintang 90° imbasan asal PDF — rujuk Peraturan-Peraturan Makanan (Pengkompaunan Kesalahan) 2017."
+    },
+    {
+      "kod": "Lampiran G",
+      "tajuk": "Jadual Kadar Kompaun PPKM 2009 mengikut Kategori Premis I–IV (SOP-PKKM-PD-04)",
+      "jenis": "jadual_kompaun",
+      "muka_surat_pdf": "26-27",
+      "status": "AKTIF",
+      "status_ekstrak": "imej_imbasan_perlu_ocr",
+      "nota": "Jadual melintang 90° imbasan asal PDF — rujuk Jadual Keempat PPKM 2009."
+    },
+    {
+      "kod": "Lampiran H",
+      "tajuk": "Buku Daftar Pengeluaran Notis Seksyen 32B & Kompaun",
+      "jenis": "buku_daftar",
+      "muka_surat_pdf": "28",
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran I",
+      "tajuk": "Buku Daftar Kawalan Buku Notis Seksyen 32B",
+      "jenis": "buku_daftar",
+      "muka_surat_pdf": "29",
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran J",
+      "tajuk": "Laporan Bulanan Kutipan Kompaun Akta Makanan 1983",
+      "jenis": "lain",
+      "muka_surat_pdf": "30",
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran K",
+      "tajuk": "Surat Peringatan / Tuntutan Bayaran Kompaun (Imbasan)",
+      "jenis": "surat_contoh",
+      "muka_surat_pdf": "31-32",
+      "status": "AKTIF",
+      "status_ekstrak": "imej_imbasan_perlu_ocr",
+      "nota": "Halaman imbasan asal PDF."
+    },
+    {
+      "kod": "Lampiran L",
+      "tajuk": "Borang Pembatalan Notis Seksyen 32B (Imbasan)",
+      "jenis": "borang",
+      "muka_surat_pdf": "33",
+      "status": "AKTIF",
+      "status_ekstrak": "imej_imbasan_perlu_ocr",
+      "nota": "Halaman imbasan asal PDF."
+    },
+    {
+      "kod": "Lampiran M",
+      "tajuk": "Senarai Semak Pengeluaran Notis & Kompaun Akta Makanan 1983",
+      "jenis": "senarai_semak",
+      "muka_surat_pdf": "34",
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran N",
+      "tajuk": "Carta / Ringkasan Punca Kuasa Pengkompaunan Akta Makanan 1983",
+      "jenis": "lain",
+      "muka_surat_pdf": "35",
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    }
+  ],
+  "pematuhan": [
+    "Prosedur yang dikeluarkan ini hendaklah terus berkuatkuasa dan",
+    "dianggap sah sehingga dipinda atau diganti dengan satu prosedur lain",
+    "atau dibatalkan.",
+    "Keengganan dan kegagalan mematuhi prosedur ini tanpa alasan yang",
+    "munasabah boleh menyebabkan seseorang pegawai dikenakan tindakan",
+    "tatatertib di bawah Peraturan-Peraturan Pegawai Awam (Kelakuan dan",
+    "Tatatertib) 1993.",
+    "Kegagalan mematuhi prosedur ini juga merupakan satu kesalahan di"
+  ],
+  "rujukan_silang_resolved": [
+    {
+      "sop_id": "UIP-UMUM-05-07 (PINDAAN 2024)",
+      "file_stem": "UIP-UMUM-05-07",
+      "tajuk": "Prosedur Pendakwaan Di Mahkamah"
+    }
+  ],
+  "nota_audit_kualiti": [
+    "Isi Kandungan PDF asal berbeza +1 muka surat bagi kesemua 14 Lampiran dan mengandungi ralat cetak '2007' (sepatutnya Peraturan-Peraturan Makanan (Pengkompaunan Kesalahan) 2017). 15 halaman lampiran (m/s 16-27, 31-33: Lampiran D, E, F, G, K, L termasuk jadual kadar kompaun melintang 90° SOP-PKKM-PD-09 & PD-04) adalah imej imbasan dan ditandakan status 'imej_imbasan_perlu_ocr'."
+  ]
+}

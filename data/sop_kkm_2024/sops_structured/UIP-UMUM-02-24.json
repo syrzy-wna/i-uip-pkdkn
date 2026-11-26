@@ -1,0 +1,805 @@
+{
+  "schema_version": "2.0",
+  "sop_id": "UIP-UMUM-02-24",
+  "file_stem": "UIP-UMUM-02-24",
+  "alias_kod": [],
+  "tajuk": "Prosedur Menggeledah Tanpa Waran Di Bawah Akta Makanan 1983 [Akta 281]",
+  "kategori": "UMUM",
+  "akta_utama": "Akta 281",
+  "akta_berkaitan": [
+    "Akta 281",
+    "Akta 593",
+    "Akta 388",
+    "Akta 574"
+  ],
+  "keluaran": "01",
+  "pindaan": "00",
+  "tarikh_kuatkuasa": "15 Feb 2024",
+  "ringkasan_eksekutif": "Prosedur ini menerangkan tatacara dalam pelaksanaan menggeledah tanpa waran.",
+  "tujuan": "Prosedur ini menerangkan tatacara dalam pelaksanaan menggeledah tanpa waran.",
+  "panduan_am": [],
+  "punca_kuasa": [
+    "S.4(1)(b) Akta 281",
+    "S.62 KTJ",
+    "S.64 KTJ (Senarai Pemeriksaan)",
+    "Syak munasabah barang akan dialihkan jika lengah",
+    "Laporan Polis"
+  ],
+  "undang_undang_berkaitan": [
+    {
+      "akta": "Akta Makanan 1983 [Akta 281] dan peraturan-peraturan di bawahnya",
+      "akta_kod": "Akta 281",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Kanun Tatacara Jenayah [Akta 593]",
+      "akta_kod": "Akta 593",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Tafsiran 1948 (Disemak 1989) [Akta 388]",
+      "akta_kod": "Akta 388",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Kanun Keseksaan (Disemak 1997) [Akta 574]",
+      "akta_kod": "Akta 574",
+      "status": "AKTIF",
+      "nota": null
+    }
+  ],
+  "anggota_terlibat": [
+    {
+      "kod": "PEGAWAI DIBE",
+      "jawatan": "Pegawai diberi kuasa di bawah Akta Makanan 1983 [Akta 281] dan peraturan-"
+    },
+    {
+      "kod": "PERATURAN DI",
+      "jawatan": "peraturan dibawahnya."
+    },
+    {
+      "kod": "NO. RUJUKAN ",
+      "jawatan": "NO. RUJUKAN UIP-UMUM-02-24"
+    },
+    {
+      "kod": "PROSEDUR MEN",
+      "jawatan": "PROSEDUR MEN"
+    },
+    {
+      "kod": "PUNCA KUASA",
+      "jawatan": "PUNCA KUASA"
+    },
+    {
+      "kod": "SEKSYEN 4(1)",
+      "jawatan": "Seksyen 4(1)(b) Akta Makanan 1983 [Akta 281]"
+    },
+    {
+      "kod": "SEKSYEN 62 K",
+      "jawatan": "Seksyen 62 Kanun Tatacara Jenayah [Akta 593]"
+    }
+  ],
+  "singkatan": [
+    {
+      "kod": "JKN",
+      "maksud": "Jabatan Kesihatan Negeri"
+    },
+    {
+      "kod": "PKD",
+      "maksud": "Pegawai Kesihatan Daerah/ Kawasan/ Bahagian"
+    },
+    {
+      "kod": "PKP",
+      "maksud": "Pegawai Kesihatan Persekitaran"
+    },
+    {
+      "kod": "KPPKP",
+      "maksud": "Ketua Penolong Pegawai Kesihatan Persekitaran"
+    },
+    {
+      "kod": "PPKPK",
+      "maksud": "Penolong Pegawai Kesihatan Persekitaran Kanan"
+    },
+    {
+      "kod": "PDK",
+      "maksud": "Pegawai Diberi Kuasa"
+    },
+    {
+      "kod": "Akta 281",
+      "maksud": "Akta Makanan 1983 dan peraturan-peraturannya"
+    },
+    {
+      "kod": "UIPD",
+      "maksud": "Unit Inspektorat dan Perundangan Daerah"
+    },
+    {
+      "kod": "UIPN",
+      "maksud": "Unit Inspektorat dan Perundangan Negeri"
+    },
+    {
+      "kod": "IO",
+      "maksud": "Pegawai Penyiasat"
+    },
+    {
+      "kod": "PO",
+      "maksud": "Pegawai Pendakwa"
+    },
+    {
+      "kod": "TPR",
+      "maksud": "Timbalan Pendakwa Raya --- 3 PROSEDUR MEN"
+    }
+  ],
+  "nota_pindaan": [
+    {
+      "tahap": "INFO",
+      "tajuk": "[NOTA PINDAAN] Skop Akta A1702: Geledah Akta Makanan 1983 (Makanan Sahaja)",
+      "butiran": "Berikutan Akta A1702 (1 Okt 2024), prosedur ini terpakai khusus bagi penguatkuasaan keselamatan makanan di bawah Akta 281. Bagi kes penggeledahan produk merokok/vape di bawah Akta 852, rujuk UIP-AKPMDKA-03-24 (S.33).",
+      "gantian_statut": "Akta A1702 & UIP-AKPMDKA-03-24 (S.33)"
+    }
+  ],
+  "tempoh_sla": [],
+  "fasa_kerja": [
+    {
+      "fasa_id": "F1",
+      "tajuk_fasa": "1. Pelaksanaan Proses Kerja",
+      "langkah": [
+        {
+          "no": "1",
+          "tajuk": "Menjalankan operasi penguakuasaan di premis ",
+          "anggota": [
+            "JKN",
+            "PKD",
+            "PDK"
+          ],
+          "tindakan": [
+            "Menjalankan operasi penguakuasaan di premis . makanan ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "2",
+          "tajuk": "Kenalkan diri dan anggota kepada penjual/ pemilik ",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            "Kenalkan diri dan anggota kepada penjual/ pemilik . premis dan jalankan pemeriksaan ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "3",
+          "tajuk": "Mengesyaki dengan munasabah terdapat produk / ",
+          "anggota": [],
+          "tindakan": [
+            "Mengesyaki dengan munasabah terdapat produk / . makanan yang disyaki melanggar mana-mana peruntukan di bawah Akta 281 disimpan di dalam premis ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "4",
+          "tajuk": "Mempunyai syak jika berlaku kelengahan pada ",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            "Mempunyai syak jika berlaku kelengahan pada . tindakan penguatkuasaan akan menyebabkan produk/makanan akan dialihkan ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 4: Mempunyai syak jika berlaku kelengahan pada . tindakan penguatkuasaan akan menyebabkan produk/m...",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "5",
+          "tajuk": "Memaklumkan kepadapenjual/pemilik premisakan ",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            "Memaklumkan kepadapenjual/pemilik premisakan . menjalankanpenggeledahan tanpa waran"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "6",
+          "tajuk": "Jika pemilik premis enggan membenarkan buat ",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            "Jika pemilik premis enggan membenarkan buat . , laporan polis untuk tindakan dan siasatan lanjut menghalang tugas penjawat awam"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 6: Jika pemilik premis enggan membenarkan buat . , laporan polis untuk tindakan dan siasatan lanju...",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "7",
+          "tajuk": "Menjalankan penggeledahan didalam premis ",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            "Menjalankan penggeledahan didalam premis . ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "8",
+          "tajuk": "Jika hasil penggeledahan didapati gagal menemui ",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            "Jika hasil penggeledahan didapati gagal menemui . produk/makanan disyaki tiada tindakan lanjut , ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 8: Jika hasil penggeledahan didapati gagal menemui . produk/makanan disyaki tiada tindakan lanjut ...",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "9",
+          "tajuk": "Jika penggeledahan telah menemui mana-mana ",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            "Jika penggeledahan telah menemui mana-mana . barang kes (makanan/produk) sita mana-mana , barang kes yang disyaki"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 9: Jika penggeledahan telah menemui mana-mana . barang kes (makanan/produk) sita mana-mana , baran...",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "10",
+          "tajuk": "Keluarkan senarai pemeriksaan sebagai bukti ",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            "Keluarkan senarai pemeriksaan sebagai bukti . pemerolehan barang kes sebagaimana dinyatakan di bawah seksyen 64 Kanun Tatacara Jenayah . Lampiran A"
+          ],
+          "rujukan": [
+            "Lampiran A"
+          ],
+          "rujukan_lampiran": [
+            "Lampiran A"
+          ],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "11",
+          "tajuk": "Membuat laporan polis berkaitan hasil ",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            "Membuat laporan polis berkaitan hasil . penggeledahan di balai polis berhampiran ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "12",
+          "tajuk": "Sediakan dokumen hasil penggeledahan dan ",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            "Sediakan dokumen hasil penggeledahan dan . laporan polis kepada IO ."
+          ],
+          "rujukan": [
+            "LampiranB"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "13",
+          "tajuk": "Membuka kertas siasatan dan jalankan siasatan ",
+          "anggota": [
+            "IO"
+          ],
+          "tindakan": [
+            "Membuka kertas siasatan dan jalankan siasatan . yang lengkap berkaitan kes dan dirujuk kepada pegawai penyelia untuk arahan lanjut ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "14",
+          "tajuk": "Membuat semakan ke atas kertas siasatan dan ",
+          "anggota": [
+            "PKP",
+            "PPKPK",
+            "PPKP"
+          ],
+          "tindakan": [
+            "Membuat semakan ke atas kertas siasatan dan . minitkan cadangan tindakan hasil siasatan oleh IO"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "15",
+          "tajuk": "Merujuk kertas siasatan kepada TPR untuk arahan ",
+          "anggota": [
+            "IO"
+          ],
+          "tindakan": [
+            "Merujuk kertas siasatan kepada TPR untuk arahan . lanjut ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "16",
+          "tajuk": "Jika arahan pendakwaan oleh TPR ambil tindakan ",
+          "anggota": [
+            "PO"
+          ],
+          "tindakan": [
+            "Jika arahan pendakwaan oleh TPR ambil tindakan . , sebagaimana SOP UIP -UMUM -05 -07 (PINDAAN 2024) Prosedur Pendakwaan Di Mahkamah"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 16: Jika arahan pendakwaan oleh TPR ambil tindakan . , sebagaimana SOP UIP -UMUM -05 -07 (PINDAAN 2...",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "17",
+          "tajuk": "Jika izin dakwa tidak diperolehi produk/makanan ",
+          "anggota": [
+            "PO"
+          ],
+          "tindakan": [
+            "Jika izin dakwa tidak diperolehi produk/makanan . , yang disita hendaklah dilepaskan ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 17: Jika izin dakwa tidak diperolehi produk/makanan . , yang disita hendaklah dilepaskan .",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        }
+      ]
+    }
+  ],
+  "carta_alir": {
+    "nodes": [
+      {
+        "id": "N_START",
+        "type": "start",
+        "label": "Mula Operasi / Prosedur",
+        "role": null,
+        "step_ref": null,
+        "sop_ref": null
+      },
+      {
+        "id": "N1",
+        "type": "process",
+        "label": "1. Menjalankan operasi penguakuasaan di premis ",
+        "role": "JKN/PKD",
+        "step_ref": "1",
+        "sop_ref": null
+      },
+      {
+        "id": "N2",
+        "type": "process",
+        "label": "2. Kenalkan diri dan anggota kepada penjual/ pemilik ",
+        "role": "PDK",
+        "step_ref": "2",
+        "sop_ref": null
+      },
+      {
+        "id": "N3",
+        "type": "process",
+        "label": "3. Mengesyaki dengan munasabah terdapat produk / ",
+        "role": null,
+        "step_ref": "3",
+        "sop_ref": null
+      },
+      {
+        "id": "N4",
+        "type": "decision",
+        "label": "4. Mempunyai syak jika berlaku kelengahan pada ",
+        "role": "PDK",
+        "step_ref": "4",
+        "sop_ref": null
+      },
+      {
+        "id": "N5",
+        "type": "process",
+        "label": "5. Memaklumkan kepadapenjual/pemilik premisakan ",
+        "role": "PDK",
+        "step_ref": "5",
+        "sop_ref": null
+      },
+      {
+        "id": "N6",
+        "type": "decision",
+        "label": "6. Jika pemilik premis enggan membenarkan buat ",
+        "role": "PDK",
+        "step_ref": "6",
+        "sop_ref": null
+      },
+      {
+        "id": "N7",
+        "type": "process",
+        "label": "7. Menjalankan penggeledahan didalam premis ",
+        "role": "PDK",
+        "step_ref": "7",
+        "sop_ref": null
+      },
+      {
+        "id": "N8",
+        "type": "decision",
+        "label": "8. Jika hasil penggeledahan didapati gagal menemui ",
+        "role": "PDK",
+        "step_ref": "8",
+        "sop_ref": null
+      },
+      {
+        "id": "N9",
+        "type": "decision",
+        "label": "9. Jika penggeledahan telah menemui mana-mana ",
+        "role": "PDK",
+        "step_ref": "9",
+        "sop_ref": null
+      },
+      {
+        "id": "N10",
+        "type": "process",
+        "label": "10. Keluarkan senarai pemeriksaan sebagai bukti ",
+        "role": "PDK",
+        "step_ref": "10",
+        "sop_ref": null
+      },
+      {
+        "id": "N11",
+        "type": "process",
+        "label": "11. Membuat laporan polis berkaitan hasil ",
+        "role": "PDK",
+        "step_ref": "11",
+        "sop_ref": null
+      },
+      {
+        "id": "N12",
+        "type": "process",
+        "label": "12. Sediakan dokumen hasil penggeledahan dan ",
+        "role": "PDK",
+        "step_ref": "12",
+        "sop_ref": null
+      },
+      {
+        "id": "N13",
+        "type": "process",
+        "label": "13. Membuka kertas siasatan dan jalankan siasatan ",
+        "role": "IO",
+        "step_ref": "13",
+        "sop_ref": null
+      },
+      {
+        "id": "N14",
+        "type": "process",
+        "label": "14. Membuat semakan ke atas kertas siasatan dan ",
+        "role": "PKP/PPKPK",
+        "step_ref": "14",
+        "sop_ref": null
+      },
+      {
+        "id": "N_END",
+        "type": "end",
+        "label": "Selesai & Rekod Fail UIP",
+        "role": null,
+        "step_ref": null,
+        "sop_ref": null
+      }
+    ],
+    "edges": [
+      {
+        "from": "N_START",
+        "to": "N1",
+        "label": null
+      },
+      {
+        "from": "N1",
+        "to": "N2",
+        "label": null
+      },
+      {
+        "from": "N2",
+        "to": "N3",
+        "label": null
+      },
+      {
+        "from": "N3",
+        "to": "N4",
+        "label": null
+      },
+      {
+        "from": "N4",
+        "to": "N5",
+        "label": "Teruskan"
+      },
+      {
+        "from": "N5",
+        "to": "N6",
+        "label": null
+      },
+      {
+        "from": "N6",
+        "to": "N7",
+        "label": "Teruskan"
+      },
+      {
+        "from": "N7",
+        "to": "N8",
+        "label": null
+      },
+      {
+        "from": "N8",
+        "to": "N9",
+        "label": "Teruskan"
+      },
+      {
+        "from": "N9",
+        "to": "N10",
+        "label": "Teruskan"
+      },
+      {
+        "from": "N10",
+        "to": "N11",
+        "label": null
+      },
+      {
+        "from": "N11",
+        "to": "N12",
+        "label": null
+      },
+      {
+        "from": "N12",
+        "to": "N13",
+        "label": null
+      },
+      {
+        "from": "N13",
+        "to": "N14",
+        "label": null
+      },
+      {
+        "from": "N14",
+        "to": "N_END",
+        "label": null
+      }
+    ]
+  },
+  "senarai_semak": [
+    {
+      "id": "CHK-01",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[1] Menjalankan operasi penguakuasaan di premis ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-02",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[2] Kenalkan diri dan anggota kepada penjual/ pemilik ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-03",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[3] Mengesyaki dengan munasabah terdapat produk / ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-04",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[4] Mempunyai syak jika berlaku kelengahan pada ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-05",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[5] Memaklumkan kepadapenjual/pemilik premisakan ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-06",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[6] Jika pemilik premis enggan membenarkan buat ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-07",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[7] Menjalankan penggeledahan didalam premis ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-08",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[8] Jika hasil penggeledahan didapati gagal menemui ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-09",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[9] Jika penggeledahan telah menemui mana-mana ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-10",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[10] Keluarkan senarai pemeriksaan sebagai bukti ",
+      "wajib": true,
+      "rujukan": "Lampiran A"
+    },
+    {
+      "id": "CHK-11",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[11] Membuat laporan polis berkaitan hasil ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-12",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[12] Sediakan dokumen hasil penggeledahan dan ",
+      "wajib": true,
+      "rujukan": "LampiranB"
+    }
+  ],
+  "lampiran": [
+    {
+      "kod": "Lampiran A",
+      "tajuk": "Senarai Barang Yang Disita (Senarai Pemeriksaan S.64 KTJ)",
+      "jenis": "lain",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran B",
+      "tajuk": "Borang Akuan Serah / Terima Barang Kes",
+      "jenis": "borang",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    }
+  ],
+  "pematuhan": [
+    "Prosedur yang dikeluarkan ini hendaklah terus berkuat kuasa dan dianggap",
+    "sah sehingga dipinda atau diganti dengan satu prosedur lain atau dibatalkan.",
+    "Keengganan dan kegagalan mematuhi prosedur ini tanpa alasan yang",
+    "munasabah boleh menyebabkan seseorang pegawai dikenakan tindakan",
+    "tatatertib di bawah Peraturan-Peraturan Pegawai Awam (Kelakuan dan",
+    "Tatatertib) 1993.",
+    "Kegagalan mematuhi prosedur ini juga merupakan satu kesalahan di bawah",
+    "Seksyen 24 (1) (f) Akta Suruhanjaya Integriti Agensi Penguatkuasaan 2009"
+  ],
+  "rujukan_silang_resolved": [
+    {
+      "sop_id": "UIP-UMUM-05-07 (PINDAAN 2024)",
+      "file_stem": "UIP-UMUM-05-07",
+      "tajuk": "Prosedur Pendakwaan Di Mahkamah"
+    }
+  ],
+  "nota_audit_kualiti": []
+}

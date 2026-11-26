@@ -187,8 +187,11 @@ def build_statutory_context_for_question(
         return ""
 
 
+QUARANTINED_PPKHT_SOPS_COUNT = 5
+
+
 class IUIPNerusBrain:
-    """Enjin utama rujukan SOP KKM Pindaan 2024 + Statut untuk i-UIP Nerus."""
+    """Enjin utama rujukan SOP KKM Pindaan 2024 (33 SOP Aktif) + Statut untuk i-UIP Nerus."""
 
     def __init__(
         self,
@@ -218,6 +221,7 @@ class IUIPNerusBrain:
         self._client: Any = None
         self._client_key_used: Optional[str] = None
         self._active_cache_name: Optional[str] = None
+        self._active_cache_expires_at: float = 0.0
 
         router_index_path = self.sop_data_dir / "sop_index_active_router.json"
         if not router_index_path.exists():
@@ -233,6 +237,11 @@ class IUIPNerusBrain:
         self.active_index: List[dict] = []
         self._sop_lookup: dict[str, dict] = {}
         self._pdf_pages_by_stem: dict[str, str] = {}
+        self._structured_by_stem: dict[str, Dict[str, Any]] = {}
+        self._search_blob_by_stem: dict[str, str] = {}
+        self._pekeliling_rujukan: List[Dict[str, Any]] = []
+
+        structured_dir = self.sop_data_dir / "sops_structured"
         for rec in raw_index:
             sop_id = str(rec.get("sop_id") or "")
             fail_md = str(rec.get("fail_md") or "")
@@ -247,14 +256,60 @@ class IUIPNerusBrain:
             self._sop_lookup[sop_id.upper()] = rec
             stem = str(rec.get("file_stem") or "")
             if stem:
-                self._sop_lookup[stem.upper()] = rec
-                self._pdf_pages_by_stem[stem.upper()] = _extract_pdf_pages_from_frontmatter(md_path)
+                stem_up = stem.upper()
+                self._sop_lookup[stem_up] = rec
+                self._pdf_pages_by_stem[stem_up] = _extract_pdf_pages_from_frontmatter(md_path)
+                struct_path = structured_dir / f"{stem}.json"
+                if struct_path.exists():
+                    try:
+                        s_obj = json.loads(struct_path.read_text(encoding="utf-8"))
+                        if isinstance(s_obj, dict) and "PPKHT" not in str(s_obj.get("sop_id") or "").upper():
+                            self._structured_by_stem[stem_up] = s_obj
+                            self._search_blob_by_stem[stem_up] = self._build_structured_search_blob(s_obj)
+                    except Exception as exc:
+                        logger.warning("Gagal memuatkan SOP berstruktur %s: %s", struct_path.name, exc)
             if rec.get("toc_id_alias"):
                 alias_full = str(rec["toc_id_alias"]).upper()
                 self._sop_lookup[alias_full] = rec
                 alias_code = alias_full.split(" ")[0].strip()
                 if alias_code and "PPKHT" not in alias_code:
                     self._sop_lookup[alias_code] = rec
+
+        pek_path = self.sop_data_dir / "pekeliling_rujukan.json"
+        if pek_path.exists():
+            try:
+                raw_pek = json.loads(pek_path.read_text(encoding="utf-8"))
+                if isinstance(raw_pek, list):
+                    self._pekeliling_rujukan = [p for p in raw_pek if isinstance(p, dict)]
+                elif isinstance(raw_pek, dict):
+                    self._pekeliling_rujukan = [raw_pek]
+            except Exception as exc:
+                logger.warning("Gagal memuatkan pekeliling_rujukan.json: %s", exc)
+
+    @staticmethod
+    def _build_structured_search_blob(s_obj: Dict[str, Any]) -> str:
+        """Bina indeks carian teks penuh bagi langkah, lampiran, singkatan & nota pindaan satu SOP."""
+        parts: List[str] = [
+            str(s_obj.get("tujuan") or ""),
+            str(s_obj.get("ringkasan_eksekutif") or ""),
+            str(s_obj.get("punca_kuasa") or ""),
+            str(s_obj.get("panduan_am") or ""),
+        ]
+        for ph in s_obj.get("fasa_kerja") or []:
+            parts.append(str(ph.get("tajuk_fasa") or ""))
+            for st in ph.get("langkah") or []:
+                parts.append(str(st.get("ringkas") or ""))
+                for act in st.get("tindakan") or []:
+                    parts.append(str(act))
+                for ref in st.get("rujukan") or []:
+                    parts.append(str(ref))
+        for lamp in s_obj.get("lampiran") or []:
+            parts.append(f"{lamp.get('kod', '')} {lamp.get('tajuk', '')}")
+        for sg in s_obj.get("singkatan") or []:
+            parts.append(f"{sg.get('kod', '')} {sg.get('maksud', '')}")
+        for np in s_obj.get("nota_pindaan") or []:
+            parts.append(f"{np.get('tajuk', '')} {np.get('butiran', '')}")
+        return re.sub(r"\s+", " ", " ".join(p for p in parts if p)).strip()
 
     def _resolve_api_key(self) -> Optional[str]:
         if self._api_key_override:
@@ -384,12 +439,12 @@ class IUIPNerusBrain:
             if act not in akta_terlibat:
                 akta_terlibat.append(act)
 
-        # Peraturan 2: Kes merokok / vape / shisha / OBD / PPKHT 2004 -> WAJIB Akta 852, SIFAR SOP PPKHT
+        # Peraturan 2: Kes merokok / vape / shisha / OBD / PPKHT 2004 -> WAJIB Akta 852 + SOP rasmi UIP-AKPMDKA-01-24..08-24, SIFAR SOP PPKHT
         melibatkan_852 = bool(
             re.search(
-                r"\b(?:akta\s*852|ppkht|vape|rokok|merokok|shisha|tembakau|nikotin|obd|orang\s+belum\s+dewasa|"
+                r"\b(?:akta\s*852|akpmdka|uip-akpmdka|ppkht|vape|rokok|merokok|shisha|tembakau|nikotin|obd|orang\s+belum\s+dewasa|"
                 r"paket\s+terbuka|sebatang-sebatang|sebatang\s+sebatang|borang\s+4.*23\(2\)|peraturan\s+8\s+dan\s+9|"
-                r"kawasan\s+larangan\s+merokok|tanda\s+larangan\s+merokok)(?=\W|$)",
+                r"kawasan\s+larangan\s+merokok|tanda\s+larangan\s+merokok|produk\s+merokok)(?=\W|$)",
                 q_low,
             )
         )
@@ -398,8 +453,40 @@ class IUIPNerusBrain:
             if re.search(r"\b(?:ppkht|32b|borang\s+4|peraturan\s+8|peraturan\s+9)(?=\W|$)", q_low):
                 amaran_list.append(
                     "PPKHT 2004 dan Notis Seksyen 32B Akta Makanan 1983 bagi kes produk merokok/vape telah MANSUH "
-                    "sejak 1 Oktober 2024 dan digantikan sepenuhnya oleh Akta 852."
+                    "sejak 1 Oktober 2024 dan digantikan sepenuhnya oleh Akta 852 (UIP-AKPMDKA-01-24 hingga 08-24)."
                 )
+            # Pemadanan 8 SOP rasmi Akta 852 (kuat kuasa 1 Okt 2024)
+            if re.search(r"\b(?:uip-akpmdka-02-24|seksyen\s+32\s+akta\s*852)\b", q_low) or (
+                re.search(r"\b(?:geledah|menggeledah|waran\s+geledah)\b", q_low)
+                and re.search(r"\b(?:dengan\s+waran|mohon\s+waran|waran\s+geledah|majistret|seksyen\s+32)\b", q_low)
+                and not re.search(r"\btanpa\s+waran\b", q_low)
+            ):
+                _add_sop("UIP-AKPMDKA-02-24", "Geledah dengan waran Majistret di bawah Seksyen 32 Akta 852")
+            if re.search(r"\b(?:uip-akpmdka-03-24|seksyen\s+33\s+akta\s*852)\b", q_low) or (
+                re.search(r"\b(?:geledah|menggeledah)\b", q_low) and re.search(r"\b(?:tanpa\s+waran|seksyen\s+33)\b", q_low)
+            ):
+                _add_sop("UIP-AKPMDKA-03-24", "Geledah tanpa waran di bawah Seksyen 33 Akta 852")
+            if re.search(r"\b(?:uip-akpmdka-04-24|persampelan|ambil\s+sampel|sampel\s+produk|seksyen\s+28\(2\)|s\.?28\(2\))\b", q_low):
+                _add_sop("UIP-AKPMDKA-04-24", "Prosedur persampelan produk merokok di bawah Seksyen 28(2) Akta 852")
+            if re.search(r"\b(?:uip-akpmdka-07-24|pemulangan\s+sementara|pulang(?:kan)?\s+sementara|tuntut\s+barang\s+sita)\b", q_low):
+                _add_sop("UIP-AKPMDKA-07-24", "Prosedur pemulangan sementara barang yang disita (S.37 Akta 852)")
+            if re.search(r"\b(?:uip-akpmdka-08-24|hantar.*makmal|penghantaran.*makmal|jabatan\s+kimia|analisis\s+makmal)\b", q_low):
+                _add_sop("UIP-AKPMDKA-08-24", "Prosedur penghantaran barang kes produk merokok ke makmal")
+            if re.search(r"\b(?:uip-akpmdka-06-24|sita|penyitaan|menyita|seksyen\s+35|seksyen\s+36|seksyen\s+37)\b", q_low):
+                _add_sop("UIP-AKPMDKA-06-24", "Prosedur penyitaan barang kes di bawah Seksyen 35–37 Akta 852")
+            if re.search(
+                r"\b(?:uip-akpmdka-05-24|tidak\s+boleh\s+dikompaun|tidak\s+boleh\s+kompaun|jual\s+rokok|jual\s+vape|jualan|"
+                r"sebatang-sebatang|sebatang\s+sebatang|paket\s+terbuka|pameran|iklan|promosi|tajaan|mesin\s+layan\s+diri|"
+                r"tidak\s+berdaftar|seksyen\s+(?:3|7|8|9|10|11|12|13\(1\)|14|15)(?=\W|$))\b",
+                q_low,
+            ):
+                _add_sop("UIP-AKPMDKA-05-24", "Prosedur penguatkuasaan kesalahan tidak boleh dikompaun Akta 852")
+            if re.search(
+                r"\b(?:uip-akpmdka-01-24|notis\s+(?:seksyen\s+)?47|seksyen\s+47|seksyen\s+48|kompaun|kawasan\s+larangan|"
+                r"hisap\s+vape|menghisap|merokok\s+di|tanda\s+larangan|seksyen\s+(?:13\(3\)|16\(2\)|17\(1\)|18\(1\))|32b|borang\s+4)\b",
+                q_low,
+            ):
+                _add_sop("UIP-AKPMDKA-01-24", "Prosedur Notis S.47 & Kompaun S.48 Akta 852 (kesalahan boleh dikompaun)")
 
         # Kesan alias / kod lama silap cetak untuk amaran
         if "uip-apspp-03-07" in q_low:
@@ -423,7 +510,7 @@ class IUIPNerusBrain:
         )
         if is_halang:
             _add_sop("UIP-UMUM-01-24", "Melibatkan halangan tugas / kekasaran terhadap PPKP")
-            if re.search(r"\b(?:tolak|pukul|cedera|luka|kasar|serang|ugut|186|polis)(?=\W|$)", q_low):
+            if re.search(r"\b(?:tolak|pukul|cedera|luka|kasar|serang|ugut|186|polis)(?=\W|$)", q_low) or melibatkan_852:
                 _add_act("Akta 574")
                 _add_act("Akta 593")
 
@@ -520,8 +607,14 @@ class IUIPNerusBrain:
             _add_act("Akta 342")
             _add_sop("UIP-APPPB-01-21", "Prosedur mengkompaun kesalahan S.10(2), 22(c), 22(d) Akta 342")
 
-        # Peraturan 6: Geledah Akta Makanan 1983 (tanpa waran vs dengan waran)
-        has_geledah = bool(re.search(r"\b(?:geledah|menggeledah|waran\s+geledah|uip-umum-02-24|uip-umum-03-24)(?=\W|$)", q_low))
+        # Peraturan 6: Akta Makanan 1983 (Geledah & Kompaun S.32B Makanan Sahaja)
+        has_geledah = bool(
+            re.search(r"\b(?:geledah|menggeledah|waran\s+geledah|uip-umum-02-24|uip-umum-03-24)(?=\W|$)", q_low)
+            and (
+                not melibatkan_852
+                or re.search(r"\b(?:akta\s*281|akta\s+makanan|makanan|uip-umum-02-24|uip-umum-03-24)\b", q_low)
+            )
+        )
         if has_geledah:
             _add_act("Akta 281")
             _add_act("Akta 593")
@@ -542,7 +635,18 @@ class IUIPNerusBrain:
                 _add_sop("UIP-UMUM-02-24", "Geledah tanpa waran Akta Makanan 1983")
                 _add_sop("UIP-UMUM-03-24", "Geledah dengan waran Majistret Akta Makanan 1983")
 
-        # SOP UMUM lain (BWC, Fotografi Forensik, Serahan Saman, Pendakwaan, Kertas Siasatan, Ops Bersepadu, Gubal Akta)
+        # UIP-UMUM-04-24: Kompaun Akta Makanan 1983 / PPKM 2009 / PPM 1985 (HANYA makanan, bukan produk merokok)
+        if not melibatkan_852 and (
+            "uip-umum-04-24" in q_low
+            or (
+                re.search(r"\b(?:kompaun|notis\s+32b|seksyen\s+32b|s\.?32b|seksyen\s+33)\b", q_low)
+                and re.search(r"\b(?:akta\s*281|akta\s+makanan|ppkm|ppm\s*1985|kebersihan\s+makanan|pengendali\s+makanan|premis\s+makanan|tifoid|apron)\b", q_low)
+            )
+        ):
+            _add_act("Akta 281")
+            _add_sop("UIP-UMUM-04-24", "Prosedur pengeluaran Notis S.32B & kompaun Akta Makanan 1983 (PPKM 2009 / PPM 1985)")
+
+        # SOP UMUM lain (BWC, Fotografi Forensik, Serahan Saman, Pendakwaan, Kertas Siasatan, Ops Bersepadu, Gubal Akta, Eksibit, Risikan)
         if re.search(r"\b(?:kamera\s+badan|body\s+worn\s+camera|bodycam|bwc|uip-umum-01-22|uip-umum-01-23|rename.*video|video.*rename)(?=\W|$)", q_low):
             _add_act("Akta 56")
             _add_sop("UIP-UMUM-01-22", "Prosedur penggunaan Kamera Badan (BWC) & Perakuan S.90A(2)")
@@ -562,11 +666,17 @@ class IUIPNerusBrain:
             _add_sop("UIP-UMUM-01-16", "Prosedur operasi bersepadu penguatkuasaan kesihatan awam")
         if re.search(r"\b(?:gubal\s+akta|penggubalan\s+undang|kertas\s+jemaah\s+menteri|seranta\s+awam|uip-umum-01-07)(?=\W|$)", q_low):
             _add_sop("UIP-UMUM-01-07", "Prosedur penggubalan undang-undang kesihatan awam")
+        if re.search(r"\b(?:pengurusan\s+eksibit|stor\s+barang\s+kes|bilik\s+eksibit|daftar\s+barang\s+kes|pelupusan\s+eksibit|rantaian\s+eksibit|uip-umum-05-24)(?=\W|$)", q_low):
+            _add_sop("UIP-UMUM-05-24", "Prosedur pengurusan eksibit dan stor barang kes UIP")
+        if re.search(r"\b(?:risikan|unit\s+risikan|maklumat\s+risikan|intipan|operasi\s+risikan|uip-umum-06-24)(?=\W|$)", q_low):
+            _add_sop("UIP-UMUM-06-24", "Prosedur risikan undang-undang kesihatan awam")
 
         # Fallback berasaskan indeks aktif (`sop_index_active_router.json`) jika tiada peraturan langsung yang sepadan
-        if not selected and not melibatkan_852:
+        if not selected:
             scored_idx: List[tuple[int, dict]] = []
             for rec in self.active_index:
+                if melibatkan_852 and not (str(rec.get("file_stem") or "").startswith(("UIP-AKPMDKA-", "UIP-UMUM-"))):
+                    continue
                 hits = 0
                 for kw in rec.get("kata_kunci") or []:
                     kw_low = str(kw).strip().lower()
@@ -603,19 +713,18 @@ class IUIPNerusBrain:
             _add_act("Akta 56")
 
         # Bagi kes Akta 852 TULEN (tanpa akta KKM lain seperti Akta 342/154 dalam soalan berbilang akta),
-        # kekalkan hanya SOP UMUM agar tidak menarik SOP tidak berkaitan; jika soalan berbilang akta (cth vape + keracunan makanan S.18(1)(d)),
-        # benarkan SOP Akta 342/154 yang memang dicetuskan secara eksplisit!
+        # kekalkan hanya SOP rasmi Akta 852 (`UIP-AKPMDKA-*`) & `UIP-UMUM-*` (SIFAR PPKHT).
         has_other_kkm_sop_trigger = any(
             a in akta_terlibat for a in ("Akta 342", "Akta 154")
         )
         if melibatkan_852 and not has_other_kkm_sop_trigger:
-            selected = [s for s in selected if s.startswith("UIP-UMUM-")]
+            selected = [s for s in selected if s.startswith(("UIP-AKPMDKA-", "UIP-UMUM-"))]
 
         sebab = (
             "; ".join(reasons[:3])
             if reasons
             else (
-                "Kes melibatkan Akta 852 — tiada SOP khusus Pindaan Feb 2024 (PPKHT 2004 telah mansuh); rujuk teks Akta 852."
+                "Kes melibatkan Akta 852 (PPKHT 2004 telah mansuh mulai 1 Okt 2024); rujuk teks Akta 852 & SOP rasmi UIP-AKPMDKA-01-24..08-24."
                 if melibatkan_852
                 else "Tiada SOP khusus yang sepadan secara langsung; rujuk teks Statut terkini yang disahkan."
             )
@@ -641,7 +750,7 @@ class IUIPNerusBrain:
 
         index_str = json.dumps(self.active_index, ensure_ascii=False)
         prompt = (
-            f"INDEKS SOP AKTIF (22 SOP KKM PINDAAN 2024):\n{index_str}\n\n"
+            f"INDEKS SOP AKTIF ({len(self.active_index)} SOP KKM AKTIF 2024):\n{index_str}\n\n"
             f"SOALAN PENGGUNA:\n{soalan}"
         )
 
@@ -700,6 +809,20 @@ class IUIPNerusBrain:
             )
         return "\n\n".join(loaded_blocks)
 
+    def get_pekeliling_rujukan(self) -> List[Dict[str, Any]]:
+        """Pulangkan senarai pekeliling rujukan tambahan (cth: Pekeliling KPK Bil 18/2024)."""
+        return list(self._pekeliling_rujukan)
+
+    @staticmethod
+    def _clean_markdown_body(raw_md: str) -> str:
+        """Buang blok YAML frontmatter dan penanda halaman teknikal berlebihan untuk bacaan bersih."""
+        txt = raw_md or ""
+        if txt.startswith("---"):
+            parts = txt.split("---", 2)
+            if len(parts) == 3:
+                txt = parts[2].lstrip("\r\n")
+        return txt.strip()
+
     def get_sop_summaries(self, sop_ids: List[str]) -> List[Dict[str, Any]]:
         """Pulangkan ringkasan berstruktur SOP aktif yang dipilih (untuk paparan UI & metadata jawapan)."""
         out: List[Dict[str, Any]] = []
@@ -715,38 +838,60 @@ class IUIPNerusBrain:
             if sid in seen:
                 continue
             seen.add(sid)
-            stem_up = str(rec.get("file_stem") or "").upper()
+            stem = str(rec.get("file_stem") or "")
+            stem_up = stem.upper()
             kat = str(rec.get("kategori") or "").strip()
-            akta_list = list(rec.get("akta_berkaitan") or [])
+            struct = self._structured_by_stem.get(stem_up) or {}
+            akta_list = list(rec.get("akta_berkaitan") or struct.get("akta_berkaitan") or [])
             seksyen_list = list(rec.get("seksyen_kunci") or [])
             lampiran_list = list(rec.get("lampiran_ringkas") or [])
+            if not lampiran_list and struct.get("lampiran"):
+                lampiran_list = [
+                    f"{lp.get('kod', '')}: {lp.get('tajuk', '')}".strip(": ")
+                    for lp in (struct.get("lampiran") or [])
+                ]
             kata_kunci_list = list(rec.get("kata_kunci") or [])
             toc_alias = rec.get("toc_id_alias")
             akta_label = (
-                "Akta 154 (APSPP)"
+                "Akta 852 (Produk Merokok)"
+                if ("AKPMDKA" in kat.upper() or stem_up.startswith("UIP-AKPMDKA-"))
+                else "Akta 154 (APSPP)"
                 if "APSPP" in kat.upper()
                 else "Akta 342 (APPPB)"
                 if "APPPB" in kat.upper()
                 else "Akta 281 (Akta Makanan)"
-                if ("AKM" in kat.upper() or "MAKANAN" in kat.upper() or stem_up in ("UIP-UMUM-02-24", "UIP-UMUM-03-24"))
+                if (
+                    "AKM" in kat.upper()
+                    or "MAKANAN" in kat.upper()
+                    or stem_up in ("UIP-UMUM-02-24", "UIP-UMUM-03-24", "UIP-UMUM-04-24")
+                )
                 else "SOP Umum / KTJ"
                 if kat.upper() == "UMUM"
                 else (akta_list[0] if akta_list else kat or "SOP KKM 2024")
             )
             ringkasan_str = (
-                "; ".join(str(s) for s in seksyen_list[:4])
-                if seksyen_list
-                else str(rec.get("tajuk") or "")
+                str(struct.get("ringkasan_eksekutif") or "").strip()
+                or ("; ".join(str(s) for s in seksyen_list[:4]) if seksyen_list else str(rec.get("tajuk") or ""))
             )
             amaran_konflik = (
                 f"Nota Konflik Kod Cetakan: Jadual Kandungan mencetak '{toc_alias}', namun kod rasmi dalam teks SOP ialah '{sid}'."
                 if toc_alias
                 else None
             )
+            nota_pindaan_list = list(struct.get("nota_pindaan") or [])
+            tempoh_sla_list = list(struct.get("tempoh_sla") or [])
+            anggota_list = list(struct.get("anggota_terlibat") or [])
+            bil_langkah = sum(len(ph.get("langkah") or []) for ph in (struct.get("fasa_kerja") or []))
+            bil_lampiran = len(struct.get("lampiran") or lampiran_list)
+            tarikh_kk = str(
+                struct.get("tarikh_kuatkuasa")
+                or ("01 Okt 2024" if stem_up.startswith("UIP-AKPMDKA-") else "15 Feb 2024")
+            )
+            pindaan_no = str(struct.get("pindaan") or ("01" if "PINDAAN" in sid.upper() else "00"))
             out.append(
                 {
                     "sop_id": sid,
-                    "file_stem": rec.get("file_stem", ""),
+                    "file_stem": stem,
                     "tajuk": rec.get("tajuk", ""),
                     "kategori": kat,
                     "akta": akta_label,
@@ -756,13 +901,27 @@ class IUIPNerusBrain:
                     "lampiran_ringkas": lampiran_list,
                     "borang_lampiran": lampiran_list,
                     "ringkasan": ringkasan_str,
+                    "tujuan_ringkas": str(struct.get("tujuan") or ringkasan_str)[:260],
+                    "punca_kuasa": str(struct.get("punca_kuasa") or ("; ".join(seksyen_list[:3]) if seksyen_list else "")),
                     "rujukan_silang": list(rec.get("rujukan_silang") or []),
                     "muka_surat_pdf": self._pdf_pages_by_stem.get(stem_up, ""),
                     "toc_id_alias": toc_alias,
-                    "tarikh_kuat_kuasa": "15 Feb 2024",
-                    "pindaan": "2024",
+                    "tarikh_kuat_kuasa": tarikh_kk,
+                    "pindaan": pindaan_no,
                     "status_sop": "AKTIF",
                     "amaran_konflik_kod": amaran_konflik,
+                    "has_nota_pindaan": len(nota_pindaan_list) > 0,
+                    "nota_pindaan_ringkas": str(nota_pindaan_list[0].get("tajuk") or "") if nota_pindaan_list else None,
+                    "nota_pindaan_tahap": str(nota_pindaan_list[0].get("tahap") or "") if nota_pindaan_list else None,
+                    "tempoh_sla_ringkas": [
+                        f"{t.get('label', '')}: {t.get('tempoh', '')}".strip(": ")
+                        for t in tempoh_sla_list[:3]
+                    ],
+                    "peranan_utama": [str(a.get("kod") or "") for a in anggota_list[:6] if a.get("kod")],
+                    "bil_langkah": bil_langkah,
+                    "bil_lampiran": bil_lampiran,
+                    "structured_ready": bool(struct),
+                    "nota_audit": struct.get("nota_audit_kualiti"),
                 }
             )
         return out
@@ -771,8 +930,11 @@ class IUIPNerusBrain:
         self,
         q: Optional[str] = None,
         akta_filter: Optional[str] = None,
+        kategori: Optional[str] = None,
+        ada_pindaan: Optional[bool] = None,
     ) -> List[Dict[str, Any]]:
-        """Pulangkan senarai lengkap kesemua 22 SOP aktif untuk Direktori SOP KKM 2024 (sifar SOP mansuh)."""
+        """Pulangkan senarai lengkap kesemua SOP aktif untuk Direktori SOP KKM 2024 (sifar SOP mansuh)
+        dengan sokongan penapisan Akta/Kategori/Nota Pindaan dan carian teks penuh langkah & lampiran."""
         items = self.get_sop_summaries([str(r.get("sop_id") or "") for r in self.active_index])
         if akta_filter and akta_filter.strip() and akta_filter.strip().lower() != "semua":
             af = akta_filter.strip().lower()
@@ -784,24 +946,46 @@ class IUIPNerusBrain:
                 or af in str(it.get("sop_id") or "").lower()
                 or any(af in str(a).lower() for a in (it.get("akta_berkaitan") or []))
             ]
+        if kategori and kategori.strip() and kategori.strip().lower() != "semua":
+            kf = kategori.strip().lower()
+            items = [it for it in items if kf in str(it.get("kategori") or "").lower()]
+        if ada_pindaan is not None:
+            items = [it for it in items if bool(it.get("has_nota_pindaan")) == bool(ada_pindaan)]
         if q and q.strip():
             ql = q.strip().lower()
-            items = [
-                it
-                for it in items
-                if ql in str(it.get("sop_id") or "").lower()
-                or ql in str(it.get("file_stem") or "").lower()
-                or ql in str(it.get("tajuk") or "").lower()
-                or ql in str(it.get("ringkasan") or "").lower()
-                or ql in str(it.get("akta") or "").lower()
-                or any(ql in str(k).lower() for k in (it.get("kata_kunci") or []))
-                or any(ql in str(k).lower() for k in (it.get("seksyen_kunci") or []))
-                or any(ql in str(k).lower() for k in (it.get("lampiran_ringkas") or []))
-            ]
+            matched_items: List[Dict[str, Any]] = []
+            for it in items:
+                stem_up = str(it.get("file_stem") or "").upper()
+                meta_hit = (
+                    ql in str(it.get("sop_id") or "").lower()
+                    or ql in stem_up.lower()
+                    or ql in str(it.get("tajuk") or "").lower()
+                    or ql in str(it.get("ringkasan") or "").lower()
+                    or ql in str(it.get("tujuan_ringkas") or "").lower()
+                    or ql in str(it.get("akta") or "").lower()
+                    or any(ql in str(k).lower() for k in (it.get("kata_kunci") or []))
+                    or any(ql in str(k).lower() for k in (it.get("seksyen_kunci") or []))
+                    or any(ql in str(k).lower() for k in (it.get("lampiran_ringkas") or []))
+                )
+                blob = self._search_blob_by_stem.get(stem_up, "")
+                blob_idx = blob.lower().find(ql) if blob else -1
+                if meta_hit or blob_idx >= 0:
+                    enriched = dict(it)
+                    if blob_idx >= 0:
+                        start = max(0, blob_idx - 55)
+                        end = min(len(blob), blob_idx + len(ql) + 95)
+                        snippet = blob[start:end].strip()
+                        if start > 0:
+                            snippet = "…" + snippet
+                        if end < len(blob):
+                            snippet = snippet + "…"
+                        enriched["match_snippet"] = snippet
+                    matched_items.append(enriched)
+            items = matched_items
         return items
 
     def get_sop_markdown(self, file_stem_or_id: str) -> Optional[Dict[str, Any]]:
-        """Pulangkan kandungan penuh Markdown bagi satu SOP aktif (menyekat keras sops_arkib_deprecated & PPKHT)."""
+        """Pulangkan kandungan penuh Markdown + struktur v2 JSON bagi satu SOP aktif (menyekat keras PPKHT)."""
         up = (file_stem_or_id or "").strip().upper()
         if not up or "PPKHT" in up:
             return None
@@ -812,9 +996,13 @@ class IUIPNerusBrain:
         if not md_path or not md_path.exists():
             return None
         summary = self.get_sop_summaries([str(rec["sop_id"])])[0]
+        raw_md = md_path.read_text(encoding="utf-8")
+        stem_up = str(rec.get("file_stem") or "").upper()
         return {
             **summary,
-            "markdown_content": md_path.read_text(encoding="utf-8"),
+            "markdown_content": raw_md,
+            "cleaned_markdown": self._clean_markdown_body(raw_md),
+            "structured": self._structured_by_stem.get(stem_up),
         }
 
     def tanya_pakar_uip(
@@ -924,8 +1112,12 @@ class IUIPNerusBrain:
                 question_context=soalan,
             )
             if not legal_validation.get("passed"):
+                retry_base = user_payload
+                if used_cache_mode:
+                    retry_sops_xml = self.load_full_sops(route.selected_sop_ids)
+                    retry_base = f"DOKUMEN SOP KKM PENUH YANG DISUNTIK:\n{retry_sops_xml}\n\n{user_payload}"
                 retry_payload = (
-                    f"{user_payload}\n\n"
+                    f"{retry_base}\n\n"
                     f"AMARAN PENGESAH SISTEM (SILA BETULKAN SERTA-MERTA):\n{legal_validation.get('warning_banner', '')}\n"
                     "Buang semua seksyen/subseksyen/kod SOP tidak wujud atau mansuh dan ulang jawapan 4 lapisan yang tepat."
                 )
@@ -1170,32 +1362,33 @@ class IUIPNerusBrain:
         }
 
     def ensure_context_cache(self, ttl_seconds: int = 3600) -> str:
-        """Cipta Gemini Context Cache untuk kesemua 22 SOP aktif (~90k token) dengan pengesanan tamat tempoh TTL."""
+        """Cipta Gemini Context Cache untuk kesemua SOP aktif dengan pengesanan tamat tempoh TTL (thread-safe)."""
         import time as _time
 
-        expires_at = float(getattr(self, "_active_cache_expires_at", 0.0) or 0.0)
-        if self._active_cache_name and _time.monotonic() < expires_at:
-            return self._active_cache_name
+        with self._client_lock:
+            expires_at = float(getattr(self, "_active_cache_expires_at", 0.0) or 0.0)
+            if self._active_cache_name and _time.monotonic() < expires_at:
+                return self._active_cache_name
 
-        client = self.client
-        if client is None or types is None:
-            raise RuntimeError("GEMINI_API_KEY tidak dikonfigurasi untuk mencipta Context Cache.")
+            client = self.client
+            if client is None or types is None:
+                raise RuntimeError("GEMINI_API_KEY tidak dikonfigurasi untuk mencipta Context Cache.")
 
-        bundle_path = self.sop_data_dir / "sop_bundle_aktif_context_cache.txt"
-        bundle_text = bundle_path.read_text(encoding="utf-8")
+            bundle_path = self.sop_data_dir / "sop_bundle_aktif_context_cache.txt"
+            bundle_text = bundle_path.read_text(encoding="utf-8")
 
-        cache = client.caches.create(
-            model=self.answer_model,
-            config=types.CreateCachedContentConfig(
-                display_name="i-uip-nerus-sop-kkm-2024-aktif",
-                system_instruction=PAKAR_UIP_SYSTEM_PROMPT,
-                contents=[bundle_text],
-                ttl=f"{ttl_seconds}s",
-            ),
-        )
-        self._active_cache_name = cache.name
-        self._active_cache_expires_at = _time.monotonic() + max(60, ttl_seconds - 60)
-        return cache.name
+            cache = client.caches.create(
+                model=self.answer_model,
+                config=types.CreateCachedContentConfig(
+                    display_name="i-uip-nerus-sop-kkm-2024-aktif",
+                    system_instruction=PAKAR_UIP_SYSTEM_PROMPT,
+                    contents=[bundle_text],
+                    ttl=f"{ttl_seconds}s",
+                ),
+            )
+            self._active_cache_name = cache.name
+            self._active_cache_expires_at = _time.monotonic() + max(60, ttl_seconds - 60)
+            return cache.name
 
     def get_status_summary(self) -> Dict[str, Any]:
         deprecated_dir = self.sop_data_dir / "sops_arkib_deprecated"
@@ -1207,9 +1400,11 @@ class IUIPNerusBrain:
         except Exception:
             cache_flag = False
         return {
-            "version": "SOP-KKM-2024-v1",
+            "version": "SOP-KKM-2024-v2",
             "active_sops_indexed": len(self.active_index),
-            "deprecated_sops_quarantined": deprecated_count,
+            "structured_sops_ready": len(self._structured_by_stem),
+            "pekeliling_rujukan_count": len(self._pekeliling_rujukan),
+            "deprecated_sops_quarantined": max(deprecated_count, QUARANTINED_PPKHT_SOPS_COUNT),
             "router_model": self.router_model,
             "answer_model": self.answer_model,
             "temperature": 0.0,

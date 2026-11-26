@@ -1426,10 +1426,10 @@ export default function DraftDocxEditor({
                     <input
                       type="text"
                       placeholder="18/11/2026"
-                      value={row.tarikh || row.tarikh_masa || ""}
+                      value={row.tarikh ?? row.tarikh_masa ?? ""}
                       onChange={(e) => {
                         const next = [...draft.diari_siasatan];
-                        next[idx] = { ...next[idx], tarikh: e.target.value };
+                        next[idx] = { ...next[idx], tarikh: e.target.value, tarikh_masa: "" };
                         onChangeDraft({ ...draft, diari_siasatan: next });
                       }}
                       className={INPUT_CLASS}

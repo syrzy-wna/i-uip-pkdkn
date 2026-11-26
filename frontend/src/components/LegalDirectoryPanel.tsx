@@ -30,7 +30,6 @@ import {
   X,
 } from "lucide-react";
 import {
-  fetchActiveSopDetail,
   fetchActiveSops,
   fetchLegalRegistry,
   fetchLegalSnapshot,
@@ -39,6 +38,7 @@ import {
   updateMasterOffence,
   verifyGazetteStatuteOrOffence,
 } from "@/lib/api";
+import SopDirectoryView from "@/components/sop/SopDirectoryView";
 import {
   OFFLINE_LEGAL_CACHE_KEY,
   canonicalizeActCode,
@@ -52,7 +52,6 @@ import {
   useLockBodyScroll,
 } from "@/lib/uiHelpers";
 import type {
-  ActiveSopDetail,
   ActiveSopSummary,
   LegalCoverageReport,
   LegalLibrarySnapshot,
@@ -83,6 +82,7 @@ interface LegalDirectoryPanelProps {
     bukaIp: boolean,
     compoundMeta?: CompoundPrefillMeta
   ) => void;
+  onAskExpertWithSop?: (promptText: string) => void;
 }
 
 type DirectorySubTab = "offences" | "statutes" | "sops" | "repealed" | "admin";
@@ -267,6 +267,7 @@ export default function LegalDirectoryPanel({
   authToken,
   isDevAdmin,
   onApplyOffenceToCase,
+  onAskExpertWithSop,
 }: LegalDirectoryPanelProps) {
   const [subTab, setSubTab] = useState<DirectorySubTab>("offences");
   const [snapshot, setSnapshot] = useState<LegalLibrarySnapshot | null>(null);
@@ -301,14 +302,8 @@ export default function LegalDirectoryPanel({
   const [sectionSearch, setSectionSearch] = useState<string>("");
   const [selectedDocId, setSelectedDocId] = useState<string>("");
 
-  // Direktori 22 SOP KKM Pindaan 2024
+  // Direktori Visual SOP KKM 2024 (bilangan dinamik untuk lencana tab)
   const [activeSops, setActiveSops] = useState<ActiveSopSummary[]>([]);
-  const [sopSearch, setSopSearch] = useState<string>("");
-  const [sopActFilter, setSopActFilter] = useState<string>("Semua");
-  const [selectedSopStem, setSelectedSopStem] = useState<string>("");
-  const [activeSopDetail, setActiveSopDetail] = useState<ActiveSopDetail | null>(null);
-  const [sopDetailLoading, setSopDetailLoading] = useState<boolean>(false);
-  const [copiedSop, setCopiedSop] = useState<boolean>(false);
 
   useLockBodyScroll(mobileOffenceDrawerOpen || mobileSectionDrawerOpen);
 
@@ -363,7 +358,6 @@ export default function LegalDirectoryPanel({
       setCoverage(reg);
       if (sopsResp.sops && sopsResp.sops.length > 0) {
         setActiveSops(sopsResp.sops);
-        setSelectedSopStem((prev) => prev || sopsResp.sops[0].file_stem);
       }
       setOfflineMode(false);
       if (typeof window !== "undefined") {
@@ -414,59 +408,6 @@ export default function LegalDirectoryPanel({
   useEffect(() => {
     void loadLegalLibrary();
   }, [loadLegalLibrary]);
-
-  const filteredSops = useMemo(() => {
-    const qLow = sopSearch.trim().toLowerCase();
-    return activeSops.filter((sop) => {
-      if (sopActFilter !== "Semua") {
-        const akLow = (sop.akta || "").toLowerCase();
-        if (sopActFilter === "UMUM" && !akLow.includes("umum") && !akLow.includes("593") && !akLow.includes("semua")) {
-          return false;
-        }
-        if (sopActFilter !== "UMUM" && !akLow.includes(sopActFilter.toLowerCase())) {
-          return false;
-        }
-      }
-      if (qLow) {
-        const hay = [
-          sop.sop_id,
-          sop.tajuk,
-          sop.akta,
-          sop.ringkasan,
-          ...(sop.kata_kunci || []),
-          ...(sop.borang_lampiran || []),
-        ]
-          .join(" ")
-          .toLowerCase();
-        if (!hay.includes(qLow)) return false;
-      }
-      return true;
-    });
-  }, [activeSops, sopActFilter, sopSearch]);
-
-  const activeSopSummary = useMemo(() => {
-    if (!filteredSops.length) return null;
-    return filteredSops.find((s) => s.file_stem === selectedSopStem) || filteredSops[0];
-  }, [filteredSops, selectedSopStem]);
-
-  useEffect(() => {
-    if (subTab !== "sops" || !activeSopSummary) return;
-    let cancelled = false;
-    setSopDetailLoading(true);
-    fetchActiveSopDetail(activeSopSummary.file_stem, authToken)
-      .then((detail) => {
-        if (!cancelled) setActiveSopDetail(detail);
-      })
-      .catch(() => {
-        if (!cancelled) setActiveSopDetail(null);
-      })
-      .finally(() => {
-        if (!cancelled) setSopDetailLoading(false);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [subTab, activeSopSummary, authToken]);
 
   // Tapis Senarai Kesalahan (master_offences_matrix)
   const filteredOffences = useMemo(() => {
@@ -1117,7 +1058,7 @@ export default function LegalDirectoryPanel({
                 )}
               </div>
               <p className="mt-0.5 text-xs text-slate-600">
-                Rujukan pantas senarai kesalahan, had kompaun, perkara wajib dibuktikan, 22 SOP KKM Pindaan 2024 dan teks asal akta.
+                Rujukan pantas senarai kesalahan, had kompaun, perkara wajib dibuktikan, {activeSops.length || 33} SOP KKM 2024 berstruktur dan teks asal akta.
               </p>
             </div>
           </div>
@@ -1129,7 +1070,7 @@ export default function LegalDirectoryPanel({
               <span>•</span>
               <span>{snapshot?.statute_sections_verbatim.length ?? 0} Seksyen</span>
               <span>•</span>
-              <span>{activeSops.length || 22} SOP 2024</span>
+              <span>{activeSops.length || 33} SOP 2024</span>
             </div>
 
             <button
@@ -1182,7 +1123,7 @@ export default function LegalDirectoryPanel({
             }`}
           >
             <ClipboardList className={`h-4 w-4 ${subTab === "sops" ? "text-indigo-200" : "text-indigo-700"}`} />
-            <span>SOP KKM 2024 ({activeSops.length || 22})</span>
+            <span>SOP KKM 2024 ({activeSops.length || 33})</span>
           </button>
 
           <button
@@ -1836,190 +1777,13 @@ export default function LegalDirectoryPanel({
       )}
 
       {/* ===================================================================== */}
-      {/* SUB-TAB 2B: DIREKTORI 22 SOP PENGUATKUASAAN KKM PINDAAN 2024          */}
+      {/* SUB-TAB 2B: DIREKTORI VISUAL SOP PENGUATKUASAAN KKM 2024              */}
       {/* ===================================================================== */}
       {subTab === "sops" && (
-        <div className="space-y-4">
-          <section className="rounded-2xl border border-slate-200 bg-white p-3.5 shadow-sm sm:p-4">
-            <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center sm:justify-between">
-              <div className="relative flex-1">
-                <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-                <input
-                  type="text"
-                  value={sopSearch}
-                  onChange={(e) => setSopSearch(e.target.value)}
-                  placeholder="Cari kod SOP (cth: UIP-UMUM-02-07), borang/lampiran, larva, BWC, saman..."
-                  className="min-h-[44px] w-full rounded-xl border border-slate-300 bg-slate-50/40 pl-9 pr-9 text-base text-slate-900 focus:border-[#0f2744] focus:bg-white focus:outline-none sm:text-xs"
-                />
-                {sopSearch && (
-                  <button
-                    type="button"
-                    onClick={() => setSopSearch("")}
-                    aria-label="Kosongkan carian SOP"
-                    className="absolute right-2.5 top-1/2 -translate-y-1/2 rounded-full p-1 text-slate-400 hover:bg-slate-200 hover:text-slate-700"
-                  >
-                    <X className="h-3.5 w-3.5" />
-                  </button>
-                )}
-              </div>
-
-              <select
-                aria-label="Tapis SOP mengikut Akta"
-                value={sopActFilter}
-                onChange={(e) => setSopActFilter(e.target.value)}
-                className="min-h-[44px] rounded-xl border border-slate-300 bg-white px-3 py-2 text-base font-bold text-slate-800 sm:text-xs"
-              >
-                <option value="Semua">Semua SOP Aktif ({activeSops.length})</option>
-                <option value="UMUM">SOP Umum / KTJ (Siasatan, BWC, Saman, Fail IP)</option>
-                <option value="154">SOP Akta 154 (APSPP — Aedes &amp; Tapak Bina)</option>
-                <option value="342">SOP Akta 342 (APPPB — Penyakit Berjangkit)</option>
-                <option value="281">SOP Akta 281 (Akta Makanan 1983)</option>
-              </select>
-            </div>
-
-            <div className="mt-2.5 flex items-start gap-2 rounded-xl border border-amber-200 bg-amber-50/80 px-3 py-2 text-xs text-amber-950">
-              <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-700" />
-              <span>
-                <strong>Hierarki Statut &gt; SOP (Pindaan 15 Feb 2024):</strong> 5 SOP PPKHT 2004 telah dikuarantin dan dimansuhkan mulai 1 Oktober 2024. Bagi kes produk merokok/vape, rujuk teks Akta 852 terkini bersama SOP Umum yang terpakai.
-              </span>
-            </div>
-          </section>
-
-          <div className="grid grid-cols-1 gap-4 lg:grid-cols-12">
-            {/* Lajur Kiri: Senarai 22 SOP Aktif */}
-            <div className="max-h-[680px] space-y-2 overflow-y-auto pr-1 lg:col-span-5">
-              {filteredSops.length === 0 ? (
-                <div className="rounded-2xl border border-slate-200 bg-white p-6 text-center text-xs text-slate-600">
-                  Tiada SOP ditemui untuk carian ini.
-                </div>
-              ) : (
-                filteredSops.map((sop) => {
-                  const isSel = activeSopSummary?.file_stem === sop.file_stem;
-                  return (
-                    <button
-                      key={sop.file_stem}
-                      type="button"
-                      onClick={() => setSelectedSopStem(sop.file_stem)}
-                      className={`flex w-full flex-col items-start rounded-2xl border p-3.5 text-left text-xs transition ${
-                        isSel
-                          ? "border-indigo-600 bg-indigo-50/70 shadow-sm ring-1 ring-indigo-600"
-                          : "border-slate-200 bg-white hover:border-indigo-300 hover:bg-slate-50"
-                      }`}
-                    >
-                      <div className="flex w-full flex-wrap items-center justify-between gap-2">
-                        <span className="rounded-md bg-[#0f2744] px-2 py-0.5 font-mono text-[11px] font-extrabold text-white">
-                          {sop.sop_id}
-                        </span>
-                        <span className="rounded-full bg-indigo-100 px-2.5 py-0.5 text-[10px] font-bold text-indigo-950">
-                          {sop.akta}
-                        </span>
-                      </div>
-                      <div className="mt-1.5 font-extrabold text-slate-900">{sop.tajuk}</div>
-                      <p className="mt-1 line-clamp-2 text-[11px] leading-relaxed text-slate-600">
-                        {sop.ringkasan}
-                      </p>
-                      {sop.borang_lampiran && sop.borang_lampiran.length > 0 && (
-                        <div className="mt-1.5 text-[10px] font-semibold text-indigo-900">
-                          Lampiran: {sop.borang_lampiran.slice(0, 3).join(" • ")}
-                        </div>
-                      )}
-                    </button>
-                  );
-                })
-              )}
-            </div>
-
-            {/* Lajur Kanan: Teks Penuh Markdown SOP */}
-            <div className="lg:col-span-7">
-              {activeSopSummary ? (
-                <div className="space-y-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-                  <div className="flex flex-wrap items-start justify-between gap-2 border-b border-slate-200 pb-3">
-                    <div>
-                      <div className="flex flex-wrap items-center gap-2">
-                        <span className="rounded-md bg-[#0f2744] px-2.5 py-0.5 font-mono text-xs font-extrabold text-white">
-                          {activeSopSummary.sop_id}
-                        </span>
-                        <span className="rounded-full bg-indigo-100 px-2.5 py-0.5 text-xs font-bold text-indigo-950">
-                          {activeSopSummary.akta}
-                        </span>
-                        {activeSopSummary.tarikh_kuat_kuasa && (
-                          <span className="text-[11px] font-semibold text-slate-500">
-                            Kuat kuasa: {activeSopSummary.tarikh_kuat_kuasa} (Pindaan {activeSopSummary.pindaan || "01"})
-                          </span>
-                        )}
-                      </div>
-                      <h3 className="mt-2 text-base font-extrabold text-slate-900">
-                        {activeSopSummary.tajuk}
-                      </h3>
-                    </div>
-
-                    {activeSopDetail?.markdown_content && (
-                      <button
-                        type="button"
-                        onClick={async () => {
-                          const ok = await copyTextSafe(
-                            `${activeSopSummary.sop_id} — ${activeSopSummary.tajuk}\n\n${activeSopDetail.markdown_content}`
-                          );
-                          if (ok) {
-                            setCopiedSop(true);
-                            window.setTimeout(() => setCopiedSop(false), 2000);
-                          }
-                        }}
-                        className="inline-flex min-h-[40px] items-center gap-1.5 rounded-xl border border-slate-300 bg-white px-3 py-1.5 text-xs font-bold text-slate-700 hover:bg-slate-50"
-                      >
-                        {copiedSop ? (
-                          <ClipboardCheck className="h-3.5 w-3.5 text-emerald-600" />
-                        ) : (
-                          <Copy className="h-3.5 w-3.5" />
-                        )}
-                        {copiedSop ? "Disalin!" : "Salin SOP"}
-                      </button>
-                    )}
-                  </div>
-
-                  {activeSopSummary.amaran_konflik_kod && (
-                    <div className="rounded-xl border border-amber-300 bg-amber-50 px-3.5 py-2.5 text-xs font-semibold text-amber-950">
-                      {activeSopSummary.amaran_konflik_kod}
-                    </div>
-                  )}
-
-                  {activeSopSummary.borang_lampiran && activeSopSummary.borang_lampiran.length > 0 && (
-                    <div className="rounded-xl border border-indigo-200 bg-indigo-50/40 p-3 text-xs">
-                      <div className="font-extrabold text-indigo-950">
-                        Borang &amp; Lampiran Wajib SOP Ini:
-                      </div>
-                      <ul className="mt-1.5 list-disc space-y-1 pl-4 text-slate-700">
-                        {activeSopSummary.borang_lampiran.map((b, idx) => (
-                          <li key={idx}>{b}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-
-                  <div className="rounded-xl border border-slate-200 bg-slate-50/50 p-4">
-                    <div className="mb-2 text-[11px] font-extrabold uppercase tracking-wide text-[#0f2744]">
-                      Teks Penuh Tatacara &amp; Langkah SOP KKM (Pindaan 15 Feb 2024)
-                    </div>
-                    {sopDetailLoading ? (
-                      <div className="flex items-center gap-2 py-8 text-xs font-bold text-slate-600">
-                        <Loader2 className="h-4 w-4 animate-spin text-indigo-700" />
-                        Memuatkan teks penuh SOP...
-                      </div>
-                    ) : (
-                      <pre className="max-h-[520px] overflow-y-auto whitespace-pre-wrap font-sans text-xs leading-relaxed text-slate-800">
-                        {activeSopDetail?.markdown_content || activeSopSummary.ringkasan}
-                      </pre>
-                    )}
-                  </div>
-                </div>
-              ) : (
-                <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center text-xs text-slate-500">
-                  Pilih mana-mana SOP di sebelah kiri untuk membaca langkah tatacara dan senarai Lampiran.
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
+        <SopDirectoryView
+          authToken={authToken}
+          onAskExpertWithSop={onAskExpertWithSop}
+        />
       )}
 
       {/* ===================================================================== */}

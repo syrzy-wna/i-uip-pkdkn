@@ -1,0 +1,1004 @@
+{
+  "schema_version": "2.0",
+  "sop_id": "UIP-APPPB-03-07 (PINDAAN 2024)",
+  "file_stem": "UIP-APPPB-03-07",
+  "alias_kod": [],
+  "tajuk": "Prosedur Perintah Barangan/Binatang Dibasmi Kuman Di Bawah Perenggan 18(1)(e) Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988",
+  "kategori": "APPPB_1988",
+  "akta_utama": "Akta 342",
+  "akta_berkaitan": [
+    "Akta 342",
+    "Akta 260",
+    "Akta 56",
+    "Akta 388",
+    "Akta 593",
+    "Akta 574",
+    "IHR 2005"
+  ],
+  "keluaran": "01",
+  "pindaan": "01",
+  "tarikh_kuatkuasa": "15 Feb 2024",
+  "ringkasan_eksekutif": "Prosedur ini mengariskan tatacara memerintah supaya sesuatu barangan yang telah dicemari dan/atau binatang yang dijangkiti atau dicemari oleh agen penyebab penyakit berjangkit supaya dibasmi kuman di bawah Perenggan 18(1)(e) Akta Pencegahan dan Pengawalan Peny",
+  "tujuan": "Prosedur ini mengariskan tatacara memerintah supaya sesuatu barangan yang telah dicemari dan/atau binatang yang dijangkiti atau dicemari oleh agen penyebab penyakit berjangkit supaya dibasmi kuman di bawah Perenggan 18(1)(e) Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988.",
+  "panduan_am": [],
+  "punca_kuasa": [
+    "Perenggan 18(1)(e) Akta 342",
+    "Berupaya dibasmi kuman -> Perintah Basmi Kuman",
+    "Tidak berupaya dibasmi kuman -> Perintah Pemusnahan",
+    "Jika halangan -> Laporan polis & perintah mahkamah"
+  ],
+  "undang_undang_berkaitan": [
+    {
+      "akta": "(1)(e) Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988.",
+      "akta_kod": null,
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Pencegahan Dan Pengawalan Penyakit Berjangkit 1988 [Akta",
+      "akta_kod": null,
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "] dan Peraturan-Peraturannya.",
+      "akta_kod": null,
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Keterangan 1950 (Disemak 1971) [Akta 56]",
+      "akta_kod": "Akta 56",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Tafsiran 1948 dan 1967 (Disemak 1989) [Akta 388]",
+      "akta_kod": "Akta 388",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Kanun Tatacara Jenayah (Disemak 1999) [Akta 593]",
+      "akta_kod": "Akta 593",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Kanun Keseksaan (Disemak 1997) [Akta 574]",
+      "akta_kod": "Akta 574",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Prosedur Perintah Barangan/Binatang Dibasmi Kuman Di Bawah Perenggan 18(1)(e) Akta 342",
+      "akta_kod": "Akta 342",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Pencegahan dan Pengawalan Penyakit Berjangkit (Pindaan) 2025 [Akta A1742] & P.U.(A) 139/2025",
+      "akta_kod": "Akta 342",
+      "status": "AKTIF",
+      "nota": "[NOTA PINDAAN] Berkuat kuasa 1 Mei 2025 — mengatasi kadar penalti & kompaun lama cetakan SOP 15 Feb 2024."
+    }
+  ],
+  "anggota_terlibat": [
+    {
+      "kod": "PEGAWAI KESI",
+      "jawatan": "Pegawai Kesihatan Daerah/Kawasan/Bahagian"
+    },
+    {
+      "kod": "KETUA PENOLO",
+      "jawatan": "Ketua Penolong Pegawai Kesihatan Persekitaran"
+    },
+    {
+      "kod": "PENOLONG PEG",
+      "jawatan": "Penolong Pegawai Kesihatan Persekitaran Kanan"
+    },
+    {
+      "kod": "PEMBANTU KES",
+      "jawatan": "Pembantu Kesihatan Awam"
+    }
+  ],
+  "singkatan": [
+    {
+      "kod": "Akta 342",
+      "maksud": "Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988 [Akta 342]"
+    },
+    {
+      "kod": "KPPKP",
+      "maksud": "Ketua Penolong Pegawai Kesihatan Persekitaran"
+    },
+    {
+      "kod": "K/S",
+      "maksud": "Kertas Siasatan"
+    },
+    {
+      "kod": "PKA",
+      "maksud": "Pembantu Kesihatan Awam"
+    },
+    {
+      "kod": "PKD",
+      "maksud": "Pegawai Kesihatan Daerah/Kawasan/Bahagian"
+    },
+    {
+      "kod": "PKP",
+      "maksud": "Pegawai Kesihatan Persekitaran"
+    },
+    {
+      "kod": "PPKP",
+      "maksud": "Penolong Pegawai Kesihatan Persekitaran"
+    },
+    {
+      "kod": "PPKPK",
+      "maksud": "Penolong Pegawai Kesihatan Persekitaran Kanan"
+    },
+    {
+      "kod": "UIPD",
+      "maksud": "Unit Inspektorat dan Perundangan Daerah"
+    },
+    {
+      "kod": "UIPN",
+      "maksud": "Unit Inspektorat dan Perundangan Negeri --- Prosedur Perintah Barangan/Binatang Dibasmi Kuman Di Bawah Perenggan 18(1)(e) Akta 342 3"
+    }
+  ],
+  "nota_pindaan": [
+    {
+      "tahap": "AMARAN",
+      "tajuk": "[NOTA PINDAAN] Pindaan Penalti & Kuasa Akta 342 (Akta A1742 — 1 Mei 2025)",
+      "butiran": "SOP ini berkuat kuasa 15 Feb 2024 sebelum Akta Pencegahan dan Pengawalan Penyakit Berjangkit (Pindaan) 2025 [Akta A1742] dan P.U.(A) 139/2025 (1 Mei 2025). Utamakan had penalti baharu Seksyen 24(a) (individu maks RM10,000 / penjara 2 tahun) dan Seksyen 24(b) (pertubuhan perbadanan maks RM100,000) serta liabiliti korporat S.22A.",
+      "gantian_statut": "Akta A1742 & P.U.(A) 139/2025 (1 Mei 2025)"
+    }
+  ],
+  "tempoh_sla": [],
+  "fasa_kerja": [
+    {
+      "fasa_id": "F1",
+      "tajuk_fasa": "1. Pelaksanaan Proses Kerja",
+      "langkah": [
+        {
+          "no": "1",
+          "tajuk": "Terimalaporandanbuatpengesahantentangkejadian ",
+          "anggota": [
+            "PPKP"
+          ],
+          "tindakan": [
+            "Terimalaporandanbuatpengesahantentangkejadian . penyakitberjangkittersebutsertajalankansiasatan di bawahAkta342 ."
+          ],
+          "rujukan": [
+            "Borang",
+            "Notifikasi/",
+            "Laporan",
+            "Siasatan"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "2",
+          "tajuk": "Kenalpastipremisbarangandan/ataubinatangyang ",
+          "anggota": [
+            "PPKP"
+          ],
+          "tindakan": [
+            "Kenalpastipremisbarangandan/ataubinatangyang . perludikeluarkanperintahbasmikuman ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "3",
+          "tajuk": "Maklumkankepadapegawaiatasanberkaitan ",
+          "anggota": [
+            "PPKP"
+          ],
+          "tindakan": [
+            "Maklumkankepadapegawaiatasanberkaitan . barangandan/ataubinatangyangperludikeluarkan perintahbagitindakanbasmikuman ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "4",
+          "tajuk": "LaporkankepadaPKDatauPPKPunityangberkaitan ",
+          "anggota": [
+            "PKP",
+            "KPPKP",
+            "PPKPK"
+          ],
+          "tindakan": [
+            "LaporkankepadaPKDatauPPKPunityangberkaitan . ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "5",
+          "tajuk": "Beritaklimatdanagihantugaskepadapasukan ",
+          "anggota": [
+            "PKD",
+            "PKP",
+            "PPKPK"
+          ],
+          "tindakan": [
+            "Beritaklimatdanagihantugaskepadapasukan . ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "6",
+          "tajuk": "Sediakanperalatandandokumenyangsesuaiuntuk ",
+          "anggota": [
+            "PPKP",
+            "PKA"
+          ],
+          "tindakan": [
+            "Sediakanperalatandandokumenyangsesuaiuntuk . tujuansiasatandanpembasmiankuman ."
+          ],
+          "rujukan": [
+            "LampiranA"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "7",
+          "tajuk": "Kenalkan diri dan tunjukkan Kad Pengenalan Pegawai ",
+          "anggota": [
+            "PKP",
+            "KPPKP",
+            "PPKPK",
+            "PPKP",
+            "PKA"
+          ],
+          "tindakan": [
+            "Kenalkan diri dan tunjukkan Kad Pengenalan Pegawai . Diberikuasa sertaterangkantujuankedatangankepada tuanpunyapremisatauwakilnya ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "8",
+          "tajuk": "Tentukan barangan dan/atau binatang yang ",
+          "anggota": [
+            "PKP",
+            "KPPKP",
+            "PPKPK",
+            "PPKP"
+          ],
+          "tindakan": [
+            "Tentukan barangan dan/atau binatang yang . berupaya/tidakberupayadibasmikuman ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "9",
+          "tajuk": "Sekiranyaberupayadibasmikuman sediakanPerintah ",
+          "anggota": [
+            "PKP",
+            "KPPKP",
+            "PPKPK",
+            "PPKP"
+          ],
+          "tindakan": [
+            "Sekiranyaberupayadibasmikuman sediakanPerintah . , SupayaBarangandan/atauBinatangDibasmiKuman ."
+          ],
+          "rujukan": [
+            "LampiranB"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "10",
+          "tajuk": "Sediakan Arahan Kerja Pembasmian Kuman Terhadap ",
+          "anggota": [
+            "PKP",
+            "KPPKP",
+            "PPKPK",
+            "PPKP"
+          ],
+          "tindakan": [
+            "Sediakan Arahan Kerja Pembasmian Kuman Terhadap . Barangan dan/atau Binatang Terangkan kandungan . setiap dokumen tersebut kepada tuanpunya premis atau wakilnya (Terangkan implikasi jika tidak patuh . arahanpegawaidiberikuasa) ."
+          ],
+          "rujukan": [
+            "LampiranC"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 10: Sediakan Arahan Kerja Pembasmian Kuman Terhadap . Barangan dan/atau Binatang Terangkan kandunga...",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "11",
+          "tajuk": "Dapatkan pengesahan penerimaan tuan punya premis ",
+          "anggota": [
+            "PKP",
+            "KPPKP",
+            "PPKPK",
+            "PPKP"
+          ],
+          "tindakan": [
+            "Dapatkan pengesahan penerimaan tuan punya premis . atauwakilnyapadasuratakuanterimaperintahtersebut"
+          ],
+          "rujukan": [
+            "LampiranB",
+            "dan Lampiran",
+            "C"
+          ],
+          "rujukan_lampiran": [
+            "Lampiran C"
+          ],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "12",
+          "tajuk": "Serahkan satu salinan setiap dokumen tersebut kepada ",
+          "anggota": [
+            "PKP",
+            "KPPKP",
+            "PPKPK",
+            "PPKP"
+          ],
+          "tindakan": [
+            "Serahkan satu salinan setiap dokumen tersebut kepada . tuan punya premis atau wakilnya dengan disaksikan seorang anggota lain dan salinan asal disimpan . (Terangkan implikasi jika tidak patuh arahan pegawai diberikuasa)"
+          ],
+          "rujukan": [
+            "LampiranB",
+            "dan Lampiran",
+            "C"
+          ],
+          "rujukan_lampiran": [
+            "Lampiran C"
+          ],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 12: Serahkan satu salinan setiap dokumen tersebut kepada . tuan punya premis atau wakilnya dengan d...",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "13",
+          "tajuk": "Jika barangan dan/atau binatang itu tidak berupaya ",
+          "anggota": [
+            "PKD",
+            "PKP",
+            "KPPKP",
+            "PPKPK",
+            "PPKP"
+          ],
+          "tindakan": [
+            "Jika barangan dan/atau binatang itu tidak berupaya . dibasmi kuman dengan sempurnanya maka perintah , pemusnahandikeluarkan ."
+          ],
+          "rujukan": [
+            "LampiranD"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 13: Jika barangan dan/atau binatang itu tidak berupaya . dibasmi kuman dengan sempurnanya maka peri...",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "14",
+          "tajuk": "SediakanSenaraiBarangandan/atauBinatangyang ",
+          "anggota": [
+            "PKD",
+            "PKP",
+            "KPPKP",
+            "PPKPK",
+            "PPKP"
+          ],
+          "tindakan": [
+            "SediakanSenaraiBarangandan/atauBinatangyang . DiperintahUntukPemusnahan"
+          ],
+          "rujukan": [
+            "LampiranE"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "15",
+          "tajuk": "Sekiranya terdapat halangan buat laporan polis dan ",
+          "anggota": [
+            "PKD",
+            "PKP",
+            "KPPKP",
+            "PPKPK",
+            "PPKP"
+          ],
+          "tindakan": [
+            "Sekiranya terdapat halangan buat laporan polis dan . , pohonperintahmahkamahuntukpemusnahan ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 15: Sekiranya terdapat halangan buat laporan polis dan . , pohonperintahmahkamahuntukpemusnahan .",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "16",
+          "tajuk": "Buat pemantauan bagi memastikan aktiviti yang ",
+          "anggota": [
+            "PPKPK",
+            "PPKP"
+          ],
+          "tindakan": [
+            "Buat pemantauan bagi memastikan aktiviti yang . diarahkantelahdilakukandengansempurna ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "17",
+          "tajuk": "Sekiranya pemunya/pemilik ingkar Perintah buat ",
+          "anggota": [
+            "PKD",
+            "PKP",
+            "KPPKP",
+            "PPKPK",
+            "PPKP"
+          ],
+          "tindakan": [
+            "Sekiranya pemunya/pemilik ingkar Perintah buat . , laporan polis sediakan K/S lengkap dan serah kepada , UIPDuntuktindakanmahkamah ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 17: Sekiranya pemunya/pemilik ingkar Perintah buat . , laporan polis sediakan K/S lengkap dan serah...",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "18",
+          "tajuk": "Jalankan kerja-kerja pembasmian dan pemusnahan ",
+          "anggota": [
+            "PKP",
+            "KPPKP",
+            "PPKPK",
+            "PPKP"
+          ],
+          "tindakan": [
+            "Jalankan kerja-kerja pembasmian dan pemusnahan . sepertiterkandungdibawahaktayangsama ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "19",
+          "tajuk": "Rekodkanaktivitidansediakanlaporanuntuksemakan ",
+          "anggota": [
+            "PPKPK",
+            "PPKP"
+          ],
+          "tindakan": [
+            "Rekodkanaktivitidansediakanlaporanuntuksemakan . PKD/PKP/KPPKP"
+          ],
+          "rujukan": [
+            "LampiranF"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "20",
+          "tajuk": "Buat penilaian ke atas aktiviti yang telah dijalankan ",
+          "anggota": [
+            "PKD",
+            "PKP",
+            "KPPKP"
+          ],
+          "tindakan": [
+            "Buat penilaian ke atas aktiviti yang telah dijalankan . bagi mengenalpasti kelemahan (sekiranya ada) supaya langkah -langkahpenambahbaikandapatdilakukan"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 20: Buat penilaian ke atas aktiviti yang telah dijalankan . bagi mengenalpasti kelemahan (sekiranya...",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "21",
+          "tajuk": "Semak serta mengesahkan laporan dan majukan ",
+          "anggota": [
+            "PKD",
+            "PKP",
+            "KPPKP"
+          ],
+          "tindakan": [
+            "Semak serta mengesahkan laporan dan majukan . laporankeUIPN ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "22",
+          "tajuk": "(Kelakuan dan Tatatertib) 1993",
+          "anggota": [
+            "10.3"
+          ],
+          "tindakan": [
+            "(Kelakuan dan Tatatertib) 1993. Kegagalan mematuhi prosedur ini juga merupakan satu bawah Seksyen 24 (1) (f) Akta Suruhanjaya Integriti Penguatkuasaan 2009 [Akta 700]"
+          ],
+          "rujukan": [
+            "kesalahan di Agensi"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 8
+        }
+      ]
+    }
+  ],
+  "carta_alir": {
+    "nodes": [
+      {
+        "id": "N_START",
+        "type": "start",
+        "label": "Mula Operasi / Prosedur",
+        "role": null,
+        "step_ref": null,
+        "sop_ref": null
+      },
+      {
+        "id": "N1",
+        "type": "process",
+        "label": "1. Terimalaporandanbuatpengesahantentangkejadian ",
+        "role": "PPKP",
+        "step_ref": "1",
+        "sop_ref": null
+      },
+      {
+        "id": "N2",
+        "type": "process",
+        "label": "2. Kenalpastipremisbarangandan/ataubinatangyang ",
+        "role": "PPKP",
+        "step_ref": "2",
+        "sop_ref": null
+      },
+      {
+        "id": "N3",
+        "type": "process",
+        "label": "3. Maklumkankepadapegawaiatasanberkaitan ",
+        "role": "PPKP",
+        "step_ref": "3",
+        "sop_ref": null
+      },
+      {
+        "id": "N4",
+        "type": "process",
+        "label": "4. LaporkankepadaPKDatauPPKPunityangberkaitan ",
+        "role": "PKP/KPPKP",
+        "step_ref": "4",
+        "sop_ref": null
+      },
+      {
+        "id": "N5",
+        "type": "process",
+        "label": "5. Beritaklimatdanagihantugaskepadapasukan ",
+        "role": "PKD/PKP",
+        "step_ref": "5",
+        "sop_ref": null
+      },
+      {
+        "id": "N6",
+        "type": "process",
+        "label": "6. Sediakanperalatandandokumenyangsesuaiuntuk ",
+        "role": "PPKP/PKA",
+        "step_ref": "6",
+        "sop_ref": null
+      },
+      {
+        "id": "N7",
+        "type": "process",
+        "label": "7. Kenalkan diri dan tunjukkan Kad Pengenalan Pegawai ",
+        "role": "PKP/KPPKP",
+        "step_ref": "7",
+        "sop_ref": null
+      },
+      {
+        "id": "N8",
+        "type": "process",
+        "label": "8. Tentukan barangan dan/atau binatang yang ",
+        "role": "PKP/KPPKP",
+        "step_ref": "8",
+        "sop_ref": null
+      },
+      {
+        "id": "N9",
+        "type": "process",
+        "label": "9. Sekiranyaberupayadibasmikuman sediakanPerintah ",
+        "role": "PKP/KPPKP",
+        "step_ref": "9",
+        "sop_ref": null
+      },
+      {
+        "id": "N10",
+        "type": "decision",
+        "label": "10. Sediakan Arahan Kerja Pembasmian Kuman Terhadap ",
+        "role": "PKP/KPPKP",
+        "step_ref": "10",
+        "sop_ref": null
+      },
+      {
+        "id": "N11",
+        "type": "process",
+        "label": "11. Dapatkan pengesahan penerimaan tuan punya premis ",
+        "role": "PKP/KPPKP",
+        "step_ref": "11",
+        "sop_ref": null
+      },
+      {
+        "id": "N12",
+        "type": "decision",
+        "label": "12. Serahkan satu salinan setiap dokumen tersebut kepada ",
+        "role": "PKP/KPPKP",
+        "step_ref": "12",
+        "sop_ref": null
+      },
+      {
+        "id": "N13",
+        "type": "decision",
+        "label": "13. Jika barangan dan/atau binatang itu tidak berupaya ",
+        "role": "PKD/PKP",
+        "step_ref": "13",
+        "sop_ref": null
+      },
+      {
+        "id": "N14",
+        "type": "process",
+        "label": "14. SediakanSenaraiBarangandan/atauBinatangyang ",
+        "role": "PKD/PKP",
+        "step_ref": "14",
+        "sop_ref": null
+      },
+      {
+        "id": "N_END",
+        "type": "end",
+        "label": "Selesai & Rekod Fail UIP",
+        "role": null,
+        "step_ref": null,
+        "sop_ref": null
+      }
+    ],
+    "edges": [
+      {
+        "from": "N_START",
+        "to": "N1",
+        "label": null
+      },
+      {
+        "from": "N1",
+        "to": "N2",
+        "label": null
+      },
+      {
+        "from": "N2",
+        "to": "N3",
+        "label": null
+      },
+      {
+        "from": "N3",
+        "to": "N4",
+        "label": null
+      },
+      {
+        "from": "N4",
+        "to": "N5",
+        "label": null
+      },
+      {
+        "from": "N5",
+        "to": "N6",
+        "label": null
+      },
+      {
+        "from": "N6",
+        "to": "N7",
+        "label": null
+      },
+      {
+        "from": "N7",
+        "to": "N8",
+        "label": null
+      },
+      {
+        "from": "N8",
+        "to": "N9",
+        "label": null
+      },
+      {
+        "from": "N9",
+        "to": "N10",
+        "label": null
+      },
+      {
+        "from": "N10",
+        "to": "N11",
+        "label": "Teruskan"
+      },
+      {
+        "from": "N11",
+        "to": "N12",
+        "label": null
+      },
+      {
+        "from": "N12",
+        "to": "N13",
+        "label": "Teruskan"
+      },
+      {
+        "from": "N13",
+        "to": "N14",
+        "label": "Teruskan"
+      },
+      {
+        "from": "N14",
+        "to": "N_END",
+        "label": null
+      }
+    ]
+  },
+  "senarai_semak": [
+    {
+      "id": "CHK-01",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[1] Terimalaporandanbuatpengesahantentangkejadian ",
+      "wajib": true,
+      "rujukan": "Borang"
+    },
+    {
+      "id": "CHK-02",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[2] Kenalpastipremisbarangandan/ataubinatangyang ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-03",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[3] Maklumkankepadapegawaiatasanberkaitan ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-04",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[4] LaporkankepadaPKDatauPPKPunityangberkaitan ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-05",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[5] Beritaklimatdanagihantugaskepadapasukan ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-06",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[6] Sediakanperalatandandokumenyangsesuaiuntuk ",
+      "wajib": true,
+      "rujukan": "LampiranA"
+    },
+    {
+      "id": "CHK-07",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[7] Kenalkan diri dan tunjukkan Kad Pengenalan Pegawai ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-08",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[8] Tentukan barangan dan/atau binatang yang ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-09",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[9] Sekiranyaberupayadibasmikuman sediakanPerintah ",
+      "wajib": true,
+      "rujukan": "LampiranB"
+    },
+    {
+      "id": "CHK-10",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[10] Sediakan Arahan Kerja Pembasmian Kuman Terhadap ",
+      "wajib": true,
+      "rujukan": "LampiranC"
+    },
+    {
+      "id": "CHK-11",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[11] Dapatkan pengesahan penerimaan tuan punya premis ",
+      "wajib": true,
+      "rujukan": "Lampiran C"
+    },
+    {
+      "id": "CHK-12",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[12] Serahkan satu salinan setiap dokumen tersebut kepada ",
+      "wajib": true,
+      "rujukan": "Lampiran C"
+    }
+  ],
+  "lampiran": [
+    {
+      "kod": "Lampiran A",
+      "tajuk": "Senarai Semak Dokumen, Peralatan Basmi Kuman & Pemusnahan",
+      "jenis": "senarai_semak",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran B",
+      "tajuk": "Perintah Supaya Barangan dan/atau Binatang Dibasmi Kuman",
+      "jenis": "borang",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran C",
+      "tajuk": "Arahan Kerja Pembasmian Kuman Terhadap Barangan dan/atau Binatang",
+      "jenis": "lain",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran D",
+      "tajuk": "Perintah Pemusnahan Barangan Tercemar dan/atau Binatang",
+      "jenis": "borang",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran E",
+      "tajuk": "Senarai Barangan dan/atau Binatang Yang Diperintah Untuk Pemusnahan",
+      "jenis": "borang",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran F",
+      "tajuk": "Laporan Aktiviti Di Bawah Seksyen 18 Akta 342",
+      "jenis": "lain",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    }
+  ],
+  "pematuhan": [
+    "Prosedur yang dikeluarkan ini hendaklah terus berkuatkuasa dan",
+    "dianggap sah sehingga dipinda atau diganti dengan satu prosedur lain",
+    "atau dibatalkan.",
+    "Keengganan dan kegagalan mematuhi prosedur ini tanpa alasan yang",
+    "munasabah boleh menyebabkan seseorang pegawai dikenakan",
+    "tindakan tatatertib di bawah Peraturan-Peraturan Pegawai Awam",
+    "(Kelakuan dan Tatatertib) 1993.",
+    "Kegagalan mematuhi prosedur ini juga merupakan satu kesalahan di"
+  ],
+  "rujukan_silang_resolved": [],
+  "nota_audit_kualiti": []
+}

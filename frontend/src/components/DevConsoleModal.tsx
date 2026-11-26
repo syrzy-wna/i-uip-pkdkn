@@ -181,7 +181,7 @@ export default function DevConsoleModal({
                 <a
                   href="https://g.dev/syrzy"
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
                   className="inline-flex items-center gap-1 rounded-full bg-amber-400 px-2 py-0.5 text-[10px] font-extrabold text-slate-950 hover:bg-amber-300"
                 >
                   g.dev/syrzy <ExternalLink className="h-2.5 w-2.5" />

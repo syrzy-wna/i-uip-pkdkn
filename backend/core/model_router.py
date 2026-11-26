@@ -383,13 +383,13 @@ class UIPModelRouter:
         cfg_kwargs: Dict[str, Any] = {
             "response_mime_type": "application/json",
             "response_json_schema": schema,
+            "temperature": temperature,
         }
         if max_output_tokens is not None:
             cfg_kwargs["max_output_tokens"] = max_output_tokens
         low_model = model_name.lower()
         thinking_cls = getattr(genai_types, "ThinkingConfig", None)
         if "2.5" in low_model:
-            cfg_kwargs["temperature"] = temperature
             if prefer_flash and "flash" in low_model and thinking_cls is not None:
                 cfg_kwargs["thinking_config"] = thinking_cls(thinking_budget=0)
         elif thinking_cls is not None and (prefer_flash or "3.8-flash" in low_model):
@@ -437,10 +437,10 @@ class UIPModelRouter:
                 },
                 "store": False,
             }
+            gen_cfg: Dict[str, Any] = {"temperature": temperature}
             if low_thinking:
-                inter_kwargs["generation_config"] = {"thinking_level": "low"}
-            elif "3." not in model_name:
-                inter_kwargs["generation_config"] = {"temperature": temperature}
+                gen_cfg["thinking_level"] = "low"
+            inter_kwargs["generation_config"] = gen_cfg
             interaction = client.interactions.create(**inter_kwargs)
             text = (getattr(interaction, "output_text", None) or "").strip()
             if text:
@@ -514,7 +514,7 @@ class UIPModelRouter:
         model_candidates: List[str],
         input_payload: Any,
         schema: Dict[str, Any],
-        temperature: float = 0.1,
+        temperature: float = 0.0,
         prefer_flash: bool = False,
         prefer_fast_gc: bool = False,
         max_output_tokens: Optional[int] = None,
@@ -1094,7 +1094,7 @@ class UIPModelRouter:
                 ],
                 input_payload=prompt,
                 schema=_LegalDraftSchema.model_json_schema(),
-                temperature=0.1,
+                temperature=0.0,
                 prefer_flash=True,
             )
             if isinstance(ai_json, dict) and isinstance(ai_json.get("borang_114"), dict):

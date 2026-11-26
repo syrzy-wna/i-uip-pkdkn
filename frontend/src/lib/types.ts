@@ -148,6 +148,7 @@ export interface StatutoryCitation {
 
 export interface SopReferenceItem {
   sop_id: string;
+  file_stem?: string;
   tajuk: string;
   kategori: string;
   akta_berkaitan: string[];
@@ -359,22 +360,178 @@ export interface CompoundCheckResult {
   legal_validation?: LegalValidationResult | null;
 }
 
+export interface SopNotaPindaan {
+  tahap: "KRITIKAL" | "AMARAN" | "INFO" | string;
+  tajuk: string;
+  butiran: string;
+  gantian_statut?: string | null;
+}
+
+export interface SopTempohSla {
+  label: string;
+  tempoh: string;
+  rujukan?: string | null;
+}
+
+export interface SopUndangUndangItem {
+  akta: string;
+  akta_kod?: string | null;
+  status: "AKTIF" | "DIMANSUHKAN" | string;
+  nota?: string | null;
+}
+
+export interface SopAnggotaItem {
+  kod: string;
+  jawatan: string;
+}
+
+export interface SopSingkatanItem {
+  kod: string;
+  maksud: string;
+}
+
+export interface SopLangkahItem {
+  no: string;
+  tajuk: string;
+  anggota: string[];
+  tindakan: string[];
+  rujukan: string[];
+  rujukan_lampiran: string[];
+  rujukan_sop: string[];
+  sla?: string | null;
+  keputusan?: string | null;
+  amaran_pindaan?: string | null;
+  muka_surat_pdf?: number | null;
+}
+
+export interface SopFasaKerja {
+  fasa_id: string;
+  tajuk_fasa: string;
+  langkah: SopLangkahItem[];
+}
+
+export interface SopCartaAlirNode {
+  id: string;
+  type: "start" | "process" | "decision" | "end" | string;
+  label: string;
+  role?: string | null;
+  step_ref?: string | null;
+  sop_ref?: string | null;
+}
+
+export interface SopCartaAlirEdge {
+  from: string;
+  to: string;
+  label?: string | null;
+}
+
+export interface SopCartaAlir {
+  nodes: SopCartaAlirNode[];
+  edges: SopCartaAlirEdge[];
+}
+
+export interface SopSenaraiSemakItem {
+  id: string;
+  kumpulan: string;
+  item: string;
+  wajib: boolean;
+  rujukan?: string | null;
+}
+
+export interface SopLampiranItem {
+  kod: string;
+  tajuk: string;
+  jenis: string;
+  muka_surat_pdf?: number | null;
+  status: "AKTIF" | "DIMANSUHKAN" | string;
+  status_ekstrak?: string;
+  nota?: string | null;
+}
+
+export interface SopRujukanSilangResolved {
+  sop_id: string;
+  file_stem: string;
+  tajuk: string;
+}
+
+export interface SopStructuredContent {
+  schema_version: string;
+  sop_id: string;
+  file_stem: string;
+  alias_kod: string[];
+  tajuk: string;
+  kategori: string;
+  akta_utama: string;
+  akta_berkaitan: string[];
+  keluaran: string;
+  pindaan: string;
+  tarikh_kuatkuasa: string;
+  ringkasan_eksekutif: string;
+  tujuan: string;
+  panduan_am: string[];
+  punca_kuasa: string[];
+  undang_undang_berkaitan: SopUndangUndangItem[];
+  anggota_terlibat: SopAnggotaItem[];
+  singkatan: SopSingkatanItem[];
+  nota_pindaan: SopNotaPindaan[];
+  tempoh_sla: SopTempohSla[];
+  fasa_kerja: SopFasaKerja[];
+  carta_alir: SopCartaAlir;
+  senarai_semak: SopSenaraiSemakItem[];
+  lampiran: SopLampiranItem[];
+  pematuhan: string[];
+  rujukan_silang_resolved: SopRujukanSilangResolved[];
+  nota_audit_kualiti: string[];
+}
+
+export interface PekelilingRujukanItem {
+  kod: string;
+  no_rujukan: string;
+  tarikh: string;
+  tajuk: string;
+  status_imbasan: string;
+  amaran_ketidaklengkapan: string;
+  rujukan_statut_rasmi?: string[];
+  akta_berkaitan?: string[];
+}
+
 export interface ActiveSopSummary {
   sop_id: string;
   file_stem: string;
   tajuk: string;
+  kategori?: string;
   akta: string;
+  akta_berkaitan?: string[];
+  seksyen_kunci?: string[];
   kata_kunci: string[];
+  lampiran_ringkas?: string[];
   borang_lampiran: string[];
   ringkasan: string;
+  tujuan_ringkas?: string;
+  punca_kuasa?: string;
+  rujukan_silang?: string[];
+  muka_surat_pdf?: string;
+  toc_id_alias?: string | null;
   tarikh_kuat_kuasa?: string;
   pindaan?: string;
   status_sop?: string;
-  amaran_konflik_kod?: string;
+  amaran_konflik_kod?: string | null;
+  has_nota_pindaan?: boolean;
+  nota_pindaan_ringkas?: string | null;
+  nota_pindaan_tahap?: string | null;
+  tempoh_sla_ringkas?: string[];
+  peranan_utama?: string[];
+  bil_langkah?: number;
+  bil_lampiran?: number;
+  structured_ready?: boolean;
+  nota_audit?: string[] | null;
+  match_snippet?: string;
 }
 
 export interface ActiveSopDetail extends ActiveSopSummary {
   markdown_content: string;
+  cleaned_markdown?: string;
+  structured?: SopStructuredContent | null;
 }
 
 export interface OfficerProfile {

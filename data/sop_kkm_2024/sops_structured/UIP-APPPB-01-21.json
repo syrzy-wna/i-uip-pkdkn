@@ -1,0 +1,1014 @@
+{
+  "schema_version": "2.0",
+  "sop_id": "UIP-APPPB-01-21 (PINDAAN 2024)",
+  "file_stem": "UIP-APPPB-01-21",
+  "alias_kod": [],
+  "tajuk": "Prosedur Mengkompaun Kesalahan Di Bawah Seksyen 10(2), 22(c) dan 22(d) Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988",
+  "kategori": "APPPB_1988",
+  "akta_utama": "Akta 342",
+  "akta_berkaitan": [
+    "Akta 342",
+    "P.U.(A) 327/1993",
+    "Akta 56",
+    "Akta 388",
+    "Akta 593",
+    "Akta 574"
+  ],
+  "keluaran": "01",
+  "pindaan": "01",
+  "tarikh_kuatkuasa": "15 Feb 2024",
+  "ringkasan_eksekutif": "Prosedur ini menerangkan tatacara dalam pelaksanaan pengeluaran dan pengurusan kompaun di bawah Seksyen 10 (2), 22 (c) Dan 22 (d) Akta Pencegahan Dan Pengawalan Penyakit Berjangkit 1988 [Akta 342]",
+  "tujuan": "Prosedur ini menerangkan tatacara dalam pelaksanaan pengeluaran dan pengurusan kompaun di bawah Seksyen 10 (2), 22 (c) Dan 22 (d) Akta Pencegahan Dan Pengawalan Penyakit Berjangkit 1988 [Akta 342]",
+  "panduan_am": [],
+  "punca_kuasa": [
+    "S.10(2) Akta 342 (Gagal notifikasi penyakit berjangkit)",
+    "S.22(c) Akta 342",
+    "S.22(d) Akta 342",
+    "S.25 Akta 342 (Kompaun <= RM1,000 - semak pindaan terkini)"
+  ],
+  "undang_undang_berkaitan": [
+    {
+      "akta": "Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988 [Akta 342]",
+      "akta_kod": "Akta 342",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "dan peraturan-peraturan di bawahnya",
+      "akta_kod": null,
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Keterangan 1950 (Disemak 1971) [Akta 56]",
+      "akta_kod": "Akta 56",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Kanun Tatacara Jenayah [Akta 593]",
+      "akta_kod": "Akta 593",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Tafsiran 1948 (Disemak 1989) [Akta 388]",
+      "akta_kod": "Akta 388",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Kanun Keseksaan (Disemak 1997) [Akta 574]",
+      "akta_kod": "Akta 574",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Pencegahan dan Pengawalan Penyakit Berjangkit (Pindaan) 2025 [Akta A1742] & P.U.(A) 139/2025",
+      "akta_kod": "Akta 342",
+      "status": "AKTIF",
+      "nota": "[NOTA PINDAAN] Berkuat kuasa 1 Mei 2025 — mengatasi kadar penalti & kompaun lama cetakan SOP 15 Feb 2024."
+    }
+  ],
+  "anggota_terlibat": [
+    {
+      "kod": "KETUA PENGAR",
+      "jawatan": "Ketua Pengarah atau mana-mana pegawai awam yang diberi kuasa olehnya bagi"
+    },
+    {
+      "kod": "MAKSUD INI S",
+      "jawatan": "maksud ini secara bertulis."
+    },
+    {
+      "kod": "PUNCA KUASA",
+      "jawatan": "PUNCA KUASA"
+    },
+    {
+      "kod": "SEKSYEN 25 A",
+      "jawatan": "Seksyen 25 Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988"
+    },
+    {
+      "kod": "[AKTA 342]",
+      "jawatan": "[Akta 342]"
+    },
+    {
+      "kod": "SEKSYEN 25. ",
+      "jawatan": "Seksyen 25. Ketua Pengarah atau mana-mana pegawai awam yang diberi"
+    },
+    {
+      "kod": "KUASA OLEHNY",
+      "jawatan": "kuasa olehnya bagi maksud ini secara bertulis boleh mengkompaun apa-apa"
+    },
+    {
+      "kod": "KESALAHAN DI",
+      "jawatan": "kesalahan di bawah akta ini atau mana-mana peraturan yang dibuat di bawah"
+    },
+    {
+      "kod": "AKTA INI YAN",
+      "jawatan": "akta ini yang telah ditetapkan oleh peraturan-peraturan sebagai boleh kompaun"
+    },
+    {
+      "kod": "DENGAN MENDA",
+      "jawatan": "dengan mendapatkan daripada pesalah itu sejumlah wang yang tidak melebihi"
+    },
+    {
+      "kod": "SERIBU RINGG",
+      "jawatan": "seribu ringgit."
+    },
+    {
+      "kod": "PERATURAN-PE",
+      "jawatan": "Peraturan-Peraturan Pencegahan dan Pengawalan Penyakit Berjangkit"
+    }
+  ],
+  "singkatan": [
+    {
+      "kod": "JKN",
+      "maksud": "Jabatan Kesihatan Negeri"
+    },
+    {
+      "kod": "PKD",
+      "maksud": "Pegawai Kesihatan Daerah/ Kawasan/ Bahagian"
+    },
+    {
+      "kod": "PKP",
+      "maksud": "Pegawai Kesihatan Persekitaran"
+    },
+    {
+      "kod": "KPPKP",
+      "maksud": "Ketua Penolong Pegawai Kesihatan Persekitaran"
+    },
+    {
+      "kod": "PPKPK",
+      "maksud": "Penolong Pegawai Kesihatan Persekitaran Kanan"
+    },
+    {
+      "kod": "PPKP CDC",
+      "maksud": "Penolong Pegawai Kesihatan Persekitaran Unit"
+    }
+  ],
+  "nota_pindaan": [
+    {
+      "tahap": "KRITIKAL",
+      "tajuk": "[NOTA PINDAAN] Kadar Kompaun & Penalti Akta 342 Dipinda (Akta A1742 & P.U.(A) 139/2025)",
+      "butiran": "Teks cetakan SOP 15 Feb 2024 masih menyebut P.U.(A) 327/1993 dan kadar lama RM1,000.00. Mulai 1 Mei 2025, Akta A1742 & P.U.(A) 139/2025 menetapkan had kompaun S.25 sehingga RM5,000 (individu) / RM50,000 (pertubuhan perbadanan) bagi kesalahan Jadual Pertama (S.10(2), S.11(5), S.21A(3), S.22(b)/(c)/(d)) dengan keizinan bertulis Pendakwa Raya, dan penalti am S.24 sehingga RM10,000/2 tahun (individu) atau RM100,000 (korporat).",
+      "gantian_statut": "Akta A1742 & P.U.(A) 139/2025 (1 Mei 2025)"
+    }
+  ],
+  "tempoh_sla": [
+    {
+      "label": "Tempoh Bayaran Kompaun Akta 342",
+      "tempoh": "14 hari dari tarikh tawaran",
+      "rujukan": "Seksyen 25 Akta 342 & P.U.(A) 139/2025"
+    }
+  ],
+  "fasa_kerja": [
+    {
+      "fasa_id": "F1",
+      "tajuk_fasa": "1. Pelaksanaan Proses Kerja",
+      "langkah": [
+        {
+          "no": "1",
+          "tajuk": "Jalankan pemantauan",
+          "anggota": [
+            "JKN",
+            "PKD",
+            "PDK"
+          ],
+          "tindakan": [
+            "Jalankan pemantauan; 1 Semakan ke atas sistem notifikasi kes sama ada . secara manual atau secara dalam talian ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "2",
+          "tajuk": "Maklumat diperolehi melalui pesakit yang pernah ",
+          "anggota": [
+            "PPKP"
+          ],
+          "tindakan": [
+            "Maklumat diperolehi melalui pesakit yang pernah . mendapatkan rawatan ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "3",
+          "tajuk": "Pemeriksaan ke atas buku daftar di hospital/ klinik ",
+          "anggota": [
+            "PPKP"
+          ],
+          "tindakan": [
+            "Pemeriksaan ke atas buku daftar di hospital/ klinik . dan apa-apa dokumen berkaitan"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "4",
+          "tajuk": "Kenal pasti kes-kes yang gagal dinotifikasi atau ",
+          "anggota": [
+            "PPKP"
+          ],
+          "tindakan": [
+            "Kenal pasti kes-kes yang gagal dinotifikasi atau . lewat notifikasi enggan memberikan apa-apa , maklumat atau memberikan maklumat palsu ."
+          ],
+          "rujukan": [
+            "Rujuk",
+            "case",
+            "definition"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 4: Kenal pasti kes-kes yang gagal dinotifikasi atau . lewat notifikasi enggan memberikan apa-apa ,...",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "5",
+          "tajuk": "Dapatkan bukti -bukti kes gagal dinotifikasi atau ",
+          "anggota": [
+            "PPKP"
+          ],
+          "tindakan": [
+            "Dapatkan bukti -bukti kes gagal dinotifikasi atau . lewat notifikasi enggan memberikan apa-apa , maklumat atau memberikan maklumat palsu ."
+          ],
+          "rujukan": [
+            "Borang",
+            "notifikasi"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 5: Dapatkan bukti -bukti kes gagal dinotifikasi atau . lewat notifikasi enggan memberikan apa-apa ...",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "6",
+          "tajuk": "Sediakandokumendanlaporanringkaspelanggaran ",
+          "anggota": [
+            "PPKP"
+          ],
+          "tindakan": [
+            "Sediakandokumendanlaporanringkaspelanggaran . ke PKP/ KPPKP/ PPKPK untuk memaklumkan kesalahan yang dikesan ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "7",
+          "tajuk": "Membuatsemakandanminitkanarahanpenyiasatan ",
+          "anggota": [
+            "PKP",
+            "KPPKP",
+            "PPKPK"
+          ],
+          "tindakan": [
+            "Membuatsemakandanminitkanarahanpenyiasatan . bagi penyediaan kertas siasatan yang lengkap mengikut kesalahan kepada PPKP UIPD (IO) ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "8",
+          "tajuk": "Semak dokumen dan laporan ringkas dan isikan ",
+          "anggota": [
+            "IO"
+          ],
+          "tindakan": [
+            "Semak dokumen dan laporan ringkas dan isikan . borang serahan/terima bagi dokumen diterima"
+          ],
+          "rujukan": [
+            "Lampiran A"
+          ],
+          "rujukan_lampiran": [
+            "Lampiran A"
+          ],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "9",
+          "tajuk": "Buka kertas siasatan lengkap dan jalankan ",
+          "anggota": [
+            "IO"
+          ],
+          "tindakan": [
+            "Buka kertas siasatan lengkap dan jalankan . penyiasatan lanjut mengikut arahan PKP/KPPKP/PPKPK dan lengkapkan kertas siasatan Bukti -bukti berkaitan siasatan perlu . dikumpulkan oleh IO ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "10",
+          "tajuk": "Perlu membuat surat permohonan bagi ",
+          "anggota": [
+            "IO"
+          ],
+          "tindakan": [
+            "Perlu membuat surat permohonan bagi . mendapatkan dokumen-dokumen daripada mana- mana orang/agensi yang mempunyai kawalan ke atas dokumen/barang kes yang berkaitan dengan siasatan kes (jika perlu) Lampiran B ."
+          ],
+          "rujukan": [
+            "Lampiran B"
+          ],
+          "rujukan_lampiran": [
+            "Lampiran B"
+          ],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 10: Perlu membuat surat permohonan bagi . mendapatkan dokumen-dokumen daripada mana- mana orang/age...",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "11",
+          "tajuk": "Jika semasa pemeriksaan dan siasatan IO telah ",
+          "anggota": [
+            "IO"
+          ],
+          "tindakan": [
+            "Jika semasa pemeriksaan dan siasatan IO telah . memperolehi mana-mana barang kes satu senarai , pemeriksaan perlu dikeluarkan sebagai bukti pemerolehan barang kes (jika perlu) Lampiran C ."
+          ],
+          "rujukan": [
+            "Lampiran C"
+          ],
+          "rujukan_lampiran": [
+            "Lampiran C"
+          ],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 11: Jika semasa pemeriksaan dan siasatan IO telah . memperolehi mana-mana barang kes satu senarai ,...",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "12",
+          "tajuk": "Rujuk kertas siasatan kepada PKP/ KPPKP/ ",
+          "anggota": [
+            "IO"
+          ],
+          "tindakan": [
+            "Rujuk kertas siasatan kepada PKP/ KPPKP/ . PPKPKuntuksemakansebelum dimajukankepada UIPN utuk dikemukakan kepada TPR untuk izin kompaun ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "13",
+          "tajuk": "Membuat semakan dan ulasan minitkan kepada ",
+          "anggota": [
+            "PKP",
+            "KPPKP",
+            "PPKPK"
+          ],
+          "tindakan": [
+            "Membuat semakan dan ulasan minitkan kepada . , PPKP UIPD (IO) untuk merujuk kertas sisatan ke UIPN untuk dikemukakan kepada TPR bagi mendapatkan izin mengkompaun ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "14",
+          "tajuk": "Kemukakan kertas siasatan kepada UIPN bagi ",
+          "anggota": [
+            "IO"
+          ],
+          "tindakan": [
+            "Kemukakan kertas siasatan kepada UIPN bagi . tujuan semakan kertas siasatan seterusnya dikemukakan kepada TPR untuk semakan lanjut dan izin kompaun (Bergantung kepada pengurusan UIPN) ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "15",
+          "tajuk": "Setelah izin kompaun diperolehi kemukakan ",
+          "anggota": [
+            "IO"
+          ],
+          "tindakan": [
+            "Setelah izin kompaun diperolehi kemukakan . , kertas siasatan kepada PDK yang mendapat kebenaran untuk mengkompaun di bawah seksyen"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "25",
+          "tajuk": "Akta 342 di daerah ",
+          "anggota": [
+            "IO"
+          ],
+          "tindakan": [
+            "Akta 342 di daerah ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "16",
+          "tajuk": "Sekiranya izin kompaun tidak diperolehi atas ",
+          "anggota": [
+            "IO"
+          ],
+          "tindakan": [
+            "Sekiranya izin kompaun tidak diperolehi atas . sebab teknikal IO perlu melengkapkan siasatan , mengikut keperluan sebagaimana dinyatakan oleh TPR"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 16: Sekiranya izin kompaun tidak diperolehi atas . sebab teknikal IO perlu melengkapkan siasatan , ...",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "17",
+          "tajuk": "Sekiranya tiada pembuktian bagi mensabitkan kes ",
+          "anggota": [
+            "IO"
+          ],
+          "tindakan": [
+            "Sekiranya tiada pembuktian bagi mensabitkan kes . , dan TPR mengarahkan untuk NFA kes dikira , selesai dan perlu direkodkan"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 17: Sekiranya tiada pembuktian bagi mensabitkan kes . , dan TPR mengarahkan untuk NFA kes dikira , ...",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 8
+        },
+        {
+          "no": "18",
+          "tajuk": "PDKK yang mendapat kebenaran untuk ",
+          "anggota": [
+            "PDKK"
+          ],
+          "tindakan": [
+            "PDKK yang mendapat kebenaran untuk . mengkompaun keluarkan kompaun kepada OKK . Isi maklumat berikut di dalam buku kompaun : i Tempat . ii Tarikh . iii Nama OKK dan No Kad Pengenalan/ . . Passport iv Alamat mengikut kad pengenalan dan . alamat terkini v Waktu kesalahan dilakukan . vi Seksyen Kesalahan yang dikenal pasti . vii Nilai kompaun yang ditawarkan ialah RM ."
+          ],
+          "rujukan": [
+            "Lampiran D"
+          ],
+          "rujukan_lampiran": [
+            "Lampiran D"
+          ],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 8
+        },
+        {
+          "no": "1",
+          "tajuk": "000 00 , ",
+          "anggota": [
+            "PDKK"
+          ],
+          "tindakan": [
+            "000 00 , . viii Tempoh tamat tawaran bayaran kompaun . adalah 14 hari daripada tarikh tawaran kompaun dikeluarkan ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": "14 hari",
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 8
+        },
+        {
+          "no": "19",
+          "tajuk": "Daftarkan tawaran kompaun dalam buku daftar ",
+          "anggota": [
+            "IO"
+          ],
+          "tindakan": [
+            "Daftarkan tawaran kompaun dalam buku daftar ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 8
+        },
+        {
+          "no": "20",
+          "tajuk": "Membuat serahan kompaun kepada OKK ",
+          "anggota": [
+            "IO"
+          ],
+          "tindakan": [
+            "Membuat serahan kompaun kepada OKK . . Dapatkan tandatangan OKK sebagai bukti penerimaan salinan tawaran untuk kompaun . Serahkan satu salinankompaun kepada OKK"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 8
+        },
+        {
+          "no": "21",
+          "tajuk": "Pembayaran kompaun boleh dilakukan di mana- ",
+          "anggota": [
+            "IO"
+          ],
+          "tindakan": [
+            "Pembayaran kompaun boleh dilakukan di mana- . mana pejabat kesihatan Mana-mana pejabat . kesihatan yang menerima pembayaran kompaun perlu memaklumkan kepada pejabat asal yang mengeluarkan kompaun ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 8
+        },
+        {
+          "no": "22",
+          "tajuk": "Daftarkan tawaran kompaun dalam buku daftar ",
+          "anggota": [
+            "IO"
+          ],
+          "tindakan": [
+            "Daftarkan tawaran kompaun dalam buku daftar ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 8
+        },
+        {
+          "no": "23",
+          "tajuk": "Sekiranya kompaun tidak dijelaskan dalam ",
+          "anggota": [
+            "IO"
+          ],
+          "tindakan": [
+            "Sekiranya kompaun tidak dijelaskan dalam . tempoh tawaran kompaun tersebut rujuk kertas , siasatan kepada TPR untuk mendapatkan izin untuk mendakwa ."
+          ],
+          "rujukan": [
+            "Rujuk SOP",
+            "UIP UMUM",
+            "- -",
+            "05 07",
+            "-",
+            "(Pindaan"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 23: Sekiranya kompaun tidak dijelaskan dalam . tempoh tawaran kompaun tersebut rujuk kertas , siasa...",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 8
+        }
+      ]
+    }
+  ],
+  "carta_alir": {
+    "nodes": [
+      {
+        "id": "N_START",
+        "type": "start",
+        "label": "Mula Operasi / Prosedur",
+        "role": null,
+        "step_ref": null,
+        "sop_ref": null
+      },
+      {
+        "id": "N1",
+        "type": "process",
+        "label": "1. Jalankan pemantauan",
+        "role": "JKN/PKD",
+        "step_ref": "1",
+        "sop_ref": null
+      },
+      {
+        "id": "N2",
+        "type": "process",
+        "label": "2. Maklumat diperolehi melalui pesakit yang pernah ",
+        "role": "PPKP",
+        "step_ref": "2",
+        "sop_ref": null
+      },
+      {
+        "id": "N3",
+        "type": "process",
+        "label": "3. Pemeriksaan ke atas buku daftar di hospital/ klinik ",
+        "role": "PPKP",
+        "step_ref": "3",
+        "sop_ref": null
+      },
+      {
+        "id": "N4",
+        "type": "decision",
+        "label": "4. Kenal pasti kes-kes yang gagal dinotifikasi atau ",
+        "role": "PPKP",
+        "step_ref": "4",
+        "sop_ref": null
+      },
+      {
+        "id": "N5",
+        "type": "decision",
+        "label": "5. Dapatkan bukti -bukti kes gagal dinotifikasi atau ",
+        "role": "PPKP",
+        "step_ref": "5",
+        "sop_ref": null
+      },
+      {
+        "id": "N6",
+        "type": "process",
+        "label": "6. Sediakandokumendanlaporanringkaspelanggaran ",
+        "role": "PPKP",
+        "step_ref": "6",
+        "sop_ref": null
+      },
+      {
+        "id": "N7",
+        "type": "process",
+        "label": "7. Membuatsemakandanminitkanarahanpenyiasatan ",
+        "role": "PKP/KPPKP",
+        "step_ref": "7",
+        "sop_ref": null
+      },
+      {
+        "id": "N8",
+        "type": "process",
+        "label": "8. Semak dokumen dan laporan ringkas dan isikan ",
+        "role": "IO",
+        "step_ref": "8",
+        "sop_ref": null
+      },
+      {
+        "id": "N9",
+        "type": "process",
+        "label": "9. Buka kertas siasatan lengkap dan jalankan ",
+        "role": "IO",
+        "step_ref": "9",
+        "sop_ref": null
+      },
+      {
+        "id": "N10",
+        "type": "decision",
+        "label": "10. Perlu membuat surat permohonan bagi ",
+        "role": "IO",
+        "step_ref": "10",
+        "sop_ref": null
+      },
+      {
+        "id": "N11",
+        "type": "decision",
+        "label": "11. Jika semasa pemeriksaan dan siasatan IO telah ",
+        "role": "IO",
+        "step_ref": "11",
+        "sop_ref": null
+      },
+      {
+        "id": "N12",
+        "type": "process",
+        "label": "12. Rujuk kertas siasatan kepada PKP/ KPPKP/ ",
+        "role": "IO",
+        "step_ref": "12",
+        "sop_ref": null
+      },
+      {
+        "id": "N13",
+        "type": "process",
+        "label": "13. Membuat semakan dan ulasan minitkan kepada ",
+        "role": "PKP/KPPKP",
+        "step_ref": "13",
+        "sop_ref": null
+      },
+      {
+        "id": "N14",
+        "type": "process",
+        "label": "14. Kemukakan kertas siasatan kepada UIPN bagi ",
+        "role": "IO",
+        "step_ref": "14",
+        "sop_ref": null
+      },
+      {
+        "id": "N_END",
+        "type": "end",
+        "label": "Selesai & Rekod Fail UIP",
+        "role": null,
+        "step_ref": null,
+        "sop_ref": null
+      }
+    ],
+    "edges": [
+      {
+        "from": "N_START",
+        "to": "N1",
+        "label": null
+      },
+      {
+        "from": "N1",
+        "to": "N2",
+        "label": null
+      },
+      {
+        "from": "N2",
+        "to": "N3",
+        "label": null
+      },
+      {
+        "from": "N3",
+        "to": "N4",
+        "label": null
+      },
+      {
+        "from": "N4",
+        "to": "N5",
+        "label": "Teruskan"
+      },
+      {
+        "from": "N5",
+        "to": "N6",
+        "label": "Teruskan"
+      },
+      {
+        "from": "N6",
+        "to": "N7",
+        "label": null
+      },
+      {
+        "from": "N7",
+        "to": "N8",
+        "label": null
+      },
+      {
+        "from": "N8",
+        "to": "N9",
+        "label": null
+      },
+      {
+        "from": "N9",
+        "to": "N10",
+        "label": null
+      },
+      {
+        "from": "N10",
+        "to": "N11",
+        "label": "Teruskan"
+      },
+      {
+        "from": "N11",
+        "to": "N12",
+        "label": "Teruskan"
+      },
+      {
+        "from": "N12",
+        "to": "N13",
+        "label": null
+      },
+      {
+        "from": "N13",
+        "to": "N14",
+        "label": null
+      },
+      {
+        "from": "N14",
+        "to": "N_END",
+        "label": null
+      }
+    ]
+  },
+  "senarai_semak": [
+    {
+      "id": "CHK-01",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[1] Jalankan pemantauan",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-02",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[2] Maklumat diperolehi melalui pesakit yang pernah ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-03",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[3] Pemeriksaan ke atas buku daftar di hospital/ klinik ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-04",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[4] Kenal pasti kes-kes yang gagal dinotifikasi atau ",
+      "wajib": true,
+      "rujukan": "Rujuk"
+    },
+    {
+      "id": "CHK-05",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[5] Dapatkan bukti -bukti kes gagal dinotifikasi atau ",
+      "wajib": true,
+      "rujukan": "Borang"
+    },
+    {
+      "id": "CHK-06",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[6] Sediakandokumendanlaporanringkaspelanggaran ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-07",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[7] Membuatsemakandanminitkanarahanpenyiasatan ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-08",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[8] Semak dokumen dan laporan ringkas dan isikan ",
+      "wajib": true,
+      "rujukan": "Lampiran A"
+    },
+    {
+      "id": "CHK-09",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[9] Buka kertas siasatan lengkap dan jalankan ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-10",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[10] Perlu membuat surat permohonan bagi ",
+      "wajib": true,
+      "rujukan": "Lampiran B"
+    },
+    {
+      "id": "CHK-11",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[11] Jika semasa pemeriksaan dan siasatan IO telah ",
+      "wajib": true,
+      "rujukan": "Lampiran C"
+    },
+    {
+      "id": "CHK-12",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[12] Rujuk kertas siasatan kepada PKP/ KPPKP/ ",
+      "wajib": true,
+      "rujukan": null
+    }
+  ],
+  "lampiran": [
+    {
+      "kod": "Lampiran A",
+      "tajuk": "Borang Akuan Serah / Terima Barang Kes",
+      "jenis": "borang",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran B",
+      "tajuk": "Contoh Surat Permohonan Maklumat",
+      "jenis": "surat_contoh",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran C",
+      "tajuk": "Senarai Pemeriksaan",
+      "jenis": "lain",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran D",
+      "tajuk": "Borang Kompaun Akta 342",
+      "jenis": "borang",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    }
+  ],
+  "pematuhan": [
+    "a. Prosedur yang dikeluarkan ini hendaklah terus berkuat kuasa dan dianggap sah",
+    "sehingga dipinda atau diganti dengan satu prosedur lain atau dibatalkan.",
+    "b. Keengganan dan kegagalan mematuhi prosedur ini tanpa alasan yang",
+    "munasabah boleh menyebabkan seseorang pegawai dikenakan tindakan",
+    "tatatertib di bawah Peraturan-Peraturan Pegawai Awam (Kelakuan dan",
+    "Tatatertib) 1993.",
+    "c. Kegagalan mematuhi prosedur ini juga merupakan satu kesalahan di bawah",
+    "Seksyen 24 (1) (f) Akta Suruhanjaya Integriti Agensi Penguatkuasaan 2009"
+  ],
+  "rujukan_silang_resolved": [
+    {
+      "sop_id": "UIP-UMUM-05-07 (PINDAAN 2024)",
+      "file_stem": "UIP-UMUM-05-07",
+      "tajuk": "Prosedur Pendakwaan Di Mahkamah"
+    }
+  ],
+  "nota_audit_kualiti": [
+    "SEMAK HAD KOMPAUN: Teks SOP ini memetik had kompaun RM1,000 di bawah Seksyen 25 Akta 342 (versi sebelum pindaan). Sentiasa sahkan kadar kompaun semasa berdasarkan pindaan Akta 342 / Peraturan Pengkompaunan terkini yang berkuat kuasa."
+  ]
+}

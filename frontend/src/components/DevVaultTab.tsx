@@ -217,13 +217,16 @@ export default function DevVaultTab({
     loadList();
   }, [loadList, refreshSignal]);
 
+  const detailCacheRef = React.useRef(detailCache);
+  detailCacheRef.current = detailCache;
+
   const loadDetail = useCallback(
     async (recordId: string) => {
       setPreviewUrl((prev) => {
         if (prev) window.URL.revokeObjectURL(prev);
         return null;
       });
-      if (detailCache[recordId]) return;
+      if (detailCacheRef.current[recordId]) return;
       setLoadingDetail(true);
       try {
         const detail = await fetchDevVaultRecordDetail(recordId, authToken);
@@ -234,7 +237,7 @@ export default function DevVaultTab({
         setLoadingDetail(false);
       }
     },
-    [authToken, detailCache]
+    [authToken]
   );
 
   useEffect(() => {

@@ -2691,7 +2691,7 @@ class UIPAdvisorService:
             or ("281" in matched_akta_code and "AKTA_281_PINDAAN_2024" not in applied_companions)
         ):
             grounding = legal_lib.search_closed_book_grounding(
-                question=question,
+                question=contextual_question,
                 akta_hint=matched_akta_code,
                 top_k=4,
             )

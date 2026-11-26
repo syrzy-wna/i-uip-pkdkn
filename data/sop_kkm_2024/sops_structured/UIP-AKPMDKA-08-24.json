@@ -1,0 +1,822 @@
+{
+  "schema_version": "2.0",
+  "sop_id": "UIP-AKPMDKA-08-24",
+  "file_stem": "UIP-AKPMDKA-08-24",
+  "alias_kod": [
+    "AKPMDKA-08-24",
+    "AKPMDKS-08-24",
+    "08 AKPMDKS 08-24"
+  ],
+  "tajuk": "Prosedur Penghantaran Barang Kes Ke Makmal Di Bawah Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024 [Akta 852]",
+  "kategori": "AKTA_852",
+  "akta_utama": "Akta 852",
+  "akta_berkaitan": [
+    "Akta 852",
+    "Akta 56",
+    "Akta 593",
+    "Akta 388",
+    "Akta 92"
+  ],
+  "keluaran": "01",
+  "pindaan": "00",
+  "tarikh_kuatkuasa": "01 Okt 2024",
+  "ringkasan_eksekutif": "Tujuan prosedur ini adalah untuk menggariskan Prosedur Penghantaran Barang Kes Ke Makmal Di Bawah Akta Kawalan Produk Merokok Demi Kesihatan Awam (AKPMDKA) 2024 [ Akta 852 ]",
+  "tujuan": "Tujuan prosedur ini adalah untuk menggariskan Prosedur Penghantaran Barang Kes Ke Makmal Di Bawah Akta Kawalan Produk Merokok Demi Kesihatan Awam (AKPMDKA) 2024 [ Akta 852 ]",
+  "panduan_am": [],
+  "punca_kuasa": [
+    "Seksyen 28 Akta 852",
+    "Seksyen 35-36 Akta 852",
+    "P.U.(A) 263/2024 (Makmal Diluluskan)",
+    "Seksyen 399 KTJ",
+    "Rantaian Jagaan Eksibit (Borang 1-3)"
+  ],
+  "undang_undang_berkaitan": [
+    {
+      "akta": "Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024 [ Akta 852 ]",
+      "akta_kod": "Akta 852",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Keterangan 1950 (Disemak 1971) [Akta 56]",
+      "akta_kod": "Akta 56",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Kanun Tatacara Jenayah [Akta 593]",
+      "akta_kod": "Akta 593",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Mahkamah Rendah 1948 [Akta 92)",
+      "akta_kod": "Akta 92",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Tafsiran 1948 (Disemak 1989) [Akta 388]",
+      "akta_kod": "Akta 388",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Perintah Makmal Yang Diluluskan 2024",
+      "akta_kod": null,
+      "status": "AKTIF",
+      "nota": null
+    }
+  ],
+  "anggota_terlibat": [
+    {
+      "kod": "SEMUA PEGAWA",
+      "jawatan": "Semua pegawai yang dilantik sebagai pegawai diberi kuasa di bawah Seksyen"
+    },
+    {
+      "kod": "AKTA KAWALAN",
+      "jawatan": "Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024 [ Akta 852 ]"
+    },
+    {
+      "kod": "NO. RUJUKAN ",
+      "jawatan": "NO. RUJUKAN PROSEDUR: UIP-AKPMDKA-08-24"
+    },
+    {
+      "kod": "PROSEDUR PEN",
+      "jawatan": "Prosedur Penghantaran Barang Kes Ke Makmal Di Bawah Akta Kawalan Produk Merokok"
+    },
+    {
+      "kod": "DEMI KESIHAT",
+      "jawatan": "Demi Kesihatan Awam 2024[ Akta 852 ]"
+    }
+  ],
+  "singkatan": [
+    {
+      "kod": "Akta 852",
+      "maksud": "Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024"
+    },
+    {
+      "kod": "KPPKP",
+      "maksud": "Ketua Penolong Pegawai Kesihatan Persekitaran"
+    },
+    {
+      "kod": "K/S",
+      "maksud": "Kertas Siasatan"
+    },
+    {
+      "kod": "PDK",
+      "maksud": "Pegawai Diberi Kuasa"
+    },
+    {
+      "kod": "PKD",
+      "maksud": "Pegawai Kesihatan Daerah/Kawasan/Bahagian"
+    },
+    {
+      "kod": "PKP",
+      "maksud": "Pegawai Kesihatan Persekitaran"
+    },
+    {
+      "kod": "PPKP",
+      "maksud": "Penolong Pegawai Kesihatan Persekitaran"
+    },
+    {
+      "kod": "PPKPK",
+      "maksud": "Penolong Pegawai Kesihatan Persekitaran Kanan"
+    },
+    {
+      "kod": "UIPD",
+      "maksud": "Unit Inspektorat dan Perundangan Daerah"
+    },
+    {
+      "kod": "UIPN",
+      "maksud": "Unit Inspektorat dan Perundangan Negeri 7 PENGAMBILAN BARANG KES"
+    }
+  ],
+  "nota_pindaan": [],
+  "tempoh_sla": [],
+  "fasa_kerja": [
+    {
+      "fasa_id": "F1",
+      "tajuk_fasa": "Di Pejabat",
+      "langkah": [
+        {
+          "no": "1",
+          "tajuk": "Taklimat kepada PDK ",
+          "anggota": [
+            "PKP",
+            "PPKPK",
+            "PDK"
+          ],
+          "tindakan": [
+            "Taklimat kepada PDK ."
+          ],
+          "rujukan": [
+            "Suratarahan",
+            "KKM"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "2",
+          "tajuk": "Persediaan awal dengan menyemak peralatan ",
+          "anggota": [
+            "PKP",
+            "PPKPK",
+            "PDK"
+          ],
+          "tindakan": [
+            "Persediaan awal dengan menyemak peralatan . untuk pengambilan barang kes ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        }
+      ]
+    },
+    {
+      "fasa_id": "F2",
+      "tajuk_fasa": "Di Lapangan",
+      "langkah": [
+        {
+          "no": "3",
+          "tajuk": "Jumpapesalahtunjukkankadpengenalandiri serta ",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            "Jumpapesalahtunjukkankadpengenalandiri serta . nyatakan tujuan kedatangan ."
+          ],
+          "rujukan": [
+            "KadPengenalan",
+            "Diri /Kad",
+            "PerakuanKuasa",
+            "Borang1"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "4",
+          "tajuk": "Ambil barang kes yang dihisap untuk merokok dan ",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            "Ambil barang kes yang dihisap untuk merokok dan . masukkan dalam bekas yang bersesuaian ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "5",
+          "tajuk": "Isi Notis Seksyen 47 bersama dengan Borang ",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            "Isi Notis Seksyen 47 bersama dengan Borang . Barang Yang Disita ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "6",
+          "tajuk": "Lak dan labelkan barang kes ",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            "Lak dan labelkan barang kes . ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "7",
+          "tajuk": "Terangkan kesalahan pesalah dan dapatkan ",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            "Terangkan kesalahan pesalah dan dapatkan . tandatangan pesalah ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "8",
+          "tajuk": "Teruskan operasi di tempat lain jika berkaitan ",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            "Teruskan operasi di tempat lain jika berkaitan . dengan kawasan larangan merokok ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 8: Teruskan operasi di tempat lain jika berkaitan . dengan kawasan larangan merokok .",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "9",
+          "tajuk": "Sediakan dokumen pelan lakar ( lokasi dan lantai) ",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            "Sediakan dokumen pelan lakar ( lokasi dan lantai) . ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        }
+      ]
+    },
+    {
+      "fasa_id": "F3",
+      "tajuk_fasa": "Di Pejabat",
+      "langkah": [
+        {
+          "no": "10",
+          "tajuk": "Jika sampel tidak dapat dihantar pada hari yang ",
+          "anggota": [
+            "PDK",
+            "PKP",
+            "KPPKP",
+            "PP",
+            "KPK"
+          ],
+          "tindakan": [
+            "Jika sampel tidak dapat dihantar pada hari yang . sama sampel hendaklah disimpan dalam almari , berkunci / bilik eksibit ."
+          ],
+          "rujukan": [
+            "Borang2",
+            "Borang3"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 10: Jika sampel tidak dapat dihantar pada hari yang . sama sampel hendaklah disimpan dalam almari ,...",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "11",
+          "tajuk": "Isi borang permintaan analisis dan lekatkan satu ",
+          "anggota": [
+            "PDK",
+            "PKP",
+            "KPPKP",
+            "PP",
+            "KPK"
+          ],
+          "tindakan": [
+            "Isi borang permintaan analisis dan lekatkan satu . keratan label sampel bersama borang permintaan analisis barang kes ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "12",
+          "tajuk": "Hantar ke Juruanalisis di Jabatan Kimia Malaysia/ ",
+          "anggota": [
+            "PDK",
+            "PKP",
+            "KPPKP",
+            "PP",
+            "KPK"
+          ],
+          "tindakan": [
+            "Hantar ke Juruanalisis di Jabatan Kimia Malaysia/ . MakmalKesihatanAwamKebangsaanyangdiiktiraf untuk tujuan analisis ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "13",
+          "tajuk": "Dapatkan resit penerimaan sampel daripada ",
+          "anggota": [
+            "PDK",
+            "PKP",
+            "KPPKP",
+            "PP",
+            "KPK"
+          ],
+          "tindakan": [
+            "Dapatkan resit penerimaan sampel daripada . Juruanalisis ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "14",
+          "tajuk": "Dapatkan Perakuan Juruanalisis setelah keputusan ",
+          "anggota": [
+            "PDK",
+            "PKP",
+            "KPPKP",
+            "PP",
+            "KPK"
+          ],
+          "tindakan": [
+            "Dapatkan Perakuan Juruanalisis setelah keputusan . analisis keluar ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "15",
+          "tajuk": "Jika keputusan perakuan juruanalisis mengesan ",
+          "anggota": [
+            "PDK",
+            "PKP",
+            "KPPKP",
+            "PP",
+            "KPK"
+          ],
+          "tindakan": [
+            "Jika keputusan perakuan juruanalisis mengesan . bahan yang dimohon analisis kemukakan kepada ,"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 15: Jika keputusan perakuan juruanalisis mengesan . bahan yang dimohon analisis kemukakan kepada ,",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "16",
+          "tajuk": "sekiranya keputusan analisis melanggar",
+          "anggota": [
+            "18. Demi Kesihatan"
+          ],
+          "tindakan": [
+            "sekiranya keputusan analisis melanggar. Serahkan kepada Pegawai Penyiasat semua dokumen dan baki sampel bersama Borang Akuan Terima. Awam 2024[ Akta 852 ]"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 16: sekiranya keputusan analisis melanggar. Serahkan kepada Pegawai Penyiasat semua dokumen dan bak...",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        }
+      ]
+    }
+  ],
+  "carta_alir": {
+    "nodes": [
+      {
+        "id": "N_START",
+        "type": "start",
+        "label": "Mula Operasi / Prosedur",
+        "role": null,
+        "step_ref": null,
+        "sop_ref": null
+      },
+      {
+        "id": "N1",
+        "type": "process",
+        "label": "1. Taklimat kepada PDK ",
+        "role": "PKP/PPKPK",
+        "step_ref": "1",
+        "sop_ref": null
+      },
+      {
+        "id": "N2",
+        "type": "process",
+        "label": "2. Persediaan awal dengan menyemak peralatan ",
+        "role": "PKP/PPKPK",
+        "step_ref": "2",
+        "sop_ref": null
+      },
+      {
+        "id": "N3",
+        "type": "process",
+        "label": "3. Jumpapesalahtunjukkankadpengenalandiri serta ",
+        "role": "PDK",
+        "step_ref": "3",
+        "sop_ref": null
+      },
+      {
+        "id": "N4",
+        "type": "process",
+        "label": "4. Ambil barang kes yang dihisap untuk merokok dan ",
+        "role": "PDK",
+        "step_ref": "4",
+        "sop_ref": null
+      },
+      {
+        "id": "N5",
+        "type": "process",
+        "label": "5. Isi Notis Seksyen 47 bersama dengan Borang ",
+        "role": "PDK",
+        "step_ref": "5",
+        "sop_ref": null
+      },
+      {
+        "id": "N6",
+        "type": "process",
+        "label": "6. Lak dan labelkan barang kes ",
+        "role": "PDK",
+        "step_ref": "6",
+        "sop_ref": null
+      },
+      {
+        "id": "N7",
+        "type": "process",
+        "label": "7. Terangkan kesalahan pesalah dan dapatkan ",
+        "role": "PDK",
+        "step_ref": "7",
+        "sop_ref": null
+      },
+      {
+        "id": "N8",
+        "type": "decision",
+        "label": "8. Teruskan operasi di tempat lain jika berkaitan ",
+        "role": "PDK",
+        "step_ref": "8",
+        "sop_ref": null
+      },
+      {
+        "id": "N9",
+        "type": "process",
+        "label": "9. Sediakan dokumen pelan lakar ( lokasi dan lantai) ",
+        "role": "PDK",
+        "step_ref": "9",
+        "sop_ref": null
+      },
+      {
+        "id": "N10",
+        "type": "decision",
+        "label": "10. Jika sampel tidak dapat dihantar pada hari yang ",
+        "role": "PDK/PKP",
+        "step_ref": "10",
+        "sop_ref": null
+      },
+      {
+        "id": "N11",
+        "type": "process",
+        "label": "11. Isi borang permintaan analisis dan lekatkan satu ",
+        "role": "PDK/PKP",
+        "step_ref": "11",
+        "sop_ref": null
+      },
+      {
+        "id": "N12",
+        "type": "process",
+        "label": "12. Hantar ke Juruanalisis di Jabatan Kimia Malaysia/ ",
+        "role": "PDK/PKP",
+        "step_ref": "12",
+        "sop_ref": null
+      },
+      {
+        "id": "N13",
+        "type": "process",
+        "label": "13. Dapatkan resit penerimaan sampel daripada ",
+        "role": "PDK/PKP",
+        "step_ref": "13",
+        "sop_ref": null
+      },
+      {
+        "id": "N14",
+        "type": "process",
+        "label": "14. Dapatkan Perakuan Juruanalisis setelah keputusan ",
+        "role": "PDK/PKP",
+        "step_ref": "14",
+        "sop_ref": null
+      },
+      {
+        "id": "N_END",
+        "type": "end",
+        "label": "Selesai & Rekod Fail UIP",
+        "role": null,
+        "step_ref": null,
+        "sop_ref": null
+      }
+    ],
+    "edges": [
+      {
+        "from": "N_START",
+        "to": "N1",
+        "label": null
+      },
+      {
+        "from": "N1",
+        "to": "N2",
+        "label": null
+      },
+      {
+        "from": "N2",
+        "to": "N3",
+        "label": null
+      },
+      {
+        "from": "N3",
+        "to": "N4",
+        "label": null
+      },
+      {
+        "from": "N4",
+        "to": "N5",
+        "label": null
+      },
+      {
+        "from": "N5",
+        "to": "N6",
+        "label": null
+      },
+      {
+        "from": "N6",
+        "to": "N7",
+        "label": null
+      },
+      {
+        "from": "N7",
+        "to": "N8",
+        "label": null
+      },
+      {
+        "from": "N8",
+        "to": "N9",
+        "label": "Teruskan"
+      },
+      {
+        "from": "N9",
+        "to": "N10",
+        "label": null
+      },
+      {
+        "from": "N10",
+        "to": "N11",
+        "label": "Teruskan"
+      },
+      {
+        "from": "N11",
+        "to": "N12",
+        "label": null
+      },
+      {
+        "from": "N12",
+        "to": "N13",
+        "label": null
+      },
+      {
+        "from": "N13",
+        "to": "N14",
+        "label": null
+      },
+      {
+        "from": "N14",
+        "to": "N_END",
+        "label": null
+      }
+    ]
+  },
+  "senarai_semak": [
+    {
+      "id": "CHK-01",
+      "kumpulan": "Di Pejabat",
+      "item": "[1] Taklimat kepada PDK ",
+      "wajib": true,
+      "rujukan": "Suratarahan"
+    },
+    {
+      "id": "CHK-02",
+      "kumpulan": "Di Pejabat",
+      "item": "[2] Persediaan awal dengan menyemak peralatan ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-03",
+      "kumpulan": "Di Lapangan",
+      "item": "[3] Jumpapesalahtunjukkankadpengenalandiri serta ",
+      "wajib": true,
+      "rujukan": "KadPengenalan"
+    },
+    {
+      "id": "CHK-04",
+      "kumpulan": "Di Lapangan",
+      "item": "[4] Ambil barang kes yang dihisap untuk merokok dan ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-05",
+      "kumpulan": "Di Lapangan",
+      "item": "[5] Isi Notis Seksyen 47 bersama dengan Borang ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-06",
+      "kumpulan": "Di Lapangan",
+      "item": "[6] Lak dan labelkan barang kes ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-07",
+      "kumpulan": "Di Lapangan",
+      "item": "[7] Terangkan kesalahan pesalah dan dapatkan ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-08",
+      "kumpulan": "Di Lapangan",
+      "item": "[8] Teruskan operasi di tempat lain jika berkaitan ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-09",
+      "kumpulan": "Di Lapangan",
+      "item": "[9] Sediakan dokumen pelan lakar ( lokasi dan lantai) ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-10",
+      "kumpulan": "Di Pejabat",
+      "item": "[10] Jika sampel tidak dapat dihantar pada hari yang ",
+      "wajib": true,
+      "rujukan": "Borang2"
+    },
+    {
+      "id": "CHK-11",
+      "kumpulan": "Di Pejabat",
+      "item": "[11] Isi borang permintaan analisis dan lekatkan satu ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-12",
+      "kumpulan": "Di Pejabat",
+      "item": "[12] Hantar ke Juruanalisis di Jabatan Kimia Malaysia/ ",
+      "wajib": true,
+      "rujukan": null
+    }
+  ],
+  "lampiran": [
+    {
+      "kod": "Borang 1",
+      "tajuk": "PKP/",
+      "jenis": "lain",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Borang 2",
+      "tajuk": "AKTA KAWALAN PRODUK MEROKOK DEMI KESIHATAN AWAM 2024 [AKTA 852]",
+      "jenis": "lain",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Borang 3",
+      "tajuk": "AKTA KAWALAN PRODUK MEROKOK DEMI KESIHATAN AWAM 2024 [AKTA 852]",
+      "jenis": "lain",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    }
+  ],
+  "pematuhan": [
+    "Peraturan-Peraturan Pegawai Awam (Kelakuan dan Tatatertib) 1993",
+    "Pemakaian Kad Perakuan Kuasa KKM dan pematuhan rantaian keterangan mahkamah."
+  ],
+  "rujukan_silang_resolved": [
+    {
+      "sop_id": "UIP-UMUM-02-07 (PINDAAN 2024)",
+      "file_stem": "UIP-UMUM-02-07",
+      "tajuk": "Prosedur Penyediaan Kertas Siasatan"
+    }
+  ],
+  "nota_audit_kualiti": [
+    "Nama fail sumber Google Drive menggunakan ejaan 'AKPMDKS'; kod rasmi dalam dokumen ialah UIP-AKPMDKA-08-24."
+  ]
+}

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, type RefObject } from "react";
 
 /**
  * Salin teks ke papan keratan dengan sokongan sandaran (fallback) pada rangkaian HTTP tempatan (LAN PKD).
@@ -52,6 +52,67 @@ export function useLockBodyScroll(active: boolean): void {
       }
     };
   }, [active]);
+}
+
+/**
+ * Perangkap fokus papan kekunci (Tab / Shift+Tab + Escape) & pulih fokus asal untuk dialog modal (WCAG 2.1 AA).
+ */
+export function useModalFocusTrap(
+  containerRef: RefObject<HTMLElement | null>,
+  active: boolean,
+  onClose?: () => void
+): void {
+  useEffect(() => {
+    if (!active || typeof document === "undefined") return;
+    const prevFocused = document.activeElement as HTMLElement | null;
+    const node = containerRef.current;
+    const selector =
+      'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+    const focusFirst = () => {
+      if (!node) return;
+      const focusables = Array.from(node.querySelectorAll<HTMLElement>(selector));
+      if (focusables.length > 0) {
+        focusables[0].focus();
+      } else {
+        node.focus();
+      }
+    };
+    const timer = window.setTimeout(focusFirst, 15);
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        if (onClose) {
+          e.preventDefault();
+          onClose();
+        }
+        return;
+      }
+      if (e.key !== "Tab" || !node) return;
+      const focusables = Array.from(node.querySelectorAll<HTMLElement>(selector));
+      if (focusables.length === 0) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      if (e.shiftKey) {
+        if (document.activeElement === first || !node.contains(document.activeElement)) {
+          e.preventDefault();
+          last.focus();
+        }
+      } else if (document.activeElement === last || !node.contains(document.activeElement)) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.clearTimeout(timer);
+      document.removeEventListener("keydown", handleKeyDown);
+      if (prevFocused && typeof prevFocused.focus === "function") {
+        prevFocused.focus();
+      }
+    };
+  }, [active, containerRef, onClose]);
 }
 
 /**

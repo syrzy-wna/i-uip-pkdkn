@@ -16,6 +16,7 @@ import json
 import re
 import secrets
 import sqlite3
+import threading
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path
@@ -1537,11 +1538,21 @@ class UIPDatabase:
         )
         updates: List[str] = []
         params: List[Any] = []
+        allowed_roles = {
+            "PEGAWAI_PENYIASAT",
+            "PEGAWAI_PENDAKWA",
+            "PEGAWAI_PENYELIA",
+            "PEGAWAI_PENGUATKUASA",
+            "KETUA_UNIT",
+        }
         for field in updatable:
             if field in payload and payload[field] is not None:
                 val = str(payload[field]).strip()
                 if field == "grade":
                     val = normalize_sspa_grade(val, "U5")
+                elif field == "system_role":
+                    up_role = val.upper()
+                    val = up_role if up_role in allowed_roles else "PEGAWAI_PENYIASAT"
                 updates.append(f"{field} = ?")
                 params.append(val)
         if not updates:
@@ -2939,10 +2950,13 @@ class UIPDatabase:
 
 
 _db_instance: Optional[UIPDatabase] = None
+_db_lock = threading.RLock()
 
 
 def get_uip_db() -> UIPDatabase:
     global _db_instance
     if _db_instance is None:
-        _db_instance = UIPDatabase()
+        with _db_lock:
+            if _db_instance is None:
+                _db_instance = UIPDatabase()
     return _db_instance

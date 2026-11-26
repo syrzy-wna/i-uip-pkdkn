@@ -3355,7 +3355,7 @@ def test_sop_brain_2024_dual_knowledge_store_and_audit_pra_tpr() -> None:
     )
 
     brain = get_sop_brain()
-    assert len(brain.active_index) == 22
+    assert len(brain.active_index) == 33
     assert all("PPKHT" not in str(r.get("sop_id", "")).upper() for r in brain.active_index)
     assert all("sops_arkib_deprecated" not in str(r.get("fail_md", "")).lower() for r in brain.active_index)
 
@@ -3403,11 +3403,11 @@ def test_sop_brain_2024_dual_knowledge_store_and_audit_pra_tpr() -> None:
             )
         assert all("PPKHT" not in s.upper() for s in r.selected_sop_ids)
 
-    # Sahkan /api/status melaporkan sop_brain (22 SOP aktif, temp=0.0)
+    # Sahkan /api/status melaporkan sop_brain (33 SOP aktif, temp=0.0)
     st_resp = client.get("/api/status")
     assert st_resp.status_code == 200
     sb_status = st_resp.json().get("sop_brain") or {}
-    assert sb_status.get("active_sops_indexed") == 22
+    assert sb_status.get("active_sops_indexed") == 33
     assert sb_status.get("temperature") == 0.0
 
     # Sahkan /api/advisor/consult & /api/advisor/sop-brain menyertakan sop_routing, sop_references & [NOTA PINDAAN]
@@ -3559,14 +3559,17 @@ def test_comprehensive_audit_remediations_query_anti_miscitation_and_workflows()
     sops_resp = client.get("/api/legal/sops", headers=headers)
     assert sops_resp.status_code == 200
     sops_body = sops_resp.json()
-    assert sops_body["total"] == 22
-    assert len(sops_body["sops"]) == 22
+    assert sops_body["total"] == 33
+    assert len(sops_body["sops"]) == 33
+    assert len(sops_body["items"]) == 33
+    assert len(sops_body.get("pekeliling_rujukan") or []) >= 1
     assert all("PPKHT" not in item["sop_id"].upper() for item in sops_body["sops"])
     assert all(item.get("akta") and item.get("tajuk") for item in sops_body["sops"])
 
     sop_detail = client.get("/api/legal/sops/UIP-UMUM-02-24", headers=headers)
     assert sop_detail.status_code == 200
     assert "Akta Makanan" in sop_detail.json()["markdown_content"]
+    assert sop_detail.json().get("structured", {}).get("schema_version") == "2.0"
     assert client.get("/api/legal/sops/UIP-PPKHT-01-12", headers=headers).status_code == 404
 
     # 7. Unauthenticated /api/status redacts gemini.masked_api_key
@@ -3639,5 +3642,176 @@ def test_comprehensive_audit_remediations_query_anti_miscitation_and_workflows()
     assert comp_13a.status_code == 200
     k06_13a = next(c for c in comp_13a.json()["checks"] if c["code"] == "K06")
     assert k06_13a["status"] == "GAGAL"
+
+
+def test_v2_33_sops_structured_and_p0_p1_fixes() -> None:
+    """Sahkan kesemua penambahbaikan menyeluruh v2:
+    1. 33 SOP aktif berstruktur (8 Akta 852 UIP-AKPMDKA-01..08 + 3 UMUM 04/05/06 + 22 KKM Feb 2024), 0 PPKHT.
+    2. Pekeliling KPK Bil 18/2024 (#09) dengan amaran imbasan halaman ganjil tidak lengkap.
+    3. P0 Fix: CompoundNoticeChecker tidak lagi ranap HTTP 500 (TypeError) apabila repealed_hits memulangkan dict;
+       Notis S.32B bagi makanan (PPKM 2009) kekal LULUS manakala S.32B bagi rokok/PPKHT GAGAL.
+    4. P0 Fix: Pintu gerbang [KRITIKAL] SOP Pra-TPR dalam IPAuditorService kini aktif menyekat K/S & menyuntik SOP-K01.
+    5. P1 Fix: HybridModelRouter menguatkuasakan temperature=0.0 merentas semua model Gemini (2.5, 3.x, 4.x).
+    """
+    from backend.core.model_router import UIPModelRouter
+    from backend.services.sop_brain import get_sop_brain
+
+    headers = _get_auth_headers()
+    brain = get_sop_brain()
+
+    # 1. Semak 8 SOP Akta 852 + 3 SOP UMUM 2024 diindeks & berstruktur v2
+    expected_new = [
+        "UIP-AKPMDKA-01-24",
+        "UIP-AKPMDKA-02-24",
+        "UIP-AKPMDKA-03-24",
+        "UIP-AKPMDKA-04-24",
+        "UIP-AKPMDKA-05-24",
+        "UIP-AKPMDKA-06-24",
+        "UIP-AKPMDKA-07-24",
+        "UIP-AKPMDKA-08-24",
+        "UIP-UMUM-04-24",
+        "UIP-UMUM-05-24",
+        "UIP-UMUM-06-24",
+    ]
+    for stem in expected_new:
+        detail_resp = client.get(f"/api/legal/sops/{stem}", headers=headers)
+        assert detail_resp.status_code == 200, f"SOP aktif baharu hilang: {stem}"
+        body = detail_resp.json()
+        struct = body.get("structured")
+        assert isinstance(struct, dict) and struct.get("schema_version") == "2.0"
+        total_steps = sum(len(ph.get("langkah") or []) for ph in (struct.get("fasa_kerja") or []))
+        assert total_steps >= 3, f"{stem} langkah terlalu sedikit: {total_steps}"
+        assert body.get("cleaned_markdown")
+
+    # Semak [NOTA PINDAAN] Akta A1742 / P.U.(A) 139/2025 pada UIP-APPPB-01-21
+    apppb_detail = client.get("/api/legal/sops/UIP-APPPB-01-21", headers=headers).json()
+    assert apppb_detail.get("has_nota_pindaan") is True
+    assert any("A1742" in str(n.get("tajuk", "")) for n in (apppb_detail["structured"]["nota_pindaan"] or []))
+
+    # Semak penghalaan deterministik bagi 8 SOP Akta 852 & 3 SOP UMUM 2024
+    assert "UIP-AKPMDKA-01-24" in brain.route_question_deterministic(
+        "Keluarkan Notis Seksyen 47 dan kompaun S.48 Akta 852 bagi lelaki merokok di kedai makan"
+    ).selected_sop_ids
+    assert "UIP-AKPMDKA-02-24" in brain.route_question_deterministic(
+        "Mohon waran geledah Majistret Seksyen 32 Akta 852 untuk stor vape haram"
+    ).selected_sop_ids
+    assert "UIP-AKPMDKA-03-24" in brain.route_question_deterministic(
+        "Geledah tanpa waran Seksyen 33 Akta 852 di kedai vape"
+    ).selected_sop_ids
+    assert "UIP-AKPMDKA-04-24" in brain.route_question_deterministic(
+        "Prosedur persampelan produk merokok Seksyen 28(2) Akta 852"
+    ).selected_sop_ids
+    assert "UIP-AKPMDKA-05-24" in brain.route_question_deterministic(
+        "Kedai runcit jual rokok sebatang-sebatang dan pamer vape terbuka di bawah Akta 852"
+    ).selected_sop_ids
+    assert "UIP-AKPMDKA-06-24" in brain.route_question_deterministic(
+        "Prosedur penyitaan barang kes vape Seksyen 35 Akta 852"
+    ).selected_sop_ids
+    assert "UIP-AKPMDKA-07-24" in brain.route_question_deterministic(
+        "Pemilik mohon pemulangan sementara barang kes vape yang disita Akta 852"
+    ).selected_sop_ids
+    assert "UIP-AKPMDKA-08-24" in brain.route_question_deterministic(
+        "Tatacara penghantaran barang kes cecair vape Akta 852 ke Jabatan Kimia makmal"
+    ).selected_sop_ids
+    assert "UIP-UMUM-04-24" in brain.route_question_deterministic(
+        "Cara keluarkan notis kompaun Seksyen 32B Akta Makanan 1983 bagi pekerja restoran tiada suntikan tifoid PPKM 2009"
+    ).selected_sop_ids
+    assert "UIP-UMUM-05-24" in brain.route_question_deterministic(
+        "Prosedur pengurusan eksibit dan daftar stor barang kes UIP"
+    ).selected_sop_ids
+    assert "UIP-UMUM-06-24" in brain.route_question_deterministic(
+        "Prosedur risikan undang-undang kesihatan awam sebelum serbuan"
+    ).selected_sop_ids
+
+    # 2. Semak Pekeliling KPK Bil 18/2024 (#09) dengan amaran imbasan tidak lengkap
+    sops_list = client.get("/api/legal/sops?akta=Akta%20852", headers=headers).json()
+    assert sops_list["total"] >= 8
+    pek = sops_list.get("pekeliling_rujukan") or []
+    assert any("18/2024" in str(p.get("kod", "")) and "ganjil" in str(p.get("amaran_ketidaklengkapan", "")).lower() for p in pek)
+
+    # 3. P0 Fix: CompoundChecker repealed_hits dict (PPKHT 2004 / tobacco S.32B) tidak ranap HTTP 500
+    comp_repealed = client.post(
+        "/api/check-compound",
+        headers=headers,
+        json={
+            "no_notis": "KKM/KOM/TEST/2026/991",
+            "nama_penerima": "Ahmad bin Ali",
+            "no_kp": "900512-11-5211",
+            "nama_premis": "Kedai Kopi Sentosa",
+            "alamat_kejadian": "No. 10, Jalan Sultan, Kuala Nerus",
+            "tarikh_masa": "18/11/2026, 10.30 pagi",
+            "peruntukan_undang": "Peraturan 11(1)(d) PPKHT 2004 / Seksyen 32B Akta Makanan 1983",
+            "peruntukan_kompaun": "Borang 4 PPKHT 2004",
+            "kesalahan_ringkas": "Didapati menghisap rokok dan vape di kawasan kedai makan larangan merokok.",
+            "amaun_kompaun_rm": "RM 250.00",
+            "tempoh_bayaran": "14 hari dari tarikh serahan notis",
+            "pegawai_pengeluar": "PPKP Amirul",
+            "no_kad_kuasa": "KKM-001",
+        },
+    )
+    assert comp_repealed.status_code == 200
+    k06_rep = next(c for c in comp_repealed.json()["checks"] if c["code"] == "K06")
+    assert k06_rep["status"] == "GAGAL"
+    assert "852" in k06_rep["note"]
+
+    # S.32B Akta Makanan 1983 bagi keselamatan makanan (PPKM 2009) kekal 100% SAH (LULUS)
+    comp_food_32b = client.post(
+        "/api/check-compound",
+        headers=headers,
+        json={
+            "no_notis": "KKM/KOM/281/2026/992",
+            "nama_penerima": "Siti binti Hassan",
+            "no_kp": "920415-11-5222",
+            "nama_premis": "Restoran Selera Pantai",
+            "alamat_kejadian": "No. 5, Jalan Gong Badak, Kuala Nerus",
+            "tarikh_masa": "18/11/2026, 11.00 pagi",
+            "peruntukan_undang": "Peraturan 31(1) PPKM 2009 (Notis Seksyen 32B Akta Makanan 1983)",
+            "peruntukan_kompaun": "Seksyen 33 Akta Makanan 1983",
+            "kesalahan_ringkas": "Pengendali makanan didapati tidak mempunyai rekod suntikan vaksin antitifoid yang sah semasa pemeriksaan premis.",
+            "amaun_kompaun_rm": "RM 250.00",
+            "tempoh_bayaran": "14 hari dari tarikh serahan notis",
+            "pegawai_pengeluar": "PPKP Amirul",
+            "no_kad_kuasa": "KKM-001",
+        },
+    )
+    assert comp_food_32b.status_code == 200
+    k06_food = next(c for c in comp_food_32b.json()["checks"] if c["code"] == "K06")
+    assert k06_food["status"] == "LULUS"
+
+    # 4. P0 Fix: Pre-TPR [KRITIKAL] SOP gate menolak K/S dan menyuntik kuiri SOP-K01
+    resp_crit_audit = client.post(
+        "/api/audit-ip",
+        headers=headers,
+        data={
+            "text": (
+                "Kertas Siasatan lengkap dengan Borang 114, Saman, Diari Siasatan, Rakaman Percakapan S.112 KTJ. "
+                "Kes remaja hisap vape di kedai makan, dikeluarkan Notis Seksyen 32B Akta Makanan 1983 dan Borang 4 PPKHT 2004. "
+                "Tiada sijil Seksyen 90A dilampirkan."
+            ),
+            "akta_utama": "Akta 852",
+            "use_ollama": "false",
+            "fast_mode": "true",
+        },
+    )
+    assert resp_crit_audit.status_code == 200
+    crit_body = resp_crit_audit.json()
+    assert crit_body["readiness_status"] == "DITOLAK / ADA KUIRI KRITIKAL"
+    assert any(str(q.get("code", "")).startswith("SOP-K") for q in (crit_body.get("kuiri_tpr") or []))
+
+    # 5. P1 Fix: temperature=0.0 dikuatkuasakan untuk semua keluarga model Gemini (2.5, 3.x, 4.x)
+    for model_id in ("gemini-2.5-flash", "gemini-3.1-pro-preview", "gemini-4-flash"):
+        cfg = UIPModelRouter._build_generate_content_config(
+            model_name=model_id,
+            temperature=0.0,
+            schema={"type": "object", "properties": {}},
+            prefer_flash=False,
+        )
+        assert getattr(cfg, "temperature", None) == 0.0
+
+    # 6. /healthz probe DB berjaya
+    hz = client.get("/healthz")
+    assert hz.status_code == 200
+    assert hz.json().get("status") == "ok"
+
 
 

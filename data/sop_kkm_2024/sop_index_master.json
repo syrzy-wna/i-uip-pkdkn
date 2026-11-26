@@ -6,24 +6,578 @@
     "jumlah_sop_aktif": 22,
     "jumlah_sop_arkib_deprecated": 5,
     "anggaran_token_aktif_keseluruhan": 89840,
-    "polisi_akta_852": "Semua 5 SOP Bahagian D (PPKHT 2004) ditandakan DEPRECATED_BY_AKTA_852 dan dikecualikan daripada indeks aktif."
+    "polisi_akta_852": "Semua 5 SOP Bahagian D (PPKHT 2004) ditandakan DEPRECATED_BY_AKTA_852 dan dikecualikan daripada indeks aktif.",
+    "total_sops": 38,
+    "active_sops": 33,
+    "deprecated_sops": 5,
+    "version": "SOP-KKM-2024-v2-33-AKTIF"
   },
   "sops": [
     {
-      "bil": 1,
-      "start_page": 5,
-      "end_page": 14,
+      "sop_id": "UIP-AKPMDKA-01-24",
+      "file_stem": "UIP-AKPMDKA-01-24",
+      "fail_md": "data/sops_aktif/UIP-AKPMDKA-01-24.md",
+      "fail_json": "data/sops_structured/UIP-AKPMDKA-01-24.json",
+      "toc_id_alias": null,
+      "kategori": "AKTA_852",
+      "akta_utama": "Akta 852",
+      "keluaran": "01",
+      "pindaan": "00",
+      "tarikh_kuatkuasa": "01 Okt 2024",
+      "tajuk": "Prosedur Pelaksanaan Notis Memerintahkan Kehadiran Ke Mahkamah Di Bawah Seksyen 47 dan Tawaran Mengkompaun Kesalahan Di Bawah Seksyen 48 Akta 852",
+      "akta_berkaitan": [
+        "Akta 852",
+        "P.U.(A) 257/2024",
+        "P.U.(A) 258/2024",
+        "P.U.(A) 259/2024",
+        "P.U.(A) 264/2024",
+        "Akta 56",
+        "Akta 593",
+        "Akta 92"
+      ],
+      "seksyen_kunci": [
+        "Seksyen 47 Akta 852 (Notis Kehadiran Mahkamah — P.U.(A) 264/2024)",
+        "Seksyen 48 Akta 852 (Tawaran Kompaun — P.U.(A) 259/2024)",
+        "Kesalahan Boleh Kompaun: S.13(3), S.16(2), S.17(1), S.18(1)",
+        "Seksyen 41 Akta 852 (Izin Mendakwa TPR)",
+        "Tempoh Bayaran & Tarikh Hadir Mahkamah (>60 hari)"
+      ],
+      "kata_kunci": [
+        "notis seksyen 47",
+        "notis s.47",
+        "kompaun akta 852",
+        "tawaran kompaun akta 852",
+        "seksyen 48 akta 852",
+        "merokok kawasan larangan",
+        "seksyen 16(2)",
+        "seksyen 17(1)",
+        "seksyen 18(1)",
+        "seksyen 13(3)",
+        "pengurangan kompaun akta 852",
+        "buku notis akta 852",
+        "uip-akpmdka-01-24"
+      ],
+      "rujukan_silang": [
+        "UIP-UMUM-05-07"
+      ],
+      "lampiran_ringkas": [
+        "Lampiran A: Cara Mengisi Borang Notis",
+        "Borang Dib: ekalkan.",
+        "Lampiran M: Anggota",
+        "Lampiran F: UIPN",
+        "Lampiran B: KEMENTERIAN KESIHATAN MALAYSIA",
+        "Lampiran C: JADUAL KEDUA",
+        "Lampiran D: AKTA KAWALAN PRODUK MEROKOK DEMI KESIHATAN AWAM 2024",
+        "Lampiran E: NO. BORANG : NMKDM/AKPMDKA-01/2024(D)"
+      ],
+      "muka_surat_pdf": "1-39",
+      "status": "AKTIF",
+      "nota_audit": [
+        "Ralat cetak PDF asal dinormalkan: duplikasi nombor '22' dalam Isi Kandungan ('22 Pematuhan' & '22 Tarikh Kuatkuasa') dan ejaan 'seksyen 90(A)' -> 'Seksyen 90A'. Menggantikan sepenuhnya UIP-PPKHT-01-16 yang dimansuhkan."
+      ],
+      "lampiran": {
+        "Lampiran A": "Cara Mengisi Borang Notis",
+        "Borang Dib": "ekalkan.",
+        "Lampiran M": "Anggota",
+        "Lampiran F": "UIPN",
+        "Lampiran B": "KEMENTERIAN KESIHATAN MALAYSIA",
+        "Lampiran C": "JADUAL KEDUA",
+        "Lampiran D": "AKTA KAWALAN PRODUK MEROKOK DEMI KESIHATAN AWAM 2024",
+        "Lampiran E": "NO. BORANG : NMKDM/AKPMDKA-01/2024(D)",
+        "Lampiran G": "NO. BORANG : NMKDM/AKPMDKA-01/2024(N)",
+        "Lampiran H": "NMKDM/AM-04/2007 (N)",
+        "Lampiran I": "BORANG 3",
+        "Lampiran J": "BORANG 2",
+        "Lampiran K": "NMKDM/AKPMDKA-01/2024 (D)",
+        "Lampiran L": "NMKDM/AKPMDKA-01/2024 (D)"
+      },
+      "sumber_gdrive_id": "1n5WfBGgevmJXxlquqkqOtyV3M1jv4N_S",
+      "sumber_sha256": "4edc2accaeda03bb8b35836d4758c3daacbffcf6733e556bf44d79680ec25fa6"
+    },
+    {
+      "sop_id": "UIP-AKPMDKA-02-24",
+      "file_stem": "UIP-AKPMDKA-02-24",
+      "fail_md": "data/sops_aktif/UIP-AKPMDKA-02-24.md",
+      "fail_json": "data/sops_structured/UIP-AKPMDKA-02-24.json",
+      "toc_id_alias": null,
+      "kategori": "AKTA_852",
+      "akta_utama": "Akta 852",
+      "keluaran": "01",
+      "pindaan": "00",
+      "tarikh_kuatkuasa": "01 Okt 2024",
+      "tajuk": "Prosedur Menggeledah Dengan Waran Di Bawah Seksyen 32 Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024 [Akta 852]",
+      "akta_berkaitan": [
+        "Akta 852",
+        "Akta 593",
+        "Akta 56",
+        "Akta 344",
+        "Akta 574"
+      ],
+      "seksyen_kunci": [
+        "Seksyen 32 Akta 852 (Permohonan & Pelaksanaan Waran Geledah Majistret)",
+        "Seksyen 35 & 36 Akta 852 (Sitaan & Senarai)",
+        "Afidavit & Maklumat Bersumpah Kepada Majistret",
+        "Lampiran A-F Waran Geledah Akta 852"
+      ],
+      "kata_kunci": [
+        "geledah dengan waran akta 852",
+        "waran geledah vape",
+        "waran geledah akta 852",
+        "seksyen 32 akta 852",
+        "mohon waran majistret vape",
+        "uip-akpmdka-02-24"
+      ],
+      "rujukan_silang": [],
+      "lampiran_ringkas": [
+        "Lampiran A: Senarai Barang Disita",
+        "Lampiran C: LAMPIRAN D",
+        "Lampiran B: IO/PO",
+        "Borang Aku: AN SERAH / TERIMA BARANG KES",
+        "Lampiran D: MAKLUMAT BERSUMPAH",
+        "Lampiran E: Kepala surat jabatan",
+        "Lampiran F: Contoh Draf Laporan Polis"
+      ],
+      "muka_surat_pdf": "1-15",
+      "status": "AKTIF",
+      "nota_audit": [
+        "Rujukan silang rosak dalam PDF asal ('UIP-UMUM-05-16 (Pindaan 2024)' yang tidak wujud) telah dipetakan kepada kod aktif UIP-UMUM-05-07 (PINDAAN 2024). Jadual Proses Kerja tanpa garisan sempadan diekstrak melalui pengelompokan koordinat-X."
+      ],
+      "lampiran": {
+        "Lampiran A": "Senarai Barang Disita",
+        "Lampiran C": "LAMPIRAN D",
+        "Lampiran B": "IO/PO",
+        "Borang Aku": "AN SERAH / TERIMA BARANG KES",
+        "Lampiran D": "MAKLUMAT BERSUMPAH",
+        "Lampiran E": "Kepala surat jabatan",
+        "Lampiran F": "Contoh Draf Laporan Polis"
+      },
+      "sumber_gdrive_id": "1O8RmIZicjHnCe6AsfD6tNTYt630cjYMD",
+      "sumber_sha256": "966163f7fb1532366d2cf6a7f0ab75289d356a4f58be1bb50e0061e757bc384a"
+    },
+    {
+      "sop_id": "UIP-AKPMDKA-03-24",
+      "file_stem": "UIP-AKPMDKA-03-24",
+      "fail_md": "data/sops_aktif/UIP-AKPMDKA-03-24.md",
+      "fail_json": "data/sops_structured/UIP-AKPMDKA-03-24.json",
+      "toc_id_alias": null,
+      "kategori": "AKTA_852",
+      "akta_utama": "Akta 852",
+      "keluaran": "01",
+      "pindaan": "00",
+      "tarikh_kuatkuasa": "01 Okt 2024",
+      "tajuk": "Prosedur Menggeledah Tanpa Waran Di Bawah Seksyen 33 Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024 [Akta 852]",
+      "akta_berkaitan": [
+        "Akta 852",
+        "Akta 593",
+        "Akta 56",
+        "Akta 344",
+        "Akta 574"
+      ],
+      "seksyen_kunci": [
+        "Seksyen 33 Akta 852 (Menggeledah Tanpa Waran)",
+        "Sebab Munasabah Keterangan Akan Dialihkan/Dimusnahkan",
+        "Seksyen 35 & 36 Akta 852 (Sitaan & Senarai)",
+        "Contoh Draf Laporan Polis (Lampiran C)"
+      ],
+      "kata_kunci": [
+        "geledah tanpa waran akta 852",
+        "geledah vape tanpa waran",
+        "seksyen 33 akta 852",
+        "serbu kedai vape tanpa waran",
+        "uip-akpmdka-03-24"
+      ],
+      "rujukan_silang": [],
+      "lampiran_ringkas": [
+        "Lampiran A: Senarai Barang Disita",
+        "Borang Aku: AN SERAH / TERIMA BARANG KES",
+        "Lampiran C: Contoh Draf Laporan Polis"
+      ],
+      "muka_surat_pdf": "1-12",
+      "status": "AKTIF",
+      "nota_audit": [
+        "Ralat cetak PDF asal dinormalkan: Isi Kandungan menyenaraikan dua 'Lampiran B' sedangkan halaman 12 ialah LAMPIRAN C (Contoh Draf Laporan Polis), serta ejaan 'menggeladah'."
+      ],
+      "lampiran": {
+        "Lampiran A": "Senarai Barang Disita",
+        "Borang Aku": "AN SERAH / TERIMA BARANG KES",
+        "Lampiran C": "Contoh Draf Laporan Polis"
+      },
+      "sumber_gdrive_id": "1TY2nrilift__8wC6nl2e3lSZXdex1xTp",
+      "sumber_sha256": "1a3db3eb449a0d339aac40c83272bedd258ed9f918d59b40c1485e118b2c685b"
+    },
+    {
+      "sop_id": "UIP-AKPMDKA-04-24",
+      "file_stem": "UIP-AKPMDKA-04-24",
+      "fail_md": "data/sops_aktif/UIP-AKPMDKA-04-24.md",
+      "fail_json": "data/sops_structured/UIP-AKPMDKA-04-24.json",
+      "toc_id_alias": null,
+      "kategori": "AKTA_852",
+      "akta_utama": "Akta 852",
+      "keluaran": "01",
+      "pindaan": "00",
+      "tarikh_kuatkuasa": "01 Okt 2024",
+      "tajuk": "Tatacara Pengambilan Sampel Produk Merokok Di Bawah Subseksyen 28(2) Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024 [Akta 852]",
+      "akta_berkaitan": [
+        "Akta 852",
+        "Akta 56",
+        "Akta 593",
+        "Akta 388"
+      ],
+      "seksyen_kunci": [
+        "Subseksyen 28(2) Akta 852 (Kuasa Ambil Sampel)",
+        "Seksyen 29 Akta 852 (Pembayaran & Pembahagian Sampel)",
+        "Borang A & Borang 1-3 Persampelan",
+        "P.U.(A) 263/2024 (Makmal Analisis)"
+      ],
+      "kata_kunci": [
+        "persampelan akta 852",
+        "ambil sampel vape",
+        "sampel cecair vape",
+        "sampel rokok",
+        "seksyen 28(2) akta 852",
+        "ujian makmal vape",
+        "borang a sampel",
+        "uip-akpmdka-04-24"
+      ],
+      "rujukan_silang": [
+        "UIP-UMUM-04-07",
+        "UIP-UMUM-02-07"
+      ],
+      "lampiran_ringkas": [
+        "Borang A: Borang 1",
+        "Borang 3: SOP UIP-UMUM",
+        "Borang 1: LABEL BAGI HASIL TEMBAKAU/ PRODUK PENGGANTI TEMBAKAU/ BAHAN MEROKOK",
+        "Borang 2: PERMINTAAN BAGI ANALISIS PRODUK MEROKOK"
+      ],
+      "muka_surat_pdf": "1-13",
+      "status": "AKTIF",
+      "nota_audit": [
+        "Nama fail sumber menggunakan 'AKPMDKS'; kod rasmi ialah UIP-AKPMDKA-04-24."
+      ],
+      "lampiran": {
+        "Borang A": "Borang 1",
+        "Borang 3": "SOP UIP-UMUM",
+        "Borang 1": "LABEL BAGI HASIL TEMBAKAU/ PRODUK PENGGANTI TEMBAKAU/ BAHAN MEROKOK",
+        "Borang 2": "PERMINTAAN BAGI ANALISIS PRODUK MEROKOK"
+      },
+      "sumber_gdrive_id": "1kQ7Q1xUvPwzj6Zm_QdmUb_4m3OhCncQZ",
+      "sumber_sha256": "205e50747e2ec756c8bd02e0e5b48e30da77b6a2dc69c0e1bfbc22e3a8572e34"
+    },
+    {
+      "sop_id": "UIP-AKPMDKA-05-24",
+      "file_stem": "UIP-AKPMDKA-05-24",
+      "fail_md": "data/sops_aktif/UIP-AKPMDKA-05-24.md",
+      "fail_json": "data/sops_structured/UIP-AKPMDKA-05-24.json",
+      "toc_id_alias": null,
+      "kategori": "AKTA_852",
+      "akta_utama": "Akta 852",
+      "keluaran": "01",
+      "pindaan": "00",
+      "tarikh_kuatkuasa": "01 Okt 2024",
+      "tajuk": "Prosedur Penguatkuasaan Bagi Kesalahan Tidak Boleh Dikompaun Di Bawah Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024 [Akta 852]",
+      "akta_berkaitan": [
+        "Akta 852",
+        "Akta 56",
+        "Akta 593",
+        "Akta 92",
+        "Akta 388",
+        "Akta 574"
+      ],
+      "seksyen_kunci": [
+        "Kesalahan Tidak Boleh Kompaun Akta 852 (S.3, S.7, S.9, S.10, S.11, S.13(1), S.14, S.15)",
+        "Buka Kertas Siasatan Terus (Tanpa Kompaun)",
+        "Seksyen 41 Akta 852 (Izin Mendakwa TPR)",
+        "Notis Hadir Penyiasatan & Rakaman S.112 KTJ"
+      ],
+      "kata_kunci": [
+        "kesalahan tidak boleh dikompaun",
+        "tidak boleh kompaun akta 852",
+        "jual vape kepada obd",
+        "seksyen 13(1) akta 852",
+        "pamer vape",
+        "seksyen 10(1) akta 852",
+        "iklan vape",
+        "seksyen 7(1) akta 852",
+        "jual online vape",
+        "tidak berdaftar seksyen 3",
+        "uip-akpmdka-05-24"
+      ],
+      "rujukan_silang": [],
+      "lampiran_ringkas": [
+        "Lampiran A: 4. Taklimat operasi.",
+        "Lampiran B: Lampiran C",
+        "Lampiran C: Dokumen Rasmi Lampiran C"
+      ],
+      "muka_surat_pdf": "1-13",
+      "status": "AKTIF",
+      "nota_audit": [
+        "Tiga ralat cetak dalaman PDF asal dinormalkan: kepala halaman 3 'UIP-AKMPDKA-05-24', frasa berulang pada kepala halaman, dan duplikasi label 'Lampiran B' dalam Isi Kandungan (item kedua ialah Lampiran C: Notis Hadir Penyiasatan)."
+      ],
+      "lampiran": {
+        "Lampiran A": "4. Taklimat operasi.",
+        "Lampiran B": "Lampiran C",
+        "Lampiran C": "Dokumen Rasmi Lampiran C"
+      },
+      "sumber_gdrive_id": "1IGzQbI53aLoFwLsfRHH8fDCf8Mdz_ve9",
+      "sumber_sha256": "970f191334b3859f87a102edb7e1522d3a5fab72ccf1498a0af024c0f0f48508"
+    },
+    {
+      "sop_id": "UIP-AKPMDKA-06-24",
+      "file_stem": "UIP-AKPMDKA-06-24",
+      "fail_md": "data/sops_aktif/UIP-AKPMDKA-06-24.md",
+      "fail_json": "data/sops_structured/UIP-AKPMDKA-06-24.json",
+      "toc_id_alias": null,
+      "kategori": "AKTA_852",
+      "akta_utama": "Akta 852",
+      "keluaran": "01",
+      "pindaan": "00",
+      "tarikh_kuatkuasa": "01 Okt 2024",
+      "tajuk": "Prosedur Penyitaan Produk Merokok & Barang Kes Di Bawah Seksyen 35, 36 dan 37 Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024 [Akta 852]",
+      "akta_berkaitan": [
+        "Akta 852",
+        "Akta 56",
+        "Akta 593",
+        "Akta 388",
+        "Akta 574"
+      ],
+      "seksyen_kunci": [
+        "Seksyen 35 Akta 852 (Kuasa Menyita)",
+        "Seksyen 36 Akta 852 (Senarai Benda Disita)",
+        "Seksyen 37 Akta 852 (Pelepasan / Pelucuthakan 30 hari)",
+        "Borang Senarai Sitaan S.36"
+      ],
+      "kata_kunci": [
+        "sita vape",
+        "penyitaan akta 852",
+        "seksyen 35 akta 852",
+        "seksyen 36 akta 852",
+        "senarai benda disita",
+        "lak barang kes vape",
+        "sita produk merokok",
+        "30 hari sitaan",
+        "uip-akpmdka-06-24"
+      ],
+      "rujukan_silang": [],
+      "lampiran_ringkas": [
+        "Lampiran A: Senarai Barang Disita",
+        "Lampiran B: PKP/PPKPK/K",
+        "Borang Aku: AN SERAH / TERIMA BARANG KES",
+        "Lampiran C: KEMENTERIAN KESIHATAN MALAYSIA"
+      ],
+      "muka_surat_pdf": "1-12",
+      "status": "AKTIF",
+      "nota_audit": [
+        "Nama fail sumber Google Drive menggunakan ejaan 'AKPMDKS'; kod rasmi ialah UIP-AKPMDKA-06-24."
+      ],
+      "lampiran": {
+        "Lampiran A": "Senarai Barang Disita",
+        "Lampiran B": "PKP/PPKPK/K",
+        "Borang Aku": "AN SERAH / TERIMA BARANG KES",
+        "Lampiran C": "KEMENTERIAN KESIHATAN MALAYSIA"
+      },
+      "sumber_gdrive_id": "1W7fqrCWNKa-BX4jVofQDLLcGp8cLx--p",
+      "sumber_sha256": "32c5368a140cde036ca5d9c824dee6c00d3b57acc640947dee8728432fc5c62e"
+    },
+    {
+      "sop_id": "UIP-AKPMDKA-07-24",
+      "file_stem": "UIP-AKPMDKA-07-24",
+      "fail_md": "data/sops_aktif/UIP-AKPMDKA-07-24.md",
+      "fail_json": "data/sops_structured/UIP-AKPMDKA-07-24.json",
+      "toc_id_alias": null,
+      "kategori": "AKTA_852",
+      "akta_utama": "Akta 852",
+      "keluaran": "01",
+      "pindaan": "00",
+      "tarikh_kuatkuasa": "01 Okt 2024",
+      "tajuk": "Prosedur Pemulangan Sementara Barang Disita Di Bawah Seksyen 37 Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024 [Akta 852]",
+      "akta_berkaitan": [
+        "Akta 852",
+        "Akta 56",
+        "Akta 593",
+        "Akta 388"
+      ],
+      "seksyen_kunci": [
+        "Seksyen 37 Akta 852 (Pemulangan Sementara)",
+        "Seksyen 35-36 Akta 852",
+        "Bon / Jaminan Pemulangan Sementara",
+        "Kebenaran Bertulis Ketua Pengarah / Pegawai Diberi Kuasa"
+      ],
+      "kata_kunci": [
+        "pemulangan sementara",
+        "pelepasan sementara",
+        "seksyen 37 akta 852",
+        "tuntut barang sitaan vape",
+        "pulang barang sita",
+        "bon jaminan sitaan",
+        "uip-akpmdka-07-24"
+      ],
+      "rujukan_silang": [],
+      "lampiran_ringkas": [
+        "Lampiran A: Borang Akuan serah/ Terima",
+        "Lampiran B: Bagi",
+        "Borang Aku: AN SERAH / TERIMA"
+      ],
+      "muka_surat_pdf": "1-9",
+      "status": "AKTIF",
+      "nota_audit": [
+        "Nama fail sumber menyebut 'Pelepasan Sementara'; tajuk rasmi dalam dokumen ialah Pemulangan Sementara Di Bawah Seksyen 37 Akta 852. Nombor muka surat Isi Kandungan PDF berbeza +2 dan tajuk Carta Alir bertindih nombor '8.' telah dinormalkan."
+      ],
+      "lampiran": {
+        "Lampiran A": "Borang Akuan serah/ Terima",
+        "Lampiran B": "Bagi",
+        "Borang Aku": "AN SERAH / TERIMA"
+      },
+      "sumber_gdrive_id": "1p5MZp7duQ3J9WEYub5m8EbGwBypEAtis",
+      "sumber_sha256": "1f632e6d9c4710aefb1fb5ddce311c613598a5ae678abc10a876b8661085bdc8"
+    },
+    {
+      "sop_id": "UIP-AKPMDKA-08-24",
+      "file_stem": "UIP-AKPMDKA-08-24",
+      "fail_md": "data/sops_aktif/UIP-AKPMDKA-08-24.md",
+      "fail_json": "data/sops_structured/UIP-AKPMDKA-08-24.json",
+      "toc_id_alias": null,
+      "kategori": "AKTA_852",
+      "akta_utama": "Akta 852",
+      "keluaran": "01",
+      "pindaan": "00",
+      "tarikh_kuatkuasa": "01 Okt 2024",
+      "tajuk": "Prosedur Penghantaran Barang Kes Ke Makmal Di Bawah Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024 [Akta 852]",
+      "akta_berkaitan": [
+        "Akta 852",
+        "Akta 56",
+        "Akta 593",
+        "Akta 388",
+        "Akta 92"
+      ],
+      "seksyen_kunci": [
+        "Seksyen 28 Akta 852",
+        "Seksyen 35-36 Akta 852",
+        "P.U.(A) 263/2024 (Makmal Diluluskan)",
+        "Seksyen 399 KTJ",
+        "Rantaian Jagaan Eksibit (Borang 1-3)"
+      ],
+      "kata_kunci": [
+        "hantar barang kes",
+        "hantar sampel makmal",
+        "makmal akta 852",
+        "p.u.(a) 263/2024",
+        "analisis nikotin",
+        "rokok elektronik makmal",
+        "vape makmal",
+        "borang 1",
+        "borang 2",
+        "borang 3",
+        "uip-akpmdka-08-24"
+      ],
+      "rujukan_silang": [
+        "UIP-UMUM-02-07"
+      ],
+      "lampiran_ringkas": [
+        "Borang 1: PKP/",
+        "Borang 2: AKTA KAWALAN PRODUK MEROKOK DEMI KESIHATAN AWAM 2024 [AKTA 852]",
+        "Borang 3: AKTA KAWALAN PRODUK MEROKOK DEMI KESIHATAN AWAM 2024 [AKTA 852]"
+      ],
+      "muka_surat_pdf": "1-12",
+      "status": "AKTIF",
+      "nota_audit": [
+        "Nama fail sumber Google Drive menggunakan ejaan 'AKPMDKS'; kod rasmi dalam dokumen ialah UIP-AKPMDKA-08-24."
+      ],
+      "lampiran": {
+        "Borang 1": "PKP/",
+        "Borang 2": "AKTA KAWALAN PRODUK MEROKOK DEMI KESIHATAN AWAM 2024 [AKTA 852]",
+        "Borang 3": "AKTA KAWALAN PRODUK MEROKOK DEMI KESIHATAN AWAM 2024 [AKTA 852]"
+      },
+      "sumber_gdrive_id": "1SqFhvoIOSsPzq5OL9nb-wqg54owDbUtZ",
+      "sumber_sha256": "e9e52d508441a319c0f80575fc6479744c4238797a7c79fe33fffbad5ffb6453"
+    },
+    {
+      "sop_id": "UIP-UMUM-04-24",
+      "file_stem": "UIP-UMUM-04-24",
+      "fail_md": "data/sops_aktif/UIP-UMUM-04-24.md",
+      "fail_json": "data/sops_structured/UIP-UMUM-04-24.json",
+      "toc_id_alias": null,
+      "kategori": "AKTA_281",
+      "akta_utama": "Akta 281",
+      "keluaran": "01",
+      "pindaan": "00",
+      "tarikh_kuatkuasa": "22 Apr 2024",
+      "tajuk": "Prosedur Pengeluaran Kompaun Di Bawah Akta Makanan 1983 [Akta 281]",
+      "akta_berkaitan": [
+        "Akta 281",
+        "PPKM 2009",
+        "PPM 1985",
+        "Akta 593",
+        "Akta 56",
+        "Akta 388"
+      ],
+      "seksyen_kunci": [
+        "Seksyen 32B Akta Makanan 1983 (Notis Memerintahkan Kehadiran Ke Mahkamah — AKTIF bagi keselamatan makanan)",
+        "Seksyen 33 Akta Makanan 1983 (Kuasa Mengkompaun)",
+        "Peraturan-Peraturan Makanan (Pengkompaunan Kesalahan) 2017",
+        "Jadual Kadar Kompaun Kategori Premis I-IV (PPM 1985 & PPKM 2009)",
+        "14 Lampiran (A-N)"
+      ],
+      "kata_kunci": [
+        "kompaun akta makanan",
+        "kompaun akta 281",
+        "notis 32b makanan",
+        "notis seksyen 32b",
+        "kompaun ppkm 2009",
+        "kompaun ppm 1985",
+        "jadual kompaun makanan",
+        "kategori premis makanan",
+        "pengurangan kompaun makanan",
+        "uip-umum-04-24"
+      ],
+      "rujukan_silang": [
+        "UIP-UMUM-05-07"
+      ],
+      "lampiran_ringkas": [
+        "Lampiran A: Notis Memerintahkan Kehadiran Di Mahkamah (Seksyen 32B Akta Makanan 1983)",
+        "Lampiran B: Tawaran Mengkompaun Kesalahan (Seksyen 33 Akta Makanan 1983)",
+        "Lampiran C: Resit Rasmi Bayaran Kompaun & Perakuan Penerimaan",
+        "Lampiran D: Borang Permohonan Pengurangan Kompaun (Imbasan)",
+        "Lampiran E: Surat Keputusan Pengurangan Kompaun (Imbasan)",
+        "Lampiran F: Jadual Kadar Kompaun Peraturan-Peraturan Makanan 1985 mengikut Kategori Premis I–IV (SOP-PKKM-PD-09)",
+        "Lampiran G: Jadual Kadar Kompaun PPKM 2009 mengikut Kategori Premis I–IV (SOP-PKKM-PD-04)",
+        "Lampiran H: Buku Daftar Pengeluaran Notis Seksyen 32B & Kompaun"
+      ],
+      "muka_surat_pdf": "1-35",
+      "status": "AKTIF",
+      "nota_audit": [
+        "Isi Kandungan PDF asal berbeza +1 muka surat bagi kesemua 14 Lampiran dan mengandungi ralat cetak '2007' (sepatutnya Peraturan-Peraturan Makanan (Pengkompaunan Kesalahan) 2017). 15 halaman lampiran (m/s 16-27, 31-33: Lampiran D, E, F, G, K, L termasuk jadual kadar kompaun melintang 90° SOP-PKKM-PD-09 & PD-04) adalah imej imbasan dan ditandakan status 'imej_imbasan_perlu_ocr'."
+      ],
+      "lampiran": {
+        "Lampiran A": "Notis Memerintahkan Kehadiran Di Mahkamah (Seksyen 32B Akta Makanan 1983)",
+        "Lampiran B": "Tawaran Mengkompaun Kesalahan (Seksyen 33 Akta Makanan 1983)",
+        "Lampiran C": "Resit Rasmi Bayaran Kompaun & Perakuan Penerimaan",
+        "Lampiran D": "Borang Permohonan Pengurangan Kompaun (Imbasan)",
+        "Lampiran E": "Surat Keputusan Pengurangan Kompaun (Imbasan)",
+        "Lampiran F": "Jadual Kadar Kompaun Peraturan-Peraturan Makanan 1985 mengikut Kategori Premis I–IV (SOP-PKKM-PD-09)",
+        "Lampiran G": "Jadual Kadar Kompaun PPKM 2009 mengikut Kategori Premis I–IV (SOP-PKKM-PD-04)",
+        "Lampiran H": "Buku Daftar Pengeluaran Notis Seksyen 32B & Kompaun",
+        "Lampiran I": "Buku Daftar Kawalan Buku Notis Seksyen 32B",
+        "Lampiran J": "Laporan Bulanan Kutipan Kompaun Akta Makanan 1983",
+        "Lampiran K": "Surat Peringatan / Tuntutan Bayaran Kompaun (Imbasan)",
+        "Lampiran L": "Borang Pembatalan Notis Seksyen 32B (Imbasan)",
+        "Lampiran M": "Senarai Semak Pengeluaran Notis & Kompaun Akta Makanan 1983",
+        "Lampiran N": "Carta / Ringkasan Punca Kuasa Pengkompaunan Akta Makanan 1983"
+      },
+      "sumber_gdrive_id": "1tMbUvgF9npyzTgnRx2V6Sz3_xZSYm55u",
+      "sumber_sha256": "2aa550cb4d11fb75302cbc061db46a329a09ca083633ff35f6650bfea8cc6354"
+    },
+    {
       "sop_id": "UIP-UMUM-01-07 (PINDAAN 2024)",
       "file_stem": "UIP-UMUM-01-07",
+      "fail_md": "data/sops_aktif/UIP-UMUM-01-07.md",
+      "fail_json": "data/sops_structured/UIP-UMUM-01-07.json",
       "toc_id_alias": null,
       "kategori": "UMUM",
-      "status": "AKTIF",
-      "tarikh_kuatkuasa": "2024-02-15",
+      "akta_utama": "SOP Umum / KTJ",
+      "keluaran": "01",
+      "pindaan": "01",
+      "tarikh_kuatkuasa": "15 Feb 2024",
       "tajuk": "Prosedur Penggubalan Undang-Undang Kesihatan Awam",
-      "punca_kuasa": [
-        "Perlembagaan Persekutuan",
-        "Akta Ibu Kesihatan Awam"
-      ],
       "akta_berkaitan": [
         "Akta 56",
         "Akta 260",
@@ -50,30 +604,216 @@
         "Kertas Jemaah Menteri",
         "pewartaan"
       ],
-      "lampiran": {},
       "rujukan_silang": [],
+      "lampiran_ringkas": [],
+      "muka_surat_pdf": "1-10",
+      "status": "AKTIF",
       "nota_audit": [
         "Menyenaraikan PPKHT 2004 dalam rujukan umum; rujukan hasil tembakau kini tertakluk kepada Akta 852 (berkuat kuasa 1 Okt 2024)."
       ],
-      "jumlah_aksara": 8512,
-      "anggaran_token": 2128,
-      "fail_md": "data/sops_aktif/UIP-UMUM-01-07.md"
+      "lampiran": {},
+      "sumber_gdrive_id": "1bzmkWzTQtkOYU7KfUFCbx-WsV8WjI0DG",
+      "sumber_sha256": "9a56f69272b4f0ec8429cb6f2b7bcd3372b373938b946d02e4191e9997dcc273"
     },
     {
-      "bil": 2,
-      "start_page": 15,
-      "end_page": 33,
-      "sop_id": "UIP-UMUM-02-07 (PINDAAN 2024)",
-      "file_stem": "UIP-UMUM-02-07",
+      "sop_id": "UIP-UMUM-01-16 (PINDAAN 2024)",
+      "file_stem": "UIP-UMUM-01-16",
+      "fail_md": "data/sops_aktif/UIP-UMUM-01-16.md",
+      "fail_json": "data/sops_structured/UIP-UMUM-01-16.json",
       "toc_id_alias": null,
       "kategori": "UMUM",
-      "status": "AKTIF",
-      "tarikh_kuatkuasa": "2024-02-15",
-      "tajuk": "Prosedur Penyediaan Kertas Siasatan",
-      "punca_kuasa": [
-        "Seksyen 119 Kanun Tatacara Jenayah [Akta 593]",
-        "Seksyen 377(b) KTJ"
+      "akta_utama": "SOP Umum / KTJ",
+      "keluaran": "01",
+      "pindaan": "01",
+      "tarikh_kuatkuasa": "15 Feb 2024",
+      "tajuk": "Prosedur Operasi/Operasi Bersepadu Penguatkuasaan Perundangan Kesihatan Awam",
+      "akta_berkaitan": [
+        "Akta 154",
+        "Akta 281",
+        "Akta 342",
+        "Akta 260",
+        "Akta 56",
+        "Akta 593",
+        "PPKM 2009",
+        "PPM 1985"
       ],
+      "seksyen_kunci": [
+        "Perancangan Operasi",
+        "Risikan Awal",
+        "Surat Penurunan Kuasa Pasukan Bantuan",
+        "Taklimat",
+        "Debriefing",
+        "Laporan Operasi"
+      ],
+      "kata_kunci": [
+        "operasi bersepadu",
+        "ops bersepadu",
+        "antara daerah",
+        "antara negeri",
+        "pasukan bantuan",
+        "surat penurunan kuasa",
+        "taklimat operasi",
+        "debriefing",
+        "risikan"
+      ],
+      "rujukan_silang": [
+        "UIP-UMUM-04-07",
+        "UIP-APSPP-01-07",
+        "UIP-APSPP-01-16",
+        "UIP-APPPB-01-07",
+        "UIP-AKPMDKA-01-24"
+      ],
+      "lampiran_ringkas": [
+        "Lampiran A: Senarai Semak Rujukan SOP bagi Operasi Bersepadu"
+      ],
+      "muka_surat_pdf": "1-11",
+      "status": "AKTIF",
+      "nota_audit": [
+        "Item 5 dalam Lampiran A merujuk UIP-PPKHT-01-16 (PPKHT 2004 / S.32B) yang telah digantikan oleh Akta 852."
+      ],
+      "lampiran": {
+        "Lampiran A": "Senarai Semak Rujukan SOP bagi Operasi Bersepadu"
+      },
+      "sumber_gdrive_id": "1WqVZ0zfkmrCSdZoahNwQY111WUl4f1qS",
+      "sumber_sha256": "6b5f2439ef8734c147ec170118a3887a09f190e31c4d50ae73f730d1c61431f8"
+    },
+    {
+      "sop_id": "UIP-UMUM-01-22 (PINDAAN 2024)",
+      "file_stem": "UIP-UMUM-01-22",
+      "fail_md": "data/sops_aktif/UIP-UMUM-01-22.md",
+      "fail_json": "data/sops_structured/UIP-UMUM-01-22.json",
+      "toc_id_alias": "UIP-UMUM-01-23 (PINDAAN 2024)",
+      "kategori": "UMUM",
+      "akta_utama": "SOP Umum / KTJ",
+      "keluaran": "01",
+      "pindaan": "01",
+      "tarikh_kuatkuasa": "15 Feb 2024",
+      "tajuk": "Prosedur Pengurusan dan Pelaksanaan Penggunaan Kamera Badan (Body Worn Camera)",
+      "akta_berkaitan": [
+        "Akta 593",
+        "Akta 56",
+        "Akta 388",
+        "Akta 574",
+        "Akta 88",
+        "Akta 281",
+        "Akta 342",
+        "Akta 154"
+      ],
+      "seksyen_kunci": [
+        "S.4 Akta 342",
+        "S.33B Akta 281",
+        "S.18 Akta 154",
+        "Pengecualian S.10 Akta 342",
+        "Jarak 0.5m-1.5m",
+        "PDK Pengawal",
+        "Larangan edit/rename",
+        "S.90A(2) Akta 56"
+      ],
+      "kata_kunci": [
+        "kamera badan",
+        "body worn camera",
+        "BWC",
+        "PDK pengawal",
+        "rakaman video",
+        "jarak rakaman",
+        "padam rakaman",
+        "edit",
+        "rename",
+        "CD",
+        "90A",
+        "Akta Rahsia Rasmi",
+        "sek 10 akta 342"
+      ],
+      "rujukan_silang": [],
+      "lampiran_ringkas": [
+        "Lampiran 1: Rekod Pengurusan dan Pelaksanaan Penggunaan Kamera Badan",
+        "Lampiran 2: Perakuan Di Bawah Seksyen 90A(2) Akta Keterangan 1950 (Kamera Badan)",
+        "Lampiran 3: Borang Akuan Serah/Terima Barang Kes"
+      ],
+      "muka_surat_pdf": "1-15",
+      "status": "AKTIF",
+      "nota_audit": [
+        "KONFLIK KOD: Halaman Kandungan A menyenaraikan SOP ini sebagai UIP-UMUM-01-23 (PINDAAN 2024), tetapi kod rasmi dalam dokumen adalah UIP-UMUM-01-22 (PINDAAN 2024).",
+        "Isi Kandungan ms 91 tersilap label Lampiran 2 sebagai 'Senarai Pemeriksaan', sedangkan Lampiran 2 sebenar (ms 103) adalah 'Perakuan Di Bawah Seksyen 90A(2) Akta Keterangan 1950'.",
+        "Perenggan 8.1 merujuk PPKHT 2004 yang kini digantikan oleh Akta 852."
+      ],
+      "lampiran": {
+        "Lampiran 1": "Rekod Pengurusan dan Pelaksanaan Penggunaan Kamera Badan",
+        "Lampiran 2": "Perakuan Di Bawah Seksyen 90A(2) Akta Keterangan 1950 (Kamera Badan)",
+        "Lampiran 3": "Borang Akuan Serah/Terima Barang Kes"
+      },
+      "sumber_gdrive_id": "1HFYlCEHGIfM69ZxSfJVKEEQJjQ4p_iAY",
+      "sumber_sha256": "78d6fdba0d9e64c5153362beae58b3ed3ef9c719944a968eb9da558239ee6c16"
+    },
+    {
+      "sop_id": "UIP-UMUM-01-24",
+      "file_stem": "UIP-UMUM-01-24",
+      "fail_md": "data/sops_aktif/UIP-UMUM-01-24.md",
+      "fail_json": "data/sops_structured/UIP-UMUM-01-24.json",
+      "toc_id_alias": "UIP-APSPP-03-07 (Kod lama dalam rujukan silang)",
+      "kategori": "UMUM",
+      "akta_utama": "SOP Umum / KTJ",
+      "keluaran": "01",
+      "pindaan": "00",
+      "tarikh_kuatkuasa": "15 Feb 2024",
+      "tajuk": "Prosedur Tindakan Kerana Menghalang Tugas",
+      "akta_berkaitan": [
+        "Akta 281",
+        "Akta 154",
+        "Akta 342",
+        "Akta 574",
+        "Akta 593",
+        "Akta 56",
+        "Akta 388"
+      ],
+      "seksyen_kunci": [
+        "S.186 Kanun Keseksaan (kekasaran/kecederaan - serah PDRM)",
+        "S.4(4) Akta 281",
+        "S.21 Akta 154",
+        "S.22 Akta 342",
+        "Surat Permohonan Sebut Awal"
+      ],
+      "kata_kunci": [
+        "menghalang tugas",
+        "halang penjawat awam",
+        "enggan benarkan masuk",
+        "enggan beri maklumat",
+        "buang barang kes",
+        "bertindak kasar",
+        "cedera",
+        "seksyen 186",
+        "laporan polis",
+        "sebut awal"
+      ],
+      "rujukan_silang": [
+        "UIP-UMUM-05-07"
+      ],
+      "lampiran_ringkas": [
+        "Lampiran A: Surat Permohonan Sebut Awal"
+      ],
+      "muka_surat_pdf": "1-9",
+      "status": "AKTIF",
+      "nota_audit": [
+        "Akta 852 TIDAK mempunyai seksyen halangan tugas tersendiri — halangan tugas semasa penguatkuasaan Akta 852 wajib dirujuk kepada PDRM di bawah Seksyen 186 Kanun Keseksaan [Akta 574]."
+      ],
+      "lampiran": {
+        "Lampiran A": "Surat Permohonan Sebut Awal"
+      },
+      "sumber_gdrive_id": "1ksLaKGcFqgSpta3KFByRFrzyeywV1Z_m",
+      "sumber_sha256": "b942ba0f5b1748a218a9051c9a68deecf9d0744a755da42d3d4f7fcaedf477f1"
+    },
+    {
+      "sop_id": "UIP-UMUM-02-07 (PINDAAN 2024)",
+      "file_stem": "UIP-UMUM-02-07",
+      "fail_md": "data/sops_aktif/UIP-UMUM-02-07.md",
+      "fail_json": "data/sops_structured/UIP-UMUM-02-07.json",
+      "toc_id_alias": null,
+      "kategori": "UMUM",
+      "akta_utama": "SOP Umum / KTJ",
+      "keluaran": "01",
+      "pindaan": "01",
+      "tarikh_kuatkuasa": "15 Feb 2024",
+      "tajuk": "Prosedur Penyediaan Kertas Siasatan",
       "akta_berkaitan": [
         "Akta 56",
         "Akta 260",
@@ -113,6 +853,23 @@
         "TPR",
         "barang kes"
       ],
+      "rujukan_silang": [
+        "UIP-AKPMDKA-01-24"
+      ],
+      "lampiran_ringkas": [
+        "Lampiran A: Senarai Semak Kertas Siasatan Bagi Akta Makanan 1983",
+        "Lampiran B: Senarai Semak Kertas Siasatan Bagi Akta Pemusnahan Serangga Pembawa Penyakit 1975",
+        "Lampiran C: [DEPRECATED - PPKHT 2004] Senarai Semak Kertas Siasatan Bagi PPKHT 2004 (Ganti rujukan statut dengan Akta 852)",
+        "Lampiran D: Senarai Semak Kertas Siasatan Bagi Peraturan-Peraturan Kebersihan Makanan 2009",
+        "Lampiran E: Senarai Semak Kertas Siasatan Bagi Peraturan-Peraturan Makanan 1985 (Tercicir dari Isi Kandungan PDF tetapi wujud di ms 32)",
+        "Lampiran F: Senarai Semak Kertas Siasatan Bagi Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988 (Tercicir dari Isi Kandungan PDF tetapi wujud di ms 33)"
+      ],
+      "muka_surat_pdf": "1-19",
+      "status": "AKTIF",
+      "nota_audit": [
+        "Langkah 1.4 dan Lampiran C merujuk PPKHT 2004 dan Notis S.32B Akta Makanan 1983 yang telah dimansuhkan/digantikan oleh Akta 852 mulai 1 Oktober 2024.",
+        "Isi Kandungan asal PDF hanya menyenaraikan Lampiran A-D, tetapi Lampiran E (PPM 1985) dan Lampiran F (Akta 342) wujud pada halaman 32-33."
+      ],
       "lampiran": {
         "Lampiran A": "Senarai Semak Kertas Siasatan Bagi Akta Makanan 1983",
         "Lampiran B": "Senarai Semak Kertas Siasatan Bagi Akta Pemusnahan Serangga Pembawa Penyakit 1975",
@@ -121,33 +878,74 @@
         "Lampiran E": "Senarai Semak Kertas Siasatan Bagi Peraturan-Peraturan Makanan 1985 (Tercicir dari Isi Kandungan PDF tetapi wujud di ms 32)",
         "Lampiran F": "Senarai Semak Kertas Siasatan Bagi Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988 (Tercicir dari Isi Kandungan PDF tetapi wujud di ms 33)"
       },
-      "rujukan_silang": [],
-      "nota_audit": [
-        "Langkah 1.4 dan Lampiran C merujuk PPKHT 2004 dan Notis S.32B Akta Makanan 1983 yang telah dimansuhkan/digantikan oleh Akta 852 mulai 1 Oktober 2024.",
-        "Isi Kandungan asal PDF hanya menyenaraikan Lampiran A-D, tetapi Lampiran E (PPM 1985) dan Lampiran F (Akta 342) wujud pada halaman 32-33."
-      ],
-      "jumlah_aksara": 22320,
-      "anggaran_token": 5580,
-      "fail_md": "data/sops_aktif/UIP-UMUM-02-07.md"
+      "sumber_gdrive_id": "197HPYQGnLAR7Nda-oFQ7ZqjZ1T-QUORw",
+      "sumber_sha256": "910ae4dce6cacc76e4406f8bc7dd72d42760c41c1147a6d2ec0a2f41736a8645"
     },
     {
-      "bil": 3,
-      "start_page": 34,
-      "end_page": 52,
-      "sop_id": "UIP-UMUM-03-07 (PINDAAN 2024)",
-      "file_stem": "UIP-UMUM-03-07",
+      "sop_id": "UIP-UMUM-02-24",
+      "file_stem": "UIP-UMUM-02-24",
+      "fail_md": "data/sops_aktif/UIP-UMUM-02-24.md",
+      "fail_json": "data/sops_structured/UIP-UMUM-02-24.json",
       "toc_id_alias": null,
       "kategori": "UMUM",
-      "status": "AKTIF",
-      "tarikh_kuatkuasa": "2024-02-15",
-      "tajuk": "Prosedur Penyerahan Saman",
-      "punca_kuasa": [
-        "Seksyen 34(2) KTJ",
-        "Seksyen 35(1) KTJ",
-        "Seksyen 35(4) KTJ",
-        "Seksyen 36 KTJ",
-        "Seksyen 37 KTJ"
+      "akta_utama": "Akta 281",
+      "keluaran": "01",
+      "pindaan": "00",
+      "tarikh_kuatkuasa": "15 Feb 2024",
+      "tajuk": "Prosedur Menggeledah Tanpa Waran Di Bawah Akta Makanan 1983 [Akta 281]",
+      "akta_berkaitan": [
+        "Akta 281",
+        "Akta 593",
+        "Akta 388",
+        "Akta 574"
       ],
+      "seksyen_kunci": [
+        "S.4(1)(b) Akta 281",
+        "S.62 KTJ",
+        "S.64 KTJ (Senarai Pemeriksaan)",
+        "Syak munasabah barang akan dialihkan jika lengah",
+        "Laporan Polis"
+      ],
+      "kata_kunci": [
+        "geledah tanpa waran",
+        "menggeledah tanpa waran",
+        "Akta Makanan",
+        "sita makanan",
+        "senarai barang disita",
+        "seksyen 62 KTJ",
+        "seksyen 64 KTJ",
+        "kelengahan",
+        "barang dialihkan"
+      ],
+      "rujukan_silang": [
+        "UIP-UMUM-05-07"
+      ],
+      "lampiran_ringkas": [
+        "Lampiran A: Senarai Barang Yang Disita (Senarai Pemeriksaan S.64 KTJ)",
+        "Lampiran B: Borang Akuan Serah / Terima Barang Kes"
+      ],
+      "muka_surat_pdf": "1-11",
+      "status": "AKTIF",
+      "nota_audit": [],
+      "lampiran": {
+        "Lampiran A": "Senarai Barang Yang Disita (Senarai Pemeriksaan S.64 KTJ)",
+        "Lampiran B": "Borang Akuan Serah / Terima Barang Kes"
+      },
+      "sumber_gdrive_id": "1BI9xcz2hPw7l-tRqDHAq41bXdMLRL3pt",
+      "sumber_sha256": "67fe69adb1bd84c38c74cd45f8d2cfac18aff1324bb726bec52c4325ba91137f"
+    },
+    {
+      "sop_id": "UIP-UMUM-03-07 (PINDAAN 2024)",
+      "file_stem": "UIP-UMUM-03-07",
+      "fail_md": "data/sops_aktif/UIP-UMUM-03-07.md",
+      "fail_json": "data/sops_structured/UIP-UMUM-03-07.json",
+      "toc_id_alias": null,
+      "kategori": "UMUM",
+      "akta_utama": "SOP Umum / KTJ",
+      "keluaran": "01",
+      "pindaan": "01",
+      "tarikh_kuatkuasa": "15 Feb 2024",
+      "tajuk": "Prosedur Penyerahan Saman",
       "akta_berkaitan": [
         "Akta 593",
         "Akta 56",
@@ -178,6 +976,23 @@
         "Borang 252",
         "DNAA"
       ],
+      "rujukan_silang": [
+        "UIP-UMUM-04-07"
+      ],
+      "lampiran_ringkas": [
+        "Lampiran A: Senarai Semak Prosedur Penyerahan Saman",
+        "Lampiran B: Surat Arahan Menyampaikan Saman Di Bawah Seksyen 34(2) KTJ",
+        "Lampiran C: Akuan Terima Saman / Perakuan Penyerahan Saman",
+        "Lampiran D: Contoh Borang 11A (Mahkamah 252 Pin. 1/78) Affidavit Tidak Sampai Penyampaian",
+        "Lampiran E: Contoh Permohonan Bagi Penyampaian Ganti Mengikut Seksyen 36 KPJ",
+        "Lampiran F: Contoh Borang 11A (Mahkamah 252 Pin. 1/78) Affidavit Penyampaian"
+      ],
+      "muka_surat_pdf": "1-19",
+      "status": "AKTIF",
+      "nota_audit": [
+        "Isi Kandungan PDF hanya menyenaraikan Lampiran A-D dengan penomboran bercampur, tetapi dokumen sebenar mempunyai 6 lampiran lengkap (Lampiran A hingga F).",
+        "Proses kerja Langkah 22 menyebut '(Lampiran 3)' merujuk Borang 252 Pin. 1/78 yang sebenarnya adalah Lampiran F dalam dokumen ini."
+      ],
       "lampiran": {
         "Lampiran A": "Senarai Semak Prosedur Penyerahan Saman",
         "Lampiran B": "Surat Arahan Menyampaikan Saman Di Bawah Seksyen 34(2) KTJ",
@@ -186,31 +1001,73 @@
         "Lampiran E": "Contoh Permohonan Bagi Penyampaian Ganti Mengikut Seksyen 36 KPJ",
         "Lampiran F": "Contoh Borang 11A (Mahkamah 252 Pin. 1/78) Affidavit Penyampaian"
       },
-      "rujukan_silang": [
-        "UIP-UMUM-04-07 (PINDAAN 2024)"
-      ],
-      "nota_audit": [
-        "Isi Kandungan PDF hanya menyenaraikan Lampiran A-D dengan penomboran bercampur, tetapi dokumen sebenar mempunyai 6 lampiran lengkap (Lampiran A hingga F).",
-        "Proses kerja Langkah 22 menyebut '(Lampiran 3)' merujuk Borang 252 Pin. 1/78 yang sebenarnya adalah Lampiran F dalam dokumen ini."
-      ],
-      "jumlah_aksara": 19552,
-      "anggaran_token": 4888,
-      "fail_md": "data/sops_aktif/UIP-UMUM-03-07.md"
+      "sumber_gdrive_id": "1TqhZ5nCqkV7sNfwviC9K0gQluG4Z7hLK",
+      "sumber_sha256": "2a62705fe5c1035cec6e3d1fc6db1657fd4385893407b8bdcaca8f2dd85959d2"
     },
     {
-      "bil": 4,
-      "start_page": 53,
-      "end_page": 67,
-      "sop_id": "UIP-UMUM-04-07 (PINDAAN 2024)",
-      "file_stem": "UIP-UMUM-04-07",
+      "sop_id": "UIP-UMUM-03-24",
+      "file_stem": "UIP-UMUM-03-24",
+      "fail_md": "data/sops_aktif/UIP-UMUM-03-24.md",
+      "fail_json": "data/sops_structured/UIP-UMUM-03-24.json",
       "toc_id_alias": null,
       "kategori": "UMUM",
-      "status": "AKTIF",
-      "tarikh_kuatkuasa": "2024-02-15",
-      "tajuk": "Prosedur Mengambil Gambar",
-      "punca_kuasa": [
-        "Seksyen 90A(2) Akta Keterangan 1950 [Akta 56]"
+      "akta_utama": "Akta 281",
+      "keluaran": "01",
+      "pindaan": "00",
+      "tarikh_kuatkuasa": "15 Feb 2024",
+      "tajuk": "Prosedur Menggeledah Dengan Waran Di Bawah Akta Makanan 1983 [Akta 281]",
+      "akta_berkaitan": [
+        "Akta 281",
+        "Akta 593",
+        "Akta 388",
+        "Akta 574"
       ],
+      "seksyen_kunci": [
+        "S.4(1)(b) Akta 281",
+        "S.54 KTJ (Waran Geledah)",
+        "S.64 KTJ",
+        "Permohonan kepada Majistret",
+        "Kembalikan waran & hasil kepada Majistret"
+      ],
+      "kata_kunci": [
+        "geledah dengan waran",
+        "waran geledah",
+        "permohonan waran",
+        "Majistret",
+        "seksyen 54 KTJ",
+        "Akta Makanan",
+        "sita",
+        "kembalikan waran"
+      ],
+      "rujukan_silang": [
+        "UIP-UMUM-05-07"
+      ],
+      "lampiran_ringkas": [
+        "Lampiran A: Senarai Barang Yang Disita (Borang Pemeriksaan)",
+        "Lampiran B: Borang Akuan Serah / Terima Barang Kes"
+      ],
+      "muka_surat_pdf": "1-11",
+      "status": "AKTIF",
+      "nota_audit": [],
+      "lampiran": {
+        "Lampiran A": "Senarai Barang Yang Disita (Borang Pemeriksaan)",
+        "Lampiran B": "Borang Akuan Serah / Terima Barang Kes"
+      },
+      "sumber_gdrive_id": "1cX-WrsiEYQVqwrBhXzJTndDtoYUwKbxN",
+      "sumber_sha256": "cff7499c4f29d1c0804943699cb6c43d2d945d635958efe56c3bbabce556bad1"
+    },
+    {
+      "sop_id": "UIP-UMUM-04-07 (PINDAAN 2024)",
+      "file_stem": "UIP-UMUM-04-07",
+      "fail_md": "data/sops_aktif/UIP-UMUM-04-07.md",
+      "fail_json": "data/sops_structured/UIP-UMUM-04-07.json",
+      "toc_id_alias": null,
+      "kategori": "UMUM",
+      "akta_utama": "SOP Umum / KTJ",
+      "keluaran": "01",
+      "pindaan": "01",
+      "tarikh_kuatkuasa": "15 Feb 2024",
+      "tajuk": "Prosedur Mengambil Gambar",
       "akta_berkaitan": [
         "Akta 56",
         "Akta 281",
@@ -239,37 +1096,39 @@
         "sampul gambar",
         "jurugambar"
       ],
+      "rujukan_silang": [],
+      "lampiran_ringkas": [
+        "Lampiran A: Senarai Semak Peralatan Mengambil Gambar",
+        "Lampiran B: Format Dokumen Gambar & Keterangan Gambar",
+        "Lampiran C: Perakuan Di Bawah Seksyen 90A(2) Akta Keterangan 1950",
+        "Lampiran D: Akuan Penyerahan dan Penerimaan Dokumen Tertentu"
+      ],
+      "muka_surat_pdf": "1-15",
+      "status": "AKTIF",
+      "nota_audit": [
+        "Isi Kandungan PDF hanya menyenaraikan Lampiran A, tetapi Lampiran B, C (Perakuan S.90A), dan D wujud pada halaman 63-67."
+      ],
       "lampiran": {
         "Lampiran A": "Senarai Semak Peralatan Mengambil Gambar",
         "Lampiran B": "Format Dokumen Gambar & Keterangan Gambar",
         "Lampiran C": "Perakuan Di Bawah Seksyen 90A(2) Akta Keterangan 1950",
         "Lampiran D": "Akuan Penyerahan dan Penerimaan Dokumen Tertentu"
       },
-      "rujukan_silang": [],
-      "nota_audit": [
-        "Isi Kandungan PDF hanya menyenaraikan Lampiran A, tetapi Lampiran B, C (Perakuan S.90A), dan D wujud pada halaman 63-67."
-      ],
-      "jumlah_aksara": 12836,
-      "anggaran_token": 3209,
-      "fail_md": "data/sops_aktif/UIP-UMUM-04-07.md"
+      "sumber_gdrive_id": "1KTTtLI93MS7hpIU99hdQ7q6exugUCVuy",
+      "sumber_sha256": "2f1c1ea75c650a05c0203782e87efb44d6ec1bad0567ff14d2818914e44f9197"
     },
     {
-      "bil": 5,
-      "start_page": 68,
-      "end_page": 78,
       "sop_id": "UIP-UMUM-05-07 (PINDAAN 2024)",
       "file_stem": "UIP-UMUM-05-07",
+      "fail_md": "data/sops_aktif/UIP-UMUM-05-07.md",
+      "fail_json": "data/sops_structured/UIP-UMUM-05-07.json",
       "toc_id_alias": null,
       "kategori": "UMUM",
-      "status": "AKTIF",
-      "tarikh_kuatkuasa": "2024-02-15",
+      "akta_utama": "SOP Umum / KTJ",
+      "keluaran": "01",
+      "pindaan": "01",
+      "tarikh_kuatkuasa": "15 Feb 2024",
       "tajuk": "Prosedur Pendakwaan Di Mahkamah",
-      "punca_kuasa": [
-        "Seksyen 377(b) KTJ",
-        "Seksyen 51A KTJ",
-        "Seksyen 172A KTJ",
-        "Seksyen 173(d) KTJ"
-      ],
       "akta_berkaitan": [
         "Akta 593",
         "Akta 56",
@@ -306,320 +1165,144 @@
         "DNAA",
         "rayuan TPR"
       ],
-      "lampiran": {},
       "rujukan_silang": [],
+      "lampiran_ringkas": [],
+      "muka_surat_pdf": "1-11",
+      "status": "AKTIF",
       "nota_audit": [
         "Menyenaraikan PPKHT 2004 dalam rujukan umum; rujukan hasil tembakau kini tertakluk kepada Akta 852."
       ],
-      "jumlah_aksara": 11419,
-      "anggaran_token": 2854,
-      "fail_md": "data/sops_aktif/UIP-UMUM-05-07.md"
+      "lampiran": {},
+      "sumber_gdrive_id": "1pbhoVD3aiseoVwwYHIf17_yu4ZPUW5Hf",
+      "sumber_sha256": "c1777b7ae417e3db154efa374447958f73ba2166c0d20209e65eabce1c9dd58b"
     },
     {
-      "bil": 6,
-      "start_page": 79,
-      "end_page": 89,
-      "sop_id": "UIP-UMUM-01-16 (PINDAAN 2024)",
-      "file_stem": "UIP-UMUM-01-16",
+      "sop_id": "UIP-UMUM-05-24",
+      "file_stem": "UIP-UMUM-05-24",
+      "fail_md": "data/sops_aktif/UIP-UMUM-05-24.md",
+      "fail_json": "data/sops_structured/UIP-UMUM-05-24.json",
       "toc_id_alias": null,
       "kategori": "UMUM",
-      "status": "AKTIF",
-      "tarikh_kuatkuasa": "2024-02-15",
-      "tajuk": "Prosedur Operasi/Operasi Bersepadu Penguatkuasaan Perundangan Kesihatan Awam",
-      "punca_kuasa": [
-        "Akta 154",
-        "Akta 281",
-        "Akta 342",
-        "Surat Penurunan Kuasa"
-      ],
+      "akta_utama": "SOP Umum / KTJ",
+      "keluaran": "01",
+      "pindaan": "00",
+      "tarikh_kuatkuasa": "22 Apr 2024",
+      "tajuk": "Prosedur Pengurusan Barang Kes / Eksibit Di Bawah Perundangan Kesihatan Awam",
       "akta_berkaitan": [
-        "Akta 154",
+        "Akta 852",
         "Akta 281",
+        "Akta 154",
         "Akta 342",
-        "Akta 260",
-        "Akta 56",
         "Akta 593",
-        "PPKM 2009",
-        "PPM 1985"
+        "Akta 56"
       ],
       "seksyen_kunci": [
-        "Perancangan Operasi",
-        "Risikan Awal",
-        "Surat Penurunan Kuasa Pasukan Bantuan",
-        "Taklimat",
-        "Debriefing",
-        "Laporan Operasi"
+        "Rantaian Jagaan Eksibit (Chain of Custody)",
+        "Stor Barang Kes & Pegawai Penjaga Stor Eksibit",
+        "Pendaftaran, Pelabelan, Lak (Seal) & Pelupusan S.407/407A KTJ",
+        "Lampiran A-C Daftar & Serah Terima Eksibit"
       ],
       "kata_kunci": [
-        "operasi bersepadu",
-        "ops bersepadu",
-        "antara daerah",
-        "antara negeri",
-        "pasukan bantuan",
-        "surat penurunan kuasa",
-        "taklimat operasi",
-        "debriefing",
-        "risikan"
+        "pengurusan eksibit",
+        "barang kes",
+        "stor eksibit",
+        "bilik barang kes",
+        "chain of custody",
+        "rantaian jagaan",
+        "daftar barang kes",
+        "lupus barang kes",
+        "pelupusan eksibit",
+        "uip-umum-05-24"
+      ],
+      "rujukan_silang": [
+        "UIP-AKPMDKA-06-24"
+      ],
+      "lampiran_ringkas": [
+        "Lampiran A: Dokumen Rasmi Lampiran A",
+        "Lampiran B: Lampiran C",
+        "Lampiran C: Daftar Barang kes/eksibit UIP"
+      ],
+      "muka_surat_pdf": "1-15",
+      "status": "AKTIF",
+      "nota_audit": [
+        "Langkah 6 PDF asal masih menyebut 'PPKHT 2004 dan Akta 852' — diberi [NOTA PINDAAN] bahawa PPKHT 2004 telah dimansuhkan mulai 1 Okt 2024. Ralat cetak 'Keluaran: 00' dan 'Definasi' dalam PDF asal dinormalkan."
       ],
       "lampiran": {
-        "Lampiran A": "Senarai Semak Rujukan SOP bagi Operasi Bersepadu"
+        "Lampiran A": "Dokumen Rasmi Lampiran A",
+        "Lampiran B": "Lampiran C",
+        "Lampiran C": "Daftar Barang kes/eksibit UIP"
       },
-      "rujukan_silang": [
-        "UIP-UMUM-04-07 (PINDAAN 2024)",
-        "UIP-APSPP-01-07 (PINDAAN 2024)",
-        "UIP-APSPP-01-16 (PINDAAN 2024)",
-        "UIP-APPPB-01-07 (PINDAAN 2024)"
-      ],
-      "nota_audit": [
-        "Item 5 dalam Lampiran A merujuk UIP-PPKHT-01-16 (PPKHT 2004 / S.32B) yang telah digantikan oleh Akta 852."
-      ],
-      "jumlah_aksara": 11320,
-      "anggaran_token": 2830,
-      "fail_md": "data/sops_aktif/UIP-UMUM-01-16.md"
+      "sumber_gdrive_id": "1ZoUn0Wy1iYK70iZH1oMB5saQWwLHQ5rN",
+      "sumber_sha256": "34d2f5785eb26a49c419d8eb9e2efb6be820ef97e29791e16e56565696fb3d9c"
     },
     {
-      "bil": 7,
-      "start_page": 90,
-      "end_page": 104,
-      "sop_id": "UIP-UMUM-01-22 (PINDAAN 2024)",
-      "file_stem": "UIP-UMUM-01-22",
-      "toc_id_alias": "UIP-UMUM-01-23 (PINDAAN 2024)",
+      "sop_id": "UIP-UMUM-06-24",
+      "file_stem": "UIP-UMUM-06-24",
+      "fail_md": "data/sops_aktif/UIP-UMUM-06-24.md",
+      "fail_json": "data/sops_structured/UIP-UMUM-06-24.json",
+      "toc_id_alias": null,
       "kategori": "UMUM",
-      "status": "AKTIF",
-      "tarikh_kuatkuasa": "2024-02-15",
-      "tajuk": "Prosedur Pengurusan dan Pelaksanaan Penggunaan Kamera Badan (Body Worn Camera)",
-      "punca_kuasa": [
-        "Seksyen 90A(2) Akta Keterangan 1950",
-        "Kanun Tatacara Jenayah [Akta 593]",
-        "Akta Rahsia Rasmi 1972 [Akta 88]"
-      ],
+      "akta_utama": "SOP Umum / KTJ",
+      "keluaran": "01",
+      "pindaan": "00",
+      "tarikh_kuatkuasa": "Disember 2024",
+      "tajuk": "Prosedur Pengurusan Aktiviti Risikan Undang-Undang Kesihatan Awam",
       "akta_berkaitan": [
+        "Akta 852",
+        "Akta 281",
+        "Akta 154",
+        "Akta 342",
         "Akta 593",
         "Akta 56",
-        "Akta 388",
-        "Akta 574",
-        "Akta 88",
-        "Akta 281",
-        "Akta 342",
-        "Akta 154"
+        "Akta 574"
       ],
       "seksyen_kunci": [
-        "S.4 Akta 342",
-        "S.33B Akta 281",
-        "S.18 Akta 154",
-        "Pengecualian S.10 Akta 342",
-        "Jarak 0.5m-1.5m",
-        "PDK Pengawal",
-        "Larangan edit/rename",
-        "S.90A(2) Akta 56"
+        "Pengumpulan & Penilaian Maklumat Risikan (SULIT)",
+        "Borang Laporan Risikan (Lampiran A — SULIT)",
+        "Senarai Semak Aktiviti Risikan (Lampiran B)",
+        "Keselamatan Anggota & Kerahsiaan Sumber Maklumat"
       ],
       "kata_kunci": [
-        "kamera badan",
-        "body worn camera",
-        "BWC",
-        "PDK pengawal",
-        "rakaman video",
-        "jarak rakaman",
-        "padam rakaman",
-        "edit",
-        "rename",
-        "CD",
-        "90A",
-        "Akta Rahsia Rasmi",
-        "sek 10 akta 342"
+        "risikan",
+        "aktiviti risikan",
+        "intipan",
+        "maklumat risikan",
+        "borang laporan risikan",
+        "sulit",
+        "penyamaran",
+        "premis sasaran",
+        "uip-umum-06-24",
+        "uip-umum-06-2024"
       ],
-      "lampiran": {
-        "Lampiran 1": "Rekod Pengurusan dan Pelaksanaan Penggunaan Kamera Badan",
-        "Lampiran 2": "Perakuan Di Bawah Seksyen 90A(2) Akta Keterangan 1950 (Kamera Badan)",
-        "Lampiran 3": "Borang Akuan Serah/Terima Barang Kes"
-      },
       "rujukan_silang": [],
+      "lampiran_ringkas": [
+        "Lampiran B: Dokumen Rasmi Lampiran B",
+        "Lampiran A: Dokumen Rasmi Lampiran A"
+      ],
+      "muka_surat_pdf": "1-12",
+      "status": "AKTIF",
       "nota_audit": [
-        "KONFLIK KOD: Halaman Kandungan A menyenaraikan SOP ini sebagai UIP-UMUM-01-23 (PINDAAN 2024), tetapi kod rasmi dalam dokumen adalah UIP-UMUM-01-22 (PINDAAN 2024).",
-        "Isi Kandungan ms 91 tersilap label Lampiran 2 sebagai 'Senarai Pemeriksaan', sedangkan Lampiran 2 sebenar (ms 103) adalah 'Perakuan Di Bawah Seksyen 90A(2) Akta Keterangan 1950'.",
-        "Perenggan 8.1 merujuk PPKHT 2004 yang kini digantikan oleh Akta 852."
-      ],
-      "jumlah_aksara": 17170,
-      "anggaran_token": 4292,
-      "fail_md": "data/sops_aktif/UIP-UMUM-01-22.md"
-    },
-    {
-      "bil": 8,
-      "start_page": 105,
-      "end_page": 113,
-      "sop_id": "UIP-UMUM-01-24",
-      "file_stem": "UIP-UMUM-01-24",
-      "toc_id_alias": "UIP-APSPP-03-07 (Kod lama dalam rujukan silang)",
-      "kategori": "UMUM",
-      "status": "AKTIF",
-      "tarikh_kuatkuasa": "2024-02-15",
-      "tajuk": "Prosedur Tindakan Kerana Menghalang Tugas",
-      "punca_kuasa": [
-        "Seksyen 4(4) Akta Makanan 1983 [Akta 281]",
-        "Seksyen 21 APSPP 1975 [Akta 154]",
-        "Seksyen 22 APPPB 1988 [Akta 342]",
-        "Seksyen 186 Kanun Keseksaan [Akta 574]"
-      ],
-      "akta_berkaitan": [
-        "Akta 281",
-        "Akta 154",
-        "Akta 342",
-        "Akta 574",
-        "Akta 593",
-        "Akta 56",
-        "Akta 388"
-      ],
-      "seksyen_kunci": [
-        "S.186 Kanun Keseksaan (kekasaran/kecederaan - serah PDRM)",
-        "S.4(4) Akta 281",
-        "S.21 Akta 154",
-        "S.22 Akta 342",
-        "Surat Permohonan Sebut Awal"
-      ],
-      "kata_kunci": [
-        "menghalang tugas",
-        "halang penjawat awam",
-        "enggan benarkan masuk",
-        "enggan beri maklumat",
-        "buang barang kes",
-        "bertindak kasar",
-        "cedera",
-        "seksyen 186",
-        "laporan polis",
-        "sebut awal"
+        "Nama fail sumber menggunakan kod 'UIP-UMUM-06-2024' dan kulit muka menggunakan tanda en-dash; kod rasmi dalam badan SOP ialah UIP-UMUM-06-24. Sudah merujuk Akta 852 tanpa rujukan PPKHT 2004."
       ],
       "lampiran": {
-        "Lampiran A": "Surat Permohonan Sebut Awal"
+        "Lampiran B": "Dokumen Rasmi Lampiran B",
+        "Lampiran A": "Dokumen Rasmi Lampiran A"
       },
-      "rujukan_silang": [
-        "UIP-UMUM-05-07 (PINDAAN 2024)"
-      ],
-      "nota_audit": [
-        "Nota Akta 852: Bagi kes menghalang tugas di bawah Akta 852, rujuk peruntukan halangan tugas khusus dalam Akta 852 sebagai tambahan kepada seksyen di Langkah 9."
-      ],
-      "jumlah_aksara": 11280,
-      "anggaran_token": 2820,
-      "fail_md": "data/sops_aktif/UIP-UMUM-01-24.md"
+      "sumber_gdrive_id": "1CW1TSjC8Iv7jm_67YoCqdU0DIiZjnryQ",
+      "sumber_sha256": "42373ca5ec4c621dae79eca652fd0f1249e401e6eaa7f4176f06a419e6497f1e"
     },
     {
-      "bil": 9,
-      "start_page": 114,
-      "end_page": 124,
-      "sop_id": "UIP-UMUM-02-24",
-      "file_stem": "UIP-UMUM-02-24",
-      "toc_id_alias": null,
-      "kategori": "UMUM",
-      "status": "AKTIF",
-      "tarikh_kuatkuasa": "2024-02-15",
-      "tajuk": "Prosedur Menggeledah Tanpa Waran Di Bawah Akta Makanan 1983 [Akta 281]",
-      "punca_kuasa": [
-        "Seksyen 4(1)(b) Akta Makanan 1983 [Akta 281]",
-        "Seksyen 62 Kanun Tatacara Jenayah [Akta 593]",
-        "Seksyen 64 KTJ"
-      ],
-      "akta_berkaitan": [
-        "Akta 281",
-        "Akta 593",
-        "Akta 388",
-        "Akta 574"
-      ],
-      "seksyen_kunci": [
-        "S.4(1)(b) Akta 281",
-        "S.62 KTJ",
-        "S.64 KTJ (Senarai Pemeriksaan)",
-        "Syak munasabah barang akan dialihkan jika lengah",
-        "Laporan Polis"
-      ],
-      "kata_kunci": [
-        "geledah tanpa waran",
-        "menggeledah tanpa waran",
-        "Akta Makanan",
-        "sita makanan",
-        "senarai barang disita",
-        "seksyen 62 KTJ",
-        "seksyen 64 KTJ",
-        "kelengahan",
-        "barang dialihkan"
-      ],
-      "lampiran": {
-        "Lampiran A": "Senarai Barang Yang Disita (Senarai Pemeriksaan S.64 KTJ)",
-        "Lampiran B": "Borang Akuan Serah / Terima Barang Kes"
-      },
-      "rujukan_silang": [
-        "UIP-UMUM-05-07 (PINDAAN 2024)"
-      ],
-      "nota_audit": [],
-      "jumlah_aksara": 8376,
-      "anggaran_token": 2094,
-      "fail_md": "data/sops_aktif/UIP-UMUM-02-24.md"
-    },
-    {
-      "bil": 10,
-      "start_page": 125,
-      "end_page": 136,
-      "sop_id": "UIP-UMUM-03-24",
-      "file_stem": "UIP-UMUM-03-24",
-      "toc_id_alias": null,
-      "kategori": "UMUM",
-      "status": "AKTIF",
-      "tarikh_kuatkuasa": "2024-02-15",
-      "tajuk": "Prosedur Menggeledah Dengan Waran Di Bawah Akta Makanan 1983 [Akta 281]",
-      "punca_kuasa": [
-        "Seksyen 4(1)(b) Akta Makanan 1983 [Akta 281]",
-        "Seksyen 54 Kanun Tatacara Jenayah [Akta 593]",
-        "Seksyen 64 KTJ"
-      ],
-      "akta_berkaitan": [
-        "Akta 281",
-        "Akta 593",
-        "Akta 388",
-        "Akta 574"
-      ],
-      "seksyen_kunci": [
-        "S.4(1)(b) Akta 281",
-        "S.54 KTJ (Waran Geledah)",
-        "S.64 KTJ",
-        "Permohonan kepada Majistret",
-        "Kembalikan waran & hasil kepada Majistret"
-      ],
-      "kata_kunci": [
-        "geledah dengan waran",
-        "waran geledah",
-        "permohonan waran",
-        "Majistret",
-        "seksyen 54 KTJ",
-        "Akta Makanan",
-        "sita",
-        "kembalikan waran"
-      ],
-      "lampiran": {
-        "Lampiran A": "Senarai Barang Yang Disita (Borang Pemeriksaan)",
-        "Lampiran B": "Borang Akuan Serah / Terima Barang Kes"
-      },
-      "rujukan_silang": [
-        "UIP-UMUM-05-07 (PINDAAN 2024)"
-      ],
-      "nota_audit": [],
-      "jumlah_aksara": 8290,
-      "anggaran_token": 2072,
-      "fail_md": "data/sops_aktif/UIP-UMUM-03-24.md"
-    },
-    {
-      "bil": 11,
-      "start_page": 137,
-      "end_page": 161,
       "sop_id": "UIP-APSPP-01-07 (PINDAAN 2024)",
       "file_stem": "UIP-APSPP-01-07",
+      "fail_md": "data/sops_aktif/UIP-APSPP-01-07.md",
+      "fail_json": "data/sops_structured/UIP-APSPP-01-07.json",
       "toc_id_alias": null,
       "kategori": "APSPP_1975",
-      "status": "AKTIF",
-      "tarikh_kuatkuasa": "2024-02-15",
+      "akta_utama": "Akta 154",
+      "keluaran": "01",
+      "pindaan": "01",
+      "tarikh_kuatkuasa": "15 Feb 2024",
       "tajuk": "Prosedur Pemeriksaan Serangga Pembawa Penyakit Di Lapangan",
-      "punca_kuasa": [
-        "Akta Pemusnahan Serangga Pembawa Penyakit 1975 [Akta 154]",
-        "Seksyen 5(3) APSPP 1975",
-        "Seksyen 6 APSPP 1975"
-      ],
       "akta_berkaitan": [
         "Akta 154",
         "Akta 56",
@@ -652,6 +1335,26 @@
         "sampul kecil",
         "selepas 10 malam"
       ],
+      "rujukan_silang": [
+        "UIP-UMUM-01-24",
+        "UIP-UMUM-04-07",
+        "UIP-APSPP-02-07"
+      ],
+      "lampiran_ringkas": [
+        "Lampiran A: Senarai Semak Persediaan, Peralatan (Inspection Kit) & Borang",
+        "Lampiran B: Label Botol Spesimen / Bekas Pembiakan",
+        "Lampiran C: Perakuan Pungutan Serangga Pembawa Penyakit Dari Premis",
+        "Lampiran D: Senarai Barang Yang Disita (Seksyen 6 APSPP 1975)",
+        "Lampiran E: Contoh Pelan Lokasi Kedudukan Premis & Lampiran E(a) Petunjuk",
+        "Lampiran F: Contoh Pelan Lantai Tempat Pembiakan & Lampiran F(a) Petunjuk",
+        "Lampiran G: Contoh Diari Siasatan (ID)",
+        "Lampiran H: Notis Memasuki Premis Di Bawah Seksyen 5(3) APSPP 1975"
+      ],
+      "muka_surat_pdf": "1-25",
+      "status": "AKTIF",
+      "nota_audit": [
+        "KONFLIK RUJUKAN SILANG: Proses Kerja Langkah 2.7.2 masih memetik kod lama 'UIP-APSPP-03-07 (Pindaan 2024)' untuk menghalang tugas, tetapi Carta Alir (ms 145) memetik kod rasmi terkini iaitu 'UIP-UMUM-01-24'."
+      ],
       "lampiran": {
         "Lampiran A": "Senarai Semak Persediaan, Peralatan (Inspection Kit) & Borang",
         "Lampiran B": "Label Botol Spesimen / Bekas Pembiakan",
@@ -664,88 +1367,21 @@
         "Lampiran I": "Penyerahan Spesimen dan Permohonan Identifikasi",
         "Lampiran J": "Akuan Terima Spesimen Serangga Pembawa Penyakit"
       },
-      "rujukan_silang": [
-        "UIP-UMUM-01-24",
-        "UIP-UMUM-04-07 (PINDAAN 2024)",
-        "UIP-APSPP-02-07 (PINDAAN 2024)"
-      ],
-      "nota_audit": [
-        "KONFLIK RUJUKAN SILANG: Proses Kerja Langkah 2.7.2 masih memetik kod lama 'UIP-APSPP-03-07 (Pindaan 2024)' untuk menghalang tugas, tetapi Carta Alir (ms 145) memetik kod rasmi terkini iaitu 'UIP-UMUM-01-24'."
-      ],
-      "jumlah_aksara": 30048,
-      "anggaran_token": 7512,
-      "fail_md": "data/sops_aktif/UIP-APSPP-01-07.md"
+      "sumber_gdrive_id": "1Fb1sC_WE1pwIIdpDCwrfORrTSctYnSHK",
+      "sumber_sha256": "8d3b6e9e31c3bf4390c1f87afa03db70682b664516d284a84d6ed24a1be10c4f"
     },
     {
-      "bil": 12,
-      "start_page": 162,
-      "end_page": 171,
-      "sop_id": "UIP-APSPP-02-07 (PINDAAN 2024)",
-      "file_stem": "UIP-APSPP-02-07",
-      "toc_id_alias": null,
-      "kategori": "APSPP_1975",
-      "status": "AKTIF",
-      "tarikh_kuatkuasa": "2024-02-15",
-      "tajuk": "Prosedur Identifikasi Serangga Pembawa Penyakit",
-      "punca_kuasa": [
-        "Akta Pemusnahan Serangga Pembawa Penyakit 1975 [Akta 154]"
-      ],
-      "akta_berkaitan": [
-        "Akta 154",
-        "Akta 56",
-        "Akta 388",
-        "Akta 574",
-        "Akta 593"
-      ],
-      "seksyen_kunci": [
-        "PSPP dilantik Pegawai Kesihatan",
-        "Mikroskop & Sijil Kalibrasi",
-        "Awet & Lak semula botol",
-        "Laporan Pemeriksaan Spesimen"
-      ],
-      "kata_kunci": [
-        "identifikasi larva",
-        "pemeriksa larva",
-        "PSPP",
-        "spesies aedes",
-        "mikroskop",
-        "kalibrasi",
-        "awet spesimen",
-        "lak makmal",
-        "laporan pemeriksaan spesimen"
-      ],
-      "lampiran": {
-        "Lampiran A": "Senarai Semak Identifikasi Spesimen",
-        "Lampiran B": "Daftar Penerimaan Spesimen Serangga Pembawa Penyakit",
-        "Lampiran C": "Laporan Pemeriksaan Spesimen Serangga Pembawa Penyakit"
-      },
-      "rujukan_silang": [
-        "UIP-APSPP-01-07 (PINDAAN 2024)"
-      ],
-      "nota_audit": [
-        "Dalam UIP-APSPP-01-07 Langkah 3.5.10, rujukan menyebut 'Lampiran D' bagi Laporan Pemeriksaan, namun dalam dokumen UIP-APSPP-02-07 sebenar borang tersebut ialah 'Lampiran C'."
-      ],
-      "jumlah_aksara": 9334,
-      "anggaran_token": 2333,
-      "fail_md": "data/sops_aktif/UIP-APSPP-02-07.md"
-    },
-    {
-      "bil": 13,
-      "start_page": 172,
-      "end_page": 186,
       "sop_id": "UIP-APSPP-01-16 (PINDAAN 2024)",
       "file_stem": "UIP-APSPP-01-16",
+      "fail_md": "data/sops_aktif/UIP-APSPP-01-16.md",
+      "fail_json": "data/sops_structured/UIP-APSPP-01-16.json",
       "toc_id_alias": null,
       "kategori": "APSPP_1975",
-      "status": "AKTIF",
-      "tarikh_kuatkuasa": "2024-02-15",
+      "akta_utama": "Akta 154",
+      "keluaran": "01",
+      "pindaan": "01",
+      "tarikh_kuatkuasa": "15 Feb 2024",
       "tajuk": "Prosedur Memasuki Premis Dengan Kekerasan Yang Munasabah Di Bawah Akta Pemusnahan Serangga Pembawa Penyakit 1975",
-      "punca_kuasa": [
-        "Seksyen 5 APSPP 1975",
-        "Subseksyen 5(1)",
-        "Subseksyen 5(3)",
-        "Subseksyen 5(5) APSPP 1975"
-      ],
       "akta_berkaitan": [
         "Akta 154",
         "Akta 56",
@@ -774,6 +1410,23 @@
         "afidavit penyampaian",
         "APSPP"
       ],
+      "rujukan_silang": [
+        "UIP-APSPP-01-07",
+        "UIP-UMUM-04-07"
+      ],
+      "lampiran_ringkas": [
+        "Lampiran A: Senarai Semak Pemeriksaan Aedes (Operasi Pecah Masuk)",
+        "Lampiran B: Notis Memohon Mendapatkan Maklumat Premis Yang Tidak Dapat Dimasuki",
+        "Lampiran C: Notis Untuk Memasuki Premis Di Bawah Seksyen 5(5) APSPP 1975",
+        "Lampiran D: Contoh Afidavit Penyampaian Dalam Mahkamah Majistret",
+        "Lampiran E: Notis Makluman Memasuki Premis Di Bawah Seksyen 5 APSPP 1975",
+        "Lampiran F: Notis Untuk Mengambil Kunci Bagi Premis Yang Dimasuki (21 hari)"
+      ],
+      "muka_surat_pdf": "1-15",
+      "status": "AKTIF",
+      "nota_audit": [
+        "Perbezaan tempoh notis dalam dokumen asal: Proses Kerja Langkah 4 menyatakan 'Tidak melebihi 7 hari dari notis dikeluarkan', manakala Carta Alir (ms 179) menyebut 'notis (24 jam)'. Sila sahkan pematuhan tempoh munasabah mengikut Seksyen 5(3) APSPP 1975."
+      ],
       "lampiran": {
         "Lampiran A": "Senarai Semak Pemeriksaan Aedes (Operasi Pecah Masuk)",
         "Lampiran B": "Notis Memohon Mendapatkan Maklumat Premis Yang Tidak Dapat Dimasuki",
@@ -782,86 +1435,21 @@
         "Lampiran E": "Notis Makluman Memasuki Premis Di Bawah Seksyen 5 APSPP 1975",
         "Lampiran F": "Notis Untuk Mengambil Kunci Bagi Premis Yang Dimasuki (21 hari)"
       },
-      "rujukan_silang": [
-        "UIP-APSPP-01-07 (PINDAAN 2024)",
-        "UIP-UMUM-04-07 (PINDAAN 2024)"
-      ],
-      "nota_audit": [
-        "Perbezaan tempoh notis dalam dokumen asal: Proses Kerja Langkah 4 menyatakan 'Tidak melebihi 7 hari dari notis dikeluarkan', manakala Carta Alir (ms 179) menyebut 'notis (24 jam)'. Sila sahkan pematuhan tempoh munasabah mengikut Seksyen 5(3) APSPP 1975."
-      ],
-      "jumlah_aksara": 21345,
-      "anggaran_token": 5336,
-      "fail_md": "data/sops_aktif/UIP-APSPP-01-16.md"
+      "sumber_gdrive_id": "1jsjrqIAlQgb2lGjg9-U_3ECTW3Sq9PdK",
+      "sumber_sha256": "d9f59a3ca9c6cfd600a0d90f8aac5ca3a5d9a57347386c516ff6f4997ec66c6f"
     },
     {
-      "bil": 14,
-      "start_page": 187,
-      "end_page": 195,
-      "sop_id": "UIP-APSPP-02-16 (PINDAAN 2024)",
-      "file_stem": "UIP-APSPP-02-16",
-      "toc_id_alias": null,
-      "kategori": "APSPP_1975",
-      "status": "AKTIF",
-      "tarikh_kuatkuasa": "2024-02-15",
-      "tajuk": "Prosedur Tawaran Kompaun Di Bawah Akta Pemusnahan Serangga Pembawa Penyakit 1975",
-      "punca_kuasa": [
-        "Seksyen 25 APSPP 1975",
-        "Seksyen 16(1)(b) APSPP 1975",
-        "Seksyen 376(3) KTJ",
-        "Peraturan-Peraturan APSPP (Mengkompaun Kesalahan-Kesalahan) 1975"
-      ],
-      "akta_berkaitan": [
-        "Akta 154",
-        "Akta 388",
-        "Akta 593",
-        "Peraturan APSPP (Mengkompaun Kesalahan) 1975"
-      ],
-      "seksyen_kunci": [
-        "Izin kompaun TPR (S.376(3) KTJ)",
-        "Tawaran kompaun dalam 21 hari dari izin",
-        "S.16(1)(b) APSPP 1975 (Serahan Tangan/Pos Berdaftar)",
-        "Gagal bayar -> mohon izin dakwa TPR"
-      ],
-      "kata_kunci": [
-        "kompaun aedes",
-        "kompaun APSPP",
-        "izin kompaun",
-        "TPR",
-        "21 hari",
-        "OKK",
-        "buku daftar kompaun",
-        "gagal bayar kompaun",
-        "Borang A"
-      ],
-      "lampiran": {
-        "Lampiran A": "Keizinan Bertulis Mengkompaun Kesalahan Boleh Dikompaun (S.376(3) KTJ)",
-        "Lampiran B": "Senarai Semak Sampul Kecil"
-      },
-      "rujukan_silang": [
-        "UIP-APSPP-01-07 (PINDAAN 2024)"
-      ],
-      "nota_audit": [],
-      "jumlah_aksara": 8504,
-      "anggaran_token": 2126,
-      "fail_md": "data/sops_aktif/UIP-APSPP-02-16.md"
-    },
-    {
-      "bil": 15,
-      "start_page": 196,
-      "end_page": 211,
       "sop_id": "UIP-APSPP-01-24",
       "file_stem": "UIP-APSPP-01-24",
+      "fail_md": "data/sops_aktif/UIP-APSPP-01-24.md",
+      "fail_json": "data/sops_structured/UIP-APSPP-01-24.json",
       "toc_id_alias": null,
       "kategori": "APSPP_1975",
-      "status": "AKTIF",
-      "tarikh_kuatkuasa": "2024-02-15",
+      "akta_utama": "Akta 154",
+      "keluaran": "01",
+      "pindaan": "00",
+      "tarikh_kuatkuasa": "15 Feb 2024",
       "tajuk": "Prosedur Pemeriksaan Serangga Pembawa Penyakit Di Premis Tapak Binaan Di Bawah Akta Pemusnahan Serangga Pembawa Penyakit 1975",
-      "punca_kuasa": [
-        "Subseksyen 8(3)(aa) APSPP 1975 (Pindaan 2000)",
-        "Seksyen 8(1)/(2)",
-        "Seksyen 8(8)",
-        "Seksyen 23 APSPP 1975"
-      ],
       "akta_berkaitan": [
         "Akta 154",
         "Akta 56",
@@ -888,6 +1476,23 @@
         "ingkar penutupan",
         "buka semula tapak bina"
       ],
+      "rujukan_silang": [
+        "UIP-APSPP-01-07",
+        "UIP-APSPP-02-07",
+        "UIP-UMUM-01-24",
+        "UIP-UMUM-04-07",
+        "UIP-UMUM-05-07"
+      ],
+      "lampiran_ringkas": [
+        "Lampiran A: Perintah Penutupan Premis Di Bawah Subseksyen 8(3)(aa) APSPP 1975",
+        "Lampiran B: Notis Perintah Tutup Premis (Tampal di pintu masuk)",
+        "Lampiran C: Notis Arahan Kerja Penghapusan & Pemusnahan Tempat Pembiakan",
+        "Lampiran D: Borang Permohonan Pemeriksaan Untuk Membuka Semula Premis Tapak Binaan",
+        "Lampiran E: Surat Kebenaran Membuka Semula Premis Tapak Binaan"
+      ],
+      "muka_surat_pdf": "1-16",
+      "status": "AKTIF",
+      "nota_audit": [],
       "lampiran": {
         "Lampiran A": "Perintah Penutupan Premis Di Bawah Subseksyen 8(3)(aa) APSPP 1975",
         "Lampiran B": "Notis Perintah Tutup Premis (Tampal di pintu masuk)",
@@ -895,34 +1500,130 @@
         "Lampiran D": "Borang Permohonan Pemeriksaan Untuk Membuka Semula Premis Tapak Binaan",
         "Lampiran E": "Surat Kebenaran Membuka Semula Premis Tapak Binaan"
       },
-      "rujukan_silang": [
-        "UIP-APSPP-01-07 (PINDAAN 2024)",
-        "UIP-APSPP-02-07 (PINDAAN 2024)",
-        "UIP-UMUM-01-24",
-        "UIP-UMUM-04-07 (PINDAAN 2024)",
-        "UIP-UMUM-05-07 (PINDAAN 2024)"
-      ],
-      "nota_audit": [],
-      "jumlah_aksara": 24582,
-      "anggaran_token": 6145,
-      "fail_md": "data/sops_aktif/UIP-APSPP-01-24.md"
+      "sumber_gdrive_id": "1rE4vUcayP9THvow7OAAISRsVSEJbrxcP",
+      "sumber_sha256": "435f5f63c48a28e57704dae0f47a5eecab3345b6c86ab93cb099529587aadf2e"
     },
     {
-      "bil": 16,
-      "start_page": 212,
-      "end_page": 227,
+      "sop_id": "UIP-APSPP-02-07 (PINDAAN 2024)",
+      "file_stem": "UIP-APSPP-02-07",
+      "fail_md": "data/sops_aktif/UIP-APSPP-02-07.md",
+      "fail_json": "data/sops_structured/UIP-APSPP-02-07.json",
+      "toc_id_alias": null,
+      "kategori": "APSPP_1975",
+      "akta_utama": "Akta 154",
+      "keluaran": "01",
+      "pindaan": "01",
+      "tarikh_kuatkuasa": "15 Feb 2024",
+      "tajuk": "Prosedur Identifikasi Serangga Pembawa Penyakit",
+      "akta_berkaitan": [
+        "Akta 154",
+        "Akta 56",
+        "Akta 388",
+        "Akta 574",
+        "Akta 593"
+      ],
+      "seksyen_kunci": [
+        "PSPP dilantik Pegawai Kesihatan",
+        "Mikroskop & Sijil Kalibrasi",
+        "Awet & Lak semula botol",
+        "Laporan Pemeriksaan Spesimen"
+      ],
+      "kata_kunci": [
+        "identifikasi larva",
+        "pemeriksa larva",
+        "PSPP",
+        "spesies aedes",
+        "mikroskop",
+        "kalibrasi",
+        "awet spesimen",
+        "lak makmal",
+        "laporan pemeriksaan spesimen"
+      ],
+      "rujukan_silang": [
+        "UIP-APSPP-01-07"
+      ],
+      "lampiran_ringkas": [
+        "Lampiran A: Senarai Semak Identifikasi Spesimen",
+        "Lampiran B: Daftar Penerimaan Spesimen Serangga Pembawa Penyakit",
+        "Lampiran C: Laporan Pemeriksaan Spesimen Serangga Pembawa Penyakit"
+      ],
+      "muka_surat_pdf": "1-10",
+      "status": "AKTIF",
+      "nota_audit": [
+        "Dalam UIP-APSPP-01-07 Langkah 3.5.10, rujukan menyebut 'Lampiran D' bagi Laporan Pemeriksaan, namun dalam dokumen UIP-APSPP-02-07 sebenar borang tersebut ialah 'Lampiran C'."
+      ],
+      "lampiran": {
+        "Lampiran A": "Senarai Semak Identifikasi Spesimen",
+        "Lampiran B": "Daftar Penerimaan Spesimen Serangga Pembawa Penyakit",
+        "Lampiran C": "Laporan Pemeriksaan Spesimen Serangga Pembawa Penyakit"
+      },
+      "sumber_gdrive_id": "1_bR4HOup1aFZJp957WZiYVS9S9ap-E6E",
+      "sumber_sha256": "d827e028c4d27636b8b9c0a218837e90b018960f266c5ee102f378a86d6c4a1f"
+    },
+    {
+      "sop_id": "UIP-APSPP-02-16 (PINDAAN 2024)",
+      "file_stem": "UIP-APSPP-02-16",
+      "fail_md": "data/sops_aktif/UIP-APSPP-02-16.md",
+      "fail_json": "data/sops_structured/UIP-APSPP-02-16.json",
+      "toc_id_alias": null,
+      "kategori": "APSPP_1975",
+      "akta_utama": "Akta 154",
+      "keluaran": "01",
+      "pindaan": "01",
+      "tarikh_kuatkuasa": "15 Feb 2024",
+      "tajuk": "Prosedur Tawaran Kompaun Di Bawah Akta Pemusnahan Serangga Pembawa Penyakit 1975",
+      "akta_berkaitan": [
+        "Akta 154",
+        "Akta 388",
+        "Akta 593",
+        "Peraturan APSPP (Mengkompaun Kesalahan) 1975"
+      ],
+      "seksyen_kunci": [
+        "Izin kompaun TPR (S.376(3) KTJ)",
+        "Tawaran kompaun dalam 21 hari dari izin",
+        "S.16(1)(b) APSPP 1975 (Serahan Tangan/Pos Berdaftar)",
+        "Gagal bayar -> mohon izin dakwa TPR"
+      ],
+      "kata_kunci": [
+        "kompaun aedes",
+        "kompaun APSPP",
+        "izin kompaun",
+        "TPR",
+        "21 hari",
+        "OKK",
+        "buku daftar kompaun",
+        "gagal bayar kompaun",
+        "Borang A"
+      ],
+      "rujukan_silang": [
+        "UIP-APSPP-01-07"
+      ],
+      "lampiran_ringkas": [
+        "Lampiran A: Keizinan Bertulis Mengkompaun Kesalahan Boleh Dikompaun (S.376(3) KTJ)",
+        "Lampiran B: Senarai Semak Sampul Kecil"
+      ],
+      "muka_surat_pdf": "1-9",
+      "status": "AKTIF",
+      "nota_audit": [],
+      "lampiran": {
+        "Lampiran A": "Keizinan Bertulis Mengkompaun Kesalahan Boleh Dikompaun (S.376(3) KTJ)",
+        "Lampiran B": "Senarai Semak Sampul Kecil"
+      },
+      "sumber_gdrive_id": "1KJxgILu_klSNc_kLk5XL-ZAlgwBE5i4X",
+      "sumber_sha256": "b9047eb9d42062f10cec9d3b4f684132e81a935b2c7e9f13d5109504c7976a7d"
+    },
+    {
       "sop_id": "UIP-APPPB-01-07 (PINDAAN 2024)",
       "file_stem": "UIP-APPPB-01-07",
+      "fail_md": "data/sops_aktif/UIP-APPPB-01-07.md",
+      "fail_json": "data/sops_structured/UIP-APPPB-01-07.json",
       "toc_id_alias": null,
       "kategori": "APPPB_1988",
-      "status": "AKTIF",
-      "tarikh_kuatkuasa": "2024-02-15",
+      "akta_utama": "Akta 342",
+      "keluaran": "01",
+      "pindaan": "01",
+      "tarikh_kuatkuasa": "15 Feb 2024",
       "tajuk": "Prosedur Penguatkuasaan Penutupan Premis Di Bawah Subseksyen 18(1)(d) Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988",
-      "punca_kuasa": [
-        "Subseksyen 18(1)(d) Akta 342",
-        "Seksyen 10 Akta 342",
-        "Seksyen 22(b) & 24 Akta 342"
-      ],
       "akta_berkaitan": [
         "Akta 342",
         "Akta 56",
@@ -947,6 +1648,23 @@
         "buka semula premis",
         "ingkar perintah tutup"
       ],
+      "rujukan_silang": [
+        "UIP-UMUM-02-07",
+        "UIP-UMUM-05-07"
+      ],
+      "lampiran_ringkas": [
+        "Lampiran A: Senarai Semak Penutupan Premis S.18(1)(d)",
+        "Lampiran B: Perintah Penutupan Premis Subseksyen 18(1)",
+        "Lampiran C: Notis Arahan Kerja Subseksyen 18(1)",
+        "Lampiran D: Notis Perintah Tutup Premis (Tampal)",
+        "Lampiran E: Borang Permohonan Untuk Membuka Semula Premis",
+        "Lampiran F: Notis Kebenaran Membuka Semula Premis"
+      ],
+      "muka_surat_pdf": "1-16",
+      "status": "AKTIF",
+      "nota_audit": [
+        "Perlu bezakan S.18(1)(d) (tutup untuk tujuan basmi kuman/serangga/tikus/dekontaminasi) dengan S.18(1)(f) dalam UIP-APPPB-06-20 (tutup bagi mencegah bermulanya/merebaknya penyakit berjangkit)."
+      ],
       "lampiran": {
         "Lampiran A": "Senarai Semak Penutupan Premis S.18(1)(d)",
         "Lampiran B": "Perintah Penutupan Premis Subseksyen 18(1)",
@@ -955,140 +1673,21 @@
         "Lampiran E": "Borang Permohonan Untuk Membuka Semula Premis",
         "Lampiran F": "Notis Kebenaran Membuka Semula Premis"
       },
-      "rujukan_silang": [
-        "UIP-UMUM-02-07 (PINDAAN 2024)",
-        "UIP-UMUM-05-07 (PINDAAN 2024)"
-      ],
-      "nota_audit": [
-        "Perlu bezakan S.18(1)(d) (tutup untuk tujuan basmi kuman/serangga/tikus/dekontaminasi) dengan S.18(1)(f) dalam UIP-APPPB-06-20 (tutup bagi mencegah bermulanya/merebaknya penyakit berjangkit)."
-      ],
-      "jumlah_aksara": 19106,
-      "anggaran_token": 4776,
-      "fail_md": "data/sops_aktif/UIP-APPPB-01-07.md"
+      "sumber_gdrive_id": "1nVd-72xCk69ceqTj76LLDPvQ9LQg1wPy",
+      "sumber_sha256": "2f15f593bd044921fd053072d7c5c79044818c70505eee316fd86ee484d14563"
     },
     {
-      "bil": 17,
-      "start_page": 228,
-      "end_page": 242,
-      "sop_id": "UIP-APPPB-02-07 (PINDAAN 2024)",
-      "file_stem": "UIP-APPPB-02-07",
-      "toc_id_alias": null,
-      "kategori": "APPPB_1988",
-      "status": "AKTIF",
-      "tarikh_kuatkuasa": "2024-02-15",
-      "tajuk": "Prosedur Perintah Premis Untuk Dibasmi Kuman, Dibasmi Serangga Atau Dibasmi Tikus Di Bawah Perenggan 18(1)(c) Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988",
-      "punca_kuasa": [
-        "Perenggan 18(1)(c) Akta 342"
-      ],
-      "akta_berkaitan": [
-        "Akta 342",
-        "Akta 154",
-        "Akta 260",
-        "Akta 56",
-        "Akta 388",
-        "Akta 593",
-        "Akta 574",
-        "IHR 2005"
-      ],
-      "seksyen_kunci": [
-        "Perenggan 18(1)(c) Akta 342",
-        "Tempoh pelaksanaan 3 hingga 14 hari",
-        "Arahan Kerja Pembasmian (Kuman/Serangga/Tikus)"
-      ],
-      "kata_kunci": [
-        "18(1)(c)",
-        "perintah basmi kuman",
-        "basmi serangga",
-        "basmi tikus",
-        "tanpa tutup premis",
-        "3 hingga 14 hari",
-        "Akta 342",
-        "disinfeksi",
-        "fumigasi"
-      ],
-      "lampiran": {
-        "Lampiran A": "Senarai Semak Perintah 18(1)(c)",
-        "Lampiran B": "Perintah Supaya Premis Dibasmi Kuman, Dibasmi Serangga Atau Dibasmi Tikus",
-        "Lampiran C": "Arahan Kerja Pembasmian Kuman, Pembasmian Serangga Atau Pembasmian Tikus",
-        "Lampiran D": "Laporan Aktiviti Di Bawah Seksyen 18 Akta 342"
-      },
-      "rujukan_silang": [
-        "UIP-UMUM-02-07 (PINDAAN 2024)",
-        "UIP-UMUM-05-07 (PINDAAN 2024)"
-      ],
-      "nota_audit": [],
-      "jumlah_aksara": 16481,
-      "anggaran_token": 4120,
-      "fail_md": "data/sops_aktif/UIP-APPPB-02-07.md"
-    },
-    {
-      "bil": 18,
-      "start_page": 243,
-      "end_page": 258,
-      "sop_id": "UIP-APPPB-03-07 (PINDAAN 2024)",
-      "file_stem": "UIP-APPPB-03-07",
-      "toc_id_alias": null,
-      "kategori": "APPPB_1988",
-      "status": "AKTIF",
-      "tarikh_kuatkuasa": "2024-02-15",
-      "tajuk": "Prosedur Perintah Barangan/Binatang Dibasmi Kuman Di Bawah Perenggan 18(1)(e) Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988",
-      "punca_kuasa": [
-        "Perenggan 18(1)(e) Akta 342"
-      ],
-      "akta_berkaitan": [
-        "Akta 342",
-        "Akta 260",
-        "Akta 56",
-        "Akta 388",
-        "Akta 593",
-        "Akta 574",
-        "IHR 2005"
-      ],
-      "seksyen_kunci": [
-        "Perenggan 18(1)(e) Akta 342",
-        "Berupaya dibasmi kuman -> Perintah Basmi Kuman",
-        "Tidak berupaya dibasmi kuman -> Perintah Pemusnahan",
-        "Jika halangan -> Laporan polis & perintah mahkamah"
-      ],
-      "kata_kunci": [
-        "18(1)(e)",
-        "barangan tercemar",
-        "binatang dijangkiti",
-        "basmi kuman barangan",
-        "pemusnahan barangan",
-        "pemusnahan haiwan",
-        "Akta 342"
-      ],
-      "lampiran": {
-        "Lampiran A": "Senarai Semak Dokumen, Peralatan Basmi Kuman & Pemusnahan",
-        "Lampiran B": "Perintah Supaya Barangan dan/atau Binatang Dibasmi Kuman",
-        "Lampiran C": "Arahan Kerja Pembasmian Kuman Terhadap Barangan dan/atau Binatang",
-        "Lampiran D": "Perintah Pemusnahan Barangan Tercemar dan/atau Binatang",
-        "Lampiran E": "Senarai Barangan dan/atau Binatang Yang Diperintah Untuk Pemusnahan",
-        "Lampiran F": "Laporan Aktiviti Di Bawah Seksyen 18 Akta 342"
-      },
-      "rujukan_silang": [],
-      "nota_audit": [],
-      "jumlah_aksara": 18207,
-      "anggaran_token": 4551,
-      "fail_md": "data/sops_aktif/UIP-APPPB-03-07.md"
-    },
-    {
-      "bil": 19,
-      "start_page": 259,
-      "end_page": 277,
       "sop_id": "UIP-APPPB-01-16 (PINDAAN 2024)",
       "file_stem": "UIP-APPPB-01-16",
+      "fail_md": "data/sops_aktif/UIP-APPPB-01-16.md",
+      "fail_json": "data/sops_structured/UIP-APPPB-01-16.json",
       "toc_id_alias": null,
       "kategori": "APPPB_1988",
-      "status": "AKTIF",
-      "tarikh_kuatkuasa": "2024-02-15",
+      "akta_utama": "Akta 342",
+      "keluaran": "01",
+      "pindaan": "01",
+      "tarikh_kuatkuasa": "15 Feb 2024",
       "tajuk": "Prosedur Penguatkuasaan Perintah Pemerhatian Atau Pengawasan Di Bawah Subseksyen 15(1) Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988",
-      "punca_kuasa": [
-        "Subseksyen 15(1) Akta 342",
-        "Subseksyen 15(2) Akta 342 (Kekerasan perlu)",
-        "Seksyen 3 Akta 342"
-      ],
       "akta_berkaitan": [
         "Akta 342",
         "Akta 56",
@@ -1116,6 +1715,22 @@
         "perintah lisan 24 jam",
         "Akta 342"
       ],
+      "rujukan_silang": [
+        "UIP-UMUM-02-07",
+        "UIP-UMUM-05-07"
+      ],
+      "lampiran_ringkas": [
+        "Lampiran A: Senarai Semak Peralatan / Borang",
+        "Lampiran B: Perintah Pemerhatian Subseksyen 15(1) Akta 342",
+        "Lampiran C: Perintah Pengawasan Subseksyen 15(1) Akta 342",
+        "Lampiran D: Pengakuan Penganjur Bagi Orang Yang Dikenakan Perintah Pemerhatian/Pengawasan",
+        "Lampiran E: Pelepasan Dari Perintah Pemerhatian/Pengawasan Di Bawah Subseksyen 15(1)"
+      ],
+      "muka_surat_pdf": "1-19",
+      "status": "AKTIF",
+      "nota_audit": [
+        "Ralat cetak dalam Isi Kandungan PDF (ms 261): Lampiran C ditulis 'Subseksyen 5(1)', sedangkan borang sebenar (ms 275) adalah 'Subseksyen 15(1) Akta 342'."
+      ],
       "lampiran": {
         "Lampiran A": "Senarai Semak Peralatan / Borang",
         "Lampiran B": "Perintah Pemerhatian Subseksyen 15(1) Akta 342",
@@ -1123,33 +1738,140 @@
         "Lampiran D": "Pengakuan Penganjur Bagi Orang Yang Dikenakan Perintah Pemerhatian/Pengawasan",
         "Lampiran E": "Pelepasan Dari Perintah Pemerhatian/Pengawasan Di Bawah Subseksyen 15(1)"
       },
-      "rujukan_silang": [
-        "UIP-UMUM-02-07 (PINDAAN 2024)",
-        "UIP-UMUM-05-07 (PINDAAN 2024)"
-      ],
-      "nota_audit": [
-        "Ralat cetak dalam Isi Kandungan PDF (ms 261): Lampiran C ditulis 'Subseksyen 5(1)', sedangkan borang sebenar (ms 275) adalah 'Subseksyen 15(1) Akta 342'."
-      ],
-      "jumlah_aksara": 30347,
-      "anggaran_token": 7586,
-      "fail_md": "data/sops_aktif/UIP-APPPB-01-16.md"
+      "sumber_gdrive_id": "181khc8Q6P8MZ2ri-weu2UwOwmQVhT8iz",
+      "sumber_sha256": "693ffe0bf21b07a6c65049220344c004358c14e37f6ea81986e2637df747a141"
     },
     {
-      "bil": 20,
-      "start_page": 278,
-      "end_page": 290,
-      "sop_id": "UIP-APPPB-02-16 (PINDAAN 2024)",
-      "file_stem": "UIP-APPPB-02-16",
+      "sop_id": "UIP-APPPB-01-21 (PINDAAN 2024)",
+      "file_stem": "UIP-APPPB-01-21",
+      "fail_md": "data/sops_aktif/UIP-APPPB-01-21.md",
+      "fail_json": "data/sops_structured/UIP-APPPB-01-21.json",
       "toc_id_alias": null,
       "kategori": "APPPB_1988",
-      "status": "AKTIF",
-      "tarikh_kuatkuasa": "2024-02-15",
-      "tajuk": "Prosedur Penguatkuasaan Di Bawah Subseksyen 7(1) Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988: Pemeriksaan Sanitasi Berkaitan Vektor Pada Kenderaan (Pesawat Udara)",
-      "punca_kuasa": [
-        "Subseksyen 7(1) Akta 342",
-        "Subseksyen 7(2) Akta 342",
-        "Subseksyen 8(1) Akta 342"
+      "akta_utama": "Akta 342",
+      "keluaran": "01",
+      "pindaan": "01",
+      "tarikh_kuatkuasa": "15 Feb 2024",
+      "tajuk": "Prosedur Mengkompaun Kesalahan Di Bawah Seksyen 10(2), 22(c) dan 22(d) Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988",
+      "akta_berkaitan": [
+        "Akta 342",
+        "P.U.(A) 327/1993",
+        "Akta 56",
+        "Akta 388",
+        "Akta 593",
+        "Akta 574"
       ],
+      "seksyen_kunci": [
+        "S.10(2) Akta 342 (Gagal notifikasi penyakit berjangkit)",
+        "S.22(c) Akta 342",
+        "S.22(d) Akta 342",
+        "S.25 Akta 342 (Kompaun <= RM1,000 - semak pindaan terkini)"
+      ],
+      "kata_kunci": [
+        "kompaun Akta 342",
+        "gagal notifikasi",
+        "seksyen 10(2)",
+        "seksyen 22(c)",
+        "seksyen 22(d)",
+        "seksyen 25 Akta 342",
+        "klinik swasta tidak notifikasi",
+        "borang kompaun Akta 342"
+      ],
+      "rujukan_silang": [
+        "UIP-UMUM-05-07"
+      ],
+      "lampiran_ringkas": [
+        "Lampiran A: Borang Akuan Serah / Terima Barang Kes",
+        "Lampiran B: Contoh Surat Permohonan Maklumat",
+        "Lampiran C: Senarai Pemeriksaan",
+        "Lampiran D: Borang Kompaun Akta 342"
+      ],
+      "muka_surat_pdf": "1-15",
+      "status": "AKTIF",
+      "nota_audit": [
+        "SEMAK HAD KOMPAUN: Teks SOP ini memetik had kompaun RM1,000 di bawah Seksyen 25 Akta 342 (versi sebelum pindaan). Sentiasa sahkan kadar kompaun semasa berdasarkan pindaan Akta 342 / Peraturan Pengkompaunan terkini yang berkuat kuasa."
+      ],
+      "lampiran": {
+        "Lampiran A": "Borang Akuan Serah / Terima Barang Kes",
+        "Lampiran B": "Contoh Surat Permohonan Maklumat",
+        "Lampiran C": "Senarai Pemeriksaan",
+        "Lampiran D": "Borang Kompaun Akta 342"
+      },
+      "sumber_gdrive_id": "1MwiwztLKMgRvz_iHo9m7hnGqWX-_8z56",
+      "sumber_sha256": "bd2a00301a81050e9d2ba08d646e35d284c21775546c1c8d1b50fe7992e3a6f7"
+    },
+    {
+      "sop_id": "UIP-APPPB-02-07 (PINDAAN 2024)",
+      "file_stem": "UIP-APPPB-02-07",
+      "fail_md": "data/sops_aktif/UIP-APPPB-02-07.md",
+      "fail_json": "data/sops_structured/UIP-APPPB-02-07.json",
+      "toc_id_alias": null,
+      "kategori": "APPPB_1988",
+      "akta_utama": "Akta 342",
+      "keluaran": "01",
+      "pindaan": "01",
+      "tarikh_kuatkuasa": "15 Feb 2024",
+      "tajuk": "Prosedur Perintah Premis Untuk Dibasmi Kuman, Dibasmi Serangga Atau Dibasmi Tikus Di Bawah Perenggan 18(1)(c) Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988",
+      "akta_berkaitan": [
+        "Akta 342",
+        "Akta 154",
+        "Akta 260",
+        "Akta 56",
+        "Akta 388",
+        "Akta 593",
+        "Akta 574",
+        "IHR 2005"
+      ],
+      "seksyen_kunci": [
+        "Perenggan 18(1)(c) Akta 342",
+        "Tempoh pelaksanaan 3 hingga 14 hari",
+        "Arahan Kerja Pembasmian (Kuman/Serangga/Tikus)"
+      ],
+      "kata_kunci": [
+        "18(1)(c)",
+        "perintah basmi kuman",
+        "basmi serangga",
+        "basmi tikus",
+        "tanpa tutup premis",
+        "3 hingga 14 hari",
+        "Akta 342",
+        "disinfeksi",
+        "fumigasi"
+      ],
+      "rujukan_silang": [
+        "UIP-UMUM-02-07",
+        "UIP-UMUM-05-07"
+      ],
+      "lampiran_ringkas": [
+        "Lampiran A: Senarai Semak Perintah 18(1)(c)",
+        "Lampiran B: Perintah Supaya Premis Dibasmi Kuman, Dibasmi Serangga Atau Dibasmi Tikus",
+        "Lampiran C: Arahan Kerja Pembasmian Kuman, Pembasmian Serangga Atau Pembasmian Tikus",
+        "Lampiran D: Laporan Aktiviti Di Bawah Seksyen 18 Akta 342"
+      ],
+      "muka_surat_pdf": "1-15",
+      "status": "AKTIF",
+      "nota_audit": [],
+      "lampiran": {
+        "Lampiran A": "Senarai Semak Perintah 18(1)(c)",
+        "Lampiran B": "Perintah Supaya Premis Dibasmi Kuman, Dibasmi Serangga Atau Dibasmi Tikus",
+        "Lampiran C": "Arahan Kerja Pembasmian Kuman, Pembasmian Serangga Atau Pembasmian Tikus",
+        "Lampiran D": "Laporan Aktiviti Di Bawah Seksyen 18 Akta 342"
+      },
+      "sumber_gdrive_id": "18pKhXl2n48gKd6uGIL1NpskoY84tO9lN",
+      "sumber_sha256": "0acf9d7b6ea6e5500d69cb9acee40da917586979c654046ee7465c57765fbde5"
+    },
+    {
+      "sop_id": "UIP-APPPB-02-16 (PINDAAN 2024)",
+      "file_stem": "UIP-APPPB-02-16",
+      "fail_md": "data/sops_aktif/UIP-APPPB-02-16.md",
+      "fail_json": "data/sops_structured/UIP-APPPB-02-16.json",
+      "toc_id_alias": null,
+      "kategori": "APPPB_1988",
+      "akta_utama": "Akta 342",
+      "keluaran": "01",
+      "pindaan": "01",
+      "tarikh_kuatkuasa": "15 Feb 2024",
+      "tajuk": "Prosedur Penguatkuasaan Di Bawah Subseksyen 7(1) Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988: Pemeriksaan Sanitasi Berkaitan Vektor Pada Kenderaan (Pesawat Udara)",
       "akta_berkaitan": [
         "Akta 342",
         "Akta 56",
@@ -1176,35 +1898,98 @@
         "Aircraft General Declaration",
         "pembasmian serangga pesawat"
       ],
+      "rujukan_silang": [
+        "UIP-APPPB-01-16",
+        "UIP-UMUM-02-07",
+        "UIP-UMUM-05-07"
+      ],
+      "lampiran_ringkas": [
+        "Lampiran A: Senarai Semak Peralatan / Borang",
+        "Lampiran B: Aircraft General Declaration",
+        "Lampiran C: Notis Perintah Menjalankan Aktiviti Pembasmian Serangga Dalam Pesawat Udara"
+      ],
+      "muka_surat_pdf": "1-13",
+      "status": "AKTIF",
+      "nota_audit": [],
       "lampiran": {
         "Lampiran A": "Senarai Semak Peralatan / Borang",
         "Lampiran B": "Aircraft General Declaration",
         "Lampiran C": "Notis Perintah Menjalankan Aktiviti Pembasmian Serangga Dalam Pesawat Udara"
       },
-      "rujukan_silang": [
-        "UIP-APPPB-01-16 (PINDAAN 2024)",
-        "UIP-UMUM-02-07 (PINDAAN 2024)",
-        "UIP-UMUM-05-07 (PINDAAN 2024)"
-      ],
-      "nota_audit": [],
-      "jumlah_aksara": 19066,
-      "anggaran_token": 4766,
-      "fail_md": "data/sops_aktif/UIP-APPPB-02-16.md"
+      "sumber_gdrive_id": "1KTR5yPlmY3EbLu4Hic3r9ESk67LggAbO",
+      "sumber_sha256": "674cde5df336604b7e7deaff6612c681c604c6478eb2f75cc55ffe00e283fd44"
     },
     {
-      "bil": 21,
-      "start_page": 291,
-      "end_page": 305,
+      "sop_id": "UIP-APPPB-03-07 (PINDAAN 2024)",
+      "file_stem": "UIP-APPPB-03-07",
+      "fail_md": "data/sops_aktif/UIP-APPPB-03-07.md",
+      "fail_json": "data/sops_structured/UIP-APPPB-03-07.json",
+      "toc_id_alias": null,
+      "kategori": "APPPB_1988",
+      "akta_utama": "Akta 342",
+      "keluaran": "01",
+      "pindaan": "01",
+      "tarikh_kuatkuasa": "15 Feb 2024",
+      "tajuk": "Prosedur Perintah Barangan/Binatang Dibasmi Kuman Di Bawah Perenggan 18(1)(e) Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988",
+      "akta_berkaitan": [
+        "Akta 342",
+        "Akta 260",
+        "Akta 56",
+        "Akta 388",
+        "Akta 593",
+        "Akta 574",
+        "IHR 2005"
+      ],
+      "seksyen_kunci": [
+        "Perenggan 18(1)(e) Akta 342",
+        "Berupaya dibasmi kuman -> Perintah Basmi Kuman",
+        "Tidak berupaya dibasmi kuman -> Perintah Pemusnahan",
+        "Jika halangan -> Laporan polis & perintah mahkamah"
+      ],
+      "kata_kunci": [
+        "18(1)(e)",
+        "barangan tercemar",
+        "binatang dijangkiti",
+        "basmi kuman barangan",
+        "pemusnahan barangan",
+        "pemusnahan haiwan",
+        "Akta 342"
+      ],
+      "rujukan_silang": [],
+      "lampiran_ringkas": [
+        "Lampiran A: Senarai Semak Dokumen, Peralatan Basmi Kuman & Pemusnahan",
+        "Lampiran B: Perintah Supaya Barangan dan/atau Binatang Dibasmi Kuman",
+        "Lampiran C: Arahan Kerja Pembasmian Kuman Terhadap Barangan dan/atau Binatang",
+        "Lampiran D: Perintah Pemusnahan Barangan Tercemar dan/atau Binatang",
+        "Lampiran E: Senarai Barangan dan/atau Binatang Yang Diperintah Untuk Pemusnahan",
+        "Lampiran F: Laporan Aktiviti Di Bawah Seksyen 18 Akta 342"
+      ],
+      "muka_surat_pdf": "1-16",
+      "status": "AKTIF",
+      "nota_audit": [],
+      "lampiran": {
+        "Lampiran A": "Senarai Semak Dokumen, Peralatan Basmi Kuman & Pemusnahan",
+        "Lampiran B": "Perintah Supaya Barangan dan/atau Binatang Dibasmi Kuman",
+        "Lampiran C": "Arahan Kerja Pembasmian Kuman Terhadap Barangan dan/atau Binatang",
+        "Lampiran D": "Perintah Pemusnahan Barangan Tercemar dan/atau Binatang",
+        "Lampiran E": "Senarai Barangan dan/atau Binatang Yang Diperintah Untuk Pemusnahan",
+        "Lampiran F": "Laporan Aktiviti Di Bawah Seksyen 18 Akta 342"
+      },
+      "sumber_gdrive_id": "1h0PivUj3N5pgTqzbSG0GPr_fewe7b6eY",
+      "sumber_sha256": "702999b696f0c125651f9ef940565163e5999c52432c68c4a8b6c650dd885f2f"
+    },
+    {
       "sop_id": "UIP-APPPB-06-20 (PINDAAN 2024)",
       "file_stem": "UIP-APPPB-06-20",
+      "fail_md": "data/sops_aktif/UIP-APPPB-06-20.md",
+      "fail_json": "data/sops_structured/UIP-APPPB-06-20.json",
       "toc_id_alias": "UIP-APPPB-01-20 (PINDAAN 2024)",
       "kategori": "APPPB_1988",
-      "status": "AKTIF",
-      "tarikh_kuatkuasa": "2024-02-15",
+      "akta_utama": "Akta 342",
+      "keluaran": "01",
+      "pindaan": "01",
+      "tarikh_kuatkuasa": "15 Feb 2024",
       "tajuk": "Prosedur Penutupan Premis Di Bawah Subseksyen 18(1)(f) Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988",
-      "punca_kuasa": [
-        "Subseksyen 18(1)(f) Akta 342"
-      ],
       "akta_berkaitan": [
         "Akta 342",
         "Akta 56",
@@ -1225,6 +2010,23 @@
         "buka semula premis",
         "arahan kerja"
       ],
+      "rujukan_silang": [
+        "UIP-UMUM-02-07",
+        "UIP-UMUM-05-07"
+      ],
+      "lampiran_ringkas": [
+        "Lampiran A: Senarai Semak Penutupan Premis S.18(1)(f)",
+        "Lampiran B: Perintah Penutupan Premis Bagi Kawalan Perebakan Penyakit Berjangkit",
+        "Lampiran C: Arahan Kerja",
+        "Lampiran D: Notis Perintah Tutup Premis",
+        "Lampiran E: Borang Permohonan Untuk Membuka Semula Premis",
+        "Lampiran F: Kebenaran Membuka Semula Premis"
+      ],
+      "muka_surat_pdf": "1-15",
+      "status": "AKTIF",
+      "nota_audit": [
+        "KONFLIK KOD: Halaman Kandungan C menyenaraikan SOP ini sebagai UIP-APPPB-01-20 (PINDAAN 2024), tetapi kod rasmi dalam dokumen adalah UIP-APPPB-06-20 (PINDAAN 2024)."
+      ],
       "lampiran": {
         "Lampiran A": "Senarai Semak Penutupan Premis S.18(1)(f)",
         "Lampiran B": "Perintah Penutupan Premis Bagi Kawalan Perebakan Penyakit Berjangkit",
@@ -1233,71 +2035,8 @@
         "Lampiran E": "Borang Permohonan Untuk Membuka Semula Premis",
         "Lampiran F": "Kebenaran Membuka Semula Premis"
       },
-      "rujukan_silang": [
-        "UIP-UMUM-02-07 (PINDAAN 2024)",
-        "UIP-UMUM-05-07 (PINDAAN 2024)"
-      ],
-      "nota_audit": [
-        "KONFLIK KOD: Halaman Kandungan C menyenaraikan SOP ini sebagai UIP-APPPB-01-20 (PINDAAN 2024), tetapi kod rasmi dalam dokumen adalah UIP-APPPB-06-20 (PINDAAN 2024)."
-      ],
-      "jumlah_aksara": 15502,
-      "anggaran_token": 3875,
-      "fail_md": "data/sops_aktif/UIP-APPPB-06-20.md"
-    },
-    {
-      "bil": 22,
-      "start_page": 306,
-      "end_page": 320,
-      "sop_id": "UIP-APPPB-01-21 (PINDAAN 2024)",
-      "file_stem": "UIP-APPPB-01-21",
-      "toc_id_alias": null,
-      "kategori": "APPPB_1988",
-      "status": "AKTIF",
-      "tarikh_kuatkuasa": "2024-02-15",
-      "tajuk": "Prosedur Mengkompaun Kesalahan Di Bawah Seksyen 10(2), 22(c) dan 22(d) Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988",
-      "punca_kuasa": [
-        "Seksyen 25 Akta 342",
-        "Peraturan-Peraturan Pencegahan dan Pengawalan Penyakit Berjangkit (Pengkompaunan Kesalahan-Kesalahan) 1993 [P.U.(A) 327/1993]"
-      ],
-      "akta_berkaitan": [
-        "Akta 342",
-        "P.U.(A) 327/1993",
-        "Akta 56",
-        "Akta 388",
-        "Akta 593",
-        "Akta 574"
-      ],
-      "seksyen_kunci": [
-        "S.10(2) Akta 342 (Gagal notifikasi penyakit berjangkit)",
-        "S.22(c) Akta 342",
-        "S.22(d) Akta 342",
-        "S.25 Akta 342 (Kompaun <= RM1,000 - semak pindaan terkini)"
-      ],
-      "kata_kunci": [
-        "kompaun Akta 342",
-        "gagal notifikasi",
-        "seksyen 10(2)",
-        "seksyen 22(c)",
-        "seksyen 22(d)",
-        "seksyen 25 Akta 342",
-        "klinik swasta tidak notifikasi",
-        "borang kompaun Akta 342"
-      ],
-      "lampiran": {
-        "Lampiran A": "Borang Akuan Serah / Terima Barang Kes",
-        "Lampiran B": "Contoh Surat Permohonan Maklumat",
-        "Lampiran C": "Senarai Pemeriksaan",
-        "Lampiran D": "Borang Kompaun Akta 342"
-      },
-      "rujukan_silang": [
-        "UIP-UMUM-05-07 (PINDAAN 2024)"
-      ],
-      "nota_audit": [
-        "SEMAK HAD KOMPAUN: Teks SOP ini memetik had kompaun RM1,000 di bawah Seksyen 25 Akta 342 (versi sebelum pindaan). Sentiasa sahkan kadar kompaun semasa berdasarkan pindaan Akta 342 / Peraturan Pengkompaunan terkini yang berkuat kuasa."
-      ],
-      "jumlah_aksara": 15790,
-      "anggaran_token": 3947,
-      "fail_md": "data/sops_aktif/UIP-APPPB-01-21.md"
+      "sumber_gdrive_id": "1IJfkNWRWpPnh-Ax8TcskWBXuCB9hZO0k",
+      "sumber_sha256": "8d06768bcb8a6d6e9390d6f4bf7e0d4999ecb891b62ce5bf8718749f52eacceb"
     },
     {
       "bil": 23,

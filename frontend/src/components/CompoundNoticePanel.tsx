@@ -232,17 +232,22 @@ export default function CompoundNoticePanel({
     }
   };
 
+  const noticeRef = useRef(notice);
+  noticeRef.current = notice;
+
   useEffect(() => {
     if (autoCheckNonce > 0) {
       onAutoCheckConsumed?.();
       setStep(3);
       setChecking(true);
       setErrorMsg(null);
-      checkCompoundNotice(notice)
+      const snapshotNotice = noticeRef.current;
+      checkCompoundNotice(snapshotNotice)
         .then((res) => {
           setCheckResult(res);
-          if (res.peruntukan_kompaun && !(notice.peruntukan_kompaun || "").trim()) {
-            onChangeNotice({ ...notice, peruntukan_kompaun: res.peruntukan_kompaun });
+          const latest = noticeRef.current;
+          if (res.peruntukan_kompaun && !(latest.peruntukan_kompaun || "").trim()) {
+            onChangeNotice({ ...latest, peruntukan_kompaun: res.peruntukan_kompaun });
           }
           setShowPassedItems(res.counts.GAGAL === 0 && res.counts.SEMAK === 0);
         })
@@ -306,10 +311,11 @@ export default function CompoundNoticePanel({
     setChecking(true);
     setErrorMsg(null);
     try {
-      const res = await checkCompoundNotice(notice);
+      const res = await checkCompoundNotice(noticeRef.current);
       setCheckResult(res);
-      if (res.peruntukan_kompaun && !(notice.peruntukan_kompaun || "").trim()) {
-        onChangeNotice({ ...notice, peruntukan_kompaun: res.peruntukan_kompaun });
+      const latest = noticeRef.current;
+      if (res.peruntukan_kompaun && !(latest.peruntukan_kompaun || "").trim()) {
+        onChangeNotice({ ...latest, peruntukan_kompaun: res.peruntukan_kompaun });
       }
       setShowPassedItems(res.counts.GAGAL === 0 && res.counts.SEMAK === 0);
       window.setTimeout(() => {

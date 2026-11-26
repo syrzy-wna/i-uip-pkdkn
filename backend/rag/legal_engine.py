@@ -15,6 +15,7 @@ import hashlib
 import json
 import math
 import re
+import threading
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
@@ -7174,10 +7175,13 @@ class ClosedBookLegalLibrary:
 
 
 _legal_library_instance: Optional[ClosedBookLegalLibrary] = None
+_legal_library_lock = threading.RLock()
 
 
 def get_legal_library() -> ClosedBookLegalLibrary:
     global _legal_library_instance
     if _legal_library_instance is None:
-        _legal_library_instance = ClosedBookLegalLibrary()
+        with _legal_library_lock:
+            if _legal_library_instance is None:
+                _legal_library_instance = ClosedBookLegalLibrary()
     return _legal_library_instance

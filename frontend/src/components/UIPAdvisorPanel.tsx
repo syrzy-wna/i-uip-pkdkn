@@ -25,12 +25,28 @@ import {
   X,
   Zap,
 } from "lucide-react";
-import LegalDirectoryPanel, { type CompoundPrefillMeta } from "@/components/LegalDirectoryPanel";
+import dynamic from "next/dynamic";
+import type { CompoundPrefillMeta } from "@/components/LegalDirectoryPanel";
+import RichLegalText from "@/components/RichLegalText";
+import SopQuickModal from "@/components/sop/SopQuickModal";
 import {
   consultUipAdvisor,
   fetchAdvisorAnsweredQuestions,
   fetchAdvisorScenarios,
 } from "@/lib/api";
+
+const LegalDirectoryPanel = dynamic(
+  () => import("@/components/LegalDirectoryPanel"),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="flex items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white py-16 text-sm text-slate-500">
+        <Loader2 className="h-5 w-5 animate-spin text-indigo-600" />
+        <span>Memuatkan Pustaka Akta &amp; SOP KKM...</span>
+      </div>
+    ),
+  }
+);
 import {
   CORE_ACT_CODES,
   CORE_KKM_ACTS,
@@ -164,6 +180,9 @@ export default function UIPAdvisorPanel({
     void loadScenarios();
   }, [loadScenarios]);
 
+  const consultSeqRef = useRef(0);
+  const [modalSopCode, setModalSopCode] = useState<string | null>(null);
+
   const loadAnsweredQuestions = useCallback(async () => {
     setAnsweredLoading(true);
     setAnsweredError(null);
@@ -178,10 +197,13 @@ export default function UIPAdvisorPanel({
   }, [authToken]);
 
   useEffect(() => {
-    void loadAnsweredQuestions();
-  }, [loadAnsweredQuestions]);
+    if (workspaceTab === "history" && !answeredData && !answeredLoading) {
+      void loadAnsweredQuestions();
+    }
+  }, [workspaceTab, answeredData, answeredLoading, loadAnsweredQuestions]);
 
   const handleResetConversation = () => {
+    consultSeqRef.current += 1;
     setQuestion("");
     setLastSubmittedQuestion("");
     setConversationHistory([]);
@@ -203,6 +225,7 @@ export default function UIPAdvisorPanel({
       setError("Sila taip situasi yang ditemui atau pilih daripada Contoh Situasi.");
       return;
     }
+    const reqSeq = ++consultSeqRef.current;
     if (forceAi) {
       setDeepLoading(true);
       window.setTimeout(() => {
@@ -228,6 +251,7 @@ export default function UIPAdvisorPanel({
         officerProfile: officer,
         conversationHistory: historyToSend,
       });
+      if (reqSeq !== consultSeqRef.current) return;
       setResult(res);
       setLastSubmittedQuestion(effectiveQ);
       const assistantSummary = `${res.akta_disyorkan} — ${res.tajuk_nasihat}: ${
@@ -246,15 +270,20 @@ export default function UIPAdvisorPanel({
       setShowNoOffenceStatutes(false);
       setShowLibrary(false);
       setSelectedAnsweredId(res.matched_collection_id || null);
-      void loadAnsweredQuestions();
+      if (answeredData) {
+        void loadAnsweredQuestions();
+      }
       window.setTimeout(() => {
         resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
       }, 90);
     } catch (err) {
+      if (reqSeq !== consultSeqRef.current) return;
       setError(err instanceof Error ? err.message : "Gagal mendapatkan nasihat pakar UIP.");
     } finally {
-      setLoading(false);
-      setDeepLoading(false);
+      if (reqSeq === consultSeqRef.current) {
+        setLoading(false);
+        setDeepLoading(false);
+      }
     }
   };
 
@@ -470,6 +499,11 @@ export default function UIPAdvisorPanel({
           officer={officer}
           isDevAdmin={isDevAdmin}
           onApplyOffenceToCase={onApplyToCaseBuilder}
+          onAskExpertWithSop={(promptText) => {
+            setWorkspaceTab("ask");
+            setQuestion(promptText);
+            void handleConsult(promptText, undefined, false, true);
+          }}
         />
       )}
 
@@ -1156,17 +1190,19 @@ export default function UIPAdvisorPanel({
                         {result.sop_references && result.sop_references.length > 0 && (
                           <div className="space-y-1.5">
                             <div className="text-[11px] font-extrabold uppercase tracking-wide text-slate-600">
-                              Rujukan Rasmi SOP KKM (Pindaan 15 Feb 2024)
+                              Rujukan Rasmi SOP Penguatkuasaan KKM 2024 (Klik untuk Paparan Visual)
                             </div>
                             <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                               {result.sop_references.map((sop) => (
-                                <div
+                                <button
                                   key={sop.sop_id}
-                                  className="rounded-xl border border-indigo-200/80 bg-indigo-50/40 px-3 py-2 text-xs"
+                                  type="button"
+                                  onClick={() => setModalSopCode(sop.file_stem || sop.sop_id)}
+                                  className="rounded-xl border border-indigo-200/80 bg-indigo-50/40 px-3 py-2 text-left text-xs transition hover:border-indigo-400 hover:bg-indigo-50 hover:shadow-sm"
                                 >
                                   <div className="flex flex-wrap items-center justify-between gap-1.5">
-                                    <span className="font-extrabold text-indigo-950">
-                                      {sop.sop_id}
+                                    <span className="font-extrabold text-indigo-950 underline decoration-indigo-300 underline-offset-2">
+                                      {sop.sop_id} ↗
                                     </span>
                                     {sop.muka_surat_pdf && (
                                       <span className="rounded-full bg-white px-2 py-0.5 text-[10px] font-bold text-indigo-900 ring-1 ring-indigo-200">
@@ -1183,7 +1219,7 @@ export default function UIPAdvisorPanel({
                                       {sop.lampiran_ringkas.join(", ")}
                                     </div>
                                   )}
-                                </div>
+                                </button>
                               ))}
                             </div>
                           </div>
@@ -1194,8 +1230,12 @@ export default function UIPAdvisorPanel({
                             <summary className="cursor-pointer font-extrabold text-[#0f2744]">
                               Lihat Ringkasan Lengkap 4 Lapisan Bukti SOP (Penilaian, Punca Kuasa, Langkah &amp; Lampiran)
                             </summary>
-                            <div className="mt-2 whitespace-pre-wrap leading-relaxed text-slate-700">
-                              {result.jawapan_4_lapisan_sop}
+                            <div className="mt-2">
+                              <RichLegalText
+                                text={result.jawapan_4_lapisan_sop}
+                                className="text-xs"
+                                onOpenSop={(code) => setModalSopCode(code)}
+                              />
                             </div>
                           </details>
                         )}
@@ -1432,17 +1472,19 @@ export default function UIPAdvisorPanel({
                       {result.sop_references && result.sop_references.length > 0 && (
                         <div className="space-y-1.5">
                           <div className="text-[11px] font-extrabold uppercase tracking-wide text-slate-600">
-                            Rujukan Rasmi SOP KKM (Pindaan 15 Feb 2024)
+                            Rujukan Rasmi SOP Penguatkuasaan KKM 2024 (Klik untuk Paparan Visual)
                           </div>
                           <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                             {result.sop_references.map((sop) => (
-                              <div
+                              <button
                                 key={sop.sop_id}
-                                className="rounded-xl border border-indigo-200/80 bg-indigo-50/40 px-3 py-2 text-xs"
+                                type="button"
+                                onClick={() => setModalSopCode(sop.file_stem || sop.sop_id)}
+                                className="rounded-xl border border-indigo-200/80 bg-indigo-50/40 px-3 py-2 text-left text-xs transition hover:border-indigo-400 hover:bg-indigo-50 hover:shadow-sm"
                               >
                                 <div className="flex flex-wrap items-center justify-between gap-1.5">
-                                  <span className="font-extrabold text-indigo-950">
-                                    {sop.sop_id}
+                                  <span className="font-extrabold text-indigo-950 underline decoration-indigo-300 underline-offset-2">
+                                    {sop.sop_id} ↗
                                   </span>
                                   {sop.muka_surat_pdf && (
                                     <span className="rounded-full bg-white px-2 py-0.5 text-[10px] font-bold text-indigo-900 ring-1 ring-indigo-200">
@@ -1459,7 +1501,7 @@ export default function UIPAdvisorPanel({
                                     {sop.lampiran_ringkas.join(", ")}
                                   </div>
                                 )}
-                              </div>
+                              </button>
                             ))}
                           </div>
                         </div>
@@ -1470,8 +1512,12 @@ export default function UIPAdvisorPanel({
                           <summary className="cursor-pointer font-extrabold text-[#0f2744]">
                             Lihat Ringkasan Lengkap 4 Lapisan Bukti SOP (Penilaian, Punca Kuasa, Langkah &amp; Lampiran)
                           </summary>
-                          <div className="mt-2 whitespace-pre-wrap leading-relaxed text-slate-700">
-                            {result.jawapan_4_lapisan_sop}
+                          <div className="mt-2">
+                            <RichLegalText
+                              text={result.jawapan_4_lapisan_sop}
+                              className="text-xs"
+                              onOpenSop={(code) => setModalSopCode(code)}
+                            />
                           </div>
                         </details>
                       )}
@@ -2059,6 +2105,17 @@ export default function UIPAdvisorPanel({
         )}
       </section>
       )}
+
+      <SopQuickModal
+        sopCode={modalSopCode}
+        authToken={authToken}
+        onClose={() => setModalSopCode(null)}
+        onAskExpertWithSop={(promptText) => {
+          setWorkspaceTab("ask");
+          setQuestion(promptText);
+          void handleConsult(promptText, undefined, false, true);
+        }}
+      />
     </div>
   );
 }

@@ -1,0 +1,770 @@
+{
+  "schema_version": "2.0",
+  "sop_id": "UIP-UMUM-01-07 (PINDAAN 2024)",
+  "file_stem": "UIP-UMUM-01-07",
+  "alias_kod": [],
+  "tajuk": "Prosedur Penggubalan Undang-Undang Kesihatan Awam",
+  "kategori": "UMUM",
+  "akta_utama": "SOP Umum / KTJ",
+  "akta_berkaitan": [
+    "Akta 56",
+    "Akta 260",
+    "Akta 281",
+    "Akta 92",
+    "Akta 154",
+    "Akta 342",
+    "Akta 388",
+    "Akta 574",
+    "Akta 593"
+  ],
+  "keluaran": "01",
+  "pindaan": "01",
+  "tarikh_kuatkuasa": "15 Feb 2024",
+  "ringkasan_eksekutif": "Tujuan prosedur ini adalah untuk menjelaskan Prosedur Penggubalan Undang-undang Kesihatan Awam 4. UNDANG-UNDANG YANG BERKAITAN 4.1 Perlembagaan Persekutuan 4.2 Akta Keterangan 1950 (Disemak 1971) [Akta 56] 4.3 Akta Hidrogen Sianid 1953 [Akta 260] 4.4 Akta Maka",
+  "tujuan": "Tujuan prosedur ini adalah untuk menjelaskan Prosedur Penggubalan Undang-undang Kesihatan Awam 4. UNDANG-UNDANG YANG BERKAITAN 4.1 Perlembagaan Persekutuan 4.2 Akta Keterangan 1950 (Disemak 1971) [Akta 56] 4.3 Akta Hidrogen Sianid 1953 [Akta 260] 4.4 Akta Makanan 1983 [Akta 281] 4.5 Akta Mahkamah Rendah 1948 [Akta 92] 4.6 Akta Pemusnahan Serangga Pembawa Penyakit 1975 [Akta 154] 4.7 Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988 [Akta 342] 4.8 Akta Tafsiran 1948 dan 1967(Disemak 1989) [Akta 388] 4.9 Kanun Keseksaan (Disemak 1997) [Akta 574] 4.10 Kanun Tatacara Jenayah (Disemak 2016) [Akta 593] 4.11 Peraturan-Peraturan Kawalan Hasil T",
+  "panduan_am": [],
+  "punca_kuasa": [
+    "RIA (MPC)",
+    "Kertas Jemaah Menteri",
+    "Pembentangan Parlimen",
+    "Pewartaan JPN"
+  ],
+  "undang_undang_berkaitan": [
+    {
+      "akta": "Akta 56",
+      "akta_kod": "Akta 56",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta 260",
+      "akta_kod": "Akta 260",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta 281",
+      "akta_kod": "Akta 281",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta 92",
+      "akta_kod": "Akta 92",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta 154",
+      "akta_kod": "Akta 154",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta 342",
+      "akta_kod": "Akta 342",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta 388",
+      "akta_kod": "Akta 388",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta 574",
+      "akta_kod": "Akta 574",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta 593",
+      "akta_kod": "Akta 593",
+      "status": "AKTIF",
+      "nota": null
+    }
+  ],
+  "anggota_terlibat": [
+    {
+      "kod": "YB MENTERI K",
+      "jawatan": "YB Menteri Kesihatan Malaysia"
+    },
+    {
+      "kod": "KETUA PENGAR",
+      "jawatan": "Ketua Pengarah Kesihatan Malaysia"
+    },
+    {
+      "kod": "KKM",
+      "jawatan": "Setiausaha Bahagian Pengurusan, KKM"
+    },
+    {
+      "kod": "KA",
+      "jawatan": "Timbalan Ketua Pengarah Kesihatan"
+    },
+    {
+      "kod": "JABATAN PEGU",
+      "jawatan": "Jabatan Peguam Negara"
+    }
+  ],
+  "singkatan": [
+    {
+      "kod": "AJK",
+      "maksud": "Ahli Jawatankuasa"
+    },
+    {
+      "kod": "JPN",
+      "maksud": "Jabatan Peguam Negara"
+    },
+    {
+      "kod": "KPJ",
+      "maksud": "Kanun Prosedur Jenayah. Boleh menggunakan Kanun Tatacara Jenayah ataupun Kanun Acara Jenayah bagi maksud yang sama"
+    },
+    {
+      "kod": "KPK",
+      "maksud": "Ketua Pengarah Kesihatan Malaysia"
+    },
+    {
+      "kod": "KSIP",
+      "maksud": "Ketua Sektor Inspektorat dan Perundangan, BPKA, KKM --- Prosedur Penggubalan Undang-undang Kesihatan Awam 3"
+    },
+    {
+      "kod": "KUP",
+      "maksud": "Ketua Unit Parlimen, KKM"
+    },
+    {
+      "kod": "MPC",
+      "maksud": "Malaysia Productivity Corporation (Perbadanan Produktiviti Malaysia)"
+    },
+    {
+      "kod": "PUU",
+      "maksud": "Penasihat Undang-Undang, KKM"
+    },
+    {
+      "kod": "RIA",
+      "maksud": "Regulatory Impact Assessment (Penilaian Kesan Perundangan)"
+    },
+    {
+      "kod": "SUB",
+      "maksud": "Setiausaha Bahagian Pengurusan, KKM"
+    },
+    {
+      "kod": "TKPK (KA)",
+      "maksud": "Timbalan Ketua Pengarah Kesihatan (Kesihatan Awam)"
+    },
+    {
+      "kod": "YBMK",
+      "maksud": "Yang Berhormat Menteri Kesihatan Malaysia --- Prosedur Penggubalan Undang-undang Kesihatan Awam 4"
+    }
+  ],
+  "nota_pindaan": [
+    {
+      "tahap": "AMARAN",
+      "tajuk": "[NOTA PINDAAN] PPKHT 2004 Dimansuhkan — Digantikan Oleh Akta 852 (1 Okt 2024)",
+      "butiran": "Sebarang rujukan PPKHT 2004 dan Notis Seksyen 32B Akta Makanan 1983 bagi kesalahan produk merokok/vape dalam SOP ini telah DIMANSUHKAN mulai 1 Oktober 2024 dan digantikan sepenuhnya oleh Akta 852 (UIP-AKPMDKA-01-24 hingga 08-24).",
+      "gantian_statut": "Akta 852 & UIP-AKPMDKA-01-24..08-24 (1 Okt 2024)"
+    }
+  ],
+  "tempoh_sla": [],
+  "fasa_kerja": [
+    {
+      "fasa_id": "F1",
+      "tajuk_fasa": "1. Pelaksanaan Proses Kerja",
+      "langkah": [
+        {
+          "no": "1",
+          "tajuk": "Arahanmemindaataumenggubalsesuatu ",
+          "anggota": [
+            "KPK"
+          ],
+          "tindakan": [
+            "Arahanmemindaataumenggubalsesuatu . perundangan(Arahanbertulis/MinitMesyuarat) ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "2",
+          "tajuk": "ArahanpenubuhanAJKInduk (dipengerusikanoleh ",
+          "anggota": [
+            "KPK",
+            "TKPK"
+          ],
+          "tindakan": [
+            "ArahanpenubuhanAJKInduk (dipengerusikanoleh . . KPK) ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "3",
+          "tajuk": "ArahanpenubuhanAJKKerja [KPK/TKPK(KA)/ ",
+          "anggota": [
+            "KPK",
+            "TKPK",
+            "KSIP"
+          ],
+          "tindakan": [
+            "ArahanpenubuhanAJKKerja [KPK/TKPK(KA)/ . . KSIPakanmelantikAJKGubalan] ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "4",
+          "tajuk": "DrafPindaandirujukkeMPCuntuksemakanbagiRIA ",
+          "anggota": [
+            "KSIP"
+          ],
+          "tindakan": [
+            "DrafPindaandirujukkeMPCuntuksemakanbagiRIA . ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "5",
+          "tajuk": "PembentangandankelulusanDrafPindaanAktaoleh ",
+          "anggota": [
+            "KPK",
+            "TKPK",
+            "KSIP"
+          ],
+          "tindakan": [
+            "PembentangandankelulusanDrafPindaanAktaoleh . AJKInduk(dipengerusikanolehKPK) ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "6",
+          "tajuk": "Jikatiadapindaan tetapkantarikhuntuk ",
+          "anggota": [
+            "KSIP"
+          ],
+          "tindakan": [
+            "Jikatiadapindaan tetapkantarikhuntuk . , pembentangankepadaYBMK Jikaada KSIPbuat . , pindaan(Ulangtindakan5) ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "7",
+          "tajuk": "PembentanganDrafPindaanAktauntukkelulusanoleh ",
+          "anggota": [
+            "KPK",
+            "TKPK",
+            "KSIP"
+          ],
+          "tindakan": [
+            "PembentanganDrafPindaanAktauntukkelulusanoleh . YBMK ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "8",
+          "tajuk": "Jika lulus laksanakan aktiviti seranta awam (taklimat ",
+          "anggota": [
+            "KSIP"
+          ],
+          "tindakan": [
+            "Jika lulus laksanakan aktiviti seranta awam (taklimat . , kepada pihak -pihak yang berkepentingan termasuk kementeriandanagensilainyang berkaitan) Jikatidak . diluluskan buattambahanpindaan(Ulangtindakan7) , . ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 8: Jika lulus laksanakan aktiviti seranta awam (taklimat . , kepada pihak -pihak yang berkepenting...",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "9",
+          "tajuk": "Jika tiada pindaan kemukakan kepada PUU untuk ",
+          "anggota": [
+            "KSIP"
+          ],
+          "tindakan": [
+            "Jika tiada pindaan kemukakan kepada PUU untuk . , kelulusan KSIPbuatpindaanjikaada . ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 9: Jika tiada pindaan kemukakan kepada PUU untuk . , kelulusan KSIPbuatpindaanjikaada . .",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "10",
+          "tajuk": "Jika tiada pindaan sediakan Kertas Jemaah Menteri ",
+          "anggota": [
+            "KSIP"
+          ],
+          "tindakan": [
+            "Jika tiada pindaan sediakan Kertas Jemaah Menteri . , untuk kelulusan KSIP buat pindaan jika ada (Ulang . tindakan9) ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 10: Jika tiada pindaan sediakan Kertas Jemaah Menteri . , untuk kelulusan KSIP buat pindaan jika ad...",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "11",
+          "tajuk": "JikaKertasJemaahMenteridiluluskan dapatkan ",
+          "anggota": [
+            "KSIP"
+          ],
+          "tindakan": [
+            "JikaKertasJemaahMenteridiluluskan dapatkan . , tarikhpembentangandiParlimen KSIPbuatpindaan . jikaada(Ulangtindakan10) ."
+          ],
+          "rujukan": [
+            "AJKGubalan"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "12",
+          "tajuk": "DapatkantarikhpembentangandiParlimen ",
+          "anggota": [
+            "PUU",
+            "JPN"
+          ],
+          "tindakan": [
+            "DapatkantarikhpembentangandiParlimen . ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "13",
+          "tajuk": "Hadirsepanjangsesipembentangandanperbahasan ",
+          "anggota": [
+            "KPK",
+            "KSIP"
+          ],
+          "tindakan": [
+            "Hadirsepanjangsesipembentangandanperbahasan . diParlimen ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "14",
+          "tajuk": "Jika diluluskan dapatkan minit kelulusan untuk ",
+          "anggota": [
+            "KSIP"
+          ],
+          "tindakan": [
+            "Jika diluluskan dapatkan minit kelulusan untuk . , tindakan Jabatan Peguam Negara Jika belum . diluluskan buatpindaan(Ulangtindakan12) , ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 14: Jika diluluskan dapatkan minit kelulusan untuk . , tindakan Jabatan Peguam Negara Jika belum . ...",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "15",
+          "tajuk": "PewartaanolehJabatanPeguamNegara ",
+          "anggota": [],
+          "tindakan": [
+            "PewartaanolehJabatanPeguamNegara . ."
+          ],
+          "rujukan": [
+            "JabatanPeguam",
+            "Negara"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        }
+      ]
+    }
+  ],
+  "carta_alir": {
+    "nodes": [
+      {
+        "id": "N_START",
+        "type": "start",
+        "label": "Mula Operasi / Prosedur",
+        "role": null,
+        "step_ref": null,
+        "sop_ref": null
+      },
+      {
+        "id": "N1",
+        "type": "process",
+        "label": "1. Arahanmemindaataumenggubalsesuatu ",
+        "role": "KPK",
+        "step_ref": "1",
+        "sop_ref": null
+      },
+      {
+        "id": "N2",
+        "type": "process",
+        "label": "2. ArahanpenubuhanAJKInduk (dipengerusikanoleh ",
+        "role": "KPK/TKPK",
+        "step_ref": "2",
+        "sop_ref": null
+      },
+      {
+        "id": "N3",
+        "type": "process",
+        "label": "3. ArahanpenubuhanAJKKerja [KPK/TKPK(KA)/ ",
+        "role": "KPK/TKPK",
+        "step_ref": "3",
+        "sop_ref": null
+      },
+      {
+        "id": "N4",
+        "type": "process",
+        "label": "4. DrafPindaandirujukkeMPCuntuksemakanbagiRIA ",
+        "role": "KSIP",
+        "step_ref": "4",
+        "sop_ref": null
+      },
+      {
+        "id": "N5",
+        "type": "process",
+        "label": "5. PembentangandankelulusanDrafPindaanAktaoleh ",
+        "role": "KPK/TKPK",
+        "step_ref": "5",
+        "sop_ref": null
+      },
+      {
+        "id": "N6",
+        "type": "process",
+        "label": "6. Jikatiadapindaan tetapkantarikhuntuk ",
+        "role": "KSIP",
+        "step_ref": "6",
+        "sop_ref": null
+      },
+      {
+        "id": "N7",
+        "type": "process",
+        "label": "7. PembentanganDrafPindaanAktauntukkelulusanoleh ",
+        "role": "KPK/TKPK",
+        "step_ref": "7",
+        "sop_ref": null
+      },
+      {
+        "id": "N8",
+        "type": "decision",
+        "label": "8. Jika lulus laksanakan aktiviti seranta awam (taklimat ",
+        "role": "KSIP",
+        "step_ref": "8",
+        "sop_ref": null
+      },
+      {
+        "id": "N9",
+        "type": "decision",
+        "label": "9. Jika tiada pindaan kemukakan kepada PUU untuk ",
+        "role": "KSIP",
+        "step_ref": "9",
+        "sop_ref": null
+      },
+      {
+        "id": "N10",
+        "type": "decision",
+        "label": "10. Jika tiada pindaan sediakan Kertas Jemaah Menteri ",
+        "role": "KSIP",
+        "step_ref": "10",
+        "sop_ref": null
+      },
+      {
+        "id": "N11",
+        "type": "process",
+        "label": "11. JikaKertasJemaahMenteridiluluskan dapatkan ",
+        "role": "KSIP",
+        "step_ref": "11",
+        "sop_ref": null
+      },
+      {
+        "id": "N12",
+        "type": "process",
+        "label": "12. DapatkantarikhpembentangandiParlimen ",
+        "role": "PUU/JPN",
+        "step_ref": "12",
+        "sop_ref": null
+      },
+      {
+        "id": "N13",
+        "type": "process",
+        "label": "13. Hadirsepanjangsesipembentangandanperbahasan ",
+        "role": "KPK/KSIP",
+        "step_ref": "13",
+        "sop_ref": null
+      },
+      {
+        "id": "N14",
+        "type": "decision",
+        "label": "14. Jika diluluskan dapatkan minit kelulusan untuk ",
+        "role": "KSIP",
+        "step_ref": "14",
+        "sop_ref": null
+      },
+      {
+        "id": "N_END",
+        "type": "end",
+        "label": "Selesai & Rekod Fail UIP",
+        "role": null,
+        "step_ref": null,
+        "sop_ref": null
+      }
+    ],
+    "edges": [
+      {
+        "from": "N_START",
+        "to": "N1",
+        "label": null
+      },
+      {
+        "from": "N1",
+        "to": "N2",
+        "label": null
+      },
+      {
+        "from": "N2",
+        "to": "N3",
+        "label": null
+      },
+      {
+        "from": "N3",
+        "to": "N4",
+        "label": null
+      },
+      {
+        "from": "N4",
+        "to": "N5",
+        "label": null
+      },
+      {
+        "from": "N5",
+        "to": "N6",
+        "label": null
+      },
+      {
+        "from": "N6",
+        "to": "N7",
+        "label": null
+      },
+      {
+        "from": "N7",
+        "to": "N8",
+        "label": null
+      },
+      {
+        "from": "N8",
+        "to": "N9",
+        "label": "Teruskan"
+      },
+      {
+        "from": "N9",
+        "to": "N10",
+        "label": "Teruskan"
+      },
+      {
+        "from": "N10",
+        "to": "N11",
+        "label": "Teruskan"
+      },
+      {
+        "from": "N11",
+        "to": "N12",
+        "label": null
+      },
+      {
+        "from": "N12",
+        "to": "N13",
+        "label": null
+      },
+      {
+        "from": "N13",
+        "to": "N14",
+        "label": null
+      },
+      {
+        "from": "N14",
+        "to": "N_END",
+        "label": null
+      }
+    ]
+  },
+  "senarai_semak": [
+    {
+      "id": "CHK-01",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[1] Arahanmemindaataumenggubalsesuatu ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-02",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[2] ArahanpenubuhanAJKInduk (dipengerusikanoleh ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-03",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[3] ArahanpenubuhanAJKKerja [KPK/TKPK(KA)/ ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-04",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[4] DrafPindaandirujukkeMPCuntuksemakanbagiRIA ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-05",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[5] PembentangandankelulusanDrafPindaanAktaoleh ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-06",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[6] Jikatiadapindaan tetapkantarikhuntuk ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-07",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[7] PembentanganDrafPindaanAktauntukkelulusanoleh ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-08",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[8] Jika lulus laksanakan aktiviti seranta awam (taklimat ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-09",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[9] Jika tiada pindaan kemukakan kepada PUU untuk ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-10",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[10] Jika tiada pindaan sediakan Kertas Jemaah Menteri ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-11",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[11] JikaKertasJemaahMenteridiluluskan dapatkan ",
+      "wajib": true,
+      "rujukan": "AJKGubalan"
+    },
+    {
+      "id": "CHK-12",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[12] DapatkantarikhpembentangandiParlimen ",
+      "wajib": true,
+      "rujukan": null
+    }
+  ],
+  "lampiran": [],
+  "pematuhan": [
+    "Prosedur yang dikeluarkan ini hendaklah terus berkuatkuasa dan",
+    "dianggap sah sehingga dipinda atau diganti dengan satu prosedur",
+    "lain atau dibatalkan.",
+    "Keengganan dan kegagalan mematuhi prosedur ini tanpa alasan",
+    "dikenakan tindakan tatatertib di bawah Peraturan-Peraturan Pegawai",
+    "Awam (Kelakuan dan Tatatertib) 1993.",
+    "Kegagalan mematuhi prosedur ini juga merupakan satu kesalahan di",
+    "bawah Seksyen 24 (1) (f) Akta Suruhanjaya Integriti Agensi"
+  ],
+  "rujukan_silang_resolved": [],
+  "nota_audit_kualiti": [
+    "Menyenaraikan PPKHT 2004 dalam rujukan umum; rujukan hasil tembakau kini tertakluk kepada Akta 852 (berkuat kuasa 1 Okt 2024)."
+  ]
+}

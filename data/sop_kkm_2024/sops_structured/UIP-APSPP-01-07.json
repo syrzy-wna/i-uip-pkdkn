@@ -1,0 +1,1322 @@
+{
+  "schema_version": "2.0",
+  "sop_id": "UIP-APSPP-01-07 (PINDAAN 2024)",
+  "file_stem": "UIP-APSPP-01-07",
+  "alias_kod": [],
+  "tajuk": "Prosedur Pemeriksaan Serangga Pembawa Penyakit Di Lapangan",
+  "kategori": "APSPP_1975",
+  "akta_utama": "Akta 154",
+  "akta_berkaitan": [
+    "Akta 154",
+    "Akta 56",
+    "Akta 388",
+    "Akta 574",
+    "Akta 593",
+    "Peraturan APSPP (Mengkompaun Kesalahan) 1975"
+  ],
+  "keluaran": "01",
+  "pindaan": "01",
+  "tarikh_kuatkuasa": "15 Feb 2024",
+  "ringkasan_eksekutif": "Tujuan prosedur ini adalah untuk menggariskan tatacara pemeriksaan serangga pembawa penyakit di lapangan dan penguatkuasaan Akta Pemusnahan Serangga Pembawa Penyakit 1975.",
+  "tujuan": "Tujuan prosedur ini adalah untuk menggariskan tatacara pemeriksaan serangga pembawa penyakit di lapangan dan penguatkuasaan Akta Pemusnahan Serangga Pembawa Penyakit 1975.",
+  "panduan_am": [],
+  "punca_kuasa": [
+    "S.5(3) APSPP 1975 (Notis masuk/selepas 10 malam)",
+    "S.6 APSPP 1975 (Sita bekas)",
+    "Umur 18 tahun ke atas",
+    "5 ekor spesimen hidup",
+    "Lak rasmi KKM",
+    "Sampul Kecil 3 hari ke UIPD"
+  ],
+  "undang_undang_berkaitan": [
+    {
+      "akta": "Akta Keterangan 1950 (Disemak 1971) [Akta 56]",
+      "akta_kod": "Akta 56",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Pemusnahan Serangga Pembawa Penyakit 1975 [Akta 154]",
+      "akta_kod": "Akta 154",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Tafsiran 1948 dan 1967 (Disemak 1989) [Akta 388]",
+      "akta_kod": "Akta 388",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Kanun Keseksaan (Disemak 1997) [Akta 574]",
+      "akta_kod": "Akta 574",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Kanun Tatacara Jenayah (Disemak 1999) [Akta 593]",
+      "akta_kod": "Akta 593",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Peraturan-Peraturan Pemusnahan Serangga Pembawa Penyakit",
+      "akta_kod": null,
+      "status": "AKTIF",
+      "nota": null
+    }
+  ],
+  "anggota_terlibat": [
+    {
+      "kod": "PEGAWAI KESI",
+      "jawatan": "Pegawai Kesihatan Daerah/ Kawasan/Bahagian"
+    },
+    {
+      "kod": "KETUA PENOLO",
+      "jawatan": "Ketua Penolong Pegawai Kesihatan Persekitaran"
+    },
+    {
+      "kod": "PENOLONG PEG",
+      "jawatan": "Penolong Pegawai Kesihatan Persekitaran Kanan"
+    },
+    {
+      "kod": "PEMBANTU KES",
+      "jawatan": "Pembantu Kesihatan Awam Kanan"
+    },
+    {
+      "kod": "PKA",
+      "jawatan": "Pembantu Kesihatan Awam"
+    }
+  ],
+  "singkatan": [
+    {
+      "kod": "APSPP 1975",
+      "maksud": "Akta Pemusnahan Serangga Pembawa Penyakit 1975"
+    },
+    {
+      "kod": "ID",
+      "maksud": "Diari Siasatan"
+    },
+    {
+      "kod": "KPPKP",
+      "maksud": "Ketua Penolong Pegawai Kesihatan Persekitaran"
+    },
+    {
+      "kod": "PA",
+      "maksud": "Pekerja Am"
+    },
+    {
+      "kod": "PKA",
+      "maksud": "Pembantu Kesihatan Awam"
+    },
+    {
+      "kod": "PKAK",
+      "maksud": "Pembantu Kesihatan Awam Kanan"
+    },
+    {
+      "kod": "PKD",
+      "maksud": "Pegawai Kesihatan Daerah/Kawasan/Bahagian"
+    },
+    {
+      "kod": "PKP",
+      "maksud": "Pegawai Kesihatan Persekitaran"
+    },
+    {
+      "kod": "PPKP",
+      "maksud": "Penolong Pegawai Kesihatan Persekitaran"
+    },
+    {
+      "kod": "PPKPK",
+      "maksud": "Penolong Pegawai Kesihatan Persekitaran Kanan"
+    },
+    {
+      "kod": "UIPD",
+      "maksud": "Unit Inspektorat dan Perundangan Daerah --- Prosedur Pemeriksaan Serangga Pembawa Penyakit Di Lapangan 3"
+    }
+  ],
+  "nota_pindaan": [],
+  "tempoh_sla": [
+    {
+      "label": "Serahan Sampul Kecil ke UIPD",
+      "tempoh": "Dalam tempoh 3 hari",
+      "rujukan": "Proses Kerja UIP-APSPP-01-07"
+    },
+    {
+      "label": "Pemeriksaan Selepas 10 Malam",
+      "tempoh": "Perlu Notis S.5(3) Akta 154",
+      "rujukan": "Seksyen 5(3) Akta 154"
+    }
+  ],
+  "fasa_kerja": [
+    {
+      "fasa_id": "F1",
+      "tajuk_fasa": "1. Pelaksanaan Proses Kerja",
+      "langkah": [
+        {
+          "no": "1",
+          "tajuk": "PersediaanSebelumKeLapangan ",
+          "anggota": [
+            "PPKP",
+            "PKAK",
+            "PKP",
+            "KPPKP",
+            "PPKPK"
+          ],
+          "tindakan": [
+            "PersediaanSebelumKeLapangan ."
+          ],
+          "rujukan": [
+            "PelanLokasi",
+            "Kawasan"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "11",
+          "tajuk": "Sediakansuratarahan/panggilanmenjalankan ",
+          "anggota": [
+            "PPKP",
+            "PKAK",
+            "PKP",
+            "KPPKP",
+            "PPKPK"
+          ],
+          "tindakan": [
+            "Sediakansuratarahan/panggilanmenjalankan . pemeriksaanseranggapembawapenyakit kepada anggotaterlibat ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "12",
+          "tajuk": "Tetapkankawasanpemeriksaanmengikut ",
+          "anggota": [
+            "PPKP",
+            "PKAK",
+            "PKP",
+            "KPPKP",
+            "PPKPK"
+          ],
+          "tindakan": [
+            "Tetapkankawasanpemeriksaanmengikut . jadualkeutamaan atauaduansertaberitaklimatkepada , anggotaterlibat ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "13",
+          "tajuk": "Ketuapasukanpemeriksaanseranggapembawapenyakit ",
+          "anggota": [
+            "PPKPK",
+            "PPKP",
+            "PKA"
+          ],
+          "tindakan": [
+            "Ketuapasukanpemeriksaanseranggapembawapenyakit . hendaklahmenyemakperalatanmengikutsenaraisemak sebelumkeluarkelapangan ."
+          ],
+          "rujukan": [
+            "LampiranA"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "2",
+          "tajuk": "Dilapangan ",
+          "anggota": [
+            "PPKPK",
+            "PPKP",
+            "PKA",
+            "PA"
+          ],
+          "tindakan": [
+            "Dilapangan ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "21",
+          "tajuk": "Jalankantugaspemeriksaandikawasanoperasiyangtelah ",
+          "anggota": [
+            "PPKPK",
+            "PPKP",
+            "PKA",
+            "PA"
+          ],
+          "tindakan": [
+            "Jalankantugaspemeriksaandikawasanoperasiyangtelah . ditetapkanbersamapembantu ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "22",
+          "tajuk": "Untukpemeriksaan dikawasantertentusepertitapak ",
+          "anggota": [
+            "KPPKP",
+            "PPKP"
+          ],
+          "tindakan": [
+            "Untukpemeriksaan dikawasantertentusepertitapak . binaan industri institutpengajiantinggihendaklahdiketuai , , olehPPKP Bagioperasikhaspasukanhendaklahdiketuai . olehKPPKP/PPKPK . ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "23",
+          "tajuk": "Temuipemunyaatau pendudukpremisyangberumur18 ",
+          "anggota": [
+            "PPKPK",
+            "PPKP",
+            "PKA",
+            "PA"
+          ],
+          "tindakan": [
+            "Temuipemunyaatau pendudukpremisyangberumur18 . tahunkeatas Jikatiada keluarkanNotisUntukMemasuki . , PremisBagiPemeriksaanDanMenjalankanKuasa-Kuasa DiBawahSeksyen5(3)AktaPemusnahanSerangga PembawaPenyakit1975 ."
+          ],
+          "rujukan": [
+            "LampiranH"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "24",
+          "tajuk": "Jikapemeriksaanperludilakukanselepaspukulsepuluh ",
+          "anggota": [
+            "PPKPK",
+            "PPKP",
+            "PKA",
+            "PA"
+          ],
+          "tindakan": [
+            "Jikapemeriksaanperludilakukanselepaspukulsepuluh . malam pastikannotistersebutdipatuhiterlebihdahulu , ."
+          ],
+          "rujukan": [
+            "LampiranH"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "25",
+          "tajuk": "Memperkenalkandiribersamapembantudengan ",
+          "anggota": [
+            "PPKPK",
+            "PPKP",
+            "PKA",
+            "PA"
+          ],
+          "tindakan": [
+            "Memperkenalkandiribersamapembantudengan . menunjukkanKadPengenalanPerakuanKuasa/Surat PewakilanKuasa ."
+          ],
+          "rujukan": [
+            "KadPengenalan",
+            "PerakuanKuasa/",
+            "SuratPewakilan",
+            "Kuasa"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "26",
+          "tajuk": "Beritahutujuankedatanganuntukmenjalankan ",
+          "anggota": [
+            "PPKPK",
+            "PPKP",
+            "PKA",
+            "PA"
+          ],
+          "tindakan": [
+            "Beritahutujuankedatanganuntukmenjalankan . . pemeriksaantempatpembiakanseranggapembawa penyakitdanmintapendudukikutbersamadalam pemeriksaan ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "27",
+          "tajuk": "Jikatiadahalangan teruskanketindakanNo 28 ",
+          "anggota": [
+            "PPKPK",
+            "PPKP",
+            "PKA",
+            "PA"
+          ],
+          "tindakan": [
+            "Jikatiadahalangan teruskanketindakanNo 28 . . , . . . Jikatidakdibenarkanmasuk;"
+          ],
+          "rujukan": [
+            "ProsedurUIP",
+            "-",
+            "APSPP 03 07",
+            "- -",
+            "(Pindaan2024)",
+            "."
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "271",
+          "tajuk": "Terangkandenganjelaskepadapemunya/ ",
+          "anggota": [
+            "PPKPK",
+            "PPKP",
+            "PKA",
+            "PA"
+          ],
+          "tindakan": [
+            "Terangkandenganjelaskepadapemunya/ . . penduduksifatdanakibatdarisegiperundanganjika menghalangtugas"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "272",
+          "tajuk": "MaklumkepadaPKD (SilarujukProsedurTindakan ",
+          "anggota": [
+            "PPKPK",
+            "PPKP",
+            "PKA",
+            "PA"
+          ],
+          "tindakan": [
+            "MaklumkepadaPKD (SilarujukProsedurTindakan . . . KeranaMenghalangTugas) ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "28",
+          "tajuk": "Ambilmaklumatdokumenpengenalandiripemunyaatau ",
+          "anggota": [
+            "PPKPK",
+            "PPKP",
+            "PKA",
+            "PA"
+          ],
+          "tindakan": [
+            "Ambilmaklumatdokumenpengenalandiripemunyaatau . pendudukpremistersebutdanlain:lainmaklumat (contohnyasepertibilair/telefon/TNB/cukaidan sebagainya) ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "29",
+          "tajuk": "Mulakanpemeriksaanbersamapembantudandiiringioleh ",
+          "anggota": [
+            "PPKPK",
+            "PPKP",
+            "PKA",
+            "PA"
+          ],
+          "tindakan": [
+            "Mulakanpemeriksaanbersamapembantudandiiringioleh . . pemunyaatau pendudukpremis ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "210",
+          "tajuk": "Jikamenemuipembiakanseranggapembawapenyakit ",
+          "anggota": [
+            "PPKPK",
+            "PPKP",
+            "PKA",
+            "PA"
+          ],
+          "tindakan": [
+            "Jikamenemuipembiakanseranggapembawapenyakit . , tunjukkan tempatyangadapembiakankepadapemunya atau pendudukpremis ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "211",
+          "tajuk": "Ambilgambartempatpembiakan (SilarujukProsedur ",
+          "anggota": [
+            "PPKP",
+            "PKA",
+            "PA"
+          ],
+          "tindakan": [
+            "Ambilgambartempatpembiakan (SilarujukProsedur . . MengambilGambar)"
+          ],
+          "rujukan": [
+            "ProsedurUIP",
+            "-",
+            "UMUM 04 07",
+            "- -",
+            "(Pindaan2024)",
+            "."
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "212",
+          "tajuk": "Tunjukkanperalatan(botolspesimendanpipet lutsinar) ",
+          "anggota": [
+            "PPKPK",
+            "PPKP",
+            "PKA",
+            "PA"
+          ],
+          "tindakan": [
+            "Tunjukkanperalatan(botolspesimendanpipet lutsinar) . . yangkosongkepadapemunyaataupendudukpremis ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "213",
+          "tajuk": "Ambilspesimenseranggapembawapenyakityang hidup ",
+          "anggota": [
+            "PPKPK",
+            "PPKP",
+            "PKA",
+            "PA"
+          ],
+          "tindakan": [
+            "Ambilspesimenseranggapembawapenyakityang hidup . . denganmenggunakanpipetdihadapanpemunyaatau pendudukpremis ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "214",
+          "tajuk": "Bagisetiaptempat/bekaspembiakan ambil5ekor ",
+          "anggota": [
+            "PPKPK",
+            "PPKP",
+            "PKA",
+            "PA"
+          ],
+          "tindakan": [
+            "Bagisetiaptempat/bekaspembiakan ambil5ekor . , spesimen Jikabilangankurangdari5ekor ambilsemua . , spesimen ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "215",
+          "tajuk": "Tutupbotolspesimendanditunjukkankepadapemunya ",
+          "anggota": [
+            "PPKPK",
+            "PPKP",
+            "PKA",
+            "PA"
+          ],
+          "tindakan": [
+            "Tutupbotolspesimendanditunjukkankepadapemunya . ataupendudukpremisKemudian lakbotolspesimen , denganlakrasmiKementerianKesihatanMalaysia"
+          ],
+          "rujukan": [
+            "Lakrasmi KKM"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "216",
+          "tajuk": "Labelkanbotolspesimendanturunkantandatangan ",
+          "anggota": [
+            "PPKPK",
+            "PPKP",
+            "PKA"
+          ],
+          "tindakan": [
+            "Labelkanbotolspesimendanturunkantandatangan . ringkasdiataslabel Botolyanglengkapdilabelditunjukkan . kepadapemunyaataupendudukpremis ."
+          ],
+          "rujukan": [
+            "LampiranB"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "217",
+          "tajuk": "Catatkansemuamaklumattempatkejadian didalamID ",
+          "anggota": [
+            "PPKPK",
+            "PPKP",
+            "PKA",
+            "PA"
+          ],
+          "tindakan": [
+            "Catatkansemuamaklumattempatkejadian didalamID . danBorangPemeriksaanPremisuntukPembiakan SeranggaPembawaPenyakit ."
+          ],
+          "rujukan": [
+            "LampiranG"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "218",
+          "tajuk": "IsiBorangPerakuanPungutanSeranggaPembawa ",
+          "anggota": [
+            "PPKPK",
+            "PPKP",
+            "PKA",
+            "PA"
+          ],
+          "tindakan": [
+            "IsiBorangPerakuanPungutanSeranggaPembawa . PenyakitdanSenaraiBarangYangDisita(jikaperlu)di dalam2salinan ."
+          ],
+          "rujukan": [
+            "LampiranCdan",
+            "LampiranD"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "219",
+          "tajuk": "Dapatkantandatanganpemunyaataupenduduk pada ",
+          "anggota": [
+            "PPKPK",
+            "PPKP",
+            "PKA",
+            "PA"
+          ],
+          "tindakan": [
+            "Dapatkantandatanganpemunyaataupenduduk pada . salinanasal Serahkansalinanpenduaborangkepada . pemunyaataupenduduk CatatkandalamID . ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "220",
+          "tajuk": "Jikapemunyaataupendudukenggan catatkandidalam ",
+          "anggota": [
+            "PPKPK",
+            "PPKP",
+            "PKA",
+            "PA"
+          ],
+          "tindakan": [
+            "Jikapemunyaataupendudukenggan catatkandidalam . , salinanasal”Pemunya/Pendudukenggantandatangan” . Tinggalkansalinanpenduadipremisberkenaandengan disaksikanolehpembantu ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "221",
+          "tajuk": "Sediakanpelanlokasikedudukanpremis gunakanhuruf ",
+          "anggota": [
+            "PPKPK",
+            "PPKP",
+            "PKA",
+            "PA"
+          ],
+          "tindakan": [
+            "Sediakanpelanlokasikedudukanpremis gunakanhuruf . , abjaduntukkedudukanlokasipremis . (Sediakankekuncipelandidalamhelaianberasingan) ."
+          ],
+          "rujukan": [
+            "LampiranEdan",
+            "LampiranE(a)"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "222",
+          "tajuk": "SediakanPelanLantaidantandakantempatpembiakan ",
+          "anggota": [
+            "PPKPK",
+            "PPKP",
+            "PKA",
+            "PA"
+          ],
+          "tindakan": [
+            "SediakanPelanLantaidantandakantempatpembiakan . dengantanda(X) . (Sediakankekuncipelandidalamhelaianberasingan) ."
+          ],
+          "rujukan": [
+            "LampiranFdan",
+            "Lampiran F(a)"
+          ],
+          "rujukan_lampiran": [
+            "Lampiran F"
+          ],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 8
+        },
+        {
+          "no": "223",
+          "tajuk": "Catatkanmaklumatdi dalamIDsebelum meninggalkan ",
+          "anggota": [
+            "PPKPK",
+            "PPKP",
+            "PKA",
+            "PA"
+          ],
+          "tindakan": [
+            "Catatkanmaklumatdi dalamIDsebelum meninggalkan . premis Bawabalikbotolspesimendaneksibitkepejabat . ."
+          ],
+          "rujukan": [
+            "LampiranG"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 8
+        },
+        {
+          "no": "3",
+          "tajuk": "Dipejabat ",
+          "anggota": [
+            "PKD",
+            "PPKP",
+            "PA"
+          ],
+          "tindakan": [
+            "Dipejabat ."
+          ],
+          "rujukan": [
+            "LampiranI",
+            "LampiranJ"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 8
+        },
+        {
+          "no": "31",
+          "tajuk": "SerahkanbotolspesimentersebutdanBorangPenyerahan ",
+          "anggota": [
+            "PKD",
+            "PPKP",
+            "PA"
+          ],
+          "tindakan": [
+            "SerahkanbotolspesimentersebutdanBorangPenyerahan . SpesimenDanPermohonanIdentifikasiSerangga PembawaPenyakit kepadapemeriksalarva yangdilantik olehPKDtanpakelengahan . Nota: DapatkanSuratAkuanTerimaSpesimen SeranggaPembawaPenyakit ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 8
+        },
+        {
+          "no": "32",
+          "tajuk": "SerahkanBorangPerakuanPungutanSeranggaPembawa ",
+          "anggota": [
+            "PKD",
+            "PPKP",
+            "PA"
+          ],
+          "tindakan": [
+            "SerahkanBorangPerakuanPungutanSeranggaPembawa . PenyakitDariPremisdanSenaraiBarang-barangDisita (jikaada)kepadaPegawaiPenyimpanEksibittanpa kelengahan . Nota: PegawaiPenyimpanEksibitperludilantikolehPKD ."
+          ],
+          "rujukan": [
+            "LampiranCdan",
+            "LampiranD"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 8
+        },
+        {
+          "no": "33",
+          "tajuk": "Terimadanrekodeksibit ",
+          "anggota": [
+            "Pegawai",
+            "Penyimpan",
+            "Eksibit"
+          ],
+          "tindakan": [
+            "Terimadanrekodeksibit . ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 8
+        },
+        {
+          "no": "34",
+          "tajuk": "KemaskinimaklumatdanlengkapkanID ",
+          "anggota": [
+            "PPKP",
+            "PKA"
+          ],
+          "tindakan": [
+            "KemaskinimaklumatdanlengkapkanID . ."
+          ],
+          "rujukan": [
+            "LampiranG"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 8
+        }
+      ]
+    }
+  ],
+  "carta_alir": {
+    "nodes": [
+      {
+        "id": "N_START",
+        "type": "start",
+        "label": "Mula Operasi / Prosedur",
+        "role": null,
+        "step_ref": null,
+        "sop_ref": null
+      },
+      {
+        "id": "N1",
+        "type": "process",
+        "label": "1. PersediaanSebelumKeLapangan ",
+        "role": "PPKP/PKAK",
+        "step_ref": "1",
+        "sop_ref": null
+      },
+      {
+        "id": "N2",
+        "type": "process",
+        "label": "11. Sediakansuratarahan/panggilanmenjalankan ",
+        "role": "PPKP/PKAK",
+        "step_ref": "11",
+        "sop_ref": null
+      },
+      {
+        "id": "N3",
+        "type": "process",
+        "label": "12. Tetapkankawasanpemeriksaanmengikut ",
+        "role": "PPKP/PKAK",
+        "step_ref": "12",
+        "sop_ref": null
+      },
+      {
+        "id": "N4",
+        "type": "process",
+        "label": "13. Ketuapasukanpemeriksaanseranggapembawapenyakit ",
+        "role": "PPKPK/PPKP",
+        "step_ref": "13",
+        "sop_ref": null
+      },
+      {
+        "id": "N5",
+        "type": "process",
+        "label": "2. Dilapangan ",
+        "role": "PPKPK/PPKP",
+        "step_ref": "2",
+        "sop_ref": null
+      },
+      {
+        "id": "N6",
+        "type": "process",
+        "label": "21. Jalankantugaspemeriksaandikawasanoperasiyangtelah ",
+        "role": "PPKPK/PPKP",
+        "step_ref": "21",
+        "sop_ref": null
+      },
+      {
+        "id": "N7",
+        "type": "process",
+        "label": "22. Untukpemeriksaan dikawasantertentusepertitapak ",
+        "role": "KPPKP/PPKP",
+        "step_ref": "22",
+        "sop_ref": null
+      },
+      {
+        "id": "N8",
+        "type": "process",
+        "label": "23. Temuipemunyaatau pendudukpremisyangberumur18 ",
+        "role": "PPKPK/PPKP",
+        "step_ref": "23",
+        "sop_ref": null
+      },
+      {
+        "id": "N9",
+        "type": "process",
+        "label": "24. Jikapemeriksaanperludilakukanselepaspukulsepuluh ",
+        "role": "PPKPK/PPKP",
+        "step_ref": "24",
+        "sop_ref": null
+      },
+      {
+        "id": "N10",
+        "type": "process",
+        "label": "25. Memperkenalkandiribersamapembantudengan ",
+        "role": "PPKPK/PPKP",
+        "step_ref": "25",
+        "sop_ref": null
+      },
+      {
+        "id": "N11",
+        "type": "process",
+        "label": "26. Beritahutujuankedatanganuntukmenjalankan ",
+        "role": "PPKPK/PPKP",
+        "step_ref": "26",
+        "sop_ref": null
+      },
+      {
+        "id": "N12",
+        "type": "process",
+        "label": "27. Jikatiadahalangan teruskanketindakanNo 28 ",
+        "role": "PPKPK/PPKP",
+        "step_ref": "27",
+        "sop_ref": null
+      },
+      {
+        "id": "N13",
+        "type": "process",
+        "label": "271. Terangkandenganjelaskepadapemunya/ ",
+        "role": "PPKPK/PPKP",
+        "step_ref": "271",
+        "sop_ref": null
+      },
+      {
+        "id": "N14",
+        "type": "process",
+        "label": "272. MaklumkepadaPKD (SilarujukProsedurTindakan ",
+        "role": "PPKPK/PPKP",
+        "step_ref": "272",
+        "sop_ref": null
+      },
+      {
+        "id": "N_END",
+        "type": "end",
+        "label": "Selesai & Rekod Fail UIP",
+        "role": null,
+        "step_ref": null,
+        "sop_ref": null
+      }
+    ],
+    "edges": [
+      {
+        "from": "N_START",
+        "to": "N1",
+        "label": null
+      },
+      {
+        "from": "N1",
+        "to": "N2",
+        "label": null
+      },
+      {
+        "from": "N2",
+        "to": "N3",
+        "label": null
+      },
+      {
+        "from": "N3",
+        "to": "N4",
+        "label": null
+      },
+      {
+        "from": "N4",
+        "to": "N5",
+        "label": null
+      },
+      {
+        "from": "N5",
+        "to": "N6",
+        "label": null
+      },
+      {
+        "from": "N6",
+        "to": "N7",
+        "label": null
+      },
+      {
+        "from": "N7",
+        "to": "N8",
+        "label": null
+      },
+      {
+        "from": "N8",
+        "to": "N9",
+        "label": null
+      },
+      {
+        "from": "N9",
+        "to": "N10",
+        "label": null
+      },
+      {
+        "from": "N10",
+        "to": "N11",
+        "label": null
+      },
+      {
+        "from": "N11",
+        "to": "N12",
+        "label": null
+      },
+      {
+        "from": "N12",
+        "to": "N13",
+        "label": null
+      },
+      {
+        "from": "N13",
+        "to": "N14",
+        "label": null
+      },
+      {
+        "from": "N14",
+        "to": "N_END",
+        "label": null
+      }
+    ]
+  },
+  "senarai_semak": [
+    {
+      "id": "CHK-01",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[1] PersediaanSebelumKeLapangan ",
+      "wajib": true,
+      "rujukan": "PelanLokasi"
+    },
+    {
+      "id": "CHK-02",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[11] Sediakansuratarahan/panggilanmenjalankan ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-03",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[12] Tetapkankawasanpemeriksaanmengikut ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-04",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[13] Ketuapasukanpemeriksaanseranggapembawapenyakit ",
+      "wajib": true,
+      "rujukan": "LampiranA"
+    },
+    {
+      "id": "CHK-05",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[2] Dilapangan ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-06",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[21] Jalankantugaspemeriksaandikawasanoperasiyangtelah ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-07",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[22] Untukpemeriksaan dikawasantertentusepertitapak ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-08",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[23] Temuipemunyaatau pendudukpremisyangberumur18 ",
+      "wajib": true,
+      "rujukan": "LampiranH"
+    },
+    {
+      "id": "CHK-09",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[24] Jikapemeriksaanperludilakukanselepaspukulsepuluh ",
+      "wajib": true,
+      "rujukan": "LampiranH"
+    },
+    {
+      "id": "CHK-10",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[25] Memperkenalkandiribersamapembantudengan ",
+      "wajib": true,
+      "rujukan": "KadPengenalan"
+    },
+    {
+      "id": "CHK-11",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[26] Beritahutujuankedatanganuntukmenjalankan ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-12",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[27] Jikatiadahalangan teruskanketindakanNo 28 ",
+      "wajib": true,
+      "rujukan": "ProsedurUIP"
+    }
+  ],
+  "lampiran": [
+    {
+      "kod": "Lampiran A",
+      "tajuk": "Senarai Semak Persediaan, Peralatan (Inspection Kit) & Borang",
+      "jenis": "senarai_semak",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran B",
+      "tajuk": "Label Botol Spesimen / Bekas Pembiakan",
+      "jenis": "lain",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran C",
+      "tajuk": "Perakuan Pungutan Serangga Pembawa Penyakit Dari Premis",
+      "jenis": "borang",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran D",
+      "tajuk": "Senarai Barang Yang Disita (Seksyen 6 APSPP 1975)",
+      "jenis": "lain",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran E",
+      "tajuk": "Contoh Pelan Lokasi Kedudukan Premis & Lampiran E(a) Petunjuk",
+      "jenis": "surat_contoh",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran F",
+      "tajuk": "Contoh Pelan Lantai Tempat Pembiakan & Lampiran F(a) Petunjuk",
+      "jenis": "surat_contoh",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran G",
+      "tajuk": "Contoh Diari Siasatan (ID)",
+      "jenis": "surat_contoh",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran H",
+      "tajuk": "Notis Memasuki Premis Di Bawah Seksyen 5(3) APSPP 1975",
+      "jenis": "borang",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran I",
+      "tajuk": "Penyerahan Spesimen dan Permohonan Identifikasi",
+      "jenis": "lain",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran J",
+      "tajuk": "Akuan Terima Spesimen Serangga Pembawa Penyakit",
+      "jenis": "lain",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    }
+  ],
+  "pematuhan": [
+    "Prosedur yang dikeluarkan ini hendaklah terus berkuatkuasa dan",
+    "dianggap sah sehingga dipinda atau diganti dengan satu prosedur lain",
+    "atau dibatalkan.",
+    "Keengganan dan kegagalan mematuhi Prosedur ini tanpa alasan yang",
+    "munasabah boleh menyebabkan seseorang pegawai dikenakan tindakan",
+    "tatatertib di bawah Peraturan:Peraturan Pegawai Awam (Kelakuan dan",
+    "Tatatertib) 1993.",
+    "Kegagalan mematuhi prosedur ini juga merupakan satu kesalahan di"
+  ],
+  "rujukan_silang_resolved": [
+    {
+      "sop_id": "UIP-UMUM-01-24",
+      "file_stem": "UIP-UMUM-01-24",
+      "tajuk": "Prosedur Tindakan Kerana Menghalang Tugas"
+    },
+    {
+      "sop_id": "UIP-UMUM-04-07 (PINDAAN 2024)",
+      "file_stem": "UIP-UMUM-04-07",
+      "tajuk": "Prosedur Mengambil Gambar"
+    },
+    {
+      "sop_id": "UIP-APSPP-02-07 (PINDAAN 2024)",
+      "file_stem": "UIP-APSPP-02-07",
+      "tajuk": "Prosedur Identifikasi Serangga Pembawa Penyakit"
+    }
+  ],
+  "nota_audit_kualiti": [
+    "KONFLIK RUJUKAN SILANG: Proses Kerja Langkah 2.7.2 masih memetik kod lama 'UIP-APSPP-03-07 (Pindaan 2024)' untuk menghalang tugas, tetapi Carta Alir (ms 145) memetik kod rasmi terkini iaitu 'UIP-UMUM-01-24'."
+  ]
+}

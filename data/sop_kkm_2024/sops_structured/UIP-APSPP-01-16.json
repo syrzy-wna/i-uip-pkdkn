@@ -1,0 +1,828 @@
+{
+  "schema_version": "2.0",
+  "sop_id": "UIP-APSPP-01-16 (PINDAAN 2024)",
+  "file_stem": "UIP-APSPP-01-16",
+  "alias_kod": [],
+  "tajuk": "Prosedur Memasuki Premis Dengan Kekerasan Yang Munasabah Di Bawah Akta Pemusnahan Serangga Pembawa Penyakit 1975",
+  "kategori": "APSPP_1975",
+  "akta_utama": "Akta 154",
+  "akta_berkaitan": [
+    "Akta 154",
+    "Akta 56",
+    "Akta 388",
+    "Akta 574",
+    "Akta 593"
+  ],
+  "keluaran": "01",
+  "pindaan": "01",
+  "tarikh_kuatkuasa": "15 Feb 2024",
+  "ringkasan_eksekutif": "Tujuan prosedur ini adalah untuk menggariskan tatacara memasuki premis yang ditutup atau kosong atau terbiar semasa menjalankan pemeriksaan dan pemusnahan serangga pembawa penyakit. Prosedur ini hendaklah digunapakai setelah subseksyen 5(1) telah dilaksanakan ",
+  "tujuan": "Tujuan prosedur ini adalah untuk menggariskan tatacara memasuki premis yang ditutup atau kosong atau terbiar semasa menjalankan pemeriksaan dan pemusnahan serangga pembawa penyakit. Prosedur ini hendaklah digunapakai setelah subseksyen 5(1) telah dilaksanakan dan kriteria-kriteria berikut telah dipatuhi : 4.1 Premis terletak dalam lokaliti wabak tidak terkawal. 4.2 Laporan entomologi (kepadatan dan kehadiran nyamuk dewasa) yang menyokong keperluan pemeriksaan premis yang tidak dapat dimasuki. 4.3 Arahan Ketua Jabatan. 4.4 Laporan Pemeriksaan Tempat Pembiakan oleh pasukan Unit Vektor Daerah. --- Prosedur Memasuki Premis Dengan Kekerasan Yang M",
+  "panduan_am": [],
+  "punca_kuasa": [
+    "S.5(1), S.5(3), S.5(5) APSPP 1975",
+    "4 kriteria wajib (wabak tidak terkawal, laporan entomologi, arahan Ketua Jabatan, laporan pemeriksaan)",
+    "Notis <=7 hari & Pos Berdaftar",
+    "Afidavit di mahkamah",
+    "Polis periksa beg sebelum & selepas",
+    "Tuntut kunci 21 hari"
+  ],
+  "undang_undang_berkaitan": [
+    {
+      "akta": "Akta Keterangan 1950 (Disemak 1971) [Akta 56]",
+      "akta_kod": "Akta 56",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Pemusnahan Serangga Pembawa Penyakit 1975 [Akta 154]",
+      "akta_kod": "Akta 154",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Tafsiran 1948 dan 1967 (Disemak 1989) [Akta 388]",
+      "akta_kod": "Akta 388",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Kanun Keseksaan (Disemak 1997) [Akta 574]",
+      "akta_kod": "Akta 574",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Kanun Tatacara Jenayah (Disemak 1999) [Akta 593]",
+      "akta_kod": "Akta 593",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Peraturan-Peraturan Pemusnahan Serangga Pembawa Penyakit",
+      "akta_kod": null,
+      "status": "AKTIF",
+      "nota": null
+    }
+  ],
+  "anggota_terlibat": [
+    {
+      "kod": "PEGAWAI KESI",
+      "jawatan": "Pegawai Kesihatan Daerah/Bahagian/Kawasan"
+    },
+    {
+      "kod": "KETUA PENOLO",
+      "jawatan": "Ketua Penolong Pegawai Kesihatan Persekitaran"
+    },
+    {
+      "kod": "PENOLONG PEG",
+      "jawatan": "Penolong Pegawai Kesihatan Persekitaran Kanan"
+    },
+    {
+      "kod": "PEMBANTU KES",
+      "jawatan": "Pembantu Kesihatan Awam Kanan"
+    },
+    {
+      "kod": "POLIS DIRAJA",
+      "jawatan": "Polis Diraja Malaysia"
+    },
+    {
+      "kod": "TUKANG KUNCI",
+      "jawatan": "Tukang Kunci"
+    },
+    {
+      "kod": "PIHAK BERKUA",
+      "jawatan": "Pihak Berkuasa Tempatan"
+    },
+    {
+      "kod": "LAIN-LAIN AG",
+      "jawatan": "Lain-lain Agensi yang berkaitan"
+    },
+    {
+      "kod": "NO. RUJUKAN ",
+      "jawatan": "NO. RUJUKAN PROSEDUR : UIP-APSPP-01-16 (PINDAAN 2024)"
+    },
+    {
+      "kod": "PROSEDUR MEM",
+      "jawatan": "Prosedur Memasuki Premis Dengan Kekerasan Yang Munasabah Di Bawah APSPP 1975"
+    }
+  ],
+  "singkatan": [
+    {
+      "kod": "KWSP",
+      "maksud": "Kumpulan Wang Simpanan Pekerja"
+    },
+    {
+      "kod": "PBT",
+      "maksud": "Pihak Berkuasa Tempatan"
+    },
+    {
+      "kod": "PDRM",
+      "maksud": "Polis Diraja Malaysia"
+    },
+    {
+      "kod": "PKA",
+      "maksud": "Pembantu Kesihatan Awam"
+    },
+    {
+      "kod": "PKAK",
+      "maksud": "Pembantu Kesihatan Awam Kanan"
+    },
+    {
+      "kod": "PKD",
+      "maksud": "Pegawai Kesihatan Daerah/Bahagian/Kawasan"
+    },
+    {
+      "kod": "PPKP",
+      "maksud": "Pegawai Kesihatan Persekitaran / Penolong Pegawai Kesihatan Persekitaran (semua gred) --- Prosedur Memasuki Premis Dengan Kekerasan Yang Munasabah Di Bawah APSPP 1975 4"
+    }
+  ],
+  "nota_pindaan": [],
+  "tempoh_sla": [
+    {
+      "label": "Notis Sebelum Pecah Masuk Premis Berkunci",
+      "tempoh": "24 jam / <=7 hari (semak konsistensi)",
+      "rujukan": "Seksyen 5(5) Akta 154"
+    }
+  ],
+  "fasa_kerja": [
+    {
+      "fasa_id": "F1",
+      "tajuk_fasa": "1. Pelaksanaan Proses Kerja",
+      "langkah": [
+        {
+          "no": "1",
+          "tajuk": "Sediakansuratarahan/panggilanmenjalankanpemeriksaan ",
+          "anggota": [
+            "PPKP"
+          ],
+          "tindakan": [
+            "Sediakansuratarahan/panggilanmenjalankanpemeriksaan . premisbagiseranggapembawapenyakitkepadaanggota terlibat ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "2",
+          "tajuk": "Kenalpasti alamat lengkap premis yang ditutup atau terbiar yang ",
+          "anggota": [
+            "PKA",
+            "PKAK"
+          ],
+          "tindakan": [
+            "Kenalpasti alamat lengkap premis yang ditutup atau terbiar yang . perludimasuki ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "3",
+          "tajuk": "Membuat semakan dengan Pihak Berkuasa Tempatan / Pejabat ",
+          "anggota": [
+            "PPKP"
+          ],
+          "tindakan": [
+            "Membuat semakan dengan Pihak Berkuasa Tempatan / Pejabat . Tanah dan Daerah atau agensi lain yang berkaitan untuk mendapatkanmaklumatperibadipemilikpremis/tanah ."
+          ],
+          "rujukan": [
+            "LampiranB"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "4",
+          "tajuk": "Sediakan notis untuk memaklumkan tarikh dan masa pasukan ",
+          "anggota": [
+            "PPKP",
+            "PKD"
+          ],
+          "tindakan": [
+            "Sediakan notis untuk memaklumkan tarikh dan masa pasukan . pemeriksaan akan memasuki premis bagi pemeriksaan serangga pembawapenyakit(Tidakmelebihi7haridarinotisdikeluarkan) ."
+          ],
+          "rujukan": [
+            "LampiranC"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": "7hari",
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "5",
+          "tajuk": "Poskan sesalinan notis tersebut melalui pos berdaftar ke alamat ",
+          "anggota": [
+            "PPKP",
+            "PKA"
+          ],
+          "tindakan": [
+            "Poskan sesalinan notis tersebut melalui pos berdaftar ke alamat . pemunya premis mengikut maklumat yang telah diperolehi dan rekodkan ."
+          ],
+          "rujukan": [
+            "KadPos",
+            "Berdaftar",
+            "BukuRekod"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "6",
+          "tajuk": "Tampalkan sesalinan notis di premis berkenaan dan ambil ",
+          "anggota": [
+            "PPKP",
+            "PKA"
+          ],
+          "tindakan": [
+            "Tampalkan sesalinan notis di premis berkenaan dan ambil . gambar ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "7",
+          "tajuk": "Setelahnotisdiposkanatautampalannotisdipremisdibuat ",
+          "anggota": [
+            "PPKP",
+            "PKA"
+          ],
+          "tindakan": [
+            "Setelahnotisdiposkanatautampalannotisdipremisdibuat . , sediakanaffidavitpenyampaiannotisdanfailkandimahkamah yangmempunyaibidangkuasa ."
+          ],
+          "rujukan": [
+            "LampiranD"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "8",
+          "tajuk": "Dapatkan bantuan polis tukang kunci atau lain-lain agensi ",
+          "anggota": [
+            "PPKP"
+          ],
+          "tindakan": [
+            "Dapatkan bantuan polis tukang kunci atau lain-lain agensi . , semasamenjalankanoperasi ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "9",
+          "tajuk": "Jalankanpemeriksaanaedesdipremisberkenaanpadatarikh ",
+          "anggota": [
+            "Pasukan",
+            "Pemeriksaan"
+          ],
+          "tindakan": [
+            "Jalankanpemeriksaanaedesdipremisberkenaanpadatarikh . danmasayangditetapkandalamnotis PastikanPolis . memeriksabegPPKP/PKAsebelummemasukidanselepas keluarpremis ."
+          ],
+          "rujukan": [
+            "ProsedurUIP",
+            "-",
+            "APSPP 01 07",
+            "- -",
+            "(Pindaan2024)"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "10",
+          "tajuk": "Ambilgambarsebelummemasukipremis semasapemeriksaan ",
+          "anggota": [
+            "PPKP",
+            "PKA"
+          ],
+          "tindakan": [
+            "Ambilgambarsebelummemasukipremis semasapemeriksaan . , , danselepaskeluarpremissebagaibukti ."
+          ],
+          "rujukan": [
+            "Prosedur",
+            "UIP UMUM 04",
+            "- - -",
+            "07(Pindaan",
+            "2024)"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "11",
+          "tajuk": "ProsesKerja",
+          "anggota": [
+            "Anggota",
+            "Terlibat"
+          ],
+          "tindakan": [
+            "ProsesKerja"
+          ],
+          "rujukan": [
+            "Rujukan"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "11",
+          "tajuk": "Tutupdankuncisemulasebelummeninggalkanpremis Jika ",
+          "anggota": [
+            "PPKP",
+            "PKA"
+          ],
+          "tindakan": [
+            "Tutupdankuncisemulasebelummeninggalkanpremis Jika . . kuncidipecahkanperludigantibaru (PBT/PKD) ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 11: Tutupdankuncisemulasebelummeninggalkanpremis Jika . . kuncidipecahkanperludigantibaru (PBT/PKD)...",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "12",
+          "tajuk": "Tampalnotismenyatakanpremistersebuttelahdiperiksadan ",
+          "anggota": [
+            "PPKP",
+            "PKA"
+          ],
+          "tindakan": [
+            "Tampalnotismenyatakanpremistersebuttelahdiperiksadan . mintaberhubungdenganPKDuntukmaklumatlanjut Poskan . sesalinannotismelaluiposberdaftarkealamatpemunyapremis mengikutmaklumatyangtelahdiperolehidanrekodkan ."
+          ],
+          "rujukan": [
+            "LampiranEdan",
+            "F"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "12",
+          "tajuk": "BuatlaporanPolisselepastamatoperasipadahariberkenaan ",
+          "anggota": [
+            "PPKP"
+          ],
+          "tindakan": [
+            "BuatlaporanPolisselepastamatoperasipadahariberkenaan . ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "13",
+          "tajuk": "Sediakanlaporanoperasi ",
+          "anggota": [
+            "PPKP"
+          ],
+          "tindakan": [
+            "Sediakanlaporanoperasi . ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        }
+      ]
+    }
+  ],
+  "carta_alir": {
+    "nodes": [
+      {
+        "id": "N_START",
+        "type": "start",
+        "label": "Mula Operasi / Prosedur",
+        "role": null,
+        "step_ref": null,
+        "sop_ref": null
+      },
+      {
+        "id": "N1",
+        "type": "process",
+        "label": "1. Sediakansuratarahan/panggilanmenjalankanpemeriksaan ",
+        "role": "PPKP",
+        "step_ref": "1",
+        "sop_ref": null
+      },
+      {
+        "id": "N2",
+        "type": "process",
+        "label": "2. Kenalpasti alamat lengkap premis yang ditutup atau terbiar yang ",
+        "role": "PKA/PKAK",
+        "step_ref": "2",
+        "sop_ref": null
+      },
+      {
+        "id": "N3",
+        "type": "process",
+        "label": "3. Membuat semakan dengan Pihak Berkuasa Tempatan / Pejabat ",
+        "role": "PPKP",
+        "step_ref": "3",
+        "sop_ref": null
+      },
+      {
+        "id": "N4",
+        "type": "process",
+        "label": "4. Sediakan notis untuk memaklumkan tarikh dan masa pasukan ",
+        "role": "PPKP/PKD",
+        "step_ref": "4",
+        "sop_ref": null
+      },
+      {
+        "id": "N5",
+        "type": "process",
+        "label": "5. Poskan sesalinan notis tersebut melalui pos berdaftar ke alamat ",
+        "role": "PPKP/PKA",
+        "step_ref": "5",
+        "sop_ref": null
+      },
+      {
+        "id": "N6",
+        "type": "process",
+        "label": "6. Tampalkan sesalinan notis di premis berkenaan dan ambil ",
+        "role": "PPKP/PKA",
+        "step_ref": "6",
+        "sop_ref": null
+      },
+      {
+        "id": "N7",
+        "type": "process",
+        "label": "7. Setelahnotisdiposkanatautampalannotisdipremisdibuat ",
+        "role": "PPKP/PKA",
+        "step_ref": "7",
+        "sop_ref": null
+      },
+      {
+        "id": "N8",
+        "type": "process",
+        "label": "8. Dapatkan bantuan polis tukang kunci atau lain-lain agensi ",
+        "role": "PPKP",
+        "step_ref": "8",
+        "sop_ref": null
+      },
+      {
+        "id": "N9",
+        "type": "process",
+        "label": "9. Jalankanpemeriksaanaedesdipremisberkenaanpadatarikh ",
+        "role": "Pasukan/Pemeriksaan",
+        "step_ref": "9",
+        "sop_ref": null
+      },
+      {
+        "id": "N10",
+        "type": "process",
+        "label": "10. Ambilgambarsebelummemasukipremis semasapemeriksaan ",
+        "role": "PPKP/PKA",
+        "step_ref": "10",
+        "sop_ref": null
+      },
+      {
+        "id": "N11",
+        "type": "process",
+        "label": "11. ProsesKerja",
+        "role": "Anggota/Terlibat",
+        "step_ref": "11",
+        "sop_ref": null
+      },
+      {
+        "id": "N12",
+        "type": "decision",
+        "label": "11. Tutupdankuncisemulasebelummeninggalkanpremis Jika ",
+        "role": "PPKP/PKA",
+        "step_ref": "11",
+        "sop_ref": null
+      },
+      {
+        "id": "N13",
+        "type": "process",
+        "label": "12. Tampalnotismenyatakanpremistersebuttelahdiperiksadan ",
+        "role": "PPKP/PKA",
+        "step_ref": "12",
+        "sop_ref": null
+      },
+      {
+        "id": "N14",
+        "type": "process",
+        "label": "12. BuatlaporanPolisselepastamatoperasipadahariberkenaan ",
+        "role": "PPKP",
+        "step_ref": "12",
+        "sop_ref": null
+      },
+      {
+        "id": "N_END",
+        "type": "end",
+        "label": "Selesai & Rekod Fail UIP",
+        "role": null,
+        "step_ref": null,
+        "sop_ref": null
+      }
+    ],
+    "edges": [
+      {
+        "from": "N_START",
+        "to": "N1",
+        "label": null
+      },
+      {
+        "from": "N1",
+        "to": "N2",
+        "label": null
+      },
+      {
+        "from": "N2",
+        "to": "N3",
+        "label": null
+      },
+      {
+        "from": "N3",
+        "to": "N4",
+        "label": null
+      },
+      {
+        "from": "N4",
+        "to": "N5",
+        "label": null
+      },
+      {
+        "from": "N5",
+        "to": "N6",
+        "label": null
+      },
+      {
+        "from": "N6",
+        "to": "N7",
+        "label": null
+      },
+      {
+        "from": "N7",
+        "to": "N8",
+        "label": null
+      },
+      {
+        "from": "N8",
+        "to": "N9",
+        "label": null
+      },
+      {
+        "from": "N9",
+        "to": "N10",
+        "label": null
+      },
+      {
+        "from": "N10",
+        "to": "N11",
+        "label": null
+      },
+      {
+        "from": "N11",
+        "to": "N12",
+        "label": null
+      },
+      {
+        "from": "N12",
+        "to": "N13",
+        "label": "Teruskan"
+      },
+      {
+        "from": "N13",
+        "to": "N14",
+        "label": null
+      },
+      {
+        "from": "N14",
+        "to": "N_END",
+        "label": null
+      }
+    ]
+  },
+  "senarai_semak": [
+    {
+      "id": "CHK-01",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[1] Sediakansuratarahan/panggilanmenjalankanpemeriksaan ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-02",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[2] Kenalpasti alamat lengkap premis yang ditutup atau terbiar yang ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-03",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[3] Membuat semakan dengan Pihak Berkuasa Tempatan / Pejabat ",
+      "wajib": true,
+      "rujukan": "LampiranB"
+    },
+    {
+      "id": "CHK-04",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[4] Sediakan notis untuk memaklumkan tarikh dan masa pasukan ",
+      "wajib": true,
+      "rujukan": "LampiranC"
+    },
+    {
+      "id": "CHK-05",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[5] Poskan sesalinan notis tersebut melalui pos berdaftar ke alamat ",
+      "wajib": true,
+      "rujukan": "KadPos"
+    },
+    {
+      "id": "CHK-06",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[6] Tampalkan sesalinan notis di premis berkenaan dan ambil ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-07",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[7] Setelahnotisdiposkanatautampalannotisdipremisdibuat ",
+      "wajib": true,
+      "rujukan": "LampiranD"
+    },
+    {
+      "id": "CHK-08",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[8] Dapatkan bantuan polis tukang kunci atau lain-lain agensi ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-09",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[9] Jalankanpemeriksaanaedesdipremisberkenaanpadatarikh ",
+      "wajib": true,
+      "rujukan": "ProsedurUIP"
+    },
+    {
+      "id": "CHK-10",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[10] Ambilgambarsebelummemasukipremis semasapemeriksaan ",
+      "wajib": true,
+      "rujukan": "Prosedur"
+    },
+    {
+      "id": "CHK-11",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[11] ProsesKerja",
+      "wajib": true,
+      "rujukan": "Rujukan"
+    },
+    {
+      "id": "CHK-12",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[11] Tutupdankuncisemulasebelummeninggalkanpremis Jika ",
+      "wajib": true,
+      "rujukan": null
+    }
+  ],
+  "lampiran": [
+    {
+      "kod": "Lampiran A",
+      "tajuk": "Senarai Semak Pemeriksaan Aedes (Operasi Pecah Masuk)",
+      "jenis": "senarai_semak",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran B",
+      "tajuk": "Notis Memohon Mendapatkan Maklumat Premis Yang Tidak Dapat Dimasuki",
+      "jenis": "borang",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran C",
+      "tajuk": "Notis Untuk Memasuki Premis Di Bawah Seksyen 5(5) APSPP 1975",
+      "jenis": "borang",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran D",
+      "tajuk": "Contoh Afidavit Penyampaian Dalam Mahkamah Majistret",
+      "jenis": "surat_contoh",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran E",
+      "tajuk": "Notis Makluman Memasuki Premis Di Bawah Seksyen 5 APSPP 1975",
+      "jenis": "borang",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran F",
+      "tajuk": "Notis Untuk Mengambil Kunci Bagi Premis Yang Dimasuki (21 hari)",
+      "jenis": "borang",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    }
+  ],
+  "pematuhan": [
+    "Prosedur yang dikeluarkan ini hendaklah terus berkuatkuasa dan",
+    "dianggap sah sehingga dipinda atau diganti dengan satu prosedur lain",
+    "atau dibatalkan.",
+    "Keengganan dan kegagalan mematuhi Prosedur ini tanpa alasan yang",
+    "munasabah boleh menyebabkan seseorang pegawai dikenakan tindakan",
+    "tatatertib di bawah Peraturan-Peraturan Pegawai Awam (Kelakuan dan",
+    "Tatatertib) 1993.",
+    "Kegagalan mematuhi prosedur ini juga merupakan satu kesalahan di"
+  ],
+  "rujukan_silang_resolved": [
+    {
+      "sop_id": "UIP-APSPP-01-07 (PINDAAN 2024)",
+      "file_stem": "UIP-APSPP-01-07",
+      "tajuk": "Prosedur Pemeriksaan Serangga Pembawa Penyakit Di Lapangan"
+    },
+    {
+      "sop_id": "UIP-UMUM-04-07 (PINDAAN 2024)",
+      "file_stem": "UIP-UMUM-04-07",
+      "tajuk": "Prosedur Mengambil Gambar"
+    }
+  ],
+  "nota_audit_kualiti": [
+    "Perbezaan tempoh notis dalam dokumen asal: Proses Kerja Langkah 4 menyatakan 'Tidak melebihi 7 hari dari notis dikeluarkan', manakala Carta Alir (ms 179) menyebut 'notis (24 jam)'. Sila sahkan pematuhan tempoh munasabah mengikut Seksyen 5(3) APSPP 1975."
+  ]
+}

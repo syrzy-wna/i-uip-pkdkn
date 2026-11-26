@@ -1,0 +1,744 @@
+{
+  "schema_version": "2.0",
+  "sop_id": "UIP-UMUM-01-24",
+  "file_stem": "UIP-UMUM-01-24",
+  "alias_kod": [
+    "UIP-APSPP-03-07 (Kod lama dalam rujukan silang)"
+  ],
+  "tajuk": "Prosedur Tindakan Kerana Menghalang Tugas",
+  "kategori": "UMUM",
+  "akta_utama": "SOP Umum / KTJ",
+  "akta_berkaitan": [
+    "Akta 281",
+    "Akta 154",
+    "Akta 342",
+    "Akta 574",
+    "Akta 593",
+    "Akta 56",
+    "Akta 388"
+  ],
+  "keluaran": "01",
+  "pindaan": "00",
+  "tarikh_kuatkuasa": "15 Feb 2024",
+  "ringkasan_eksekutif": "Tujuan prosedur ini adalah untuk menerangkan tatacara mengambil tindakan perundangan terhadap kesalahan mana-mana orang menghalang penjawat awam menjalankan tugas di bawah perundangan kesihatan awam. Jenis-jenis kesalahan menghalang tugas adalah seperti enggan",
+  "tujuan": "Tujuan prosedur ini adalah untuk menerangkan tatacara mengambil tindakan perundangan terhadap kesalahan mana-mana orang menghalang penjawat awam menjalankan tugas di bawah perundangan kesihatan awam. Jenis-jenis kesalahan menghalang tugas adalah seperti enggan membenarkan masuk, enggan memberi maklumat, membuang barang kes, tidak memberi kerjasama, bertindak kasar, mencederakan atau tindakan lain yang menghalang mana- mana pegawai menjalankan fungsinya sebagai pegawai diberi kuasa. 4. TAFSIRAN BAGI PERBUATAN MENGHALANG TUGAS Suatu perbuatan dengan sengaja menggalang mana-mana penjawat awam dalam menjalankan fungsi jawatannya.",
+  "panduan_am": [],
+  "punca_kuasa": [
+    "S.186 Kanun Keseksaan (kekasaran/kecederaan - serah PDRM)",
+    "S.4(4) Akta 281",
+    "S.21 Akta 154",
+    "S.22 Akta 342",
+    "Surat Permohonan Sebut Awal"
+  ],
+  "undang_undang_berkaitan": [
+    {
+      "akta": "Akta Keterangan 1950 (Disemak 1971) [Akta 56]",
+      "akta_kod": "Akta 56",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Makanan 1983 [Akta 281] dan peraturan-peraturan di bawahnya",
+      "akta_kod": "Akta 281",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988 [Akta 342]",
+      "akta_kod": "Akta 342",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "dan peraturan-peraturan di bawahnya",
+      "akta_kod": null,
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Pemusnahan Serangga Pembawa Penyakit 1975 [Akta 154] dan",
+      "akta_kod": "Akta 154",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "peraturan-peraturan di bawahnya",
+      "akta_kod": null,
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Tafsiran 1948 dan 1967 (Disemak 1989) [Akta 388]",
+      "akta_kod": "Akta 388",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Kanun Keseksaan (Disemak 1997) [Akta 574]",
+      "akta_kod": "Akta 574",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Kanun Tatacara Jenayah (Disemak 1999) [Akta 593]",
+      "akta_kod": "Akta 593",
+      "status": "AKTIF",
+      "nota": null
+    }
+  ],
+  "anggota_terlibat": [
+    {
+      "kod": "PEGAWAI KESI",
+      "jawatan": "Pegawai Kesihatan Daerah/ Kawasan/Bahagian"
+    },
+    {
+      "kod": "KETUA PENOLO",
+      "jawatan": "Ketua Penolong Pegawai Kesihatan Persekitaran"
+    },
+    {
+      "kod": "PENOLONG PEG",
+      "jawatan": "Penolong Pegawai Kesihatan Persekitaran Kanan"
+    },
+    {
+      "kod": "PEMBANTU KES",
+      "jawatan": "Pembantu Kesihatan Awam"
+    },
+    {
+      "kod": "PEMBANTU AWA",
+      "jawatan": "Pembantu Awam"
+    }
+  ],
+  "singkatan": [
+    {
+      "kod": "AM 1983",
+      "maksud": "Akta Makanan 1983"
+    },
+    {
+      "kod": "APPPB 1988",
+      "maksud": "Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988"
+    },
+    {
+      "kod": "APSPP 1975",
+      "maksud": "Akta Pemusnahan Serangga Pembawa Penyakit 1975"
+    },
+    {
+      "kod": "KPPKP",
+      "maksud": "Ketua Penolong Pegawai Kesihatan Persekitaran"
+    },
+    {
+      "kod": "K/S",
+      "maksud": "Kertas Siasatan"
+    },
+    {
+      "kod": "PA",
+      "maksud": "Pembantu Awam"
+    },
+    {
+      "kod": "PDK",
+      "maksud": "Pegawai diberi kuasa"
+    },
+    {
+      "kod": "PDRM",
+      "maksud": "Polis Diraja Malaysia"
+    },
+    {
+      "kod": "PKA",
+      "maksud": "Pembantu Kesihatan Awam"
+    },
+    {
+      "kod": "PKD",
+      "maksud": "Pegawai Kesihatan Daerah/ Kawasan/Bahagian"
+    },
+    {
+      "kod": "PKP",
+      "maksud": "Pegawai Kesihatan Persekitaran"
+    },
+    {
+      "kod": "PO",
+      "maksud": "Pegawai Pendakwa"
+    },
+    {
+      "kod": "PPKP",
+      "maksud": "Penolong Pegawai Kesihatan Persekitaran"
+    },
+    {
+      "kod": "PPKPK",
+      "maksud": "Penolong Pegawai Kesihatan Persekitaran Kanan"
+    },
+    {
+      "kod": "TPR",
+      "maksud": "Timbalan Pendakwa Raya"
+    },
+    {
+      "kod": "UIPD",
+      "maksud": "Unit Inspektorat dan Perundangan Daerah"
+    },
+    {
+      "kod": "UIPN",
+      "maksud": "Unit Inspektorat dan Perundangan Negeri --- 4 PROSEDUR TINDAKAN KERANA MENGHALANG TUGAS"
+    }
+  ],
+  "nota_pindaan": [
+    {
+      "tahap": "AMARAN",
+      "tajuk": "[NOTA PINDAAN] Halangan Tugas Semasa Penguatkuasaan Akta 852 -> Seksyen 186 Kanun Keseksaan",
+      "butiran": "Disahkan terhadap teks rasmi AKTA_852.pdf bahawa Akta 852 TIDAK mempunyai seksyen halangan tugas tersendiri. Sekiranya PPKP dihalang, diugut atau dikasari semasa operasi Akta 852, buat Laporan Polis (S.107 KTJ) untuk siasatan PDRM di bawah Seksyen 186 / 353 / 506 Kanun Keseksaan [Akta 574].",
+      "gantian_statut": "Seksyen 186 Kanun Keseksaan [Akta 574] & S.107 KTJ"
+    }
+  ],
+  "tempoh_sla": [],
+  "fasa_kerja": [
+    {
+      "fasa_id": "F1",
+      "tajuk_fasa": "1. Pelaksanaan Proses Kerja",
+      "langkah": [
+        {
+          "no": "1",
+          "tajuk": "Berlaku perbuatan menghalang tugas penjawat awam oleh ",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            "Berlaku perbuatan menghalang tugas penjawat awam oleh . individu/ pemunya/ penduduk Contoh kesalahan . menghalang adalah seperti berikut;"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "11",
+          "tajuk": "engganmembenarkanmasuk ",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            "engganmembenarkanmasuk . ,"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "12",
+          "tajuk": "engganmemberimaklumat ",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            "engganmemberimaklumat . ,"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "13",
+          "tajuk": "membuang barang kes ",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            "membuang barang kes . , 14tidak memberi kerjasama . ,"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "15",
+          "tajuk": "bertindakkasar (pertuduhandi bawah kanun ",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            "bertindakkasar (pertuduhandi bawah kanun . keseksaan) , 16mencederakan(pertuduhandi bawah kanun keseksaan) . atau"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "1",
+          "tajuk": ".7 apa-apa perbuatan yang menghalang pegawai awam menjalankanfungsinya ",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            ".7 apa-apa perbuatan yang menghalang pegawai awam menjalankanfungsinya ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "2",
+          "tajuk": "Terangkan dengan jelas kepada individu/ pemunya/ ",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            "Terangkan dengan jelas kepada individu/ pemunya/ . penduduk sifat dan akibat dari segi perundangan jika menghalang seseorang penjawat awam atau pegawai diberi kuasa menjalankan tugas di bawah mana-mana perundangan kesihatan awam Jelaskan kesalahan dan . denda yang boleh dikenakan mengikut peruntukan di bawah akta-akta berkaitan ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 2: Terangkan dengan jelas kepada individu/ pemunya/ . penduduk sifat dan akibat dari segi perundan...",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "3",
+          "tajuk": "Jika perlu dapatkan bantuan polis sekiranya individu/ ",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            "Jika perlu dapatkan bantuan polis sekiranya individu/ . , pemunya/ penduduk masih enggan memberikan kerjasama setelah diterangkan akibat menghalang tugas (elemen kesalahan seperti di bawah proses kerja tindakan 11 . hingga 1 7) ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 3: Jika perlu dapatkan bantuan polis sekiranya individu/ . , pemunya/ penduduk masih enggan member...",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "4",
+          "tajuk": "Jika masihgagal mendapatkan kerjasama catatkan ",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            "Jika masihgagal mendapatkan kerjasama catatkan . , maklumat ringkas kesalahan dan buat laporanpolis dan serta dapatkan salinan laporan ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 4: Jika masihgagal mendapatkan kerjasama catatkan . , maklumat ringkas kesalahan dan buat laporanp...",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "5",
+          "tajuk": "Jika perbuatan menghalang tugas yang terjumlah kepada ",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            "Jika perbuatan menghalang tugas yang terjumlah kepada . bentuk kekasaran dan mencederakan (disertakan laporan perubatan) kes diserahkan kepada pihak polis dan , pertuduhan di bawah seksyen 186 Kanun Keseksaan dan undang-undang berkaitan oleh pihak polis ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 5: Jika perbuatan menghalang tugas yang terjumlah kepada . bentuk kekasaran dan mencederakan (dise...",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "6",
+          "tajuk": "Tindakan kepada kesalahan asal yang dikenalpasti ",
+          "anggota": [
+            "PDK"
+          ],
+          "tindakan": [
+            "Tindakan kepada kesalahan asal yang dikenalpasti . perlu diteruskan setelah mendapat maklumat hasil bantuan polis ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "7",
+          "tajuk": "Sediakan laporan bertulis berkaitan individu/ pemunya/ ",
+          "anggota": [],
+          "tindakan": [
+            "Sediakan laporan bertulis berkaitan individu/ pemunya/ . penduduk menghalang tugas ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "8",
+          "tajuk": "Serahkan kepada PKP/KPPKP/PPKPK dan sertakan ",
+          "anggota": [],
+          "tindakan": [
+            "Serahkan kepada PKP/KPPKP/PPKPK dan sertakan . bersama salinan laporanpolis untukarahanselanjutnya ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        }
+      ]
+    }
+  ],
+  "carta_alir": {
+    "nodes": [
+      {
+        "id": "N_START",
+        "type": "start",
+        "label": "Mula Operasi / Prosedur",
+        "role": null,
+        "step_ref": null,
+        "sop_ref": null
+      },
+      {
+        "id": "N1",
+        "type": "process",
+        "label": "1. Berlaku perbuatan menghalang tugas penjawat awam oleh ",
+        "role": "PDK",
+        "step_ref": "1",
+        "sop_ref": null
+      },
+      {
+        "id": "N2",
+        "type": "process",
+        "label": "11. engganmembenarkanmasuk ",
+        "role": "PDK",
+        "step_ref": "11",
+        "sop_ref": null
+      },
+      {
+        "id": "N3",
+        "type": "process",
+        "label": "12. engganmemberimaklumat ",
+        "role": "PDK",
+        "step_ref": "12",
+        "sop_ref": null
+      },
+      {
+        "id": "N4",
+        "type": "process",
+        "label": "13. membuang barang kes ",
+        "role": "PDK",
+        "step_ref": "13",
+        "sop_ref": null
+      },
+      {
+        "id": "N5",
+        "type": "process",
+        "label": "15. bertindakkasar (pertuduhandi bawah kanun ",
+        "role": "PDK",
+        "step_ref": "15",
+        "sop_ref": null
+      },
+      {
+        "id": "N6",
+        "type": "process",
+        "label": "1. .7 apa-apa perbuatan yang menghalang pegawai awam menjalankanfungsinya ",
+        "role": "PDK",
+        "step_ref": "1",
+        "sop_ref": null
+      },
+      {
+        "id": "N7",
+        "type": "decision",
+        "label": "2. Terangkan dengan jelas kepada individu/ pemunya/ ",
+        "role": "PDK",
+        "step_ref": "2",
+        "sop_ref": null
+      },
+      {
+        "id": "N8",
+        "type": "decision",
+        "label": "3. Jika perlu dapatkan bantuan polis sekiranya individu/ ",
+        "role": "PDK",
+        "step_ref": "3",
+        "sop_ref": null
+      },
+      {
+        "id": "N9",
+        "type": "decision",
+        "label": "4. Jika masihgagal mendapatkan kerjasama catatkan ",
+        "role": "PDK",
+        "step_ref": "4",
+        "sop_ref": null
+      },
+      {
+        "id": "N10",
+        "type": "decision",
+        "label": "5. Jika perbuatan menghalang tugas yang terjumlah kepada ",
+        "role": "PDK",
+        "step_ref": "5",
+        "sop_ref": null
+      },
+      {
+        "id": "N11",
+        "type": "process",
+        "label": "6. Tindakan kepada kesalahan asal yang dikenalpasti ",
+        "role": "PDK",
+        "step_ref": "6",
+        "sop_ref": null
+      },
+      {
+        "id": "N12",
+        "type": "process",
+        "label": "7. Sediakan laporan bertulis berkaitan individu/ pemunya/ ",
+        "role": null,
+        "step_ref": "7",
+        "sop_ref": null
+      },
+      {
+        "id": "N13",
+        "type": "process",
+        "label": "8. Serahkan kepada PKP/KPPKP/PPKPK dan sertakan ",
+        "role": null,
+        "step_ref": "8",
+        "sop_ref": null
+      },
+      {
+        "id": "N_END",
+        "type": "end",
+        "label": "Selesai & Rekod Fail UIP",
+        "role": null,
+        "step_ref": null,
+        "sop_ref": null
+      }
+    ],
+    "edges": [
+      {
+        "from": "N_START",
+        "to": "N1",
+        "label": null
+      },
+      {
+        "from": "N1",
+        "to": "N2",
+        "label": null
+      },
+      {
+        "from": "N2",
+        "to": "N3",
+        "label": null
+      },
+      {
+        "from": "N3",
+        "to": "N4",
+        "label": null
+      },
+      {
+        "from": "N4",
+        "to": "N5",
+        "label": null
+      },
+      {
+        "from": "N5",
+        "to": "N6",
+        "label": null
+      },
+      {
+        "from": "N6",
+        "to": "N7",
+        "label": null
+      },
+      {
+        "from": "N7",
+        "to": "N8",
+        "label": "Teruskan"
+      },
+      {
+        "from": "N8",
+        "to": "N9",
+        "label": "Teruskan"
+      },
+      {
+        "from": "N9",
+        "to": "N10",
+        "label": "Teruskan"
+      },
+      {
+        "from": "N10",
+        "to": "N11",
+        "label": "Teruskan"
+      },
+      {
+        "from": "N11",
+        "to": "N12",
+        "label": null
+      },
+      {
+        "from": "N12",
+        "to": "N13",
+        "label": null
+      },
+      {
+        "from": "N13",
+        "to": "N_END",
+        "label": null
+      }
+    ]
+  },
+  "senarai_semak": [
+    {
+      "id": "CHK-01",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[1] Berlaku perbuatan menghalang tugas penjawat awam oleh ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-02",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[11] engganmembenarkanmasuk ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-03",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[12] engganmemberimaklumat ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-04",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[13] membuang barang kes ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-05",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[15] bertindakkasar (pertuduhandi bawah kanun ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-06",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[1] .7 apa-apa perbuatan yang menghalang pegawai awam menjalankanfungsinya ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-07",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[2] Terangkan dengan jelas kepada individu/ pemunya/ ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-08",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[3] Jika perlu dapatkan bantuan polis sekiranya individu/ ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-09",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[4] Jika masihgagal mendapatkan kerjasama catatkan ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-10",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[5] Jika perbuatan menghalang tugas yang terjumlah kepada ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-11",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[6] Tindakan kepada kesalahan asal yang dikenalpasti ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-12",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[7] Sediakan laporan bertulis berkaitan individu/ pemunya/ ",
+      "wajib": true,
+      "rujukan": null
+    }
+  ],
+  "lampiran": [
+    {
+      "kod": "Lampiran A",
+      "tajuk": "Surat Permohonan Sebut Awal",
+      "jenis": "surat_contoh",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    }
+  ],
+  "pematuhan": [
+    "Prosedur yang dikeluarkan ini hendaklah terus berkuatkuasa dan",
+    "dianggap sah sehingga dipinda atau diganti dengan satu prosedur",
+    "lain atau dibatalkan.",
+    "Keengganan dan kegagalan mematuhi prosedur ini tanpa alasan yang",
+    "boleh menyebabkan",
+    "seseorang pegawai",
+    "tindakan tatatertib di bawah Peraturan-Peraturan Pegawai Awam",
+    "(Kelakuan dan Tatatertib) 1993."
+  ],
+  "rujukan_silang_resolved": [
+    {
+      "sop_id": "UIP-UMUM-05-07 (PINDAAN 2024)",
+      "file_stem": "UIP-UMUM-05-07",
+      "tajuk": "Prosedur Pendakwaan Di Mahkamah"
+    }
+  ],
+  "nota_audit_kualiti": [
+    "Akta 852 TIDAK mempunyai seksyen halangan tugas tersendiri — halangan tugas semasa penguatkuasaan Akta 852 wajib dirujuk kepada PDRM di bawah Seksyen 186 Kanun Keseksaan [Akta 574]."
+  ]
+}

@@ -1,0 +1,1048 @@
+{
+  "schema_version": "2.0",
+  "sop_id": "UIP-UMUM-04-07 (PINDAAN 2024)",
+  "file_stem": "UIP-UMUM-04-07",
+  "alias_kod": [],
+  "tajuk": "Prosedur Mengambil Gambar",
+  "kategori": "UMUM",
+  "akta_utama": "SOP Umum / KTJ",
+  "akta_berkaitan": [
+    "Akta 56",
+    "Akta 281",
+    "Akta 154",
+    "Akta 342",
+    "Akta 593",
+    "Akta 574"
+  ],
+  "keluaran": "01",
+  "pindaan": "01",
+  "tarikh_kuatkuasa": "15 Feb 2024",
+  "ringkasan_eksekutif": "Tujuan prosedur ini adalah untuk menggariskan tatacara mengambil gambar semasa menjalankan pemeriksaan dan siasatan terhadap kesalahan- kesalahan di bawah Undang-Undang Kesihatan Awam supaya ianya boleh digunakan dalam prosiding di mahkamah sebagai bahan keter",
+  "tujuan": "Tujuan prosedur ini adalah untuk menggariskan tatacara mengambil gambar semasa menjalankan pemeriksaan dan siasatan terhadap kesalahan- kesalahan di bawah Undang-Undang Kesihatan Awam supaya ianya boleh digunakan dalam prosiding di mahkamah sebagai bahan keterangan.",
+  "panduan_am": [],
+  "punca_kuasa": [
+    "S.90A(2) Akta Keterangan 1950",
+    "Teknik Overview-Fokus-Zoom",
+    "CDR",
+    "Pelan Lantai"
+  ],
+  "undang_undang_berkaitan": [
+    {
+      "akta": "Akta Keterangan 1950 (Disemak 1971) [Akta 56]",
+      "akta_kod": "Akta 56",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Hidrogen Sianid 1953 [Akta 260]",
+      "akta_kod": "Akta 260",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Makanan 1983 [Akta 281]",
+      "akta_kod": "Akta 281",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Mahkamah Rendah 1948 [Akta 92]",
+      "akta_kod": "Akta 92",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Pemusnahan Serangga Pembawa Penyakit 1975 [Akta 154]",
+      "akta_kod": "Akta 154",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988",
+      "akta_kod": null,
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "[Akta 342]",
+      "akta_kod": "Akta 342",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Tafsiran 1948 dan 1967(Disemak 1989) [Akta 388]",
+      "akta_kod": "Akta 388",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Kanun Keseksaan (Disemak 1997) [Akta 574]",
+      "akta_kod": "Akta 574",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Kanun Tatacara Jenayah [Akta 593]",
+      "akta_kod": "Akta 593",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Peraturan-Peraturan Kawalan Hasil Tembakau 2004",
+      "akta_kod": null,
+      "status": "DIMANSUHKAN",
+      "nota": "[NOTA PINDAAN] Dimansuhkan mulai 1 Okt 2024 dan digantikan oleh Akta 852."
+    },
+    {
+      "akta": "Peraturan-Peraturan Kebersihan Makanan 2009",
+      "akta_kod": null,
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Peraturan-Peraturan Kemasukan Orang-orang Ke Dalam Malaysia",
+      "akta_kod": null,
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Peraturan-Peraturan Makanan 1985",
+      "akta_kod": null,
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Peraturan-Peraturan Pemusnahan Serangga Pembawa Penyakit",
+      "akta_kod": null,
+      "status": "AKTIF",
+      "nota": null
+    }
+  ],
+  "anggota_terlibat": [
+    {
+      "kod": "PENOLONG PEG",
+      "jawatan": "Penolong Pegawai Kesihatan Persekitaran"
+    },
+    {
+      "kod": "PEMBANTU KES",
+      "jawatan": "Pembantu Kesihatan Awam"
+    },
+    {
+      "kod": "PEMBANTU AWA",
+      "jawatan": "Pembantu Awam"
+    },
+    {
+      "kod": "NOTA: SEMUA ",
+      "jawatan": "Nota: Semua anggota yang terlibat hendaklah dilantik dan diberi latihan prosedur"
+    },
+    {
+      "kod": "PENGAMBILAN ",
+      "jawatan": "pengambilan gambar oleh jabatan ."
+    }
+  ],
+  "singkatan": [
+    {
+      "kod": "ID",
+      "maksud": "Diari siasatan"
+    },
+    {
+      "kod": "PA",
+      "maksud": "Pembantu Awam"
+    },
+    {
+      "kod": "PKA",
+      "maksud": "Pembantu Kesihatan Awam"
+    },
+    {
+      "kod": "PPKP",
+      "maksud": "Penolong Pegawai Kesihatan Persekitaran --- NO. RUJUK PROSEDUR : UIP-UMUM-04-07 (PINDAAN 2024) Prosedur Mengambil Gambar 3"
+    }
+  ],
+  "nota_pindaan": [
+    {
+      "tahap": "AMARAN",
+      "tajuk": "[NOTA PINDAAN] PPKHT 2004 Dimansuhkan — Digantikan Oleh Akta 852 (1 Okt 2024)",
+      "butiran": "Sebarang rujukan PPKHT 2004 dan Notis Seksyen 32B Akta Makanan 1983 bagi kesalahan produk merokok/vape dalam SOP ini telah DIMANSUHKAN mulai 1 Oktober 2024 dan digantikan sepenuhnya oleh Akta 852 (UIP-AKPMDKA-01-24 hingga 08-24).",
+      "gantian_statut": "Akta 852 & UIP-AKPMDKA-01-24..08-24 (1 Okt 2024)"
+    }
+  ],
+  "tempoh_sla": [],
+  "fasa_kerja": [
+    {
+      "fasa_id": "F1",
+      "tajuk_fasa": "1. Pelaksanaan Proses Kerja",
+      "langkah": [
+        {
+          "no": "1",
+          "tajuk": "Di pejabat :- ",
+          "anggota": [
+            "PPKP",
+            "PKA"
+          ],
+          "tindakan": [
+            "Di pejabat :- ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "11",
+          "tajuk": "Semakperalatankameramenggunakansenaraisemak ",
+          "anggota": [
+            "PPKP",
+            "PKA"
+          ],
+          "tindakan": [
+            "Semakperalatankameramenggunakansenaraisemak . ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "12",
+          "tajuk": "Pastikansetiappasukandibekalkandengankamerajenis ",
+          "anggota": [
+            "PPKP",
+            "PKA"
+          ],
+          "tindakan": [
+            "Pastikansetiappasukandibekalkandengankamerajenis . DSLR/AutoFocus/Digital . Nota: Jurugambarjikaperlumengambilgambardengantarikh dan masa pastikantarikhdanmasapadakameradiselaraskan , dengantarikhbetuldantepat ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "2",
+          "tajuk": "Di lapangan :- ",
+          "anggota": [
+            "PPKP",
+            "PKA"
+          ],
+          "tindakan": [
+            "Di lapangan :- . Kenalpastiurutankejadiankesdanbahan-bahanbuktiyangperlu dikumpulkanuntukdirakamkan ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "3",
+          "tajuk": "Perkara penting semasa mengambil gambar :- ",
+          "anggota": [
+            "PPKP",
+            "PKA"
+          ],
+          "tindakan": [
+            "Perkara penting semasa mengambil gambar :- ."
+          ],
+          "rujukan": [
+            "Buku",
+            "Catatan"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "31",
+          "tajuk": "Pastikantarikhdanmasayangbetulpadakamera ",
+          "anggota": [
+            "PPKP",
+            "PKA"
+          ],
+          "tindakan": [
+            "Pastikantarikhdanmasayangbetulpadakamera . ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "32",
+          "tajuk": "Pastikanpemunya/pendudukmenyaksikanbersamasemasa ",
+          "anggota": [
+            "PPKP",
+            "PKA"
+          ],
+          "tindakan": [
+            "Pastikanpemunya/pendudukmenyaksikanbersamasemasa . gambardiambil ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "4",
+          "tajuk": "Teknik -teknik pengambilan gambar :- ",
+          "anggota": [
+            "PPKP",
+            "PKA"
+          ],
+          "tindakan": [
+            "Teknik -teknik pengambilan gambar :- ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "41",
+          "tajuk": "Mengikuturutandankaitan denganperistiwakes ",
+          "anggota": [
+            "PPKP",
+            "PKA"
+          ],
+          "tindakan": [
+            "Mengikuturutandankaitan denganperistiwakes . ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "42",
+          "tajuk": "Gambar yang hendak diambil ditempat kejadian perlu ",
+          "anggota": [
+            "PPKP",
+            "PKA"
+          ],
+          "tindakan": [
+            "Gambar yang hendak diambil ditempat kejadian perlu . menggunakan teknik pengambilan gambar fotografi forensik sepertiberikut:-"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "421",
+          "tajuk": "Teknik”Overview“(Pandangankeseluruhan)meliputi ",
+          "anggota": [
+            "PPKP",
+            "PKA"
+          ],
+          "tindakan": [
+            "Teknik”Overview“(Pandangankeseluruhan)meliputi . . bangunandankawasansekeliling ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "422",
+          "tajuk": "Teknik “Fokus“ (Pandangan pertengahan) meliputi ",
+          "anggota": [
+            "PPKP",
+            "PKA"
+          ],
+          "tindakan": [
+            "Teknik “Fokus“ (Pandangan pertengahan) meliputi . . objek atau peralatan yang hendak digambarkan ditempatkejadian ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "423",
+          "tajuk": "Teknik“Zoom“(Pandangandekat)meliputiobjekatau ",
+          "anggota": [
+            "PPKP",
+            "PKA"
+          ],
+          "tindakan": [
+            "Teknik“Zoom“(Pandangandekat)meliputiobjekatau . . peralatanyangdiambilgambarsecaradekatdanjelas . Penandaanobjekatauperalatanyangdiambil hendaklahdiibuatsupayaianyamengambarkanobjek yangdimaksudkan ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "424",
+          "tajuk": "Teknik“Overview““Focus“dan“Zoom“bolehdiambil ",
+          "anggota": [
+            "PPKP",
+            "PKA"
+          ],
+          "tindakan": [
+            "Teknik“Overview““Focus“dan“Zoom“bolehdiambil . . , secaraberulang-ulanguntukmendapatkanurutanjalan ceritaataukesalahansecarakeseluruhanditempat kejadian ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "425",
+          "tajuk": "Gambaryangbolehdiambilmenggunakanteknikseperti ",
+          "anggota": [],
+          "tindakan": [
+            "Gambaryangbolehdiambilmenggunakanteknikseperti . . tercatatdiatasadalahberdasarkanarahanPegawai Serbuan/pegawaiPenyiasatmengikutkesesuaiankes ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "426",
+          "tajuk": "Gambaryangdiambilperlulahditandadalampelan ",
+          "anggota": [],
+          "tindakan": [
+            "Gambaryangdiambilperlulahditandadalampelan . . lantai"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "427",
+          "tajuk": "Gambaryangdikemukakansebagaibuktibarangkes ",
+          "anggota": [],
+          "tindakan": [
+            "Gambaryangdikemukakansebagaibuktibarangkes . . , perludisusunmengikuturutan ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "5",
+          "tajuk": "Rekodkanbilangangambaryangdiambildankeadaannya(posisi ",
+          "anggota": [
+            "PPKP",
+            "PKA"
+          ],
+          "tindakan": [
+            "Rekodkanbilangangambaryangdiambildankeadaannya(posisi . objekdanperalatanditempatkejadian) didalamID .",
+            "Kameradigital:"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "6",
+          "tajuk": "Proseskerjapenyerahangambardigitalkepadapegawai penyiasat: ",
+          "anggota": [],
+          "tindakan": [
+            "Proseskerjapenyerahangambardigitalkepadapegawai penyiasat: ."
+          ],
+          "rujukan": [
+            "LampiranB",
+            "(Format",
+            "Gambar)",
+            "LampiranC",
+            "LampiranD"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "6",
+          "tajuk": ".1 Jurugambar akan mencetak gambar-gambar yang dimuat turun ke komputerdandisalinkedalamsekepingcakerapadat(CD",
+          "anggota": [],
+          "tindakan": [
+            ".1 Jurugambar akan mencetak gambar-gambar yang dimuat turun ke komputerdandisalinkedalamsekepingcakerapadat(CDR)yang mengandungigambar-gambaryangtelahdimuatturun dari komputer ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "62",
+          "tajuk": "Masukkankedalamsampulsuratkecil Labelkansampulsurat ",
+          "anggota": [],
+          "tindakan": [
+            "Masukkankedalamsampulsuratkecil Labelkansampulsurat . . denganbutir-butirberikut;"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "621",
+          "tajuk": "Tarikh ",
+          "anggota": [],
+          "tindakan": [
+            "Tarikh . ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "622",
+          "tajuk": "Masa ",
+          "anggota": [],
+          "tindakan": [
+            "Masa . ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "623",
+          "tajuk": "Namapemunyapremis ",
+          "anggota": [],
+          "tindakan": [
+            "Namapemunyapremis . ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "624",
+          "tajuk": "Alamat ",
+          "anggota": [],
+          "tindakan": [
+            "Alamat . ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "625",
+          "tajuk": "No Rujukan ",
+          "anggota": [],
+          "tindakan": [
+            "No Rujukan . . ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "626",
+          "tajuk": "Masukkan semuasampulsurat kecilyang ",
+          "anggota": [],
+          "tindakan": [
+            "Masukkan semuasampulsurat kecilyang . . mengandungigambarkedalamsampul suratbesar Catatkantarikhpemeriksaan/ . persampelandisampulsuratbesar ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "63",
+          "tajuk": "KeluarkanPerakuandibawahseksyen90A(2)AktaKeterangan ",
+          "anggota": [],
+          "tindakan": [
+            "KeluarkanPerakuandibawahseksyen90A(2)AktaKeterangan ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "1950",
+          "tajuk": "",
+          "anggota": [],
+          "tindakan": [
+            "."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "64",
+          "tajuk": "Keluarkanborangakuanserahterimabarangkes ",
+          "anggota": [],
+          "tindakan": [
+            "Keluarkanborangakuanserahterimabarangkes . ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "7",
+          "tajuk": "Jurugambarserahkaneksibitbersamaborangserahanyang ",
+          "anggota": [
+            "PPKP",
+            "PKA"
+          ],
+          "tindakan": [
+            "Jurugambarserahkaneksibitbersamaborangserahanyang . lengkapkepadapegawaipenyiasat ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        }
+      ]
+    }
+  ],
+  "carta_alir": {
+    "nodes": [
+      {
+        "id": "N_START",
+        "type": "start",
+        "label": "Mula Operasi / Prosedur",
+        "role": null,
+        "step_ref": null,
+        "sop_ref": null
+      },
+      {
+        "id": "N1",
+        "type": "process",
+        "label": "1. Di pejabat :- ",
+        "role": "PPKP/PKA",
+        "step_ref": "1",
+        "sop_ref": null
+      },
+      {
+        "id": "N2",
+        "type": "process",
+        "label": "11. Semakperalatankameramenggunakansenaraisemak ",
+        "role": "PPKP/PKA",
+        "step_ref": "11",
+        "sop_ref": null
+      },
+      {
+        "id": "N3",
+        "type": "process",
+        "label": "12. Pastikansetiappasukandibekalkandengankamerajenis ",
+        "role": "PPKP/PKA",
+        "step_ref": "12",
+        "sop_ref": null
+      },
+      {
+        "id": "N4",
+        "type": "process",
+        "label": "2. Di lapangan :- ",
+        "role": "PPKP/PKA",
+        "step_ref": "2",
+        "sop_ref": null
+      },
+      {
+        "id": "N5",
+        "type": "process",
+        "label": "3. Perkara penting semasa mengambil gambar :- ",
+        "role": "PPKP/PKA",
+        "step_ref": "3",
+        "sop_ref": null
+      },
+      {
+        "id": "N6",
+        "type": "process",
+        "label": "31. Pastikantarikhdanmasayangbetulpadakamera ",
+        "role": "PPKP/PKA",
+        "step_ref": "31",
+        "sop_ref": null
+      },
+      {
+        "id": "N7",
+        "type": "process",
+        "label": "32. Pastikanpemunya/pendudukmenyaksikanbersamasemasa ",
+        "role": "PPKP/PKA",
+        "step_ref": "32",
+        "sop_ref": null
+      },
+      {
+        "id": "N8",
+        "type": "process",
+        "label": "4. Teknik -teknik pengambilan gambar :- ",
+        "role": "PPKP/PKA",
+        "step_ref": "4",
+        "sop_ref": null
+      },
+      {
+        "id": "N9",
+        "type": "process",
+        "label": "41. Mengikuturutandankaitan denganperistiwakes ",
+        "role": "PPKP/PKA",
+        "step_ref": "41",
+        "sop_ref": null
+      },
+      {
+        "id": "N10",
+        "type": "process",
+        "label": "42. Gambar yang hendak diambil ditempat kejadian perlu ",
+        "role": "PPKP/PKA",
+        "step_ref": "42",
+        "sop_ref": null
+      },
+      {
+        "id": "N11",
+        "type": "process",
+        "label": "421. Teknik”Overview“(Pandangankeseluruhan)meliputi ",
+        "role": "PPKP/PKA",
+        "step_ref": "421",
+        "sop_ref": null
+      },
+      {
+        "id": "N12",
+        "type": "process",
+        "label": "422. Teknik “Fokus“ (Pandangan pertengahan) meliputi ",
+        "role": "PPKP/PKA",
+        "step_ref": "422",
+        "sop_ref": null
+      },
+      {
+        "id": "N13",
+        "type": "process",
+        "label": "423. Teknik“Zoom“(Pandangandekat)meliputiobjekatau ",
+        "role": "PPKP/PKA",
+        "step_ref": "423",
+        "sop_ref": null
+      },
+      {
+        "id": "N14",
+        "type": "process",
+        "label": "424. Teknik“Overview““Focus“dan“Zoom“bolehdiambil ",
+        "role": "PPKP/PKA",
+        "step_ref": "424",
+        "sop_ref": null
+      },
+      {
+        "id": "N_END",
+        "type": "end",
+        "label": "Selesai & Rekod Fail UIP",
+        "role": null,
+        "step_ref": null,
+        "sop_ref": null
+      }
+    ],
+    "edges": [
+      {
+        "from": "N_START",
+        "to": "N1",
+        "label": null
+      },
+      {
+        "from": "N1",
+        "to": "N2",
+        "label": null
+      },
+      {
+        "from": "N2",
+        "to": "N3",
+        "label": null
+      },
+      {
+        "from": "N3",
+        "to": "N4",
+        "label": null
+      },
+      {
+        "from": "N4",
+        "to": "N5",
+        "label": null
+      },
+      {
+        "from": "N5",
+        "to": "N6",
+        "label": null
+      },
+      {
+        "from": "N6",
+        "to": "N7",
+        "label": null
+      },
+      {
+        "from": "N7",
+        "to": "N8",
+        "label": null
+      },
+      {
+        "from": "N8",
+        "to": "N9",
+        "label": null
+      },
+      {
+        "from": "N9",
+        "to": "N10",
+        "label": null
+      },
+      {
+        "from": "N10",
+        "to": "N11",
+        "label": null
+      },
+      {
+        "from": "N11",
+        "to": "N12",
+        "label": null
+      },
+      {
+        "from": "N12",
+        "to": "N13",
+        "label": null
+      },
+      {
+        "from": "N13",
+        "to": "N14",
+        "label": null
+      },
+      {
+        "from": "N14",
+        "to": "N_END",
+        "label": null
+      }
+    ]
+  },
+  "senarai_semak": [
+    {
+      "id": "CHK-01",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[1] Di pejabat :- ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-02",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[11] Semakperalatankameramenggunakansenaraisemak ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-03",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[12] Pastikansetiappasukandibekalkandengankamerajenis ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-04",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[2] Di lapangan :- ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-05",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[3] Perkara penting semasa mengambil gambar :- ",
+      "wajib": true,
+      "rujukan": "Buku"
+    },
+    {
+      "id": "CHK-06",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[31] Pastikantarikhdanmasayangbetulpadakamera ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-07",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[32] Pastikanpemunya/pendudukmenyaksikanbersamasemasa ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-08",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[4] Teknik -teknik pengambilan gambar :- ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-09",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[41] Mengikuturutandankaitan denganperistiwakes ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-10",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[42] Gambar yang hendak diambil ditempat kejadian perlu ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-11",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[421] Teknik”Overview“(Pandangankeseluruhan)meliputi ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-12",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[422] Teknik “Fokus“ (Pandangan pertengahan) meliputi ",
+      "wajib": true,
+      "rujukan": null
+    }
+  ],
+  "lampiran": [
+    {
+      "kod": "Lampiran A",
+      "tajuk": "Senarai Semak Peralatan Mengambil Gambar",
+      "jenis": "senarai_semak",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran B",
+      "tajuk": "Format Dokumen Gambar & Keterangan Gambar",
+      "jenis": "lain",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran C",
+      "tajuk": "Perakuan Di Bawah Seksyen 90A(2) Akta Keterangan 1950",
+      "jenis": "borang",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran D",
+      "tajuk": "Akuan Penyerahan dan Penerimaan Dokumen Tertentu",
+      "jenis": "lain",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    }
+  ],
+  "pematuhan": [
+    "Prosedur yang dikeluarkan ini hendaklah terus berkuatkuasa dan",
+    "dianggap sah sehingga dipinda atau diganti dengan satu prosedur",
+    "lain atau dibatalkan.",
+    "Keengganan dan kegagalan mematuhi Prosedur ini tanpa alasan",
+    "yang munasabah boleh menyebabkan seseorang pegawai",
+    "dikenakan tindakan tatatertib di bawah Peraturan-Peraturan Pegawai",
+    "Awam (Kelakuan dan Tatatertib) 1993.",
+    "Kegagalan mematuhi prosedur ini juga merupakan satu kesalahan di"
+  ],
+  "rujukan_silang_resolved": [],
+  "nota_audit_kualiti": [
+    "Isi Kandungan PDF hanya menyenaraikan Lampiran A, tetapi Lampiran B, C (Perakuan S.90A), dan D wujud pada halaman 63-67."
+  ]
+}

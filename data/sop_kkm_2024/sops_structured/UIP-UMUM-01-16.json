@@ -1,0 +1,528 @@
+{
+  "schema_version": "2.0",
+  "sop_id": "UIP-UMUM-01-16 (PINDAAN 2024)",
+  "file_stem": "UIP-UMUM-01-16",
+  "alias_kod": [],
+  "tajuk": "Prosedur Operasi/Operasi Bersepadu Penguatkuasaan Perundangan Kesihatan Awam",
+  "kategori": "UMUM",
+  "akta_utama": "SOP Umum / KTJ",
+  "akta_berkaitan": [
+    "Akta 154",
+    "Akta 281",
+    "Akta 342",
+    "Akta 260",
+    "Akta 56",
+    "Akta 593",
+    "PPKM 2009",
+    "PPM 1985"
+  ],
+  "keluaran": "01",
+  "pindaan": "01",
+  "tarikh_kuatkuasa": "15 Feb 2024",
+  "ringkasan_eksekutif": "Prosedur ini adalah untuk menggariskan tatacara operasi /operasi bersepadu yang merangkumi beberapa perundangan termasuk Akta Pemusnahan Serangga Pembawa Penyakit 1975, Akta Makanan 1983 dan peraturan-peraturan di bawahnya, Peraturan-peraturan Kawalan Hasil Te",
+  "tujuan": "Prosedur ini adalah untuk menggariskan tatacara operasi /operasi bersepadu yang merangkumi beberapa perundangan termasuk Akta Pemusnahan Serangga Pembawa Penyakit 1975, Akta Makanan 1983 dan peraturan-peraturan di bawahnya, Peraturan-peraturan Kawalan Hasil Tembakau 2004 dan Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988 dalam melaksanakan penguatkuasaan undang-undang kesihatan awam yang melibatkan anggota dari unit-unit dalam daerah, atau antara daerah, atau antara negeri bersama agensi lain (jika perlu).",
+  "panduan_am": [],
+  "punca_kuasa": [
+    "Perancangan Operasi",
+    "Risikan Awal",
+    "Surat Penurunan Kuasa Pasukan Bantuan",
+    "Taklimat",
+    "Debriefing",
+    "Laporan Operasi"
+  ],
+  "undang_undang_berkaitan": [
+    {
+      "akta": "Akta Keterangan 1950 (Disemak 1971) [Akta 56]",
+      "akta_kod": "Akta 56",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Hidrogen Sianid 1953 [Akta 260]",
+      "akta_kod": "Akta 260",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Makanan 1983 [Akta 281]",
+      "akta_kod": "Akta 281",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Mahkamah Rendah 1948 [Akta 92]",
+      "akta_kod": "Akta 92",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Pemusnahan Serangga Pembawa Penyakit 1975 [Akta 154]",
+      "akta_kod": "Akta 154",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988 [Akta 342]",
+      "akta_kod": "Akta 342",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Tafsiran 1948 dan 1967 (Disemak 1989) [Akta 388]",
+      "akta_kod": "Akta 388",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Kanun Keseksaan (Disemak 1997) [Akta 574]",
+      "akta_kod": "Akta 574",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Kanun Prosedur Jenayah (Disemak 1999) [Akta 593]",
+      "akta_kod": "Akta 593",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Peraturan-Peraturan Kawalan Hasil Tembakau 2004",
+      "akta_kod": null,
+      "status": "DIMANSUHKAN",
+      "nota": "[NOTA PINDAAN] Dimansuhkan mulai 1 Okt 2024 dan digantikan oleh Akta 852."
+    },
+    {
+      "akta": "Peraturan-Peraturan Kebersihan Makanan 2009",
+      "akta_kod": null,
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Peraturan-Peraturan Kemasukan Orang-orang Ke Dalam Malaysia",
+      "akta_kod": null,
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Peraturan-Peraturan Makanan 1985",
+      "akta_kod": null,
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Peraturan-Peraturan",
+      "akta_kod": null,
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Peraturan-Peraturan Pencegahan dan Pengawalan Penyakit Berjangkit",
+      "akta_kod": null,
+      "status": "AKTIF",
+      "nota": null
+    }
+  ],
+  "anggota_terlibat": [
+    {
+      "kod": "PEGAWAI KESI",
+      "jawatan": "Pegawai Kesihatan Daerah/ Kawasan/Bahagian"
+    },
+    {
+      "kod": "KETUA PENOLO",
+      "jawatan": "Ketua Penolong Pegawai Kesihatan Persekitaran"
+    },
+    {
+      "kod": "PENOLONG PEG",
+      "jawatan": "Penolong Pegawai Kesihatan Persekitaran Kanan"
+    },
+    {
+      "kod": "PEMBANTU KES",
+      "jawatan": "Pembantu Kesihatan Awam Kanan"
+    },
+    {
+      "kod": "PKA",
+      "jawatan": "Pembantu Kesihatan Awam"
+    },
+    {
+      "kod": "AGENSI LAIN ",
+      "jawatan": "Agensi lain (jika perlu)"
+    },
+    {
+      "kod": "NO. RUJUKAN ",
+      "jawatan": "NO. RUJUKAN PROSEDUR: UIP-UMUM-01-16 (PINDAAN 2024)"
+    },
+    {
+      "kod": "PROSEDUR OPE",
+      "jawatan": "Prosedur Operasi/Operasi Bersepadu Penguatkuasaan Perundangan Kesihatan Awam 3"
+    }
+  ],
+  "singkatan": [
+    {
+      "kod": "KKM",
+      "maksud": "Kementerian Kesihatan Malaysia"
+    },
+    {
+      "kod": "KPPKP",
+      "maksud": "Ketua Penolong Pegawai Kesihatan Persekitaran"
+    },
+    {
+      "kod": "KUIPD",
+      "maksud": "Ketua Unit Inspektorat dan Perundangan Daerah"
+    },
+    {
+      "kod": "KUIPN",
+      "maksud": "Ketua Unit Inspektorat dan Perundangan Negeri"
+    },
+    {
+      "kod": "PA",
+      "maksud": "Pekerja Am"
+    },
+    {
+      "kod": "PK",
+      "maksud": "Pejabat Kesihatan Daerah/Kawasan/Bahagian"
+    },
+    {
+      "kod": "PKA",
+      "maksud": "Pembantu Kesihatan Awam"
+    },
+    {
+      "kod": "PKAK",
+      "maksud": "Pembantu Kesihatan Awam Kanan"
+    },
+    {
+      "kod": "PKD",
+      "maksud": "Pegawai Kesihatan Daerah/Kawasan/Bahagian"
+    },
+    {
+      "kod": "PKN",
+      "maksud": "Pengarah Kesihatan Negeri"
+    },
+    {
+      "kod": "PKP",
+      "maksud": "Pegawai Kesihatan Persekitaran"
+    },
+    {
+      "kod": "PPKP",
+      "maksud": "Penolong Pegawai Kesihatan Persekitaran"
+    },
+    {
+      "kod": "PPKPK",
+      "maksud": "Penolong Pegawai Kesihatan Persekitaran Kanan"
+    },
+    {
+      "kod": "TPKN(KA)",
+      "maksud": "Timbalan Pengarah Kesihatan Negeri (Kesihatan Awam)"
+    },
+    {
+      "kod": "UIP",
+      "maksud": "Unit Inspektorat dan Perundangan"
+    },
+    {
+      "kod": "UIPD",
+      "maksud": "Unit Inspektorat dan Perundangan Daerah"
+    },
+    {
+      "kod": "UIPN",
+      "maksud": "Unit Inspektorat dan Perundangan Negeri --- Prosedur Operasi/Operasi Bersepadu Penguatkuasaan Perundangan Kesihatan Awam 4"
+    }
+  ],
+  "nota_pindaan": [
+    {
+      "tahap": "KRITIKAL",
+      "tajuk": "[NOTA PINDAAN] PPKHT 2004 Dimansuhkan — Digantikan Oleh Akta 852 (1 Okt 2024)",
+      "butiran": "Sebarang rujukan PPKHT 2004 dan Notis Seksyen 32B Akta Makanan 1983 bagi kesalahan produk merokok/vape dalam SOP ini telah DIMANSUHKAN mulai 1 Oktober 2024 dan digantikan sepenuhnya oleh Akta 852 (UIP-AKPMDKA-01-24 hingga 08-24). Rujukan 'UIP-PPKHT-01-16' pada Lampiran A item 5 adalah mansuh dan digantikan oleh UIP-AKPMDKA-01-24.",
+      "gantian_statut": "Akta 852 & UIP-AKPMDKA-01-24..08-24 (1 Okt 2024)"
+    }
+  ],
+  "tempoh_sla": [],
+  "fasa_kerja": [
+    {
+      "fasa_id": "F1",
+      "tajuk_fasa": "1. Pelaksanaan Proses Kerja",
+      "langkah": [
+        {
+          "no": "1",
+          "tajuk": "awal di lokasi / premis sasaran dan seperti peta lokasi operasi secara dan data perisikan",
+          "anggota": [
+            "UIPN",
+            "UIPD",
+            "KUIPN",
+            "PKD",
+            "KUIPD",
+            "PKN",
+            "TPK"
+          ],
+          "tindakan": [
+            "awal di lokasi / premis sasaran dan seperti peta lokasi operasi secara dan data perisikan. skop operasi dan modus operandi: negeri-KUIPN bincang dengan TPK (KA) daerah-KUIPD bincang dengan PKD panggilan Operasi/Operasi Bersepadu pihak yang terlibat termasuk agensi lain (jika negeri, KUIPN sediakan surat panggilan setiap daerah dan ketua unit yang terlibat. daerah, KUIPD sediakan surat panggilan penurunan kuasa untuk pasukan bantuan Surat bersepadu negeri dan antara Kuasa berkaitan sahaja). dan kemudahan operasi. Sila rujuk Lampiran"
+          ],
+          "rujukan": [
+            "Penurunan A"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 1: awal di lokasi / premis sasaran dan seperti peta lokasi operasi secara dan data perisikan. skop...",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "3.2",
+          "tajuk": "Kumpulkan maklumat pencapaian operasi",
+          "anggota": [
+            "KUIPN",
+            "KUIPD"
+          ],
+          "tindakan": [
+            "Kumpulkan maklumat pencapaian operasi. Pastikan borang diisi dengan lengkap dan ditandatangani oleh ketua kumpulan."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "3.3",
+          "tajuk": "Sediakan laporan ringkas operasi",
+          "anggota": [
+            "UIPN"
+          ],
+          "tindakan": [
+            "Sediakan laporan ringkas operasi."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "3.4",
+          "tajuk": "Kemukakan laporan kepada PKN/TPKN(KA)",
+          "anggota": [
+            "PKD",
+            "UIPN",
+            "UIPD"
+          ],
+          "tindakan": [
+            "Kemukakan laporan kepada PKN/TPKN(KA). Jika perlu sediakan kenyataan media."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 3.4: Kemukakan laporan kepada PKN/TPKN(KA). Jika perlu sediakan kenyataan media.",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "3.5",
+          "tajuk": "Edarkan sesalinan laporan kepada semua PKD dan failkan satu salinan",
+          "anggota": [],
+          "tindakan": [
+            "Edarkan sesalinan laporan kepada semua PKD dan failkan satu salinan."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        }
+      ]
+    }
+  ],
+  "carta_alir": {
+    "nodes": [
+      {
+        "id": "N_START",
+        "type": "start",
+        "label": "Mula Operasi / Prosedur",
+        "role": null,
+        "step_ref": null,
+        "sop_ref": null
+      },
+      {
+        "id": "N1",
+        "type": "decision",
+        "label": "1. awal di lokasi / premis sasaran dan seperti peta lokasi operasi secara dan data perisika",
+        "role": "UIPN/UIPD",
+        "step_ref": "1",
+        "sop_ref": null
+      },
+      {
+        "id": "N2",
+        "type": "process",
+        "label": "3.2. Kumpulkan maklumat pencapaian operasi",
+        "role": "KUIPN/KUIPD",
+        "step_ref": "3.2",
+        "sop_ref": null
+      },
+      {
+        "id": "N3",
+        "type": "process",
+        "label": "3.3. Sediakan laporan ringkas operasi",
+        "role": "UIPN",
+        "step_ref": "3.3",
+        "sop_ref": null
+      },
+      {
+        "id": "N4",
+        "type": "decision",
+        "label": "3.4. Kemukakan laporan kepada PKN/TPKN(KA)",
+        "role": "PKD/UIPN",
+        "step_ref": "3.4",
+        "sop_ref": null
+      },
+      {
+        "id": "N5",
+        "type": "process",
+        "label": "3.5. Edarkan sesalinan laporan kepada semua PKD dan failkan satu salinan",
+        "role": null,
+        "step_ref": "3.5",
+        "sop_ref": null
+      },
+      {
+        "id": "N_END",
+        "type": "end",
+        "label": "Selesai & Rekod Fail UIP",
+        "role": null,
+        "step_ref": null,
+        "sop_ref": null
+      }
+    ],
+    "edges": [
+      {
+        "from": "N_START",
+        "to": "N1",
+        "label": null
+      },
+      {
+        "from": "N1",
+        "to": "N2",
+        "label": "Teruskan"
+      },
+      {
+        "from": "N2",
+        "to": "N3",
+        "label": null
+      },
+      {
+        "from": "N3",
+        "to": "N4",
+        "label": null
+      },
+      {
+        "from": "N4",
+        "to": "N5",
+        "label": "Teruskan"
+      },
+      {
+        "from": "N5",
+        "to": "N_END",
+        "label": null
+      }
+    ]
+  },
+  "senarai_semak": [
+    {
+      "id": "CHK-01",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[1] awal di lokasi / premis sasaran dan seperti peta lokasi operasi secara dan data perisikan",
+      "wajib": true,
+      "rujukan": "Penurunan A"
+    },
+    {
+      "id": "CHK-02",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[3.2] Kumpulkan maklumat pencapaian operasi",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-03",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[3.3] Sediakan laporan ringkas operasi",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-04",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[3.4] Kemukakan laporan kepada PKN/TPKN(KA)",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-05",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[3.5] Edarkan sesalinan laporan kepada semua PKD dan failkan satu salinan",
+      "wajib": true,
+      "rujukan": null
+    }
+  ],
+  "lampiran": [
+    {
+      "kod": "Lampiran A",
+      "tajuk": "Senarai Semak Rujukan SOP bagi Operasi Bersepadu",
+      "jenis": "senarai_semak",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    }
+  ],
+  "pematuhan": [
+    "Prosedur yang dikeluarkan ini hendaklah terus berkuatkuasa dan",
+    "dianggap sah sehingga dipinda atau diganti dengan satu prosedur lain",
+    "atau dibatalkan.",
+    "Keengganan dan kegagalan mematuhi Prosedur ini tanpa alasan",
+    "dikenakan tindakan tatatertib di bawah Peraturan-Peraturan Pegawai",
+    "Awam (Kelakuan dan Tatatertib) 1993.",
+    "Kegagalan mematuhi prosedur ini juga merupakan satu kesalahan di",
+    "bawah Seksyen 24 (1) (f) Akta Suruhanjaya Integriti Agensi"
+  ],
+  "rujukan_silang_resolved": [
+    {
+      "sop_id": "UIP-UMUM-04-07 (PINDAAN 2024)",
+      "file_stem": "UIP-UMUM-04-07",
+      "tajuk": "Prosedur Mengambil Gambar"
+    },
+    {
+      "sop_id": "UIP-APSPP-01-07 (PINDAAN 2024)",
+      "file_stem": "UIP-APSPP-01-07",
+      "tajuk": "Prosedur Pemeriksaan Serangga Pembawa Penyakit Di Lapangan"
+    },
+    {
+      "sop_id": "UIP-APSPP-01-16 (PINDAAN 2024)",
+      "file_stem": "UIP-APSPP-01-16",
+      "tajuk": "Prosedur Memasuki Premis Dengan Kekerasan Yang Munasabah Di Bawah Akta Pemusnahan Serangga Pembawa Penyakit 1975"
+    },
+    {
+      "sop_id": "UIP-APPPB-01-07 (PINDAAN 2024)",
+      "file_stem": "UIP-APPPB-01-07",
+      "tajuk": "Prosedur Penguatkuasaan Penutupan Premis Di Bawah Subseksyen 18(1)(d) Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988"
+    },
+    {
+      "sop_id": "UIP-AKPMDKA-01-24",
+      "file_stem": "UIP-AKPMDKA-01-24",
+      "tajuk": "Prosedur Pelaksanaan Notis Memerintahkan Kehadiran Ke Mahkamah Di Bawah Seksyen 47 dan Tawaran Mengkompaun Kesalahan Di Bawah Seksyen 48 Akta 852"
+    }
+  ],
+  "nota_audit_kualiti": [
+    "Item 5 dalam Lampiran A merujuk UIP-PPKHT-01-16 (PPKHT 2004 / S.32B) yang telah digantikan oleh Akta 852."
+  ]
+}

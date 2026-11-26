@@ -13,6 +13,7 @@ import hashlib
 import json
 import math
 import re
+import threading
 from collections import Counter
 from dataclasses import dataclass
 from pathlib import Path
@@ -194,6 +195,10 @@ class _DeterministicHashEmbedding(EmbeddingFunction):  # type: ignore[misc]
 
     def get_config(self) -> Dict[str, Any]:
         return {"dim": self.dim}
+
+    @staticmethod
+    def build_from_config(config: Dict[str, Any]) -> "_DeterministicHashEmbedding":
+        return _DeterministicHashEmbedding(dim=int(config.get("dim", 256)))
 
     def __call__(self, input: Documents) -> Embeddings:  # noqa: A002
         vectors: List[List[float]] = []
@@ -861,10 +866,13 @@ class StatutoryRAGStore:
 
 
 _store_instance: Optional[StatutoryRAGStore] = None
+_store_lock = threading.RLock()
 
 
 def get_statutory_store() -> StatutoryRAGStore:
     global _store_instance
     if _store_instance is None:
-        _store_instance = StatutoryRAGStore()
+        with _store_lock:
+            if _store_instance is None:
+                _store_instance = StatutoryRAGStore()
     return _store_instance

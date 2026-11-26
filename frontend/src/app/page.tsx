@@ -17,7 +17,7 @@ import {
   Sparkles,
   Zap,
 } from "lucide-react";
-import AppGuidePanel from "@/components/AppGuidePanel";
+import dynamic from "next/dynamic";
 import AuditPanel, {
   type AuditFixContext,
   mapCriterionToEditorSection,
@@ -25,8 +25,7 @@ import AuditPanel, {
 import AuthAccountModal from "@/components/AuthAccountModal";
 import CaseRegistryModal from "@/components/CaseRegistryModal";
 import CompoundNoticePanel from "@/components/CompoundNoticePanel";
-import DevConsoleModal from "@/components/DevConsoleModal";
-import DraftDocxEditor, {
+import {
   type EditorGroupTab,
   mapSectionToGroup,
 } from "@/components/DraftDocxEditor";
@@ -35,9 +34,13 @@ import type { CompoundPrefillMeta } from "@/components/LegalDirectoryPanel";
 import MobileBottomNav from "@/components/MobileBottomNav";
 import OnboardingCardsModal from "@/components/OnboardingCardsModal";
 import SplashScreenModal from "@/components/SplashScreenModal";
-import SystemSettingsModal from "@/components/SystemSettingsModal";
 import TopNavbar, { type ActiveAppMode } from "@/components/TopNavbar";
 import UIPAdvisorPanel, { type PakarWorkspaceTab } from "@/components/UIPAdvisorPanel";
+
+const AppGuidePanel = dynamic(() => import("@/components/AppGuidePanel"), { ssr: false });
+const DevConsoleModal = dynamic(() => import("@/components/DevConsoleModal"), { ssr: false });
+const DraftDocxEditor = dynamic(() => import("@/components/DraftDocxEditor"), { ssr: false });
+const SystemSettingsModal = dynamic(() => import("@/components/SystemSettingsModal"), { ssr: false });
 import {
   ApiError,
   extractEvidence,
@@ -2038,6 +2041,7 @@ export default function UIPCommandPage() {
                 }
               }}
               initialSubView={auditSubView}
+              authToken={authToken}
             />
           )}
 

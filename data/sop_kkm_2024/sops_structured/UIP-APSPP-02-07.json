@@ -1,0 +1,489 @@
+{
+  "schema_version": "2.0",
+  "sop_id": "UIP-APSPP-02-07 (PINDAAN 2024)",
+  "file_stem": "UIP-APSPP-02-07",
+  "alias_kod": [],
+  "tajuk": "Prosedur Identifikasi Serangga Pembawa Penyakit",
+  "kategori": "APSPP_1975",
+  "akta_utama": "Akta 154",
+  "akta_berkaitan": [
+    "Akta 154",
+    "Akta 56",
+    "Akta 388",
+    "Akta 574",
+    "Akta 593"
+  ],
+  "keluaran": "01",
+  "pindaan": "01",
+  "tarikh_kuatkuasa": "15 Feb 2024",
+  "ringkasan_eksekutif": "Tujuan prosedur ini adalah untuk menerangkan tatacara mengenalpasti spesis serangga pembawa penyakit oleh Pegawai Sains (Kajiserangga)/Pegawai Pemeriksa yang dilantik sebagai Pemeriksa Serangga Pembawa Penyakit.",
+  "tujuan": "Tujuan prosedur ini adalah untuk menerangkan tatacara mengenalpasti spesis serangga pembawa penyakit oleh Pegawai Sains (Kajiserangga)/Pegawai Pemeriksa yang dilantik sebagai Pemeriksa Serangga Pembawa Penyakit.",
+  "panduan_am": [],
+  "punca_kuasa": [
+    "PSPP dilantik Pegawai Kesihatan",
+    "Mikroskop & Sijil Kalibrasi",
+    "Awet & Lak semula botol",
+    "Laporan Pemeriksaan Spesimen"
+  ],
+  "undang_undang_berkaitan": [
+    {
+      "akta": "Akta Keterangan 1950 (Disemak 1971) [Akta 56]",
+      "akta_kod": "Akta 56",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Pemusnahan Serangga Pembawa Penyakit 1975 [Akta 154]",
+      "akta_kod": "Akta 154",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Tafsiran 1948 dan 1967 (Disemak 1989) [Akta 388]",
+      "akta_kod": "Akta 388",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Kanun Keseksaan (Disemak 1997) [Akta 574]",
+      "akta_kod": "Akta 574",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Kanun Tatacara Jenayah (Disemak 1999) [Akta 593]",
+      "akta_kod": "Akta 593",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Peraturan-Peraturan Pemusnahan Serangga Pembawa Penyakit",
+      "akta_kod": null,
+      "status": "AKTIF",
+      "nota": null
+    }
+  ],
+  "anggota_terlibat": [
+    {
+      "kod": "PEGAWAI SAIN",
+      "jawatan": "Pegawai Sains (Kajiserangga)"
+    },
+    {
+      "kod": "PENOLONG PEG",
+      "jawatan": "Penolong Pegawai Kesihatan Persekitaran"
+    },
+    {
+      "kod": "PEMBANTU KES",
+      "jawatan": "Pembantu Kesihatan Awam"
+    }
+  ],
+  "singkatan": [
+    {
+      "kod": "APSPP 1975",
+      "maksud": "Akta Pemusnahan Serangga Pembawa Penyakit 1975"
+    },
+    {
+      "kod": "PPKP",
+      "maksud": "Penolong Pegawai Kesihatan Persekitaran"
+    },
+    {
+      "kod": "PSPP",
+      "maksud": "Pemeriksa Serangga Pembawa Penyakit adalah mana-mana pegawai yang dilantik oleh Pegawai Kesihatan. --- Prosedur Identifikasi Serangga Pembawa Penyakit 4"
+    }
+  ],
+  "nota_pindaan": [],
+  "tempoh_sla": [],
+  "fasa_kerja": [
+    {
+      "fasa_id": "F1",
+      "tajuk_fasa": "1. Pelaksanaan Proses Kerja",
+      "langkah": [
+        {
+          "no": "1",
+          "tajuk": "KERJA",
+          "anggota": [
+            "7. PROSES terlibat"
+          ],
+          "tindakan": [
+            "KERJA"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "1",
+          "tajuk": "Terima botol spesimen Serangga Pembawa Penyakit Lampiran yang berlabel, dilak, bersama borang Penyerahan APSPP",
+          "anggota": [
+            "PSPP"
+          ],
+          "tindakan": [
+            "Terima botol spesimen Serangga Pembawa Penyakit Lampiran yang berlabel, dilak, bersama borang Penyerahan APSPP-01-07 Spesimen dan Permohonan Identifikasi Serangga (Pindaan Pembawa Penyakit untuk tujuan pengenalan spesis. Nota: PSPP terlatih."
+          ],
+          "rujukan": [
+            "I, UIP- 2024)"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "2",
+          "tajuk": "Semak dan pastikan borang Penyerahan Spesimen dan Permohonan Identifikasi Serangga Pembawa Penyakit Lampiran a",
+          "anggota": [
+            "PSPP"
+          ],
+          "tindakan": [
+            "Semak dan pastikan borang Penyerahan Spesimen dan Permohonan Identifikasi Serangga Pembawa Penyakit Lampiran adalah sama dengan botol spesimen yang diterima. Catatkan dalam Daftar Penerimaan Spesimen Serangga Lampiran Pembawa Penyakit."
+          ],
+          "rujukan": [
+            "A B"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "3",
+          "tajuk": "Keluarkan Akuan Terima Spesimen Serangga Pembawa Penyakit",
+          "anggota": [
+            "PSPP"
+          ],
+          "tindakan": [
+            "Keluarkan Akuan Terima Spesimen Serangga Pembawa Penyakit. Lampiran APSPP-01-07"
+          ],
+          "rujukan": [
+            "J, UIP-"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "4",
+          "tajuk": "Periksa semua serangga pembawa penyakit dan (Pindaan rekodkan keputusan ke dalam Daftar Identifikasi Spesimen ",
+          "anggota": [
+            "PSPP"
+          ],
+          "tindakan": [
+            "Periksa semua serangga pembawa penyakit dan (Pindaan rekodkan keputusan ke dalam Daftar Identifikasi Spesimen Serangga Pembawa Penyakit."
+          ],
+          "rujukan": [
+            "2024)"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "5",
+          "tajuk": "Masukkan semula serangga pembawa penyakit yang telah diperiksa dan diawet ke dalam botol dan lak bekas spesime",
+          "anggota": [
+            "PSPP"
+          ],
+          "tindakan": [
+            "Masukkan semula serangga pembawa penyakit yang telah diperiksa dan diawet ke dalam botol dan lak bekas spesimen dengan lak rasmi Kementerian Kesihatan Malaysia dan PSPP menurunkan tandatangan ringkas di atas lak Kementerian Kesihatan Malaysia pada botol spesimen yang telah diperiksa."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "6",
+          "tajuk": "Tandatangani Laporan Pemeriksaan Spesimen Serangga Lampiran Pembawa Penyakit dan rekodkan ke dalam buku Daftar",
+          "anggota": [
+            "PSPP"
+          ],
+          "tindakan": [
+            "Tandatangani Laporan Pemeriksaan Spesimen Serangga Lampiran Pembawa Penyakit dan rekodkan ke dalam buku Daftar Identifikasi Spesimen Serangga Pembawa Penyakit."
+          ],
+          "rujukan": [
+            "C"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "7",
+          "tajuk": "Serahkan Laporan Pemeriksaan Spesimen Serangga Pembawa Penyakit bersama botol spesimen yang telah dilak, kepad",
+          "anggota": [
+            "PSPP",
+            "PPKP"
+          ],
+          "tindakan": [
+            "Serahkan Laporan Pemeriksaan Spesimen Serangga Pembawa Penyakit bersama botol spesimen yang telah dilak, kepada pemohon tanpa kelengahan."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        }
+      ]
+    }
+  ],
+  "carta_alir": {
+    "nodes": [
+      {
+        "id": "N_START",
+        "type": "start",
+        "label": "Mula Operasi / Prosedur",
+        "role": null,
+        "step_ref": null,
+        "sop_ref": null
+      },
+      {
+        "id": "N1",
+        "type": "process",
+        "label": "1. KERJA",
+        "role": "7. PROSES terlibat",
+        "step_ref": "1",
+        "sop_ref": null
+      },
+      {
+        "id": "N2",
+        "type": "process",
+        "label": "1. Terima botol spesimen Serangga Pembawa Penyakit Lampiran yang berlabel, dilak, bersama b",
+        "role": "PSPP",
+        "step_ref": "1",
+        "sop_ref": null
+      },
+      {
+        "id": "N3",
+        "type": "process",
+        "label": "2. Semak dan pastikan borang Penyerahan Spesimen dan Permohonan Identifikasi Serangga Pemba",
+        "role": "PSPP",
+        "step_ref": "2",
+        "sop_ref": null
+      },
+      {
+        "id": "N4",
+        "type": "process",
+        "label": "3. Keluarkan Akuan Terima Spesimen Serangga Pembawa Penyakit",
+        "role": "PSPP",
+        "step_ref": "3",
+        "sop_ref": null
+      },
+      {
+        "id": "N5",
+        "type": "process",
+        "label": "4. Periksa semua serangga pembawa penyakit dan (Pindaan rekodkan keputusan ke dalam Daftar ",
+        "role": "PSPP",
+        "step_ref": "4",
+        "sop_ref": null
+      },
+      {
+        "id": "N6",
+        "type": "process",
+        "label": "5. Masukkan semula serangga pembawa penyakit yang telah diperiksa dan diawet ke dalam botol",
+        "role": "PSPP",
+        "step_ref": "5",
+        "sop_ref": null
+      },
+      {
+        "id": "N7",
+        "type": "process",
+        "label": "6. Tandatangani Laporan Pemeriksaan Spesimen Serangga Lampiran Pembawa Penyakit dan rekodka",
+        "role": "PSPP",
+        "step_ref": "6",
+        "sop_ref": null
+      },
+      {
+        "id": "N8",
+        "type": "process",
+        "label": "7. Serahkan Laporan Pemeriksaan Spesimen Serangga Pembawa Penyakit bersama botol spesimen y",
+        "role": "PSPP/PPKP",
+        "step_ref": "7",
+        "sop_ref": null
+      },
+      {
+        "id": "N_END",
+        "type": "end",
+        "label": "Selesai & Rekod Fail UIP",
+        "role": null,
+        "step_ref": null,
+        "sop_ref": null
+      }
+    ],
+    "edges": [
+      {
+        "from": "N_START",
+        "to": "N1",
+        "label": null
+      },
+      {
+        "from": "N1",
+        "to": "N2",
+        "label": null
+      },
+      {
+        "from": "N2",
+        "to": "N3",
+        "label": null
+      },
+      {
+        "from": "N3",
+        "to": "N4",
+        "label": null
+      },
+      {
+        "from": "N4",
+        "to": "N5",
+        "label": null
+      },
+      {
+        "from": "N5",
+        "to": "N6",
+        "label": null
+      },
+      {
+        "from": "N6",
+        "to": "N7",
+        "label": null
+      },
+      {
+        "from": "N7",
+        "to": "N8",
+        "label": null
+      },
+      {
+        "from": "N8",
+        "to": "N_END",
+        "label": null
+      }
+    ]
+  },
+  "senarai_semak": [
+    {
+      "id": "CHK-01",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[1] KERJA",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-02",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[1] Terima botol spesimen Serangga Pembawa Penyakit Lampiran yang berlabel, dilak, bersama borang Penyerahan APSPP",
+      "wajib": true,
+      "rujukan": "I, UIP- 2024)"
+    },
+    {
+      "id": "CHK-03",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[2] Semak dan pastikan borang Penyerahan Spesimen dan Permohonan Identifikasi Serangga Pembawa Penyakit Lampiran a",
+      "wajib": true,
+      "rujukan": "A B"
+    },
+    {
+      "id": "CHK-04",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[3] Keluarkan Akuan Terima Spesimen Serangga Pembawa Penyakit",
+      "wajib": true,
+      "rujukan": "J, UIP-"
+    },
+    {
+      "id": "CHK-05",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[4] Periksa semua serangga pembawa penyakit dan (Pindaan rekodkan keputusan ke dalam Daftar Identifikasi Spesimen ",
+      "wajib": true,
+      "rujukan": "2024)"
+    },
+    {
+      "id": "CHK-06",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[5] Masukkan semula serangga pembawa penyakit yang telah diperiksa dan diawet ke dalam botol dan lak bekas spesime",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-07",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[6] Tandatangani Laporan Pemeriksaan Spesimen Serangga Lampiran Pembawa Penyakit dan rekodkan ke dalam buku Daftar",
+      "wajib": true,
+      "rujukan": "C"
+    },
+    {
+      "id": "CHK-08",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[7] Serahkan Laporan Pemeriksaan Spesimen Serangga Pembawa Penyakit bersama botol spesimen yang telah dilak, kepad",
+      "wajib": true,
+      "rujukan": null
+    }
+  ],
+  "lampiran": [
+    {
+      "kod": "Lampiran A",
+      "tajuk": "Senarai Semak Identifikasi Spesimen",
+      "jenis": "senarai_semak",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran B",
+      "tajuk": "Daftar Penerimaan Spesimen Serangga Pembawa Penyakit",
+      "jenis": "buku_daftar",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    },
+    {
+      "kod": "Lampiran C",
+      "tajuk": "Laporan Pemeriksaan Spesimen Serangga Pembawa Penyakit",
+      "jenis": "lain",
+      "muka_surat_pdf": null,
+      "status": "AKTIF",
+      "status_ekstrak": "teks_penuh",
+      "nota": null
+    }
+  ],
+  "pematuhan": [
+    "Prosedur yang dikeluarkan ini hendaklah terus berkuatkuasa dan",
+    "dianggap sah sehingga dipinda atau diganti dengan satu prosedur lain",
+    "atau dibatalkan.",
+    "Keengganan dan kegagalan mematuhi Prosedur ini tanpa alasan yang",
+    "munasabah boleh menyebabkan seseorang pegawai dikenakan tindakan",
+    "tatatertib di bawah Peraturan-Peraturan Pegawai Awam (Kelakuan dan",
+    "Tatatertib) 1993.",
+    "Kegagalan mematuhi prosedur ini juga merupakan satu kesalahan di"
+  ],
+  "rujukan_silang_resolved": [
+    {
+      "sop_id": "UIP-APSPP-01-07 (PINDAAN 2024)",
+      "file_stem": "UIP-APSPP-01-07",
+      "tajuk": "Prosedur Pemeriksaan Serangga Pembawa Penyakit Di Lapangan"
+    }
+  ],
+  "nota_audit_kualiti": [
+    "Dalam UIP-APSPP-01-07 Langkah 3.5.10, rujukan menyebut 'Lampiran D' bagi Laporan Pemeriksaan, namun dalam dokumen UIP-APSPP-02-07 sebenar borang tersebut ialah 'Lampiran C'."
+  ]
+}

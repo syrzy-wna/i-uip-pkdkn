@@ -1,0 +1,1171 @@
+{
+  "schema_version": "2.0",
+  "sop_id": "UIP-UMUM-05-07 (PINDAAN 2024)",
+  "file_stem": "UIP-UMUM-05-07",
+  "alias_kod": [],
+  "tajuk": "Prosedur Pendakwaan Di Mahkamah",
+  "kategori": "UMUM",
+  "akta_utama": "SOP Umum / KTJ",
+  "akta_berkaitan": [
+    "Akta 593",
+    "Akta 56",
+    "Akta 92",
+    "Akta 281",
+    "Akta 154",
+    "Akta 342",
+    "Akta 574"
+  ],
+  "keluaran": "01",
+  "pindaan": "01",
+  "tarikh_kuatkuasa": "15 Feb 2024",
+  "ringkasan_eksekutif": "Tujuan prosedur ini adalah untuk menggariskan tatacara pendakwaan di mahkamah mengikut peruntukan perundangan Kesihatan Awam yang berkaitan.",
+  "tujuan": "Tujuan prosedur ini adalah untuk menggariskan tatacara pendakwaan di mahkamah mengikut peruntukan perundangan Kesihatan Awam yang berkaitan.",
+  "panduan_am": [],
+  "punca_kuasa": [
+    "S.377(b)(3) KTJ",
+    "S.172A KTJ (Pra Perbicaraan 30 hari)",
+    "S.51A KTJ (Serahan Dokumen)",
+    "S.173(d) KTJ",
+    "Sapina 10 hari",
+    "Prima Facie"
+  ],
+  "undang_undang_berkaitan": [
+    {
+      "akta": "Akta Keterangan 1950 (Disemak 1971) [Akta 56]",
+      "akta_kod": "Akta 56",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Hidrogen Sianid 1953 [Akta 260]",
+      "akta_kod": "Akta 260",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Makanan 1983 [Akta 281]",
+      "akta_kod": "Akta 281",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Mahkamah Rendah 1955 [Akta 92]",
+      "akta_kod": "Akta 92",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Pemusnahan Serangga Pembawa Penyakit 1975 [Akta 154]",
+      "akta_kod": "Akta 154",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988 [Akta 342]",
+      "akta_kod": "Akta 342",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Akta Tafsiran 1948 dan 1967(Disemak 1989) [Akta 388]",
+      "akta_kod": "Akta 388",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Kanun Keseksaan (Disemak 1997) [Akta 574]",
+      "akta_kod": "Akta 574",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Kanun Tatacara Jenayah [Akta 593]",
+      "akta_kod": "Akta 593",
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Peraturan-Peraturan Kawalan Hasil Tembakau 2004",
+      "akta_kod": null,
+      "status": "DIMANSUHKAN",
+      "nota": "[NOTA PINDAAN] Dimansuhkan mulai 1 Okt 2024 dan digantikan oleh Akta 852."
+    },
+    {
+      "akta": "Peraturan-Peraturan Kebersihan Makanan 2009",
+      "akta_kod": null,
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Peraturan-Peraturan Kemasukan Orang-orang Ke Dalam Malaysia",
+      "akta_kod": null,
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Peraturan-Peraturan Makanan 1985",
+      "akta_kod": null,
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Peraturan-Peraturan",
+      "akta_kod": null,
+      "status": "AKTIF",
+      "nota": null
+    },
+    {
+      "akta": "Peraturan-Peraturan Pencegahan dan Pengawalan Penyakit Berjangkit",
+      "akta_kod": null,
+      "status": "AKTIF",
+      "nota": null
+    }
+  ],
+  "anggota_terlibat": [
+    {
+      "kod": "PEGAWAI KESI",
+      "jawatan": "Pegawai Kesihatan Persekitaran"
+    },
+    {
+      "kod": "KETUA PENOLO",
+      "jawatan": "Ketua Penolong Pegawai Kesihatan Persekitaran"
+    },
+    {
+      "kod": "PENOLONG PEG",
+      "jawatan": "Penolong Pegawai Kesihatan Persekitaran Kanan"
+    },
+    {
+      "kod": "NOTA : SEMUA",
+      "jawatan": "Nota : Semua Pegawai Pendakwa yang terlibat samada bagi sebutan kes atau"
+    },
+    {
+      "kod": "PERBICARAAN ",
+      "jawatan": "perbicaraan di mahkamah perlu mempunyai lantikan/ diberi kuasa secara"
+    },
+    {
+      "kod": "BERTULIS OLE",
+      "jawatan": "bertulis oleh pendakwaraya dibawah subseksyen 377(b)(3) Kanun Tatacara"
+    },
+    {
+      "kod": "JENAYAH.",
+      "jawatan": "Jenayah."
+    }
+  ],
+  "singkatan": [
+    {
+      "kod": "A&D",
+      "maksud": "‘Acquittal and Discharge’ (Dilepaskan Dan Dibebaskan)"
+    },
+    {
+      "kod": "DNAA",
+      "maksud": "‘Discharge Not Amounting To Acquittal’ (Dilepaskan Tanpa Dibebaskan)"
+    },
+    {
+      "kod": "KTJ",
+      "maksud": "Kanun Tatacara Jenayah"
+    },
+    {
+      "kod": "K/S",
+      "maksud": "Kertas Siasatan"
+    },
+    {
+      "kod": "OKS",
+      "maksud": "Orang Kena Saman"
+    },
+    {
+      "kod": "OKT",
+      "maksud": "Orang Kena Tuduh"
+    },
+    {
+      "kod": "PO",
+      "maksud": "Pegawai Pendakwa"
+    },
+    {
+      "kod": "UIPN",
+      "maksud": "Unit Inspektorat dan Perundangan Negeri --- Prosedur Pendakwaan di Mahkamah 3"
+    }
+  ],
+  "nota_pindaan": [
+    {
+      "tahap": "AMARAN",
+      "tajuk": "[NOTA PINDAAN] PPKHT 2004 Dimansuhkan — Digantikan Oleh Akta 852 (1 Okt 2024)",
+      "butiran": "Sebarang rujukan PPKHT 2004 dan Notis Seksyen 32B Akta Makanan 1983 bagi kesalahan produk merokok/vape dalam SOP ini telah DIMANSUHKAN mulai 1 Oktober 2024 dan digantikan sepenuhnya oleh Akta 852 (UIP-AKPMDKA-01-24 hingga 08-24).",
+      "gantian_statut": "Akta 852 & UIP-AKPMDKA-01-24..08-24 (1 Okt 2024)"
+    }
+  ],
+  "tempoh_sla": [
+    {
+      "label": "Pra-Perbicaraan (S.172A KTJ)",
+      "tempoh": "30 hari",
+      "rujukan": "Seksyen 172A KTJ"
+    },
+    {
+      "label": "Serahan Sapina Saksi",
+      "tempoh": "10 hari sebelum bicara",
+      "rujukan": "UIP-UMUM-05-07"
+    },
+    {
+      "label": "Laporan Keputusan ke UIPN / Rayuan TPR",
+      "tempoh": "3 hari ke UIPN / 14 hari ke TPR",
+      "rujukan": "UIP-UMUM-05-07"
+    }
+  ],
+  "fasa_kerja": [
+    {
+      "fasa_id": "F1",
+      "tajuk_fasa": "1. Pelaksanaan Proses Kerja",
+      "langkah": [
+        {
+          "no": "1",
+          "tajuk": "BahagianA",
+          "anggota": [],
+          "tindakan": [
+            "BahagianA"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "1",
+          "tajuk": "Hadir di mahkamah pada tarikh dan masa yang telah ",
+          "anggota": [
+            "PO"
+          ],
+          "tindakan": [
+            "Hadir di mahkamah pada tarikh dan masa yang telah . ditetapkan ."
+          ],
+          "rujukan": [
+            "K/S"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "2",
+          "tajuk": "PO mengemukakan kuasa mendakwa dan izin ",
+          "anggota": [
+            "PO"
+          ],
+          "tindakan": [
+            "PO mengemukakan kuasa mendakwa dan izin . pendakwaan (Tender salinan dokumen sebagai . eksibit) ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "3",
+          "tajuk": "POmemohonpertuduhandibacakan ",
+          "anggota": [
+            "PO"
+          ],
+          "tindakan": [
+            "POmemohonpertuduhandibacakan . ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "4",
+          "tajuk": "KeputusanOKS: ",
+          "anggota": [
+            "PO"
+          ],
+          "tindakan": [
+            "KeputusanOKS: ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "4",
+          "tajuk": ".1 OKS mengaku salah Rujuk Bahagian B – ",
+          "anggota": [
+            "PO"
+          ],
+          "tindakan": [
+            ".1 OKS mengaku salah Rujuk Bahagian B – ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "4",
+          "tajuk": ".2 OKS memohon dibicarakan Rujuk Bahagian C – ",
+          "anggota": [
+            "PO"
+          ],
+          "tindakan": [
+            ".2 OKS memohon dibicarakan Rujuk Bahagian C – .",
+            "BahagianB –OKSMengakuSalah -PerbicaraanTerus"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "1",
+          "tajuk": "MohonPertuduhandibacakan ",
+          "anggota": [
+            "PO"
+          ],
+          "tindakan": [
+            "MohonPertuduhandibacakan . ."
+          ],
+          "rujukan": [
+            "K/S"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "2",
+          "tajuk": "OKS mengaku salah dan faham akibat daripada ",
+          "anggota": [
+            "PO"
+          ],
+          "tindakan": [
+            "OKS mengaku salah dan faham akibat daripada . pengakuan ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "3",
+          "tajuk": "Mengemukakan fakta kes untuk dibacakan dan tender ",
+          "anggota": [
+            "PO"
+          ],
+          "tindakan": [
+            "Mengemukakan fakta kes untuk dibacakan dan tender . semuaeksibit ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "4",
+          "tajuk": "RayuandariOKS ",
+          "anggota": [
+            "PO"
+          ],
+          "tindakan": [
+            "RayuandariOKS . ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "5",
+          "tajuk": "Penghujahan untuk memohon hukuman pemberatan ",
+          "anggota": [
+            "PO"
+          ],
+          "tindakan": [
+            "Penghujahan untuk memohon hukuman pemberatan . terhadapkes ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "6",
+          "tajuk": "OKSdisabitkankesalahandandijatuhkanhukuman ",
+          "anggota": [
+            "PO"
+          ],
+          "tindakan": [
+            "OKSdisabitkankesalahandandijatuhkanhukuman . ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "7",
+          "tajuk": "Memohon perintah mahkamah untuk melupuskan ",
+          "anggota": [
+            "PO"
+          ],
+          "tindakan": [
+            "Memohon perintah mahkamah untuk melupuskan . barangkes ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "8",
+          "tajuk": "Kemaskinimaklumatdalambukudaftar ",
+          "anggota": [
+            "PO"
+          ],
+          "tindakan": [
+            "Kemaskinimaklumatdalambukudaftar . ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "9",
+          "tajuk": "K/S dirujuk ke UIPN dalam masa 3 hari selepas tarikh ",
+          "anggota": [
+            "PO"
+          ],
+          "tindakan": [
+            "K/S dirujuk ke UIPN dalam masa 3 hari selepas tarikh . penghakiman ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": "3 hari",
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "10",
+          "tajuk": "K/S dirujuk ke TPR dalam masa 14 hari selepas tarikh ",
+          "anggota": [
+            "PO"
+          ],
+          "tindakan": [
+            "K/S dirujuk ke TPR dalam masa 14 hari selepas tarikh . penghakimanuntukrayuansekiranyaada .",
+            "BahagianC -OKSMengakuTidakBersalah(Tuntut dibicarakan) PRAPERBICARAAN"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": "14 hari",
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 5
+        },
+        {
+          "no": "1",
+          "tajuk": "Diadakan 30 hari sebelum perbicaraan sebelum permulaan ",
+          "anggota": [
+            "PO"
+          ],
+          "tindakan": [
+            "Diadakan 30 hari sebelum perbicaraan sebelum permulaan .",
+            "- PengurusanKes"
+          ],
+          "rujukan": [
+            "Seksyen172A",
+            "KTJ",
+            "Seksyen51A",
+            ",",
+            "KTJ",
+            "Seksyen173(d)"
+          ],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": "30 hari",
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "2",
+          "tajuk": "Dibuatdenganpeguamyangmewakilitertuduh ",
+          "anggota": [
+            "PO"
+          ],
+          "tindakan": [
+            "Dibuatdenganpeguamyangmewakilitertuduh ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "3",
+          "tajuk": "Perbincangan merangkumi ",
+          "anggota": [
+            "PO"
+          ],
+          "tindakan": [
+            "Perbincangan merangkumi . – i Kenal pasti fakta dan isu undang-undang . ii Menentukanisuyangmenjadipersoalan . iii Kenal pasti kedudukan pihak -pihak . iv MemastikankeperluanS51AKTJdipatuhi . . v Sifatkedudukankespendakwaandankespembelaan . vi KenalpastisamaadakemungkinanOKTmengaku . salah vii Perkara-perkara lain yang dipersetujui bersama . . PENGURUSANKES"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "4",
+          "tajuk": "Pohonkepadamahkamahtarikhpengurusankesdantarikh ",
+          "anggota": [
+            "PO"
+          ],
+          "tindakan": [
+            "Pohonkepadamahkamahtarikhpengurusankesdantarikh . serahandokumen ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "5",
+          "tajuk": "Membekalkandokumenberkaitankeskepadapihak ",
+          "anggota": [
+            "PO"
+          ],
+          "tindakan": [
+            "Membekalkandokumenberkaitankeskepadapihak . pembelaandalamtempohyangditetapkanolehmahkamah daritarikhdituduhmengikutSeksyen51A KTJ ,"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "6",
+          "tajuk": "Hadirkemahkamahpadatarikhserahandokumendan ",
+          "anggota": [
+            "PO"
+          ],
+          "tindakan": [
+            "Hadirkemahkamahpadatarikhserahandokumendan . lantikanpeguamsertamohonsatutarikhperbicaraan . Nyatakanbilangansaksiyangakanterlibatdalam perbicaraan ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "7",
+          "tajuk": "Pohonkepadamahkamahuntukkeluarkansapinakepada ",
+          "anggota": [
+            "PO"
+          ],
+          "tindakan": [
+            "Pohonkepadamahkamahuntukkeluarkansapinakepada . saksi ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "8",
+          "tajuk": "Sampaikan sapina kepada saksi -saksi perbicaraan sepuluh ",
+          "anggota": [
+            "PO"
+          ],
+          "tindakan": [
+            "Sampaikan sapina kepada saksi -saksi perbicaraan sepuluh . harisebelumhariperbicaraan . PERINGKATPENDAKWAAN"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "9",
+          "tajuk": "OKSdansaksihadirpadahariperbicaraan ",
+          "anggota": [
+            "PO"
+          ],
+          "tindakan": [
+            "OKSdansaksihadirpadahariperbicaraan . ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "10",
+          "tajuk": "Perbicaraan dimulakan dengan pemeriksaan saksi -saksi serta ",
+          "anggota": [
+            "PO"
+          ],
+          "tindakan": [
+            "Perbicaraan dimulakan dengan pemeriksaan saksi -saksi serta . kemukakan eksibit -eksibit yang relevan ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 6
+        },
+        {
+          "no": "11",
+          "tajuk": "OKSdansaksihadirpadahariperbicaraan ",
+          "anggota": [],
+          "tindakan": [
+            "OKSdansaksihadirpadahariperbicaraan . ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "12",
+          "tajuk": "Perbicaraan dimulakan dengan pemeriksaan saksi -saksi serta ",
+          "anggota": [],
+          "tindakan": [
+            "Perbicaraan dimulakan dengan pemeriksaan saksi -saksi serta . kemukakan eksibit -eksibit yang relevan ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "13",
+          "tajuk": "Padaakhirkespendakwaan pihakpendakwaakantutupkes ",
+          "anggota": [],
+          "tindakan": [
+            "Padaakhirkespendakwaan pihakpendakwaakantutupkes . , dan kedua-dua pihak akan buat penghujahan ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "14",
+          "tajuk": "Sekiranyaadaprimafacie OKSdimintamembeladiri ",
+          "anggota": [],
+          "tindakan": [
+            "Sekiranyaadaprimafacie OKSdimintamembeladiri . , . Peguambelaakanbuatpemeriksaansaksi -saksinyadan kemukakan eksibit -eksibit sekiranya ada ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": {
+            "soalan": "Semakan syarat langkah 14: Sekiranyaadaprimafacie OKSdimintamembeladiri . , . Peguambelaakanbuatpemeriksaansaksi -saksinya...",
+            "cabang_ya": "Laksanakan tindakan khas / rujuk SOP berkaitan seperti dinyatakan dalam langkah ini.",
+            "cabang_tidak": "Teruskan ke langkah aliran kerja berikutnya."
+          },
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "15",
+          "tajuk": "HujahanakhirkespendakwaanolehPO&Peguambela ",
+          "anggota": [],
+          "tindakan": [
+            "HujahanakhirkespendakwaanolehPO&Peguambela . ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "16",
+          "tajuk": "Sekiranyatiadakesprimafacie OKSdilepaskandan ",
+          "anggota": [],
+          "tindakan": [
+            "Sekiranyatiadakesprimafacie OKSdilepaskandan . , dibebaskan(A&D) . PERINGKATPEMBELAAN"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "17",
+          "tajuk": "SekiranyaOKSdimintamembeladiri pembelaberjaya ",
+          "anggota": [],
+          "tindakan": [
+            "SekiranyaOKSdimintamembeladiri pembelaberjaya . , menimbulkankeraguanyangmunasabah OKSdibebaskan , dandilepaskan(A&D) . . HUKUMAN"
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "18",
+          "tajuk": "Jikapembelagagalmenimbulkankeraguanmunasabah OKS ",
+          "anggota": [],
+          "tindakan": [
+            "Jikapembelagagalmenimbulkankeraguanmunasabah OKS . , disabitkesalahandandijatuhkanhukuman ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "19",
+          "tajuk": "LengkapkanK/Sdankemaskinikanmaklumatpendakwaan ",
+          "anggota": [],
+          "tindakan": [
+            "LengkapkanK/Sdankemaskinikanmaklumatpendakwaan . dalamdaftar ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": null,
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "20",
+          "tajuk": "KemukakanK/SkepadaUIPNuntuktindakanselanjutnya ",
+          "anggota": [],
+          "tindakan": [
+            "KemukakanK/SkepadaUIPNuntuktindakanselanjutnya . dalamtempoh3haribagikesDNAA/A&D/Bicara/NFA ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": "3hari",
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        },
+        {
+          "no": "21",
+          "tajuk": "K/SdirujukkeTPRdalammasa14hariselepastarikh ",
+          "anggota": [],
+          "tindakan": [
+            "K/SdirujukkeTPRdalammasa14hariselepastarikh . penghakimanuntukrayuansekiranyaada ."
+          ],
+          "rujukan": [],
+          "rujukan_lampiran": [],
+          "rujukan_sop": [],
+          "sla": "14hari",
+          "keputusan": null,
+          "amaran_pindaan": null,
+          "muka_surat_pdf": 7
+        }
+      ]
+    }
+  ],
+  "carta_alir": {
+    "nodes": [
+      {
+        "id": "N_START",
+        "type": "start",
+        "label": "Mula Operasi / Prosedur",
+        "role": null,
+        "step_ref": null,
+        "sop_ref": null
+      },
+      {
+        "id": "N1",
+        "type": "process",
+        "label": "1. BahagianA",
+        "role": null,
+        "step_ref": "1",
+        "sop_ref": null
+      },
+      {
+        "id": "N2",
+        "type": "process",
+        "label": "1. Hadir di mahkamah pada tarikh dan masa yang telah ",
+        "role": "PO",
+        "step_ref": "1",
+        "sop_ref": null
+      },
+      {
+        "id": "N3",
+        "type": "process",
+        "label": "2. PO mengemukakan kuasa mendakwa dan izin ",
+        "role": "PO",
+        "step_ref": "2",
+        "sop_ref": null
+      },
+      {
+        "id": "N4",
+        "type": "process",
+        "label": "3. POmemohonpertuduhandibacakan ",
+        "role": "PO",
+        "step_ref": "3",
+        "sop_ref": null
+      },
+      {
+        "id": "N5",
+        "type": "process",
+        "label": "4. KeputusanOKS: ",
+        "role": "PO",
+        "step_ref": "4",
+        "sop_ref": null
+      },
+      {
+        "id": "N6",
+        "type": "process",
+        "label": "4. .1 OKS mengaku salah Rujuk Bahagian B – ",
+        "role": "PO",
+        "step_ref": "4",
+        "sop_ref": null
+      },
+      {
+        "id": "N7",
+        "type": "process",
+        "label": "4. .2 OKS memohon dibicarakan Rujuk Bahagian C – ",
+        "role": "PO",
+        "step_ref": "4",
+        "sop_ref": null
+      },
+      {
+        "id": "N8",
+        "type": "process",
+        "label": "1. MohonPertuduhandibacakan ",
+        "role": "PO",
+        "step_ref": "1",
+        "sop_ref": null
+      },
+      {
+        "id": "N9",
+        "type": "process",
+        "label": "2. OKS mengaku salah dan faham akibat daripada ",
+        "role": "PO",
+        "step_ref": "2",
+        "sop_ref": null
+      },
+      {
+        "id": "N10",
+        "type": "process",
+        "label": "3. Mengemukakan fakta kes untuk dibacakan dan tender ",
+        "role": "PO",
+        "step_ref": "3",
+        "sop_ref": null
+      },
+      {
+        "id": "N11",
+        "type": "process",
+        "label": "4. RayuandariOKS ",
+        "role": "PO",
+        "step_ref": "4",
+        "sop_ref": null
+      },
+      {
+        "id": "N12",
+        "type": "process",
+        "label": "5. Penghujahan untuk memohon hukuman pemberatan ",
+        "role": "PO",
+        "step_ref": "5",
+        "sop_ref": null
+      },
+      {
+        "id": "N13",
+        "type": "process",
+        "label": "6. OKSdisabitkankesalahandandijatuhkanhukuman ",
+        "role": "PO",
+        "step_ref": "6",
+        "sop_ref": null
+      },
+      {
+        "id": "N14",
+        "type": "process",
+        "label": "7. Memohon perintah mahkamah untuk melupuskan ",
+        "role": "PO",
+        "step_ref": "7",
+        "sop_ref": null
+      },
+      {
+        "id": "N_END",
+        "type": "end",
+        "label": "Selesai & Rekod Fail UIP",
+        "role": null,
+        "step_ref": null,
+        "sop_ref": null
+      }
+    ],
+    "edges": [
+      {
+        "from": "N_START",
+        "to": "N1",
+        "label": null
+      },
+      {
+        "from": "N1",
+        "to": "N2",
+        "label": null
+      },
+      {
+        "from": "N2",
+        "to": "N3",
+        "label": null
+      },
+      {
+        "from": "N3",
+        "to": "N4",
+        "label": null
+      },
+      {
+        "from": "N4",
+        "to": "N5",
+        "label": null
+      },
+      {
+        "from": "N5",
+        "to": "N6",
+        "label": null
+      },
+      {
+        "from": "N6",
+        "to": "N7",
+        "label": null
+      },
+      {
+        "from": "N7",
+        "to": "N8",
+        "label": null
+      },
+      {
+        "from": "N8",
+        "to": "N9",
+        "label": null
+      },
+      {
+        "from": "N9",
+        "to": "N10",
+        "label": null
+      },
+      {
+        "from": "N10",
+        "to": "N11",
+        "label": null
+      },
+      {
+        "from": "N11",
+        "to": "N12",
+        "label": null
+      },
+      {
+        "from": "N12",
+        "to": "N13",
+        "label": null
+      },
+      {
+        "from": "N13",
+        "to": "N14",
+        "label": null
+      },
+      {
+        "from": "N14",
+        "to": "N_END",
+        "label": null
+      }
+    ]
+  },
+  "senarai_semak": [
+    {
+      "id": "CHK-01",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[1] BahagianA",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-02",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[1] Hadir di mahkamah pada tarikh dan masa yang telah ",
+      "wajib": true,
+      "rujukan": "K/S"
+    },
+    {
+      "id": "CHK-03",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[2] PO mengemukakan kuasa mendakwa dan izin ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-04",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[3] POmemohonpertuduhandibacakan ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-05",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[4] KeputusanOKS: ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-06",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[4] .1 OKS mengaku salah Rujuk Bahagian B – ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-07",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[4] .2 OKS memohon dibicarakan Rujuk Bahagian C – ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-08",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[1] MohonPertuduhandibacakan ",
+      "wajib": true,
+      "rujukan": "K/S"
+    },
+    {
+      "id": "CHK-09",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[2] OKS mengaku salah dan faham akibat daripada ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-10",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[3] Mengemukakan fakta kes untuk dibacakan dan tender ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-11",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[4] RayuandariOKS ",
+      "wajib": true,
+      "rujukan": null
+    },
+    {
+      "id": "CHK-12",
+      "kumpulan": "1. Pelaksanaan Proses Kerja",
+      "item": "[5] Penghujahan untuk memohon hukuman pemberatan ",
+      "wajib": true,
+      "rujukan": null
+    }
+  ],
+  "lampiran": [],
+  "pematuhan": [
+    "Prosedur yang dikeluarkan ini hendaklah terus berkuatkuasa dan",
+    "dianggap sah sehingga dipinda atau diganti dengan satu prosedur lain",
+    "atau dibatalkan.",
+    "Keengganan dan kegagalan mematuhi prosedur ini tanpa alasan yang",
+    "munasabah boleh menyebabkan seseorang pegawai dikenakan tindakan",
+    "tatatertib di bawah Peraturan-Peraturan Pegawai Awam (Kelakuan dan",
+    "Tatatertib) 1993.",
+    "Kegagalan mematuhi prosedur ini juga merupakan satu kesalahan di"
+  ],
+  "rujukan_silang_resolved": [],
+  "nota_audit_kualiti": [
+    "Menyenaraikan PPKHT 2004 dalam rujukan umum; rujukan hasil tembakau kini tertakluk kepada Akta 852."
+  ]
+}

@@ -43,12 +43,30 @@ dev_vault_service = DevArchiveVaultService(db=db_service, redactor=router_servic
 
 _rate_limit_lock = threading.Lock()
 _rate_limit_buckets: Dict[str, deque[float]] = defaultdict(deque)
+_MAX_RATE_LIMIT_BUCKETS = 4096
 
 
 def _check_rate_limit(bucket_key: str, max_requests: int, window_sec: float = 60.0) -> None:
-    """Penghad kadar permintaan (sliding window) dalam memori untuk melindungi titik akhir pengesahan & AI."""
+    """Penghad kadar permintaan (sliding window) terhad memori untuk melindungi titik akhir pengesahan & AI."""
     now = time.monotonic()
     with _rate_limit_lock:
+        if len(_rate_limit_buckets) >= _MAX_RATE_LIMIT_BUCKETS and bucket_key not in _rate_limit_buckets:
+            stale_keys = [
+                k
+                for k, v in _rate_limit_buckets.items()
+                if not v or (now - v[-1]) > max(window_sec, 60.0)
+            ]
+            for sk in stale_keys:
+                _rate_limit_buckets.pop(sk, None)
+            if len(_rate_limit_buckets) >= _MAX_RATE_LIMIT_BUCKETS:
+                # Singkirkan 1/4 kunci tertua jika masih penuh
+                oldest = sorted(
+                    _rate_limit_buckets.items(),
+                    key=lambda kv: kv[1][-1] if kv[1] else 0.0,
+                )[: _MAX_RATE_LIMIT_BUCKETS // 4]
+                for sk, _ in oldest:
+                    _rate_limit_buckets.pop(sk, None)
+
         dq = _rate_limit_buckets[bucket_key]
         while dq and now - dq[0] > window_sec:
             dq.popleft()
@@ -65,7 +83,10 @@ def _client_ip(request: Optional[Request]) -> str:
         return "local"
     xff = request.headers.get("x-forwarded-for") or ""
     if xff:
-        return xff.split(",")[0].strip() or "unknown"
+        # Di belakang Cloud Run / Nginx reverse proxy, entri paling kanan yang ditambah proksi dipercayai tidak boleh dipalsukan klien
+        parts = [p.strip() for p in xff.split(",") if p.strip()]
+        if parts:
+            return parts[-1]
     if request.client and request.client.host:
         return request.client.host
     return "unknown"
@@ -375,6 +396,14 @@ def root() -> Dict[str, str]:
 @app.get("/healthz")
 @app.get("/api/health")
 def healthz() -> Dict[str, str]:
+    db_ok = True
+    try:
+        with db_service._connect() as conn:
+            conn.execute("SELECT 1").fetchone()
+    except Exception:
+        db_ok = False
+    if not db_ok:
+        raise HTTPException(status_code=503, detail="Pangkalan data tidak dapat dicapai buat sementara waktu.")
     return {
         "status": "ok",
         "db": "postgres" if db_service.use_postgres else "sqlite",
@@ -1179,17 +1208,22 @@ def list_repealed_and_blocked_provisions(
 def list_active_sops_endpoint(
     q: Optional[str] = None,
     akta: Optional[str] = None,
+    kategori: Optional[str] = None,
+    ada_pindaan: Optional[bool] = None,
     _officer: Dict[str, Any] = Depends(_require_authenticated_officer),
 ) -> Dict[str, Any]:
-    """Menyenaraikan 22 SOP KKM Pindaan 2024 yang aktif (5 SOP PPKHT 2004 mansuh dikuarantin)."""
+    """Menyenaraikan semua SOP KKM 2024 yang aktif (5 SOP PPKHT 2004 mansuh dikuarantin)."""
     from backend.services.sop_brain import get_sop_brain
 
     brain = get_sop_brain()
-    items = brain.list_all_active_sops(q=q, akta_filter=akta)
+    items = brain.list_all_active_sops(q=q, akta_filter=akta, kategori=kategori, ada_pindaan=ada_pindaan)
     return {
         "total": len(items),
+        "total_active_corpus": len(brain.active_index),
         "quarantined_deprecated_blocked": 5,
         "sops": items,
+        "items": items,
+        "pekeliling_rujukan": brain.get_pekeliling_rujukan(),
     }
 
 
@@ -1198,7 +1232,7 @@ def get_active_sop_detail_endpoint(
     file_stem: str,
     _officer: Dict[str, Any] = Depends(_require_authenticated_officer),
 ) -> Dict[str, Any]:
-    """Mengambil kandungan penuh Markdown bagi satu SOP KKM 2024 yang aktif."""
+    """Mengambil kandungan penuh berstruktur v2 + Markdown bagi satu SOP KKM 2024 yang aktif."""
     from backend.services.sop_brain import get_sop_brain
 
     brain = get_sop_brain()
@@ -1206,7 +1240,7 @@ def get_active_sop_detail_endpoint(
     if not detail:
         raise HTTPException(
             status_code=404,
-            detail="SOP tidak dijumpai dalam indeks 22 SOP KKM 2024 aktif (atau telah dikuarantin kerana mansuh).",
+            detail="SOP tidak dijumpai dalam indeks SOP KKM 2024 aktif (atau telah dikuarantin kerana mansuh).",
         )
     return detail
 
@@ -1589,6 +1623,7 @@ def consult_sop_brain_endpoint(
     except Exception as exc:
         from backend.services.sop_brain import get_sop_brain
 
+        logger.warning("SOP Brain fallback triggered: %s", str(exc)[:240])
         brain = get_sop_brain()
         route = brain.route_question_deterministic(req.question.strip())
         res = {
@@ -1600,7 +1635,7 @@ def consult_sop_brain_endpoint(
             "sop_references": brain.get_sop_summaries(route.selected_sop_ids),
             "mod": "deterministic_fallback",
             "model_used": "penghala-deterministik-sop-2024",
-            "fallback_error": str(exc)[:180],
+            "fallback_error": "Perkhidmatan AI tidak dapat dihubungi buat sementara waktu. Rujukan deterministik SOP dipaparkan.",
         }
     latency_ms = int((time.perf_counter() - t0) * 1000)
     q_preview = router_service.redactor.redact(req.question.strip()[:140], use_ollama=False).redacted_text[:100]
