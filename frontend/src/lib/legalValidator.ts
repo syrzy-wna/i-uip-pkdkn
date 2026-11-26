@@ -66,15 +66,17 @@ export function extractLegalCitations(text: string): Array<{
     "Akta\\s+Keterangan(?:\\s*1950)?|P\\.U\\.\\s*\\(A\\)\\s*\\d+\\/\\d{4}";
 
   const pairedRe = new RegExp(
-    `\\b(Seksyen|Peraturan|Section)\\s+(\\d+[A-Za-z]{0,3}(?:\\(\\d+\\))?(?:\\([a-z]\\))?)(?:\\s+(?:dibaca\\s+bersama\\s+[^,\\n.;]{1,40}\\s+)?)?\\s*(${actPat})?`,
+    `(?:^|[^\\w])(Seksyen|Subseksyen|Peraturan|Subperaturan|Section|Regulation|Sek\\.|Per\\.|S\\.|P\\.)\\s*(\\d+[A-Za-z]{0,3}(?:\\(\\d+\\))?(?:\\([a-z]\\))?)(?:\\s+(?:dibaca\\s+bersama\\s+[^,\\n.;]{1,40}\\s+)?)?\\s*(${actPat})?`,
     "gi"
   );
   const tailActRe = new RegExp(`\\b(${actPat})\\b`, "i");
 
   let match: RegExpExecArray | null;
   while ((match = pairedRe.exec(text)) !== null) {
-    const rawKind = match[1];
-    const kind = rawKind.toLowerCase() === "section" ? "Seksyen" : rawKind;
+    const rawKind = match[1].toLowerCase().replace(/\.$/, "");
+    const kind = ["peraturan", "subperaturan", "regulation", "per", "p"].includes(rawKind)
+      ? "Peraturan"
+      : "Seksyen";
     const num = match[2].trim();
     let actRef = (match[3] || "").trim();
     let inferredFromTail = false;
@@ -125,7 +127,7 @@ export function validateLegalOutput(
     respObj = { keputusan_tindakan: aiResponse, alasan_keputusan: aiResponse };
   } else if (aiResponse && typeof aiResponse === "object") {
     respObj = aiResponse as Record<string, unknown>;
-    // Jika backend telah menyertakan legal_validation dan db tempatan belum dimuatkan, guna keputusan backend
+    // Jika backend telah menyertakan legal_validation dan db tempatan tidak dimuatkan, guna keputusan rasmi backend
     if (
       sectionsList.length === 0 &&
       offencesList.length === 0 &&
@@ -143,12 +145,22 @@ export function validateLegalOutput(
           `${c.perihal || ""} ${c.seksyen_kesalahan || ""} ${c.seksyen_hukuman || ""} ${c.hukuman_maksimum || ""} ${c.boleh_kompaun || ""}`
       )
       .join(" ");
+    const listField = (k: string) =>
+      Array.isArray(respObj[k]) ? (respObj[k] as unknown[]).map((x) => String(x || "")).join(" ") : "";
     combinedText = [
       String(respObj.akta_disyorkan || ""),
       String(respObj.tajuk_nasihat || ""),
+      String(respObj.ringkasan_keputusan || ""),
       String(respObj.keputusan_tindakan || ""),
       String(respObj.alasan_keputusan || ""),
+      String(respObj.sebab_tidak_menyalahi || ""),
       String(respObj.templat_ringkas || ""),
+      String(respObj.nota_pindaan || ""),
+      String(respObj.jawapan_4_lapisan_sop || ""),
+      listField("sop_lapangan"),
+      listField("langkah_susulan_ppkp"),
+      listField("eksibit_wajib"),
+      listField("perangkap_kesilapan"),
       chargesTxt,
     ].join(" ");
   }
@@ -372,7 +384,7 @@ export function validateLegalOutput(
   // Semak ketidaksepadanan had denda/kompaun & status boleh kompaun
   const penaltyMismatches: string[] = [];
   if (/\bakta\s+154\b/i.test(lowCombined) && lowCombined.includes("kompaun")) {
-    const rmHits = Array.from(lowCombined.matchAll(/kompaun\s+rm\s?([\d,]+(?:\.\d{1,2})?)/gi));
+    const rmHits = Array.from(lowCombined.matchAll(/kompaun(?:\s+sebanyak|\s+maks(?:imum)?|\s+sehingga)?\s+rm\s?([\d,]+(?:\.\d{1,2})?)/gi));
     for (const m of rmHits) {
       const val = parseFloat((m[1] || "0").replace(/,/g, ""));
       if (val > 500) {
@@ -390,7 +402,7 @@ export function validateLegalOutput(
     }
   }
   if (/\bakta\s+342\b/i.test(lowCombined) && lowCombined.includes("kompaun")) {
-    const rmHits = Array.from(lowCombined.matchAll(/kompaun(?:\s+individu)?\s+rm\s?([\d,]+(?:\.\d{1,2})?)/gi));
+    const rmHits = Array.from(lowCombined.matchAll(/kompaun(?:\s+individu|\s+sebanyak|\s+maks(?:imum)?|\s+sehingga)?\s+rm\s?([\d,]+(?:\.\d{1,2})?)/gi));
     for (const m of rmHits) {
       const val = parseFloat((m[1] || "0").replace(/,/g, ""));
       const idx = m.index ?? 0;
@@ -404,11 +416,38 @@ export function validateLegalOutput(
       }
     }
   }
+  // Semak status boleh kompaun menggunakan corak tepat (elak Seksyen 13(3) Akta 852 terkena padanan \b3\b pada '(3)')
   const nonCompRules: Array<[string, RegExp, string]> = [
-    ["852", /\b(?:3|7|8|9|10|11|12|13\(1\)|14|15)(?:\b|\()/i, "Jadual Pertama P.U. (A) 259/2024"],
-    ["281", /\b(?:seksyen\s*(?:11|13|13a|13b|13c|14|15|16|17)|13\(1\)|13a|13b|13c|11\(2\))(?:\b|\()/i, "Akta Makanan 1983 (wajib Buka IP)"],
-    ["154", /\b(?:8\(8\)|seksyen\s*20|seksyen\s*21)(?:\b|\()/i, "Akta 154 (wajib Buka IP)"],
-    ["342", /\b(?:12|14|15|18|22\(a\)|22\(e\))(?:\b|\()/i, "Jadual Pertama P.U. (A) 139/2025"],
+    [
+      "852",
+      /(?:^|[^\w(])(?:seksyen|section|sek\.?|s\.?)\s*(?:3(?:\(1\))?|7(?:\(1\))?|8(?:\(\d+\))?|9(?:\(1\))?|10(?:\(1\))?|11(?:\(\d+\))?|12(?:\(\d+\))?|13\(1\)|14(?:\(\d+\))?|15(?:\(1\))?|20(?:\(\d+\))?)(?=\W|$)/i,
+      "Jadual Pertama P.U. (A) 259/2024 (hanya S.13(3), 16(2), 17(1) & 18(1) boleh dikompaun)",
+    ],
+    [
+      "281",
+      /(?:^|[^\w(])(?:seksyen|section|sek\.?|s\.?)\s*(?:4\(4\)|11(?:\([12]\))?|13(?:\(1\))?|13a(?:\([123]\))?|13b(?:\(\d+\))?|13c|14|15|16|17)(?=\W|$)/i,
+      "Akta Makanan 1983 (wajib Buka IP)",
+    ],
+    [
+      "154",
+      /(?:^|[^\w(])(?:(?:seksyen|section|sek\.?|s\.?)\s*)?(?:8\(8\)|(?:seksyen|s\.?)\s*(?:20|21))(?=\W|$)/i,
+      "Akta 154 (wajib Buka IP)",
+    ],
+    [
+      "342",
+      /(?:^|[^\w(])(?:(?:seksyen|section|sek\.?|s\.?)\s*)?(?:12(?:\(\d+\))?|14a?(?:\(\d+\))?|15(?:\(\d+\))?|18(?:\(\d+\))?|22\([ae]\))(?=\W|$)/i,
+      "Jadual Pertama P.U. (A) 139/2025 (hanya S.10(2), 11(5), 21A(3), 22(b), 22(c) & 22(d) boleh dikompaun)",
+    ],
+    [
+      "574",
+      /(?:^|[^\w])(?:seksyen|section|sek\.?|s\.?)\s*\d+/i,
+      "Kanun Keseksaan [Akta 574] (Bidang kuasa PDRM & TPR sahaja — tiada kuasa kompaun PPKP)",
+    ],
+    [
+      "344",
+      /(?:^|[^\w])(?:seksyen|section|sek\.?|s\.?)\s*90(?=\W|$)/i,
+      "Akta Polis 1967 [Akta 344] (Bidang kuasa PDRM sahaja — tiada kuasa kompaun PPKP)",
+    ],
   ];
   for (const c of chargesArr) {
     const sec = String(c.seksyen_kesalahan || "").toLowerCase();
@@ -417,8 +456,8 @@ export function validateLegalOutput(
       (comp.includes("boleh kompaun") || comp.includes("boleh dikompaun")) &&
       !["tidak boleh", "tiada kompaun", "buka ip terus"].some((neg) => comp.includes(neg));
     if (!claimsComp) continue;
-    const chargeActs = ["852", "281", "154", "342"].filter((d) => new RegExp(`\\b${d}\\b`).test(sec));
-    const effActs = chargeActs.length > 0 ? chargeActs : ["852", "281", "154", "342"].filter((d) => defaultAct.includes(d));
+    const chargeActs = ["852", "281", "154", "342", "574", "344"].filter((d) => new RegExp(`\\b${d}\\b`).test(sec));
+    const effActs = chargeActs.length > 0 ? chargeActs : ["852", "281", "154", "342", "574", "344"].filter((d) => defaultAct.includes(d));
     for (const [actDigits, secRe, schedRef] of nonCompRules) {
       if (effActs.includes(actDigits) && secRe.test(sec)) {
         penaltyMismatches.push(

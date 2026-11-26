@@ -1,4 +1,6 @@
 import type {
+  ActiveSopDetail,
+  ActiveSopSummary,
   AdvisorAnsweredListResponse,
   AdvisorConsultResult,
   AdvisorScenarioItem,
@@ -479,6 +481,7 @@ export async function consultUipAdvisor(params: {
   useAi?: boolean;
   authToken?: string | null;
   officerProfile?: OfficerProfile | null;
+  conversationHistory?: Array<{ role: string; content: string }>;
 }): Promise<AdvisorConsultResult> {
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
@@ -495,6 +498,10 @@ export async function consultUipAdvisor(params: {
         scenario_id: params.scenarioId || undefined,
         use_ai: Boolean(params.useAi),
         officer_profile: params.officerProfile || undefined,
+        conversation_history:
+          params.conversationHistory && params.conversationHistory.length > 0
+            ? params.conversationHistory
+            : undefined,
       }),
     },
     65000
@@ -933,4 +940,40 @@ export async function purgeAdvisorQaCache(
   });
   return parseJsonOrThrow(res);
 }
+
+export async function fetchActiveSops(
+  params: {
+    q?: string;
+    akta?: string;
+    authToken?: string | null;
+  } = {}
+): Promise<{
+  total: number;
+  quarantined_deprecated_blocked: number;
+  sops: ActiveSopSummary[];
+}> {
+  const search = new URLSearchParams();
+  if (params.q?.trim()) search.set("q", params.q.trim());
+  if (params.akta && params.akta !== "Semua") search.set("akta", params.akta);
+  const res = await fetchWithTimeout(`${API_BASE}/api/legal/sops?${search.toString()}`, {
+    cache: "no-store",
+    headers: { ...getAuthHeader(params.authToken) },
+  });
+  return parseJsonOrThrow(res);
+}
+
+export async function fetchActiveSopDetail(
+  fileStemOrId: string,
+  authToken?: string | null
+): Promise<ActiveSopDetail> {
+  const res = await fetchWithTimeout(
+    `${API_BASE}/api/legal/sops/${encodeURIComponent(fileStemOrId)}`,
+    {
+      cache: "no-store",
+      headers: { ...getAuthHeader(authToken) },
+    }
+  );
+  return parseJsonOrThrow<ActiveSopDetail>(res);
+}
+
 

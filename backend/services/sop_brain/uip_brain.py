@@ -357,8 +357,14 @@ class IUIPNerusBrain:
         - Mod Pantas (`use_ai=False`) supaya PPKP tetap menerima rujukan kod SOP aktif & muka surat PDF serta-merta.
         - Fallback selamat apabila `GEMINI_API_KEY` tiada di persekitaran tempatan / luar talian.
         """
-        q = (soalan or "").strip()
-        q_low = q.lower()
+        q_orig = (soalan or "").strip()
+        try:
+            from backend.rag.legal_engine import normalize_ppkp_query
+
+            q = normalize_ppkp_query(q_orig)
+        except Exception:
+            q = q_orig
+        q_low = f"{q_orig.lower()} {q.lower()}".strip()
 
         akta_terlibat: List[str] = []
         selected: List[str] = []
@@ -383,13 +389,13 @@ class IUIPNerusBrain:
             re.search(
                 r"\b(?:akta\s*852|ppkht|vape|rokok|merokok|shisha|tembakau|nikotin|obd|orang\s+belum\s+dewasa|"
                 r"paket\s+terbuka|sebatang-sebatang|sebatang\s+sebatang|borang\s+4.*23\(2\)|peraturan\s+8\s+dan\s+9|"
-                r"kawasan\s+larangan\s+merokok|tanda\s+larangan\s+merokok)\b",
+                r"kawasan\s+larangan\s+merokok|tanda\s+larangan\s+merokok)(?=\W|$)",
                 q_low,
             )
         )
         if melibatkan_852:
             _add_act("Akta 852")
-            if re.search(r"\b(?:ppkht|32b|borang\s+4|peraturan\s+8|peraturan\s+9)\b", q_low):
+            if re.search(r"\b(?:ppkht|32b|borang\s+4|peraturan\s+8|peraturan\s+9)(?=\W|$)", q_low):
                 amaran_list.append(
                     "PPKHT 2004 dan Notis Seksyen 32B Akta Makanan 1983 bagi kes produk merokok/vape telah MANSUH "
                     "sejak 1 Oktober 2024 dan digantikan sepenuhnya oleh Akta 852."
@@ -411,38 +417,38 @@ class IUIPNerusBrain:
                 r"\b(?:menghalang|halang\s+tugas|halang\s+ppkp|enggan\s+benarkan\s+masuk|tidak\s+benarkan\s+masuk|"
                 r"tak\s+bagi\s+masuk|menengking|kasar|kekerasan|tolak\s+ppkp|pukul\s+ppkp|cedera|luka\s+di|serang|"
                 r"buang\s+barang\s+kes|ugut|seksyen\s+186|s\.?186|seksyen\s+21\s+akta\s+154|4\(4\)\s+akta\s+makanan|"
-                r"uip-umum-01-24|uip-apspp-03-07)\b",
+                r"uip-umum-01-24|uip-apspp-03-07)(?=\W|$)",
                 q_low,
             )
         )
         if is_halang:
             _add_sop("UIP-UMUM-01-24", "Melibatkan halangan tugas / kekasaran terhadap PPKP")
-            if re.search(r"\b(?:tolak|pukul|cedera|luka|kasar|serang|ugut|186|polis)\b", q_low):
+            if re.search(r"\b(?:tolak|pukul|cedera|luka|kasar|serang|ugut|186|polis)(?=\W|$)", q_low):
                 _add_act("Akta 574")
                 _add_act("Akta 593")
 
         # Peraturan 4: Tapak bina (APSPP 1975 / Akta 154) -> UIP-APSPP-01-24
         is_tapak_bina = bool(
-            re.search(r"\b(?:tapak\s+bina|tapak\s+binaan|tapak\s+pembinaan|kontraktor|8\(3\)\(aa\)|uip-apspp-01-24)\b", q_low)
+            re.search(r"\b(?:tapak\s+bina|tapak\s+binaan|tapak\s+pembinaan|kontraktor|8\(3\)\(aa\)|uip-apspp-01-24)(?=\W|$)", q_low)
         )
         if is_tapak_bina:
             _add_act("Akta 154")
             _add_sop("UIP-APSPP-01-24", "Pemeriksaan pembiakan Aedes di tapak binaan (Akta 154)")
 
         # Akta 154 (APSPP 1975) lain
-        if re.search(r"\b(?:pecah\s+masuk|kekerasan\s+munasabah|rumah\s+kosong|rumah\s+terbiar|premis\s+berkunci|tuntut\s+kunci|5\(5\)|uip-apspp-01-16)\b", q_low):
+        if re.search(r"\b(?:pecah\s+masuk|kekerasan\s+munasabah|rumah\s+kosong|rumah\s+terbiar|premis\s+berkunci|tuntut\s+kunci|5\(5\)|uip-apspp-01-16)(?=\W|$)", q_low):
             _add_act("Akta 154")
             _add_sop("UIP-APSPP-01-16", "Memasuki premis berkunci/terbiar dengan kekerasan munasabah (S.5(5) Akta 154)")
-        if re.search(r"\b(?:izin\s+kompaun|tawaran\s+kompaun.*aedes|kompaun.*akta\s*154|kompaun.*apspp|tawaran\s+kompaun.*okk|16\(1\)\(b\)|uip-apspp-02-16)\b", q_low):
+        if re.search(r"\b(?:izin\s+kompaun|tawaran\s+kompaun.*aedes|kompaun.*akta\s*154|kompaun.*apspp|tawaran\s+kompaun.*okk|16\(1\)\(b\)|uip-apspp-02-16)(?=\W|$)", q_low):
             _add_act("Akta 154")
             _add_sop("UIP-APSPP-02-16", "Prosedur tawaran kompaun di bawah Akta 154")
-        if re.search(r"\b(?:identifikasi\s+larva|pemeriksa\s+larva|pspp|spesies\s+aedes|mikroskop|uip-apspp-02-07)\b", q_low):
+        if re.search(r"\b(?:identifikasi\s+larva|pemeriksa\s+larva|pspp|spesies\s+aedes|mikroskop|uip-apspp-02-07)(?=\W|$)", q_low):
             _add_act("Akta 154")
             _add_sop("UIP-APSPP-02-07", "Prosedur identifikasi spesies larva serangga pembawa penyakit")
         if (
             not is_tapak_bina
             and re.search(
-                r"\b(?:aedes|jentik-jentik|jentik|larva|sampul\s+kecil|uipd|pembiakan\s+nyamuk|apspp|akta\s*154|uip-apspp-01-07)\b",
+                r"\b(?:aedes|jentik-jentik|jentik|larva|sampul\s+kecil|uipd|pembiakan\s+nyamuk|apspp|akta\s*154|uip-apspp-01-07)(?=\W|$)",
                 q_low,
             )
             and not any(s.startswith("UIP-APSPP-01-16") or s.startswith("UIP-APSPP-02-16") for s in selected)
@@ -453,17 +459,17 @@ class IUIPNerusBrain:
         # Peraturan 5: Penutupan Premis & Perintah Akta 342
         has_18_d = bool(
             re.search(
-                r"\b(?:18\(1\)\(d\)|keracunan\s+makanan|dekontaminasi|uip-apppb-01-07)\b",
+                r"\b(?:18\(1\)\(d\)|keracunan\s+makanan|dekontaminasi|uip-apppb-01-07)(?=\W|$)",
                 q_low,
             )
             or (
-                re.search(r"\b(?:tutup|penutupan)\b", q_low)
-                and re.search(r"\b(?:basmi\s+kuman|basmi\s+serangga|basmi\s+tikus|kantin)\b", q_low)
+                re.search(r"\b(?:tutup|penutupan)(?=\W|$)", q_low)
+                and re.search(r"\b(?:basmi\s+kuman|basmi\s+serangga|basmi\s+tikus|kantin)(?=\W|$)", q_low)
             )
         )
         has_18_f = bool(
             re.search(
-                r"\b(?:18\(1\)\(f\)|mencegah\s+(?:bermulanya|perebakan|merebak)|uip-apppb-06-20|uip-apppb-01-20)\b",
+                r"\b(?:18\(1\)\(f\)|mencegah\s+(?:bermulanya|perebakan|merebak)|uip-apppb-06-20|uip-apppb-01-20)(?=\W|$)",
                 q_low,
             )
         )
@@ -476,53 +482,53 @@ class IUIPNerusBrain:
         if (
             not has_18_d
             and not has_18_f
-            and re.search(r"\b(?:tutup\s+premis|penutupan\s+premis)\b", q_low)
-            and re.search(r"\b(?:akta\s*342|apppb|penyakit\s+berjangkit|hfmd|wabak)\b", q_low)
+            and re.search(r"\b(?:tutup\s+premis|penutupan\s+premis|tutup\s+taska|tutup\s+tadika|tutup\s+kantin)(?=\W|$)", q_low)
+            and re.search(r"\b(?:akta\s*342|apppb|penyakit\s+berjangkit|hfmd|wabak|taska|tadika)(?=\W|$)", q_low)
         ):
             _add_act("Akta 342")
             _add_sop("UIP-APPPB-01-07", "Perbandingan penutupan premis S.18(1)(d) Akta 342")
             _add_sop("UIP-APPPB-06-20", "Perbandingan penutupan premis S.18(1)(f) Akta 342")
 
-        if re.search(r"\b(?:18\(1\)\(c\)|tanpa\s+penutupan|tanpa\s+tutup\s+premis|uip-apppb-02-07)\b", q_low) or (
-            re.search(r"\b(?:basmi\s+kuman|basmi\s+tikus|basmi\s+serangga)\b", q_low)
-            and not re.search(r"\b(?:tutup|penutupan|18\(1\)\(d\)|18\(1\)\(f\)|barangan|binatang)\b", q_low)
+        if re.search(r"\b(?:18\(1\)\(c\)|tanpa\s+penutupan|tanpa\s+tutup\s+premis|uip-apppb-02-07)(?=\W|$)", q_low) or (
+            re.search(r"\b(?:basmi\s+kuman|basmi\s+tikus|basmi\s+serangga)(?=\W|$)", q_low)
+            and not re.search(r"\b(?:tutup|penutupan|18\(1\)\(d\)|18\(1\)\(f\)|barangan|binatang)(?=\W|$)", q_low)
         ):
             _add_act("Akta 342")
             _add_sop("UIP-APPPB-02-07", "Perintah basmi kuman/serangga/tikus S.18(1)(c) Akta 342 tanpa penutupan")
 
-        if re.search(r"\b(?:18\(1\)\(e\)|barangan\s+tercemar|binatang\s+dijangkiti|musnah\s+barangan|uip-apppb-03-07)\b", q_low):
+        if re.search(r"\b(?:18\(1\)\(e\)|barangan\s+tercemar|binatang\s+dijangkiti|musnah\s+barangan|uip-apppb-03-07)(?=\W|$)", q_low):
             _add_act("Akta 342")
             _add_sop("UIP-APPPB-03-07", "Perintah basmi kuman/pemusnahan barangan atau binatang S.18(1)(e) Akta 342")
 
         if re.search(
             r"\b(?:15\(1\)|perintah\s+pemerhatian|perintah\s+pengawasan|kuarantin|perintah\s+lisan.*24\s+jam|"
-            r"pui\b|kontak\s+rapat|subseksyen\s+5\(1\)|uip-apppb-01-16)\b",
+            r"pui|kontak\s+rapat|subseksyen\s+5\(1\)|uip-apppb-01-16)(?=\W|$)",
             q_low,
         ):
             _add_act("Akta 342")
             _add_sop("UIP-APPPB-01-16", "Penguatkuasaan Perintah Pemerhatian atau Pengawasan S.15(1) Akta 342")
 
-        if re.search(r"\b(?:pesawat\s+udara|kapal\s+terbang|lapangan\s+terbang|pintu\s+masuk\s+antarabangsa|sanitasi.*kenderaan|7\(1\).*342|uip-apppb-02-16)\b", q_low):
+        if re.search(r"\b(?:pesawat\s+udara|kapal\s+terbang|lapangan\s+terbang|pintu\s+masuk\s+antarabangsa|sanitasi.*kenderaan|7\(1\).*342|uip-apppb-02-16)(?=\W|$)", q_low):
             _add_act("Akta 342")
             _add_sop("UIP-APPPB-02-16", "Pemeriksaan sanitasi vektor pada pesawat udara S.7(1) Akta 342")
 
         if re.search(
             r"\b(?:10\(2\)|notifikasi.*penyakit|gagal\s+buat\s+notifikasi|gagal\s+notifikasi|22\(c\)|22\(d\)|"
-            r"kompaun.*akta\s*342|kompaun.*342|sop\s+kompaun.*342|uip-apppb-01-21)\b",
+            r"kompaun.*akta\s*342|kompaun.*342|sop\s+kompaun.*342|uip-apppb-01-21)(?=\W|$)",
             q_low,
         ):
             _add_act("Akta 342")
             _add_sop("UIP-APPPB-01-21", "Prosedur mengkompaun kesalahan S.10(2), 22(c), 22(d) Akta 342")
 
         # Peraturan 6: Geledah Akta Makanan 1983 (tanpa waran vs dengan waran)
-        has_geledah = bool(re.search(r"\b(?:geledah|menggeledah|waran\s+geledah|uip-umum-02-24|uip-umum-03-24)\b", q_low))
+        has_geledah = bool(re.search(r"\b(?:geledah|menggeledah|waran\s+geledah|uip-umum-02-24|uip-umum-03-24)(?=\W|$)", q_low))
         if has_geledah:
             _add_act("Akta 281")
             _add_act("Akta 593")
-            ask_diff = bool(re.search(r"\b(?:beza|perbezaan|banding|kedua-dua)\b", q_low))
-            tanpa_waran = bool(re.search(r"\b(?:tanpa\s+waran|uip-umum-02-24|alihkan\s+barang|seksyen\s+62)\b", q_low))
+            ask_diff = bool(re.search(r"\b(?:beza|perbezaan|banding|kedua-dua)(?=\W|$)", q_low))
+            tanpa_waran = bool(re.search(r"\b(?:tanpa\s+waran|uip-umum-02-24|alihkan\s+barang|seksyen\s+62)(?=\W|$)", q_low))
             dengan_waran = bool(
-                re.search(r"\b(?:dengan\s+waran|mohon\s+waran|permohonan\s+waran|waran\s+geledah|majistret|seksyen\s+54|uip-umum-03-24)\b", q_low)
+                re.search(r"\b(?:dengan\s+waran|mohon\s+waran|permohonan\s+waran|waran\s+geledah|majistret|seksyen\s+54|uip-umum-03-24)(?=\W|$)", q_low)
                 and not tanpa_waran
             )
             if ask_diff:
@@ -537,48 +543,72 @@ class IUIPNerusBrain:
                 _add_sop("UIP-UMUM-03-24", "Geledah dengan waran Majistret Akta Makanan 1983")
 
         # SOP UMUM lain (BWC, Fotografi Forensik, Serahan Saman, Pendakwaan, Kertas Siasatan, Ops Bersepadu, Gubal Akta)
-        if re.search(r"\b(?:kamera\s+badan|body\s+worn\s+camera|bwc|uip-umum-01-22|uip-umum-01-23|rename.*video|video.*rename)\b", q_low):
+        if re.search(r"\b(?:kamera\s+badan|body\s+worn\s+camera|bodycam|bwc|uip-umum-01-22|uip-umum-01-23|rename.*video|video.*rename)(?=\W|$)", q_low):
             _add_act("Akta 56")
             _add_sop("UIP-UMUM-01-22", "Prosedur penggunaan Kamera Badan (BWC) & Perakuan S.90A(2)")
-        if re.search(r"\b(?:fotografi\s+forensik|ambil\s+gambar|mengambil\s+gambar|gambar\s+forensik|gambar\s+digital.*cdr|overview.*fokus|uip-umum-04-07)\b", q_low):
+        if re.search(r"\b(?:fotografi\s+forensik|ambil\s+gambar|mengambil\s+gambar|tangkap\s+gambar|gambar\s+forensik|gambar\s+digital|dslr|overview.*fokus|uip-umum-04-07)(?=\W|$)", q_low):
             _add_act("Akta 56")
             _add_sop("UIP-UMUM-04-07", "Prosedur mengambil gambar forensik & Perakuan S.90A(2) Lampiran C")
-        if re.search(r"\b(?:serahan\s+saman|penyerah\s+saman|penyampaian\s+gantian|borang\s+252|afidavit\s+saman|seksyen\s+36\s+ktj|3\s+kali.*oks|uip-umum-03-07)\b", q_low):
+        if re.search(r"\b(?:serah\s+saman|serahan\s+saman|penyerah\s+saman|penyampaian\s+gantian|borang\s+252|afidavit\s+saman|seksyen\s+36\s+ktj|3\s+kali.*oks|oks\s+enggan\s+terima|uip-umum-03-07)(?=\W|$)", q_low):
             _add_act("Akta 593")
             _add_sop("UIP-UMUM-03-07", "Prosedur penyerahan saman & penyampaian gantian (S.34–37 KTJ)")
-        if re.search(r"\b(?:mengaku\s+tidak\s+bersalah|pra\s+perbicaraan|sapina\s+saksi|172a|51a|pendakwaan\s+di\s+mahkamah|selepas\s+penghakiman|uip-umum-05-07)\b", q_low):
+        if re.search(r"\b(?:mengaku\s+(?:tidak\s+)?bersalah|mengaku\s+salah|pra\s+perbicaraan|sapina\s+saksi|172a|51a|pendakwaan\s+di\s+mahkamah|selepas\s+penghakiman|uip-umum-05-07)(?=\W|$)", q_low):
             _add_act("Akta 593")
             _add_sop("UIP-UMUM-05-07", "Prosedur pendakwaan di mahkamah (Pra-Perbicaraan S.172A, S.51A, sapina & rayuan)")
-        if re.search(r"\b(?:kertas\s+siasatan|meminit|minit\s+kertas|folio\s+[abcd]|senarai\s+semak\s+k/?s|diari\s+siasatan|uip-umum-02-07)\b", q_low):
+        if re.search(r"\b(?:kertas\s+siasatan|susun\s+fail|buka\s+ip|meminit|minit\s+kertas|folio\s+[abcd]|senarai\s+semak\s+k/?s|diari\s+siasatan|uip-umum-02-07)(?=\W|$)", q_low):
             _add_act("Akta 593")
             _add_sop("UIP-UMUM-02-07", "Prosedur penyediaan, minit & senarai semak Kertas Siasatan (Lampiran A–F)")
-        if re.search(r"\b(?:operasi\s+bersepadu|ops\s+bersepadu|antara\s+daerah|antara\s+negeri|uip-umum-01-16)\b", q_low):
+        if re.search(r"\b(?:operasi\s+bersepadu|ops\s+bersepadu|antara\s+daerah|antara\s+negeri|uip-umum-01-16)(?=\W|$)", q_low):
             _add_sop("UIP-UMUM-01-16", "Prosedur operasi bersepadu penguatkuasaan kesihatan awam")
-        if re.search(r"\b(?:gubal\s+akta|penggubalan\s+undang|kertas\s+jemaah\s+menteri|seranta\s+awam|uip-umum-01-07)\b", q_low):
+        if re.search(r"\b(?:gubal\s+akta|penggubalan\s+undang|kertas\s+jemaah\s+menteri|seranta\s+awam|uip-umum-01-07)(?=\W|$)", q_low):
             _add_sop("UIP-UMUM-01-07", "Prosedur penggubalan undang-undang kesihatan awam")
 
+        # Fallback berasaskan indeks aktif (`sop_index_active_router.json`) jika tiada peraturan langsung yang sepadan
+        if not selected and not melibatkan_852:
+            scored_idx: List[tuple[int, dict]] = []
+            for rec in self.active_index:
+                hits = 0
+                for kw in rec.get("kata_kunci") or []:
+                    kw_low = str(kw).strip().lower()
+                    if len(kw_low) >= 4 and kw_low in q_low:
+                        hits += 2
+                for sk in rec.get("seksyen_kunci") or []:
+                    sk_low = str(sk).strip().lower()
+                    if len(sk_low) >= 4 and sk_low in q_low:
+                        hits += 3
+                if hits >= 3:
+                    scored_idx.append((hits, rec))
+            scored_idx.sort(key=lambda x: x[0], reverse=True)
+            for _sc, rec in scored_idx[:2]:
+                _add_sop(rec["sop_id"], f"Padanan indeks aktif: {rec.get('tajuk', '')}")
+
         # Padankan akta tambahan dari teks soalan
-        if re.search(r"\b(?:akta\s*281|akta\s+makanan|ppkm\s*2009|ppm\s*1985|restoran|premis\s+makanan|kilang\s+makanan)\b", q_low):
+        if re.search(r"\b(?:akta\s*281|akta\s+makanan|ppkm\s*2009|ppm\s*1985|restoran|premis\s+makanan|kilang\s+makanan)(?=\W|$)", q_low):
             _add_act("Akta 281")
-        if re.search(r"\b(?:akta\s*342|apppb|penyakit\s+berjangkit|tibi|hfmd|covid|wabak)\b", q_low):
+        if re.search(r"\b(?:akta\s*342|apppb|penyakit\s+berjangkit|tibi|hfmd|covid|wabak)(?=\W|$)", q_low):
             _add_act("Akta 342")
-        if re.search(r"\b(?:akta\s*154|apspp|aedes|denggi|jentik)\b", q_low):
+        if re.search(r"\b(?:akta\s*154|apspp|aedes|denggi|jentik)(?=\W|$)", q_low):
             _add_act("Akta 154")
-        if re.search(r"\b(?:akta\s*574|kanun\s+keseksaan)\b", q_low):
+        if re.search(r"\b(?:akta\s*574|kanun\s+keseksaan)(?=\W|$)", q_low):
             _add_act("Akta 574")
-        if re.search(r"\b(?:akta\s*593|ktj|kanun\s+tatacara\s+jenayah)\b", q_low):
+        if re.search(r"\b(?:akta\s*593|ktj|kanun\s+tatacara\s+jenayah)(?=\W|$)", q_low):
             _add_act("Akta 593")
-        if re.search(r"\b(?:akta\s*344|akta\s+polis)\b", q_low):
+        if re.search(r"\b(?:akta\s*344|akta\s+polis)(?=\W|$)", q_low):
             _add_act("Akta 344")
-        if re.search(r"\b(?:akta\s*388|akta\s+tafsiran)\b", q_low):
+        if re.search(r"\b(?:akta\s*388|akta\s+tafsiran)(?=\W|$)", q_low):
             _add_act("Akta 388")
-        if re.search(r"\b(?:akta\s*92|mahkamah\s+rendah|mahkamah\s+sesyen|mahkamah\s+majistret)\b", q_low):
+        if re.search(r"\b(?:akta\s*92|mahkamah\s+rendah|mahkamah\s+sesyen|mahkamah\s+majistret)(?=\W|$)", q_low):
             _add_act("Akta 92")
-        if re.search(r"\b(?:akta\s*56|90a|akta\s+keterangan)\b", q_low):
+        if re.search(r"\b(?:akta\s*56|90a|akta\s+keterangan)(?=\W|$)", q_low):
             _add_act("Akta 56")
 
-        # Bagi kes Akta 852 tulen tanpa permintaan SOP UMUM, kekalkan selected_sop_ids kosong ([]) supaya tidak tarik SOP tidak berkaitan
-        if melibatkan_852:
+        # Bagi kes Akta 852 TULEN (tanpa akta KKM lain seperti Akta 342/154 dalam soalan berbilang akta),
+        # kekalkan hanya SOP UMUM agar tidak menarik SOP tidak berkaitan; jika soalan berbilang akta (cth vape + keracunan makanan S.18(1)(d)),
+        # benarkan SOP Akta 342/154 yang memang dicetuskan secara eksplisit!
+        has_other_kkm_sop_trigger = any(
+            a in akta_terlibat for a in ("Akta 342", "Akta 154")
+        )
+        if melibatkan_852 and not has_other_kkm_sop_trigger:
             selected = [s for s in selected if s.startswith("UIP-UMUM-")]
 
         sebab = (
@@ -686,20 +716,106 @@ class IUIPNerusBrain:
                 continue
             seen.add(sid)
             stem_up = str(rec.get("file_stem") or "").upper()
+            kat = str(rec.get("kategori") or "").strip()
+            akta_list = list(rec.get("akta_berkaitan") or [])
+            seksyen_list = list(rec.get("seksyen_kunci") or [])
+            lampiran_list = list(rec.get("lampiran_ringkas") or [])
+            kata_kunci_list = list(rec.get("kata_kunci") or [])
+            toc_alias = rec.get("toc_id_alias")
+            akta_label = (
+                "Akta 154 (APSPP)"
+                if "APSPP" in kat.upper()
+                else "Akta 342 (APPPB)"
+                if "APPPB" in kat.upper()
+                else "Akta 281 (Akta Makanan)"
+                if ("AKM" in kat.upper() or "MAKANAN" in kat.upper() or stem_up in ("UIP-UMUM-02-24", "UIP-UMUM-03-24"))
+                else "SOP Umum / KTJ"
+                if kat.upper() == "UMUM"
+                else (akta_list[0] if akta_list else kat or "SOP KKM 2024")
+            )
+            ringkasan_str = (
+                "; ".join(str(s) for s in seksyen_list[:4])
+                if seksyen_list
+                else str(rec.get("tajuk") or "")
+            )
+            amaran_konflik = (
+                f"Nota Konflik Kod Cetakan: Jadual Kandungan mencetak '{toc_alias}', namun kod rasmi dalam teks SOP ialah '{sid}'."
+                if toc_alias
+                else None
+            )
             out.append(
                 {
                     "sop_id": sid,
+                    "file_stem": rec.get("file_stem", ""),
                     "tajuk": rec.get("tajuk", ""),
-                    "kategori": rec.get("kategori", ""),
-                    "akta_berkaitan": list(rec.get("akta_berkaitan") or []),
-                    "seksyen_kunci": list(rec.get("seksyen_kunci") or []),
-                    "lampiran_ringkas": list(rec.get("lampiran_ringkas") or []),
+                    "kategori": kat,
+                    "akta": akta_label,
+                    "akta_berkaitan": akta_list,
+                    "seksyen_kunci": seksyen_list,
+                    "kata_kunci": kata_kunci_list,
+                    "lampiran_ringkas": lampiran_list,
+                    "borang_lampiran": lampiran_list,
+                    "ringkasan": ringkasan_str,
                     "rujukan_silang": list(rec.get("rujukan_silang") or []),
                     "muka_surat_pdf": self._pdf_pages_by_stem.get(stem_up, ""),
-                    "toc_id_alias": rec.get("toc_id_alias"),
+                    "toc_id_alias": toc_alias,
+                    "tarikh_kuat_kuasa": "15 Feb 2024",
+                    "pindaan": "2024",
+                    "status_sop": "AKTIF",
+                    "amaran_konflik_kod": amaran_konflik,
                 }
             )
         return out
+
+    def list_all_active_sops(
+        self,
+        q: Optional[str] = None,
+        akta_filter: Optional[str] = None,
+    ) -> List[Dict[str, Any]]:
+        """Pulangkan senarai lengkap kesemua 22 SOP aktif untuk Direktori SOP KKM 2024 (sifar SOP mansuh)."""
+        items = self.get_sop_summaries([str(r.get("sop_id") or "") for r in self.active_index])
+        if akta_filter and akta_filter.strip() and akta_filter.strip().lower() != "semua":
+            af = akta_filter.strip().lower()
+            items = [
+                it
+                for it in items
+                if af in str(it.get("akta") or "").lower()
+                or af in str(it.get("kategori") or "").lower()
+                or af in str(it.get("sop_id") or "").lower()
+                or any(af in str(a).lower() for a in (it.get("akta_berkaitan") or []))
+            ]
+        if q and q.strip():
+            ql = q.strip().lower()
+            items = [
+                it
+                for it in items
+                if ql in str(it.get("sop_id") or "").lower()
+                or ql in str(it.get("file_stem") or "").lower()
+                or ql in str(it.get("tajuk") or "").lower()
+                or ql in str(it.get("ringkasan") or "").lower()
+                or ql in str(it.get("akta") or "").lower()
+                or any(ql in str(k).lower() for k in (it.get("kata_kunci") or []))
+                or any(ql in str(k).lower() for k in (it.get("seksyen_kunci") or []))
+                or any(ql in str(k).lower() for k in (it.get("lampiran_ringkas") or []))
+            ]
+        return items
+
+    def get_sop_markdown(self, file_stem_or_id: str) -> Optional[Dict[str, Any]]:
+        """Pulangkan kandungan penuh Markdown bagi satu SOP aktif (menyekat keras sops_arkib_deprecated & PPKHT)."""
+        up = (file_stem_or_id or "").strip().upper()
+        if not up or "PPKHT" in up:
+            return None
+        rec = self._sop_lookup.get(up) or self._sop_lookup.get(up.split(" ")[0].strip())
+        if not rec:
+            return None
+        md_path = _resolve_active_md_path(self.sop_data_dir, str(rec.get("fail_md") or ""))
+        if not md_path or not md_path.exists():
+            return None
+        summary = self.get_sop_summaries([str(rec["sop_id"])])[0]
+        return {
+            **summary,
+            "markdown_content": md_path.read_text(encoding="utf-8"),
+        }
 
     def tanya_pakar_uip(
         self,
@@ -708,11 +824,8 @@ class IUIPNerusBrain:
         guna_cache: Optional[bool] = None,
         akta_hint: str = "Semua",
     ) -> dict:
-        """Jawapan lengkap dua peringkat (Full-SOP Injection atau Context Cache) dengan `temperature=0.0`.
-
-        Jika `konteks_statut_tambahan` kosong, sistem akan menarik petikan seksyen verbatim
-        secara automatik daripada pangkalan data Akta/Statut sedia ada (`ClosedBookLegalLibrary`).
-        """
+        """Jawapan lengkap dua peringkat (Full-SOP Injection atau Context Cache) dengan `temperature=0.0`
+        serta pengesahan pasca-penjanaan `validate_legal_output()`."""
         if guna_cache is None:
             try:
                 from backend.core.config import settings as _settings
@@ -746,23 +859,31 @@ class IUIPNerusBrain:
 
         used_model = self.answer_model
         resp_text = ""
+        used_cache_mode = False
 
         if guna_cache:
-            cache_name = self.ensure_context_cache()
-            user_payload = (
-                f"KEPUTUSAN ROUTER: Akta={route.akta_terlibat} | SOP Disyorkan={route.selected_sop_ids}"
-                f"{nota_akta_852}{statut_block}\n\nSOALAN PENGGUNA:\n{soalan}"
-            )
-            resp = client.models.generate_content(
-                model=self.answer_model,
-                contents=user_payload,
-                config=types.GenerateContentConfig(
-                    cached_content=cache_name,
-                    temperature=0.0,
-                ),
-            )
-            resp_text = resp.text or ""
-        else:
+            try:
+                cache_name = self.ensure_context_cache()
+                user_payload = (
+                    f"KEPUTUSAN ROUTER: Akta={route.akta_terlibat} | SOP Disyorkan={route.selected_sop_ids}"
+                    f"{nota_akta_852}{statut_block}\n\nSOALAN PENGGUNA:\n{soalan}"
+                )
+                resp = client.models.generate_content(
+                    model=self.answer_model,
+                    contents=user_payload,
+                    config=types.GenerateContentConfig(
+                        cached_content=cache_name,
+                        temperature=0.0,
+                    ),
+                )
+                resp_text = resp.text or ""
+                used_cache_mode = bool(resp_text)
+            except Exception as cache_exc:
+                logger.warning("Context Cache tamat tempoh/gagal, beralih ke Full-SOP Injection: %s", str(cache_exc)[:160])
+                self._active_cache_name = None
+                self._active_cache_expires_at = 0.0
+
+        if not resp_text:
             full_sops_xml = self.load_full_sops(route.selected_sop_ids)
             user_payload = (
                 f"DOKUMEN SOP KKM PENUH YANG DISUNTIK:\n{full_sops_xml}"
@@ -791,13 +912,52 @@ class IUIPNerusBrain:
             if not resp_text and last_exc is not None:
                 raise RuntimeError(f"Peringkat 2 Pakar UIP gagal: {last_exc}")
 
+        # Pengesahan Pasca-Penjanaan Wajib (`validate_legal_output`) + 1x Self-Correction (temperature=0.0)
+        legal_validation = None
+        try:
+            from backend.rag.legal_engine import get_legal_library, validate_legal_output
+
+            snap = get_legal_library().to_snapshot_dict()
+            legal_validation = validate_legal_output(
+                {"akta_disyorkan": ", ".join(route.akta_terlibat), "jawapan_4_lapisan_sop": resp_text},
+                snap,
+                question_context=soalan,
+            )
+            if not legal_validation.get("passed"):
+                retry_payload = (
+                    f"{user_payload}\n\n"
+                    f"AMARAN PENGESAH SISTEM (SILA BETULKAN SERTA-MERTA):\n{legal_validation.get('warning_banner', '')}\n"
+                    "Buang semua seksyen/subseksyen/kod SOP tidak wujud atau mansuh dan ulang jawapan 4 lapisan yang tepat."
+                )
+                try:
+                    retry_resp = client.models.generate_content(
+                        model=used_model,
+                        contents=retry_payload,
+                        config=types.GenerateContentConfig(
+                            system_instruction=PAKAR_UIP_SYSTEM_PROMPT,
+                            temperature=0.0,
+                        ),
+                    )
+                    if retry_resp.text:
+                        resp_text = retry_resp.text
+                        legal_validation = validate_legal_output(
+                            {"akta_disyorkan": ", ".join(route.akta_terlibat), "jawapan_4_lapisan_sop": resp_text},
+                            snap,
+                            question_context=soalan,
+                        )
+                except Exception as retry_exc:
+                    logger.warning("Self-correction SOP Brain gagal: %s", str(retry_exc)[:140])
+        except Exception as val_exc:
+            logger.warning("Pengesahan pasca-penjanaan SOP Brain dilangkau: %s", val_exc)
+
         return {
             "jawapan": resp_text,
             "routing": route.model_dump(),
             "sop_references": self.get_sop_summaries(route.selected_sop_ids),
-            "mod": "context_cache" if guna_cache else "two_stage_full_sop",
+            "mod": "context_cache" if used_cache_mode else "two_stage_full_sop",
             "model_used": used_model,
             "statut_disuntik": bool(effective_statut),
+            "legal_validation": legal_validation,
         }
 
     def audit_kertas_siasatan(
@@ -897,7 +1057,7 @@ class IUIPNerusBrain:
             "852" in akta_norm
             or re.search(r"\b(?:vape|rokok|merokok|shisha|obd|produk\s+merokok)\b", low)
         )
-        if is_smoking_case and re.search(r"\b(?:ppkht\s*2004|peraturan\s+(?:8|9|11|13)\s+ppkht|borang\s+4.*23\(2\)|seksyen\s+32b\s+akta\s+makanan)\b", low):
+        if is_smoking_case and re.search(r"\b(?:ppkht\s*2004|peraturan\s+(?:8|9|11|13)\s+ppkht|borang\s+4.*23\(2\)|seksyen\s+32b\s+akta\s+makanan)(?=\W|$)", low):
             dapatan_sop.append(
                 {
                     "kategori": "Kesahan Statut [NOTA PINDAAN]",
@@ -923,20 +1083,20 @@ class IUIPNerusBrain:
         dapatan_sop.append(
             {
                 "kategori": "Senarai Semak K/S (Lampiran Rasmi)",
-                "status": "[AMARAN - PERLU PEMBETULAN]" if "852" in akta_norm else "[LULUS]",
+                "status": "[NOTA PINDAAN]" if "852" in akta_norm else "[LULUS]",
                 "rujukan_sop": lamp_info["lampiran"],
                 "perincian": lamp_info["butiran"],
             }
         )
 
         # 3. Rantaian Bahan Bukti, S.90A & BWC
-        has_bwc = bool(re.search(r"\b(?:bwc|kamera\s+badan|body\s+worn\s+camera)\b", low))
+        has_bwc = bool(re.search(r"\b(?:bwc|kamera\s+badan|body\s+worn\s+camera|bodycam)\b", low))
         if has_bwc:
-            bwc_renamed = bool(re.search(r"\b(?:rename|dinamakan\s+semula|tukar\s+nama\s+fail|edit\s+video|sunting\s+video)\b", low))
+            bwc_renamed = bool(re.search(r"\b(?:rename|di-rename|dinamakan\s+semula|tukar\s+nama\s+fail|edit\s+video|sunting\s+video)\b", low))
             dapatan_sop.append(
                 {
                     "kategori": "Kamera Badan (BWC) & S.90A(2)",
-                    "status": "[KRITIKAL - RISIKO K/S DITOLAK TPR]" if bwc_renamed else "[AMARAN - PERLU PEMBETULAN]",
+                    "status": "[KRITIKAL - RISIKO K/S DITOLAK TPR]" if bwc_renamed else "[LULUS]",
                     "rujukan_sop": "UIP-UMUM-01-22 (PINDAAN 2024) — Lampiran 2",
                     "perincian": (
                         "Fail rakaman BWC DILARANG dinamakan semula (rename) atau disunting; pastikan Perakuan S.90A(2) Lampiran 2 dilampirkan."
@@ -961,12 +1121,12 @@ class IUIPNerusBrain:
             }
         )
 
-        # 4. Peringatan Tempoh Statutori SOP mengikut Akta
+        # 4. Peringatan Tempoh Statutori SOP mengikut Akta (berstatus makluman SOP kecuali pelanggaran dikesan)
         if "154" in akta_norm:
             dapatan_sop.append(
                 {
                     "kategori": "Tempoh Statutori SOP Akta 154",
-                    "status": "[AMARAN - PERLU PEMBETULAN]",
+                    "status": "[INFO SOP]",
                     "rujukan_sop": "UIP-APSPP-01-07 & UIP-APSPP-02-16 (PINDAAN 2024)",
                     "perincian": (
                         "Sahkan serahan Sampul Kecil ke PPKP UIPD dalam tempoh 3 hari (UIP-APSPP-01-07) "
@@ -978,7 +1138,7 @@ class IUIPNerusBrain:
             dapatan_sop.append(
                 {
                     "kategori": "Tempoh Statutori SOP Akta 342",
-                    "status": "[AMARAN - PERLU PEMBETULAN]",
+                    "status": "[INFO SOP]",
                     "rujukan_sop": "UIP-APPPB-01-16 & UIP-APPPB-01-07 (PINDAAN 2024)",
                     "perincian": (
                         "Jika perintah lisan S.15(1) diberikan, perintah bertulis wajib dikeluarkan dalam 24 jam (UIP-APPPB-01-16); "
@@ -1010,8 +1170,11 @@ class IUIPNerusBrain:
         }
 
     def ensure_context_cache(self, ttl_seconds: int = 3600) -> str:
-        """Cipta Gemini Context Cache untuk kesemua 22 SOP aktif (~90k token)."""
-        if self._active_cache_name:
+        """Cipta Gemini Context Cache untuk kesemua 22 SOP aktif (~90k token) dengan pengesanan tamat tempoh TTL."""
+        import time as _time
+
+        expires_at = float(getattr(self, "_active_cache_expires_at", 0.0) or 0.0)
+        if self._active_cache_name and _time.monotonic() < expires_at:
             return self._active_cache_name
 
         client = self.client
@@ -1031,6 +1194,7 @@ class IUIPNerusBrain:
             ),
         )
         self._active_cache_name = cache.name
+        self._active_cache_expires_at = _time.monotonic() + max(60, ttl_seconds - 60)
         return cache.name
 
     def get_status_summary(self) -> Dict[str, Any]:

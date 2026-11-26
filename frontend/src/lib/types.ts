@@ -355,6 +355,26 @@ export interface CompoundCheckResult {
     note: string;
   }>;
   suggested_offense_text: string;
+  peruntukan_kompaun?: string;
+  legal_validation?: LegalValidationResult | null;
+}
+
+export interface ActiveSopSummary {
+  sop_id: string;
+  file_stem: string;
+  tajuk: string;
+  akta: string;
+  kata_kunci: string[];
+  borang_lampiran: string[];
+  ringkasan: string;
+  tarikh_kuat_kuasa?: string;
+  pindaan?: string;
+  status_sop?: string;
+  amaran_konflik_kod?: string;
+}
+
+export interface ActiveSopDetail extends ActiveSopSummary {
+  markdown_content: string;
 }
 
 export interface OfficerProfile {

@@ -65,8 +65,8 @@ export function extractRecommendedCompoundRm(
   const desc = (compoundDesc || "").trim();
   const descLow = desc.toLowerCase();
 
-  // 1. Semak kadar rasmi khusus yang sering bercanggah dengan angka denda mahkamah dalam teks penerangan
-  if (sec.includes("852")) {
+  // 1. Semak kadar rasmi khusus yang sering bercanggah dengan angka denda mahkamah / siling maksimum dalam teks penerangan
+  if (sec.includes("852") || /25[7-9]\/2024|26[0-4]\/2024/.test(sec)) {
     if (sec.includes("17(1)") || sec.includes("13(3)")) {
       return "RM 50.00";
     }
@@ -77,18 +77,40 @@ export function extractRecommendedCompoundRm(
   if (sec.includes("154")) {
     return "RM 500.00";
   }
-  if (sec.includes("ppkm") && /\b32(?:\([123]\))?\b/.test(sec)) {
-    return "RM 250.00";
+  if (sec.includes("ppkm") || sec.includes("95/2009")) {
+    if (/(?<!\w)(?:8|30|31|32|33)(?:\([123]\))?(?!\w)/.test(sec)) {
+      return "RM 250.00";
+    }
+    if (/(?<!\w)11(?:\(1\))?(?!\w)/.test(sec)) {
+      return "RM 500.00";
+    }
+  }
+  if (sec.includes("342") || sec.includes("139/2025")) {
+    return "RM 1,000.00";
   }
 
-  // 2. Cari angka RM selepas kata kunci tawaran/had kompaun (bukan selepas "denda")
+  // 2. Utamakan 'tawaran lazim' / 'kompaun lazim' dahulu sebelum 'kompaun maksimum'
+  const lazyRateMatch = desc.match(
+    /(?:tawaran\s+(?:lazim|kompaun)|kompaun\s+lazim|kadar\s+lazim)\s*:?\s*RM\s*([\d,]+(?:\.\d{1,2})?)/i
+  );
+  if (lazyRateMatch) {
+    const val = parseFloat(lazyRateMatch[1].replace(/,/g, ""));
+    if (!Number.isNaN(val) && val > 0) {
+      return `RM ${val.toFixed(2)}`;
+    }
+  }
+
   const targetedMatch =
-    desc.match(/(?:tawaran\s+(?:lazim|kompaun)|kompaun(?:\s+lazim|\s+maks(?:imum)?)?|iaitu|=)\s*:?\s*RM\s*([\d,]+(?:\.\d{1,2})?)/i) ||
+    desc.match(/(?:kompaun(?:\s+maks(?:imum)?)?|iaitu|=)\s*:?\s*RM\s*([\d,]+(?:\.\d{1,2})?)/i) ||
     desc.match(/RM\s*([\d,]+(?:\.\d{1,2})?)\s*(?:\(\s*individu|\s*bagi\s+individu|\s*di\s+bawah|\s*—|\s*\[)/i);
 
   if (targetedMatch) {
     const val = parseFloat(targetedMatch[1].replace(/,/g, ""));
     if (!Number.isNaN(val) && val > 0) {
+      // Jika hanya siling RM5,000 PPKM/Akta 281 ditemui tanpa kadar khusus, guna kadar tawaran lazim lapangan RM 250.00
+      if (val >= 5000 && (sec.includes("ppkm") || sec.includes("281") || descLow.includes("seksyen 33"))) {
+        return "RM 250.00";
+      }
       return `RM ${val.toFixed(2)}`;
     }
   }
@@ -103,7 +125,7 @@ export function extractRecommendedCompoundRm(
   }
   if (allMatches.length >= 1) {
     const firstVal = parseFloat(allMatches[0][1].replace(/,/g, ""));
-    if (!Number.isNaN(firstVal) && firstVal > 0) {
+    if (!Number.isNaN(firstVal) && firstVal > 0 && firstVal < 5000) {
       return `RM ${firstVal.toFixed(2)}`;
     }
   }

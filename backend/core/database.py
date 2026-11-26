@@ -320,8 +320,11 @@ def _has_legal_fact_conflict(q_norm: str, cand_norm: str, cand_item: Dict[str, A
                 return True
 
     # 1c. Polariti keseluruhan (satu soalan mempunyai penafian utama tiada/tidak/belum/tanpa, satu lagi tidak)
-    q_any_neg = bool(re.search(r"\b(?:tiada|tidak|belum|tanpa|bukan)\b", q_norm))
-    c_any_neg = bool(re.search(r"\b(?:tiada|tidak|belum|tanpa|bukan)\b", cand_norm))
+    # Abaikan ungkapan tanya pilihan ("ke tidak", "atau tidak", "ataupun tidak") agar tidak dianggap penafian fakta kes
+    q_for_neg = re.sub(r"\b(?:ke|atau|ataupun)\s+(?:tidak|tak|bukan)\b", " ", q_norm)
+    c_for_neg = re.sub(r"\b(?:ke|atau|ataupun)\s+(?:tidak|tak|bukan)\b", " ", cand_norm)
+    q_any_neg = bool(re.search(r"\b(?:tiada|tidak|belum|tanpa|bukan)\b", q_for_neg))
+    c_any_neg = bool(re.search(r"\b(?:tiada|tidak|belum|tanpa|bukan)\b", c_for_neg))
     if q_any_neg != c_any_neg:
         return True
 
@@ -2291,6 +2294,27 @@ class UIPDatabase:
             "legal_validation": analysis.get("legal_validation"),
             "element_evaluations": analysis.get("element_evaluations") or [],
             "statutory_citations": citations,
+            "repealed_warnings": (
+                analysis.get("repealed_warnings")
+                if isinstance(analysis.get("repealed_warnings"), list)
+                else []
+            ),
+            "sop_routing": (
+                analysis.get("sop_routing")
+                if isinstance(analysis.get("sop_routing"), dict)
+                else None
+            ),
+            "sop_references": (
+                [r for r in analysis.get("sop_references") if isinstance(r, dict)]
+                if isinstance(analysis.get("sop_references"), list)
+                else []
+            ),
+            "nota_pindaan": (
+                " | ".join(str(x) for x in analysis.get("nota_pindaan") if str(x).strip()) or None
+                if isinstance(analysis.get("nota_pindaan"), list)
+                else (str(analysis.get("nota_pindaan") or "").strip() or None)
+            ),
+            "jawapan_4_lapisan_sop": str(analysis.get("jawapan_4_lapisan_sop") or "").strip() or None,
         }
 
     def invalidate_advisor_qa_cache(

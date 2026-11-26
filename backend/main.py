@@ -10,7 +10,7 @@ import threading
 import time
 from collections import defaultdict, deque
 from dataclasses import asdict
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional
 from urllib.parse import quote, urlparse
 
 from fastapi import APIRouter, Depends, FastAPI, File, Form, Header, HTTPException, Query, Request, UploadFile
@@ -291,12 +291,14 @@ class AdvisorConsultRequest(BaseModel):
     scenario_id: Optional[str] = None
     use_ai: bool = False
     officer_profile: Optional[Dict[str, Any]] = None
+    conversation_history: Optional[List[Dict[str, str]]] = None
 
 
 class AdvisorSopBrainRequest(BaseModel):
     question: str
     akta_hint: str = "Semua"
     guna_cache: Optional[bool] = None
+    conversation_history: Optional[List[Dict[str, str]]] = None
 
 
 class ExportDocxRequest(BaseModel):
@@ -392,6 +394,11 @@ def get_status(
     payload = dict(router_service.get_system_status())
     if not is_admin:
         payload["masked_api_key"] = "********" if settings.has_gemini_key else ""
+        if isinstance(payload.get("gemini"), dict):
+            payload["gemini"] = {
+                **payload["gemini"],
+                "masked_api_key": "********" if settings.has_gemini_key else "",
+            }
         if isinstance(payload.get("ollama"), dict):
             payload["ollama"] = {
                 **payload["ollama"],
@@ -895,7 +902,11 @@ def export_docx_endpoint(
         enriched_payload["officer_profile"] = _merge_authoritative_officer(
             current_officer, enriched_payload.get("officer_profile")
         )
-    docx_bytes, filename = generate_docx_by_type(req.doc_type, enriched_payload)
+    docx_bytes, filename = generate_docx_by_type(
+        req.doc_type,
+        enriched_payload,
+        officer_profile=enriched_payload.get("officer_profile"),
+    )
     latency_ms = int((time.perf_counter() - t0) * 1000)
     db_service.log_activity(
         action_type="EXPORT_DOCX",
@@ -1162,6 +1173,42 @@ def list_repealed_and_blocked_provisions(
         "statute_library_version": lib.statute_library_version,
         "provisions": lib.repealed_and_blocked_provisions,
     }
+
+
+@app.get("/api/legal/sops")
+def list_active_sops_endpoint(
+    q: Optional[str] = None,
+    akta: Optional[str] = None,
+    _officer: Dict[str, Any] = Depends(_require_authenticated_officer),
+) -> Dict[str, Any]:
+    """Menyenaraikan 22 SOP KKM Pindaan 2024 yang aktif (5 SOP PPKHT 2004 mansuh dikuarantin)."""
+    from backend.services.sop_brain import get_sop_brain
+
+    brain = get_sop_brain()
+    items = brain.list_all_active_sops(q=q, akta_filter=akta)
+    return {
+        "total": len(items),
+        "quarantined_deprecated_blocked": 5,
+        "sops": items,
+    }
+
+
+@app.get("/api/legal/sops/{file_stem}")
+def get_active_sop_detail_endpoint(
+    file_stem: str,
+    _officer: Dict[str, Any] = Depends(_require_authenticated_officer),
+) -> Dict[str, Any]:
+    """Mengambil kandungan penuh Markdown bagi satu SOP KKM 2024 yang aktif."""
+    from backend.services.sop_brain import get_sop_brain
+
+    brain = get_sop_brain()
+    detail = brain.get_sop_markdown(file_stem)
+    if not detail:
+        raise HTTPException(
+            status_code=404,
+            detail="SOP tidak dijumpai dalam indeks 22 SOP KKM 2024 aktif (atau telah dikuarantin kerana mansuh).",
+        )
+    return detail
 
 
 @app.post("/api/legal/validate")
@@ -1467,6 +1514,7 @@ def consult_uip_advisor(
         scenario_id=req.scenario_id,
         use_ai=req.use_ai,
         officer_profile=officer,
+        conversation_history=req.conversation_history,
     )
     model_used = str(res.get("engine_used") or "Mod Pantas — Matriks SOP UIP KKM + Strict RAG")
     is_cloud = bool(
@@ -1530,11 +1578,40 @@ def consult_sop_brain_endpoint(
             detail="Sila taip soalan situasi kes untuk rujukan Otak SOP KKM 2024.",
         )
     _check_rate_limit(f"ai:{current_officer.get('id') or 'anon'}", max_requests=25, window_sec=60.0)
-    return advisor_service.consult_sop_brain(
-        question=req.question.strip(),
-        akta_hint=req.akta_hint,
-        guna_cache=req.guna_cache,
+    t0 = time.perf_counter()
+    try:
+        res = advisor_service.consult_sop_brain(
+            question=req.question.strip(),
+            akta_hint=req.akta_hint,
+            guna_cache=req.guna_cache,
+            conversation_history=req.conversation_history,
+        )
+    except Exception as exc:
+        from backend.services.sop_brain import get_sop_brain
+
+        brain = get_sop_brain()
+        route = brain.route_question_deterministic(req.question.strip())
+        res = {
+            "jawapan": (
+                f"Rujukan SOP KKM 2024 dipilih secara deterministik ({', '.join(route.selected_sop_ids) or 'Tiada SOP khusus'}). "
+                "Perkhidmatan AI sedang sibuk buat sementara waktu."
+            ),
+            "routing": route.model_dump(),
+            "sop_references": brain.get_sop_summaries(route.selected_sop_ids),
+            "mod": "deterministic_fallback",
+            "model_used": "penghala-deterministik-sop-2024",
+            "fallback_error": str(exc)[:180],
+        }
+    latency_ms = int((time.perf_counter() - t0) * 1000)
+    q_preview = router_service.redactor.redact(req.question.strip()[:140], use_ollama=False).redacted_text[:100]
+    db_service.log_activity(
+        action_type="SOP_BRAIN_2024",
+        action_detail=f"Otak SOP 2024 ({req.akta_hint}): {q_preview}",
+        user=current_officer,
+        model_used=str(res.get("model_used") or res.get("mod") or "sop-brain-2024"),
+        latency_ms=latency_ms,
     )
+    return res
 
 
 # ---------------- Konsol Pembangun & Private Vault Bucket (zero4eleven@gmail.com sahaja) ----------------

@@ -30,12 +30,10 @@ import {
   consultUipAdvisor,
   fetchAdvisorAnsweredQuestions,
   fetchAdvisorScenarios,
-  fetchLegalSnapshot,
 } from "@/lib/api";
 import {
   CORE_ACT_CODES,
   CORE_KKM_ACTS,
-  OFFLINE_LEGAL_CACHE_KEY,
   SECONDARY_ACT_CODES,
   SUPPORT_LEGAL_ACTS,
   getActBadgeStyle,
@@ -49,7 +47,6 @@ import type {
   AdvisorAnsweredListResponse,
   AdvisorConsultResult,
   AdvisorScenarioItem,
-  LegalLibrarySnapshot,
   LegalValidationResult,
   OfficerProfile,
 } from "@/lib/types";
@@ -141,7 +138,10 @@ export default function UIPAdvisorPanel({
   const [answeredSearch, setAnsweredSearch] = useState("");
   const [selectedAnsweredId, setSelectedAnsweredId] = useState<string | null>(null);
   const [expandedActGroups, setExpandedActGroups] = useState<Record<string, boolean>>({});
-  const [legalSnapshot, setLegalSnapshot] = useState<LegalLibrarySnapshot | null>(null);
+  const [lastSubmittedQuestion, setLastSubmittedQuestion] = useState<string>("");
+  const [conversationHistory, setConversationHistory] = useState<
+    Array<{ role: string; content: string }>
+  >([]);
   const resultRef = useRef<HTMLDivElement | null>(null);
   const answeredSectionRef = useRef<HTMLElement | null>(null);
 
@@ -164,32 +164,6 @@ export default function UIPAdvisorPanel({
     void loadScenarios();
   }, [loadScenarios]);
 
-  useEffect(() => {
-    fetchLegalSnapshot(authToken)
-      .then((snap) => {
-        setLegalSnapshot(snap);
-        if (typeof window !== "undefined") {
-          try {
-            window.localStorage.setItem(OFFLINE_LEGAL_CACHE_KEY, JSON.stringify(snap));
-          } catch {
-            // Abaikan jika kuota penuh
-          }
-        }
-      })
-      .catch(() => {
-        if (typeof window !== "undefined") {
-          const raw = window.localStorage.getItem(OFFLINE_LEGAL_CACHE_KEY);
-          if (raw) {
-            try {
-              setLegalSnapshot(JSON.parse(raw) as LegalLibrarySnapshot);
-            } catch {
-              // Abaikan
-            }
-          }
-        }
-      });
-  }, [authToken]);
-
   const loadAnsweredQuestions = useCallback(async () => {
     setAnsweredLoading(true);
     setAnsweredError(null);
@@ -207,10 +181,22 @@ export default function UIPAdvisorPanel({
     void loadAnsweredQuestions();
   }, [loadAnsweredQuestions]);
 
+  const handleResetConversation = () => {
+    setQuestion("");
+    setLastSubmittedQuestion("");
+    setConversationHistory([]);
+    setResult(null);
+    setError(null);
+    setSelectedAnsweredId(null);
+    setCheckedSop({});
+    setShowNoOffenceStatutes(false);
+  };
+
   const handleConsult = async (
     customQuestion?: string,
     scenarioId?: string,
-    forceAi = false
+    forceAi = false,
+    resetThread = false
   ) => {
     const q = (customQuestion ?? question).trim();
     if (!q && !scenarioId) {
@@ -229,16 +215,32 @@ export default function UIPAdvisorPanel({
     setCopiedSummary(false);
     setWorkspaceTab("ask");
 
+    const effectiveQ = q || "Rujuk contoh situasi ini";
+    const historyToSend = resetThread || scenarioId ? [] : conversationHistory.slice(-6);
+
     try {
       const res = await consultUipAdvisor({
-        question: q || "Rujuk contoh situasi ini",
+        question: effectiveQ,
         aktaHint: aktaFilter,
         scenarioId,
         useAi: forceAi,
         authToken,
         officerProfile: officer,
+        conversationHistory: historyToSend,
       });
       setResult(res);
+      setLastSubmittedQuestion(effectiveQ);
+      const assistantSummary = `${res.akta_disyorkan} — ${res.tajuk_nasihat}: ${
+        res.ringkasan_keputusan || res.keputusan_tindakan
+      }`;
+      setConversationHistory((prev) => {
+        const base = resetThread || scenarioId ? [] : prev.slice(-4);
+        return [
+          ...base,
+          { role: "user", content: effectiveQ },
+          { role: "assistant", content: assistantSummary },
+        ];
+      });
       setCheckedSop({});
       setResultTab("evidence");
       setShowNoOffenceStatutes(false);
@@ -262,13 +264,14 @@ export default function UIPAdvisorPanel({
       setQuestion(qClean);
       setWorkspaceTab("ask");
       onInitialQuestionConsumed?.();
-      void handleConsult(qClean);
+      void handleConsult(qClean, undefined, false, true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialQuestionNonce]);
 
   const handleSelectAnsweredItem = (item: AdvisorAnsweredItem) => {
     setQuestion(item.question);
+    setLastSubmittedQuestion(item.question);
     setSelectedAnsweredId(item.id);
     setError(null);
     setCopiedSummary(false);
@@ -277,6 +280,15 @@ export default function UIPAdvisorPanel({
     setWorkspaceTab("ask");
     if (item.answer) {
       setResult(item.answer);
+      setConversationHistory([
+        { role: "user", content: item.question },
+        {
+          role: "assistant",
+          content: `${item.answer.akta_disyorkan} — ${item.answer.tajuk_nasihat}: ${
+            item.answer.ringkasan_keputusan || item.answer.keputusan_tindakan
+          }`,
+        },
+      ]);
       setCheckedSop({});
       setResultTab("evidence");
       window.setTimeout(() => {
@@ -284,7 +296,7 @@ export default function UIPAdvisorPanel({
       }, 90);
       return;
     }
-    void handleConsult(item.question);
+    void handleConsult(item.question, undefined, false, true);
   };
 
   const handleCopySummary = async () => {
@@ -295,6 +307,16 @@ export default function UIPAdvisorPanel({
         (result.keputusan_tindakan.toUpperCase().includes("TIADA KESALAHAN") ||
           result.keputusan_tindakan.toUpperCase().includes("BUKAN KESALAHAN")));
 
+    const sopSummaryLine =
+      result.sop_references && result.sop_references.length > 0
+        ? `RUJUKAN SOP KKM 2024:\n${result.sop_references
+            .map(
+              (s) =>
+                `- ${s.sop_id}: ${s.tajuk}${s.muka_surat_pdf ? ` (PDF m.s. ${s.muka_surat_pdf})` : ""}`
+            )
+            .join("\n")}`
+        : "";
+
     if (isNoOff) {
       const steps =
         result.langkah_susulan_ppkp && result.langkah_susulan_ppkp.length > 0
@@ -304,9 +326,11 @@ export default function UIPAdvisorPanel({
         `${result.tajuk_nasihat} (${result.akta_disyorkan})`,
         `KEPUTUSAN: ${result.ringkasan_keputusan || result.keputusan_tindakan}`,
         `SEBAB TIDAK MENYALAHI UNDANG-UNDANG:\n${result.sebab_tidak_menyalahi || result.alasan_keputusan}`,
+        result.nota_pindaan ? `${result.nota_pindaan}` : "",
         steps.length
           ? `LANGKAH SUSULAN PPKP:\n${steps.map((s, i) => `${i + 1}. ${s}`).join("\n")}`
           : "",
+        sopSummaryLine,
       ]
         .filter(Boolean)
         .join("\n\n");
@@ -325,7 +349,9 @@ export default function UIPAdvisorPanel({
       `SEKSYEN KESALAHAN: ${punca?.seksyen_kesalahan || primary?.seksyen_kesalahan || result.akta_disyorkan}`,
       `HUKUMAN: ${punca?.seksyen_hukuman || primary?.seksyen_hukuman || "-"} (${punca?.had_hukuman || primary?.hukuman_maksimum || "-"})`,
       `CADANGAN TINDAKAN: ${result.ringkasan_keputusan || result.keputusan_tindakan}`,
+      result.nota_pindaan ? `${result.nota_pindaan}` : "",
       `LANGKAH DI LOKASI:\n${result.sop_lapangan.map((s, i) => `${i + 1}. ${s}`).join("\n")}`,
+      sopSummaryLine,
       `BARANG BUKTI WAJIB:\n${result.eksibit_wajib.map((e) => `- ${e}`).join("\n")}`,
     ]
       .filter(Boolean)
@@ -382,14 +408,15 @@ export default function UIPAdvisorPanel({
 
   const primaryCharge = result?.cadangan_pertuduhan?.[0];
 
+  // Utamakan keputusan validasi rasmi backend (2,334 seksyen verbatim AGC + 22 SOP KKM 2024)
+  // dan kunci terhadap lastSubmittedQuestion supaya menaip soalan baharu tidak memicu amaran palsu!
   const activeValidation: LegalValidationResult | null = useMemo(() => {
     if (!result) return null;
-    if (legalSnapshot) {
-      const clientCheck = validateLegalOutput(result, legalSnapshot, question);
-      if (!clientCheck.passed) return clientCheck;
+    if (result.legal_validation && typeof result.legal_validation === "object") {
+      return result.legal_validation;
     }
-    return result.legal_validation || (legalSnapshot ? validateLegalOutput(result, legalSnapshot, question) : null);
-  }, [result, legalSnapshot, question]);
+    return validateLegalOutput(result, null, lastSubmittedQuestion);
+  }, [result, lastSubmittedQuestion]);
 
   return (
     <div className="mx-auto max-w-5xl space-y-4">
@@ -485,6 +512,21 @@ export default function UIPAdvisorPanel({
         </div>
 
         <div className="mt-3 space-y-3">
+          <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-slate-200/80 bg-slate-50/70 px-3 py-2 text-[11px] text-slate-600">
+            <span>
+              <strong className="text-[#0f2744]">Panduan soalan tepat:</strong> Nyatakan{" "}
+              <span className="font-semibold text-slate-800">Siapa pelaku</span> +{" "}
+              <span className="font-semibold text-slate-800">Perbuatan/Peninggalan</span> +{" "}
+              <span className="font-semibold text-slate-800">Lokasi/Premis</span> +{" "}
+              <span className="font-semibold text-slate-800">Alasan/Bukti</span>.
+            </span>
+            {conversationHistory.length > 0 && (
+              <span className="inline-flex items-center gap-1 rounded-full border border-indigo-200 bg-indigo-50 px-2.5 py-0.5 text-[10px] font-bold text-indigo-900">
+                Konteks Susulan Aktif ({Math.ceil(conversationHistory.length / 2)} pusingan)
+              </span>
+            )}
+          </div>
+
           <textarea
             rows={3}
             value={question}
@@ -508,7 +550,7 @@ export default function UIPAdvisorPanel({
                   type="button"
                   onClick={() => {
                     setQuestion(chip);
-                    handleConsult(chip);
+                    handleConsult(chip, undefined, false, true);
                   }}
                   className="min-h-[44px] rounded-full border border-slate-200 bg-slate-50 px-3.5 py-2 text-xs font-semibold text-slate-700 transition hover:border-[#0f2744] hover:bg-slate-100 hover:text-slate-900 sm:min-h-[38px] sm:py-1.5"
                 >
@@ -529,6 +571,17 @@ export default function UIPAdvisorPanel({
                 <span>Contoh Situasi ({filteredScenarios.length})</span>
                 {showLibrary ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
               </button>
+
+              {(result || question.trim() || conversationHistory.length > 0) && (
+                <button
+                  type="button"
+                  onClick={handleResetConversation}
+                  className="inline-flex min-h-[44px] items-center justify-center gap-1.5 rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs font-bold text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                >
+                  <X className="h-3.5 w-3.5" />
+                  <span>Soalan Baharu</span>
+                </button>
+              )}
             </div>
 
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
@@ -809,10 +862,15 @@ export default function UIPAdvisorPanel({
                   )}
                   {cleanEngineLabel}
                 </span>
-                {isDevAdmin && activeValidation && activeValidation.passed && (
-                  <span className="inline-flex items-center gap-1 rounded-full border border-emerald-300 bg-emerald-50 px-2 py-0.5 text-xs font-bold text-emerald-900">
-                    <ShieldCheck className="h-3 w-3 text-emerald-700" />
-                    {result.statute_library_version || activeValidation.statute_library_version}
+                {activeValidation && activeValidation.passed && (
+                  <span className="inline-flex items-center gap-1 rounded-full border border-emerald-300 bg-emerald-50 px-2.5 py-0.5 text-xs font-bold text-emerald-900">
+                    <ShieldCheck className="h-3.5 w-3.5 text-emerald-700" />
+                    <span>Disahkan Teks Akta AGC &amp; SOP 2024</span>
+                    {isDevAdmin && (
+                      <span className="ml-1 font-mono text-[10px] text-emerald-700">
+                        ({result.statute_library_version || activeValidation.statute_library_version})
+                      </span>
+                    )}
                   </span>
                 )}
               </div>
@@ -1038,23 +1096,111 @@ export default function UIPAdvisorPanel({
                   )}
                 </div>
 
-                {/* 3. Langkah & Tindakan Susulan PPKP (Jika Perlu) */}
-                {followUpSteps.length > 0 && (
+                {/* 3. Langkah & Tindakan Susulan PPKP (Jika Perlu) + Rujukan SOP KKM 2024 & [NOTA PINDAAN] */}
+                {(followUpSteps.length > 0 ||
+                  result.nota_pindaan ||
+                  (result.repealed_warnings && result.repealed_warnings.length > 0) ||
+                  (result.sop_references && result.sop_references.length > 0) ||
+                  result.jawapan_4_lapisan_sop) && (
                   <div className="rounded-2xl border border-slate-200 bg-white p-4">
-                    <h4 className="flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wide text-slate-900">
-                      <ClipboardList className="h-4 w-4 text-indigo-700" />
-                      Langkah &amp; Tindakan Susulan PPKP (Jika Perlu)
-                    </h4>
-                    <ol className="mt-2.5 space-y-2.5 text-xs leading-relaxed text-slate-700 sm:text-[13px]">
-                      {followUpSteps.map((step, idx) => (
-                        <li key={idx} className="flex items-start gap-2.5">
-                          <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#0f2744] text-[11px] font-extrabold text-white">
-                            {idx + 1}
-                          </span>
-                          <span>{step}</span>
-                        </li>
-                      ))}
-                    </ol>
+                    {followUpSteps.length > 0 && (
+                      <>
+                        <h4 className="flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wide text-slate-900">
+                          <ClipboardList className="h-4 w-4 text-indigo-700" />
+                          Langkah &amp; Tindakan Susulan PPKP (Jika Perlu)
+                        </h4>
+                        <ol className="mt-2.5 space-y-2.5 text-xs leading-relaxed text-slate-700 sm:text-[13px]">
+                          {followUpSteps.map((step, idx) => (
+                            <li key={idx} className="flex items-start gap-2.5">
+                              <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#0f2744] text-[11px] font-extrabold text-white">
+                                {idx + 1}
+                              </span>
+                              <span>{step}</span>
+                            </li>
+                          ))}
+                        </ol>
+                      </>
+                    )}
+
+                    {(result.nota_pindaan ||
+                      (result.repealed_warnings && result.repealed_warnings.length > 0) ||
+                      (result.sop_references && result.sop_references.length > 0) ||
+                      result.jawapan_4_lapisan_sop) && (
+                      <div className="mt-3.5 space-y-2.5 border-t border-slate-200 pt-3">
+                        {result.nota_pindaan && (
+                          <div className="flex items-start gap-2 rounded-xl border border-amber-300 bg-amber-50 px-3 py-2 text-xs leading-relaxed text-amber-950">
+                            <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-700" />
+                            <span>{result.nota_pindaan}</span>
+                          </div>
+                        )}
+
+                        {result.repealed_warnings && result.repealed_warnings.length > 0 && (
+                          <div className="space-y-1.5">
+                            {result.repealed_warnings.map((rw, rIdx) => (
+                              <div
+                                key={rw.provision_id || rIdx}
+                                className="flex items-start gap-2 rounded-xl border border-rose-200 bg-rose-50/70 px-3 py-2 text-xs text-rose-950"
+                              >
+                                <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0 text-rose-700" />
+                                <div>
+                                  <span className="font-extrabold">{rw.warning_message_bm}</span>
+                                  {rw.key_differences_note && (
+                                    <span className="ml-1 text-rose-900">({rw.key_differences_note})</span>
+                                  )}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+
+                        {result.sop_references && result.sop_references.length > 0 && (
+                          <div className="space-y-1.5">
+                            <div className="text-[11px] font-extrabold uppercase tracking-wide text-slate-600">
+                              Rujukan Rasmi SOP KKM (Pindaan 15 Feb 2024)
+                            </div>
+                            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                              {result.sop_references.map((sop) => (
+                                <div
+                                  key={sop.sop_id}
+                                  className="rounded-xl border border-indigo-200/80 bg-indigo-50/40 px-3 py-2 text-xs"
+                                >
+                                  <div className="flex flex-wrap items-center justify-between gap-1.5">
+                                    <span className="font-extrabold text-indigo-950">
+                                      {sop.sop_id}
+                                    </span>
+                                    {sop.muka_surat_pdf && (
+                                      <span className="rounded-full bg-white px-2 py-0.5 text-[10px] font-bold text-indigo-900 ring-1 ring-indigo-200">
+                                        PDF m.s. {sop.muka_surat_pdf}
+                                      </span>
+                                    )}
+                                  </div>
+                                  <div className="mt-0.5 font-medium text-slate-700">
+                                    {sop.tajuk}
+                                  </div>
+                                  {sop.lampiran_ringkas && sop.lampiran_ringkas.length > 0 && (
+                                    <div className="mt-1 text-[11px] text-slate-600">
+                                      <span className="font-bold text-slate-800">Borang/Lampiran:</span>{" "}
+                                      {sop.lampiran_ringkas.join(", ")}
+                                    </div>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {result.jawapan_4_lapisan_sop && (
+                          <details className="rounded-xl border border-slate-200 bg-slate-50/60 px-3.5 py-2.5 text-xs">
+                            <summary className="cursor-pointer font-extrabold text-[#0f2744]">
+                              Lihat Ringkasan Lengkap 4 Lapisan Bukti SOP (Penilaian, Punca Kuasa, Langkah &amp; Lampiran)
+                            </summary>
+                            <div className="mt-2 whitespace-pre-wrap leading-relaxed text-slate-700">
+                              {result.jawapan_4_lapisan_sop}
+                            </div>
+                          </details>
+                        )}
+                      </div>
+                    )}
                   </div>
                 )}
 
@@ -1253,6 +1399,7 @@ export default function UIPAdvisorPanel({
 
                   {/* Rujukan SOP KKM Pindaan 2024 & [NOTA PINDAAN] (Otak SOP Dual Knowledge Store) */}
                   {(result.nota_pindaan ||
+                    (result.repealed_warnings && result.repealed_warnings.length > 0) ||
                     (result.sop_references && result.sop_references.length > 0) ||
                     result.jawapan_4_lapisan_sop) && (
                     <div className="mt-3.5 space-y-2.5 border-t border-slate-200 pt-3">
@@ -1260,6 +1407,25 @@ export default function UIPAdvisorPanel({
                         <div className="flex items-start gap-2 rounded-xl border border-amber-300 bg-amber-50 px-3 py-2 text-xs leading-relaxed text-amber-950">
                           <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-700" />
                           <span>{result.nota_pindaan}</span>
+                        </div>
+                      )}
+
+                      {result.repealed_warnings && result.repealed_warnings.length > 0 && (
+                        <div className="space-y-1.5">
+                          {result.repealed_warnings.map((rw, rIdx) => (
+                            <div
+                              key={rw.provision_id || rIdx}
+                              className="flex items-start gap-2 rounded-xl border border-rose-200 bg-rose-50/70 px-3 py-2 text-xs text-rose-950"
+                            >
+                              <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0 text-rose-700" />
+                              <div>
+                                <span className="font-extrabold">{rw.warning_message_bm}</span>
+                                {rw.key_differences_note && (
+                                  <span className="ml-1 text-rose-900">({rw.key_differences_note})</span>
+                                )}
+                              </div>
+                            </div>
+                          ))}
                         </div>
                       )}
 
@@ -1603,6 +1769,10 @@ export default function UIPAdvisorPanel({
                 </div>
               </div>
             )}
+
+            <div className="border-t border-slate-100 pt-2.5 text-[11px] leading-relaxed text-slate-500">
+              <strong className="text-slate-700">Nota Rujukan Rasmi:</strong> Panduan ini berasaskan teks Warta Kerajaan Persekutuan (AGC) &amp; 22 SOP Penguatkuasaan KKM Pindaan 2024 (Hierarki Statut &gt; SOP). Keputusan muktamad pendakwaan tertakluk kepada semakan UIP JKN dan Izin Mendakwa Timbalan Pendakwa Raya.
+            </div>
           </section>
         );
       })()}

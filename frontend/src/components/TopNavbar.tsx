@@ -106,9 +106,9 @@ export default function TopNavbar({
             className="h-9 w-9 shrink-0 rounded-full bg-white p-0.5 object-contain shadow-sm ring-1 ring-white/40"
           />
           <div className="min-w-0">
-            <div className="truncate text-sm font-extrabold tracking-tight text-white sm:text-base">
+            <h1 className="truncate text-sm font-extrabold tracking-tight text-white sm:text-base">
               i-UIP Nerus
-            </div>
+            </h1>
             <p className="truncate text-xs font-medium text-slate-300">
               {officer?.district_pkd || "Unit Inspektorat & Perundangan KKM"}
             </p>

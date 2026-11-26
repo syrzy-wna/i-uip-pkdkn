@@ -92,9 +92,13 @@ export default function AuditPanel({
       setView("privacy");
     } else if (initialSubView === "folder") {
       setView("folder");
-    } else if (initialSubView === "criteria") {
+    } else {
       const totalIssues = report ? report.counts.GAGAL + report.counts.SEMAK : 0;
       setView(report && totalIssues === 0 ? "all" : "issues");
+    }
+    if (report) {
+      const firstIssue = report.criteria_results.find((c) => c.status !== "LULUS");
+      setExpandedCode(firstIssue ? firstIssue.code : null);
     }
   }, [initialSubView, report]);
 
@@ -119,14 +123,6 @@ export default function AuditPanel({
       return a.code.localeCompare(b.code);
     });
   }, [report, view, priorityCodes]);
-
-  useEffect(() => {
-    if (!report) return;
-    const totalIssues = report.counts.GAGAL + report.counts.SEMAK;
-    setView(totalIssues > 0 ? "issues" : "all");
-    const firstIssue = report.criteria_results.find((c) => c.status !== "LULUS");
-    setExpandedCode(firstIssue ? firstIssue.code : null);
-  }, [report]);
 
   if (!report) {
     return (
@@ -276,6 +272,13 @@ export default function AuditPanel({
               )}
             </div>
 
+            {report.sop_audit_pra_tpr.butiran_lampiran_ks && (
+              <div className="rounded-lg border border-indigo-200/80 bg-white px-3 py-2 text-[11px] leading-relaxed text-slate-700">
+                <span className="font-bold text-indigo-950">Keperluan Lampiran K/S: </span>
+                {report.sop_audit_pra_tpr.butiran_lampiran_ks}
+              </div>
+            )}
+
             {report.sop_audit_pra_tpr.dapatan_sop.length > 0 && (
               <div className="space-y-1.5">
                 {report.sop_audit_pra_tpr.dapatan_sop.map((d, i) => {
@@ -320,6 +323,29 @@ export default function AuditPanel({
               </details>
             )}
           </div>
+        )}
+
+        {report.statutory_citations && report.statutory_citations.length > 0 && (
+          <details className="rounded-xl border border-slate-200 bg-slate-50/70 px-3.5 py-2.5 text-xs">
+            <summary className="cursor-pointer font-extrabold text-[#0f2744]">
+              Rujukan Seksyen Akta Berkaitan ({report.statutory_citations.length})
+            </summary>
+            <div className="mt-2 space-y-2">
+              {report.statutory_citations.map((cit, cIdx) => (
+                <div
+                  key={`${cit.akta_code}-${cit.section}-${cIdx}`}
+                  className="rounded-lg border border-slate-200 bg-white p-2.5"
+                >
+                  <div className="font-bold text-[#0f2744]">
+                    {cit.akta_code} • {cit.section}
+                  </div>
+                  <p className="mt-0.5 line-clamp-4 whitespace-pre-line leading-relaxed text-slate-700">
+                    {cit.text}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </details>
         )}
 
         {/* 1 Bar Sub-Tab Tunggal */}
@@ -444,6 +470,9 @@ export default function AuditPanel({
                         )}
                         <div className="min-w-0">
                           <div className="flex flex-wrap items-center gap-2">
+                            <span className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-[11px] font-bold text-[#0f2744]">
+                              {item.code}
+                            </span>
                             <span className="text-sm font-bold text-slate-900">
                               {idx + 1}. {item.title}
                             </span>

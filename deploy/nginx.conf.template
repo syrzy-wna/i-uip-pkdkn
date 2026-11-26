@@ -12,6 +12,19 @@ http {
     sendfile on;
     keepalive_timeout 65;
     client_max_body_size 25M;
+    gzip on;
+    gzip_vary on;
+    gzip_proxied any;
+    gzip_comp_level 5;
+    gzip_min_length 1024;
+    gzip_types
+        application/json
+        application/javascript
+        text/javascript
+        text/css
+        text/plain
+        text/xml
+        application/xml;
     map $http_x_forwarded_for $client_real_ip {
         default $binary_remote_addr;
         "~^([^,\s]+)" $1;

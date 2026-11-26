@@ -268,16 +268,8 @@ export default function LeftEvidencePane({
           />
 
           <div
-            role="button"
-            tabIndex={0}
             onClick={() => {
               if (!uploadedFile) fileInputRef.current?.click();
-            }}
-            onKeyDown={(e) => {
-              if ((e.key === "Enter" || e.key === " ") && !uploadedFile) {
-                e.preventDefault();
-                fileInputRef.current?.click();
-              }
             }}
             onDragEnter={(e) => {
               e.preventDefault();

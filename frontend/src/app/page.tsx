@@ -109,6 +109,81 @@ function buildCompoundFromCase(
   if (rec.draft?.notis_kompaun) {
     return { ...EMPTY_COMPOUND_NOTICE, ...rec.draft.notis_kompaun };
   }
+  const rawText = `${rec.tajuk_kes || ""} ${rec.case_text || ""}`;
+  let peruntukanUndang = "";
+  let peruntukanKompaun = "";
+  let amaunRm = "";
+  let tempohBayaran = "";
+
+  if (rec.akta_utama === "Akta 852") {
+    peruntukanKompaun = "Seksyen 48 Akta 852 [P.U. (A) 259/2024]";
+    tempohBayaran = "30 hari dari tarikh tawaran kompaun";
+    if (/\b13\s*\(\s*1\s*\)|\bjual\b[\s\S]{0,40}\b(?:obd|bawah\s*18|pelajar)\b/i.test(rawText)) {
+      peruntukanUndang = "Seksyen 13(1) Akta 852";
+      amaunRm = "";
+    } else if (/\b10\s*\(\s*1\s*\)|\bpamer/i.test(rawText)) {
+      peruntukanUndang = "Seksyen 10(1) Akta 852";
+      amaunRm = "";
+    } else if (/\b3\s*\(\s*1\s*\)|\btanpa\s*pendaftaran\b/i.test(rawText)) {
+      peruntukanUndang = "Seksyen 3(1) Akta 852";
+      amaunRm = "";
+    } else if (/\b(?:17\s*\(\s*1\s*\)|13\s*\(\s*3\s*\))|\b(?:obd|pelajar|remaja)\b/i.test(rawText)) {
+      peruntukanUndang = "Seksyen 17(1) Akta 852";
+      amaunRm = "RM 50.00";
+    } else if (/\b18\s*\(\s*1\s*\)|\btanda\s*(?:amaran|larangan)\b/i.test(rawText)) {
+      peruntukanUndang = "Seksyen 18(1)(a) Akta 852";
+      amaunRm = "RM 250.00";
+    } else {
+      peruntukanUndang = "Seksyen 16(2) Akta 852";
+      amaunRm = "RM 250.00";
+    }
+  } else if (rec.akta_utama === "Akta 281") {
+    peruntukanKompaun = "Notis Seksyen 32B & Seksyen 33 Akta Makanan 1983";
+    tempohBayaran = "14 hari dari tarikh serahan notis";
+    if (/\b13A\b|\bbangkai\b|\blipas\b/i.test(rawText)) {
+      peruntukanUndang = "Seksyen 13A(2) Akta Makanan 1983 (Akta 281)";
+      amaunRm = "";
+    } else if (/\b13B\b|\badulterasi\b/i.test(rawText)) {
+      peruntukanUndang = "Seksyen 13B Akta Makanan 1983 (Akta 281)";
+      amaunRm = "";
+    } else if (/\bseksyen\s*11\b|\bnotis\s*s\.?\s*11\b/i.test(rawText)) {
+      peruntukanUndang = "Seksyen 11 Akta Makanan 1983 (Akta 281)";
+      amaunRm = "";
+    } else if (/\b(?:peraturan|p\.?)\s*31\b|\btifoid\b/i.test(rawText)) {
+      peruntukanUndang = "Peraturan 31(1) PPKM 2009 [P.U. (A) 95/2009]";
+      amaunRm = "RM 250.00";
+    } else if (/\b(?:peraturan|p\.?)\s*30\b|\blpm\b/i.test(rawText)) {
+      peruntukanUndang = "Peraturan 30(1) PPKM 2009 [P.U. (A) 95/2009]";
+      amaunRm = "RM 250.00";
+    } else {
+      peruntukanUndang = "Peraturan 11(1) PPKM 2009 [P.U. (A) 95/2009]";
+      amaunRm = "RM 500.00";
+    }
+  } else if (rec.akta_utama === "Akta 154") {
+    peruntukanKompaun = "Seksyen 25 Akta 154 (Maksimum RM500)";
+    tempohBayaran = "14 hari dari tarikh serahan notis";
+    if (/\bseksyen\s*21\b|\bhalang\b/i.test(rawText)) {
+      peruntukanUndang = "Seksyen 21 Akta 154";
+      amaunRm = "";
+    } else if (/\bseksyen\s*8\b/i.test(rawText)) {
+      peruntukanUndang = "Seksyen 8(1) dibaca bersama Seksyen 8(8) Akta 154";
+      amaunRm = "RM 500.00";
+    } else {
+      peruntukanUndang = "Seksyen 13(1) dibaca bersama Seksyen 13(2) Akta 154";
+      amaunRm = "RM 500.00";
+    }
+  } else if (rec.akta_utama === "Akta 342") {
+    peruntukanKompaun = "Seksyen 25 Akta 342 [P.U. (A) 139/2025]";
+    tempohBayaran = "14 hari dari tarikh serahan notis";
+    if (/\b10\s*\(\s*2\s*\)|\bgagal\s*notifikasi\b/i.test(rawText)) {
+      peruntukanUndang = "Seksyen 10(2) dibaca bersama Seksyen 24 Akta 342";
+      amaunRm = "RM 1,000.00";
+    } else {
+      peruntukanUndang = "Seksyen 22(b) dibaca bersama Seksyen 24 Akta 342";
+      amaunRm = "RM 1,000.00";
+    }
+  }
+
   return {
     ...EMPTY_COMPOUND_NOTICE,
     no_notis: rec.no_ip ? `KKM/KOM/${rec.no_ip.split("/").pop()}` : "",
@@ -118,41 +193,10 @@ function buildCompoundFromCase(
     alamat_kejadian: rec.alamat_kejadian || "",
     no_ssm: rec.no_ssm || "",
     tarikh_masa: [rec.tarikh_kejadian, rec.masa_kejadian].filter(Boolean).join(", "),
-    peruntukan_undang:
-      rec.akta_utama === "Akta 852"
-        ? "Seksyen 16(2) Akta 852"
-        : rec.akta_utama === "Akta 281"
-          ? "Peraturan 11(1) PPKM 2009 [P.U. (A) 95/2009]"
-          : rec.akta_utama === "Akta 154"
-            ? "Seksyen 13(1) dibaca bersama Seksyen 13(2) Akta 154"
-            : rec.akta_utama === "Akta 342"
-              ? "Seksyen 22(b) Akta 342"
-              : "",
-    peruntukan_kompaun:
-      rec.akta_utama === "Akta 852"
-        ? "Seksyen 48 Akta 852 [P.U. (A) 259/2024]"
-        : rec.akta_utama === "Akta 281"
-          ? "Notis Seksyen 32B & Seksyen 33 Akta Makanan 1983"
-          : rec.akta_utama === "Akta 154"
-            ? "Seksyen 25 Akta 154 (Maksimum RM500)"
-            : rec.akta_utama === "Akta 342"
-              ? "Seksyen 25 Akta 342 [P.U. (A) 139/2025]"
-              : "",
-    amaun_kompaun_rm:
-      rec.akta_utama === "Akta 852" ||
-      rec.akta_utama === "Akta 281" ||
-      rec.akta_utama === "Akta 154" ||
-      rec.akta_utama === "Akta 342"
-        ? "RM 500.00"
-        : "",
-    tempoh_bayaran:
-      rec.akta_utama === "Akta 852"
-        ? "30 hari dari tarikh tawaran kompaun"
-        : rec.akta_utama === "Akta 281" ||
-            rec.akta_utama === "Akta 154" ||
-            rec.akta_utama === "Akta 342"
-          ? "14 hari dari tarikh serahan notis"
-          : "",
+    peruntukan_undang: peruntukanUndang,
+    peruntukan_kompaun: peruntukanKompaun,
+    amaun_kompaun_rm: amaunRm,
+    tempoh_bayaran: tempohBayaran,
     pegawai_pengeluar: rec.pegawai_io || officer?.full_name || "",
     no_kad_kuasa: rec.no_kad_kuasa || officer?.kkm_authority_card_no || "",
   };
@@ -1350,10 +1394,7 @@ export default function UIPCommandPage() {
     );
   }
 
-  const isDevAdmin = Boolean(
-    officer &&
-      (officer.is_dev_admin || officer.email?.trim().toLowerCase() === "zero4eleven@gmail.com")
-  );
+  const isDevAdmin = Boolean(officer?.is_dev_admin);
   const missingKadKuasa = !officer.kkm_authority_card_no?.trim();
   const hasCaseInput = Boolean(caseText.trim() || uploadedFile);
   const activeCaseObj = cases.find((c) => c.id === activeCaseId);

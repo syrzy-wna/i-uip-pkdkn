@@ -108,6 +108,24 @@ const COMMON_OFFENCE_PRESETS: Array<{
     kesalahan_ringkas:
       "Membiarkan pembiakan larva nyamuk Aedes di dalam bekas takungan air di kawasan premis.",
   },
+  {
+    label: "OBD Merokok/Vape (S.17(1))",
+    peruntukan_undang: "Seksyen 17(1) Akta 852",
+    peruntukan_kompaun: "Seksyen 48 Akta 852 [P.U. (A) 259/2024]",
+    amaun_kompaun_rm: "RM 50.00",
+    tempoh_bayaran: "30 hari dari tarikh tawaran kompaun",
+    kesalahan_ringkas:
+      "Orang Belum Dewasa (OBD) merokok, mengunyah atau menggunakan produk merokok.",
+  },
+  {
+    label: "Gagal Notifikasi Penyakit (S.10(2) Akta 342)",
+    peruntukan_undang: "Seksyen 10(2) dibaca bersama Seksyen 24 Akta 342",
+    peruntukan_kompaun: "Seksyen 25 Akta 342 [P.U. (A) 139/2025]",
+    amaun_kompaun_rm: "RM 1,000.00",
+    tempoh_bayaran: "14 hari dari tarikh serahan notis",
+    kesalahan_ringkas:
+      "Gagal memberi pemberitahuan kes penyakit berjangkit kepada Pegawai Kesihatan dalam tempoh ditetapkan.",
+  },
 ];
 
 export default function CompoundNoticePanel({
@@ -223,6 +241,9 @@ export default function CompoundNoticePanel({
       checkCompoundNotice(notice)
         .then((res) => {
           setCheckResult(res);
+          if (res.peruntukan_kompaun && !(notice.peruntukan_kompaun || "").trim()) {
+            onChangeNotice({ ...notice, peruntukan_kompaun: res.peruntukan_kompaun });
+          }
           setShowPassedItems(res.counts.GAGAL === 0 && res.counts.SEMAK === 0);
         })
         .catch((err) => {
@@ -287,6 +308,9 @@ export default function CompoundNoticePanel({
     try {
       const res = await checkCompoundNotice(notice);
       setCheckResult(res);
+      if (res.peruntukan_kompaun && !(notice.peruntukan_kompaun || "").trim()) {
+        onChangeNotice({ ...notice, peruntukan_kompaun: res.peruntukan_kompaun });
+      }
       setShowPassedItems(res.counts.GAGAL === 0 && res.counts.SEMAK === 0);
       window.setTimeout(() => {
         resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -744,7 +768,7 @@ export default function CompoundNoticePanel({
                     className={INPUT_CLASS}
                   />
                   <div className="mt-2 flex flex-wrap gap-2">
-                    {["RM 250.00", "RM 500.00"].map((amt) => (
+                    {["RM 50.00", "RM 250.00", "RM 500.00", "RM 1,000.00"].map((amt) => (
                       <button
                         key={amt}
                         type="button"

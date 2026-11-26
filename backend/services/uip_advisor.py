@@ -146,7 +146,13 @@ UIP_SCENARIO_LIBRARY: List[Dict[str, Any]] = [
             "kaunter jual", "resit belian", "18 tahun", "jual kepada obd", "membeli rokok",
             "seksyen 13 akta 852", "bawah umur",
         ],
-        "negative_keywords": ["makanan tercemar", "keracunan", "najis tikus", "pamer secara terbuka"],
+        "negative_keywords": [
+            "makanan tercemar", "keracunan", "najis tikus", "pamer secara terbuka",
+            "online", "dalam talian", "tiktok", "shopee", "lazada", "facebook", "whatsapp",
+            "vending", "mesin layan diri", "tidak berdaftar", "tanpa pendaftaran", "pendaftaran produk",
+            "seksyen 3", "s.3(1)", "seksyen 10", "s.10(1)", "260/2024", "262/2024",
+            "mengimport", "mengilang", "mengedar", "pembungkusan", "amaran bergambar",
+        ],
         "keputusan_tindakan": "PENJUAL: BUKA IP TERUS (S.13(1) Tidak Boleh Kompaun) | OBD MEMBELI/MEROKOK: KOMPAUN S.48(2) / KHIDMAT MASYARAKAT",
         "sesuai_buka_ip": True,
         "alasan_keputusan": (
@@ -589,7 +595,14 @@ UIP_SCENARIO_LIBRARY: List[Dict[str, Any]] = [
             "aedes", "larva", "jentik-jentik", "jentik", "denggi", "takungan air", "takungan",
             "nyamuk", "entomologi", "seksyen 13 akta 154", "ak 154", "pembiakan nyamuk",
         ],
-        "negative_keywords": ["tapak bina", "tapak pembinaan", "kontraktor", "cidb", "fogging", "halang semburan", "e-notifikasi", "klinik swasta"],
+        "negative_keywords": [
+            "tapak bina", "tapak pembinaan", "kontraktor", "cidb", "fogging", "halang semburan",
+            "e-notifikasi", "klinik swasta",
+            "berapa ekor", "minimum larva", "sampul kecil", "pecah masuk", "seksyen 5(5)",
+            "s.5(5)", "seksyen 5(4)", "s.5(4)", "perintah seksyen 8", "notis seksyen 8",
+            "seksyen 8(1)", "seksyen 8(8)", "s.8(1)", "s.8(8)", "ingkar perintah",
+            "perintah tutup", "tutup premis", "waran geledah",
+        ],
         "keputusan_tindakan": "KOMPAUN S.25 DAHULU (Maksimum RM500 — 14 Hari); BUKA IP JIKA GAGAL BAYAR",
         "sesuai_buka_ip": False,
         "alasan_keputusan": (
@@ -1651,11 +1664,133 @@ class UIPAdvisorService:
         except Exception:
             pass
 
+    @staticmethod
+    def _resolve_followup_question(
+        question: str,
+        conversation_history: Optional[List[Dict[str, str]]] = None,
+    ) -> tuple[str, str]:
+        """Gabungkan konteks pusingan terdahulu apabila soalan adalah susulan ringkas / merujuk kes tadi.
+
+        Mengembalikan `(effective_search_question, compact_history_block)`.
+        """
+        q_clean = (question or "").strip()
+        if not conversation_history or not isinstance(conversation_history, list):
+            return q_clean, ""
+
+        valid_turns: List[Dict[str, str]] = []
+        for item in conversation_history[-6:]:
+            if not isinstance(item, dict):
+                continue
+            q_turn = str(item.get("question") or "").strip()
+            a_turn = str(item.get("answer") or "").strip()
+            if q_turn or a_turn:
+                if q_turn:
+                    valid_turns.append({"role": "user", "content": q_turn[:500]})
+                if a_turn:
+                    valid_turns.append({"role": "assistant", "content": a_turn[:500]})
+                continue
+            role = str(item.get("role") or "user").strip().lower()
+            content = str(item.get("content") or "").strip()
+            if content:
+                valid_turns.append({"role": role, "content": content[:500]})
+        if not valid_turns:
+            return q_clean, ""
+
+        history_lines = [
+            f"- {'PPKP' if t['role'] == 'user' else 'Pakar UIP'}: {t['content']}"
+            for t in valid_turns[-4:]
+        ]
+        history_block = "KONTEKS PERBUALAN TERDAHULU (SUSULAN):\n" + "\n".join(history_lines)
+
+        q_low = q_clean.lower()
+        is_anaphoric_followup = (
+            len(q_clean.split()) <= 14
+            or bool(
+                re.search(
+                    r"\b(?:kalau|jika|macam\s+mana|bagaimana\s+pula|borang\s+apa|lampiran\s+apa|"
+                    r"seksyen\s+mana|akta\s+mana|kes\s+tadi|kes\s+itu|kes\s+tu|situasi\s+tadi|"
+                    r"oks\s+(?:tu|itu|tersebut|enggan|tak\s+bayar|tidak\s+bayar|mengaku)|"
+                    r"kalau\s+dia|berapa\s+hari|tempohnya|kompaunnya|hukumannya)\b",
+                    q_low,
+                )
+            )
+        )
+        if not is_anaphoric_followup:
+            return q_clean, history_block
+
+        last_user_turns = [t["content"] for t in valid_turns if t["role"] == "user"]
+        last_assistant_turns = [t["content"] for t in valid_turns if t["role"] != "user"]
+        ctx_parts: List[str] = []
+        if last_user_turns:
+            ctx_parts.append(f"Kes sebelum ini: {last_user_turns[-1][:260]}")
+        if last_assistant_turns:
+            ctx_parts.append(f"Ringkasan jawapan terdahulu: {last_assistant_turns[-1][:220]}")
+        if ctx_parts:
+            combined = f"{q_clean} ({' | '.join(ctx_parts)})"
+            return combined, history_block
+        return q_clean, history_block
+
+    @staticmethod
+    def _attach_sop_brain_metadata(
+        result: Dict[str, Any],
+        effective_question: str,
+        grounding: Optional[Dict[str, Any]] = None,
+        *,
+        sop_brain: Any = None,
+        sop_route: Any = None,
+        sop_route_mode: str = "deterministic",
+    ) -> None:
+        """Memastikan sop_routing, sop_references & nota_pindaan sentiasa dilampirkan pada SEMUA laluan respons."""
+        if sop_brain is None:
+            try:
+                from backend.services.sop_brain import get_sop_brain
+
+                sop_brain = get_sop_brain()
+            except Exception:
+                sop_brain = None
+
+        if sop_brain is None:
+            result.setdefault("sop_routing", None)
+            result.setdefault("sop_references", [])
+            return
+
+        if sop_route is None:
+            try:
+                sop_route = sop_brain.route_question_deterministic(effective_question)
+                sop_route_mode = "deterministic"
+            except Exception:
+                result.setdefault("sop_routing", None)
+                result.setdefault("sop_references", [])
+                return
+
+        sop_refs = sop_brain.get_sop_summaries(sop_route.selected_sop_ids)
+        if not result.get("sop_routing"):
+            result["sop_routing"] = {
+                **sop_route.model_dump(),
+                "mode": sop_route_mode,
+            }
+        if not result.get("sop_references"):
+            result["sop_references"] = sop_refs
+
+        if not result.get("nota_pindaan"):
+            amend_dirs = (grounding or {}).get("amendment_directives") or []
+            if sop_route.melibatkan_akta_852:
+                result["nota_pindaan"] = (
+                    "[NOTA PINDAAN] PPKHT 2004 dan Notis Seksyen 32B Akta Makanan 1983 bagi kes produk merokok/vape "
+                    "telah DIMANSUHKAN mulai 1 Oktober 2024 dan digantikan oleh Akta 852. Tiada SOP khusus Akta 852 "
+                    "dalam koleksi SOP KKM Pindaan 15 Feb 2024; rujuk teks Akta 852 terkini dan SOP UMUM yang terpakai."
+                )
+            elif amend_dirs:
+                result["nota_pindaan"] = f"[NOTA PINDAAN] {' | '.join(amend_dirs)}"
+            elif sop_route.amaran_statut_mansuh:
+                result["nota_pindaan"] = f"[NOTA PINDAAN] {sop_route.amaran_statut_mansuh}"
+
     def consult_sop_brain(
         self,
         question: str,
         akta_hint: str = "Semua",
         guna_cache: Optional[bool] = None,
+        conversation_history: Optional[List[Dict[str, str]]] = None,
     ) -> Dict[str, Any]:
         """Laluan terus Dual Knowledge Store (Otak SOP KKM 2024 + Statut AGC Verbatim, `temperature=0.0`)."""
         from backend.services.sop_brain import (
@@ -1664,9 +1799,17 @@ class UIPAdvisorService:
         )
 
         brain = get_sop_brain()
-        redacted = self.router.redactor.redact(question, use_ollama=False)
+        contextual_q, history_block = self._resolve_followup_question(question, conversation_history)
+        redacted = self.router.redactor.redact(contextual_q, use_ollama=False)
         safe_q = redacted.redacted_text
+        safe_history = (
+            self.router.redactor.redact(history_block, use_ollama=False).redacted_text
+            if history_block
+            else ""
+        )
         konteks_statut = build_statutory_context_for_question(safe_q, akta_hint=akta_hint)
+        if safe_history:
+            konteks_statut = f"{safe_history}\n\n{konteks_statut}".strip()
 
         if not brain.has_api_key:
             route = brain.route_question_deterministic(safe_q)
@@ -2088,7 +2231,10 @@ class UIPAdvisorService:
                 if s["id"] == scenario_id:
                     return s, 10.0, True
 
-        q_low = question.lower()
+        from backend.rag.legal_engine import normalize_ppkp_query
+
+        q_norm = normalize_ppkp_query(question or "")
+        q_low = f"{(question or '').lower()} {q_norm.lower()}".strip()
         scored: List[tuple[float, float, int, List[str], Dict[str, Any]]] = []
         for s in UIP_SCENARIO_LIBRARY:
             total, kw_score, neg_hits, matched_kws = cls._score_scenario(s, q_low, akta_hint=akta_hint)
@@ -2098,6 +2244,22 @@ class UIPAdvisorService:
         primary_total, primary_kw, primary_neg, primary_kws, primary = scored[0]
         if primary_kw < cls.MIN_SCENARIO_SCORE:
             return primary, max(0.0, primary_kw), False
+
+        # Elak templat kesalahan statik merampas soalan prosedur teknikal SOP KKM 2024
+        # (cth. bilangan minimum larva / sampul kecil / pecah masuk S.5(5) / BWC / susun folio / serah saman / waran tangkap)
+        procedural_scenario_prefixes = ("ktj_", "ak574_", "ak344_", "ak388_", "ak92_")
+        is_sop_procedural_question = bool(
+            re.search(
+                r"(?<!\w)(?:berapa\s+ekor|minimum\s+larva|sampul\s+kecil|pecah\s+masuk|seksyen\s+5\(5\)|s\.?\s*5\(5\)|"
+                r"susun(?:an)?\s+fail|folio\s+[abcd]|kamera\s+badan|bodycam|bwc|serah\s+saman|waran\s+tangkap|"
+                r"tatacara\s+sop|langkah\s+sop|kod\s+sop|lampiran\s+sop|uip-(?:umum|apspp|apppb|am)|"
+                r"rantai\s+jagaan|chain\s+of\s+custody|pelupusan\s+barang\s+kes|pemusnahan\s+barang\s+kes|"
+                r"borang\s+rampasan|resit\s+bayaran\s+kompaun|oks\s+mengaku\s+salah)(?!\w)",
+                q_low,
+            )
+        )
+        if is_sop_procedural_question and not str(primary.get("id") or "").startswith(procedural_scenario_prefixes):
+            return primary, max(0.0, primary_kw * 0.5), False
 
         # Gabung secara automatik hanya jika kesalahan kedua sah, serasi & berbeza kata kunci
         merged = dict(primary)
@@ -2222,6 +2384,7 @@ class UIPAdvisorService:
         scenario_id: Optional[str] = None,
         use_ai: bool = False,
         officer_profile: Optional[Dict[str, Any]] = None,
+        conversation_history: Optional[List[Dict[str, str]]] = None,
     ) -> Dict[str, Any]:
         from backend.rag.legal_engine import (
             canonical_akta_code_for_statute,
@@ -2234,10 +2397,12 @@ class UIPAdvisorService:
 
         legal_lib = get_legal_library()
         lib_snapshot = legal_lib.to_snapshot_dict()
+        contextual_question, history_block = self._resolve_followup_question(question, conversation_history)
+        has_followup_history = bool(history_block)
 
         # FASA 3.1: Carian Hibrid Wajib Sebelum Menjawab (Mandatory Closed-Book Grounding)
         grounding = legal_lib.search_closed_book_grounding(
-            question=question,
+            question=contextual_question,
             akta_hint=akta_hint,
             top_k=4,
         )
@@ -2290,9 +2455,10 @@ class UIPAdvisorService:
                 "repealed_warnings": grounding.get("repealed_matches") or [],
                 "statutory_citations": [],
             }
-            self._enrich_two_branch_structure(res_unidx, question, is_fallback=True)
+            self._enrich_two_branch_structure(res_unidx, contextual_question, is_fallback=True)
+            self._attach_sop_brain_metadata(res_unidx, contextual_question, grounding)
             res_unidx["legal_validation"] = validate_legal_output(
-                res_unidx, lib_snapshot, question_context=f"{question} {akta_hint}"
+                res_unidx, lib_snapshot, question_context=f"{contextual_question} {akta_hint}"
             )
             return res_unidx
 
@@ -2301,8 +2467,8 @@ class UIPAdvisorService:
             (o for o in legal_lib.master_offences_matrix if o["offence_id"] == "AKTA_852_S17_1"),
             None,
         )
-        if s17_offence and is_passive_vape_possession_question(question):
-            s17_eval = evaluate_offence_elements_against_facts(question, s17_offence)
+        if s17_offence and is_passive_vape_possession_question(contextual_question):
+            s17_eval = evaluate_offence_elements_against_facts(contextual_question, s17_offence)
             if s17_eval["action_blocked"]:
                 s17_verbatim = [
                     {
@@ -2373,9 +2539,10 @@ class UIPAdvisorService:
                     "statutory_citations": s17_verbatim,
                 }
                 trap_res["draf_teks_kes_cadangan"] = ""
-                self._enrich_two_branch_structure(trap_res, question, is_fallback=False)
+                self._enrich_two_branch_structure(trap_res, contextual_question, is_fallback=False)
+                self._attach_sop_brain_metadata(trap_res, contextual_question, grounding)
                 trap_res["legal_validation"] = validate_legal_output(
-                    trap_res, lib_snapshot, question_context=question
+                    trap_res, lib_snapshot, question_context=contextual_question
                 )
                 return trap_res
 
@@ -2386,10 +2553,11 @@ class UIPAdvisorService:
             s["doc_id"] for s in legal_lib.statute_sections_verbatim if s.get("is_offence_provision")
         }
 
-        # 0. Semak Koleksi Soalan & Jawapan Pakar dahulu apabila pengguna tidak memaksa Analisa AI segar
+        # 0. Semak Koleksi Soalan & Jawapan Pakar dahulu apabila pengguna tidak memaksa Analisa AI segar & bukan soalan susulan
         if (
             not use_ai
             and not scenario_id
+            and not has_followup_history
             and self.db is not None
             and len((question or "").strip()) >= 8
         ):
@@ -2416,6 +2584,7 @@ class UIPAdvisorService:
                     and (is_akta_388_ans or not ("seksyen 2" in ans_dump_low and "tafsiran" in ans_dump_low))
                 ):
                     self._enrich_two_branch_structure(ans, question, is_fallback=False)
+                    self._attach_sop_brain_metadata(ans, question, grounding)
                     # Sahkan jawapan cache menggunakan validate_legal_output sebelum dipetik semula
                     val_check = validate_legal_output(ans, lib_snapshot, question_context=question)
                     if val_check["passed"]:
@@ -2485,12 +2654,12 @@ class UIPAdvisorService:
                         return ans
 
         matched, kw_score, confident_match = self._match_composite_scenarios(
-            question, akta_hint=akta_hint, scenario_id=scenario_id
+            contextual_question, akta_hint=akta_hint, scenario_id=scenario_id
         )
         rag_query = (
-            f"{question} {matched['akta_utama']} {matched['tajuk']}"
+            f"{contextual_question} {matched['akta_utama']} {matched['tajuk']}"
             if confident_match
-            else question
+            else contextual_question
         )
         effective_rag_akta = (
             None
@@ -2669,8 +2838,10 @@ class UIPAdvisorService:
             "is_fallback_response": bool(matched.get("is_fallback_response", False)),
         }
 
-        effective_question = question.strip()
-        if not effective_question or effective_question.lower().startswith("rujuk templat situasi ini"):
+        effective_question = contextual_question.strip()
+        if not effective_question or effective_question.lower().startswith(
+            ("rujuk templat situasi ini", "rujuk contoh situasi ini")
+        ):
             effective_question = matched["tajuk"]
 
         ai_requested = bool(use_ai)
@@ -2713,6 +2884,7 @@ class UIPAdvisorService:
 
         auto_ai_needed = (
             (not confident_match)
+            or has_followup_history
             or (is_nuanced_question and matched.get("id") not in fast_handled_nuance_ids)
         ) and len(effective_question) >= 12
         should_call_ai = ai_requested or auto_ai_needed
@@ -2733,6 +2905,7 @@ class UIPAdvisorService:
             PAKAR_UIP_SYSTEM_PROMPT = ""  # type: ignore
             logger.warning("Otak SOP KKM 2024 tidak dapat dimulakan: %s", _sop_exc)
 
+        safe_history_for_llm = ""
         if should_call_ai and self.router._genai_client is None:
             result["ai_attempted"] = ai_requested
             if ai_requested:
@@ -2741,7 +2914,7 @@ class UIPAdvisorService:
                 )
         elif should_call_ai:
             result["ai_attempted"] = True
-            # PDPA P0: Nyah-identiti (redaksi) soalan pengguna SEBELUM dihantar ke LLM luaran (Gemini)
+            # PDPA P0: Nyah-identiti (redaksi) soalan pengguna & sejarah perbualan SEBELUM dihantar ke LLM luaran (Gemini)
             try:
                 redacted_q_res = self.router.redactor.redact(
                     effective_question,
@@ -2749,14 +2922,26 @@ class UIPAdvisorService:
                     redact_moh_emails=True,
                 )
                 safe_question_for_llm = redacted_q_res.redacted_text
+                if history_block:
+                    safe_history_for_llm = self.router.redactor.redact(
+                        history_block,
+                        use_ollama=False,
+                        redact_moh_emails=True,
+                    ).redacted_text
             except TypeError:
                 # Sokongan serasi jika redactor belum dikemas kini parameter tambahan
                 safe_question_for_llm = self.router.redactor.redact(
                     effective_question,
                     use_ollama=False,
                 ).redacted_text
+                if history_block:
+                    safe_history_for_llm = self.router.redactor.redact(
+                        history_block,
+                        use_ollama=False,
+                    ).redacted_text
             except Exception:
                 safe_question_for_llm = effective_question
+                safe_history_for_llm = ""
 
             if sop_brain is not None:
                 try:
@@ -2772,6 +2957,7 @@ class UIPAdvisorService:
                     legal_lib.statute_library_version,
                     "sop-brain-2024-v1",
                     safe_question_for_llm.lower(),
+                    safe_history_for_llm.lower()[:240],
                     akta_hint,
                     scenario_id or "",
                     "deep" if ai_requested else "auto",
@@ -2875,6 +3061,7 @@ class UIPAdvisorService:
                     f"{deep_mode_instruction}\n"
                     f"{sop_router_header}"
                     f"{nota_852_guard}"
+                    f"{(safe_history_for_llm + chr(10) + chr(10)) if safe_history_for_llm else ''}"
                     f"SOALAN PPKP:\n{safe_question_for_llm}\n\n"
                     f"DOKUMEN SOP KKM PENUH YANG DISUNTIK:\n{full_sops_xml}\n\n"
                     f"{ref_block}"
@@ -3060,31 +3247,14 @@ class UIPAdvisorService:
         result["statutory_citations"] = citations_dict
 
         # Lampirkan metadata Otak SOP KKM 2024 pada SEMUA jawapan (termasuk Mod Pantas / luar talian)
-        if sop_brain is not None:
-            if sop_route is None:
-                sop_route = sop_brain.route_question_deterministic(effective_question)
-                sop_route_mode = "deterministic"
-            sop_refs = sop_brain.get_sop_summaries(sop_route.selected_sop_ids)
-            result["sop_routing"] = {
-                **sop_route.model_dump(),
-                "mode": sop_route_mode,
-            }
-            result["sop_references"] = sop_refs
-            if not result.get("nota_pindaan"):
-                amend_dirs = grounding.get("amendment_directives") or []
-                if sop_route.melibatkan_akta_852:
-                    result["nota_pindaan"] = (
-                        "[NOTA PINDAAN] PPKHT 2004 dan Notis Seksyen 32B Akta Makanan 1983 bagi kes produk merokok/vape "
-                        "telah DIMANSUHKAN mulai 1 Oktober 2024 dan digantikan oleh Akta 852. Tiada SOP khusus Akta 852 "
-                        "dalam koleksi SOP KKM Pindaan 15 Feb 2024; rujuk teks Akta 852 terkini dan SOP UMUM yang terpakai."
-                    )
-                elif amend_dirs:
-                    result["nota_pindaan"] = f"[NOTA PINDAAN] {' | '.join(amend_dirs)}"
-                elif sop_route.amaran_statut_mansuh:
-                    result["nota_pindaan"] = f"[NOTA PINDAAN] {sop_route.amaran_statut_mansuh}"
-        else:
-            result.setdefault("sop_routing", None)
-            result.setdefault("sop_references", [])
+        self._attach_sop_brain_metadata(
+            result,
+            effective_question,
+            grounding,
+            sop_brain=sop_brain,
+            sop_route=sop_route,
+            sop_route_mode=sop_route_mode,
+        )
 
         if "legal_validation" not in result or result["legal_validation"] is None:
             result["legal_validation"] = validate_legal_output(

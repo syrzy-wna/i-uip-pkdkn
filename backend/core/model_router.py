@@ -532,8 +532,13 @@ class UIPModelRouter:
 
         if prefer_fast_gc or prefer_flash:
             gc_list: List[str] = []
-            if not prefer_flash and model_candidates:
-                gc_list.extend(m for m in model_candidates if m)
+            if model_candidates:
+                if prefer_flash:
+                    # Utamakan model flash daripada senarai pemanggil dahulu, kemudian model lain
+                    gc_list.extend(m for m in model_candidates if m and "flash" in m.lower())
+                    gc_list.extend(m for m in model_candidates if m and "flash" not in m.lower())
+                else:
+                    gc_list.extend(m for m in model_candidates if m)
             if settings.standard_fallback_model:
                 gc_list.append(settings.standard_fallback_model)
             if settings.multimodal_model:
@@ -541,7 +546,7 @@ class UIPModelRouter:
             gc_list.append("gemini-2.5-flash")
 
             gc_unique = list(dict.fromkeys(gc_list))
-            for idx, m_name in enumerate(gc_unique[:2]):
+            for idx, m_name in enumerate(gc_unique[:3]):
                 res = self._try_generate_content_json(
                     model_name=m_name,
                     gc_contents=gc_contents,
@@ -1093,13 +1098,13 @@ class UIPModelRouter:
                 prefer_flash=True,
             )
             if isinstance(ai_json, dict) and isinstance(ai_json.get("borang_114"), dict):
-                # Sahkan output AI terhadap Pustaka Akta Verbatim AGC sebelum diterima
+                # Sahkan SEMUA artifak draf AI (Borang 114, Saman 111, Izin Mendakwa, Notis Kompaun, Fakta Kes, Kertas Cadangan IO) terhadap Pustaka Akta Verbatim AGC
                 from backend.rag.legal_engine import get_legal_library, validate_legal_output
 
                 val_draft = validate_legal_output(
-                    {"akta_disyorkan": akta_utama, "borang_114": ai_json.get("borang_114")},
+                    {**ai_json, "akta_disyorkan": akta_utama},
                     get_legal_library().to_snapshot_dict(),
-                    question_context=redaction.redacted_text[:600],
+                    question_context=redaction.redacted_text[:800],
                 )
                 if val_draft.get("passed", True):
                     generated_json = ai_json
@@ -1594,18 +1599,60 @@ class UIPModelRouter:
         akta_utama: str, text: str, citations: List[StatuteChunk]
     ) -> tuple[str, str, str, str, str, str]:
         """Menentukan Seksyen Kesalahan, Hukuman, Had Hukuman, Status Kompaun, Tempoh & Amaun lalai yang sah mengikut Akta."""
-        low = (akta_utama + " " + text[:2000]).lower()
-        if "852" in akta_utama or "852" in low:
-            if "pamer" in low or "kaunter" in low or "peraturan 6" in low:
+        low = (akta_utama + " " + text[:3000]).lower()
+        akta_low = (akta_utama or "").lower()
+
+        def _has_pat(pat: str) -> bool:
+            return bool(re.search(pat, low, flags=re.I))
+
+        # --- AKTA 852 (Produk Merokok 2024) ---
+        if "852" in akta_low or ("852" in low and not any(a in akta_low for a in ("281", "154", "342"))):
+            if _has_pat(r"(?<!\w)(?:seksyen\s+3\(1\)|s\.?\s*3\(1\)|seksyen\s+3\b|tidak\s+berdaftar|tanpa\s+pendaftaran|262/2024|mengimport\s+produk\s+merokok|mengilang\s+produk\s+merokok)(?!\w)"):
                 return (
-                    "Seksyen 10(1) Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024 [Akta 852] dibaca bersama Peraturan 6 Peraturan-Peraturan Kawalan Produk Merokok Demi Kesihatan Awam (Kawalan Penjualan) 2024 [P.U. (A) 260/2024]",
+                    "Seksyen 3(1) Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024 [Akta 852] dibaca bersama Peraturan-Peraturan Kawalan Produk Merokok Demi Kesihatan Awam (Pendaftaran Produk Tembakau, Bahan Merokok atau Produk Pengganti Tembakau) 2024 [P.U. (A) 262/2024]",
+                    "Seksyen 3(2)(a) [Individu] atau Seksyen 3(2)(b) [Pertubuhan Perbadanan] Akta 852",
+                    "Individu: Denda tidak melebihi RM20,000 atau penjara tidak melebihi 1 tahun (kesalahan pertama). Syarikat: Denda RM20,000 – RM100,000 atau penjara tidak melebihi 2 tahun.",
+                    "TIDAK BOLEH DIKOMPAUN (tiada dalam Jadual Pertama P.U. (A) 259/2024) — Wajib Sita (S.35/S.36) & Buka IP Terus",
+                    "Tiada tawaran kompaun (Buka IP Terus)",
+                    "Tidak Berkenaan (Buka IP Terus)",
+                )
+            if _has_pat(r"(?<!\w)(?:seksyen\s+13\(1\)|s\.?\s*13\(1\)|jual(?:an)?\s+(?:rokok|vape|produk\s+merokok)\s+kepada\s+(?:obd|pelajar|kanak-kanak|bawah\s+umur|bawah\s+18)|menjual\s+.*\b(?:obd|pelajar|bawah\s+18|bawah\s+umur))(?!\w)"):
+                return (
+                    "Seksyen 13(1) Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024 [Akta 852]",
+                    "Seksyen 13(2)(a) [Individu] atau Seksyen 13(2)(b) [Pertubuhan Perbadanan] Akta 852",
+                    "Individu: Denda tidak melebihi RM20,000 atau penjara tidak melebihi 1 tahun (kesalahan pertama). Syarikat: Denda RM20,000 – RM100,000 atau penjara tidak melebihi 2 tahun.",
+                    "TIDAK BOLEH DIKOMPAUN (tiada dalam Jadual Pertama P.U. (A) 259/2024) — Wajib Sita (S.35/S.36) & Buka IP Terus",
+                    "Tiada tawaran kompaun (Buka IP Terus)",
+                    "Tidak Berkenaan (Buka IP Terus)",
+                )
+            if _has_pat(r"(?<!\w)(?:seksyen\s+13\(3\)|s\.?\s*13\(3\)|(?:obd|pelajar|bawah\s+18|bawah\s+umur)\s+membeli\s+(?:rokok|vape|produk\s+merokok))(?!\w)"):
+                return (
+                    "Seksyen 13(3) Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024 [Akta 852]",
+                    "Seksyen 13(4) Akta 852",
+                    "Denda tidak melebihi RM500.00 atau perintah khidmat masyarakat (patuhi Akta Kanak-Kanak 2001 [Akta 611]).",
+                    "Seksyen 48(2) Akta 852 & Jadual Pertama(a) P.U. (A) 259/2024 (had kompaun maks RM250.00)",
+                    "30 hari dari tarikh tawaran kompaun",
+                    "RM 50.00",
+                )
+            if _has_pat(r"(?<!\w)(?:seksyen\s+17\(1\)|s\.?\s*17\(1\)|(?:obd|pelajar|murid|budak\s+sekolah|bawah\s+18|bawah\s+umur).{0,50}(?:merokok|hisap|menghisap|menggunakan|vape|rokok))(?!\w)"):
+                return (
+                    "Seksyen 17(1) Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024 [Akta 852]",
+                    "Seksyen 17(2) Akta 852",
+                    "Denda tidak melebihi RM500.00 atau perintah khidmat masyarakat (patuhi Akta Kanak-Kanak 2001 [Akta 611]).",
+                    "Seksyen 48(2) Akta 852 & Jadual Pertama(c) P.U. (A) 259/2024 (had kompaun maks RM250.00)",
+                    "30 hari dari tarikh tawaran kompaun",
+                    "RM 50.00",
+                )
+            if _has_pat(r"(?<!\w)(?:seksyen\s+10\(1\)|s\.?\s*10\(1\)|pamer|mempamer(?:kan)?\s+(?:rokok|vape|produk)|kaunter\s+terbuka|peraturan\s+6|260/2024|jualan\s+dalam\s+talian|jual\s+online|tiktok|shopee|vending|mesin\s+layan\s+diri)(?!\w)"):
+                return (
+                    "Seksyen 10(1) Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024 [Akta 852] dibaca bersama Peraturan-Peraturan Kawalan Produk Merokok Demi Kesihatan Awam (Kawalan Penjualan) 2024 [P.U. (A) 260/2024]",
                     "Seksyen 10(2)(a) [Bukan Pertubuhan Perbadanan] atau Seksyen 10(2)(b) [Pertubuhan Perbadanan] Akta 852",
                     "Individu: Denda tidak melebihi RM20,000 atau penjara tidak melebihi 1 tahun (kesalahan pertama). Syarikat: Denda RM20,000 – RM100,000 atau penjara tidak melebihi 2 tahun.",
                     "TIDAK BOLEH DIKOMPAUN (tiada dalam Jadual Pertama P.U. (A) 259/2024) — Wajib Sita (S.35/S.36) & Buka IP Terus",
                     "Tiada tawaran kompaun (Buka IP Terus)",
                     "Tidak Berkenaan (Buka IP Terus)",
                 )
-            if "iklan" in low or "seksyen 7" in low:
+            if _has_pat(r"(?<!\w)(?:iklan|mengiklankan|promosi|tajaan|seksyen\s+7\(1\)|s\.?\s*7\(1\)|seksyen\s+7\b)(?!\w)"):
                 return (
                     "Seksyen 7(1) Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024 [Akta 852]",
                     "Seksyen 7(2)(a) [Bukan Pertubuhan Perbadanan] atau Seksyen 7(2)(b) [Pertubuhan Perbadanan] Akta 852",
@@ -1614,7 +1661,16 @@ class UIPModelRouter:
                     "Tiada tawaran kompaun (Buka IP Terus)",
                     "Tidak Berkenaan (Buka IP Terus)",
                 )
-            if "tanda amaran" in low or "tanda larangan" in low or "seksyen 18" in low:
+            if _has_pat(r"(?<!\w)(?:seksyen\s+15\(1\)|s\.?\s*15\(1\)|pembungkusan|amaran\s+kesihatan\s+bergambar|261/2024)(?!\w)"):
+                return (
+                    "Seksyen 15(1) Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024 [Akta 852] dibaca bersama Peraturan-Peraturan Kawalan Produk Merokok Demi Kesihatan Awam (Pembungkusan dan Pelabelan) 2024 [P.U. (A) 261/2024]",
+                    "Seksyen 15(2)(a) [Individu] atau Seksyen 15(2)(b) [Pertubuhan Perbadanan] Akta 852",
+                    "Individu: Denda tidak melebihi RM20,000 atau penjara tidak melebihi 1 tahun. Syarikat: Denda RM20,000 – RM100,000 atau penjara tidak melebihi 2 tahun.",
+                    "TIDAK BOLEH DIKOMPAUN (tiada dalam Jadual Pertama P.U. (A) 259/2024) — Wajib Sita (S.35/S.36) & Buka IP Terus",
+                    "Tiada tawaran kompaun (Buka IP Terus)",
+                    "Tidak Berkenaan (Buka IP Terus)",
+                )
+            if _has_pat(r"(?<!\w)(?:tanda\s+amaran|tanda\s+larangan|papan\s+tanda|bekas\s+abu|ashtray|258/2024|seksyen\s+18|s\.?\s*18\(1\))(?!\w)"):
                 return (
                     "Seksyen 18(1)(a) Akta Kawalan Produk Merokok Demi Kesihatan Awam 2024 [Akta 852] dibaca bersama Peraturan 2(1) & 2(2) P.U. (A) 258/2024",
                     "Seksyen 18(2) Akta 852",
@@ -1632,11 +1688,93 @@ class UIPModelRouter:
                 "RM 250.00",
             )
 
-        if "281" in akta_utama or "makanan" in low or "ppkm" in low:
-            if "tifoid" in low or "31(1)" in low or "peraturan 31" in low:
+        # --- AKTA 281 (Akta Makanan 1983 / PPKM 2009 / PPM 1985) ---
+        if "281" in akta_low or ("makanan" in low and not any(a in akta_low for a in ("852", "154", "342"))) or "ppkm" in low or "ppm 1985" in low:
+            if _has_pat(r"(?<!\w)(?:seksyen\s+13a\(2\)|s\.?\s*13a\(2\)|seksyen\s+13a|bangkai\s+lipas|jirim\s+asing|benda\s+asing|busuk|reput|tidak\s+layak\s+dimakan)(?!\w)"):
+                return (
+                    "Seksyen 13A(2) Akta Makanan 1983 [Akta 281]",
+                    "Seksyen 13A(2) Akta Makanan 1983 [Akta 281]",
+                    "Denda tidak melebihi RM30,000.00 atau penjara tidak melebihi 5 tahun atau kedua-duanya (Perbicaraan di Mahkamah Sesyen mengikut S.63/64 Akta 92).",
+                    "TIDAK BOLEH DIKOMPAUN — Wajib Buka IP Terus ke Mahkamah Sesyen",
+                    "Tiada tawaran kompaun (Buka IP Terus)",
+                    "Tidak Berkenaan (Buka IP Terus)",
+                )
+            if _has_pat(r"(?<!\w)(?:seksyen\s+13\(1\)|s\.?\s*13\(1\)|memudaratkan\s+kesihatan|bahan\s+beracun|keracunan\s+makanan\s+seksyen\s+13)(?!\w)"):
+                return (
+                    "Seksyen 13(1) Akta Makanan 1983 [Akta 281]",
+                    "Seksyen 13(1) Akta Makanan 1983 [Akta 281]",
+                    "Denda tidak melebihi RM100,000.00 atau penjara tidak melebihi 10 tahun atau kedua-duanya (Perbicaraan di Mahkamah Sesyen mengikut S.63/64 Akta 92).",
+                    "TIDAK BOLEH DIKOMPAUN — Wajib Buka IP Terus ke Mahkamah Sesyen",
+                    "Tiada tawaran kompaun (Buka IP Terus)",
+                    "Tidak Berkenaan (Buka IP Terus)",
+                )
+            if _has_pat(r"(?<!\w)(?:seksyen\s+13b|s\.?\s*13b|diaduk|adulterated|bahan\s+tambah\s+dilarang)(?!\w)"):
+                return (
+                    "Seksyen 13B(1) Akta Makanan 1983 [Akta 281]",
+                    "Seksyen 13B(4) Akta Makanan 1983 [Akta 281]",
+                    "Denda tidak melebihi RM20,000.00 atau penjara tidak melebihi 5 tahun atau kedua-duanya (Perbicaraan di Mahkamah Sesyen mengikut S.63/64 Akta 92).",
+                    "TIDAK BOLEH DIKOMPAUN — Wajib Buka IP Terus ke Mahkamah Sesyen",
+                    "Tiada tawaran kompaun (Buka IP Terus)",
+                    "Tidak Berkenaan (Buka IP Terus)",
+                )
+            if _has_pat(r"(?<!\w)(?:seksyen\s+11(?:\([12]\))?|s\.?\s*11(?:\([12]\))?|perintah\s+tutup|penutupan\s+premis\s+makanan|ingkar\s+arahan\s+penutupan)(?!\w)"):
+                return (
+                    "Seksyen 11 Akta Makanan 1983 [Akta 281] (Ingkar Perintah Penutupan Premis Tidak Suci)",
+                    "Seksyen 11 Akta Makanan 1983 [Akta 281]",
+                    "Penjara tidak melebihi 5 tahun atau denda atau kedua-duanya (Perbicaraan di Mahkamah Sesyen jika hukuman melebihi had Majistret S.87 Akta 92).",
+                    "TIDAK BOLEH DIKOMPAUN — Wajib Buka IP Terus ke Mahkamah",
+                    "Tiada tawaran kompaun (Buka IP Terus)",
+                    "Tidak Berkenaan (Buka IP Terus)",
+                )
+            if _has_pat(r"(?<!\w)(?:seksyen\s+4\(4\)|s\.?\s*4\(4\)|menghalang\s+pegawai\s+diberi\s+kuasa)(?!\w)"):
+                return (
+                    "Seksyen 4(4) Akta Makanan 1983 [Akta 281]",
+                    "Seksyen 4(4) Akta Makanan 1983 [Akta 281]",
+                    "Penjara tidak melebihi 1 tahun atau denda atau kedua-duanya.",
+                    "TIDAK BOLEH DIKOMPAUN — Wajib Buka IP Terus ke Mahkamah",
+                    "Tiada tawaran kompaun (Buka IP Terus)",
+                    "Tidak Berkenaan (Buka IP Terus)",
+                )
+            if _has_pat(r"(?<!\w)(?:14\(9\)|peraturan\s+14\(9\)|tarikh\s+akhir|tamat\s+tempoh|luput\s+tarikh|expired|ppm\s*1985)(?!\w)"):
+                return (
+                    "Peraturan 14(9)(b) Peraturan-Peraturan Makanan 1985 [P.U. (A) 437/1985]",
+                    "Peraturan 397(2) Peraturan-Peraturan Makanan 1985 [P.U. (A) 437/1985]",
+                    "Denda tidak melebihi RM10,000.00 atau penjara tidak melebihi 2 tahun.",
+                    "Notis Seksyen 32B & Seksyen 33 Akta Makanan 1983 (Boleh kompaun bagi kesalahan tersenarai dalam Jadual Peraturan Makanan)",
+                    "14 hari dari tarikh penyampaian notis",
+                    "RM 2,500.00",
+                )
+            if _has_pat(r"(?<!\w)(?:tifoid|typhoid|antitifoid|31\(1\)|peraturan\s+31)(?!\w)"):
                 return (
                     "Peraturan 31(1) Peraturan-Peraturan Kebersihan Makanan 2009 [P.U. (A) 95/2009]",
                     "Peraturan 31(3) Peraturan-Peraturan Kebersihan Makanan 2009 [P.U. (A) 95/2009]",
+                    "Denda tidak melebihi RM10,000.00 atau penjara tidak melebihi 2 tahun.",
+                    "Notis Seksyen 32B & Seksyen 33 Akta Makanan 1983 [Jadual Keempat PPKM 2009]",
+                    "14 hari dari tarikh penyampaian notis",
+                    "RM 250.00",
+                )
+            if _has_pat(r"(?<!\w)(?:slpm|latihan\s+pengendali|kursus\s+pengendali|30\(1\)|peraturan\s+30)(?!\w)"):
+                return (
+                    "Peraturan 30(1) Peraturan-Peraturan Kebersihan Makanan 2009 [P.U. (A) 95/2009]",
+                    "Peraturan 30(3) Peraturan-Peraturan Kebersihan Makanan 2009 [P.U. (A) 95/2009]",
+                    "Denda tidak melebihi RM10,000.00 atau penjara tidak melebihi 2 tahun.",
+                    "Notis Seksyen 32B & Seksyen 33 Akta Makanan 1983 [Jadual Keempat PPKM 2009]",
+                    "14 hari dari tarikh penyampaian notis",
+                    "RM 250.00",
+                )
+            if _has_pat(r"(?<!\w)(?:apron|penutup\s+kepala|kasut\s+bertutup|pakaian\s+pengendali|32\(1\)|peraturan\s+32)(?!\w)"):
+                return (
+                    "Peraturan 32(1) Peraturan-Peraturan Kebersihan Makanan 2009 [P.U. (A) 95/2009]",
+                    "Peraturan 32(3) Peraturan-Peraturan Kebersihan Makanan 2009 [P.U. (A) 95/2009]",
+                    "Denda tidak melebihi RM1,000.00 (had kompaun maks RM500.00).",
+                    "Notis Seksyen 32B & Seksyen 33 Akta Makanan 1983 [Jadual Keempat PPKM 2009]",
+                    "14 hari dari tarikh penyampaian notis",
+                    "RM 100.00",
+                )
+            if _has_pat(r"(?<!\w)(?:fosim|perakuan\s+pendaftaran|peraturan\s+8|8\(1\)|p\.?\s*8\(1\))(?!\w)"):
+                return (
+                    "Peraturan 8(1) Peraturan-Peraturan Kebersihan Makanan 2009 [P.U. (A) 95/2009]",
+                    "Peraturan 8(2) Peraturan-Peraturan Kebersihan Makanan 2009 [P.U. (A) 95/2009]",
                     "Denda tidak melebihi RM10,000.00 atau penjara tidak melebihi 2 tahun.",
                     "Notis Seksyen 32B & Seksyen 33 Akta Makanan 1983 [Jadual Keempat PPKM 2009]",
                     "14 hari dari tarikh penyampaian notis",
@@ -1651,7 +1789,26 @@ class UIPModelRouter:
                 "RM 500.00",
             )
 
-        if "154" in akta_utama or "aedes" in low or "larva" in low:
+        # --- AKTA 154 (APSPP 1975) ---
+        if "154" in akta_low or "aedes" in low or "larva" in low or "apspp" in low:
+            if _has_pat(r"(?<!\w)(?:seksyen\s+21|s\.?\s*21|menghalang|halang\s+fogging|halang\s+semburan|semburan\s+kabus)(?!\w)"):
+                return (
+                    "Seksyen 21 Akta Pemusnahan Serangga Pembawa Penyakit 1975 [Akta 154]",
+                    "Seksyen 23(a) [Kesalahan Pertama] / Seksyen 23(b) [Ulangan] Akta 154",
+                    "Kesalahan pertama: Denda tidak melebihi RM10,000 atau penjara tidak melebihi 2 tahun atau kedua-duanya. Kesalahan kedua/ulangan: Denda tidak melebihi RM50,000 atau penjara tidak melebihi 5 tahun.",
+                    "TIDAK BOLEH DIKOMPAUN — Wajib Buka IP Terus ke Mahkamah",
+                    "Tiada tawaran kompaun (Buka IP Terus)",
+                    "Tidak Berkenaan (Buka IP Terus)",
+                )
+            if _has_pat(r"(?<!\w)(?:seksyen\s+8\(8\)|s\.?\s*8\(8\)|ingkar\s+perintah\s+(?:bertulis\s+)?seksyen\s+8|perintah\s+bertulis\s+seksyen\s+8|notis\s+seksyen\s+8)(?!\w)"):
+                return (
+                    "Seksyen 8(8) Akta Pemusnahan Serangga Pembawa Penyakit 1975 [Akta 154]",
+                    "Seksyen 23(a) [Kesalahan Pertama] / Seksyen 23(b) [Ulangan] Akta 154",
+                    "Kesalahan pertama: Denda tidak melebihi RM10,000 atau penjara tidak melebihi 2 tahun atau kedua-duanya. Kesalahan kedua/ulangan: Denda tidak melebihi RM50,000 atau penjara tidak melebihi 5 tahun.",
+                    "TIDAK BOLEH DIKOMPAUN — Wajib Buka IP Terus ke Mahkamah",
+                    "Tiada tawaran kompaun (Buka IP Terus)",
+                    "Tidak Berkenaan (Buka IP Terus)",
+                )
             return (
                 "Seksyen 13(1) dibaca bersama Seksyen 13(2) Akta Pemusnahan Serangga Pembawa Penyakit 1975 [Akta 154]",
                 "Seksyen 23(a) Akta Pemusnahan Serangga Pembawa Penyakit 1975 [Akta 154]",
@@ -1661,7 +1818,37 @@ class UIPModelRouter:
                 "RM 500.00",
             )
 
-        if "342" in akta_utama or "342" in low or "tibi" in low or "tuberkulosis" in low:
+        # --- AKTA 342 (APPPB 1988 + Pindaan Akta A1742) ---
+        if "342" in akta_low or "342" in low or "tibi" in low or "tuberkulosis" in low or "apppb" in low:
+            if not _has_pat(r"(?<!\w)(?:seksyen\s+22\(b\)|s\.?\s*22\(b\)|cicir\s+rawatan)(?!\w)") and _has_pat(
+                r"(?<!\w)(?:seksyen\s+10\(2\)|s\.?\s*10\(2\)|gagal\s+(?:membuat\s+)?notifikasi|tidak\s+(?:membuat\s+)?notifikasi|gagal\s+melapor(?:kan)?\s+penyakit|pengamal\s+perubatan\s+(?:gagal|tidak))(?!\w)"
+            ):
+                return (
+                    "Seksyen 10(2) Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988 [Akta 342]",
+                    "Seksyen 24(a) [Individu] / Seksyen 24(b) [Pertubuhan Perbadanan] Akta 342 (Pindaan Akta A1742)",
+                    "Individu: Denda tidak melebihi RM10,000.00 atau penjara tidak melebihi 2 tahun atau kedua-duanya | Syarikat: Denda tidak melebihi RM100,000.00.",
+                    "Seksyen 25 Akta 342 [P.U. (A) 139/2025] (dengan keizinan bertulis Pendakwa Raya)",
+                    "14 hari dari tarikh tawaran kompaun",
+                    "RM 1,000.00",
+                )
+            if _has_pat(r"(?<!\w)(?:seksyen\s+12\(1\)|s\.?\s*12\(1\)|bersiar-siar|mendedahkan\s+orang\s+awam)(?!\w)"):
+                return (
+                    "Seksyen 12(1) Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988 [Akta 342]",
+                    "Seksyen 24(a) Akta 342 (Pindaan Akta A1742)",
+                    "Denda tidak melebihi RM10,000.00 atau penjara tidak melebihi 2 tahun atau kedua-duanya.",
+                    "TIDAK BOLEH DIKOMPAUN (tiada dalam Jadual Pertama P.U. (A) 139/2025) — Wajib Buka IP Terus ke Mahkamah",
+                    "Tiada tawaran kompaun (Buka IP Terus)",
+                    "Tidak Berkenaan (Buka IP Terus)",
+                )
+            if _has_pat(r"(?<!\w)(?:seksyen\s+22\(a\)|s\.?\s*22\(a\)|menghalang\s+pegawai\s+diberi\s+kuasa)(?!\w)"):
+                return (
+                    "Seksyen 22(a) Akta Pencegahan dan Pengawalan Penyakit Berjangkit 1988 [Akta 342]",
+                    "Seksyen 24(a) [Individu] / Seksyen 24(b) [Pertubuhan Perbadanan] Akta 342 (Pindaan Akta A1742)",
+                    "Individu: Denda tidak melebihi RM10,000.00 atau penjara tidak melebihi 2 tahun atau kedua-duanya | Syarikat: Denda tidak melebihi RM100,000.00.",
+                    "TIDAK BOLEH DIKOMPAUN (tiada dalam Jadual Pertama P.U. (A) 139/2025) — Wajib Buka IP Terus ke Mahkamah",
+                    "Tiada tawaran kompaun (Buka IP Terus)",
+                    "Tidak Berkenaan (Buka IP Terus)",
+                )
             if any(k in low for k in ("smear negatif", "afb negatif", "disaring", "saringan", "enggan mula", "taknak mula")):
                 return (
                     "Seksyen 14A(1) & Seksyen 14 Akta 342 [Pindaan Akta A1742] (Perintah Pengasingan/Pengawasan; S.22(b) hanya terpakai selepas diagnosis aktif disahkan MO/FMS & notis bertulis diserahkan lalu diingkari)",
@@ -1679,6 +1866,28 @@ class UIPModelRouter:
                 "14 hari (jika kompaun ditawarkan)",
                 "RM 1,000.00",
             )
+
+        # Fallback dinamik daripada matriks kesalahan AGC (ClosedBookLegalLibrary)
+        try:
+            from backend.rag.legal_engine import get_legal_library
+
+            grounding = get_legal_library().search_closed_book_grounding(text[:600], akta_hint=akta_utama, top_k=1)
+            cands = grounding.get("candidate_offences") or []
+            if cands:
+                top_o = cands[0]
+                comp_i = top_o.get("compound_info") or {}
+                pen_i = top_o.get("penalty_first_offence") or {}
+                is_comp = bool(comp_i.get("is_compoundable"))
+                return (
+                    f"{top_o.get('offence_section')} ({top_o.get('canonical_akta_code') or akta_utama})",
+                    str(top_o.get("penalty_section") or f"Peruntukan penalti di bawah {akta_utama}"),
+                    str(pen_i.get("verbatim_penalty") or "Tertakluk had maksimum penalti di bawah Akta berkaitan."),
+                    str(comp_i.get("compound_amount_or_limit") or ("Boleh dikompaun mengikut jadual Akta" if is_comp else "TIDAK BOLEH DIKOMPAUN — Rujuk PDRM/TPR")),
+                    f"{comp_i.get('payment_days') or 14} hari" if is_comp else "Tiada tawaran kompaun",
+                    str(comp_i.get("max_compound_rm") or "RM 250.00") if is_comp else "Tidak Berkenaan",
+                )
+        except Exception:
+            pass
 
         primary = citations[0] if citations else None
         return (

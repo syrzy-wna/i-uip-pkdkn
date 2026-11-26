@@ -3478,3 +3478,166 @@ def test_sop_brain_2024_dual_knowledge_store_and_audit_pra_tpr() -> None:
     assert any(s["sop_id"].startswith("UIP-UMUM-02-07") for s in (sop_audit.get("sops_dirujuk") or []))
 
 
+def test_comprehensive_audit_remediations_query_anti_miscitation_and_workflows() -> None:
+    from backend.rag.legal_engine import (
+        expand_query_for_grounding,
+        infer_domain_statute_ids,
+        normalize_ppkp_query,
+        validate_legal_output,
+    )
+    from backend.services.sop_brain import get_sop_brain
+    from backend.services.uip_advisor import UIPAdvisorService
+
+    # 1. Colloquial BM & PPKP acronym normalization + "tak" preserved
+    norm_q = normalize_ppkp_query("pekerja xde tifoid n xde lpm, oks xnak sign kompaun")
+    assert "tiada" in norm_q
+    assert "enggan" in norm_q
+    base_tokens, exp_tokens = expand_query_for_grounding("pekerja xde tifoid dan tak pergi kursus pengendali makanan")
+    assert "tak" in base_tokens
+    assert "31(1)" in exp_tokens
+    assert "30(1)" in exp_tokens
+
+    # 2. Fixed \)\b regex for parenthesized citations
+    statutes_20_3_c = infer_domain_statute_ids("Seksyen 20(3)(c) bantuan polis")
+    assert "AKTA_344" in statutes_20_3_c
+    brain = get_sop_brain()
+    r_8_3_aa = brain.route_question_deterministic("Pemeriksaan Seksyen 8(3)(aa) Akta 154")
+    assert "UIP-APSPP-01-24" in r_8_3_aa.selected_sop_ids
+
+    # 3. Colloquial SOP routing phrases
+    assert any(
+        s.startswith("UIP-APPPB-06-20")
+        for s in brain.route_question_deterministic("macam mana nak tutup taska ada HFMD").selected_sop_ids
+    )
+    assert any(
+        s.startswith("UIP-UMUM-03-07")
+        for s in brain.route_question_deterministic("OKS enggan terima saman mahkamah").selected_sop_ids
+    )
+    assert any(
+        s.startswith("UIP-UMUM-04-07")
+        for s in brain.route_question_deterministic("cara ambil gambar guna DSLR").selected_sop_ids
+    )
+    assert any(
+        s.startswith("UIP-UMUM-01-22")
+        for s in brain.route_question_deterministic("rakaman bodycam semasa pemeriksaan").selected_sop_ids
+    )
+    assert any(
+        s.startswith("UIP-UMUM-02-07")
+        for s in brain.route_question_deterministic("buka IP kes OKS mengaku salah").selected_sop_ids
+    )
+
+    # 4. Multi-turn follow-up resolution
+    resolved_q, history_block = UIPAdvisorService._resolve_followup_question(
+        "Berapa kompaunnya?",
+        [{"question": "Pekerja restoran tiada suntikan tifoid Peraturan 31 PPKM 2009", "answer": "RM250"}],
+    )
+    assert "tifoid" in resolved_q.lower()
+    assert "tifoid" in history_block.lower()
+
+    # 5. Anti-miscitation validator catches abbreviated, fabricated subsections, SOP IDs & S.4(4)/S.16(3)
+    val_res = validate_legal_output(
+        {
+            "ringkasan_eksekutif": (
+                "S. 99(9) Akta 852 dan Seksyen 16(9) Akta 852 serta rujuk SOP UIP-PPKHT-01-12, "
+                "UIP-UMUM-01-23 dan UIP-FAKE-99-99. Kesalahan Seksyen 4(4) Akta 281 boleh dikompaun "
+                "dan Seksyen 16(3) Akta 852 denda maksimum RM10,000."
+            )
+        }
+    )
+    assert val_res["passed"] is False
+    inv_dump = " | ".join(val_res["invalid_citations"])
+    assert "99(9)" in inv_dump
+    assert "16(9)" in inv_dump
+    assert "UIP-PPKHT-01-12" in inv_dump
+    assert "UIP-UMUM-01-23" in inv_dump
+    assert "UIP-FAKE-99-99" in inv_dump
+    assert len(val_res["penalty_mismatches"]) >= 2
+
+    # 6. Active SOP directory endpoints (/api/legal/sops)
+    headers = _get_auth_headers()
+    assert client.get("/api/legal/sops").status_code == 401
+    sops_resp = client.get("/api/legal/sops", headers=headers)
+    assert sops_resp.status_code == 200
+    sops_body = sops_resp.json()
+    assert sops_body["total"] == 22
+    assert len(sops_body["sops"]) == 22
+    assert all("PPKHT" not in item["sop_id"].upper() for item in sops_body["sops"])
+    assert all(item.get("akta") and item.get("tajuk") for item in sops_body["sops"])
+
+    sop_detail = client.get("/api/legal/sops/UIP-UMUM-02-24", headers=headers)
+    assert sop_detail.status_code == 200
+    assert "Akta Makanan" in sop_detail.json()["markdown_content"]
+    assert client.get("/api/legal/sops/UIP-PPKHT-01-12", headers=headers).status_code == 404
+
+    # 7. Unauthenticated /api/status redacts gemini.masked_api_key
+    unauth_status = client.get("/api/status").json()
+    assert unauth_status.get("masked_api_key") == ""
+    assert (unauth_status.get("gemini") or {}).get("masked_api_key") == ""
+
+    # 8. Advisor static scenario guard: online sale & procedural queries not hijacked by ak852_jual_obd
+    online_resp = client.post(
+        "/api/advisor/consult",
+        headers=headers,
+        json={
+            "question": "Peniaga jual vape secara dalam talian di TikTok dan Shopee, seksyen apa?",
+            "akta_hint": "Akta 852",
+            "use_ai": False,
+        },
+    )
+    assert online_resp.status_code == 200
+    online_body = online_resp.json()
+    assert "sop_routing" in online_body
+    assert "10(1)" in json.dumps(online_body, ensure_ascii=False) or "7(1)" in json.dumps(online_body, ensure_ascii=False)
+
+    # 9. Compound checker: invalid MyKad month, non-compoundable S.13A(2) with PPKM mention, and Akta 852 P.U.(A) 259/2024
+    comp_bad_ic = client.post(
+        "/api/check-compound",
+        headers=headers,
+        json={
+            "no_notis": "KKM/KOM/852/2026/901",
+            "nama_penerima": "Ali bin Abu",
+            "no_kp": "841319015523",
+            "nama_premis": "Restoran Maju",
+            "alamat_kejadian": "No. 1, Jalan Maju, Kuala Nerus",
+            "tarikh_masa": "18/11/2026, 10.30 pagi",
+            "peruntukan_undang": "Seksyen 16(2) Akta 852",
+            "peruntukan_kompaun": "Seksyen 48 Akta 852 [P.U. (A) 259/2024]",
+            "kesalahan_ringkas": "Pada 18/11/2026, didapati menghisap rokok di kawasan larangan merokok tempat makan.",
+            "amaun_kompaun_rm": "RM 250.00",
+            "tempoh_bayaran": "30 hari dari tarikh tawaran kompaun",
+            "pegawai_pengeluar": "PPKP Amirul",
+            "no_kad_kuasa": "KKM-001",
+        },
+    )
+    assert comp_bad_ic.status_code == 200
+    comp_bad_body = comp_bad_ic.json()
+    k02 = next(c for c in comp_bad_body["checks"] if c["code"] == "K02")
+    k06 = next(c for c in comp_bad_body["checks"] if c["code"] == "K06")
+    assert k02["status"] != "LULUS"
+    assert k06["status"] == "LULUS"
+    assert not comp_bad_body["suggested_offense_text"].lower().startswith("pada 18/11/2026, pada")
+
+    comp_13a = client.post(
+        "/api/check-compound",
+        headers=headers,
+        json={
+            "no_notis": "KKM/KOM/281/2026/902",
+            "nama_penerima": "Syarikat Makanan Maju",
+            "no_kp": "880512-11-5211",
+            "nama_premis": "Restoran Maju",
+            "alamat_kejadian": "No. 1, Jalan Maju, Kuala Nerus",
+            "tarikh_masa": "18/11/2026, 10.30 pagi",
+            "peruntukan_undang": "Seksyen 13A(2) Akta Makanan 1983 (PPKM 2009)",
+            "peruntukan_kompaun": "Seksyen 33 Akta Makanan 1983",
+            "kesalahan_ringkas": "Menjual makanan mengandungi bangkai lipas di dalam mee goreng.",
+            "amaun_kompaun_rm": "RM 500.00",
+            "tempoh_bayaran": "14 hari dari tarikh serahan notis",
+            "pegawai_pengeluar": "PPKP Amirul",
+            "no_kad_kuasa": "KKM-001",
+        },
+    )
+    assert comp_13a.status_code == 200
+    k06_13a = next(c for c in comp_13a.json()["checks"] if c["code"] == "K06")
+    assert k06_13a["status"] == "GAGAL"
+
+

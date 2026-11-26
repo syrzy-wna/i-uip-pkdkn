@@ -66,9 +66,9 @@ const CORE_ACTS = [
     scope: "Rakaman S.112, Diari S.119, Penzahiran S.51A, Pelupusan S.407/407A & Sijil S.90A.",
   },
   {
-    no: "Akta 574, 344, 388 & 92",
-    name: "Kanun Keseksaan, Akta Polis, Akta Tafsiran & Mahkamah Rendah",
-    scope: "Rujukan silang halang/ugut PPKP (S.186/353/506), sijil palsu (S.465/471), bantuan polis (S.20(3)(c)), 10 hari bersih (S.54) & had mahkamah (S.63/64/87).",
+    no: "Akta 574, 344, 388, 92 & 611",
+    name: "Kanun Keseksaan, Akta Polis, Tafsiran, Mahkamah Rendah & Kanak-Kanak",
+    scope: "Halang/ugut PPKP (S.186/353/506), sijil palsu (S.465/471), bantuan polis (S.20(3)(c)), 10 hari bersih (S.54), had mahkamah (S.63/64/87) & TASKA/Kanak-Kanak (Akta 611).",
   },
 ];
 

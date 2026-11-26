@@ -3655,8 +3655,41 @@ _GROUNDING_STOPWORDS: set[str] = {
     "wajib", "check", "checking", "bag", "the", "and", "for", "with", "that",
     "bawah", "atas", "serta", "bagi", "sebagai", "antara", "lain", "satu",
     "mana2", "sekiranya", "sebarang", "seseorang", "individu", "pihak",
-    "dah", "tak", "sebuah", "kena", "buat", "kat", "dekat", "masa", "tengah", "punya",
+    "dah", "sebuah", "kena", "buat", "kat", "dekat", "masa", "tengah", "punya",
 }
+
+_PPKP_COLLOQUIAL_REPLACEMENTS: Tuple[Tuple[str, str], ...] = (
+    (r"\btakde\b|\btiade\b|\bxde\b|\btak\s+ada\b", "tiada"),
+    (r"\bxleh\b|\btakleh\b|\bx\s*boleh\b|\btak\s+boleh\b", "tidak boleh"),
+    (r"\btaknak\b|\bxnak\b|\btak\s+nak\b", "enggan tidak mahu"),
+    (r"\bblh\b", "boleh"),
+    (r"\bnk\b", "hendak"),
+    (r"\bdlm\b", "dalam"),
+    (r"\bskrg\b", "sekarang"),
+    (r"\bcamne\b|\bcmne\b|\bmcm\s*mana\b", "bagaimana"),
+    (r"\bknp\b", "kenapa"),
+    (r"\bskolah\b", "sekolah"),
+    (r"\bbodycam\b|\bbody\s+cam\b|\bbwc\b", "kamera badan bwc"),
+    (r"\bk/s\b", "kertas siasatan"),
+    (r"\bpma\b", "pintu masuk antarabangsa"),
+    (r"\buipd\b", "unit inspektorat perundangan daerah uipd"),
+    (r"\buipn\b", "unit inspektorat perundangan negeri uipn"),
+    (r"\bdslr\b", "kamera digital fotografi forensik"),
+    (r"\b(?:cd|cdr|cd-r)\b", "cdr gambar digital"),
+    (r"\b(?:tutup|penutupan)\s+(?:taska|tadika|kantin|restoran|kedai|kilang|dewan)\b", "tutup premis penutupan premis"),
+    (r"\b(?:tangkap|ambik|ambil)\s+(?:gambar|foto)\b", "mengambil gambar fotografi forensik"),
+)
+
+
+def normalize_ppkp_query(text: str) -> str:
+    """Menormalkan singkatan SMS/kolokial BM & akronim lapangan PPKP sambil mengekalkan kata nafi (tidak/tiada/belum/tak)."""
+    out = (text or "").strip()
+    if not out:
+        return ""
+    for pat, repl in _PPKP_COLLOQUIAL_REPLACEMENTS:
+        out = re.sub(pat, lambda _m, r=repl: r, out, flags=re.I)
+    return re.sub(r"\s{2,}", " ", out).strip()
+
 
 _PPKP_SYNONYM_MAP: Dict[str, Tuple[str, ...]] = {
     "cafetaria": ("tempat", "makan", "kafeteria", "premis", "makanan"),
@@ -3785,8 +3818,9 @@ def _stem_malay_token(tok: str) -> str:
 
 def expand_query_for_grounding(question: str) -> Tuple[set[str], set[str]]:
     """Menjana set token tepat (+ kata dasar Melayu) dan set token padanan sinonim dwibahasa PPKP."""
-    q_low = (question or "").lower()
-    raw_toks = [t.lower() for t in TOKEN_RE.findall(q_low) if len(t) >= 2]
+    q_orig_low = (question or "").lower()
+    q_low = normalize_ppkp_query(question or "").lower()
+    raw_toks = [t.lower() for t in TOKEN_RE.findall(f"{q_orig_low} {q_low}") if len(t) >= 2]
     exact_tokens: set[str] = set()
     expanded_tokens: set[str] = set()
 
@@ -4148,23 +4182,26 @@ def infer_domain_statute_ids(question: str, akta_hint: str = "Semua") -> Optiona
             return _attach_support_acts({"AKTA_56"}, has_kkm_obstruction_act=False)
         return {hint.upper()}
 
-    has_tobacco = _has_any((
+    has_tobacco_explicit = _has_any((
         "vape", "rokok", "e-rokok", "e-cigarette", "pod", "shisha", "tembakau",
         "nikotin", "nicotine", "merokok", "no smoking", "smoking", "hisap", "menghisap",
         "ashtray", "bekas abu", "tanda larangan", "tanda amaran", "papan tanda",
         "kod qr", "obd", "ppkht", "852", "amaran kesihatan bergambar", "pembungkusan rokok",
         "pelabelan rokok", "pembungkusan vape",
         "257/2024", "258/2024", "259/2024", "260/2024", "261/2024", "262/2024", "264/2024",
-    )) or bool(re.search(r"\b(?:17\(1\)|18\(1\)|16\(2\)|10\(1\)|13\(1\)|15\(1\))\b", q_low))
+    )) or bool(re.search(r"\b(?:17\(1\)|16\(2\)|16\(3\))(?=\W|$)", q_low))
 
     has_food_strong = _has_any((
-        "makanan", "tifoid", "typhoid", "antitifoid", "suntikan", "lpm", "slpm",
-        "kursus pengendali", "fosim", "keracunan", "kotor", "najis tikus", "tikus",
+        "makanan", "tifoid", "typhoid", "antitifoid", "lpm", "slpm",
+        "kursus pengendali", "fosim", "najis tikus", "tikus",
         "lipas", "lalat", "lilati", "apron", "penutup kepala", "benda asing",
         "diaduk", "luput", "expired", "tamat tempoh", "tarikh akhir",
-        "ppkm", "ppm", "mja", "pengendali makanan", "perintah tutup", "tutup premis",
+        "ppkm", "ppm", "mja", "pengendali makanan",
         "13a", "13b", "281", "a1702", "mee goreng", "nasi", "kicap", "sardin",
-    ))
+    )) or (
+        _has_any(("keracunan", "kotor", "suntikan", "perintah tutup", "tutup premis"))
+        and not _has_any(("342", "apppb", "18(1)(d)", "18(1)(f)", "18(1)(c)", "hfmd", "taska", "tadika", "wabak"))
+    )
     has_food_venue_only = _has_any((
         "restoran", "kedai makan", "dapur", "gerai", "warung", "kantin",
         "cafetaria", "kafeteria", "cafe", "kafe", "kopitiam", "pasar mini", "pasaraya",
@@ -4188,14 +4225,22 @@ def infer_domain_statute_ids(question: str, akta_hint: str = "Semua") -> Optiona
         "covid", "tibi", "tb", "tuberkulosis", "ptb", "afb", "tbis", "dots",
         "hfmd", "taska", "tadika", "leptospirosis", "kencing tikus", "measles", "campak",
         "wabak", "hso", "kuarantin", "pengasingan", "unit cdc", "penyakit berjangkit",
-        "342", "a1742", "139/2025",
+        "342", "a1742", "139/2025", "18(1)(d)", "18(1)(f)", "18(1)(c)", "18(1)(e)",
     )) or has_notification_signal
 
-    # Jika soalan jelas tentang HFMD/wabak taska (Akta 342) dan turut menyebut "tutup premis" / "Seksyen 11 Akta Makanan",
-    # sertakan kedua-dua domain jika Akta 281 disebut secara eksplisit; jika hanya "tutup premis" taska HFMD tanpa isyarat makanan, kekal Akta 342.
+    # Subseksyen generik (18(1), 15(1), 13(1), 10(1)) hanya mencetuskan Akta 852 jika TIADA isyarat dominan Akta 281/154/342
+    has_tobacco = has_tobacco_explicit or (
+        bool(re.search(r"\b(?:18\(1\)|10\(1\)|13\(1\)|15\(1\))(?=\W|$)", q_low))
+        and not (has_cdc or has_aedes or has_food_strong)
+    )
+
+    # Jika soalan jelas tentang Akta 342 (cth: S.18(1)(d) keracunan makanan / HFMD) tanpa menyebut Akta 281/PPKM/PPM/S.11,
+    # kekalkan Akta 342 sahaja agar tidak tercemar oleh Akta 281.
     has_food = has_food_strong or (has_food_venue_only and not has_tobacco and not has_cdc)
-    if has_cdc and not _has_any(("makanan", "restoran", "281", "ppkm", "ppm", "tifoid", "slpm", "lipas", "luput", "expired")):
-        if not has_food_venue_only:
+    if has_cdc and not _has_any(("281", "ppkm", "ppm", "tifoid", "slpm", "lipas", "luput", "expired", "seksyen 11", "s.11", "a1702")):
+        if _has_any(("342", "apppb", "18(1)(d)", "18(1)(f)", "18(1)(c)", "hfmd", "taska", "tadika", "tibi", "covid")):
+            has_food = False
+        elif not has_food_venue_only and not _has_any(("makanan", "restoran")):
             has_food = False
 
     locked: set[str] = set()
@@ -4636,7 +4681,7 @@ def evaluate_offence_elements_against_facts(
 
 
 def extract_legal_citations_from_text(text: str) -> List[Dict[str, str]]:
-    """Mengekstrak semua petikan Seksyen, Peraturan dan Akta daripada teks output AI."""
+    """Mengekstrak semua petikan Seksyen, Subseksyen, Perenggan, Peraturan dan Akta daripada teks output AI."""
     if not text:
         return []
 
@@ -4645,32 +4690,52 @@ def extract_legal_citations_from_text(text: str) -> List[Dict[str, str]]:
 
     act_ref_pat = (
         r"Akta\s+A?\d+|Act\s+A?\d+|Akta\s+Kerja\s*1955|OSHA\s*1994|PPKM\s*2009|PPM\s*1985|PPKHT\s*2004|"
-        r"KTJ|CPC|APPPB\s*1988|Kanun\s+Keseksaan|Penal\s+Code|Kanun\s+Tatacara\s+Jenayah|"
+        r"Akta\s+Makanan(?:\s*1983)?|Food\s+Act(?:\s*1983)?|"
+        r"Akta\s+Kawalan\s+Produk\s+Merokok(?:\s+Demi\s+Kesihatan\s+Awam)?(?:\s*2024)?|"
+        r"Akta\s+Pemusnahan\s+Serangga\s+Pembawa\s+Penyakit(?:\s*1975)?|APSPP(?:\s*1975)?|"
+        r"Akta\s+Pencegahan\s+dan\s+Pengawalan\s+Penyakit\s+Berjangkit(?:\s*1988)?|APPPB(?:\s*1988)?|"
+        r"Peraturan-Peraturan\s+Kebersihan\s+Makanan(?:\s*2009)?|"
+        r"Peraturan-Peraturan\s+Makanan(?:\s*1985)?|"
+        r"Akta\s+Kanak-Kanak(?:\s*2001)?|Child\s+Act(?:\s*2001)?|"
+        r"KTJ|CPC|Kanun\s+Keseksaan|Penal\s+Code|Kanun\s+Tatacara\s+Jenayah|"
         r"Akta\s+Polis(?:\s*1967)?|Police\s+Act(?:\s*1967)?|"
         r"Akta\s+Tafsiran(?:\s*1948(?:\s+dan\s+1967)?)?|Interpretation\s+Acts?(?:\s*1948(?:\s+and\s+1967)?)?|"
         r"Akta\s+Mahkamah\s+Rendah(?:\s*1948)?|Subordinate\s+Courts\s+Act(?:\s*1948)?|"
         r"Akta\s+Keterangan(?:\s*1950)?|P\.U\.\s*\(A\)\s*\d+/\d{4}"
     )
 
-    # 1. Pasangan eksplisit: "Seksyen X(Y) Akta ZZZ" atau "Peraturan X(Y) PPKM 2009 / Kanun Keseksaan / Akta Tafsiran / P.U. (A) 258/2024"
+    # 1. Pasangan eksplisit & singkatan: "Seksyen X(Y)", "Subseksyen X(Y)", "Perenggan X(Y)(z)", "S.X(Y)", "Sek. X", "Peraturan X", "P.X"
     paired_re = re.compile(
-        r"\b(Seksyen|Peraturan|Section)\s+(\d+[A-Za-z]{0,2}(?:\(\d+[A-Za-z]?\))?(?:\([a-z]+\))?)"
+        r"(?<!\w)(Seksyen|Subseksyen|Perenggan|Peraturan|Subperaturan|Section|Regulation|Sek\.|Per\.|S\.|P\.)\s*"
+        r"(\d+[A-Za-z]{0,2}(?:\(\d+[A-Za-z]?\))?(?:\([a-z]+\))?)"
         r"(?:\s+(?:dibaca\s+bersama\s+[^,\n.;]{1,40}\s+)?)?"
-        rf"\s*({act_ref_pat})?",
+        rf"(?:\s*(?:di\s+bawah\s+)?({act_ref_pat}))?",
         re.I,
     )
     tail_act_re = re.compile(rf"\b({act_ref_pat})\b", re.I)
 
     for m in paired_re.finditer(text):
-        raw_kind = m.group(1).capitalize()
-        kind = "Seksyen" if raw_kind == "Section" else raw_kind
+        raw_kind = m.group(1).strip().lower()
+        # Elak padanan palsu pada "P.U." atau "B.P.1" atau "K/S"
+        if raw_kind in ("s.", "p."):
+            prev_ch = text[m.start() - 1] if m.start() > 0 else " "
+            if prev_ch in ("/", "-", "."):
+                continue
+        if raw_kind in ("peraturan", "subperaturan", "regulation", "per.", "p."):
+            kind = "Peraturan"
+        else:
+            kind = "Seksyen"
         num = m.group(2).strip()
         act_raw = (m.group(3) or "").strip()
         inferred_from_tail = False
         # Cuba kesan Akta dalam klausa yang sama sahaja (berhenti pada tanda baca atau petikan Seksyen/Peraturan baharu)
         if not act_raw:
-            raw_tail = text[m.end() : m.end() + 85]
-            clause_stop = re.search(r"[.;\n]|\b(?:Seksyen|Peraturan|Section)\s+\d+", raw_tail, re.I)
+            raw_tail = text[m.end() : m.end() + 90]
+            clause_stop = re.search(
+                r"[.;\n]|(?<!\w)(?:Seksyen|Subseksyen|Perenggan|Peraturan|Subperaturan|Section|Sek\.|Per\.|S\.|P\.)\s*\d+",
+                raw_tail,
+                re.I,
+            )
             tail = raw_tail[: clause_stop.start()] if clause_stop else raw_tail
             tail_m = tail_act_re.search(tail)
             if tail_m:
@@ -4687,6 +4752,8 @@ def extract_legal_citations_from_text(text: str) -> List[Dict[str, str]]:
                     "act_ref": act_raw,
                     "inferred_from_tail": "1" if inferred_from_tail else "",
                     "raw_citation": m.group(0).strip(),
+                    "match_start": str(m.start()),
+                    "match_end": str(m.end()),
                 }
             )
 
@@ -4786,7 +4853,7 @@ def _build_valid_sections_index(
 
 def validate_legal_output(
     ai_response: Dict[str, Any] | str,
-    legal_library: Dict[str, Any],
+    legal_library: Optional[Dict[str, Any]] = None,
     question_context: str = "",
 ) -> Dict[str, Any]:
     """FASA 3.3: Pengesah Kod Pasca-Penjanaan Deterministik (`validateLegalOutput`).
@@ -4798,6 +4865,8 @@ def validate_legal_output(
     4. Jika unsur mandatori kesalahan berstatus `TIDAK TERPENUHI` berdasarkan `question_context`, sebarang cadangan pertuduhan/kompaun aktif bagi seksyen itu DISEKAT.
     5. Jika akta yang ditanya belum mempunyai sebarang seksyen diindeks (`total_sections_indexed == 0`), pulangkan status `AKTA BELUM DIINDEKS — MUAT NAIK PDF WARTA`.
     """
+    if legal_library is None:
+        legal_library = get_legal_library().to_snapshot_dict()
     if isinstance(ai_response, str):
         resp_dict: Dict[str, Any] = {
             "keputusan_tindakan": ai_response,
@@ -4813,17 +4882,40 @@ def validate_legal_output(
             for c in (resp_dict.get("cadangan_pertuduhan") or [])
             if isinstance(c, dict)
         )
+        def _join_str_list(val: Any) -> str:
+            if isinstance(val, list):
+                return " ".join(str(x or "") for x in val)
+            return str(val or "")
+
+        saman_111 = resp_dict.get("saman_111") if isinstance(resp_dict.get("saman_111"), dict) else {}
+        izin_mdk = resp_dict.get("izin_mendakwa") if isinstance(resp_dict.get("izin_mendakwa"), dict) else {}
+        notis_kmp = resp_dict.get("notis_kompaun") if isinstance(resp_dict.get("notis_kompaun"), dict) else {}
         combined_text = " ".join(
             [
                 str(resp_dict.get("akta_disyorkan") or ""),
                 str(resp_dict.get("tajuk_nasihat") or ""),
+                str(resp_dict.get("ringkasan_eksekutif") or ""),
+                str(resp_dict.get("ringkasan_keputusan") or ""),
                 str(resp_dict.get("keputusan_tindakan") or ""),
                 str(resp_dict.get("alasan_keputusan") or ""),
+                str(resp_dict.get("sebab_tidak_menyalahi") or ""),
+                _join_str_list(resp_dict.get("langkah_susulan_ppkp")),
+                _join_str_list(resp_dict.get("sop_lapangan")),
+                _join_str_list(resp_dict.get("eksibit_wajib")),
                 str(resp_dict.get("templat_ringkas") or ""),
+                str(resp_dict.get("nota_pindaan") or ""),
+                str(resp_dict.get("jawapan_4_lapisan_sop") or ""),
                 charges_txt,
                 str((resp_dict.get("borang_114") or {}).get("akta_dan_seksyen") or ""),
                 str((resp_dict.get("borang_114") or {}).get("seksyen_hukuman") or ""),
                 str((resp_dict.get("borang_114") or {}).get("teks_pertuduhan") or ""),
+                str(saman_111.get("teks_pertuduhan") or ""),
+                str(izin_mdk.get("peruntukan_izin") or ""),
+                str(izin_mdk.get("seksyen_dipohon") or ""),
+                str(notis_kmp.get("peruntukan_undang") or ""),
+                str(notis_kmp.get("peruntukan_kompaun") or ""),
+                str(resp_dict.get("fakta_kes") or ""),
+                str(resp_dict.get("kertas_cadangan_io") or ""),
                 str(resp_dict.get("peruntukan_undang") or ""),
             ]
         ).strip()
@@ -4833,6 +4925,21 @@ def validate_legal_output(
     offences_list: List[Dict[str, Any]] = legal_library.get("master_offences_matrix") or []
     repealed_list: List[Dict[str, Any]] = legal_library.get("repealed_and_blocked_provisions") or []
     lib_version = str(legal_library.get("statute_library_version") or INITIAL_STATUTE_LIBRARY_VERSION)
+
+    # Indeks teks verbatim mengikut (statute_id, base_number) bagi pengesahan subseksyen (cth: tolak S.11(2) Akta 281, S.16(9) Akta 852, S.5(1) Akta 342)
+    sec_text_by_sid_num: Dict[Tuple[str, str], str] = {}
+    _sec_code_re = re.compile(r"^(?:Peraturan\s+|Seksyen\s+|Section\s+|Regulation\s+)?(\d+[A-Za-z]{0,2})\b", re.I)
+    _amend_parents = {"AKTA_342_PINDAAN_2025": "AKTA_342", "AKTA_281_PINDAAN_2024": "AKTA_281"}
+    for _s in sections_list:
+        _sid = str(_s.get("statute_id") or "").upper()
+        _m = _sec_code_re.match(str(_s.get("section_code") or "").strip())
+        if _sid and _m:
+            _bn = _m.group(1).upper()
+            _txt = str(_s.get("verbatim_text_bm") or "")
+            sec_text_by_sid_num[(_sid, _bn)] = (sec_text_by_sid_num.get((_sid, _bn), "") + "\n" + _txt).strip()
+            if _sid in _amend_parents:
+                _p = _amend_parents[_sid]
+                sec_text_by_sid_num[(_p, _bn)] = (sec_text_by_sid_num.get((_p, _bn), "") + "\n" + _txt).strip()
 
     # Bina atau guna indeks nombor seksyen sah yang telah dicache mengikut statute_id & Akta Kanonik
     cached_idx = legal_library.get("_valid_sections_cache")
@@ -4876,12 +4983,12 @@ def validate_legal_output(
     # Sokong respons berbilang Akta (guna sempadan kata bagi elak perlanggaran '92'/'56')
     default_lookup_keys: List[str] = []
     for token_re_pat, key_name in (
-        (r"\b852\b", "AKTA_852"),
-        (r"\bPPKM\b", "PPKM_2009"),
-        (r"\bPPM\b", "PPM_1985"),
-        (r"\b281\b", "AKTA_281"),
-        (r"\b154\b", "AKTA_154"),
-        (r"\b342\b|\bAPPPB\b", "AKTA_342"),
+        (r"\b852\b|PRODUK\s+MEROKOK", "AKTA_852"),
+        (r"\bPPKM\b|KEBERSIHAN\s+MAKANAN", "PPKM_2009"),
+        (r"\bPPM\b|PERATURAN-PERATURAN\s+MAKANAN", "PPM_1985"),
+        (r"\b281\b|AKTA\s+MAKANAN|FOOD\s+ACT", "AKTA_281"),
+        (r"\b154\b|\bAPSPP\b|SERANGGA\s+PEMBAWA", "AKTA_154"),
+        (r"\b342\b|\bAPPPB\b|PENYAKIT\s+BERJANGKIT", "AKTA_342"),
         (r"\b593\b|\bKTJ\b|\bCPC\b|TATACARA\s+JENAYAH", "AKTA_593"),
         (r"\b574\b|KANUN\s+KESEKSAAN|PENAL\s+CODE", "AKTA_574"),
         (r"\b344\b|AKTA\s+POLIS|POLICE\s+ACT", "AKTA_344"),
@@ -4904,7 +5011,7 @@ def validate_legal_output(
     procedural_support_nums = {
         "90A", "90B", "90C", "114", "114A", "73AA",
         "107", "108", "111", "112", "113", "117", "119", "128",
-        "152", "153", "154", "163", "173", "376", "377", "399", "407", "407A", "51A",
+        "152", "153", "154", "163", "172A", "173", "376", "377", "399", "407", "407A", "51A",
         "15", "83", "91",
     }
 
@@ -4922,6 +5029,42 @@ def validate_legal_output(
         ("437/1985", "PPM_1985"),
     )
 
+    _warn_ctx_words = (
+        "dimansuhkan", "digugurkan", "diganti", "mansuh", "berbeza dengan",
+        "jangan", "tidak sah", "bukan ", "salah petik", "adalah salah", "ralat cetak", "tiada subseksyen",
+        "kod lama", "silap cetak", "sebaliknya",
+    )
+
+    def _is_cit_in_warning_context(cit_item: Dict[str, str]) -> bool:
+        try:
+            ms = int(cit_item.get("match_start") or -1)
+            me = int(cit_item.get("match_end") or -1)
+        except ValueError:
+            return False
+        if ms < 0:
+            return False
+        win = combined_text[max(0, ms - 75) : min(len(combined_text), me + 85)].lower()
+        return any(w in win for w in _warn_ctx_words)
+
+    def _subsection_missing_in_keys(cit_num: str, b_num: str, keys: List[str]) -> Optional[str]:
+        """Sahkan kewujudan subseksyen `(Y)` dalam teks verbatim seksyen (cth: S.11(2) Akta 281, S.16(9) Akta 852, S.5(1) Akta 342)."""
+        sub_m = re.match(r"^\d+[A-Za-z]{0,2}\((\d+[A-Za-z]?)\)", cit_num)
+        if not sub_m:
+            return None
+        sub_code = sub_m.group(1)
+        sub_token = f"({sub_code})"
+        checked_any_text = False
+        for k in keys:
+            vtxt = sec_text_by_sid_num.get((k.upper(), b_num.upper()))
+            if not vtxt:
+                continue
+            checked_any_text = True
+            if sub_token.lower() in vtxt.lower():
+                return None
+        if checked_any_text:
+            return sub_token
+        return None
+
     for cit in extracted_citations:
         base_num = cit["base_number"].upper()
         act_ref = cit["act_ref"].upper().strip()
@@ -4930,10 +5073,7 @@ def validate_legal_output(
         raw_cit = cit["raw_citation"]
 
         if "PPKHT" in act_ref:
-            if "ppkht" in charges_sec_only_check or not any(
-                w in combined_text.lower()
-                for w in ("dimansuhkan", "digugurkan", "diganti", "mansuh", "berbeza dengan", "jangan", "tidak sah", "bukan")
-            ):
+            if "ppkht" in charges_sec_only_check or not _is_cit_in_warning_context(cit):
                 invalid_citations.append(f"{raw_cit} (PPKHT 2004 telah dimansuhkan oleh Akta 852)")
             continue
 
@@ -4946,27 +5086,27 @@ def validate_legal_output(
             verified_citations.append(raw_cit)
             continue
 
-        # Petakan kepada statute_id tepat (termasuk peraturan subsidiari & 5 akta rujukan silang)
+        # Petakan kepada statute_id tepat (termasuk nama penuh BM, peraturan subsidiari & 5 akta rujukan silang)
         explicit_keys: List[str] = []
         for pu_code, mapped_sid in pu_to_sid:
             if pu_code in act_ref and mapped_sid in valid_sections_by_act:
                 explicit_keys.append(mapped_sid)
                 break
-        if not explicit_keys:
-            if "PPKM" in act_ref:
+        if not explicit_keys and act_ref:
+            if "PPKM" in act_ref or "KEBERSIHAN MAKANAN" in act_ref:
                 explicit_keys.append("PPKM_2009")
-            elif "PPM" in act_ref:
+            elif "PPM" in act_ref or "PERATURAN-PERATURAN MAKANAN" in act_ref:
                 explicit_keys.append("PPM_1985")
-            elif re.search(r"\b852\b", act_ref):
+            elif re.search(r"\b852\b|PRODUK\s+MEROKOK", act_ref):
                 explicit_keys.append("AKTA_852")
-            elif re.search(r"\b281\b|A1702", act_ref):
+            elif re.search(r"\b281\b|A1702|AKTA\s+MAKANAN|FOOD\s+ACT", act_ref):
                 if kind == "Peraturan":
                     explicit_keys.extend(["PPKM_2009", "PPM_1985"])
                 else:
                     explicit_keys.append("AKTA_281")
-            elif re.search(r"\b154\b", act_ref):
+            elif re.search(r"\b154\b|\bAPSPP\b|SERANGGA\s+PEMBAWA", act_ref):
                 explicit_keys.append("AKTA_154")
-            elif re.search(r"\b342\b|A1742|APPPB", act_ref):
+            elif re.search(r"\b342\b|A1742|APPPB|PENYAKIT\s+BERJANGKIT", act_ref):
                 explicit_keys.append("AKTA_342")
             elif re.search(r"\b593\b|\bKTJ\b|\bCPC\b|TATACARA\s+JENAYAH", act_ref):
                 explicit_keys.append("AKTA_593")
@@ -4980,14 +5120,29 @@ def validate_legal_output(
                 explicit_keys.append("AKTA_92")
             elif re.search(r"\b(?:AKTA|ACT)[\s_]*56\b|KETERANGAN|EVIDENCE", act_ref):
                 explicit_keys.append("AKTA_56")
-            elif re.search(r"\b611\b", act_ref):
+            elif re.search(r"\b611\b|KANAK-KANAK|CHILD\s+ACT", act_ref):
                 explicit_keys.append("AKTA_611")
 
         valid_explicit_keys = [k for k in explicit_keys if k in valid_sections_by_act]
 
         if valid_explicit_keys:
             matched_explicit = any(base_num in valid_sections_by_act[k] for k in valid_explicit_keys)
-            if matched_explicit or (inferred_tail and base_num in procedural_support_nums):
+            if matched_explicit:
+                # Semak kewujudan subseksyen (cth: S.11(2) Akta 281, S.16(9) Akta 852, Subseksyen 5(1) Akta 342) jika bukan konteks amaran
+                missing_sub = (
+                    None
+                    if (inferred_tail or _is_cit_in_warning_context(cit))
+                    else _subsection_missing_in_keys(cit["number"], base_num, valid_explicit_keys)
+                )
+                if missing_sub:
+                    invalid_citations.append(
+                        f"{raw_cit} — Subseksyen {missing_sub} TIDAK WUJUD dalam teks verbatim {base_num} ({' / '.join(valid_explicit_keys)})."
+                    )
+                else:
+                    verified_citations.append(raw_cit)
+            elif inferred_tail and base_num in procedural_support_nums:
+                verified_citations.append(raw_cit)
+            elif _is_cit_in_warning_context(cit) and raw_cit.lower() not in charges_sec_only_check:
                 verified_citations.append(raw_cit)
             else:
                 invalid_citations.append(
@@ -5008,7 +5163,19 @@ def validate_legal_output(
                 ]))
             else:
                 check_keys = default_lookup_keys
-            if any(base_num in valid_sections_by_act.get(k, set()) for k in check_keys) or base_num in procedural_support_nums:
+            if any(base_num in valid_sections_by_act.get(k, set()) for k in check_keys):
+                missing_sub = (
+                    None
+                    if _is_cit_in_warning_context(cit)
+                    else _subsection_missing_in_keys(cit["number"], base_num, check_keys)
+                )
+                if missing_sub and base_num not in procedural_support_nums:
+                    invalid_citations.append(
+                        f"{raw_cit} — Subseksyen {missing_sub} TIDAK WUJUD dalam teks verbatim {base_num} ({' / '.join(check_keys)})."
+                    )
+                else:
+                    verified_citations.append(raw_cit)
+            elif base_num in procedural_support_nums or (_is_cit_in_warning_context(cit) and raw_cit.lower() not in charges_sec_only_check):
                 verified_citations.append(raw_cit)
             else:
                 invalid_citations.append(
@@ -5017,10 +5184,40 @@ def validate_legal_output(
         else:
             if base_num in all_valid_section_nums or base_num in procedural_support_nums:
                 verified_citations.append(raw_cit)
+            elif _is_cit_in_warning_context(cit):
+                verified_citations.append(raw_cit)
             else:
                 invalid_citations.append(
                     f"{raw_cit} — Seksyen/Peraturan {cit['number']} TIDAK WUJUD dalam Pustaka Akta."
                 )
+
+    # 1B. Pengesah Deterministik Kod SOP KKM 2024 (sekat UIP-PPKHT-* mansuh, kod silap cetak & kod SOP rekaan)
+    _deprecated_or_typo_sops = {
+        "UIP-UMUM-01-23": "Kod silap cetak — guna kod rasmi UIP-UMUM-01-22 (PINDAAN 2024)",
+        "UIP-APPPB-01-20": "Kod silap cetak — guna kod rasmi UIP-APPPB-06-20 (PINDAAN 2024)",
+        "UIP-APSPP-03-07": "Kod lama mansuh — guna kod aktif UIP-UMUM-01-24",
+    }
+    _active_sop_stems: set[str] = set()
+    try:
+        from backend.services.sop_brain import get_sop_brain as _get_sb
+
+        _active_sop_stems = {str(r.get("file_stem") or "").upper() for r in _get_sb().active_index}
+    except Exception:
+        _active_sop_stems = set()
+
+    for sop_m in re.finditer(r"\b(UIP-[A-Z]+-\d{2}-\d{2})\b", combined_text, re.I):
+        sop_code = sop_m.group(1).upper()
+        sop_win = combined_text[max(0, sop_m.start() - 70) : min(len(combined_text), sop_m.end() + 85)].lower()
+        in_sop_warn = any(w in sop_win for w in _warn_ctx_words)
+        if "PPKHT" in sop_code:
+            if not in_sop_warn:
+                invalid_citations.append(f"{sop_code} — SOP PPKHT 2004 telah DIMANSUHKAN dan dilarang dipetik.")
+        elif sop_code in _deprecated_or_typo_sops:
+            if not in_sop_warn:
+                invalid_citations.append(f"{sop_code} — {_deprecated_or_typo_sops[sop_code]}.")
+        elif _active_sop_stems and sop_code not in _active_sop_stems:
+            if not in_sop_warn:
+                invalid_citations.append(f"{sop_code} — Kod SOP TIDAK WUJUD dalam indeks 22 SOP KKM Pindaan 2024.")
 
     # 2. Semak senarai hitam `repealed_and_blocked_provisions`
     repealed_hits: List[Dict[str, str]] = []
@@ -5045,11 +5242,12 @@ def validate_legal_output(
                     "tamat tempoh",
                     "tidak sah",
                     "jangan",
-                    "bukan",
+                    "bukan ",
                     "berbeza dengan",
                     "disekat",
                     "ralat",
-                    "salah",
+                    "salah petik",
+                    "adalah salah",
                 )
             )
             charges_sec_only = " ".join(
@@ -5072,15 +5270,15 @@ def validate_legal_output(
 
     # 3. Semak kesepadanan nilai denda & had kompaun dengan `master_offences_matrix` dan Jadual Kompaun Rasmi
     penalty_mismatches: List[str] = []
-    # Semak had kompaun Akta 154 (maksimum mutlak RM500) — guna sempadan 'akta 154' & abaikan ayat amaran 'jangan/ultra vires'
+    # Semak had kompaun Akta 154 (maksimum mutlak RM500) — tangkap "kompaun sebanyak RM 1,500" / "kompaun RM1,500"
     if re.search(r"\bakta\s+154\b", low_combined):
-        for comp_m in re.finditer(r"kompaun\s+rm\s?([\d,]+(?:\.\d{1,2})?)", low_combined):
+        for comp_m in re.finditer(r"kompaun(?:\s+(?:sebanyak|maksimum|sehingga|berjumlah))?\s+rm\s?([\d,]+(?:\.\d{1,2})?)", low_combined):
             try:
                 val = float(comp_m.group(1).replace(",", ""))
                 if val > 500.0:
                     ctx_win = low_combined[max(0, comp_m.start() - 55) : min(len(low_combined), comp_m.end() + 55)]
                     is_warn_154 = any(
-                        w in ctx_win for w in ("jangan", "bukan", "salah", "ultra vires", "tidak sah", "dilarang", "melebihi had", "ditolak")
+                        w in ctx_win for w in ("jangan", "bukan ", "salah petik", "adalah salah", "ultra vires", "tidak sah", "dilarang", "melebihi had", "ditolak")
                     )
                     if not is_warn_154:
                         penalty_mismatches.append(
@@ -5091,7 +5289,7 @@ def validate_legal_output(
 
     # Semak had kompaun Akta 342 Pindaan Akta A1742 / P.U.(A) 139/2025 (Individu maks RM5,000 / Korporat maks RM50,000)
     if re.search(r"\bakta\s+342\b", low_combined):
-        for comp_m in re.finditer(r"kompaun(?:\s+individu)?\s+rm\s?([\d,]+(?:\.\d{1,2})?)", low_combined):
+        for comp_m in re.finditer(r"kompaun(?:\s+(?:individu|sebanyak|maksimum|sehingga))?\s+rm\s?([\d,]+(?:\.\d{1,2})?)", low_combined):
             try:
                 val = float(comp_m.group(1).replace(",", ""))
                 ctx_both = low_combined[max(0, comp_m.start() - 65) : min(len(low_combined), comp_m.end() + 55)]
@@ -5104,11 +5302,11 @@ def validate_legal_output(
             except ValueError:
                 pass
 
-    # Semak kesilapan menawarkan kompaun bagi kesalahan TIDAK BOLEH KOMPAUN (termasuk Kanun Keseksaan Akta 574 & Akta Polis 344)
+    # Semak kesilapan menawarkan kompaun bagi kesalahan TIDAK BOLEH KOMPAUN (termasuk Kanun Keseksaan Akta 574, Akta Polis 344 & S.4(4) Akta 281)
     ak852_compoundable_re = re.compile(r"\b(?:13\(3\)|16\(2\)|17\(1\)|18\(1\))(?=\W|$)", re.I)
     ak342_compoundable_re = re.compile(r"\b(?:10\(2\)|11\(5\)|21a\(3\)|22\([bcd]\))(?=\W|$)", re.I)
-    ak281_non_comp_re = re.compile(r"\b(?:seksyen|s\.)\s*(?:11(?:\(\d+\))?|13(?:\(1\))?|13a(?:\(\d+\))?|13b(?:\(\d+\))?|13c(?:\(\d+\))?|14|15|16|17)\b", re.I)
-    ak154_non_comp_re = re.compile(r"\b(?:seksyen|s\.)\s*(?:8\(8\)|20|21)\b", re.I)
+    ak281_non_comp_re = re.compile(r"\b(?:seksyen|s\.)\s*(?:4\(4\)|11(?:\(\d+\))?|13(?:\(1\))?|13a(?:\(\d+\))?|13b(?:\(\d+\))?|13c(?:\(\d+\))?|14|15|16|17)(?=\W|$)", re.I)
+    ak154_non_comp_re = re.compile(r"\b(?:seksyen|s\.)\s*(?:8\(8\)|20|21)(?=\W|$)", re.I)
 
     for c in resp_dict.get("cadangan_pertuduhan") or []:
         if not isinstance(c, dict):
@@ -5126,6 +5324,8 @@ def validate_legal_output(
                 charge_acts_found.append("574")
             if not charge_acts_found and ("akta polis" in sec_low or "police act" in sec_low):
                 charge_acts_found.append("344")
+            if not charge_acts_found and ("akta makanan" in sec_low):
+                charge_acts_found.append("281")
             eff_charge_acts = charge_acts_found if charge_acts_found else [d for d in ("852", "281", "154", "342", "574", "344") if d in default_act.lower()]
             if "574" in eff_charge_acts or "344" in eff_charge_acts:
                 penalty_mismatches.append(
@@ -5148,12 +5348,20 @@ def validate_legal_output(
                     f"Kesalahan {c.get('seksyen_kesalahan')} TIDAK BOLEH DIKOMPAUN di bawah Akta 154 — wajib Buka IP Terus."
                 )
 
-    # Semak teks prosa (bukan cadangan_pertuduhan sahaja) jika ada dakwaan mengkompaun Akta 574 atau Akta 344 tanpa kata nafi
-    for act_num, act_name in (("574", "Kanun Keseksaan [Akta 574]"), ("344", "Akta Polis 1967 [Akta 344]")):
+    # Semak teks prosa (bukan cadangan_pertuduhan sahaja) jika ada dakwaan mengkompaun Akta 574, Akta 344, atau S.4(4) Akta 281 tanpa kata nafi
+    for act_num, act_name in (
+        ("574", "Kanun Keseksaan [Akta 574]"),
+        ("344", "Akta Polis 1967 [Akta 344]"),
+        ("281_4_4", "Seksyen 4(4) Akta Makanan 1983 [Akta 281]"),
+    ):
         act_pat = (
             r"\b(?:akta\s+574|kanun\s+keseksaan|penal\s+code)\b"
             if act_num == "574"
-            else r"\b(?:akta\s+344|akta\s+polis|police\s+act)\b"
+            else (
+                r"\b(?:akta\s+344|akta\s+polis|police\s+act)\b"
+                if act_num == "344"
+                else r"\b(?:seksyen|s\.)\s*4\(4\)(?=\W|$)"
+            )
         )
         if re.search(act_pat, low_combined):
             for cm in re.finditer(
@@ -5165,14 +5373,16 @@ def validate_legal_output(
                     n in ctx_w
                     for n in ("tidak boleh", "tiada kompaun", "bukan", "jangan", "dilarang", "tiada kuasa", "bukan kesalahan kompaun")
                 )
-                near_act = bool(re.search(act_pat, ctx_w)) or not re.search(r"\bakta\s+(?:852|281|154|342)\b", low_combined)
+                near_act = bool(re.search(act_pat, ctx_w)) or (
+                    act_num in ("574", "344") and not re.search(r"\bakta\s+(?:852|281|154|342)\b", low_combined)
+                )
                 if not has_neg and near_act:
                     penalty_mismatches.append(
-                        f"Kesalahan di bawah {act_name} TIDAK BOLEH DIKOMPAUN oleh PPKP — wajib rujuk PDRM melalui Laporan Polis Seksyen 107 KTJ."
+                        f"Kesalahan di bawah {act_name} TIDAK BOLEH DIKOMPAUN oleh PPKP."
                     )
                     break
 
-    # Semak had denda Seksyen 17(2) Akta 852 (OBD maks RM500)
+    # Semak had denda Seksyen 17(2) Akta 852 (OBD maks RM500) dan Seksyen 16(3) Akta 852 (maks RM5,000, tiada penjara)
     if "17(1)" in low_combined or "17(2)" in low_combined:
         for c in resp_dict.get("cadangan_pertuduhan") or []:
             sec_c = str(c.get("seksyen_kesalahan") or "").lower() if isinstance(c, dict) else ""
@@ -5184,6 +5394,31 @@ def validate_legal_output(
                         penalty_mismatches.append(
                             f"Hukuman denda maksimum Seksyen 17(2) Akta 852 bagi OBD ialah RM500.00 (dipetik RM{val:,})."
                         )
+    if "16(3)" in low_combined and ("852" in low_combined or "852" in default_act.lower()):
+        for c in resp_dict.get("cadangan_pertuduhan") or []:
+            if not isinstance(c, dict):
+                continue
+            sec_huk = f"{c.get('seksyen_kesalahan', '')} {c.get('seksyen_hukuman', '')}".lower()
+            if "16(3)" in sec_huk:
+                huk = str(c.get("hukuman_maksimum") or "")
+                for rm_m in re.finditer(r"RM\s?([\d,]+)", huk, flags=re.I):
+                    val = int(rm_m.group(1).replace(",", ""))
+                    if val > 5000:
+                        penalty_mismatches.append(
+                            f"Hukuman denda maksimum Seksyen 16(3) Akta 852 ialah RM5,000.00 sahaja tanpa penjara (dipetik RM{val:,})."
+                        )
+        # Semak juga teks prosa terus apabila Seksyen 16(3) Akta 852 disebut bersama denda > RM5,000
+        for m16 in re.finditer(r"16\(3\)", low_combined):
+            win16 = low_combined[max(0, m16.start() - 60) : min(len(low_combined), m16.end() + 90)]
+            if any(w in win16 for w in ("jangan", "bukan ", "salah petik", "adalah salah")):
+                continue
+            for rm_m in re.finditer(r"denda(?:\s+maksimum)?\s+rm\s?([\d,]+)", win16, flags=re.I):
+                val = int(rm_m.group(1).replace(",", ""))
+                if val > 5000:
+                    penalty_mismatches.append(
+                        f"Hukuman denda maksimum Seksyen 16(3) Akta 852 ialah RM5,000.00 sahaja tanpa penjara (dipetik RM{val:,})."
+                    )
+                    break
 
     # 4. Semak Unsur Mandatori Kesalahan — nilai perangkap fakta pada `question_context` SAHAJA (supaya nasihat berhati-hati AI tidak mencetuskan perangkap kendiri!)
     element_evaluations: List[Dict[str, Any]] = []
@@ -6192,7 +6427,20 @@ class ClosedBookLegalLibrary:
                 }
 
         results: List[Dict[str, Any]] = []
-        q_low = (q or "").strip().lower()
+        q_raw_s = (q or "").strip()
+        q_low = q_raw_s.lower()
+        q_norm_low = normalize_ppkp_query(q_raw_s).lower() if q_raw_s else ""
+        q_exact_toks, q_exp_toks = expand_query_for_grounding(q_raw_s) if q_raw_s else (set(), set())
+        # Token bermakna sahaja untuk padanan sinonim direktori supaya carian kata rawak tidak menghasilkan bunyi bising
+        q_meaningful_exp = {t for t in q_exp_toks if len(t) >= 3}
+        q_sec_num_m = re.match(
+            r"^(?:seksyen|peraturan|section|regulation|s\.?|p\.?)\s*(\d+[a-z]{0,2})(?:\([a-z0-9]+\))*$",
+            q_low,
+            flags=re.I,
+        )
+        q_sec_num = q_sec_num_m.group(1).lower() if q_sec_num_m else ""
+
+        scored_results: List[Tuple[int, Dict[str, Any]]] = []
         for sec in self.statute_sections_verbatim:
             if statute_id and statute_id.lower() != "semua":
                 if sec["statute_id"].upper() != statute_id.strip().upper():
@@ -6206,12 +6454,32 @@ class ClosedBookLegalLibrary:
                     and not re.search(rf"(?<!\w){re.escape(akta_code.lower())}(?!\w)", sec["statute_id"].lower())
                 ):
                     continue
+            match_rank = 0
             if q_low:
-                hay = f"{sec['statute_id']} {sec['section_code']} {sec['section_heading']} {sec['verbatim_text_bm']}".lower()
-                if q_low not in hay:
-                    continue
+                sc_code_l = str(sec.get("section_code") or "").lower()
+                hay = f"{sec['statute_id']} {sc_code_l} {sec['section_heading']} {sec['verbatim_text_bm']}".lower()
+                if q_low in hay or (q_norm_low and q_norm_low in hay):
+                    match_rank = 3
+                elif q_sec_num and re.search(rf"(?<!\w){re.escape(q_sec_num)}(?!\w)", sc_code_l):
+                    match_rank = 3
+                else:
+                    s_toks = self._section_token_cache.get(sec["doc_id"])
+                    if s_toks is None:
+                        s_toks = {t.lower() for t in TOKEN_RE.findall(hay) if len(t) >= 2}
+                    exact_hits = len(q_exact_toks & s_toks)
+                    exp_hits = len(q_meaningful_exp & s_toks)
+                    if q_exact_toks and exact_hits == len(q_exact_toks):
+                        match_rank = 2
+                    elif exp_hits >= 2 or (exact_hits >= 1 and exp_hits >= 1):
+                        match_rank = 1
+                    else:
+                        continue
             # Jangan pulangkan embedding_vector 64-float pada senarai UI bagi menjimatkan lebar jalur
-            results.append({k: v for k, v in sec.items() if k != "embedding_vector"})
+            scored_results.append((match_rank, {k: v for k, v in sec.items() if k != "embedding_vector"}))
+
+        if q_low:
+            scored_results.sort(key=lambda item: item[0], reverse=True)
+        results = [item[1] for item in scored_results]
 
         return {
             "status": "OK",
@@ -6232,8 +6500,12 @@ class ClosedBookLegalLibrary:
         q: Optional[str] = None,
     ) -> List[Dict[str, Any]]:
         sec_map = {s["doc_id"]: s for s in self.statute_sections_verbatim}
-        q_low = (q or "").strip().lower()
-        out: List[Dict[str, Any]] = []
+        q_raw_s = (q or "").strip()
+        q_low = q_raw_s.lower()
+        q_norm_low = normalize_ppkp_query(q_raw_s).lower() if q_raw_s else ""
+        q_exact_toks, q_exp_toks = expand_query_for_grounding(q_raw_s) if q_raw_s else (set(), set())
+        q_meaningful_exp = {t for t in q_exp_toks if len(t) >= 3}
+        scored_out: List[Tuple[int, Dict[str, Any]]] = []
 
         for off in self.master_offences_matrix:
             sid = str(off.get("statute_id") or "")
@@ -6259,10 +6531,39 @@ class ClosedBookLegalLibrary:
             if verified_status and verified_status.upper() != "SEMUA":
                 if str(off.get("verified_status") or "").upper() != verified_status.strip().upper():
                     continue
+            match_rank = 0
             if q_low:
-                hay = json.dumps(off, ensure_ascii=False).lower()
-                if q_low not in hay:
-                    continue
+                # Cari hanya pada medan boleh dibaca manusia (bukan json.dumps supaya "true"/"false" tidak sepadan nilai boolean)
+                comp_info = off.get("compound_info") if isinstance(off.get("compound_info"), dict) else {}
+                readable_parts = [
+                    str(off.get("offence_id") or ""),
+                    sid,
+                    c_act,
+                    str(off.get("offence_section") or ""),
+                    str(off.get("offence_title") or ""),
+                    " ".join(str(x) for x in (off.get("read_together_with") or [])),
+                    str(off.get("target_offender") or ""),
+                    str(off.get("penalty_first_offence") or ""),
+                    str(off.get("penalty_subsequent_offence") or ""),
+                    str(off.get("charge_sheet_template_bm") or ""),
+                    " ".join(str(x) for x in (off.get("special_legal_requirements") or [])),
+                    " ".join(str(x) for x in (off.get("mandatory_exhibits") or [])),
+                    str(comp_info.get("max_compound_rm") or ""),
+                    str(comp_info.get("notes") or ""),
+                ]
+                hay = " ".join(readable_parts).lower()
+                if q_low in hay or (q_norm_low and q_norm_low in hay):
+                    match_rank = 3
+                else:
+                    hay_toks = {t.lower() for t in TOKEN_RE.findall(hay) if len(t) >= 2}
+                    exact_hits = len(q_exact_toks & hay_toks)
+                    exp_hits = len(q_meaningful_exp & hay_toks)
+                    if q_exact_toks and exact_hits == len(q_exact_toks):
+                        match_rank = 2
+                    elif exp_hits >= 2 or (exact_hits >= 1 and exp_hits >= 1):
+                        match_rank = 1
+                    else:
+                        continue
 
             # Sertakan teks penuh verbatim bagi source_section_doc_ids
             linked_verbatim = [
@@ -6276,14 +6577,19 @@ class ClosedBookLegalLibrary:
                 for did in (off.get("source_section_doc_ids") or [])
                 if did in sec_map
             ]
-            out.append(
-                {
-                    **off,
-                    "canonical_akta_code": c_act,
-                    "linked_verbatim_sections": linked_verbatim,
-                }
+            scored_out.append(
+                (
+                    match_rank,
+                    {
+                        **off,
+                        "canonical_akta_code": c_act,
+                        "linked_verbatim_sections": linked_verbatim,
+                    },
+                )
             )
-        return out
+        if q_low:
+            scored_out.sort(key=lambda item: item[0], reverse=True)
+        return [item[1] for item in scored_out]
 
     def search_closed_book_grounding(
         self,
@@ -6300,21 +6606,22 @@ class ClosedBookLegalLibrary:
         d) Katalog ringkas 1-baris bagi SEMUA kesalahan dalam domain Akta aktif supaya AI tidak pernah "buta" terhadap seksyen sebenar.
         """
         q_raw = (question or "").strip()
-        q_low = q_raw.lower()
+        q_norm = normalize_ppkp_query(q_raw)
+        q_low = q_norm.lower()
         exact_tokens, expanded_tokens = expand_query_for_grounding(q_raw)
         q_tokens = exact_tokens | expanded_tokens
         asks_definition = any(
             k in q_low for k in ("tafsiran", "definisi", "maksud ", "seksyen 2", "sek. 2", "s.2 ", "akta 388")
         )
-        allowed_sids = infer_domain_statute_ids(q_raw, akta_hint)
+        allowed_sids = infer_domain_statute_ids(q_norm or q_raw, akta_hint)
         support_sids = {"AKTA_593", "AKTA_574", "AKTA_344", "AKTA_388", "AKTA_92", "AKTA_56", "AKTA_611"}
-        is_passive_vape = is_passive_vape_possession_question(q_raw)
+        is_passive_vape = is_passive_vape_possession_question(q_norm or q_raw)
         has_minor_signal = any(
             re.search(rf"(?<!\w){re.escape(k)}(?!\w)", q_low)
             for k in ("pelajar", "murid", "budak", "sekolah", "obd", "bawah 18", "bawah umur", "kanak-kanak")
         )
-        has_signage_duty = _has_signage_or_premise_smoking_duty_signal(q_raw)
-        has_active_smoker = _has_active_smoking_action(q_raw)
+        has_signage_duty = _has_signage_or_premise_smoking_duty_signal(q_norm or q_raw)
+        has_active_smoker = _has_active_smoking_action(q_norm or q_raw)
 
         # 0. Semak sama ada soalan/akta_hint merujuk akta yang belum diindeks (total_sections_indexed == 0)
         unindexed_hit: Optional[Dict[str, Any]] = None
@@ -6356,7 +6663,7 @@ class ClosedBookLegalLibrary:
                     None,
                 )
                 if matched_off:
-                    ev = evaluate_offence_elements_against_facts(q_raw, matched_off)
+                    ev = evaluate_offence_elements_against_facts(q_norm or q_raw, matched_off)
                     scored_offences.append((10.0 if oid == "AKTA_852_S17_1" else 6.0, matched_off, ev))
         else:
             for off in self.master_offences_matrix:
@@ -6400,9 +6707,10 @@ class ClosedBookLegalLibrary:
                     score *= 0.65
 
                 # Bonus padanan nombor seksyen tepat (cth: "18(1)", "16(2)", "13b", "8(8)", "186", "465")
+                # Gunakan (?!\w) bukannya \b supaya seksyen berakhir dengan ')' seperti 18(1) sentiasa padan
                 sec_nums = re.findall(r"\d+[A-Za-z]?(?:\(\d+\))?", str(off.get("offence_section") or ""))
                 if sec_nums and any(
-                    re.search(rf"\b(?:seksyen|peraturan|section|s\.|p\.)\s*{re.escape(sn)}\b", q_low, re.I)
+                    re.search(rf"(?<!\w)(?:seksyen|peraturan|section|s\.?|p\.?)\s*{re.escape(sn)}(?!\w)", q_low, re.I)
                     for sn in sec_nums[:3]
                 ):
                     score += 6.0
@@ -6411,7 +6719,7 @@ class ClosedBookLegalLibrary:
                 if oid == "AKTA_852_S18_1" and has_signage_duty:
                     score += 9.5
                 if oid == "AKTA_852_S17_1" and has_minor_signal and (
-                    has_active_smoker or bool(re.search(r"\b(?:vape|rokok|pod|17\(1\))\b", q_low))
+                    has_active_smoker or bool(re.search(r"(?<!\w)(?:vape|rokok|pod|17\(1\))(?!\w)", q_low))
                 ):
                     score += 8.0
                 if oid == "AKTA_852_S13_1" and has_minor_signal and bool(
@@ -6419,9 +6727,9 @@ class ClosedBookLegalLibrary:
                 ):
                     score += 7.5
                 if oid == "AKTA_852_S10_1" and bool(
-                    re.search(r"\b(?:pamer|mempamer|pameran|kaunter|kabinet\s+bertutup|opaque)\b", q_low)
+                    re.search(r"\b(?:pamer|mempamer|pameran|kaunter|kabinet\s+bertutup|opaque|online|dalam\s+talian|tiktok|shopee|lazada|facebook|whatsapp|vending)\b", q_low)
                 ) and not has_signage_duty:
-                    score += 7.0
+                    score += 7.5
                 if oid == "AKTA_852_S16_2" and not has_minor_signal:
                     # Hanya naikkan S.16(2) jika ada perbuatan merokok/menghisap (ATAU bukan soalan tanda larangan/ashtray semata-mata)
                     if has_active_smoker or (
@@ -6440,7 +6748,7 @@ class ClosedBookLegalLibrary:
                         score += 8.0
                 if oid == "AKTA_852_S3_1" and not bool(
                     re.search(
-                        r"\b(?:import|mengimport|kilang|mengilang|edar|mengedar|pengedar|daftar|pendaftaran|tidak\s+berdaftar|262/2024|s\.?3|seksyen\s+3)\b",
+                        r"(?<!\w)(?:import|mengimport|kilang|mengilang|edar|mengedar|pengedar|daftar|pendaftaran|tidak\s+berdaftar|262/2024|s\.?\s*3(?:\(1\))?|seksyen\s+3(?:\(1\))?)(?!\w)",
                         q_low,
                         re.I,
                     )
@@ -6459,17 +6767,17 @@ class ClosedBookLegalLibrary:
                     score += 8.5
                 if oid == "AKTA_281_S13B_1" and bool(re.search(r"\b(?:diaduk|bahan\s+tambah|piawaian\s+makanan|13b)\b", q_low)):
                     score += 7.5
-                if oid == "AKTA_281_S11_2" and bool(re.search(r"\b(?:perintah\s+tutup|penutupan\s+premis|seksyen\s+11|s\.?\s*11|11\(1\)|11\(2\))\b", q_low)) and not bool(
-                    re.search(r"\b(?:hfmd|taska|342|18\(1\)\(d\))\b", q_low)
+                if oid == "AKTA_281_S11_2" and bool(re.search(r"(?<!\w)(?:perintah\s+tutup|penutupan\s+premis|seksyen\s+11|s\.?\s*11|11\(1\)|11\(2\))(?!\w)", q_low)) and not bool(
+                    re.search(r"(?<!\w)(?:hfmd|taska|342|18\(1\)\(d\))(?!\w)", q_low)
                 ):
                     score += 7.0
-                if oid == "AKTA_154_S8_8" and bool(re.search(r"\b(?:ingkar\s+perintah|perintah\s+bertulis\s+seksyen\s+8|s\.?8\(1\)|s\.?8\(8\)|s\.?8\(2\))\b", q_low)):
+                if oid == "AKTA_154_S8_8" and bool(re.search(r"(?<!\w)(?:ingkar\s+perintah|perintah\s+bertulis\s+seksyen\s+8|s\.?\s*8\(1\)|s\.?\s*8\(8\)|s\.?\s*8\(2\))(?!\w)", q_low)):
                     score += 7.0
                 if oid == "AKTA_154_S21" and bool(re.search(r"\b(?:menghalang|halang|fogging|semburan\s+kabus|berkunci|mangga|seksyen\s+21)\b", q_low)):
                     score += 8.5
-                if oid == "AKTA_342_S12_1" and bool(re.search(r"\b(?:bersiar-siar|mendedahkan\s+orang\s+awam|seksyen\s+12|12\(1\))\b", q_low)):
+                if oid == "AKTA_342_S12_1" and bool(re.search(r"(?<!\w)(?:bersiar-siar|mendedahkan\s+orang\s+awam|seksyen\s+12|12\(1\))(?!\w)", q_low)):
                     score += 7.5
-                if oid == "AKTA_342_S22_B" and bool(re.search(r"\b(?:ingkar\s+perintah|perintah\s+tutup|18\(1\)\(d\)|hfmd|cicir\s+rawatan|22\(b\))\b", q_low)):
+                if oid == "AKTA_342_S22_B" and bool(re.search(r"(?<!\w)(?:ingkar\s+perintah|perintah\s+tutup|18\(1\)\(d\)|hfmd|cicir\s+rawatan|22\(b\))(?!\w)", q_low)):
                     score += 7.0
                 # Isyarat rujukan silang Akta 574 (Kanun Keseksaan) & Akta 344 (Akta Polis)
                 if oid == "AKTA_574_S186" and bool(re.search(r"\b(?:menghalang|halang|halangan|kunci\s+pintu|186)\b", q_low)) and not bool(

@@ -92,7 +92,7 @@ IP_AUDIT_CRITERIA: List[Dict[str, Any]] = [
         "category": "Prosedur KTJ",
         "threshold": 0.88,
         "description": "IO memaklumkan kewajipan menjawab benar dan hak enggan menjawab soalan membabitkan diri di bawah Seksyen 112(2) & (3) sebelum merakam percakapan.",
-        "positive_keywords": ["112(2)", "112(3)", "112(4)", "amaran", "seksyen 112"],
+        "positive_keywords": ["112(2)", "112(3)", "112(4)", "amaran seksyen 112", "nota amaran", "amaran 112", "kewajipan menjawab benar", "hak enggan menjawab"],
         "negative_keywords": ["tiada nota amaran", "tiada amaran", "tidak diberi amaran"],
         "statute_ref": "Seksyen 112(2), 112(3) & 112(4) Kanun Tatacara Jenayah [Akta 593]",
         "remedy": "Catatkan perakuan pemakluman Seksyen 112(2) & (3) KTJ di awal setiap rakaman percakapan sebelum soalan dikemukakan.",
@@ -180,7 +180,7 @@ IP_AUDIT_CRITERIA: List[Dict[str, Any]] = [
         "category": "Kertas Pertuduhan",
         "threshold": 0.92,
         "description": "Ayat pertuduhan mengandungi semua unsur wajib kesalahan (identiti OKS, tarikh, masa, premis, daerah/negeri, perbuatan spesifik, peraturan subsidiari seperti P.U.(A) 260/2024 atau PPKM 2009).",
-        "positive_keywords": ["melanggar", "peraturan", "seksyen", "premis", "p.u."],
+        "positive_keywords": ["bahawa kamu", "telah didapati", "melanggar", "suatu kesalahan di bawah", "boleh dihukum di bawah", "bertempat di", "p.u."],
         "negative_keywords": ["intipati tidak lengkap", "unsur kesalahan tidak dibuktikan"],
         "statute_ref": "Seksyen 152 & 154 Kanun Tatacara Jenayah [Akta 593]",
         "remedy": "Pastikan teks pertuduhan Borang 114 menyebut lengkap 5 unsur wajib termasuk peraturan berkaitan (cth: Peraturan 6 P.U.(A) 260/2024 bagi pameran vape).",
@@ -453,18 +453,8 @@ class IPTechnicalAuditor:
             1,
         )
 
-        if counts["GAGAL"] == 0 and counts["SEMAK"] <= 2 and overall_score >= 82.0:
-            readiness = "SEDIA DIHANTAR KE TPR"
-        elif counts["GAGAL"] >= 2 or overall_score < 65.0:
-            readiness = "DITOLAK / ADA KUIRI KRITIKAL"
-        else:
-            readiness = "PERLU LENGKAPKAN DULU (IO)"
-
-        tpr_notes = self._build_tpr_summary(criteria_results, readiness, akta_utama)
-        kuiri_tpr = self._build_kuiri_tpr(criteria_results)
-        ip_folder_checklist = self._build_ip_folder_checklist(criteria_results)
-
         # Semakan SOP KKM Pra-TPR (UIP-UMUM-02-07 + UIP-UMUM-04-07 + SOP Akta, AUDIT_PRA_TPR_SYSTEM_PROMPT, temp=0.0)
+        # Dijalankan SEBELUM muktamadkan readiness_status supaya penemuan [KRITIKAL] menyekat status SEDIA DIHANTAR KE TPR!
         sop_audit_pra_tpr: Optional[Dict[str, Any]] = None
         try:
             from backend.services.sop_brain import (
@@ -491,6 +481,43 @@ class IPTechnicalAuditor:
                 )
         except Exception:
             sop_audit_pra_tpr = None
+
+        sop_kritikal_items: List[Dict[str, Any]] = []
+        if isinstance(sop_audit_pra_tpr, dict):
+            for finding in sop_audit_pra_tpr.get("penemuan_semakan") or []:
+                if isinstance(finding, dict) and "[KRITIKAL" in str(finding.get("tahap") or "").upper():
+                    sop_kritikal_items.append(finding)
+
+        if sop_kritikal_items:
+            overall_score = round(max(0.0, overall_score - (10.0 * len(sop_kritikal_items))), 1)
+
+        if sop_kritikal_items:
+            readiness = "DITOLAK / ADA KUIRI KRITIKAL"
+        elif counts["GAGAL"] == 0 and counts["SEMAK"] <= 2 and overall_score >= 82.0:
+            readiness = "SEDIA DIHANTAR KE TPR"
+        elif counts["GAGAL"] >= 2 or overall_score < 65.0:
+            readiness = "DITOLAK / ADA KUIRI KRITIKAL"
+        else:
+            readiness = "PERLU LENGKAPKAN DULU (IO)"
+
+        tpr_notes = self._build_tpr_summary(criteria_results, readiness, akta_utama)
+        kuiri_tpr = self._build_kuiri_tpr(criteria_results)
+        for idx_k, sk in enumerate(sop_kritikal_items, start=1):
+            kod_sop = str(sk.get("kod_sop") or "SOP KKM 2024")
+            isu_sop = str(sk.get("isu") or "Isu kritikal pematuhan SOP KKM 2024.")
+            tindakan_sop = str(sk.get("tindakan") or "Sila betulkan mengikut SOP KKM Pindaan 2024 sebelum dihantar ke TPR.")
+            kuiri_tpr.insert(
+                0,
+                {
+                    "code": f"SOP-K{idx_k:02d}",
+                    "tahap": "KUIRI WAJIB",
+                    "isu": f"[{kod_sop}] {isu_sop}",
+                    "tindakan_io": tindakan_sop,
+                },
+            )
+            tpr_notes.append(f"KUIRI KRITIKAL SOP ({kod_sop}): {isu_sop} — {tindakan_sop}")
+
+        ip_folder_checklist = self._build_ip_folder_checklist(criteria_results)
 
         return IPAuditReport(
             filename=filename,
@@ -543,7 +570,7 @@ class IPTechnicalAuditor:
         return "Tiada maklumat berkaitan dijumpai dalam teks IP."
 
     @staticmethod
-    def _detect_statutory_citation_errors(code: str, low: str) -> Optional[str]:
+    def _detect_statutory_citation_errors(code: str, low: str, akta_utama: str = "") -> Optional[str]:
         """Mengesan petikan seksyen/peraturan yang salah, akta dimansuhkan atau unsur tidak dipenuhi secara baris demi baris."""
         lines = [ln.strip() for ln in low.splitlines() if ln.strip()]
         for ln in lines:
@@ -584,15 +611,15 @@ class IPTechnicalAuditor:
             ):
                 return "UNSUR KESALAHAN TIDAK DIPENUHI: Pemilikan vape semata-mata di dalam beg pelajar tanpa bukti menghisap, mengunyah, menggunakan (S.17(1)) atau membeli (S.13(3)) BUKAN kesalahan di bawah Seksyen 17(1) Akta 852!"
 
-        # Sahkan seksyen yang dipetik terhadap Pustaka Akta Verbatim AGC untuk C14 (guna kunci teks sebenar `alasan_keputusan`)
+        # Sahkan seksyen yang dipetik terhadap Pustaka Akta Verbatim AGC untuk C14 (guna kunci teks sebenar `alasan_keputusan` + `akta_utama`)
         if code == "C14":
             from backend.rag.legal_engine import get_legal_library, validate_legal_output
 
             lib_snapshot = get_legal_library().to_snapshot_dict()
             val_res = validate_legal_output(
-                {"alasan_keputusan": low, "akta_disyorkan": ""},
+                {"alasan_keputusan": low, "akta_disyorkan": akta_utama},
                 lib_snapshot,
-                question_context=low[:600],
+                question_context=f"{akta_utama} {low[:600]}",
             )
             if val_res.get("invalid_citations"):
                 return "PETIKAN SEKSYEN TIDAK WUJUD / TIDAK SAH: " + "; ".join(val_res["invalid_citations"][:2])
@@ -672,7 +699,7 @@ class IPTechnicalAuditor:
         threshold = float(spec["threshold"])
 
         # Semak kesalahan petikan seksyen terlebih dahulu
-        statute_err = self._detect_statutory_citation_errors(code, low)
+        statute_err = self._detect_statutory_citation_errors(code, low, akta_utama=akta_utama)
         if statute_err:
             return {
                 "score": 0.24,
@@ -944,11 +971,11 @@ class IPTechnicalAuditor:
             return "LENGKAP"
 
         return [
-            {"bahagian": "A", "tajuk": "Kertas Minit, Izin Mendakwa TPR & Fakta Kes", "status": _agg(["C14", "C19", "C20"])},
-            {"bahagian": "B", "tajuk": "Borang 114 (Pertuduhan) & Borang 143 (Pengaduan Majistret)", "status": _agg(["C14", "C15", "C01"])},
-            {"bahagian": "C", "tajuk": "Notis S.32B / S.47, Tawaran Kompaun & Bukti Serahan (Kad AR)", "status": _agg(["C16", "C17"])},
-            {"bahagian": "D", "tajuk": "Borang Sitaan (S.36) / Perintah S.11, Barang Kes, Pelan Lakar, Gambar & Sijil 90A", "status": _agg(["C09", "C10", "C12", "C13", "C18"])},
-            {"bahagian": "E", "tajuk": "Rakaman Percakapan S.112 KTJ (Saksi & OKT) & Senarai Saksi", "status": _agg(["C05", "C06", "C07"])},
-            {"bahagian": "F", "tajuk": "Carian Rasmi SSM, Kad Kuasa & Laporan Makmal (S.19) / Entomologi", "status": _agg(["C02", "C03", "C04", "C11"])},
-            {"bahagian": "G", "tajuk": "Diari Siasatan (Seksyen 119 KTJ)", "status": _agg(["C08"])},
+            {"bahagian": "A", "tajuk": "Kertas Minit, Izin Mendakwa TPR & Fakta Kes [Folio A/D · UIP-UMUM-02-07]", "status": _agg(["C14", "C19", "C20"])},
+            {"bahagian": "B", "tajuk": "Borang 114 (Pertuduhan) & Borang 143 (Pengaduan Majistret) [Folio D · UIP-UMUM-02-07]", "status": _agg(["C14", "C15", "C01"])},
+            {"bahagian": "C", "tajuk": "Notis S.32B / S.47, Tawaran Kompaun & Bukti Serahan (Kad AR) [Folio C · UIP-UMUM-02-07]", "status": _agg(["C16", "C17"])},
+            {"bahagian": "D", "tajuk": "Borang Sitaan (S.36) / Perintah S.11, Barang Kes, Pelan Lakar, Gambar & Sijil 90A [Folio C · UIP-UMUM-02-07]", "status": _agg(["C09", "C10", "C12", "C13", "C18"])},
+            {"bahagian": "E", "tajuk": "Rakaman Percakapan S.112 KTJ (Saksi & OKT) & Senarai Saksi [Folio B · UIP-UMUM-02-07]", "status": _agg(["C05", "C06", "C07"])},
+            {"bahagian": "F", "tajuk": "Carian Rasmi SSM, Kad Kuasa & Laporan Makmal (S.19) / Entomologi [Folio C · UIP-UMUM-02-07]", "status": _agg(["C02", "C03", "C04", "C11"])},
+            {"bahagian": "G", "tajuk": "Diari Siasatan (Seksyen 119 KTJ) [Folio A · UIP-UMUM-02-07]", "status": _agg(["C08"])},
         ]

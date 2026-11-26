@@ -324,10 +324,19 @@ def _append_borang_114(
     office = _resolve_office_display(d114, None, officer_profile)
     prof = _safe_dict(officer_profile)
 
-    mahkamah_hdr = _safe_str(
-        d114.get("mahkamah") or prof.get("default_magistrate_court"),
-        "DALAM MAHKAMAH MAJISTRET",
+    sec_combo_low = f"{_safe_str(d114.get('akta_dan_seksyen'), '')} {_safe_str(d114.get('hukuman_maksimum'), '')}".lower()
+    requires_sessions_court = bool(
+        ("281" in sec_combo_low or "makanan 1983" in sec_combo_low)
+        and re.search(r"(?<!\w)(?:seksyen\s+(?:13(?:\(1\))?|13a(?:\(\d+\))?|13b(?:\(\d+\))?)|s\.?\s*(?:13(?:\(1\))?|13a|13b))(?!\w)", sec_combo_low)
     )
+    raw_mahkamah = _safe_str(
+        d114.get("mahkamah") or prof.get("default_magistrate_court"),
+        "DALAM MAHKAMAH SESYEN" if requires_sessions_court else "DALAM MAHKAMAH MAJISTRET",
+    )
+    if requires_sessions_court and "majistret" in raw_mahkamah.lower() and "sesyen" not in raw_mahkamah.lower():
+        mahkamah_hdr = re.sub(r"MAHKAMAH\s+MAJISTRET", "MAHKAMAH SESYEN", raw_mahkamah, flags=re.I)
+    else:
+        mahkamah_hdr = raw_mahkamah
     negeri_hdr = _safe_str(d114.get("negeri"), "")
     if not negeri_hdr or negeri_hdr == "-":
         negeri_hdr = office["negeri_mahkamah"] if office["negeri"] else ""
@@ -386,12 +395,14 @@ def _append_borang_114(
         space_after=16,
     )
 
+    bench_title = "Hakim Mahkamah Sesyen" if requires_sessions_court else "Majistret"
+    bench_court = "Mahkamah Sesyen (S.63/64 Akta 92)" if requires_sessions_court else "Mahkamah Majistret"
     _add_paragraph_text(
         doc,
         f"Bertarikh pada ........ haribulan ...................... {current_year}\n\n\n"
         "............................................................          ............................................................\n"
-        "Timbalan Pendakwa Raya / Pegawai Pendakwa                          Majistret\n"
-        "Bagi Pihak Pendakwa Raya (Seksyen 376 / 377(b) KTJ)                Mahkamah Majistret",
+        f"Timbalan Pendakwa Raya / Pegawai Pendakwa                          {bench_title}\n"
+        f"Bagi Pihak Pendakwa Raya (Seksyen 376 / 377(b) KTJ)                {bench_court}",
         size=10,
     )
 
@@ -756,7 +767,12 @@ def generate_compound_notice_docx(
 
     peruntukan = _safe_str(kom.get("peruntukan_undang"), "")
     low_per = peruntukan.lower()
-    if "852" in low_per:
+    is_akta_852_notice = bool(
+        re.search(r"(?<!\d)852(?!\d)", low_per)
+        or any(pu in low_per for pu in ("257/2024", "258/2024", "259/2024", "260/2024", "261/2024", "262/2024", "263/2024", "264/2024"))
+        or "produk merokok" in low_per
+    )
+    if is_akta_852_notice:
         akta_header = "AKTA KAWALAN PRODUK MEROKOK DEMI KESIHATAN AWAM 2024 [AKTA 852]"
         form_subtitle = "TAWARAN UNTUK MENGKOMPAUN KESALAHAN (BORANG 2 JADUAL KEDUA P.U. (A) 259/2024 — SEKSYEN 48(2))"
         peruntukan_kompaun_default = "Seksyen 48(2) Akta 852 [P.U. (A) 259/2024] (dengan keizinan bertulis Pendakwa Raya — Borang 1)"
@@ -973,6 +989,8 @@ def generate_docx_by_type(
 ) -> tuple[bytes, str]:
     normalized = str(doc_type or "").strip().lower()
     p = _safe_dict(payload)
+    if not officer_profile and isinstance(p.get("officer_profile"), dict):
+        officer_profile = p.get("officer_profile")
     b114 = _safe_dict(p.get("borang_114"))
     case_slug = _slug_for_filename(b114.get("no_kes") or p.get("no_kes"))
     suffix = f"_{case_slug}" if case_slug else ""
