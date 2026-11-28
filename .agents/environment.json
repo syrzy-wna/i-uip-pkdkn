@@ -1,0 +1,3 @@
+{
+  "install": "set -euo pipefail; [ -x .venv/bin/python ] || python3 -m venv .venv; .venv/bin/python -m pip install --no-input --upgrade pip; .venv/bin/python -m pip install --no-input -r backend/requirements.txt; npm --prefix frontend ci --no-audit --no-fund; if [ -f \"$HOME/.bashrc\" ]; then sed -i '/case \\$- in/,/esac/d' \"$HOME/.bashrc\"; fi; VENV_PATH_LINE=\"export PATH=\\\"$PWD/.venv/bin:\\$PATH\\\"\"; grep -qxF \"$VENV_PATH_LINE\" \"$HOME/.bashrc\" 2>/dev/null || echo \"$VENV_PATH_LINE\" >> \"$HOME/.bashrc\""
+}
